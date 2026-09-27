@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #F5F0E6;
+  --color-paper-2: #ECE6D9;
+  --color-white: #FFFFFF;
+  --color-ink: #151413;
+  --color-ink-2: #2B2926;
+  --color-muted: #6B665C;
+  --color-line: #DCD5C7;
+  --color-pencil: #2E48D6;
+  --color-pencil-soft: #DCE1FA;
+  --color-warn: #9A5B00;
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html { background: var(--color-paper); color: var(--color-ink); -webkit-text-size-adjust: 100%; }
+body { font-family: var(--font-sans); background: var(--color-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--color-pencil); color: white; }
+:focus-visible { outline: 2px solid var(--color-pencil); outline-offset: 2px; border-radius: 2px; }
+
+/* Browsers don't give <button> a pointer cursor by default — every clickable native element gets one here. */
+button:not(:disabled), summary, select, label:has(input[type="checkbox"]), label:has(input[type="radio"]), label:has(input[type="file"]) { cursor: pointer; }
+button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
+
+.display { font-weight: 600; letter-spacing: -0.045em; line-height: 0.92; }
+.prose-serif { font-family: var(--font-serif); font-size: 1.125rem; line-height: 1.65; }
+
+/* Buttons */
+.btn { cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 48px; padding: 0 1.4rem; border-radius: 999px; font-weight: 500; font-size: .95rem; transition: background-color .15s, color .15s, border-color .15s; }
+.btn-ink { background: var(--color-ink); color: var(--color-paper); }
+.btn-ink:hover { background: var(--color-ink-2); }
+.btn-line { border: 1px solid var(--color-ink); }
+.btn-line:hover { background: var(--color-ink); color: var(--color-paper); }
+.btn-sm { min-height: 36px; padding: 0 1rem; font-size: .85rem; }
+.link { text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; }
+.link:hover { color: var(--color-pencil); }
+
+/* Blue-pencil annotation — the one signature device */
+.pencil { font-family: var(--font-sans); color: var(--color-pencil); font-size: .78rem; font-weight: 500; }
+.pencil-line { background: var(--color-pencil); }
+
+/* Choice cards in the creator */
+.choice { position: relative; text-align: left; border: 1px solid var(--color-line); background: var(--color-white); border-radius: 10px; transition: border-color .15s, box-shadow .15s; }
+.choice:hover { border-color: var(--color-ink); }
+.choice[aria-pressed="true"], .choice[aria-checked="true"] { border-color: var(--color-pencil); box-shadow: 0 0 0 1px var(--color-pencil); }
+
+/* Reveal on view (opt-in, class toggled by <Reveal/>) */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .7s var(--ease-out-expo), transform .7s var(--ease-out-expo); }
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* Site preview motion levels (demonstration of the motion choice) */
+@keyframes sp-drift { from { transform: scale(1.08) translate3d(-1.5%, 0, 0); } to { transform: scale(1.08) translate3d(1.5%, 0, 0); } }
+@keyframes sp-zoom { from { transform: scale(1); } to { transform: scale(1.14); } }
+@keyframes sp-rise { from { opacity: 0; transform: translateY(12%); } to { opacity: 1; transform: none; } }
+@keyframes sp-fade { from { opacity: 0; } to { opacity: 1; } }
+[data-motion="subtle"] .sp-media img { animation: sp-fade 1.2s ease-out both; }
+[data-motion="subtle"] .sp-title { animation: sp-rise 1s var(--ease-out-expo) both; }
+[data-motion="dynamic"] .sp-media img { animation: sp-drift 6s ease-in-out infinite alternate; }
+[data-motion="dynamic"] .sp-title { animation: sp-rise .9s var(--ease-out-expo) both; }
+[data-motion="immersive"] .sp-media img { animation: sp-zoom 9s ease-in-out infinite alternate; }
+[data-motion="immersive"] .sp-title { animation: sp-rise 1.4s var(--ease-out-expo) both; }
+
+/* Scroll-driven demo (asset reality section); static where unsupported */
+@supports (animation-timeline: view()) {
+  @keyframes scrub { from { transform: scale(1); clip-path: inset(18% 22% round 12px); } to { transform: scale(1.12); clip-path: inset(0 0 round 0); } }
+  .scrub-demo { animation: scrub linear both; animation-timeline: view(); animation-range: entry 10% cover 60%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .reveal { opacity: 1; transform: none; }
+  .scrub-demo { animation: none !important; }
+}

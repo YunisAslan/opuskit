@@ -1,0 +1,39 @@
+'use client'
+import { useState, type ReactNode } from 'react'
+
+export function Swatches({ colors, size = 'h-3.5 w-3.5' }: { colors: string[]; size?: string }) {
+  return <span className="mt-1 flex gap-1">{colors.map((c, i) => <span key={i} className={`${size} rounded-full ring-1 ring-black/10`} style={{ background: c }} />)}</span>
+}
+
+export function CopyButton({ text, label = 'Copy', className = '' }: { text: string | (() => string); label?: string; className?: string }) {
+  const [done, setDone] = useState(false)
+  return (
+    <button
+      type="button"
+      className={`btn btn-line btn-sm ${className}`}
+      onClick={async () => {
+        try { await navigator.clipboard.writeText(typeof text === 'function' ? text() : text); setDone(true); setTimeout(() => setDone(false), 1600) } catch { /* clipboard blocked */ }
+      }}
+    >
+      <span aria-live="polite">{done ? 'Copied' : label}</span>
+    </button>
+  )
+}
+
+export function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
+  return (
+    <button type="button" aria-pressed={active} onClick={onClick}
+      className="rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper">
+      {children}
+    </button>
+  )
+}
+
+export function PageIntro({ title, children }: { title: string; children?: ReactNode }) {
+  return (
+    <div className="mx-auto max-w-[1440px] px-5 pb-10 pt-14 md:px-8 md:pt-20">
+      <h1 className="display max-w-4xl text-[clamp(2.6rem,6vw,5.5rem)]">{title}</h1>
+      {children && <div className="mt-6 max-w-xl text-lg text-ink-2">{children}</div>}
+    </div>
+  )
+}
