@@ -1,9 +1,12 @@
 // Runnable check: every seed composes into a complete recipe, remix updates dependents,
 // and every adapter produces a valid, tool-specific package.  Run: npm run check
 import assert from 'node:assert/strict'
+import { spawnSync } from 'node:child_process'
 import { palettes, typography } from '../src/data/ingredients'
 import { contrast, deltaE, oklab } from '../src/lib/color'
 import { recipeSeeds } from '../src/data/recipes'
+import { imagePresentations } from '../src/data/patterns'
+import { resources } from '../src/data/resources'
 import { directions, families, goals } from '../src/data/taxonomy'
 import { adapters } from '../src/features/build-packages'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
@@ -131,6 +134,35 @@ const main = async () => {
   assert.ok(briefed.title.startsWith('Oak & Awl — '), 'brief name leads the title')
   assert.equal(briefed.contentDirection.ctaExamples[0], goals.book.cta[0], 'goal sets the primary CTA')
   assert.match(recipeToMarkdown(briefed), /Oak & Awl: Leather goods\./, 'offer reaches the markdown')
+  // Video recipes ship scripts/prepare-video.sh (valid bash); others don't.
+  const vid = await adapters['claude-code'].generate(composeRecipe(specFromSeed(recipeSeeds[1])))
+  const sh = vid.files.find((f) => f.path === 'scripts/prepare-video.sh')
+  assert.ok(sh && /-crf 20 -g 6/.test(sh.content), 'video recipe ships prepare-video.sh')
+  assert.equal(spawnSync('bash', ['-n'], { input: sh.content }).status, 0, 'prepare-video.sh is valid bash')
+  assert.ok(!(await adapters['claude-code'].generate(composeRecipe(specFromSeed(recipeSeeds[3])))).files.some((f) => f.path.endsWith('prepare-video.sh')), 'no script without video')
+
+  // Photos work under any lead: count + shape decide the layout, the user's choice wins, and the files back "Your photos" only.
+  const photo = (i: number, w: number, h: number) => ({ asset: 'images' as const, name: `p${i}.jpg`, kind: 'image' as const, width: w, height: h, fileId: `f${i}` })
+  const vspec = specFromSeed(recipeSeeds[1])
+  const withPhotos = (ps: ReturnType<typeof photo>[], extra = {}) => composeRecipe({ ...vspec, uploads: [...(vspec.uploads ?? []), ...ps], ...extra })
+  assert.equal(composeRecipe(vspec).media.imagery, undefined, 'no photo plan without photos')
+  assert.equal(withPhotos([photo(1, 3000, 2000)]).media.imagery?.presentation.id, 'single-feature', 'one photo gets room')
+  const mixed = withPhotos(Array.from({ length: 8 }, (_, i) => photo(i, i % 2 ? 2000 : 3000, i % 2 ? 3000 : 2000)), { purpose: 'portfolio' })
+  assert.equal(mixed.media.imagery?.presentation.id, 'masonry-gallery', '8 mixed-shape photos → gallery wall')
+  const yours = mixed.assetRequirements.find((a) => a.label === 'Your photos')
+  assert.equal(yours?.providedFiles?.length, 8, 'uploaded photos back "Your photos"')
+  assert.ok(!mixed.assetRequirements.some((a) => a.label === 'Poster image' && a.providedFiles), 'photos are not claimed by the video poster')
+  const oneVideo = composeRecipe({ ...vspec, assets: ['video'], uploads: [{ asset: 'video', name: 'film.mp4', kind: 'video', fileId: 'v1' }] }).assetRequirements
+  assert.equal(oneVideo.find((a) => a.label === 'Secondary video')?.status, 'optional', 'one uploaded video does not mark the optional secondary video as "have"')
+  assert.equal(withPhotos([photo(1, 2000, 3000), photo(2, 2000, 3000), photo(3, 2000, 3000), photo(4, 2000, 3000)], { purpose: 'fashion' }).media.imagery?.presentation.id, 'lookbook-spreads', 'portrait fashion → lookbook')
+  assert.equal(withPhotos([photo(1, 3000, 2000)], { imagePresentation: 'uniform-grid' }).media.imagery?.presentation.id, 'uniform-grid', 'user choice wins')
+  assert.match(recipeToMarkdown(mixed), /### Photos — Gallery wall/, 'photo plan reaches the markdown')
+  const asked = composeRecipe({ ...vspec, brief: { photos: 'I want a liquid glass carousel for the menu shots' } })
+  assert.equal(asked.media.imagery?.presentation.id, 'liquid-glass', 'the owner’s note alone creates the plan and picks the approach')
+  assert.equal(composeRecipe({ ...vspec, brief: { photos: 'Fotolar üçün 3D slayder' } }).media.imagery?.presentation.id, 'ring-3d', 'Azerbaijani note: 3D slider → ring')
+  assert.ok(asked.resources.includes('componentry') && /componentry\.dev/.test(recipeToMarkdown(asked)) && /Owner’s request/.test(recipeToMarkdown(asked)), 'component source + note reach the recipe')
+  for (const x of Object.values(imagePresentations)) for (const id of x.resources) assert.ok(resources.some((r) => r.id === id), `${x.id}: resource ${id} exists`)
+
   console.log(`✓ ${recipeSeeds.length} recipes × ${Object.keys(adapters).length} adapters, remix and asset logic OK`)
 }
 

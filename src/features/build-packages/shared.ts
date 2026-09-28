@@ -69,6 +69,7 @@ export function visualQa(r: UniversalRecipe): string[] {
     ...r.pages.map((p) => `${p.label} section order: ${p.sections.map((s) => s.name.split(' — ')[0]).join(' → ')}.`),
     `Hero matches "${r.media.hero.name}": ${r.media.hero.composition}`,
     ...r.signatures.map((s) => `Signature moment "${s.name}" is built on ${s.where}, with its mobile and reduced-motion versions.`),
+    ...(r.media.imagery ? [`Photos are shown as "${r.media.imagery.presentation.name}" (${r.media.imagery.presentation.behavior.split(';')[0]})${r.media.imagery.note ? `, and the owner's request is met: “${r.media.imagery.note}”` : ''}.`] : []),
     ...(r.media.storytelling ? ['Scroll film: forward, fast and backward scrolling move the video with the scroll; every scene message appears on its own scene, one at a time (desktop and 390px).'] : []),
     `Layout: ${r.layoutSystem.columns}; section spacing ${r.layoutSystem.sectionSpacing}.`,
     ...[...r.creativeDirection.avoid, ...r.creativeDirection.genericAvoid].map((a) => `Absent: ${a}.`),

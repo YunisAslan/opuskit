@@ -1,0 +1,20 @@
+1:"$Sreact.fragment"
+2:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"OutletBoundary"]
+3:"$Sreact.suspense"
+7:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"ViewportBoundary"]
+8:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"MetadataBoundary"]
+9:I[27201,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"IconMark"]
+b:I[39756,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"default"]
+c:I[37457,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"default"]
+6:X
+e:X
+e:C
+0:{"buildId":"cR-6byJxedb8po7pKzrf1","data":[{"rsc":["$","$1","c",{"children":[[["$","header",null,{"className":"mx-auto max-w-[800px] px-6 pb-16 pt-40 text-center md:pt-48","children":[["$","h1",null,{"className":"type-display [font-size:clamp(2.75rem,8vw,6.5rem)]","children":"Terms of service"}],["$","p",null,{"className":"type-body mx-auto mt-8 max-w-[52ch] text-muted","children":"Last updated 28 September 2026."}]]}],["$","div",null,{"className":"prose-cheeky mx-auto max-w-[680px] px-6 pb-40","children":[["$","h2",null,{"children":"Using this site"}],["$","p",null,{"children":"The films, photographs and words here belong to CHEEKY. You are welcome to share links; please ask before reusing the images."}],["$","h2",null,{"children":"Listings"}],["$","p",null,{"children":"We describe every car as accurately as we can, including faults we know about. Prices include VAT where it applies and may change until a deposit is paid."}],["$","h2",null,{"children":"Deposits and sales"}],["$","p",null,{"children":"A holding deposit reserves a car for seven days and is refunded in full if you decide not to go ahead. A sale is complete when the balance is paid and the car is collected or delivered."}],["$","h2",null,{"children":"Gift cards"}],["$","p",null,{"children":"Gift cards are valid for three years from purchase and cannot be exchanged for cash."}],["$","h2",null,{"children":"Liability"}],["$","p",null,{"children":"Nothing in these terms limits your rights as a consumer. If something goes wrong, write to us first and we will try to put it right."}]]}]],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"isPartial":"$@5","staleTime":"$6","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$L7",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#4A1119"}]]}],["$","div",null,{"hidden":true,"children":["$","$L8",null,{"children":["$","$3",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Terms of service | CHEEKY"}],["$","meta","1",{"name":"description","content":"Porsche 911s, filmed and shown like a collection. Selected cars, one season at a time."}],["$","link","2",{"rel":"icon","href":"/live/cheeky911/icon.svg?icon.0npr9q6v6zksx.svg","sizes":"any","type":"image/svg+xml"}],["$","$L9","3",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":"$@a","staleTime":"$6","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Lb",null,{"parallelRouterKey":"children","template":["$","$Lc",null,{}]}]]}],"isPartial":"$@d","staleTime":"$6","varyParams":"$e"}],"isUpgradeableISRFallback":false,"a":"$@f","rootVaryParams":null,"needsRuntimeRequest":"$@10"}
+4:null
+10:true
+6:300
+6:C
+f:0
+a:"$undefined"
+d:"$undefined"
+5:"$undefined"

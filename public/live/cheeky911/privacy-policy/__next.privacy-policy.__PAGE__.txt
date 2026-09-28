@@ -1,0 +1,20 @@
+1:"$Sreact.fragment"
+2:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"OutletBoundary"]
+3:"$Sreact.suspense"
+7:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"ViewportBoundary"]
+8:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"MetadataBoundary"]
+9:I[27201,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"IconMark"]
+b:I[39756,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"default"]
+c:I[37457,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"default"]
+6:X
+e:X
+e:C
+0:{"buildId":"cR-6byJxedb8po7pKzrf1","data":[{"rsc":["$","$1","c",{"children":[[["$","header",null,{"className":"mx-auto max-w-[800px] px-6 pb-16 pt-40 text-center md:pt-48","children":[["$","h1",null,{"className":"type-display [font-size:clamp(2.75rem,8vw,6.5rem)]","children":"Privacy policy"}],["$","p",null,{"className":"type-body mx-auto mt-8 max-w-[52ch] text-muted","children":"Last updated 28 September 2026."}]]}],["$","div",null,{"className":"prose-cheeky mx-auto max-w-[680px] px-6 pb-40","children":[["$","h2",null,{"children":"What we collect"}],["$","p",null,{"children":"Your name and email when you write to us, create an account or buy a gift card. If you view or buy a car, we also keep your address and the documents the sale requires."}],["$","h2",null,{"children":"Why"}],["$","p",null,{"children":"To answer you, arrange viewings, complete a sale and send the collection letter if you asked for it. Nothing else."}],["$","h2",null,{"children":"Who sees it"}],["$","p",null,{"children":"The two of us, our accountant, and the transport and payment companies needed to finish a sale. We never sell or rent your details."}],["$","h2",null,{"children":"How long we keep it"}],["$","p",null,{"children":"Enquiries for two years. Sale records for as long as the law requires, currently ten years."}],["$","h2",null,{"children":"Your rights"}],["$","p",null,{"children":["You can ask to see, correct or delete what we hold about you. Write to ",["$","a",null,{"href":"mailto:hello@cheeky911.com","children":"hello@cheeky911.com"}]," and we will reply within a month."]}]]}]],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"isPartial":"$@5","staleTime":"$6","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$L7",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#4A1119"}]]}],["$","div",null,{"hidden":true,"children":["$","$L8",null,{"children":["$","$3",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Privacy policy | CHEEKY"}],["$","meta","1",{"name":"description","content":"Porsche 911s, filmed and shown like a collection. Selected cars, one season at a time."}],["$","link","2",{"rel":"icon","href":"/live/cheeky911/icon.svg?icon.0npr9q6v6zksx.svg","sizes":"any","type":"image/svg+xml"}],["$","$L9","3",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":"$@a","staleTime":"$6","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Lb",null,{"parallelRouterKey":"children","template":["$","$Lc",null,{}]}]]}],"isPartial":"$@d","staleTime":"$6","varyParams":"$e"}],"isUpgradeableISRFallback":false,"a":"$@f","rootVaryParams":null,"needsRuntimeRequest":"$@10"}
+4:null
+10:true
+6:300
+6:C
+f:0
+a:"$undefined"
+d:"$undefined"
+5:"$undefined"

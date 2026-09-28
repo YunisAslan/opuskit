@@ -5,6 +5,7 @@ import { cursorAdapter } from './cursor'
 import { lovableAdapter } from './lovable'
 import { assertComplete, assetManifest, assetsConfigTs, manifestJson, tokensCss } from './shared'
 import { v0Adapter } from './v0'
+import { needsVideo, videoFiles } from './video'
 
 const ownCodeAdapter: BuildPackageAdapter = {
   id: 'own-code',
@@ -27,11 +28,25 @@ const ownCodeAdapter: BuildPackageAdapter = {
   },
 }
 
+// Every package whose recipe needs a video also gets scripts/prepare-video.sh — added here once, for every tool.
+const withVideoScript = (a: BuildPackageAdapter): BuildPackageAdapter => ({
+  ...a,
+  async generate(r) {
+    const pkg = await a.generate(r)
+    if (!needsVideo(r)) return pkg
+    return {
+      ...pkg,
+      files: [...pkg.files, ...videoFiles(r)],
+      instructions: `${pkg.instructions}\nBefore building: run bash scripts/prepare-video.sh path/to/your-original-video.mp4 — it makes every video file the hero needs (add --upscale footage or --upscale cgi if the original is under 1920 px wide).`,
+    }
+  },
+})
+
 // Adding a tool = adding an adapter here. The Universal Recipe schema never changes.
 export const adapters: Record<BuildTarget, BuildPackageAdapter> = {
-  'claude-code': claudeCodeAdapter,
-  cursor: cursorAdapter,
-  v0: v0Adapter,
-  lovable: lovableAdapter,
-  'own-code': ownCodeAdapter,
+  'claude-code': withVideoScript(claudeCodeAdapter),
+  cursor: withVideoScript(cursorAdapter),
+  v0: withVideoScript(v0Adapter),
+  lovable: withVideoScript(lovableAdapter),
+  'own-code': withVideoScript(ownCodeAdapter),
 }

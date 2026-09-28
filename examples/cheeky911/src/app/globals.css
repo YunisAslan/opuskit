@@ -1,0 +1,148 @@
+@import "../styles/tokens.css";
+
+/* ---------- Type roles ---------- */
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3rem, 10vw, 9rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  font-stretch: 140%;
+}
+@utility type-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+@utility type-body {
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+@utility type-utility {
+  font-family: var(--font-utility);
+  font-style: italic;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+/* Width is an art-direction axis: vary it per line of display type */
+@utility stretch-wide { font-stretch: 150%; }
+@utility stretch-mid { font-stretch: 110%; }
+@utility stretch-narrow { font-stretch: 75%; }
+
+/* ---------- Base ---------- */
+html { -webkit-text-size-adjust: 100%; }
+body { font-size: 1.125rem; line-height: 1.6; overflow-x: clip; }
+::selection { background: var(--color-accent); color: var(--color-background); }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+a, button, summary { transition: color 150ms ease-out, opacity 150ms ease-out, text-decoration-color 150ms ease-out; }
+
+/* Understated text link: underline grows in, no layout shift */
+.text-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  text-decoration-color: color-mix(in oklab, currentColor 40%, transparent);
+}
+.text-link:hover { text-decoration-color: currentColor; }
+
+/* Grain overlay, <= 4% */
+.grain {
+  position: fixed; inset: 0; z-index: 60; pointer-events: none;
+  opacity: 0.04; mix-blend-mode: overlay; background-size: 256px;
+}
+
+/* ---------- Reveals (activated by RevealObserver; hidden only when JS runs) ---------- */
+.js [data-reveal="rise"] > * {
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 600ms var(--ease-rise), transform 600ms var(--ease-rise);
+}
+.js [data-reveal="rise"].is-in > * { opacity: 1; transform: none; }
+[data-reveal="rise"] > :nth-child(2) { transition-delay: 60ms; }
+[data-reveal="rise"] > :nth-child(3) { transition-delay: 120ms; }
+[data-reveal="rise"] > :nth-child(4) { transition-delay: 180ms; }
+[data-reveal="rise"] > :nth-child(5) { transition-delay: 240ms; }
+[data-reveal="rise"] > :nth-child(n+6) { transition-delay: 300ms; }
+
+/* The clip sits on the children: a fully clipped target never reports as intersecting */
+.js [data-reveal="clip"] > * {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1000ms var(--ease-curtain), transform 1000ms var(--ease-curtain), opacity 300ms ease-out;
+}
+.js [data-reveal="clip"] img { transform: scale(1.15); }
+.js [data-reveal="clip"].is-in > * { clip-path: inset(0); }
+.js [data-reveal="clip"].is-in img { transform: none; }
+@media (max-width: 639px) {
+  .js [data-reveal="clip"] > *, .js [data-reveal="clip"] img { transition-duration: 700ms; }
+}
+
+/* Line-by-line: markup is <span class="line"><span>…</span></span> */
+.line { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+.line > span { display: block; }
+.js [data-reveal="lines"] .line > span { transform: translateY(100%); transition: transform 700ms var(--ease-rise); }
+.js [data-reveal="lines"].is-in .line > span { transform: none; }
+[data-reveal="lines"] .line:nth-child(2) > span { transition-delay: 80ms; }
+[data-reveal="lines"] .line:nth-child(3) > span { transition-delay: 160ms; }
+[data-reveal="lines"] .line:nth-child(4) > span { transition-delay: 240ms; }
+
+/* ---------- Footer revealed from underneath (desktop) ---------- */
+.page-sheet {
+  position: relative; z-index: 10; background: var(--color-background);
+  box-shadow: 0 32px 64px -16px color-mix(in oklab, var(--color-background) 40%, black);
+}
+
+/* ---------- FAQ accordion ---------- */
+details::details-content {
+  block-size: 0; overflow: clip;
+  transition: block-size 300ms var(--ease-rise), content-visibility 300ms allow-discrete;
+}
+details[open]::details-content { block-size: auto; }
+:root { interpolate-size: allow-keywords; }
+summary { list-style: none; cursor: pointer; }
+summary::-webkit-details-marker { display: none; }
+details .faq-sign { transition: transform 180ms ease-out; }
+details[open] .faq-sign { transform: rotate(45deg); }
+
+/* ---------- Page transition (React <ViewTransition>) ---------- */
+::view-transition-old(*), ::view-transition-new(*) {
+  animation-duration: 500ms;
+  animation-timing-function: var(--ease-curtain);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js [data-reveal="rise"] > * { transform: none; transition: opacity 200ms linear; transition-delay: 0ms; }
+  .js [data-reveal="clip"] > * { clip-path: none; opacity: 0; transform: none; transition: opacity 200ms linear; }
+  .js [data-reveal="clip"].is-in > * { opacity: 1; }
+  .js [data-reveal="clip"] img { transform: none; }
+  .js [data-reveal="lines"] .line > span { transform: none; transition: none; }
+  details::details-content { transition: none; }
+  details .faq-sign { transition: none; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* Hero film: only the first scene shows until the timeline takes over (GSAP sets inline visibility) */
+.scene ~ .scene { visibility: hidden; }
+
+/* Hero film titles: display role, sized to sit beside the portrait frame */
+.hero-title { font-size: clamp(3rem, 7.5vw, 7.5rem); }
+
+/* Endless rows under reduced motion: a static wrapped grid, duplicates hidden */
+@media (prefers-reduced-motion: reduce) {
+  .rows [data-track] { width: auto; flex-wrap: wrap; justify-content: center; padding-inline: 24px; }
+  .rows [data-track] > [aria-hidden="true"] { display: none; }
+  .rows [data-track]:not(:first-child) { display: none; }
+  .rows > div { transform: none; }
+}
+
+/* Reading column for policy and guide pages */
+.prose-cheeky h2 { font-family: var(--font-heading); font-weight: 700; font-size: 1.5rem; line-height: 1.05; margin: 64px 0 16px; }
+.prose-cheeky p, .prose-cheeky li { max-width: 65ch; }
+.prose-cheeky p + p { margin-top: 16px; }
+.prose-cheeky ul { list-style: disc; padding-left: 24px; margin-top: 16px; }
+.prose-cheeky a { text-decoration: underline; text-underline-offset: 0.3em; }
+.lookbook-track.is-pinned { overflow: visible; scroll-snap-type: none; width: max-content; }
+.lookbook-track::-webkit-scrollbar { display: none; }

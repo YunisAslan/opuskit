@@ -3,12 +3,12 @@
 
 import { characters, directions, goals, leads, motionLevels, purposes } from '@/data/taxonomy'
 import { colorRoles, layouts, palettes, typography } from '@/data/ingredients'
-import { GENERIC_TELLS, components, heroes, media, motionPatterns, pageTypes, sections, signaturePatterns } from '@/data/patterns'
+import { GENERIC_TELLS, components, heroes, imagePresentations, media, motionPatterns, pageTypes, sections, signaturePatterns } from '@/data/patterns'
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { resources } from '@/data/resources'
 import { contrast, contrastLabel, isHex } from '@/lib/color'
 import type {
-  AssetCreationPath, AssetRequirement, AssetSpec, Brief, BuildTarget, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern,
+  AssetCreationPath, AssetRequirement, AssetSpec, Brief, BuildTarget, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern, ImagePresentationId, ImageryPlan,
   LeadId, MotionLevel, PageBlueprint, SignatureMoment, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
 } from '@/types/domain'
 
@@ -51,7 +51,7 @@ function cleanBrief(b: unknown): Brief | undefined {
   const x = b as Record<string, unknown>
   const text = (v: unknown, max: number) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, max) : undefined)
   const goal = typeof x.goal === 'string' && Object.hasOwn(goals, x.goal) ? (x.goal as Brief['goal']) : undefined
-  return { name: text(x.name, 60), offer: text(x.offer, 160), goal }
+  return { name: text(x.name, 60), offer: text(x.offer, 160), goal, photos: text(x.photos, 400) }
 }
 
 /** Keeps a spec coherent after any change (questionnaire or Remix). Only dependent decisions move. */
@@ -65,6 +65,7 @@ export function normalizeSpec(spec: RecipeSpec): RecipeSpec {
   if (locked) next.layout = locked
   if (next.lead !== 'video' && next.mediaPlan === 'image-to-video') delete next.mediaPlan
   if (next.customPalette && !Object.values(next.customPalette).every(isHex)) delete next.customPalette
+  if (next.imagePresentation && !Object.hasOwn(imagePresentations, next.imagePresentation)) delete next.imagePresentation
   if (!seedBySlug[next.base]) next.base = directions[next.direction].baseRecipe
   if (next.pages.length === 0) next.pages = defaultPagesFor(next.purpose)
   return next
@@ -144,8 +145,9 @@ function paletteTokens(colors: PaletteColors, usage: Partial<Record<ColorRole, s
   })
 }
 
+// Attached files are counted per row in buildAssets — so photos for the gallery don't also mark the video poster as "have".
 function assetStatus(spec: RecipeSpec, a: AssetSpec): AssetRequirement['status'] {
-  if (spec.assets.includes(a.asset) || spec.uploads?.some((u) => u.asset === a.asset)) return 'have'
+  if (spec.assets.includes(a.asset)) return 'have'
   if (a.level === 'optional') return 'optional'
   if (a.asset === 'video' && spec.mediaPlan === 'image-to-video') return 'create'
   if (spec.mediaPlan === 'temporary' && a.level === 'required' && ['images', 'video', 'product-photos', 'illustrations', '3d'].includes(a.asset)) return 'temporary'
@@ -158,6 +160,70 @@ const SOURCE: Record<string, string> = {
   '3d': 'Spline / Poly Haven', fonts: 'Google Fonts', copy: 'Written by you', logo: 'Your brand identity',
 }
 
+const PHOTO_WORDS = {
+  grid: /\b(shop|store|menu|product|products|catalog(ue)?|collection|range|goods|dishes)\b/,
+  lookbook: /\b(lookbook|fashion|wear|clothing|apparel|garment|linen|model|editorial)\b/,
+  gallery: /\b(portfolio|gallery|photograph(y|er|s)?|work|projects|archive|art|artist)\b/,
+  story: /\b(story|journal|travel|journey|process|behind|chef|farm|workshop|made)\b/,
+}
+// The owner's own words about their photos (English + Azerbaijani). Most specific first: "3D slider" is a ring, not a carousel.
+const NOTE_WORDS: [ImagePresentationId, RegExp][] = [
+  ['liquid-glass', /liquid|glass|şüşə|maye/], ['dome-gallery', /dome|sphere|globe|günbəz|kürə/],
+  ['ring-3d', /\b3d\b|3-d|ring|circular|wheel|spiral|orbit|halqa|dairəvi/], ['infinite-canvas', /infinite|endless|canvas|draggable|sonsuz/],
+  ['tilted-grid', /tilt|perspective|əyil/], ['marquee-rows', /marquee|ticker|rows|axan/], ['card-stack', /stack|deck|üst-üstə/],
+  ['swipe-carousel', /carou?sel|slider|slide|swipe|karusel|slayd/], ['horizontal-rail', /horizontal|sideways|üfüqi|yana/],
+  ['hover-reveal', /hover|list of|siyahı/], ['lookbook-spreads', /lookbook|spread|magazine|jurnal/],
+  ['masonry-gallery', /masonry|pinterest|gallery|lightbox|qalereya/], ['uniform-grid', /\bgrid\b|tiles|şəbəkə/],
+  ['editorial-sequence', /\bstory\b|hekayə|alternat/], ['single-feature', /full.?(bleed|screen|width)|tam ekran|one by one|tək-tək/],
+]
+
+/**
+ * Picks how the photos are shown — by approach, not by count: the owner's note first, then the kind of site, its style and
+ * motion, then what the photos themselves suggest (how many, which shape). Motion-heavy approaches are only recommended
+ * to sites that move; the user can still pick any of them.
+ */
+export function recommendPresentation(spec: RecipeSpec): { id: ImagePresentationId; why: string; photos: number; orientation: string } {
+  const photos = (spec.uploads ?? []).filter((u) => u.asset === 'images' && u.kind === 'image')
+  const n = photos.length
+  const shape = (u: (typeof photos)[number]) => !u.width || !u.height ? 'square' : u.height > u.width * 1.1 ? 'portrait' : u.width > u.height * 1.1 ? 'landscape' : 'square'
+  const count = { portrait: 0, landscape: 0, square: 0 }
+  photos.forEach((u) => count[shape(u)]++)
+  const major = n ? (Object.keys(count) as (keyof typeof count)[]).find((k) => count[k] >= n * 0.7) : undefined
+  const orientation = !n ? 'not known yet' : major ? `mostly ${major}` : 'mixed shapes'
+  const note = spec.brief?.photos?.toLowerCase() ?? ''
+  const text = [spec.brief?.name, spec.brief?.offer, ...spec.pages.map((p) => p.label)].join(' ').toLowerCase()
+  const says = (k: keyof typeof PHOTO_WORDS) => PHOTO_WORDS[k].test(text)
+  const kind = purposes[spec.purpose].noun.toLowerCase()
+  const bold = directions[spec.direction].families.some((f) => f === 'experimental' || f === 'futuristic' || f === 'bold')
+  const moving = spec.motion !== 'still'
+
+  const pick = (): [ImagePresentationId, string] => {
+    const asked = NOTE_WORDS.find(([, re]) => re.test(note))
+    if (asked) return [asked[0], 'it is what you asked for']
+    if (n && n <= 2) return ['single-feature', `${n === 1 ? 'one photo' : 'two photos'} — each deserves a section of its own`]
+    if (['ecommerce', 'product'].includes(spec.purpose) || says('grid')) return ['uniform-grid', `a ${kind} — visitors compare items side by side`]
+    if ((spec.purpose === 'fashion' || says('lookbook')) && (!n || count.portrait >= n / 2)) return ['lookbook-spreads', `a ${kind} — portrait pairs read like a printed lookbook`]
+    if (spec.motion === 'immersive' && (bold || spec.purpose === 'experiment')) {
+      return spec.purpose === 'experiment' ? ['ring-3d', 'an immersive experiment — the photos become the experience'] : ['infinite-canvas', `an immersive ${kind} — visitors explore the work by dragging, not scrolling past it`]
+    }
+    if (n >= 4 && major === 'landscape' && moving) return ['horizontal-rail', 'wide photos on a site that moves — a sideways strip gives each one the full width']
+    if (moving && ['agency', 'studio'].includes(spec.purpose)) return ['hover-reveal', `a ${kind} — a list of names stays calm and each photo appears when it is wanted`]
+    if (says('story') || spec.purpose === 'restaurant' || (n >= 3 && n <= 6)) return ['editorial-sequence', `a ${kind} — photos carry the story between short paragraphs`]
+    if (says('gallery') || ['portfolio', 'experiment', 'personal-brand'].includes(spec.purpose)) return ['masonry-gallery', `a ${kind} — the work is the point, so show it all, each photo in its real shape`]
+    if (moving && n >= 6) return ['swipe-carousel', 'a set of photos that reads best one at a time']
+    return ['editorial-sequence', `a ${kind} — photos alongside the words`]
+  }
+  const [id, why] = pick()
+  return { id, why, photos: n, orientation }
+}
+
+/** How the site shows its photos (the user's choice wins over the recommendation). Absent when photos play no part. */
+export function imageryPlan(spec: RecipeSpec): ImageryPlan | undefined {
+  const rec = recommendPresentation(spec)
+  if (!spec.imagePresentation && !rec.photos && !spec.brief?.photos && spec.lead !== 'photography') return undefined
+  return { presentation: imagePresentations[spec.imagePresentation ?? rec.id], photos: rec.photos, orientation: rec.orientation, recommended: rec.id, why: rec.why, note: spec.brief?.photos }
+}
+
 function buildAssets(spec: RecipeSpec, hero: HeroPattern): AssetRequirement[] {
   const t = typography[spec.typography]
   const list: AssetSpec[] = [
@@ -166,18 +232,26 @@ function buildAssets(spec: RecipeSpec, hero: HeroPattern): AssetRequirement[] {
     { asset: 'copy', label: 'Final copy', quantity: 'All sections', level: 'required', usage: 'Headlines, body, CTAs', specs: 'Written in the recipe voice before layout; headlines ≤ 8 words' },
     ...media[spec.lead].assets,
   ]
-  if (hero.id === 'scroll-video' || hero.id === 'scroll-video-page') list.push({ asset: 'video', label: 'Scrub-ready encode', quantity: '1 file', level: 'required', usage: hero.id === 'scroll-video' ? 'Scroll-controlled hero' : 'Scroll-controlled page background', specs: 'ffmpeg -i hero.mp4 -g 1 -crf 23 -an hero-scrub.mp4 (all-intra for smooth seeking)' })
+  // Photos for the rest of the site, whatever leads the first screen. First 'images' row, so it claims the user's photos.
+  const imagery = imageryPlan(spec)
+  if (imagery && spec.lead !== 'photography') {
+    list.splice(3, 0, { asset: 'images', label: 'Your photos', quantity: imagery.photos ? `${imagery.photos} photos` : imagery.presentation.ideal, level: 'recommended',
+      usage: `${imagery.presentation.name} — ${imagery.presentation.line.toLowerCase()}`, specs: 'Min 2400px long edge, one consistent grade; keep each photo’s original shape unless the layout says otherwise' })
+  }
+  if (hero.id === 'scroll-video' || hero.id === 'scroll-video-page') list.push({ asset: 'video', label: 'Scrub-ready encode', quantity: '1 file', level: 'required', usage: hero.id === 'scroll-video' ? 'Scroll-controlled hero' : 'Scroll-controlled page background', specs: 'Made by scripts/prepare-video.sh from the ORIGINAL file: CRF 20, keyframe every 6 frames, ≤ 1920 px' })
   if (TEXTURED.has(spec.direction)) list.push({ asset: 'images', label: 'Texture', quantity: '1–2', level: 'optional', usage: 'Subtle paper/grain overlay at ≤ 4% opacity', specs: 'Seamless tile, 1024px, WebP' })
 
   // Ties uploaded files to the first requirement row of the same asset type (list order), so a single
   // uploaded video backs "Hero video" rather than being claimed by every video-shaped row at once.
   const claimed = new Set<string>()
   return list.map((a) => {
-    const status = assetStatus(spec, a)
     const files = (spec.uploads ?? []).filter((u) => u.asset === a.asset && u.fileId && !claimed.has(u.fileId))
     files.forEach((u) => claimed.add(u.fileId!))
+    // Another row of this type holds the actual upload: derived rows (mobile encode) come from it; an optional extra (secondary video) is still missing.
+    const sibling = !files.length && !!spec.uploads?.some((u) => u.asset === a.asset && u.fileId)
+    const status = files.length ? 'have' : sibling && a.level === 'optional' ? 'optional' : assetStatus(spec, a)
     const providedFiles = files.length ? files.map((u) => ({ fileId: u.fileId!, name: u.name })) : undefined
-    const providedNote = providedFiles ? `user-provided: ${providedFiles.map((f) => f.name).join(', ')}` : 'marked as available — no file attached yet'
+    const providedNote = providedFiles ? `user-provided: ${providedFiles.map((f) => f.name).join(', ')}` : sibling ? 'made from your uploaded file' : 'marked as available — no file attached yet'
     return {
       ...a, key: camel(a.label), status, providedFiles,
       source: status === 'have' ? providedNote : status === 'temporary' ? 'curated-placeholder' : status === 'create' && a.asset === 'video' ? 'image-to-video' : SOURCE[a.asset],
@@ -200,6 +274,17 @@ function videoPrompt(spec: RecipeSpec): string {
 function buildCreationPaths(spec: RecipeSpec, reqs: AssetRequirement[]): AssetCreationPath[] {
   const missing = new Set(reqs.filter((r) => r.level === 'required' && r.status !== 'have').map((r) => r.asset))
   const paths: AssetCreationPath[] = []
+  const smallVideo = spec.uploads?.find((u) => u.asset === 'video' && u.width && u.width < 1920)
+  if (smallVideo) paths.push({
+    asset: 'video', title: 'Sharpen your video for free',
+    steps: [
+      `Your video is ${smallVideo.width}×${smallVideo.height}. A full-screen hero is stretched ~${(1920 / smallVideo.width!).toFixed(1)}× on a laptop and more on large screens, which is what makes it look soft.`,
+      'Best: export the original again at 1920 px or wider (or 4K) from your camera or AI tool. Many tools offer this at no extra cost.',
+      'Otherwise upscale it free on your own computer: install ffmpeg, download Real-ESRGAN, then run bash scripts/prepare-video.sh original.mp4 --upscale footage (people, fabric, real scenes) or --upscale cgi (product, 3D, liquid, animation — much faster).',
+      'Always start from the original file, never from a copy already compressed for the web.',
+    ],
+    tools: ['real-esrgan', 'ffmpeg'],
+  })
   if (missing.has('video')) {
     paths.push({
       asset: 'video', title: 'Turn an image into your hero video',
@@ -252,6 +337,8 @@ function pickResources(spec: RecipeSpec, textured: boolean): string[] {
   if (spec.motion === 'dynamic' || spec.motion === 'immersive') ids.push('gsap')
   if (spec.motion === 'immersive') ids.push('lenis')
   if (textured) ids.push('texturelabs', 'ambientcg')
+  const imagery = imageryPlan(spec)
+  if (imagery) ids.push(...imagery.presentation.resources)
   const known = new Set(resources.map((r) => r.id))
   return uniq(ids).filter((id) => known.has(id))
 }
@@ -263,7 +350,7 @@ function filmStory(spec: RecipeSpec, hero: HeroPattern): string[] | undefined {
   const sells = ['ecommerce', 'product', 'fashion'].includes(spec.purpose)
   return [
     `Scroll controls time: map ${range} to the full video timeline (0 → duration). Slow scroll moves the film slowly, fast scroll moves it fast, scrolling up plays it backward. Never autoplay the sequence.`,
-    'Keep it tightly connected: scrub ≈ 0.5 with smooth scroll, and an all-intra (or GOP ≤ 5) encode so seeking never stutters.',
+    'Keep it tightly connected: scrub ≈ 0.5 with smooth scroll, and the scroll encode from scripts/prepare-video.sh (keyframe every 6 frames) so seeking never stutters.',
     'Before coding, watch the video and write a scene map in src/config/scenes.ts: every meaningful moment (a new subject, a pause, a zoom, a change of light) with its start and end as a fraction of the timeline, and the message that belongs to it.',
     'One message per scene, about what is on screen right now. It arrives as its scene begins, holds while the scene plays, and leaves before the next scene’s message arrives — never two at once, never at arbitrary scroll points.',
     ...(sells ? ['This site sells: when the camera pauses or zooms on a product, that scene’s message names the product, adds one line about it and its price, with a quiet link to its product page.'] : []),
@@ -344,6 +431,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const patterns = motionPatterns.filter((p) => p.levels.includes(spec.motion) && (!p.leads || p.leads.includes(spec.lead)))
   const techs = uniq(patterns.map((p) => p.tech))
   const assetRequirements = buildAssets(spec, hero)
+  const imagery = imageryPlan(spec)
 
   const resolveSection = (sid: SectionId) => {
     const base = sections[sid]
@@ -391,7 +479,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     chrome,
     pages,
     components: componentIds.map((c) => c === 'Hero' ? { ...components.Hero, anatomy: hero.composition, behavior: hero.behavior } : components[c]),
-    media: { ...lead, hero, storytelling: filmStory(spec, hero) },
+    media: { ...lead, hero, storytelling: filmStory(spec, hero), imagery },
     motion: { level: motion, principle: motion.principle, patterns, libraries: techs.map((t) => TECH_LABEL[t]) },
     signatures: pickSignatures(spec, hero, pages),
     contentDirection: {
@@ -427,6 +515,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
         'Build the asset config layer (config/assets.ts) and <MediaAsset/> so every media reference is replaceable.',
         `Build static layout for all ${pages.length} pages (${pages.flatMap((p) => p.sections).length} sections plus navbar and footer) with real copy — no motion yet.`,
         `Build the hero: ${hero.name}.`,
+        ...(imagery ? [`Build the photo layout: ${imagery.presentation.name} (see Media → Photos).`] : []),
         'Make every section responsive (mobile first, then tablet and desktop).',
         spec.motion === 'still' ? 'Add state feedback (hover/focus) only.' : `Add motion in order of importance: ${patterns.filter((p) => p.id !== 'state-feedback').map((p) => p.name).join(', ')}.`,
         'Add reduced-motion variants, then run the visual QA checklist against this recipe.',

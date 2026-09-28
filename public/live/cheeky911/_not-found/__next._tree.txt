@@ -1,0 +1,2 @@
+:HL["/live/cheeky911/_next/static/chunks/0w9n_g18wrz3l.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"cR-6byJxedb8po7pKzrf1"}

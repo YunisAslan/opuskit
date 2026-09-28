@@ -18,12 +18,12 @@ const img = (src: string, alt: string, usage: string, width = 1000, height = 125
   ({ src, alt, status, usage, kind: "image", width, height })
 
 export const assets = {
-  heroVideo: { src: "/media/heroVideo.mp4", poster: "/media/posterImage.webp", alt: "", status: "have", kind: "video", width: 1280, height: 960, usage: "Hero loop, played on request under reduced motion" },
-  scrubReadyEncode: { src: "/media/scrubReadyEncode.mp4", poster: "/media/posterImage.webp", alt: "", status: "have", kind: "video", width: 1280, height: 960, usage: "Scroll-controlled hero (GOP 4, H.264, 5.3MB)" },
-  mobileVideoEncode: { src: "/media/mobileVideoEncode.mp4", poster: "/media/posterMobile.webp", alt: "", status: "temporary", kind: "video", width: 720, height: 1280, usage: "Hero on small screens (9:16 centre crop of the hero)" },
+  heroVideo: { src: "/media/heroVideo.mp4", poster: "/media/posterImage.webp", alt: "", status: "have", kind: "video", width: 1920, height: 1440, usage: "Hero loop, played on request under reduced motion" },
+  scrubReadyEncode: { src: "/media/scrubReadyEncode.mp4", poster: "/media/posterImage.webp", alt: "", status: "have", kind: "video", width: 1920, height: 1440, usage: "Scroll-controlled hero (GOP 4, H.264, 5.3MB)" },
+  mobileVideoEncode: { src: "/media/mobileVideoEncode.mp4", poster: "/media/posterMobile.webp", alt: "", status: "temporary", kind: "video", width: 1080, height: 1920, usage: "Hero on small screens (9:16 centre crop of the hero)" },
   secondaryVideo: { src: "/media/secondaryVideo.mp4", poster: "/media/collection-wide.webp", alt: "", status: "temporary", kind: "video", width: 1280, height: 960, usage: "404 loop (cut from the hero)" },
-  posterImage: img("/media/posterImage.webp", "", "Shown before video loads and on reduced motion", 1280, 960, "have"),
-  posterMobile: img("/media/posterMobile.webp", "", "Mobile hero poster", 720, 1280, "have"),
+  posterImage: img("/media/posterImage.webp", "", "Shown before video loads and on reduced motion", 1920, 1440, "have"),
+  posterMobile: img("/media/posterMobile.webp", "", "Mobile hero poster", 1080, 1920, "have"),
 
   collectionWide: img("/media/collection-wide.webp", "A figure in grey fleece lies flat on a city crosswalk, bag and drink scattered", "Home collection, desktop", 1600, 900),
   collectionTall: img("/media/collection-tall.webp", "A figure in grey fleece lies flat on a city crosswalk", "Home collection, mobile"),

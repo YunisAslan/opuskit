@@ -48,6 +48,13 @@ export const recipeSections = {
   media: (r: UniversalRecipe) => {
     const m = r.media
     return `## Media Direction — ${m.name}\n\n${m.direction}\n\n### Treatment\n${list(m.treatment)}\n\n**Formats:** ${m.formats}\n\n### Hero — ${m.hero.name}\n- **Composition:** ${m.hero.composition}\n- **Behavior:** ${m.hero.behavior}\n- **Responsive:** ${m.hero.responsive}\n- **Requires:** ${m.hero.requires.join('; ')}\n- **Fallback:** ${m.hero.fallback}` + (m.storytelling ? `\n\n### Scroll storytelling\n\nscroll → film moves → scene changes → its message arrives → it leaves → next scene. One coordinated timeline.\n\n${list(m.storytelling)}` : '')
+      + (m.imagery ? (() => {
+        const i = m.imagery, x = i.presentation
+        return `\n\n### Photos — ${x.name}\n\n${x.line} ${i.photos ? `${i.photos} photos supplied (${i.orientation}), in /media — keep their order.` : `Suits ${x.ideal}.`}${i.recommended === x.id ? ` Chosen because: ${i.why}.` : ' Chosen by the owner.'}`
+          + (i.note ? `\n\n**Owner’s request (follow it):** “${i.note}”` : '')
+          + `\n- **Composition:** ${x.composition}\n- **Behavior:** ${x.behavior}\n- **Responsive:** ${x.responsive}\n- **Where:** every gallery, lookbook, featured-work or story section; supporting images elsewhere come from the same set.`
+          + (x.components.length ? `\n- **Start from:** ${x.components.map((c) => `[${c.name}](${c.url})`).join(', ')} — restyle to this recipe’s tokens and type; never ship a component’s demo look.` : '')
+      })() : '')
   },
 
   motion: (r: UniversalRecipe) =>

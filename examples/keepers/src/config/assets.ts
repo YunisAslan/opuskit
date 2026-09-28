@@ -6,13 +6,13 @@ type Status = 'have' | 'temporary'
 type Asset = { src: string; alt: string; status: Status; usage: string; width?: number; height?: number; kind: 'video' | 'image' }
 
 export const assets = {
-  heroVideo: { kind: 'video', src: "/media/heroVideo.mp4", alt: '', status: 'have', usage: "Hero (loop or scroll-controlled)", width: 864, height: 496 },
-  // All-intra re-encode of heroVideo (ffmpeg -g 1 -crf 26 -an) so seeking never stutters.
-  scrubReadyEncode: { kind: 'video', src: "/media/scrubReadyEncode.mp4", alt: '', status: 'have', usage: "Scroll-controlled page background", width: 864, height: 496 },
-  // 9:16 centre crop of heroVideo (GOP 2, 2.7MB). Replace with a native vertical shoot when available.
-  mobileVideoEncode: { kind: 'video', src: "/media/mobileVideoEncode.mp4", alt: '', status: 'have', usage: "Hero on small screens", width: 540, height: 960 },
+  heroVideo: { kind: 'video', src: "/media/heroVideo.mp4", alt: '', status: 'have', usage: "Hero (loop or scroll-controlled)", width: 1728, height: 992 },
+  // From the original: free 2× Real-ESRGAN upscale (864→1728), then CRF 20 with a keyframe every 6 frames — instant seeking, sharp frames.
+  scrubReadyEncode: { kind: 'video', src: "/media/scrubReadyEncode.mp4", alt: '', status: 'have', usage: "Scroll-controlled page background", width: 1728, height: 992 },
+  // 9:16 centre crop of the upscaled master (CRF 22, keyframe every 6). Replace with a native vertical shoot when available.
+  mobileVideoEncode: { kind: 'video', src: "/media/mobileVideoEncode.mp4", alt: '', status: 'have', usage: "Hero on small screens", width: 558, height: 992 },
   posterImage: { kind: 'image', src: "/media/posterImage.jpg", alt: 'A Keepers citrus coffee soda can among splashing orange halves on black', status: 'have', usage: "Shown before video loads and on reduced motion", width: 1728, height: 992 },
-  posterMobile: { kind: 'image', src: "/media/posterMobile.jpg", alt: 'A Keepers citrus coffee soda can among splashing orange halves on black', status: 'have', usage: "Mobile poster", width: 540, height: 960 },
+  posterMobile: { kind: 'image', src: "/media/posterMobile.jpg", alt: 'A Keepers citrus coffee soda can among splashing orange halves on black', status: 'have', usage: "Mobile poster", width: 1080, height: 1920 },
 
   // Supporting images — stills taken from the hero film, so the grade matches exactly.
   ingredients: { kind: 'image', src: "/media/ingredients.jpg", alt: 'Lemon slices, green coffee beans and ice cubes falling through the air', status: 'have', usage: "Features: ingredients", width: 1728, height: 992 },

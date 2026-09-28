@@ -48,6 +48,23 @@ export type HeroId =
 export type AssetId =
   | 'logo' | 'images' | 'video' | 'product-photos' | 'illustrations' | '3d' | 'fonts' | 'copy'
 
+/** How a set of photos is laid out on the site (see data/patterns.ts → imagePresentations). */
+export type ImagePresentationId =
+  | 'single-feature' | 'editorial-sequence' | 'lookbook-spreads' | 'masonry-gallery' | 'uniform-grid' | 'hover-reveal'
+  | 'horizontal-rail' | 'swipe-carousel' | 'marquee-rows' | 'tilted-grid' | 'card-stack'
+  | 'infinite-canvas' | 'ring-3d' | 'dome-gallery' | 'liquid-glass'
+/** calm = static layouts · moving = scroll/drag motion · immersive = WebGL/3D, the photos become the experience. */
+export type ImagePresentationGroup = 'calm' | 'moving' | 'immersive'
+export type ImagePresentation = {
+  id: ImagePresentationId; group: ImagePresentationGroup; name: string; line: string; ideal: string
+  composition: string; behavior: string; responsive: string
+  /** Ready-made components to start from (copy-paste / shadcn registry) — adapt to the recipe's tokens, never ship their demo styling. */
+  components: { name: string; url: string }[]
+  resources: string[]
+}
+/** The photo plan the engine resolved: the user's choice, or the recommendation from their photos and brief. */
+export type ImageryPlan = { presentation: ImagePresentation; photos: number; orientation: string; recommended: ImagePresentationId; why: string; note?: string }
+
 /** How the user wants to solve missing lead media. */
 export type MediaPlan = 'have' | 'image-to-video' | 'temporary' | 'image-alternative'
 
@@ -328,7 +345,7 @@ export type UploadedAsset = {
 export type PageSpec = { id: string; type: PageTypeId; label: string; purpose: string; sections: SectionId[] }
 
 /** The project in the user's own words. Everything optional: a recipe without a brief still composes. */
-export type Brief = { name?: string; offer?: string; goal?: GoalId }
+export type Brief = { name?: string; offer?: string; goal?: GoalId; /** Anything the user wants done with their photos, in their words. */ photos?: string }
 
 /** Everything a Recipe is composed from. Small, serializable, stable under Remix. */
 export type RecipeSpec = {
@@ -347,6 +364,7 @@ export type RecipeSpec = {
   assets: AssetId[]
   uploads?: UploadedAsset[]
   mediaPlan?: MediaPlan
+  imagePresentation?: ImagePresentationId
   pages: PageSpec[]
   target: BuildTargetId
 }
@@ -389,7 +407,7 @@ export type PageSection = SectionPattern & { note?: string }
 export type PageBlueprint = { id: string; type: PageTypeId; label: string; purpose: string; sections: PageSection[] }
 
 /** `storytelling`: for scroll-controlled film heroes, how video and text become one scroll timeline. */
-export type MediaRecipe = MediaPattern & { hero: HeroPattern; storytelling?: string[] }
+export type MediaRecipe = MediaPattern & { hero: HeroPattern; storytelling?: string[]; imagery?: ImageryPlan }
 
 export type MotionRecipe = { level: MotionLevelInfo; principle: string; patterns: MotionPattern[]; libraries: string[] }
 

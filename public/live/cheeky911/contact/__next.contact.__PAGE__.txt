@@ -1,0 +1,20 @@
+1:"$Sreact.fragment"
+2:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"OutletBoundary"]
+3:"$Sreact.suspense"
+7:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"ViewportBoundary"]
+8:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"MetadataBoundary"]
+9:I[27201,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"IconMark"]
+b:I[39756,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"default"]
+c:I[37457,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"default"]
+6:X
+e:X
+e:C
+0:{"buildId":"cR-6byJxedb8po7pKzrf1","data":[{"rsc":["$","$1","c",{"children":[["$","section",null,{"aria-labelledby":"contact-title","className":"mx-auto flex min-h-svh max-w-[1200px] flex-col justify-end px-6 pb-32 pt-40 md:pb-40","children":[["$","h1",null,{"id":"contact-title","data-reveal":"lines","className":"type-display","children":[["$","span","0",{"className":"line stretch-narrow","children":["$","span",null,{"children":"Come and"}]}],["$","span","1",{"className":"line stretch-wide","children":["$","span",null,{"children":"see one"}]}],["$","span","2",{"className":"line stretch-mid","children":["$","span",null,{"children":"in person"}]}]]}],["$","div",null,{"data-reveal":"rise","className":"mt-12 grid gap-8 md:grid-cols-12 md:gap-6","children":[["$","p",null,{"className":"type-body text-muted md:col-span-5","children":"Viewings are by appointment, most evenings and all day Saturday. Tell us which car, and we will send a time and the address of the garage."}],["$","div",null,{"className":"md:col-span-6 md:col-start-7","children":[["$","a",null,{"href":"mailto:hello@cheeky911.com","className":"text-link type-heading inline-flex min-h-16 items-center break-all","children":"hello@cheeky911.com"}],["$","p",null,{"className":"type-utility mt-2 text-muted","children":"We answer within two working days."}]]}]]}]]}],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"isPartial":"$@5","staleTime":"$6","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$L7",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#4A1119"}]]}],["$","div",null,{"hidden":true,"children":["$","$L8",null,{"children":["$","$3",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Contact | CHEEKY"}],["$","meta","1",{"name":"description","content":"Porsche 911s, filmed and shown like a collection. Selected cars, one season at a time."}],["$","link","2",{"rel":"icon","href":"/live/cheeky911/icon.svg?icon.0npr9q6v6zksx.svg","sizes":"any","type":"image/svg+xml"}],["$","$L9","3",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":"$@a","staleTime":"$6","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Lb",null,{"parallelRouterKey":"children","template":["$","$Lc",null,{}]}]]}],"isPartial":"$@d","staleTime":"$6","varyParams":"$e"}],"isUpgradeableISRFallback":false,"a":"$@f","rootVaryParams":null,"needsRuntimeRequest":"$@10"}
+4:null
+10:true
+6:300
+6:C
+f:0
+a:"$undefined"
+d:"$undefined"
+5:"$undefined"

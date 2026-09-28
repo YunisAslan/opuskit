@@ -187,6 +187,24 @@ export function RecipeDocument({ recipe, recipeRef, onRemix }: { recipe: Univers
                 <List title="Treatment" items={r.media.treatment} />
                 <p className="mt-4 text-sm text-muted">Formats: {r.media.formats}</p>
               </div>
+              {r.media.imagery && (
+                <div>
+                  <h3 className="font-medium">Photos: {r.media.imagery.presentation.name}</h3>
+                  <p className="mt-1 text-sm text-muted">
+                    {r.media.imagery.photos ? `${r.media.imagery.photos} photos, ${r.media.imagery.orientation}` : `Suits ${r.media.imagery.presentation.ideal}`}
+                    {r.media.imagery.recommended === r.media.imagery.presentation.id ? ` · ${r.media.imagery.why}` : ' · your choice'}
+                  </p>
+                  {r.media.imagery.note && <p className="mt-2 text-sm">Your request: “{r.media.imagery.note}”</p>}
+                  <dl className="mt-3 space-y-3 text-sm">
+                    {([['Composition', r.media.imagery.presentation.composition], ['Behavior', r.media.imagery.presentation.behavior], ['Mobile', r.media.imagery.presentation.responsive]] as const).map(([k, v]) => <div key={k}><dt className="text-muted">{k}</dt><dd>{v}</dd></div>)}
+                  </dl>
+                  {r.media.imagery.presentation.components.length > 0 && (
+                    <p className="mt-3 text-sm"><span className="text-muted">Start from: </span>
+                      {r.media.imagery.presentation.components.map((c, i) => <span key={c.url}>{i > 0 && ', '}<a href={c.url} target="_blank" rel="noreferrer" className="link">{c.name}</a></span>)}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </Section>
 

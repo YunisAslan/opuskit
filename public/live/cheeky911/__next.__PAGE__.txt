@@ -1,0 +1,18 @@
+1:"$Sreact.fragment"
+2:I[32177,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js","/live/cheeky911/_next/static/chunks/3x2d62so2-jf0.js"],"default"]
+3:I[69416,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js","/live/cheeky911/_next/static/chunks/3x2d62so2-jf0.js"],"default"]
+4:I[22016,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js","/live/cheeky911/_next/static/chunks/3x2d62so2-jf0.js"],""]
+5:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"OutletBoundary"]
+6:"$Sreact.suspense"
+a:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"ViewportBoundary"]
+b:I[97367,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"MetadataBoundary"]
+c:I[27201,["/live/cheeky911/_next/static/chunks/3hk53zz4hci8u.js"],"IconMark"]
+9:X
+0:{"buildId":"cR-6byJxedb8po7pKzrf1","data":[{"rsc":["$","$1","c",{"children":[[["$","$L2",null,{}],["$","div",null,{"className":"mx-auto max-w-[800px] px-6 py-32 text-center md:py-40","children":[["$","p",null,{"className":"type-utility mb-6 text-muted","children":"After the film"}],["$","h2",null,{"data-reveal":"lines","className":"type-display [font-size:clamp(2.5rem,7vw,6rem)]","children":[["$","span","0",{"className":"line stretch-wide","children":["$","span",null,{"children":"Ten cars,"}]}],["$","span","1",{"className":"line stretch-narrow","children":["$","span",null,{"children":"one season"}]}]]}],["$","div",null,{"data-reveal":"rise","className":"type-body mx-auto mt-8 max-w-[52ch] text-muted","children":["$","div",null,{"children":["$","p",null,{"children":"We find 911s worth keeping, photograph them where they live, and show them the way a house shows a collection. Each one is for sale, and each one comes with its story."}]}]}]]}],["$","$L3",null,{"rows":3,"label":"Photographs of the ten cars"}],["$","div",null,{"className":"py-32 text-center","children":["$","$L4",null,{"href":"/collections","className":"text-link type-heading inline-flex min-h-11 items-center","children":"See the work"}]}]],[["$","script","script-0",{"src":"/live/cheeky911/_next/static/chunks/3x2d62so2-jf0.js","async":true}]],["$","$L5",null,{"children":["$","$6",null,{"name":"Next.MetadataOutlet","children":"$@7"}]}]]}],"isPartial":"$@8","staleTime":"$9","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$La",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#4A1119"}]]}],["$","div",null,{"hidden":true,"children":["$","$Lb",null,{"children":["$","$6",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"CHEEKY, a fashion house for the 911"}],["$","meta","1",{"name":"description","content":"Porsche 911s, filmed and shown like a collection. Selected cars, one season at a time."}],["$","link","2",{"rel":"icon","href":"/live/cheeky911/icon.svg?icon.0npr9q6v6zksx.svg","sizes":"any","type":"image/svg+xml"}],["$","$Lc","3",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":"$@d","staleTime":"$9","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@e","rootVaryParams":null,"needsRuntimeRequest":"$@f"}
+7:null
+f:true
+9:300
+9:C
+e:0
+d:"$undefined"
+8:"$undefined"

@@ -1,5 +1,5 @@
 import type {
-  ComponentId, ComponentPattern, HeroId, HeroPattern, InspirationSource, LeadId, MediaPattern, MotionPattern, PageType, PageTypeId,
+  ComponentId, ComponentPattern, HeroId, HeroPattern, ImagePresentation, ImagePresentationId, InspirationSource, LeadId, MediaPattern, MotionPattern, PageType, PageTypeId,
   SectionId, SectionPattern, SignaturePattern,
 } from '@/types/domain'
 
@@ -31,9 +31,9 @@ export const heroes: Record<HeroId, HeroPattern> = {
   'scroll-video': {
     id: 'scroll-video', name: 'Scroll-controlled video', leads: ['video'], motion: ['immersive'],
     composition: 'A pinned 100svh stage; the video\'s playhead is mapped to scroll progress over ~300vh. Type appears at chapter points.',
-    behavior: 'GSAP ScrollTrigger pins the section and scrubs video.currentTime (scrub: 0.5). Encode with a keyframe every frame (or short GOP) so seeking is smooth.',
+    behavior: 'GSAP ScrollTrigger pins the section and scrubs video.currentTime (scrub: 0.5). Encode with scripts/prepare-video.sh (CRF 20, keyframe every 6 frames) so seeking is instant and frames stay sharp.',
     responsive: 'Mobile: shorter scroll distance (~180vh), 9:16 encode, or fall back to an autoplaying loop + poster if seeking is janky on low-end devices.',
-    requires: ['1 hero video (5–8s, single continuous camera move, all-intra or GOP ≤ 5)', '1 poster image', 'Mobile 9:16 encode (recommended)'],
+    requires: ['1 hero video (5–8s, single continuous camera move, ≥ 1920 px wide, the original export — not a web copy)', '1 poster image', 'Mobile 9:16 encode (recommended)'],
     fallback: 'Image sequence scrub from a still (subtle zoom + crossfade), or switch to the image-led variant.',
     forcesLayout: 'full-bleed',
   },
@@ -42,7 +42,7 @@ export const heroes: Record<HeroId, HeroPattern> = {
     composition: 'A fixed 100svh video layer behind the entire page; the playhead is mapped to total page scroll (0 → 100%). Every section scrolls over it on transparent or semi-opaque surfaces, so the film is always visible.',
     behavior: 'GSAP ScrollTrigger (trigger: document, start "top top", end "bottom bottom", scrub: 0.5) drives video.currentTime. Sections use the surface color at 70–90% opacity for text legibility; key moments in the film line up with section boundaries.',
     responsive: 'Mobile: 9:16 encode; if seeking is janky on low-end devices, freeze on the poster and crossfade between 3–5 stills per section.',
-    requires: ['1 long video (15–30s, one continuous camera move that can carry the whole page, all-intra or GOP ≤ 5)', '1 poster image', 'Mobile 9:16 encode (recommended)'],
+    requires: ['1 long video (15–30s, one continuous camera move that can carry the whole page, ≥ 1920 px wide, the original export — not a web copy)', '1 poster image', 'Mobile 9:16 encode (recommended)'],
     fallback: 'Fixed poster image with a crossfade between stills at each section, or switch to the opening-scene variant.',
     forcesLayout: 'full-bleed',
   },
@@ -222,7 +222,7 @@ export const motionPatterns: MotionPattern[] = [
     id: 'video-scrub', name: 'Scroll-scrubbed video', levels: ['immersive'], leads: ['video'],
     purpose: 'Let the visitor control time — scroll moves the camera through the scene.',
     trigger: 'Pinned hero section scroll progress', behavior: 'video.currentTime = progress × duration, smoothed (scrub 0.5).',
-    duration: 'Scroll-linked over ~300vh', easing: 'linear scrub', implementation: 'GSAP ScrollTrigger onUpdate → currentTime; encode with short GOP (ffmpeg -g 1 or ≤ 5) for smooth seeking.', tech: 'gsap',
+    duration: 'Scroll-linked over ~300vh', easing: 'linear scrub', implementation: 'GSAP ScrollTrigger onUpdate → currentTime; encode with scripts/prepare-video.sh (CRF 20, keyframe every 6 frames) from the original file — re-compressing a web copy is what makes scrubbed video look soft.', tech: 'gsap',
     performance: 'Preload metadata + first chunk; use requestVideoFrameCallback where supported; mobile encode ≤ 3MB.', reducedMotion: 'Show poster image; play video only on user request.',
   },
   {
@@ -261,6 +261,128 @@ export const motionPatterns: MotionPattern[] = [
     performance: 'Keep transitions short; never block navigation on animation.', reducedMotion: 'Instant navigation.',
   },
 ]
+
+/** Ways to show a set of photos, by approach. The engine recommends one from the site, the photos and the owner's note; the user can override it. */
+const CY = 'https://componentry.dev/docs/components/'
+const RB = 'https://reactbits.dev/components/'
+const AC = 'https://ui.aceternity.com/components/'
+export const imagePresentations: Record<ImagePresentationId, ImagePresentation> = {
+  // ── calm ──
+  'single-feature': {
+    id: 'single-feature', group: 'calm', name: 'Full-bleed moments', line: 'Each photo gets a whole section to itself, edge to edge.', ideal: '1–4 strong photos',
+    composition: 'Full-bleed or near-full-bleed frame at 3:2 (landscape) or 4:5 (portrait), one short caption in the utility face; never grouped with other images.',
+    behavior: 'Slow reveal (clip or fade) once, on entering the viewport; no carousel, no lightbox.',
+    responsive: 'Keeps its own crop on mobile: set a focal point so the subject stays in frame at 4:5.',
+    components: [], resources: [],
+  },
+  'editorial-sequence': {
+    id: 'editorial-sequence', group: 'calm', name: 'Photo story', line: 'Photos alternate with short text, like a magazine feature.', ideal: '3–8 photos',
+    composition: 'Photo / text pairs that alternate sides on a 12-column grid; vary widths (7/5, then 5/7, then one full-bleed) so the rhythm never repeats twice in a row.',
+    behavior: 'Each pair reveals together; the photo may drift slightly slower than the text (≤ 8% parallax).',
+    responsive: 'Stacks to photo-then-text; every photo full width; keep the original order.',
+    components: [], resources: [],
+  },
+  'lookbook-spreads': {
+    id: 'lookbook-spreads', group: 'calm', name: 'Lookbook spreads', line: 'Portrait photos in pairs, like the open pages of a magazine.', ideal: '4–12 portrait photos',
+    composition: 'Two-up spreads of portrait (4:5 or 2:3) photos, one pair per screen; every third spread breaks the pattern with a single full-height photo and a line of text.',
+    behavior: 'Each spread reveals as a pair; optional curtain reveal on the first.',
+    responsive: 'One photo per screen on mobile, keeping the pair order.',
+    components: [], resources: [],
+  },
+  'masonry-gallery': {
+    id: 'masonry-gallery', group: 'calm', name: 'Gallery wall', line: 'A mixed-size grid that keeps every photo’s real shape; tap one to open it large.', ideal: '7+ photos, mixed shapes',
+    composition: 'Masonry columns (3 desktop, 2 tablet) using each photo’s native ratio — no forced crops; gutters from the spacing scale; one or two photos span two columns to break the grid.',
+    behavior: 'Staggered reveal (40–60 ms per item); click opens an accessible lightbox with arrow keys, Esc and swipe.',
+    responsive: 'Two columns on mobile down to 360 px, then one; the lightbox swipes.',
+    components: [{ name: 'React Bits — Masonry', url: `${RB}masonry` }, { name: 'PhotoSwipe (lightbox)', url: 'https://photoswipe.com' }],
+    resources: ['react-bits', 'photoswipe'],
+  },
+  'uniform-grid': {
+    id: 'uniform-grid', group: 'calm', name: 'Even grid', line: 'Same-size tiles in tidy rows — easy to compare side by side.', ideal: '6+ photos',
+    composition: 'Even grid (4 / 3 / 2 columns) with one fixed ratio for every tile (4:5 for products and people, 3:2 for places); caption below each tile.',
+    behavior: 'Hover: subtle image scale (1.03) or a second photo; the hovered tile stays sharp while the others dim slightly (focus cards).',
+    responsive: '2 columns on mobile; never 1 unless the photos are the product itself.',
+    components: [{ name: 'Aceternity — Focus Cards', url: `${AC}focus-cards` }], resources: ['aceternity-ui'],
+  },
+  'hover-reveal': {
+    id: 'hover-reveal', group: 'calm', name: 'Names that reveal photos', line: 'A clean list of titles; hovering one shows its photo beside the cursor.', ideal: '5–20 projects or items',
+    composition: 'Full-width list of titles in the display face with year/category in the utility face; the photo appears in a fixed-size frame (4:5) that follows the cursor or sits in a side column.',
+    behavior: 'Photo fades and scales in (200–300 ms) on hover/focus, follows the pointer with light lag; keyboard focus shows it too.',
+    responsive: 'Touch has no hover: show each photo as a small thumbnail at the start of its row.',
+    components: [{ name: 'Codrops — hover reveal demos', url: 'https://tympanus.net/codrops/?s=hover+reveal' }], resources: ['codrops'],
+  },
+  // ── moving ──
+  'horizontal-rail': {
+    id: 'horizontal-rail', group: 'moving', name: 'Sideways strip', line: 'A row of large photos that moves sideways as visitors scroll down.', ideal: '4–10 photos, mostly landscape',
+    composition: 'One row of large photos at a shared height (60–70 vh), native widths, generous gutters; a small counter (01 / 08) in the utility face.',
+    behavior: 'Desktop: pinned section, vertical scroll translates the row horizontally (GSAP ScrollTrigger or CSS scroll-driven animation). Reduced motion: native horizontal scroll with snap.',
+    responsive: 'Mobile: native swipe carousel with scroll-snap — no pinning.',
+    components: [], resources: ['gsap'],
+  },
+  'swipe-carousel': {
+    id: 'swipe-carousel', group: 'moving', name: 'Swipe carousel', line: 'Large cards you drag or swipe through, the next one peeking in.', ideal: '4–12 photos',
+    composition: 'Cards at 80% of the container width (35% on desktop), the next card peeking; arrows and a progress bar in the utility face; captions on the card.',
+    behavior: 'Drag, swipe, trackpad and arrow keys; momentum with snap; tapping a card can expand it (Apple-style cards).',
+    responsive: 'Same component; one card + peek on mobile. Respect prefers-reduced-motion by removing momentum, not the carousel.',
+    components: [{ name: 'Embla Carousel', url: 'https://www.embla-carousel.com' }, { name: 'Aceternity — Apple Cards Carousel', url: `${AC}apple-cards-carousel` }],
+    resources: ['embla-carousel', 'aceternity-ui'],
+  },
+  'marquee-rows': {
+    id: 'marquee-rows', group: 'moving', name: 'Endless rows', line: 'Rows of photos drifting endlessly in opposite directions.', ideal: '10+ photos (they repeat)',
+    composition: '2–3 rows of same-height photos; alternate rows run opposite ways; rows may tilt slightly in 3D for depth.',
+    behavior: 'Continuous CSS/transform loop (duplicated track), slows on hover, pauses when off-screen; reduced motion shows a static grid.',
+    responsive: 'One or two rows on mobile, smaller photos, same speed in px/s.',
+    components: [{ name: 'Magic UI — Marquee', url: 'https://magicui.design/docs/components/marquee' }, { name: 'Aceternity — 3D Marquee', url: `${AC}3d-marquee` }, { name: 'Motion Primitives — Infinite Slider', url: 'https://motion-primitives.com/docs/infinite-slider' }],
+    resources: ['magic-ui', 'aceternity-ui', 'motion-primitives'],
+  },
+  'tilted-grid': {
+    id: 'tilted-grid', group: 'moving', name: 'Tilted scroll grid', line: 'A grid that tilts and flattens in 3D as visitors scroll through it.', ideal: '9+ photos',
+    composition: 'Dense grid (4–6 columns) set in perspective; columns offset vertically; one headline floats above it.',
+    behavior: 'Scroll drives rotateX / translateZ from tilted to flat (or columns moving at different speeds, parallax-scroll style).',
+    responsive: 'Mobile: 2–3 columns, milder tilt; reduced motion keeps it flat.',
+    components: [{ name: 'Componentry — Scroll Tilted Grid', url: `${CY}scroll-tilted-grid` }, { name: 'Aceternity — Parallax Scroll', url: `${AC}parallax-scroll` }],
+    resources: ['componentry', 'aceternity-ui'],
+  },
+  'card-stack': {
+    id: 'card-stack', group: 'moving', name: 'Card stack', line: 'Photos stacked like prints; flick the top one away to see the next.', ideal: '3–10 photos',
+    composition: 'A stack of 4:5 cards with slight random rotation (±4°) in the centre of a calm section, a caption beside it.',
+    behavior: 'Drag or click the top card to send it to the back; springy physics; keyboard: arrows cycle.',
+    responsive: 'Works as-is on touch — a good mobile answer when a grid would be too small.',
+    components: [{ name: 'React Bits — Stack', url: `${RB}stack` }, { name: 'Componentry — Orbit Card Stack', url: `${CY}orbit-card-stack` }],
+    resources: ['react-bits', 'componentry'],
+  },
+  // ── immersive ──
+  'infinite-canvas': {
+    id: 'infinite-canvas', group: 'immersive', name: 'Endless canvas', line: 'A field of photos visitors drag around in every direction, forever.', ideal: '12+ photos (they repeat)',
+    composition: 'Photos placed on an infinite 2D field (wrapping tiles), varied sizes; optional fisheye distortion near the edges; a small “drag to explore” hint.',
+    behavior: 'Drag / wheel / trackpad pans with inertia; clicking a photo zooms it to a focused view with its caption.',
+    responsive: 'Touch pans natively; offer a plain grid link for visitors who prefer it; reduced motion = static grid.',
+    components: [{ name: 'Componentry — Infinite Image Field', url: `${CY}infinite-image-field` }, { name: 'Componentry — Fisheye Infinite Grid', url: `${CY}fisheye-infinite-grid` }, { name: 'React Bits — Infinite Menu', url: `${RB}infinite-menu` }],
+    resources: ['componentry', 'react-bits'],
+  },
+  'ring-3d': {
+    id: 'ring-3d', group: 'immersive', name: '3D photo ring', line: 'Photos arranged in a ring or spiral that turns as visitors scroll or drag.', ideal: '6–16 photos',
+    composition: 'Photos on a circular or spiral path in 3D (WebGL or CSS 3D), the front one largest and sharpest; caption for the front photo only.',
+    behavior: 'Scroll or drag rotates the ring with easing; the front photo snaps to centre; bend/curve shader optional.',
+    responsive: 'Fewer, larger photos on mobile; reduced motion = swipe carousel.',
+    components: [{ name: 'React Bits — Circular Gallery', url: `${RB}circular-gallery` }, { name: 'Componentry — Wheel Carousel', url: `${CY}wheel-carousel` }, { name: 'Componentry — Spiral 3D Slider', url: `${CY}spiral-3d-slider` }, { name: 'React Bits — Flying Posters', url: `${RB}flying-posters` }],
+    resources: ['react-bits', 'componentry'],
+  },
+  'dome-gallery': {
+    id: 'dome-gallery', group: 'immersive', name: 'Photo dome', line: 'Visitors stand inside a sphere of photos and turn to look around.', ideal: '15+ photos (they repeat)',
+    composition: 'Photos mapped on the inside of a sphere, uniform tile size, background in the palette ground.',
+    behavior: 'Drag rotates the dome with inertia; clicking a photo flies it forward into a focused view.',
+    responsive: 'Touch drag works; smaller tile count on mobile; reduced motion = masonry gallery.',
+    components: [{ name: 'React Bits — Dome Gallery', url: `${RB}dome-gallery` }], resources: ['react-bits'],
+  },
+  'liquid-glass': {
+    id: 'liquid-glass', group: 'immersive', name: 'Liquid glass carousel', line: 'An endless strip of photos seen through a moving glass lens that bends light.', ideal: '6+ photos',
+    composition: 'Infinite horizontal strip of photos with a WebGL glass lens (refraction + chromatic rim) over the centre item; calm type around it.',
+    behavior: 'Inertial drag; the lens magnifies the focused photo; click expands it.',
+    responsive: 'Lens is smaller on mobile; low-power or reduced motion devices get a plain swipe carousel.',
+    components: [{ name: 'Componentry — Liquid Glass Carousel', url: `${CY}liquid-glass-carousel` }], resources: ['componentry'],
+  },
+}
 
 export const components: Record<ComponentId, ComponentPattern> = {
   Navigation: { id: 'Navigation', purpose: 'Orient and offer the primary action', anatomy: 'Logo left, 3–5 links, one primary action right; mobile: full-screen menu', behavior: 'Hides on scroll down, reappears on scroll up; solid background after hero' },

@@ -3,7 +3,7 @@
 // The main flow is a few plain, visual questions; detailed ones are optional "fine-tune" steps reached from the review.
 
 import {
-  AppWindow, BellRing, Briefcase, CalendarCheck, Compass, Globe, Images, Mail, Package, PenTool, Pencil, Plus, Shirt, ShoppingBag,
+  AppWindow, BellRing, BookOpen, Briefcase, Circle, Columns3, GalleryHorizontal, GalleryHorizontalEnd, Globe2, Grid2x2, Layers, LayoutGrid, List, Move, Newspaper, Rows3, Square, Droplet, CalendarCheck, Compass, Globe, Images, Mail, Package, PenTool, Pencil, Plus, Shirt, ShoppingBag,
   ShoppingCart, Sparkles, User, UserPlus, UtensilsCrossed, X, type LucideIcon,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -16,21 +16,21 @@ import { TypeCard } from '@/components/TypeSpecimen'
 import { Swatches } from '@/components/ui'
 import { palettes, typography } from '@/data/ingredients'
 import { directions, families, goals, leads, motionLevels, purposes } from '@/data/taxonomy'
-import { composeRecipe, defaultPagesFor, normalizeSpec, recommendedTarget } from '@/features/recipes/engine'
+import { composeRecipe, defaultPagesFor, normalizeSpec, recommendPresentation, recommendedTarget } from '@/features/recipes/engine'
 import { saveGeneration } from '@/features/recipes/library'
 import { deleteFile, getFile, putFile } from '@/lib/files'
 import { examples } from '@/data/examples'
 import { KEYS, get, write } from '@/lib/store'
-import { heroes, pageTypes } from '@/data/patterns'
+import { heroes, imagePresentations, pageTypes } from '@/data/patterns'
 import type {
-  AssetId, Brief, HeroId, BuildTargetId, CharacterId, DirectionId, FamilyId, GoalId, LayoutId, LeadId, MediaPlan, MotionLevel,
+  AssetId, Brief, HeroId, BuildTargetId, ImagePresentationGroup, ImagePresentationId, CharacterId, DirectionId, FamilyId, GoalId, LayoutId, LeadId, MediaPlan, MotionLevel,
   PageSpec, PageTypeId, PaletteColors, PaletteId, PurposeId, RecipeSpec, TypographyId, UniversalRecipe, UploadedAsset,
 } from '@/types/domain'
 
 type Draft = {
   purpose?: PurposeId; brief: Brief; feel?: FamilyId; direction?: DirectionId; characters: CharacterId[]; lead?: LeadId; motion?: MotionLevel
   hero?: HeroId; layout?: LayoutId; palette?: PaletteId; customPalette?: PaletteColors; typography?: TypographyId; assets: AssetId[]
-  uploads: UploadedAsset[]; mediaPlan?: MediaPlan; pages: PageSpec[]; target?: BuildTargetId
+  uploads: UploadedAsset[]; mediaPlan?: MediaPlan; imagePresentation?: ImagePresentationId; pages: PageSpec[]; target?: BuildTargetId
 }
 const EMPTY: Draft = { brief: {}, characters: [], assets: [], uploads: [], pages: [] }
 
@@ -39,6 +39,9 @@ const LEAD_ASSET: Record<LeadId, AssetId | null> = { photography: 'images', vide
 const has = (d: Draft, a: AssetId) => d.assets.includes(a) || d.uploads.some((u) => u.asset === a)
 // Only asked where the experience breaks without the asset; for photos/products/illustrations the recipe adds a "find it" path.
 const needsMediaPlan = (d: Draft) => (d.lead === 'video' || d.lead === '3d') && !has(d, LEAD_ASSET[d.lead]!)
+/** A patch, or a function of the latest draft — for updates that land after an await (file reads). */
+type SetDraft = (patch: Partial<Draft> | ((x: Draft) => Partial<Draft>)) => void
+const photosOf = (d: Draft) => d.uploads.filter((u) => u.asset === 'images')
 const nameOf = (d: Draft) => d.brief.name?.trim() || 'your site'
 
 
@@ -61,6 +64,8 @@ const STEPS: Step[] = [
   { id: 'palette', title: 'Pick your colors', show: always, done: (d) => !!d.palette },
   { id: 'typography', title: 'Pick your lettering', show: always, done: (d) => !!d.typography },
   { id: 'media', title: (d) => (d.lead === '3d' ? 'Add your 3D scene' : 'Add your video'), hint: (d) => (d.lead === '3d' ? 'A .glb or .gltf file.' : 'A short clip works best — 5 to 15 seconds, landscape.'), show: needsMediaPlan, done: (d) => !!d.mediaPlan },
+  // Always asked: every site can use photos, whatever leads the first screen. Their count and shape decide how they are shown.
+  { id: 'photos', title: 'Add your photos', hint: (d) => (d.lead === 'photography' ? 'The photos your site is built around. Add as many as you like.' : 'Optional — work, people, places, details for the rest of the site. Add as many as you like.'), show: always, done: always },
   { id: 'target', title: 'How will you build it?', hint: 'Not sure? We’ll pick the best fit.', show: always, done: (d) => !!d.target },
   { id: 'review', title: (d) => `Here’s the plan for ${nameOf(d)}`, hint: 'Happy with it? Create it. Want to change something? Tap it.', show: always, done: always },
 ]
@@ -71,7 +76,7 @@ function toSpec(d: Draft): RecipeSpec {
     base: dir.baseRecipe, brief: d.brief, purpose: d.purpose ?? 'other', direction: dir.id, characters: d.characters,
     lead: d.lead ?? dir.defaults.lead, motion: d.motion ?? dir.defaults.motion, hero: d.hero, layout: d.layout ?? dir.defaults.layout,
     palette: d.palette ?? dir.defaults.palette, customPalette: d.customPalette, typography: d.typography ?? dir.defaults.typography,
-    assets: d.assets, uploads: d.uploads, mediaPlan: needsMediaPlan(d) ? d.mediaPlan : 'have',
+    assets: d.assets, uploads: d.uploads, mediaPlan: needsMediaPlan(d) ? d.mediaPlan : 'have', imagePresentation: d.imagePresentation,
     pages: d.pages.length ? d.pages : defaultPagesFor(d.purpose ?? 'other'), target: d.target ?? 'not-sure',
   })
 }
@@ -110,7 +115,8 @@ export function Creator() {
     else if (saved?.d) { setD({ ...EMPTY, ...saved.d, brief: saved.d.brief ?? {} }); if (STEPS.some((s) => s.id === saved.stepId)) setStepId(saved.stepId) }
   }, [params])
 
-  useEffect(() => { write(KEYS.draft, { d, stepId }) }, [d, stepId])
+  // Skips the untouched initial draft, so it can't overwrite the saved one before the restore above lands (dev StrictMode runs effects twice).
+  useEffect(() => { if (d !== EMPTY) write(KEYS.draft, { d, stepId }) }, [d, stepId])
 
   // The step actually on screen is always whatever stepId points at — never re-derived from show(d), so
   // resolving *this* step's own question (e.g. uploading the video) doesn't yank the user forward mid-step.
@@ -121,7 +127,7 @@ export function Creator() {
   const index = visible.includes(step) ? visible.indexOf(step) : STEPS.slice(0, orderIdx).filter((s) => s.show(d)).length
   const isFirst = !STEPS.slice(0, orderIdx).some((s) => s.show(d))
   const isLast = step.id === 'review'
-  const set = (patch: Partial<Draft>) => setD((x) => ({ ...x, ...patch }))
+  const set: SetDraft = (patch) => setD((x) => ({ ...x, ...(typeof patch === 'function' ? patch(x) : patch) }))
   // The real recipe, recomposed on every answer, so feedback quotes what will actually ship — not a guess.
   const recipe = useMemo(() => composeRecipe(toSpec(d)), [d])
   // Once the user uploads their video, every preview plays it instead of the stock still.
@@ -197,7 +203,7 @@ export function Creator() {
             </div>
             <span className="text-sm tabular-nums text-muted">{index + 1}/{visible.length}</span>
           </div>
-          <button type="button" className="text-sm link" onClick={() => { setD(EMPTY); setFromReview(false); go('purpose') }}>Start over</button>
+          <button type="button" className="text-sm link" onClick={() => { setD({ ...EMPTY }); setFromReview(false); go('purpose') }}>Start over</button>
         </div>
       </header>
 
@@ -243,7 +249,7 @@ export function Creator() {
 
 /** Optional steps left empty get an honest "Skip" label instead of "Continue". */
 function skippedEmpty(id: string, d: Draft) {
-  return id === 'brief' && !d.brief.name?.trim() && !d.brief.offer?.trim()
+  return (id === 'brief' && !d.brief.name?.trim() && !d.brief.offer?.trim()) || (id === 'photos' && !photosOf(d).length && !d.imagePresentation && !d.brief.photos?.trim())
 }
 
 function defaultsFor(dir: DirectionId): Partial<Draft> {
@@ -358,7 +364,7 @@ const OFFER_EXAMPLE: Record<PurposeId, [string, string]> = {
   other: ['Field Notes Co.', 'A community garden network across six city neighbourhoods.'],
 }
 
-function StepBody({ step, d, set, go, recipe }: { step: string; d: Draft; set: (p: Partial<Draft>) => void; go: (id: string) => void; recipe: UniversalRecipe }) {
+function StepBody({ step, d, set, go, recipe }: { step: string; d: Draft; set: SetDraft; go: (id: string) => void; recipe: UniversalRecipe }) {
   const dir = d.direction && directions[d.direction]
   const setBrief = (patch: Partial<Brief>) => set({ brief: { ...d.brief, ...patch } })
   switch (step) {
@@ -436,6 +442,7 @@ function StepBody({ step, d, set, go, recipe }: { step: string; d: Draft; set: (
     case 'palette': return <PaletteStep d={d} set={set} />
     case 'typography': return <TypeStep d={d} set={set} />
     case 'media': return <MediaStep d={d} set={set} />
+    case 'photos': return <PhotosStep d={d} set={set} />
     case 'target': {
       const rec = recommendedTarget(toSpec({ ...d, target: 'not-sure' }))
       return (
@@ -463,6 +470,7 @@ function ReviewStep({ d, go, r }: { d: Draft; go: (id: string) => void; r: Unive
     ['motion', 'Movement', motionLevels[spec.motion].name],
     ['palette', 'Colors', <Swatches key="c" colors={r.visualSystem.palette.tokens.map((x) => x.hex)} />],
     ['typography', 'Lettering', typography[spec.typography].name],
+    ['photos', 'Photos', r.media.imagery && `${r.media.imagery.photos ? `${r.media.imagery.photos} · ` : ''}${r.media.imagery.presentation.name}`],
     ['target', 'Build with', tool],
   ]
   return (
@@ -645,7 +653,7 @@ async function replaceUploads(d: Draft, asset: AssetId, metas: UploadedAsset[]):
 export function uploadAdvice(u: UploadedAsset): string | null {
   if (u.kind === 'video' && u.width && u.height && u.duration) {
     const ratio = u.width / u.height
-    if (u.width < 1280 && u.height < 1280) return `${u.width}×${u.height} is low for a hero — aim for 1920×1080.`
+    if (u.width < 1920) return `${u.width}×${u.height} will look soft full-screen (it gets stretched on large displays). Upload the original export if you have it — otherwise your Build Package includes a free sharpening step.`
     if (u.duration > 20) return `${u.duration.toFixed(0)}s is long; trim to 5–15s for a hero loop.`
     if (Math.abs(ratio - 16 / 9) > 0.1 && Math.abs(ratio - 9 / 16) > 0.1) return `Aspect ${ratio.toFixed(2)} — hero video works best at 16:9 (desktop) or 9:16 (mobile).`
     return `Good: ${u.width}×${u.height}, ${u.duration.toFixed(1)}s.`
@@ -683,6 +691,82 @@ function MediaStep({ d, set }: { d: Draft; set: (p: Partial<Draft>) => void }) {
         </div>
       )}
     </div>
+  )
+}
+
+const PHOTO_GROUPS: Record<ImagePresentationGroup, string> = { calm: 'Calm layouts', moving: 'Moving — scroll, drag, swipe', immersive: 'Immersive — 3D and WebGL' }
+const PHOTO_ICON: Record<ImagePresentationId, LucideIcon> = {
+  'single-feature': Square, 'editorial-sequence': Newspaper, 'lookbook-spreads': BookOpen, 'masonry-gallery': LayoutGrid, 'uniform-grid': Grid2x2,
+  'hover-reveal': List, 'horizontal-rail': GalleryHorizontal, 'swipe-carousel': GalleryHorizontalEnd, 'marquee-rows': Rows3, 'tilted-grid': Columns3,
+  'card-stack': Layers, 'infinite-canvas': Move, 'ring-3d': Circle, 'dome-gallery': Globe2, 'liquid-glass': Droplet,
+}
+
+function PhotosStep({ d, set }: { d: Draft; set: SetDraft }) {
+  const photos = photosOf(d)
+  const rec = recommendPresentation(toSpec(d))
+  const current = d.imagePresentation ?? rec.id
+  const add = async (files?: FileList | null) => {
+    const imgs = [...(files ?? [])].filter((f) => f.type.startsWith('image'))
+    if (!imgs.length) return
+    const metas = await Promise.all(imgs.map((f) => inspect(f, 'images')))
+    set((x) => ({ uploads: [...x.uploads, ...metas] })) // latest draft: several drops can be read at once
+  }
+  const remove = (u: UploadedAsset) => { if (u.fileId) deleteFile(u.fileId); set((x) => ({ uploads: x.uploads.filter((y) => y.fileId !== u.fileId || y.name !== u.name) })) }
+  const soft = photos.filter((u) => u.width && u.width < 1600 && (u.height ?? 0) < 1600)
+  return (
+    <div className="space-y-8">
+      <label className="choice flex max-w-xl cursor-pointer flex-col items-center gap-2 border-dashed p-8 text-center"
+        onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); add(e.dataTransfer.files) }}>
+        <Images size={28} strokeWidth={1.5} className="text-ink-2" aria-hidden />
+        <span className="font-medium">{photos.length ? 'Add more photos' : 'Drop photos here or click to choose'}</span>
+        <span className="text-sm text-muted">JPG, PNG, WebP or AVIF · several at once is fine</span>
+        <input type="file" accept="image/*" multiple className="sr-only" onChange={(e) => { add(e.target.files); e.target.value = '' }} />
+      </label>
+
+      {photos.length > 0 && (
+        <div>
+          <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 xl:grid-cols-6">
+            {photos.map((u) => <Thumb key={u.fileId ?? u.name} u={u} onRemove={() => remove(u)} />)}
+          </ul>
+          <p className="mt-2 text-sm text-muted">{photos.length} photo{photos.length > 1 ? 's' : ''} · {rec.orientation}</p>
+          {soft.length > 0 && <p className="mt-1 text-sm text-pencil">{soft.length} photo{soft.length > 1 ? 's are' : ' is'} under 1600px and may look soft full-width — 2400px is ideal.</p>}
+        </div>
+      )}
+
+      <label className="block max-w-xl text-sm">
+        <span className="font-medium">Anything we should know about your photos? <span className="font-normal text-muted">(optional)</span></span>
+        <textarea value={d.brief.photos ?? ''} maxLength={400} rows={3} onChange={(e) => set({ brief: { ...d.brief, photos: e.target.value } })}
+          placeholder="e.g. A 3D slider for the project photos. The team photo goes on About. Keep the before/after pairs side by side."
+          className="mt-2 block w-full rounded-lg border border-line bg-white p-3" />
+      </label>
+
+      <div>
+        <p className="font-medium">How should your photos be shown?</p>
+        <p className="mt-1 text-sm text-muted">We recommend <span className="text-ink">{imagePresentations[rec.id].name}</span> — {rec.why}.</p>
+        {(Object.keys(PHOTO_GROUPS) as ImagePresentationGroup[]).map((g) => (
+          <div key={g} className="mt-6">
+            <p className="text-sm text-muted">{PHOTO_GROUPS[g]}</p>
+            <div role="radiogroup" aria-label={PHOTO_GROUPS[g]} className="mt-2 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+              {Object.values(imagePresentations).filter((x) => x.group === g).map((x) => (
+                <Card key={x.id} icon={PHOTO_ICON[x.id]} selected={current === x.id} title={x.name} line={x.line}
+                  badge={x.id === rec.id ? 'Recommended' : undefined} onClick={() => set({ imagePresentation: x.id === rec.id ? undefined : x.id })} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function Thumb({ u, onRemove }: { u: UploadedAsset; onRemove: () => void }) {
+  const url = useUploadUrl(u.fileId)
+  return (
+    <li className="group relative aspect-square overflow-hidden rounded-md border border-line bg-line/40">
+      {url && <img src={url} alt={u.name} className="h-full w-full object-cover" />}
+      <button type="button" onClick={onRemove} aria-label={`Remove ${u.name}`}
+        className="absolute right-1 top-1 rounded-full bg-paper/90 p-1 text-ink shadow-sm hover:bg-paper"><X size={14} /></button>
+    </li>
   )
 }
 
