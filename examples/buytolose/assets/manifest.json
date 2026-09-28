@@ -1,0 +1,111 @@
+{
+  "recipe": "9858fffc",
+  "title": "BUYTOLOSE — Gothic Modern Store",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "create",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon",
+      "notes": "Wordmark set in Unbounded 700 as text; placeholder favicon at src/app/icon.svg"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "find",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Unbounded, Onest (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "notes": "All copy, names (founders, customers), prices, address and policies are placeholder written in the recipe voice. Review before launch; legal pages need a lawyer."
+    },
+    "heroVideo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "user-provided: hf_20260908_203743_e36b99a1-6078-4b70-9226-fc463561f871.mp4",
+      "replaceWith": "—",
+      "usage": "Hero (loop or scroll-controlled)",
+      "specs": "1920×1080 min, 5–15s, slow continuous motion, no text burned in",
+      "providedFiles": [
+        {
+          "fileId": "9245cbd5-e73",
+          "name": "hf_20260908_203743_e36b99a1-6078-4b70-9226-fc463561f871.mp4"
+        }
+      ],
+      "notes": "Original HEVC kept at assets/source/heroVideo-original.mp4; served file is H.264 1280px, audio stripped, 3.0MB"
+    },
+    "posterImage": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "First frame of hero video (desktop + 9:16 mobile)",
+      "replaceWith": "user-owned-images",
+      "usage": "Shown before video loads and on reduced motion",
+      "specs": "First frame of the video, same crop",
+      "file": "public/media/posterImage.webp, public/media/posterMobile.webp"
+    },
+    "mobileVideoEncode": {
+      "required": false,
+      "level": "recommended",
+      "status": "temporary",
+      "source": "Generated 9:16 centre crop of hero (720x1280, GOP 4, 2.5MB). Replace with a framed 9:16 shoot.",
+      "replaceWith": "—",
+      "usage": "Hero on small screens",
+      "specs": "1080×1920 (9:16) or 1080×1350 (4:5), ≤ 3MB",
+      "file": "public/media/mobileVideoEncode.mp4"
+    },
+    "supportingImages": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Frames pulled from the hero video. Replace with a real product + editorial shoot graded to match.",
+      "replaceWith": "user-owned-images",
+      "usage": "Sections between video moments",
+      "specs": "Graded to match the video",
+      "files": [
+        "collection-wide",
+        "collection-tall",
+        "highlight-1",
+        "highlight-2",
+        "highlight-3",
+        "about-portrait",
+        "closing-wide",
+        "product-*-a",
+        "product-*-b"
+      ]
+    },
+    "secondaryVideo": {
+      "required": false,
+      "level": "optional",
+      "status": "temporary",
+      "source": "1.8s cut from hero, used as 404 loop",
+      "replaceWith": "—",
+      "usage": "Chapter transitions",
+      "specs": "Same grade as the hero",
+      "file": "public/media/secondaryVideo.mp4"
+    },
+    "scrubReadyEncode": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Generated from hero: ffmpeg -g 4 -crf 25 -an, 1280px",
+      "replaceWith": "—",
+      "usage": "Scroll-controlled hero",
+      "specs": "ffmpeg -i hero.mp4 -g 1 -crf 23 -an hero-scrub.mp4 (all-intra for smooth seeking)",
+      "file": "public/media/scrubReadyEncode.mp4"
+    }
+  }
+}

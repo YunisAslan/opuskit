@@ -1,6 +1,6 @@
 import type {
   ComponentId, ComponentPattern, HeroId, HeroPattern, InspirationSource, LeadId, MediaPattern, MotionPattern, PageType, PageTypeId,
-  SectionId, SectionPattern,
+  SectionId, SectionPattern, SignaturePattern,
 } from '@/types/domain'
 
 export const heroes: Record<HeroId, HeroPattern> = {
@@ -35,6 +35,15 @@ export const heroes: Record<HeroId, HeroPattern> = {
     responsive: 'Mobile: shorter scroll distance (~180vh), 9:16 encode, or fall back to an autoplaying loop + poster if seeking is janky on low-end devices.',
     requires: ['1 hero video (5–8s, single continuous camera move, all-intra or GOP ≤ 5)', '1 poster image', 'Mobile 9:16 encode (recommended)'],
     fallback: 'Image sequence scrub from a still (subtle zoom + crossfade), or switch to the image-led variant.',
+    forcesLayout: 'full-bleed',
+  },
+  'scroll-video-page': {
+    id: 'scroll-video-page', name: 'Whole-page scroll video', leads: ['video'], motion: ['immersive'],
+    composition: 'A fixed 100svh video layer behind the entire page; the playhead is mapped to total page scroll (0 → 100%). Every section scrolls over it on transparent or semi-opaque surfaces, so the film is always visible.',
+    behavior: 'GSAP ScrollTrigger (trigger: document, start "top top", end "bottom bottom", scrub: 0.5) drives video.currentTime. Sections use the surface color at 70–90% opacity for text legibility; key moments in the film line up with section boundaries.',
+    responsive: 'Mobile: 9:16 encode; if seeking is janky on low-end devices, freeze on the poster and crossfade between 3–5 stills per section.',
+    requires: ['1 long video (15–30s, one continuous camera move that can carry the whole page, all-intra or GOP ≤ 5)', '1 poster image', 'Mobile 9:16 encode (recommended)'],
+    fallback: 'Fixed poster image with a crossfade between stills at each section, or switch to the opening-scene variant.',
     forcesLayout: 'full-bleed',
   },
   'type-statement': {
@@ -368,4 +377,121 @@ export const GENERIC_TELLS = [
   'Meta strings joined with middle dots or spaced em dashes, and "→" appended to links',
   'One italic or coloured accent word inside an otherwise plain headline',
   'Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe\'s fonts',
+]
+
+// Signature moments: small, specific interactions that make a site memorable. Each lives on one section;
+// the engine picks 2–4 per recipe that fit its sections, motion level and style — never more than one per section.
+export const signaturePatterns: SignaturePattern[] = [
+  {
+    id: 'hover-preview-list', name: 'List with a floating preview', sections: ['product-grid', 'collection', 'featured-work', 'journal', 'menu'],
+    levels: ['still', 'subtle', 'dynamic', 'immersive'], fits: ['ecommerce', 'fashion', 'portfolio', 'agency', 'studio', 'restaurant', 'editorial', 'minimal', 'raw', 'swiss'],
+    experience: 'Items are a clean typographic list (name, price or year). Hovering a row makes its photo appear beside the cursor and follow it smoothly; moving to the next row swaps the photo.',
+    implementation: 'One absolutely positioned preview (aspect 4:5, ~14rem) inside the list container; pointermove sets a target, a rAF lerp (0.15) moves it with transform only; crossfade the image on row change; hide when the pointer leaves the list.',
+    mobile: 'No floating preview: show a small inline thumbnail at the start of each row instead.',
+    reducedMotion: 'Preview appears at a fixed position next to the list, no following.',
+  },
+  {
+    id: 'magnetic-button', name: 'Magnetic main button', sections: ['contact-cta', 'hero', 'reservation', 'pricing'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['agency', 'studio', 'portfolio', 'saas', 'product', 'bold', 'futuristic', 'experimental'],
+    experience: 'The main button gently pulls toward the cursor when it comes close, and settles back when it leaves — it feels alive and asks to be pressed.',
+    implementation: 'Within a ~120px radius, translate the button by 30% of the pointer offset (label by 15% for depth), eased back with a spring on leave. transform only.',
+    mobile: 'Off on touch; a short press-scale (0.97) instead.',
+    reducedMotion: 'Static button with the normal hover state.',
+  },
+  {
+    id: 'rolling-links', name: 'Links that roll on hover', sections: ['navbar', 'footer'],
+    levels: ['still', 'subtle', 'dynamic', 'immersive'], fits: ['agency', 'studio', 'portfolio', 'fashion', 'bold', 'swiss', 'editorial', 'futuristic'],
+    experience: 'Hovering a navigation link rolls its letters up one by one and a copy rolls in from below — a small, crafted detail visitors notice.',
+    implementation: 'Each link renders its label twice in an overflow-hidden box; split into letters; on hover translateY(-100%) with a 12ms stagger per letter, 350ms, cubic-bezier(0.65,0,0.35,1).',
+    mobile: 'Not needed on touch — keep plain links.',
+    reducedMotion: 'Colour or underline change only.',
+  },
+  {
+    id: 'image-trail', name: 'Image trail behind the cursor', sections: ['hero', 'gallery'],
+    levels: ['dynamic', 'immersive'], fits: ['fashion', 'portfolio', 'studio', 'experiment', 'experimental', 'art', 'playful', 'pop'],
+    experience: 'Moving the mouse across the first screen leaves a trail of photos that appear and fade behind it — playful, and it shows off lots of work at once.',
+    implementation: 'Pool of 8–12 preloaded images; spawn the next one every ~80px of pointer travel at the pointer position, scale 0.8→1 and fade out over 900ms; recycle nodes, never create new ones.',
+    mobile: 'Replace with a slow auto-playing crossfade of the same images.',
+    reducedMotion: 'A static collage of 3 images.',
+  },
+  {
+    id: 'horizontal-gallery', name: 'Sideways scrolling gallery', sections: ['gallery', 'lookbook', 'featured-work', 'collection'],
+    levels: ['dynamic', 'immersive'], fits: ['fashion', 'portfolio', 'studio', 'agency', 'cinematic', 'editorial', 'luxury'],
+    experience: 'Scrolling down moves a row of large images sideways, like walking past a gallery wall, then the page carries on.',
+    implementation: 'Pin the section; GSAP ScrollTrigger maps vertical scroll to translateX of the track (scrub: 1, end = track width − viewport). Images lazy-load one ahead.',
+    mobile: 'Native horizontal swipe with scroll-snap instead of pinning.',
+    reducedMotion: 'Plain horizontal scroll-snap row.',
+  },
+  {
+    id: 'stacking-cards', name: 'Cards that stack as you scroll', sections: ['process', 'services', 'feature-grid', 'how-it-works'],
+    levels: ['dynamic', 'immersive'], fits: ['saas', 'agency', 'product', 'studio', 'bento', 'minimal', 'technical', 'futuristic'],
+    experience: 'Each step or service slides up and stacks on top of the previous one, which shrinks slightly behind it — a clear story told one card at a time.',
+    implementation: 'Cards are position: sticky with increasing top offsets; as the next card arrives, scale the previous one to 0.94 and dim it via a scroll-linked timeline (or CSS animation-timeline: view()).',
+    mobile: 'Same effect with smaller offsets; drop the scale if it stutters.',
+    reducedMotion: 'Normal vertical list of cards.',
+  },
+  {
+    id: 'velocity-marquee', name: 'Ribbon that reacts to scrolling', sections: ['clients', 'manifesto'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['agency', 'studio', 'bold', 'raw', 'playful', 'pop', 'fashion', 'experimental'],
+    experience: 'A band of big words or client names drifts sideways, speeds up while you scroll and reverses when you scroll back up.',
+    implementation: 'Duplicate the content for a seamless loop; base speed ~40px/s; add scroll velocity (from Lenis or ScrollTrigger getVelocity) and flip direction with scroll direction; transform only.',
+    mobile: 'Constant slow drift, no velocity coupling.',
+    reducedMotion: 'Static row, wrapped.',
+  },
+  {
+    id: 'reading-highlight', name: 'Words that light up as you read', sections: ['manifesto', 'intro', 'about', 'editorial-story'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['editorial', 'studio', 'agency', 'personal-brand', 'quiet', 'minimal', 'luxury', 'heritage'],
+    experience: 'A large statement starts faint; as you scroll, each word fills in with full colour, so reading feels guided and deliberate.',
+    implementation: 'Split the paragraph into words; scroll-linked timeline over the section moves each word from muted to text colour in sequence (CSS animation-timeline: view() or GSAP scrub).',
+    mobile: 'Same, with a shorter scroll range.',
+    reducedMotion: 'Text shown at full colour.',
+  },
+  {
+    id: 'curtain-reveal', name: 'Photos revealed like a curtain', sections: ['gallery', 'lookbook', 'featured-work', 'editorial-story', 'about'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['fashion', 'luxury', 'editorial', 'cinematic', 'portfolio', 'heritage', 'quiet', 'organic', 'natural'],
+    experience: 'Images open from a thin line to full size as they come into view, with the photo inside settling from a slight zoom — like a curtain opening.',
+    implementation: 'clip-path: inset(100% 0 0 0) → inset(0) over 1s, with the inner image scaling 1.15 → 1; triggered once by IntersectionObserver.',
+    mobile: 'Same, shorter (700ms).',
+    reducedMotion: 'Images simply appear.',
+  },
+  {
+    id: 'tilt-cards', name: 'Product cards that tilt toward you', sections: ['product-grid', 'product-highlight', 'collection'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['ecommerce', 'product', 'futuristic', 'playful', 'pop', 'y2k', 'bold'],
+    experience: 'Product cards tilt slightly toward the cursor with a soft light sweeping across, so objects feel tangible.',
+    implementation: 'Map pointer position inside the card to rotateX/rotateY (max 6°) with perspective 800px; a radial-gradient highlight follows the pointer at 12% opacity; ease back on leave.',
+    mobile: 'No tilt; a subtle scale on press.',
+    reducedMotion: 'Flat cards with the normal hover.',
+  },
+  {
+    id: 'zoom-into-image', name: 'Scroll into a full-screen image', sections: ['editorial-story', 'product-highlight', 'intro'],
+    levels: ['dynamic', 'immersive'], fits: ['cinematic', 'luxury', 'product', 'fashion', 'hospitality', 'restaurant', 'coastal'],
+    experience: 'A small framed image grows as you scroll until it fills the whole screen, pulling the visitor into the moment.',
+    implementation: 'Pin for ~150vh; scrub clip-path inset from 30% to 0 (or scale 0.4 → 1) and fade in overlaid text at the end.',
+    mobile: 'Shorter pin (~100vh) and start from a larger frame.',
+    reducedMotion: 'Full-width image, no pin.',
+  },
+  {
+    id: 'reveal-footer', name: 'Footer revealed from underneath', sections: ['footer'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['agency', 'studio', 'portfolio', 'fashion', 'bold', 'cinematic', 'editorial', 'organic'],
+    experience: 'At the end, the page lifts away like a sheet and reveals a big footer underneath with the brand name set huge — a satisfying ending.',
+    implementation: 'Footer is position: sticky; bottom: 0 with z-index below main; main gets a bottom margin equal to footer height and its own background; the brand wordmark spans the full width.',
+    mobile: 'Normal footer, still with the big wordmark.',
+    reducedMotion: 'Unchanged (no animation involved).',
+  },
+  {
+    id: 'add-to-bag-fly', name: 'Product flies into the bag', sections: ['product-grid', 'product-highlight'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['ecommerce', 'product', 'playful', 'pop'],
+    experience: 'Pressing "Add to bag" sends a small copy of the product image arcing into the bag icon, which bounces once and shows the new count.',
+    implementation: 'Clone the thumbnail, animate it along a curved path to the bag icon (transform only, 600ms), then pulse the icon scale 1 → 1.15 → 1 and update the count.',
+    mobile: 'Same, shorter (400ms).',
+    reducedMotion: 'Count updates with a brief colour change.',
+  },
+  {
+    id: 'spotlight-cursor', name: 'Flashlight over a dark image', sections: ['hero', 'manifesto'],
+    levels: ['dynamic', 'immersive'], fits: ['cinematic', 'gothic', 'dark', 'experimental', 'experiment', 'music'],
+    experience: 'The first screen is almost dark; the cursor acts like a flashlight revealing the image and words underneath.',
+    implementation: 'A full-screen overlay with a radial-gradient mask centred on the pointer (radius ~22vmin), lerped for smoothness; content below stays in the DOM for accessibility.',
+    mobile: 'The light slowly drifts on its own; tap moves it.',
+    reducedMotion: 'Image shown fully lit.',
+  },
 ]

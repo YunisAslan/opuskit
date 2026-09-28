@@ -32,6 +32,20 @@ export default async function ExamplePage(props: PageProps<'/examples/[slug]'>) 
           // eslint-disable-next-line @next/next/no-img-element -- real per-example asset with no fixed aspect ratio; plain img matches the <video> case above
           : <img src={e.hero.src} alt={`${e.title} — hero`} className="w-full" />}
       </div>
+
+      <section className="mt-14 max-w-3xl" aria-labelledby="made-with">
+        <h2 id="made-with" className="text-2xl tracking-tight">How it was made</h2>
+        <p className="mt-2 text-ink-2">The exact choices picked in OpusKit to create this site.</p>
+        <dl className="mt-6 divide-y divide-line border-y border-line">
+          {e.choices.map((c) => (
+            <div key={c.label} className="flex gap-4 py-3">
+              <dt className="w-36 shrink-0 text-sm text-muted">{c.label}</dt>
+              <dd>{c.value}</dd>
+            </div>
+          ))}
+        </dl>
+        {e.note && <p className="mt-4 text-sm text-muted">{e.note}</p>}
+      </section>
     </article>
   )
 }

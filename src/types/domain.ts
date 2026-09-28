@@ -17,6 +17,8 @@ export type DirectionId =
   | 'dark-cinematic' | 'cinematic-editorial' | 'immersive-portfolio' | 'film-inspired'
   | 'swiss-modern' | 'typography-first' | 'neo-brutalist' | 'raw-editorial'
   | 'organic-modern' | 'warm-hospitality' | 'art-direction' | 'digital-futurism' | 'technical-minimal'
+  | 'soft-pastel' | 'coastal-calm' | 'modern-heritage' | 'news-grid' | 'gothic-modern' | 'retro-seventies'
+  | 'playful-pop' | 'y2k-chrome' | 'bento-product'
 
 export type CharacterId =
   | 'elegant' | 'warm' | 'mysterious' | 'playful' | 'technical' | 'futuristic' | 'sophisticated' | 'raw'
@@ -29,14 +31,18 @@ export type PaletteId =
   | 'signal-white' | 'wet-concrete' | 'legal-pad' | 'pink-plaster' | 'klein-field' | 'pool-tile'
   | 'hazard-yellow' | 'celery-room' | 'bottle-green' | 'night-ink' | 'plum-velvet' | 'oxblood-room'
   | 'wet-slate' | 'black-box' | 'rose-leaf' | 'airmail-blue'
+  | 'espresso' | 'lavender-haze' | 'cherry-red' | 'mint-fresh' | 'chrome-silver' | 'electric-lime'
+  | 'peach-fuzz' | 'deep-teal' | 'butter-cup' | 'cobalt-sky'
 
 export type TypographyId =
   | 'quiet-page' | 'ink-and-paper' | 'soft-couture' | 'printed-word' | 'opening-credits' | 'gala-night'
   | 'loud-and-clear' | 'grid-discipline' | 'photocopy-zine' | 'workshop-manual' | 'corner-bakery'
   | 'main-street' | 'stretch-test' | 'high-low' | 'control-room' | 'data-sheet'
+  | 'soft-seventies' | 'round-future' | 'letterpress-modern' | 'new-gothic' | 'friendly-app' | 'newsroom'
+  | 'moonlit-italic' | 'swiss-italic' | 'bubble-pop' | 'poster-warp'
 
 export type HeroId =
-  | 'editorial-image' | 'parallax-photo' | 'ambient-video' | 'scroll-video' | 'type-statement'
+  | 'editorial-image' | 'parallax-photo' | 'ambient-video' | 'scroll-video' | 'scroll-video-page' | 'type-statement'
   | 'kinetic-type' | 'product-stage' | 'illustrated' | 'webgl-scene'
 
 export type AssetId =
@@ -46,6 +52,9 @@ export type AssetId =
 export type MediaPlan = 'have' | 'image-to-video' | 'temporary' | 'image-alternative'
 
 export type BuildTargetId = 'claude-code' | 'cursor' | 'v0' | 'lovable' | 'own-code' | 'not-sure'
+
+export type GoalId = 'contact' | 'book' | 'buy' | 'signup' | 'subscribe' | 'explore'
+
 
 export type SectionId =
   | 'navbar' | 'hero' | 'intro' | 'featured-work' | 'case-study' | 'services' | 'process' | 'about'
@@ -89,6 +98,9 @@ export type Purpose = {
   components: ComponentId[]
   ctaPattern: string
 }
+
+/** What a visitor should do. `page` = the page this goal needs; `cta` = button wording, best first. */
+export type Goal = { id: GoalId; name: string; line: string; effect: string; page?: PageTypeId; cta: string[] }
 
 export type Family = {
   id: FamilyId
@@ -234,6 +246,22 @@ export type MotionPattern = {
   reducedMotion: string
 }
 
+/** A memorable interactive component, placed on one section. `fits`: purposes and direction tags/families it suits best. */
+export type SignaturePattern = {
+  id: string
+  name: string
+  sections: SectionId[]
+  levels: MotionLevel[]
+  fits: string[]
+  experience: string
+  implementation: string
+  mobile: string
+  reducedMotion: string
+}
+
+/** A signature pattern resolved onto a real section of this recipe. */
+export type SignatureMoment = Omit<SignaturePattern, 'sections' | 'levels' | 'fits'> & { where: string }
+
 export type MotionLevelInfo = {
   id: MotionLevel
   name: string
@@ -299,9 +327,13 @@ export type UploadedAsset = {
 /** One page as the user has configured it in the questionnaire. */
 export type PageSpec = { id: string; type: PageTypeId; label: string; purpose: string; sections: SectionId[] }
 
+/** The project in the user's own words. Everything optional: a recipe without a brief still composes. */
+export type Brief = { name?: string; offer?: string; goal?: GoalId }
+
 /** Everything a Recipe is composed from. Small, serializable, stable under Remix. */
 export type RecipeSpec = {
   base: string
+  brief?: Brief
   purpose: PurposeId
   direction: DirectionId
   characters: CharacterId[]
@@ -356,7 +388,8 @@ export type PageSection = SectionPattern & { note?: string }
 
 export type PageBlueprint = { id: string; type: PageTypeId; label: string; purpose: string; sections: PageSection[] }
 
-export type MediaRecipe = MediaPattern & { hero: HeroPattern }
+/** `storytelling`: for scroll-controlled film heroes, how video and text become one scroll timeline. */
+export type MediaRecipe = MediaPattern & { hero: HeroPattern; storytelling?: string[] }
 
 export type MotionRecipe = { level: MotionLevelInfo; principle: string; patterns: MotionPattern[]; libraries: string[] }
 
@@ -423,6 +456,8 @@ export type UniversalRecipe = {
   components: ComponentPattern[]
   media: MediaRecipe
   motion: MotionRecipe
+  /** 2–4 memorable interactions, each on its own section — the moments people remember and share. */
+  signatures: SignatureMoment[]
   contentDirection: ContentDirection
   assetRequirements: AssetRequirement[]
   assetCreationPaths: AssetCreationPath[]

@@ -4,9 +4,10 @@ import assert from 'node:assert/strict'
 import { palettes, typography } from '../src/data/ingredients'
 import { contrast, deltaE, oklab } from '../src/lib/color'
 import { recipeSeeds } from '../src/data/recipes'
-import { directions, families } from '../src/data/taxonomy'
+import { directions, families, goals } from '../src/data/taxonomy'
 import { adapters } from '../src/features/build-packages'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
+import { recipeToMarkdown } from '../src/features/recipes/markdown'
 import { composeRecipe, isValidSpec, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
 assert.equal(recipeSeeds.length, 10, 'exactly 10 seed recipes')
@@ -76,6 +77,33 @@ const main = async () => {
     assert.match(f.content, new RegExp(`^---\\nname: ${name}\\ndescription: .+\\n---`), `${name} frontmatter`)
   }
 
+  // Whole-page scroll video: its own hero, still needs the scrub-ready encode.
+  const page = composeRecipe({ ...specFromSeed(recipeSeeds[1]), lead: 'video', motion: 'immersive', hero: 'scroll-video-page' })
+  assert.equal(page.media.hero.id, 'scroll-video-page', 'whole-page scroll video is kept')
+  assert.ok(page.assetRequirements.some((a) => a.label === 'Scrub-ready encode'), 'whole-page scroll video needs a scrub encode')
+
+  assert.ok(page.media.storytelling?.some((x) => /whole page scroll/.test(x)), 'whole-page film gets scroll storytelling')
+  const shopFilm = composeRecipe({ ...specFromSeed(recipeSeeds[1]), purpose: 'ecommerce', lead: 'video', motion: 'immersive', hero: 'scroll-video' })
+  assert.ok(shopFilm.media.storytelling?.some((x) => /names the product/.test(x)), 'store films name products at each pause')
+  assert.equal(composeRecipe(specFromSeed(recipeSeeds[0])).media.storytelling, undefined, 'no film guidance without a scroll film')
+  for (const a of Object.values(adapters)) {
+    const pkg = await a.generate(shopFilm)
+    const all = pkg.instructions + pkg.files.map((f) => f.content).join('')
+    assert.ok(!/stop (after each step|for review)/i.test(all), `${a.id} never asks the agent to stop between steps`)
+    assert.match(all, /Scroll storytelling/, `${a.id} carries the scroll storytelling`)
+  }
+
+  // Signature moments: every seed gets 2–4, one per section, only on sections it has, at its motion level.
+  for (const seed of recipeSeeds) {
+    const r = composeRecipe(specFromSeed(seed))
+    assert.ok(r.signatures.length >= (r.metadata.spec.motion === 'still' ? 1 : 2) && r.signatures.length <= 4, `${seed.slug}: ${r.signatures.length} signature moments`)
+    assert.equal(new Set(r.signatures.map((s) => s.where)).size, r.signatures.length, `${seed.slug}: one signature per section`)
+  }
+  const store = composeRecipe({ ...specFromSeed(recipeSeeds[4]), purpose: 'ecommerce', pages: [] })
+  assert.ok(store.signatures.some((s) => s.id === 'hover-preview-list'), 'stores get the floating-preview product list')
+  assert.ok(!shopFilm.signatures.some((s) => s.where.startsWith('Home — Hero')), 'no cursor gimmick on top of a scroll film')
+  for (const a of Object.values(adapters)) assert.match((await a.generate(store)).files.map((f) => f.content).join('') + '', /List with a floating preview/, `${a.id} carries signature moments`)
+
   // Remix: video → photography drops video requirements and the scroll-video hero.
   const cinematic = specFromSeed(recipeSeeds[1])
   const before = composeRecipe(cinematic)
@@ -97,6 +125,12 @@ const main = async () => {
   assert.equal(custom.visualSystem.palette.tokens.find((t) => t.role === 'accent')?.hex, '#FF0000')
   assert.ok(!isValidSpec({ ...cinematic, palette: 'nope' }))
 
+  // Brief: answers reach the recipe (title, CTA, summary), and junk from storage is dropped.
+  const briefed = composeRecipe({ ...specFromSeed(recipeSeeds[0]), brief: { name: '  Oak & Awl  ', offer: 'Leather goods.', goal: 'book' } })
+  assert.equal(composeRecipe({ ...specFromSeed(recipeSeeds[0]), brief: { goal: 'nope' as never } }).metadata.spec.brief?.goal, undefined, 'unknown goal is dropped')
+  assert.ok(briefed.title.startsWith('Oak & Awl — '), 'brief name leads the title')
+  assert.equal(briefed.contentDirection.ctaExamples[0], goals.book.cta[0], 'goal sets the primary CTA')
+  assert.match(recipeToMarkdown(briefed), /Oak & Awl: Leather goods\./, 'offer reaches the markdown')
   console.log(`✓ ${recipeSeeds.length} recipes × ${Object.keys(adapters).length} adapters, remix and asset logic OK`)
 }
 

@@ -4,7 +4,7 @@
 
 import { recipeSections as S } from '@/features/recipes/markdown'
 import type { BuildFile, BuildPackageAdapter, UniversalRecipe } from '@/types/domain'
-import { assertComplete, assetManifest, assetsConfigTs, flattenPages, frontmatter, manifestJson, tokensCss, visualQa } from './shared'
+import { assertComplete, assetManifest, assetsConfigTs, flattenPages, frontmatter, manifestJson, tokensCss, visualQa, workingRules } from './shared'
 
 type Skill = { name: string; description: string; body: string }
 
@@ -29,13 +29,13 @@ function skills(r: UniversalRecipe): Skill[] {
   if (level !== 'still') out.push({
     name: 'motion-system',
     description: `Implements the ${r.motion.level.name.toLowerCase()} motion system for ${r.title}: ${r.motion.patterns.filter((p) => p.id !== 'state-feedback').map((p) => p.name.toLowerCase()).join(', ')}. Use when adding animation, scroll effects, transitions or reduced-motion support.`,
-    body: `# Motion system — ${r.motion.level.name}\n\n**Animation for demonstration, not decoration.** If an animation doesn't clarify content, hierarchy or story, don't add it.\n\n${r.motion.principle}\n\nLibraries: ${r.motion.libraries.join(', ')}. Use CSS for simple transitions, Motion for React UI animation, GSAP only for scroll-driven/pinned sequences.\n\n## Patterns (implement in this order)\n${r.motion.patterns.map((p) => `### ${p.name}\n- Purpose: ${p.purpose}\n- Trigger: ${p.trigger}\n- Behavior: ${p.behavior}\n- Duration / easing: ${p.duration} · ${p.easing}\n- How: ${p.implementation}\n- Performance: ${p.performance}\n- Reduced motion: ${p.reducedMotion}`).join('\n\n')}\n\n## Rules\n- Animate transform and opacity only.\n- Wrap every effect in a reduced-motion check (\`useReducedMotion()\` or \`matchMedia('(prefers-reduced-motion: reduce)')\`).\n- Clean up ScrollTriggers / observers on unmount.\n`,
+    body: `# Motion system — ${r.motion.level.name}\n\n**Animation for demonstration, not decoration.** If an animation doesn't clarify content, hierarchy or story, don't add it.\n\n${r.motion.principle}\n\nLibraries: ${r.motion.libraries.join(', ')}. Use CSS for simple transitions, Motion for React UI animation, GSAP only for scroll-driven/pinned sequences.\n\n## Patterns (implement in this order)\n${r.motion.patterns.map((p) => `### ${p.name}\n- Purpose: ${p.purpose}\n- Trigger: ${p.trigger}\n- Behavior: ${p.behavior}\n- Duration / easing: ${p.duration} · ${p.easing}\n- How: ${p.implementation}\n- Performance: ${p.performance}\n- Reduced motion: ${p.reducedMotion}`).join('\n\n')}\n\n${r.signatures.length ? `## Signature moments (build each one where it is placed)\n${r.signatures.map((s) => `- **${s.name}** on ${s.where}: ${s.experience} How: ${s.implementation} Mobile: ${s.mobile}`).join('\n')}\n\n` : ''}## Rules\n- Animate transform and opacity only.\n- Wrap every effect in a reduced-motion check (\`useReducedMotion()\` or \`matchMedia('(prefers-reduced-motion: reduce)')\`).\n- Clean up ScrollTriggers / observers on unmount.\n`,
   })
 
   if (lead !== 'typography') out.push({
     name: 'media-experience',
     description: `Handles ${lead} media for ${r.title}: asset config layer, posters, crops, loading and temporary-asset replacement. Use when rendering any image, video or 3D asset, or when the user supplies new media.`,
-    body: `# Media experience — ${r.media.name}\n\n${r.media.direction}\n\n## Asset layer\n- All media is referenced by key through \`src/config/assets.ts\` and rendered by \`<MediaAsset id="…" />\`.\n- Never hardcode a media path in a component.\n- Assets with status \`temporary\` in \`assets/manifest.json\` must show a dev-only "Temporary" badge and are listed in the final report.\n\n## Treatment\n${r.media.treatment.map((x) => `- ${x}`).join('\n')}\n\n## Hero — ${r.media.hero.name}\n- ${r.media.hero.composition}\n- ${r.media.hero.behavior}\n- Mobile: ${r.media.hero.responsive}\n- Fallback: ${r.media.hero.fallback}\n\n## Formats\n${r.media.formats}\n`,
+    body: `# Media experience — ${r.media.name}\n\n${r.media.direction}\n\n## Asset layer\n- All media is referenced by key through \`src/config/assets.ts\` and rendered by \`<MediaAsset id="…" />\`.\n- Never hardcode a media path in a component.\n- Assets with status \`temporary\` in \`assets/manifest.json\` must show a dev-only "Temporary" badge and are listed in the final report.\n\n## Treatment\n${r.media.treatment.map((x) => `- ${x}`).join('\n')}\n\n## Hero — ${r.media.hero.name}\n- ${r.media.hero.composition}\n- ${r.media.hero.behavior}\n- Mobile: ${r.media.hero.responsive}\n- Fallback: ${r.media.hero.fallback}\n${r.media.storytelling ? `\n## Scroll storytelling (the hero film)\n${r.media.storytelling.map((x, i) => `${i + 1}. ${x}`).join('\n')}\n` : ''}\n## Formats\n${r.media.formats}\n`,
   })
 
   if (level === 'dynamic' || level === 'immersive' || lead === 'video' || lead === '3d') out.push({
@@ -55,13 +55,13 @@ export const claudeCodeAdapter: BuildPackageAdapter = {
     assertComplete(r)
     const sk = skills(r)
     const files: BuildFile[] = [
-      { path: 'CLAUDE.md', content: `# ${r.title}\n\n${r.summary}\n\nThis project is built from an OpusKit Universal Recipe. The recipe is the source of truth for design decisions — do not invent new colors, fonts, spacing or sections.\n\n## Where things are\n- \`recipe/\` — the design recipe, split by topic (read the relevant file before working on that topic)\n- \`assets/manifest.json\` — every asset, its status (have / temporary / create / find) and usage\n- \`build/implementation-plan.md\` — build order; work through it step by step\n- \`build/verification.md\` — definition of done\n- \`.claude/skills/\` — ${sk.map((s) => s.name).join(', ')}\n\n## Stack\n${r.implementation.stack.map((s) => `- ${s}`).join('\n')}\n\n## Non-negotiables\n- Use tokens from \`src/styles/tokens.css\`; never raw hex in components.\n- Fonts: ${r.visualSystem.typography.display.family} (display), ${r.visualSystem.typography.body.family} (body), ${r.visualSystem.typography.utility.family} (utility). Load with next/font.\n- All media goes through \`src/config/assets.ts\`. Temporary assets stay replaceable.\n- Every animation has a reduced-motion alternative.\n- Avoid: ${r.creativeDirection.avoid.join('; ')}.\n\n## Core direction\n@recipe/design.md\n` },
+      { path: 'CLAUDE.md', content: `# ${r.title}\n\n${r.summary}\n\nThis project is built from an OpusKit Universal Recipe. The recipe is the source of truth for design decisions — do not invent new colors, fonts, spacing or sections.\n\n## Where things are\n- \`recipe/\` — the design recipe, split by topic (read the relevant file before working on that topic)\n- \`assets/manifest.json\` — every asset, its status (have / temporary / create / find) and usage\n- \`build/implementation-plan.md\` — build order\n- \`build/verification.md\` — definition of done\n- \`.claude/skills/\` — ${sk.map((s) => s.name).join(', ')}\n\n## Stack\n${r.implementation.stack.map((s) => `- ${s}`).join('\n')}\n\n## Non-negotiables\n- Use tokens from \`src/styles/tokens.css\`; never raw hex in components.\n- Fonts: ${r.visualSystem.typography.display.family} (display), ${r.visualSystem.typography.body.family} (body), ${r.visualSystem.typography.utility.family} (utility). Load with next/font.\n- All media goes through \`src/config/assets.ts\`. Temporary assets stay replaceable.\n- Every animation has a reduced-motion alternative.\n- Avoid: ${r.creativeDirection.avoid.join('; ')}.\n\n${workingRules(r, '\`build/implementation-plan.md\`', 'the \`visual-qa\` skill')}\n## Core direction\n@recipe/design.md\n` },
       ...sk.map((s) => ({ path: `.claude/skills/${s.name}/SKILL.md`, content: frontmatter({ name: s.name, description: s.description }) + s.body })),
       { path: 'recipe/design.md', content: [S.summary(r), S.direction(r), S.why(r), S.references(r)].join('\n\n') + '\n' },
       { path: 'recipe/typography.md', content: S.typography(r) + '\n' },
       { path: 'recipe/color.md', content: S.color(r) + '\n' },
       { path: 'recipe/layout.md', content: [S.layout(r), S.structure(r), S.components(r)].join('\n\n') + '\n' },
-      { path: 'recipe/motion.md', content: S.motion(r) + '\n' },
+      { path: 'recipe/motion.md', content: [S.motion(r), S.signatures(r)].join('\n\n') + '\n' },
       { path: 'recipe/media.md', content: [S.media(r), S.assets(r)].join('\n\n') + '\n' },
       { path: 'recipe/content.md', content: S.content(r) + '\n' },
       { path: 'recipe/resources.md', content: S.resources(r) + '\n' },
@@ -69,12 +69,12 @@ export const claudeCodeAdapter: BuildPackageAdapter = {
       { path: 'assets/manifest.json', content: manifestJson(r) },
       { path: 'src/styles/tokens.css', content: tokensCss(r) },
       { path: 'src/config/assets.ts', content: assetsConfigTs(r) },
-      { path: 'build/implementation-plan.md', content: `# Implementation plan\n\nWork through the steps in order. After each step, run the \`visual-qa\` skill on what you built.\n\n${r.implementation.sequence.map((s, i) => `## Step ${i + 1}\n${s}`).join('\n\n')}\n\n${S.implementation(r)}\n` },
+      { path: 'build/implementation-plan.md', content: `# Implementation plan\n\nWork through every step in order, in one pass — no pausing for review between steps. After each step, run the \`visual-qa\` skill on what you built, fix, and continue.\n\n${r.implementation.sequence.map((s, i) => `## Step ${i + 1}\n${s}`).join('\n\n')}\n\n${S.implementation(r)}\n` },
       { path: 'build/verification.md', content: `# Verification\n\nThe build is done when every item passes.\n\n${visualQa(r).map((x) => `- [ ] ${x}`).join('\n')}\n` },
     ]
     return {
       recipeId: r.id, target: 'claude-code', files, assets: assetManifest(r),
-      instructions: `1. Create a Next.js project (npx create-next-app@latest) or open your existing one.\n2. Unzip this package into the project root (it adds CLAUDE.md, .claude/skills, recipe/, assets/, build/ and two src/ files).\n3. Run \`claude\` in the project folder.\n4. Prompt: "Read CLAUDE.md and build/implementation-plan.md. Start with step 1 and stop after each step for review."\n5. When all steps are done: "Run the visual-qa skill against build/verification.md and fix every deviation."`,
+      instructions: `1. Create a Next.js project (npx create-next-app@latest) or open your existing one.\n2. Unzip this package into the project root (it adds CLAUDE.md, .claude/skills, recipe/, assets/, build/ and two src/ files).\n3. Run \`claude\` in the project folder.\n4. Prompt: "Read CLAUDE.md and build the whole site following build/implementation-plan.md." That is all — it works through every step, checks itself against build/verification.md, and replies with a localhost URL when done.`,
     }
   },
 }

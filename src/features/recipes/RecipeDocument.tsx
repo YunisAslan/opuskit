@@ -25,6 +25,7 @@ const TOC: { id: string; label: string; md?: RecipeSectionKey }[] = [
   { id: 'components', label: 'Components', md: 'components' },
   { id: 'media', label: 'Media', md: 'media' },
   { id: 'motion', label: 'Motion', md: 'motion' },
+  { id: 'signatures', label: 'Signature Moments', md: 'signatures' },
   { id: 'assets', label: 'Asset Checklist', md: 'assets' },
   { id: 'resources', label: 'Resources', md: 'resources' },
   { id: 'references', label: 'References', md: 'references' },
@@ -202,6 +203,22 @@ export function RecipeDocument({ recipe, recipeRef, onRemix }: { recipe: Univers
                 </details>
               ))}
             </div>
+          </Section>
+
+          <Section id="signatures" title="Signature moments" md="signatures">
+            <p className="prose-serif max-w-2xl">The small interactions people remember and share — each one placed on its own section of your site.</p>
+            {r.signatures.length ? (
+              <div className="mt-8 grid gap-3 md:grid-cols-2">
+                {r.signatures.map((s) => (
+                  <div key={s.id} className="rounded-lg border border-line bg-white p-5">
+                    <p className="text-sm text-muted">{s.where}</p>
+                    <p className="mt-1 font-medium">{s.name}</p>
+                    <p className="mt-2 text-sm text-ink-2">{s.experience}</p>
+                    <p className="mt-3 text-xs text-muted">On phones: {s.mobile}</p>
+                  </div>
+                ))}
+              </div>
+            ) : <p className="mt-4 text-sm text-muted">None — this recipe keeps interaction deliberately quiet.</p>}
           </Section>
 
           <Section id="assets" title="What you'll need" md="assets">

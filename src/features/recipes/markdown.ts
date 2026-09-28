@@ -47,12 +47,16 @@ export const recipeSections = {
 
   media: (r: UniversalRecipe) => {
     const m = r.media
-    return `## Media Direction — ${m.name}\n\n${m.direction}\n\n### Treatment\n${list(m.treatment)}\n\n**Formats:** ${m.formats}\n\n### Hero — ${m.hero.name}\n- **Composition:** ${m.hero.composition}\n- **Behavior:** ${m.hero.behavior}\n- **Responsive:** ${m.hero.responsive}\n- **Requires:** ${m.hero.requires.join('; ')}\n- **Fallback:** ${m.hero.fallback}`
+    return `## Media Direction — ${m.name}\n\n${m.direction}\n\n### Treatment\n${list(m.treatment)}\n\n**Formats:** ${m.formats}\n\n### Hero — ${m.hero.name}\n- **Composition:** ${m.hero.composition}\n- **Behavior:** ${m.hero.behavior}\n- **Responsive:** ${m.hero.responsive}\n- **Requires:** ${m.hero.requires.join('; ')}\n- **Fallback:** ${m.hero.fallback}` + (m.storytelling ? `\n\n### Scroll storytelling\n\nscroll → film moves → scene changes → its message arrives → it leaves → next scene. One coordinated timeline.\n\n${list(m.storytelling)}` : '')
   },
 
   motion: (r: UniversalRecipe) =>
     `## Motion System — ${r.motion.level.name}\n\n${r.motion.principle}\n\n**Rule:** animation for demonstration, not decoration.\n\n**Libraries:** ${r.motion.libraries.join(', ')}\n\n` +
     r.motion.patterns.map((p) => `### ${p.name}\n- **Purpose:** ${p.purpose}\n- **Trigger:** ${p.trigger}\n- **Behavior:** ${p.behavior}\n- **Duration:** ${p.duration}\n- **Easing:** ${p.easing}\n- **Implementation:** ${p.implementation}\n- **Performance:** ${p.performance}\n- **Reduced motion:** ${p.reducedMotion}`).join('\n\n'),
+
+  signatures: (r: UniversalRecipe) => r.signatures.length
+    ? `## Signature Moments\n\nThe small interactions people remember. Build each one exactly where it is placed — they are part of the design, not optional polish.\n\n${r.signatures.map((s) => `### ${s.name} — ${s.where}\n- **What visitors experience:** ${s.experience}\n- **How:** ${s.implementation}\n- **Mobile:** ${s.mobile}\n- **Reduced motion:** ${s.reducedMotion}`).join('\n\n')}`
+    : '## Signature Moments\n\nNone — this recipe keeps interaction deliberately quiet.',
 
   content: (r: UniversalRecipe) => {
     const c = r.contentDirection

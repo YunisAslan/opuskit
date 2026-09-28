@@ -48,10 +48,12 @@ To (re)generate `public/live/{slug}/` from `examples/{slug}/`:
    Without this, Turbopack walks up, finds OpusKit's own lockfile, and misidentifies OpusKit's root
    as the build root — this once wiped OpusKit's own `node_modules`/`.next`.
 2. Temporarily add `output: 'export'`, `basePath: '/live/{slug}'`, `images: { unoptimized: true }`,
-   `npm install && npx next build`, then restore the real config.
+   `npm install && npx next build`, then restore the real config. If Turbopack fails on
+   `next/font/google` ("queries have exactly one entry"), build with `npx next build --webpack`.
 3. In `out/`, grep every `.html`/`.txt`/`.js` for `"/media/` and replace with
    `"/examples/{slug}/media/`. Copy everything **except** `out/media/` into `public/live/{slug}/`.
-4. Link to `.../index.html` explicitly, not a trailing slash — `public/` files are exact-match only,
+4. Inner links (`/live/{slug}/about`) resolve via the `fallback` rewrites in `next.config.ts` (→ `about.html`).
+   Link to `.../index.html` explicitly, not a trailing slash — `public/` files are exact-match only,
    and the app's default trailing-slash redirect (`/live/{slug}/` → `/live/{slug}`) 404s otherwise.
 5. Verify with a real browser (not just curl), via a click-through from the nav, not just a direct
    URL — assert no failed requests and that the clicked-to page actually renders.

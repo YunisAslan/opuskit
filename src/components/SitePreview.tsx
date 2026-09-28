@@ -21,6 +21,8 @@ export type PreviewProps = {
   className?: string
   /** Hide the image entirely (demonstrates an asset-less state). */
   noMedia?: boolean
+  /** A real video (e.g. the user's upload) to play in place of the stock still. */
+  videoSrc?: string
 }
 
 export function previewFromDirection(id: DirectionId, over: Partial<PreviewProps> = {}): PreviewProps {
@@ -167,6 +169,7 @@ function Media(p: PreviewProps) {
       </svg>
     )
   }
+  if (p.videoSrc) return <video src={p.videoSrc} autoPlay muted loop playsInline className="h-full w-full object-cover" />
   return (
     <div className="sp-media relative h-full w-full overflow-hidden" style={{ background: c.surface }}>
       <img src={img(p.image, 900)} alt="" loading="lazy" className="h-full w-full" style={{ objectFit: p.lead === 'product' ? 'contain' : 'cover', padding: p.lead === 'product' ? '8%' : 0, borderRadius: p.lead === '3d' ? '50%' : 0, transform: p.lead === '3d' ? 'scale(.8)' : undefined }} />

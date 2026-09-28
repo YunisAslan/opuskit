@@ -68,6 +68,8 @@ export function visualQa(r: UniversalRecipe): string[] {
     `Pages: ${r.pages.map((p) => p.label).join(' · ')} — every page shares the same navbar and footer.`,
     ...r.pages.map((p) => `${p.label} section order: ${p.sections.map((s) => s.name.split(' — ')[0]).join(' → ')}.`),
     `Hero matches "${r.media.hero.name}": ${r.media.hero.composition}`,
+    ...r.signatures.map((s) => `Signature moment "${s.name}" is built on ${s.where}, with its mobile and reduced-motion versions.`),
+    ...(r.media.storytelling ? ['Scroll film: forward, fast and backward scrolling move the video with the scroll; every scene message appears on its own scene, one at a time (desktop and 390px).'] : []),
     `Layout: ${r.layoutSystem.columns}; section spacing ${r.layoutSystem.sectionSpacing}.`,
     ...[...r.creativeDirection.avoid, ...r.creativeDirection.genericAvoid].map((a) => `Absent: ${a}.`),
     'Mobile (390px): no horizontal scroll, headlines re-broken intentionally, touch targets ≥ 44px.',
@@ -75,6 +77,17 @@ export function visualQa(r: UniversalRecipe): string[] {
     'Every media element is rendered through the asset config layer; temporary assets are listed in the manifest.',
     'Lighthouse on mobile: LCP < 2.5s, CLS < 0.1.',
   ]
+}
+
+/** How the coding agent should work: build everything in one pass, stop only when truly blocked. */
+export function workingRules(r: UniversalRecipe, plan: string, qa: string): string {
+  return `## How to work
+- Build the complete site in one pass: every page, section and step in ${plan}, in order. Do not stop between steps to ask for review, confirmation or permission to continue.
+- Start by writing a short plan (5–8 lines: visual direction, hero${r.media.storytelling ? ', the scroll-film scene map' : ''}, motion, how desktop and mobile differ), then implement immediately — do not wait for approval.
+- After each step, check it against ${qa} yourself and fix what fails before moving on.
+- Only stop to ask when truly blocked: a required file is missing and the recipe gives no temporary option, or two recipe rules contradict each other.
+- When finished: run the production build, fix every build and runtime error, check desktop (1440px) and mobile (390px) in a real browser, start the dev server and reply with the localhost URL and any temporary assets still to replace.
+`
 }
 
 export const frontmatter = (fields: Record<string, string | boolean>) =>

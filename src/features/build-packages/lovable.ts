@@ -72,6 +72,7 @@ export const lovableAdapter: BuildPackageAdapter = {
       `Add the shared footer: ${r.chrome.footer.composition} ${keep}`,
       `Make every page responsive: ${r.implementation.responsive.slice(0, 3).join(' ')} Only change layout at breakpoints.`,
       ...(r.motion.level.id !== 'still' ? [`Add motion: ${r.motion.patterns.filter((p) => p.id !== 'state-feedback').map((p) => `${p.name} — ${p.behavior}`).join('; ')}. Respect prefers-reduced-motion. Don't change layout or copy.`] : []),
+      ...r.signatures.map((s) => `Add the signature moment "${s.name}" on ${s.where}: ${s.experience} ${s.implementation} On mobile: ${s.mobile} Don't change layout or copy.`),
     ]
     return {
       recipeId: r.id, target: 'lovable', assets: assetManifest(r),

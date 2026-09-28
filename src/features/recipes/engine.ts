@@ -1,15 +1,15 @@
 // Design Decision Engine: deterministic composition of curated ingredients into a Universal Recipe.
 // Same spec in → same recipe out. Remix = change one spec field and recompose.
 
-import { characters, directions, leads, motionLevels, purposes } from '@/data/taxonomy'
+import { characters, directions, goals, leads, motionLevels, purposes } from '@/data/taxonomy'
 import { colorRoles, layouts, palettes, typography } from '@/data/ingredients'
-import { GENERIC_TELLS, components, heroes, media, motionPatterns, pageTypes, sections } from '@/data/patterns'
+import { GENERIC_TELLS, components, heroes, media, motionPatterns, pageTypes, sections, signaturePatterns } from '@/data/patterns'
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { resources } from '@/data/resources'
 import { contrast, contrastLabel, isHex } from '@/lib/color'
 import type {
-  AssetCreationPath, AssetRequirement, AssetSpec, BuildTarget, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern,
-  LeadId, MotionLevel, PageBlueprint, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
+  AssetCreationPath, AssetRequirement, AssetSpec, Brief, BuildTarget, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern,
+  LeadId, MotionLevel, PageBlueprint, SignatureMoment, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
 } from '@/types/domain'
 
 // ─── Spec helpers ────────────────────────────────────────────────────────────
@@ -45,9 +45,19 @@ export function resolveHero(spec: Pick<RecipeSpec, 'lead' | 'motion' | 'hero'>):
   return heroes[byLead[spec.lead]]
 }
 
+/** Trust boundary for the free-text + id parts of the brief (they come back from localStorage). */
+function cleanBrief(b: unknown): Brief | undefined {
+  if (!b || typeof b !== 'object') return undefined
+  const x = b as Record<string, unknown>
+  const text = (v: unknown, max: number) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, max) : undefined)
+  const goal = typeof x.goal === 'string' && Object.hasOwn(goals, x.goal) ? (x.goal as Brief['goal']) : undefined
+  return { name: text(x.name, 60), offer: text(x.offer, 160), goal }
+}
+
 /** Keeps a spec coherent after any change (questionnaire or Remix). Only dependent decisions move. */
 export function normalizeSpec(spec: RecipeSpec): RecipeSpec {
-  const next = { ...spec, characters: spec.characters.slice(0, 2) }
+  const next = { ...spec, characters: spec.characters.slice(0, 2), brief: cleanBrief(spec.brief) }
+  if (!next.brief) delete next.brief
   if (next.hero && !heroOptions(next.lead, next.motion).some((h) => h.id === next.hero)) delete next.hero
   const hero = resolveHero(next)
   if (hero.forcesLayout) next.layout = hero.forcesLayout
@@ -156,7 +166,7 @@ function buildAssets(spec: RecipeSpec, hero: HeroPattern): AssetRequirement[] {
     { asset: 'copy', label: 'Final copy', quantity: 'All sections', level: 'required', usage: 'Headlines, body, CTAs', specs: 'Written in the recipe voice before layout; headlines ≤ 8 words' },
     ...media[spec.lead].assets,
   ]
-  if (hero.id === 'scroll-video') list.push({ asset: 'video', label: 'Scrub-ready encode', quantity: '1 file', level: 'required', usage: 'Scroll-controlled hero', specs: 'ffmpeg -i hero.mp4 -g 1 -crf 23 -an hero-scrub.mp4 (all-intra for smooth seeking)' })
+  if (hero.id === 'scroll-video' || hero.id === 'scroll-video-page') list.push({ asset: 'video', label: 'Scrub-ready encode', quantity: '1 file', level: 'required', usage: hero.id === 'scroll-video' ? 'Scroll-controlled hero' : 'Scroll-controlled page background', specs: 'ffmpeg -i hero.mp4 -g 1 -crf 23 -an hero-scrub.mp4 (all-intra for smooth seeking)' })
   if (TEXTURED.has(spec.direction)) list.push({ asset: 'images', label: 'Texture', quantity: '1–2', level: 'optional', usage: 'Subtle paper/grain overlay at ≤ 4% opacity', specs: 'Seamless tile, 1024px, WebP' })
 
   // Ties uploaded files to the first requirement row of the same asset type (list order), so a single
@@ -246,6 +256,57 @@ function pickResources(spec: RecipeSpec, textured: boolean): string[] {
   return uniq(ids).filter((id) => known.has(id))
 }
 
+/** Scroll-controlled film: the craft a user would otherwise have to spell out in a follow-up prompt. */
+function filmStory(spec: RecipeSpec, hero: HeroPattern): string[] | undefined {
+  if (hero.id !== 'scroll-video' && hero.id !== 'scroll-video-page') return undefined
+  const range = hero.id === 'scroll-video' ? 'the pinned hero scroll range' : 'the whole page scroll'
+  const sells = ['ecommerce', 'product', 'fashion'].includes(spec.purpose)
+  return [
+    `Scroll controls time: map ${range} to the full video timeline (0 → duration). Slow scroll moves the film slowly, fast scroll moves it fast, scrolling up plays it backward. Never autoplay the sequence.`,
+    'Keep it tightly connected: scrub ≈ 0.5 with smooth scroll, and an all-intra (or GOP ≤ 5) encode so seeking never stutters.',
+    'Before coding, watch the video and write a scene map in src/config/scenes.ts: every meaningful moment (a new subject, a pause, a zoom, a change of light) with its start and end as a fraction of the timeline, and the message that belongs to it.',
+    'One message per scene, about what is on screen right now. It arrives as its scene begins, holds while the scene plays, and leaves before the next scene’s message arrives — never two at once, never at arbitrary scroll points.',
+    ...(sells ? ['This site sells: when the camera pauses or zooms on a product, that scene’s message names the product, adds one line about it and its price, with a quiet link to its product page.'] : []),
+    'Video and type are one system: drive both from a single ScrollTrigger timeline, with each text tween placed at its scene’s fraction — not two separate animation setups.',
+    'Text transitions, varied per scene: masked line-by-line reveals, short vertical travel (≤ 24px), clip-path wipes, a small tracking or scale change. No repeated plain fade-ins, nothing bouncy.',
+    'Legibility over footage: a soft gradient scrim only behind the text, never a flat dark overlay across the whole film.',
+    hero.id === 'scroll-video'
+      ? 'When the film ends, release into the next section without a hard cut (overlap it, or ease the last frame into the page background); later sections keep the same type and spacing.'
+      : 'Sections scroll over the film on semi-opaque surfaces; line up the film’s key moments with section boundaries so each section has its own scene.',
+    'Mobile keeps the same story and scene map: shorter scroll distance, 9:16 encode, simpler reveals (opacity + small translate). If seeking stutters on a phone, step through poster stills per scene instead.',
+    'Verify in a real browser at 1440px and 390px: scroll slowly, quickly and upward — each message must appear exactly on its scene.',
+  ]
+}
+
+/** Heroes that are already the show — a cursor gimmick on top would compete with them. */
+const FEATURE_HEROES = new Set<HeroId>(['scroll-video', 'scroll-video-page', 'webgl-scene', 'ambient-video'])
+
+/** 2–4 signature interactions that fit this recipe: on sections it actually has, at its motion level, scored by purpose and style. */
+function pickSignatures(spec: RecipeSpec, hero: HeroPattern, pages: PageBlueprint[]): SignatureMoment[] {
+  const d = directions[spec.direction]
+  const style = new Set<string>([...d.tags, ...d.families, ...spec.characters])
+  const where = (sid: SectionId) => {
+    if (sid === 'navbar') return 'Navigation'
+    if (sid === 'footer') return 'Footer'
+    const page = pages.find((p) => p.sections.some((s) => s.id === sid))
+    return page && `${page.label} — ${page.sections.find((s) => s.id === sid)!.name}`
+  }
+  const candidates = signaturePatterns.flatMap((p, order) => {
+    if (!p.levels.includes(spec.motion)) return []
+    const score = (p.fits.includes(spec.purpose) ? 3 : 0) + p.fits.filter((f) => style.has(f)).length
+    return score > 0 ? [{ p, score, order }] : []
+  }).sort((a, b) => b.score - a.score || a.order - b.order)
+  const used = new Set<SectionId>()
+  const out: SignatureMoment[] = []
+  for (const { p } of candidates) {
+    const sid = p.sections.find((s) => !used.has(s) && where(s) && !(s === 'hero' && FEATURE_HEROES.has(hero.id)))
+    if (out.length === 4 || !sid) continue
+    used.add(sid)
+    out.push({ id: p.id, name: p.name, where: where(sid)!, experience: p.experience, implementation: p.implementation, mobile: p.mobile, reducedMotion: p.reducedMotion })
+  }
+  return out
+}
+
 const TECH_LABEL = { css: 'CSS (transitions, scroll-driven animations)', motion: 'Motion', gsap: 'GSAP + ScrollTrigger', lenis: 'Lenis', three: 'React Three Fiber + drei' } as const
 
 export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
@@ -266,11 +327,18 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
 
   const adjective = chars[0]?.adjective ?? ''
   const composedTitle = [direction.name.includes(adjective) ? '' : adjective, direction.name, purpose.noun].filter(Boolean).join(' ')
-  const title = unchanged ? seed.title : composedTitle
+  const brief = spec.brief ?? {}
+  const goal = brief.goal && goals[brief.goal]
+  const title = brief.name ? `${brief.name} — ${composedTitle}` : unchanged ? seed.title : composedTitle
   const slug = unchanged ? seed.slug : camel(composedTitle).replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`).replace(/^-/, '')
 
-  const summary = unchanged ? seed.summary
+  const baseSummary = unchanged && !brief.name ? seed.summary
     : `A ${purpose.noun.toLowerCase()} with a ${direction.name.toLowerCase()} direction: ${type.name.toLowerCase()} typography, a ${palette.name.toLowerCase()} palette, ${leads[spec.lead].name.toLowerCase()} leading the experience and ${motion.name.toLowerCase()} motion.`
+  const summary = [
+    brief.offer && `${brief.name ?? 'The project'}: ${brief.offer.replace(/\.$/, '')}.`,
+    baseSummary,
+    goal ? `Primary goal: ${goal.name.toLowerCase()}.` : '',
+  ].filter(Boolean).join(' ')
 
   const colors = { ...palette.colors, ...spec.customPalette }
   const patterns = motionPatterns.filter((p) => p.levels.includes(spec.motion) && (!p.leads || p.leads.includes(spec.lead)))
@@ -323,16 +391,17 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     chrome,
     pages,
     components: componentIds.map((c) => c === 'Hero' ? { ...components.Hero, anatomy: hero.composition, behavior: hero.behavior } : components[c]),
-    media: { ...lead, hero },
+    media: { ...lead, hero, storytelling: filmStory(spec, hero) },
     motion: { level: motion, principle: motion.principle, patterns, libraries: techs.map((t) => TECH_LABEL[t]) },
+    signatures: pickSignatures(spec, hero, pages),
     contentDirection: {
-      tone: sameDirection ? seed.content.tone : chars.flatMap((c) => c.tone).join(', '),
+      tone: sameDirection ? seed.content.tone : chars.flatMap((c) => c.tone).join(', ') || direction.mood.join(', ').toLowerCase(),
       voice: chars.map((c) => c.voice).join(' ') || 'Plain, specific, confident.',
       headlineStyle: chars[0]?.headlineStyle ?? 'Short, specific statements',
       headlineExamples: seed.content.headlineExamples,
       paragraphLength: spec.lead === 'typography' ? '1–3 sentences; let headlines carry the page' : '2–4 sentences (40–80 words); never more than 65 characters per line',
-      ctaStyle: purpose.ctaPattern,
-      ctaExamples: seed.content.ctaExamples,
+      ctaStyle: goal ? `${goal.effect} ${purpose.ctaPattern}` : purpose.ctaPattern,
+      ctaExamples: goal ? uniq([...goal.cta, ...seed.content.ctaExamples]).slice(0, 4) : seed.content.ctaExamples,
       wordsToAvoid: WORDS_TO_AVOID,
       density: seed.content.density,
     },
