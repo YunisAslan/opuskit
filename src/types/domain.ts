@@ -7,6 +7,7 @@ import type { ImageKey } from '@/data/images'
 export type PurposeId =
   | 'portfolio' | 'agency' | 'studio' | 'fashion' | 'restaurant' | 'ecommerce'
   | 'product' | 'saas' | 'personal-brand' | 'experiment' | 'other'
+  | 'blog' | 'event' | 'nonprofit' | 'real-estate' | 'hotel' | 'course' | 'clinic'
 
 export type FamilyId =
   | 'quiet' | 'editorial' | 'cinematic' | 'minimal' | 'bold' | 'raw' | 'organic' | 'experimental' | 'futuristic'
@@ -70,7 +71,7 @@ export type MediaPlan = 'have' | 'image-to-video' | 'temporary' | 'image-alterna
 
 export type BuildTargetId = 'claude-code' | 'cursor' | 'v0' | 'lovable' | 'own-code' | 'not-sure'
 
-export type GoalId = 'contact' | 'book' | 'buy' | 'signup' | 'subscribe' | 'explore'
+export type GoalId = 'contact' | 'book' | 'buy' | 'signup' | 'subscribe' | 'explore' | 'call' | 'visit' | 'donate' | 'apply' | 'download'
 
 
 export type SectionId =

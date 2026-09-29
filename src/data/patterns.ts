@@ -1,6 +1,6 @@
 import type {
-  ComponentId, ComponentPattern, HeroId, HeroPattern, ImagePresentation, ImagePresentationId, InspirationSource, LeadId, MediaPattern, MotionPattern, PageType, PageTypeId,
-  NavStyle, NavStyleId, SectionId, SectionPattern, ShapeId, ShapeStyle, SignaturePattern,
+  ComponentId, ComponentPattern, HeroId, HeroPattern, ImagePresentation, ImagePresentationId, InspirationSource, LeadId, MediaPattern, MotionLevel, MotionPattern, PageType, PageTypeId,
+  GoalId, NavStyle, NavStyleId, SectionId, SectionPattern, ShapeId, ShapeStyle, SignaturePattern,
 } from '@/types/domain'
 
 export const heroes: Record<HeroId, HeroPattern> = {
@@ -764,6 +764,12 @@ export const uiBySection: Partial<Record<SectionId, string[]>> = {
   journal: ['badge', 'pagination'],
   navbar: ['navigation-menu', 'dropdown-menu'],
 }
+/** The controls the main action itself needs, on whichever page it lives. */
+export const uiByGoal: Record<GoalId, string[]> = {
+  contact: ['form', 'input', 'textarea', 'label'], book: ['calendar', 'popover', 'select', 'form', 'label'], buy: ['sheet', 'radio-group', 'select'],
+  signup: ['form', 'input', 'input-otp', 'label'], subscribe: ['form', 'input'], explore: [], call: ['dropdown-menu'], visit: ['tabs', 'card'],
+  donate: ['toggle-group', 'input', 'form', 'label'], apply: ['form', 'input', 'textarea', 'select', 'checkbox', 'label'], download: ['badge'],
+}
 export const uiByPage: Partial<Record<PageTypeId, string[]>> = {
   reservations: ['calendar', 'popover', 'select', 'input', 'form', 'label'],
   contact: ['input', 'textarea', 'select', 'checkbox', 'form', 'label'],
@@ -793,3 +799,17 @@ export const uiNames: Record<string, string> = {
   dialog: 'Dialog', carousel: 'Carousel', pagination: 'Pagination', 'navigation-menu': 'Navigation menu', 'dropdown-menu': 'Dropdown menu',
   table: 'Table', separator: 'Separator', breadcrumb: 'Breadcrumb', slider: 'Range slider', avatar: 'Avatar', 'input-otp': 'One-time code', command: 'Search box',
 }
+
+/** The first-screen question: each option is a hero, described by what the visitor experiences — never by how it's built. */
+export const EFFECTS: { hero: HeroId; name: string; line: string; lead: LeadId; motion: MotionLevel; trending?: boolean }[] = [
+  { hero: 'scroll-video', name: 'Film on the first screen', line: 'The opening scene plays forward as visitors scroll, then the rest of the page carries on as normal.', lead: 'video', motion: 'immersive', trending: true },
+  { hero: 'scroll-video-page', name: 'Film behind the whole page', line: 'The film stays in the background from top to bottom, moving forward with every scroll until the very end.', lead: 'video', motion: 'immersive', trending: true },
+  { hero: 'parallax-photo', name: 'Photo with depth', line: 'The photo drifts slower than the page, so it feels three-dimensional.', lead: 'photography', motion: 'dynamic', trending: true },
+  { hero: 'kinetic-type', name: 'Words in motion', line: 'Big headlines slide and reveal themselves as visitors scroll.', lead: 'typography', motion: 'dynamic', trending: true },
+  { hero: 'webgl-scene', name: 'Object you can play with', line: 'A 3D object visitors can turn and explore with their mouse or finger.', lead: '3d', motion: 'dynamic', trending: true },
+  { hero: 'ambient-video', name: 'Moving background', line: 'A calm, looping clip plays quietly behind your headline.', lead: 'video', motion: 'subtle' },
+  { hero: 'editorial-image', name: 'One big photo', line: 'A single striking image, calm and still.', lead: 'photography', motion: 'subtle' },
+  { hero: 'product-stage', name: 'Product in the spotlight', line: 'Your product, large and clean, like a shop window.', lead: 'product', motion: 'subtle' },
+  { hero: 'type-statement', name: 'Just bold words', line: 'A confident headline and nothing else. Fast and clear.', lead: 'typography', motion: 'still' },
+  { hero: 'illustrated', name: 'Illustrated scene', line: 'A drawn world that sets your tone from the first second.', lead: 'illustration', motion: 'subtle' },
+]

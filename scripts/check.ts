@@ -146,6 +146,24 @@ const main = async () => {
   assert.match(md, /No focus rings/, 'generated rules forbid focus rings')
   assert.ok(!/focus rings use|2px outline, 2px offset/.test(md), 'nothing asks the builder for a focus ring')
 
+  // Copy examples follow the kind of site, not the base recipe it borrowed its look from.
+  const shop = composeRecipe({ ...specFromSeed(recipeSeeds[1]), purpose: 'ecommerce', pages: [] })
+  assert.ok(!shop.contentDirection.headlineExamples.some((h) => /Selected work|Films for/.test(h)), 'a store never gets portfolio headlines')
+  assert.ok(!shop.contentDirection.ctaExamples.includes('View the reel'), 'a store never gets a portfolio CTA')
+
+  // Questions keep earning their place (full report: npx tsx scripts/choice-audit.ts).
+  const fams = Object.values(families)
+  assert.equal(new Set(fams.map((f) => f.directions[0])).size, fams.length, 'every feeling opens on a different style (distinct preview card)')
+  for (let i = 0; i < fams.length; i++) for (let j = i + 1; j < fams.length; j++) {
+    const shared = fams[i].directions.filter((d) => fams[j].directions.includes(d)).length
+    assert.ok(shared / Math.min(fams[i].directions.length, fams[j].directions.length) < 0.5, `feelings ${fams[i].id}/${fams[j].id} show mostly the same styles`)
+  }
+  assert.ok(Object.keys(directions).every((d) => fams.some((f) => f.directions.includes(d as never))), 'every style is reachable from some feeling')
+  for (const g of Object.keys(goals)) {
+    const r = composeRecipe({ ...specFromSeed(recipeSeeds[0]), brief: { goal: g as never } })
+    assert.equal(r.contentDirection.ctaExamples[0], goals[g as keyof typeof goals].cta[0], `goal ${g} sets the main button`)
+  }
+
   // Remix: video → photography drops video requirements and the scroll-video hero.
   const cinematic = specFromSeed(recipeSeeds[1])
   const before = composeRecipe(cinematic)

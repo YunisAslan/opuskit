@@ -1,0 +1,166 @@
+@import "../styles/tokens.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* shadcn names that do not clash with the recipe tokens. accent / muted / background / border / primary /
+   secondary come from tokens.css; shadcn components were rewritten to use secondary / surface / muted. */
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-curtain: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+:root {
+  --background: #FFFFFF; --foreground: #000000;
+  --card: #F1F1EF; --card-foreground: #000000; --popover: #F1F1EF; --popover-foreground: #000000;
+  --primary: #000000; --primary-foreground: #FFFFFF; --secondary: #E6E6E4; --secondary-foreground: #000000;
+  --muted: #F1F1EF; --muted-foreground: #5E5E5E; --accent: #E6E6E4; --accent-foreground: #000000;
+  --border: #DCDCDA; --input: #5E5E5E; --ring: #000000; --radius: 0px;
+  --destructive: #D7261E;
+}
+
+/* Shape: Sharp. Structure comes from lines and space — nothing rounds, nothing casts a shadow, nothing glows. */
+*, *::before, *::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+@layer base {
+  * { @apply border-border; outline: none; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-align: left;
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) { cursor: pointer; }
+  ::selection { background: var(--color-text); color: var(--color-background); }
+
+  /* Keyboard focus without rings: links and buttons get an underline, fields darken their border. */
+  a:focus-visible { text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
+  button:focus-visible, [role="button"]:focus-visible, [role="tab"]:focus-visible, summary:focus-visible {
+    text-decoration: underline; text-underline-offset: 0.25em;
+  }
+  [data-slot="button"]:focus-visible { text-decoration: underline; text-underline-offset: 0.3em; }
+  [data-slot="popover-content"], [data-slot="select-content"], [data-slot="dropdown-menu-content"], [data-slot="tooltip-content"] { border: 1px solid var(--color-border); }
+  [data-slot="select-item"], [data-slot="dropdown-menu-item"], [data-slot="command-item"] { min-height: 44px; }
+}
+
+/* Typography roles */
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+@utility type-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+@utility type-body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+@utility type-utility {
+  font-family: var(--font-utility);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  font-stretch: 87.5%;
+}
+
+/* 12 / 6 / 4 column grid with 16px gutters and 24px page margins */
+@utility page {
+  width: 100%;
+  padding-inline: 24px;
+}
+@utility grid-page {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 16px;
+  @media (width >= 40rem) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  @media (width >= 64rem) { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+}
+
+/* Motion: fade & rise, clip reveal and line reveal are CSS transitions toggled by one IntersectionObserver. */
+[data-reveal="rise"] > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 600ms var(--ease-out-soft), transform 600ms var(--ease-out-soft);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+[data-reveal="rise"][data-shown] > * { opacity: 1; transform: none; }
+
+[data-reveal="clip"] {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1100ms var(--ease-curtain);
+}
+[data-reveal="clip"] > * { transform: scale(1.15); transition: transform 1100ms var(--ease-curtain); }
+[data-shown] > [data-reveal="clip"] { clip-path: inset(0 0 0 0); }
+[data-shown] > [data-reveal="clip"] > * { transform: none; }
+
+[data-reveal="lines"] .line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+[data-reveal="lines"] .line > span {
+  display: inline-block;
+  transform: translateY(105%);
+  transition: transform 700ms var(--ease-out-soft);
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+[data-reveal="lines"][data-shown] .line > span { transform: none; }
+[data-reveal="lines"][data-immediate] .line > span { animation: line-in 700ms var(--ease-out-soft) both; animation-delay: calc(var(--i, 0) * 80ms); }
+@keyframes line-in { from { transform: translateY(105%); } to { transform: none; } }
+
+/* Links that roll on hover (pointer devices only) */
+.roll { position: relative; display: inline-flex; overflow: hidden; line-height: 1.3; }
+.roll > span { display: inline-flex; }
+.roll > span:last-child { position: absolute; inset: 0; }
+.roll .ch { display: inline-block; white-space: pre; transition: transform 350ms var(--ease-curtain); transition-delay: calc(var(--c) * 12ms); }
+.roll > span:last-child .ch { transform: translateY(100%); }
+@media (hover: hover) and (pointer: fine) {
+  .roll:hover > span:first-child .ch, a:focus-visible .roll > span:first-child .ch { transform: translateY(-100%); }
+  .roll:hover > span:last-child .ch, a:focus-visible .roll > span:last-child .ch { transform: translateY(0); }
+}
+
+/* Page transition: a short crossfade; the header stays put. */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 450ms; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+::view-transition-group(site-header) { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal="rise"] > * { transform: none; transition: opacity 200ms linear; transition-delay: 0ms; }
+  [data-reveal="clip"], [data-reveal="clip"] > * { clip-path: none; transform: none; }
+  [data-reveal="clip"] { opacity: 0; transition: opacity 200ms linear; }
+  [data-shown] > [data-reveal="clip"] { opacity: 1; }
+  [data-reveal="lines"] .line > span { transform: none; transition: none; animation: none !important; }
+  .roll > span:last-child { display: none; }
+  .roll .ch { transition: none; transform: none !important; }
+  .roll:hover { text-decoration: underline; text-underline-offset: 0.25em; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  /* shadcn open/close animations (tw-animate) collapse to instant; colour feedback transitions stay. */
+  *, *::before, *::after { animation-duration: 0.01ms !important; }
+}

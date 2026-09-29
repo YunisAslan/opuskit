@@ -3,13 +3,13 @@
 
 import { characters, directions, goals, leads, motionLevels, purposes } from '@/data/taxonomy'
 import { colorRoles, layouts, palettes, typography } from '@/data/ingredients'
-import { GENERIC_TELLS, components, heroes, imagePresentations, media, motionPatterns, navStyles, pageTypes, sections, shapeStyles, signaturePatterns, UI_ALWAYS, uiByPage, uiBySection, uiNames } from '@/data/patterns'
+import { GENERIC_TELLS, components, heroes, imagePresentations, media, motionPatterns, navStyles, pageTypes, sections, shapeStyles, signaturePatterns, UI_ALWAYS, uiByGoal, uiByPage, uiBySection, uiNames } from '@/data/patterns'
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { resources } from '@/data/resources'
 import { contrast, contrastLabel, isHex } from '@/lib/color'
 import type {
   AssetCreationPath, AssetRequirement, AssetSpec, Brief, BuildTarget, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern, ImagePresentationId, ImageryPlan,
-  LeadId, MotionLevel, NavStyleId, ShapeStyle, UiKit, SignaturePattern, PageBlueprint, ShapeId, SignatureMoment, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
+  GoalId, LeadId, MotionLevel, NavStyleId, ShapeStyle, UiKit, SignaturePattern, PageBlueprint, ShapeId, SignatureMoment, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
 } from '@/types/domain'
 
 // ─── Spec helpers ────────────────────────────────────────────────────────────
@@ -456,6 +456,7 @@ export function recommendedNav(spec: Pick<RecipeSpec, 'purpose' | 'direction'>):
   const byPurpose: Record<PurposeId, NavStyleId> = {
     portfolio: 'fullscreen-menu', agency: 'fullscreen-menu', studio: 'fullscreen-menu', fashion: 'centered-logo', restaurant: 'centered-logo',
     ecommerce: 'classic-bar', product: 'floating-pill', saas: 'floating-pill', 'personal-brand': 'bottom-dock', experiment: 'card-menu', other: 'classic-bar',
+    blog: 'classic-bar', event: 'centered-logo', nonprofit: 'floating-pill', 'real-estate': 'classic-bar', hotel: 'centered-logo', course: 'floating-pill', clinic: 'classic-bar',
   }
   return byPurpose[spec.purpose]
 }
@@ -473,11 +474,12 @@ export function recommendedShape(spec: Pick<RecipeSpec, 'direction'>): ShapeId {
 
 
 /** Every control and form this site has, built from shadcn/ui and themed with the recipe's exact colors and shape. */
-function uiKit(pages: PageBlueprint[], colors: PaletteColors, shape: ShapeStyle): UiKit {
+function uiKit(pages: PageBlueprint[], colors: PaletteColors, shape: ShapeStyle, goal?: GoalId): UiKit {
   const where = new Map<string, Set<string>>()
   const add = (slug: string, place: string) => where.set(slug, (where.get(slug) ?? new Set()).add(place))
   UI_ALWAYS.forEach((slug) => add(slug, 'every page'))
   uiBySection.navbar?.forEach((slug) => add(slug, 'navigation'))
+  if (goal) uiByGoal[goal].forEach((slug) => add(slug, `main action — ${goals[goal].name.toLowerCase()}`))
   for (const p of pages) {
     uiByPage[p.type]?.forEach((slug) => add(slug, p.label))
     p.sections.forEach((sec) => uiBySection[sec.id]?.forEach((slug) => add(slug, `${p.label} — ${sec.name}`)))
@@ -508,6 +510,29 @@ function uiKit(pages: PageBlueprint[], colors: PaletteColors, shape: ShapeStyle)
       'Mobile: Select, Popover and Dropdown open as a bottom Sheet/Drawer on screens under 640px.',
     ],
   }
+}
+
+/** Headline and CTA examples per kind of site, used when the base recipe was written for a different kind
+ * (a store must never get a portfolio's "Selected work, 2019—2026"). Examples of register, not copy to paste. */
+const PURPOSE_COPY: Record<PurposeId, { headlines: string[]; cta: string[] }> = {
+  portfolio: { headlines: ['Selected work, 2019—2026', 'Design for things that last', 'Currently taking on new projects'], cta: ['See the work', 'Get in touch'] },
+  agency: { headlines: ['We make brands people remember', 'Strategy, design, launch', 'Work that moved the numbers'], cta: ['Start a project', 'See case studies'] },
+  studio: { headlines: ['A small studio with a point of view', 'Made slowly, on purpose', 'Recent work'], cta: ['Say hello', 'Visit the studio'] },
+  fashion: { headlines: ['The new collection', 'Cut close, worn loose', 'Made in small runs'], cta: ['Discover the collection', 'Shop the look'] },
+  restaurant: { headlines: ['Dinner, from seven', 'Seasonal plates, open fire', 'A table is waiting'], cta: ['Book a table', 'See the menu'] },
+  ecommerce: { headlines: ['Made to be used every day', 'New this week', 'Built to last, priced fairly'], cta: ['Shop now', 'Add to bag'] },
+  product: { headlines: ['Meet the new one', 'Everything you need, nothing you don’t', 'Designed around one idea'], cta: ['Pre-order', 'See how it works'] },
+  saas: { headlines: ['Close your books in one click', 'Less busywork, more work', 'Set up in five minutes'], cta: ['Start free', 'Book a demo'] },
+  'personal-brand': { headlines: ['Hi, I write about type', 'Notes from the work', 'Latest writing'], cta: ['Subscribe', 'Read the latest'] },
+  experiment: { headlines: ['Scroll to play', 'Everything here moves', 'An experiment in type'], cta: ['Keep exploring', 'Start'] },
+  other: { headlines: ['What we do, in one line', 'Why it matters', 'How to get started'], cta: ['Get in touch', 'Learn more'] },
+  blog: { headlines: ['The case for slower design', 'This week: three essays', 'Read the archive'], cta: ['Subscribe', 'Read the latest'] },
+  event: { headlines: ['14 June, Sheki', 'Join us', 'The day, hour by hour'], cta: ['RSVP', 'See the schedule'] },
+  nonprofit: { headlines: ['Every village deserves a library', '312 libraries built so far', 'Where your gift goes'], cta: ['Donate', 'Volunteer with us'] },
+  'real-estate': { headlines: ['Homes by the sea', 'New this month', 'Viewings this weekend'], cta: ['Book a viewing', 'See all listings'] },
+  hotel: { headlines: ['Nine rooms above the olive groves', 'Stay a while', 'Slow mornings, long dinners'], cta: ['Check availability', 'See the rooms'] },
+  course: { headlines: ['Learn lettering in six weeks', 'Next cohort starts 3 March', 'What you’ll make'], cta: ['Enrol now', 'Watch a free lesson'] },
+  clinic: { headlines: ['Gentle care, open late', 'Treatments for the whole family', 'Meet your dentist'], cta: ['Book an appointment', 'Call the practice'] },
 }
 
 const TECH_LABEL = { css: 'CSS (transitions, scroll-driven animations)', motion: 'Motion', gsap: 'GSAP + ScrollTrigger', lenis: 'Lenis', three: 'React Three Fiber + drei' } as const
@@ -608,10 +633,10 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
       tone: sameDirection ? seed.content.tone : chars.flatMap((c) => c.tone).join(', ') || direction.mood.join(', ').toLowerCase(),
       voice: chars.map((c) => c.voice).join(' ') || 'Plain, specific, confident.',
       headlineStyle: chars[0]?.headlineStyle ?? 'Short, specific statements',
-      headlineExamples: seed.content.headlineExamples,
+      headlineExamples: seed.spec.purpose === spec.purpose ? seed.content.headlineExamples : PURPOSE_COPY[spec.purpose].headlines,
       paragraphLength: spec.lead === 'typography' ? '1–3 sentences; let headlines carry the page' : '2–4 sentences (40–80 words); never more than 65 characters per line',
       ctaStyle: goal ? `${goal.effect} ${purpose.ctaPattern}` : purpose.ctaPattern,
-      ctaExamples: goal ? uniq([...goal.cta, ...seed.content.ctaExamples]).slice(0, 4) : seed.content.ctaExamples,
+      ctaExamples: (() => { const base = seed.spec.purpose === spec.purpose ? seed.content.ctaExamples : PURPOSE_COPY[spec.purpose].cta; return goal ? uniq([...goal.cta, ...base]).slice(0, 4) : base })(),
       wordsToAvoid: WORDS_TO_AVOID,
       density: seed.content.density,
     },
@@ -658,7 +683,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
         ...(spec.lead === '3d' ? ['3D canvas is decorative (aria-hidden); all information also exists in HTML.'] : []),
         `Check contrast: body text must pass AA (${contrast(colors.text, colors.background).toFixed(1)}:1 on background).`,
       ],
-      ui: uiKit(pages, colors, shapeStyles[spec.shape ?? recommendedShape(spec)]),
+      ui: uiKit(pages, colors, shapeStyles[spec.shape ?? recommendedShape(spec)], spec.brief?.goal),
       performance: [
         'Only the hero media uses priority loading; everything else lazy-loads.',
         'Animate transform and opacity only; avoid animating layout properties.',

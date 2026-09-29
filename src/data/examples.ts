@@ -39,6 +39,7 @@ export const examples: ExampleProject[] = [
     mood: ['Nostalgic', 'Warm', 'Dramatic'],
     hero: { kind: 'video', src: '/examples/cheeky911/media/heroVideo.mp4', poster: '/examples/cheeky911/media/posterImage.jpg' },
     livePath: '/live/cheeky911/index.html',
+    clip: '/examples/cheeky911/media/clip.mp4',
     // From CLAUDE.md + recipe/*.md (recipe e8e483ca).
     choices: [
       { label: 'Making', value: 'Fashion' },
@@ -62,6 +63,7 @@ export const examples: ExampleProject[] = [
     mood: ['Dramatic', 'Dark', 'Rebellious'],
     hero: { kind: 'video', src: '/examples/buytolose/media/heroVideo.mp4', poster: '/examples/buytolose/media/posterImage.webp' },
     livePath: '/live/buytolose/index.html',
+    clip: '/examples/buytolose/media/clip.mp4',
     // From CLAUDE.md + recipe/*.md (recipe 9858fffc).
     choices: [
       { label: 'Making', value: 'E-commerce store' },
@@ -85,6 +87,7 @@ export const examples: ExampleProject[] = [
     mood: ['Direct', 'Informed', 'Urgent'],
     hero: { kind: 'video', src: '/examples/keepers/media/heroVideo.mp4', poster: '/examples/keepers/media/posterImage.jpg' },
     livePath: '/live/keepers/index.html',
+    clip: '/examples/keepers/media/clip.mp4',
     // From CLAUDE.md + recipe/*.md (recipe 1c6a6cfc).
     choices: [
       { label: 'Making', value: 'Product launch' },
@@ -107,6 +110,7 @@ export const examples: ExampleProject[] = [
     mood: ['Light', 'Friendly', 'Functional'],
     hero: { kind: 'video', src: '/examples/kofii/media/heroVideo.mp4', poster: '/examples/kofii/media/posterImage.jpg' },
     livePath: '/live/kofii/index.html',
+    clip: '/examples/kofii/media/clip.mp4',
     choices: [
       { label: 'Making', value: 'Restaurant' },
       { label: 'Name', value: 'KOFİİ' },

@@ -1,9 +1,9 @@
 'use client'
 // Adaptive visual questionnaire. Only asks what changes the Recipe: steps appear or disappear based on earlier answers.
-// The main flow is a few plain, visual questions; detailed ones are optional "fine-tune" steps reached from the review.
+// The main flow is a few plain, visual questions. The last one composes the recipe; everything stays editable from the result page.
 
 import {
-  AppWindow, BellRing, Briefcase, CalendarCheck, Compass, Globe, Images, Mail, Package, PenTool, Pencil, Plus, Shirt, ShoppingBag,
+  AppWindow, BedDouble, BellRing, ClipboardCheck, Download, GraduationCap, HandHeart, HeartHandshake, House, MapPin, Newspaper, PartyPopper, Phone, Stethoscope, Briefcase, CalendarCheck, Compass, Globe, Images, Mail, Package, PenTool, Pencil, Plus, Shirt, ShoppingBag,
   ShoppingCart, Sparkles, User, UserPlus, UtensilsCrossed, X, type LucideIcon,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -15,14 +15,14 @@ import { SitePreview, previewFromDirection, type PreviewProps } from '@/componen
 import { TypeCard } from '@/components/TypeSpecimen'
 import { Swatches } from '@/components/ui'
 import { palettes, typography } from '@/data/ingredients'
-import { directions, families, goals, leads, motionLevels, purposes } from '@/data/taxonomy'
+import { directions, families, goals, motionLevels, purposes } from '@/data/taxonomy'
 import { offShapeVideo, composeRecipe, isValidSpec, specFromSeed, defaultPagesFor, normalizeSpec, recommendPresentation, recommendedNav, recommendedShape, signatureChoices } from '@/features/recipes/engine'
 import { saveGeneration } from '@/features/recipes/library'
 import { seedBySlug } from '@/data/recipes'
 import { deleteFile, getFile, storeUpload } from '@/lib/files'
 import { examples } from '@/data/examples'
 import { KEYS, get, write } from '@/lib/store'
-import { heroes, imagePresentations, navStyles, pageTypes, shapeStyles } from '@/data/patterns'
+import { EFFECTS, heroes, imagePresentations, navStyles, pageTypes, shapeStyles } from '@/data/patterns'
 import { OptionDemo } from '@/components/OptionDemo'
 import { ToolIcon } from '@/components/ToolIcon'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
@@ -52,7 +52,6 @@ const needsMediaPlan = (d: Draft) => (d.lead === 'video' || d.lead === '3d') && 
 /** A patch, or a function of the latest draft — for updates that land after an await (file reads). */
 type SetDraft = (patch: Partial<Draft> | ((x: Draft) => Partial<Draft>)) => void
 const photosOf = (d: Draft) => d.uploads.filter((u) => u.asset === 'images')
-const nameOf = (d: Draft) => d.brief.name?.trim() || 'your site'
 
 
 type Text = string | ((d: Draft) => string)
@@ -80,7 +79,6 @@ const STEPS: Step[] = [
   // Always asked: every site can use photos, whatever leads the first screen. Their count and shape decide how they are shown.
   { id: 'photos', title: 'Add your photos', hint: (d) => (d.lead === 'photography' ? 'The photos your site is built around. Add as many as you like.' : 'Optional — work, people, places, details for the rest of the site. Add as many as you like.'), show: always, done: always },
   { id: 'target', title: 'How will you build it?', hint: 'Pick the tool you use. You can switch any time on the result page.', show: always, done: (d) => !!d.target },
-  { id: 'review', title: (d) => `Here’s the plan for ${nameOf(d)}`, hint: 'Happy with it? Create it. Want to change something? Tap it.', show: always, done: always },
 ]
 
 function toSpec(d: Draft): RecipeSpec {
@@ -110,8 +108,6 @@ export function Creator() {
   const [d, setD] = useState<Draft>(EMPTY)
   const [stepId, setStepId] = useState('purpose')
   const [loading, setLoading] = useState<string | null>(null)
-  // Set when the user jumps back from the review step, so one click returns them there instead of re-walking every question.
-  const [fromReview, setFromReview] = useState(false)
   // Set when the user came back from a result page to change answers: finishing saves over that same recipe.
   const [editId, setEditId] = useState<string | null>(null)
 
@@ -123,8 +119,8 @@ export function Creator() {
     const edit = params.get('edit'), seed = params.get('seed'), jump = params.get('step')
     const from = edit ? get<Record<string, { spec: unknown }>>(KEYS.generations, {})[edit]?.spec : seed && seedBySlug[seed] ? specFromSeed(seedBySlug[seed]) : undefined
     if (from && isValidSpec(from)) {
-      setD(specToDraft(normalizeSpec(from))); setEditId(edit); setFromReview(true)
-      setStepId(jump && STEPS.some((s) => s.id === jump) ? jump : 'review')
+      setD(specToDraft(normalizeSpec(from))); setEditId(edit)
+      setStepId(jump && STEPS.some((s) => s.id === jump) ? jump : 'purpose')
     } else if (dir && directions[dir]) setD({ ...EMPTY, feel: directions[dir].families[0], direction: dir, ...defaultsFor(dir) })
     else if (feel && families[feel]) setD({ ...EMPTY, feel })
     else if (saved?.d) { setD({ ...EMPTY, ...saved.d, brief: saved.d.brief ?? {} }); if (STEPS.some((s) => s.id === saved.stepId)) setStepId(saved.stepId) }
@@ -141,7 +137,7 @@ export function Creator() {
   const visible = STEPS.filter((s) => s.show(d))
   const index = visible.includes(step) ? visible.indexOf(step) : STEPS.slice(0, orderIdx).filter((s) => s.show(d)).length
   const isFirst = !STEPS.slice(0, orderIdx).some((s) => s.show(d))
-  const isLast = step.id === 'review'
+  const isLast = !STEPS.slice(orderIdx + 1).some((s) => s.show(d))
   const set: SetDraft = (patch) => setD((x) => ({ ...x, ...(typeof patch === 'function' ? patch(x) : patch) }))
   // The real recipe, recomposed on every answer, so feedback quotes what will actually ship — not a guess.
   const recipe = useMemo(() => composeRecipe(toSpec(d)), [d])
@@ -218,7 +214,7 @@ export function Creator() {
             </div>
             <span className="text-sm tabular-nums text-muted">{index + 1}/{visible.length}</span>
           </div>
-          <button type="button" className="text-sm link" onClick={() => { setD({ ...EMPTY }); setFromReview(false); setEditId(null); go('purpose') }}>Start over</button>
+          <button type="button" className="text-sm link" onClick={() => { setD({ ...EMPTY }); setEditId(null); go('purpose') }}>Start over</button>
         </div>
       </header>
 
@@ -226,7 +222,7 @@ export function Creator() {
         <section className="px-5 pb-40 pt-10 md:px-10 lg:pt-14" aria-labelledby="q">
           <h1 id="q" tabIndex={-1} className="display outline-none text-[clamp(2rem,4vw,3.4rem)]">{txt(step.title, d)}</h1>
           {step.hint && <p className="mt-3 text-ink-2">{txt(step.hint, d)}</p>}
-          <div id="q-body" className="mt-8"><StepBody step={step.id} d={d} set={set} go={(id) => { setFromReview(true); go(id) }} recipe={recipe} /></div>
+          <div id="q-body" className="mt-8"><StepBody step={step.id} d={d} set={set} go={go} recipe={recipe} /></div>
           <RotatingTips stepId={step.id} />
         </section>
 
@@ -235,7 +231,7 @@ export function Creator() {
             {step.id === 'media' ? <MediaExamples d={d} p={p} /> : (
               <>
                 <SitePreview {...p} className="rounded-lg border border-line" />
-                {step.id !== 'review' && <SoFar d={d} />}
+                <SoFar d={d} />
               </>
             )}
           </div>
@@ -249,11 +245,12 @@ export function Creator() {
             <PopoverTrigger className="text-sm link lg:hidden">Preview</PopoverTrigger>
             <PopoverContent side="top" className="w-[min(28rem,calc(100vw-2rem))] p-3"><SitePreview {...p} className="rounded" /></PopoverContent>
           </Popover>
-          {fromReview && step.id !== 'review' && (
-            <button type="button" onClick={() => go('review')} disabled={!step.done(d)} className="btn btn-line btn-sm ml-auto disabled:opacity-30">Back to review</button>
+          {/* Came from a result page to change something: save straight back from any question. */}
+          {editId && !isLast && (
+            <button type="button" onClick={finish} disabled={!step.done(d)} className="btn btn-line btn-sm ml-auto disabled:opacity-30">Save changes</button>
           )}
           <button type="button" onClick={next} disabled={!step.done(d)} className="btn btn-ink disabled:opacity-30">
-            {isLast ? 'Create my site plan' : skippedEmpty(step.id, d) ? 'Skip' : 'Continue'}
+            {isLast ? (editId ? 'Save changes' : 'Create my site plan') : skippedEmpty(step.id, d) ? 'Skip' : 'Continue'}
           </button>
         </div>
       </footer>
@@ -267,7 +264,7 @@ const STEP_TIPS: Record<string, [string, string, string]> = {
   goal:       ['This drives the main button on every page', 'Pick one — add more CTAs in the build phase', 'The typical goal for your site type is highlighted'],
   feel:       ['Go with your gut — each style has multiple directions inside', 'Colors and fonts are fine-tuned in later steps', 'Press 1–9 to pick quickly'],
   direction:  ['Directions lock in a coordinated palette, font and layout', "You'll choose exact colors and fonts yourself next", 'Press Enter to continue after picking'],
-  lead:       ['The first screen makes the biggest impression', 'Trending picks are the most-used effects right now', 'You can change this any time from the review'],
+  lead:       ['The first screen makes the biggest impression', 'Trending picks are the most-used effects right now', 'You can change this any time from the result page'],
   motion:     ['Immersive = big scroll effects. Still = no animation.', 'Match movement to your audience — calm for professional, lively for creative', 'This controls animation throughout the whole site'],
   palette:    ['Recommended palettes were tested for this direction', 'Fine-tune individual colors with the tool below', 'Press 1–9 to pick quickly'],
   typography: ['Font pairs are curated to never clash', 'Recommended fonts were chosen for this direction', "The 'why' below each pair explains the character it adds"],
@@ -277,9 +274,8 @@ const STEP_TIPS: Record<string, [string, string, string]> = {
   media:      ['5–15 seconds works best for hero video loops', 'Landscape (16:9) fills desktop screens cleanly', 'No video yet? Use a placeholder and add it later'],
   photos:     ['More photos = more layout options in the build', 'Landscape photos suit most layouts. Portrait for editorial.', 'Add a note below — the builder uses it to place photos right'],
   target:     ['Not sure yet? Pick “Decide later” and choose on the result page', 'Lovable and v0 need no coding at all', 'Claude Code and Cursor write the code for you'],
-  review:     ['Tap any row to go back and change it', 'Everything can still change after the site is built', 'Press Enter to create your plan'],
 }
-const DEFAULT_TIPS: [string, string, string] = ['Press 1–9 to choose, Enter to continue', 'Your choices are saved automatically', 'You can change anything from the review']
+const DEFAULT_TIPS: [string, string, string] = ['Press 1–9 to choose, Enter to continue', 'Your choices are saved automatically', 'You can change anything later on the result page']
 
 function RotatingTips({ stepId }: { stepId: string }) {
   const tips = STEP_TIPS[stepId] ?? DEFAULT_TIPS
@@ -381,14 +377,15 @@ function Grid({ children, cols = 'sm:grid-cols-2 xl:grid-cols-3' }: { children: 
   return <div className={`grid gap-3 ${cols}`}>{children}</div>
 }
 
-function Card({ selected, onClick, title, line, children, badge, icon: Icon, role = 'radio' }: { selected: boolean; onClick: () => void; title: string; line?: string; children?: ReactNode; badge?: string; icon?: LucideIcon; role?: 'radio' | 'checkbox' }) {
+function Card({ selected, onClick, title, line, children, badge, icon: Icon, role = 'radio', disabled = false, note }: { selected: boolean; onClick: () => void; title: string; line?: string; children?: ReactNode; badge?: string; icon?: LucideIcon; role?: 'radio' | 'checkbox'; disabled?: boolean; note?: string }) {
   return (
-    <button type="button" role={role} aria-checked={selected} onClick={onClick} className="choice w-full overflow-hidden">
+    <button type="button" role={role} aria-checked={selected} aria-disabled={disabled || undefined} onClick={disabled ? undefined : onClick} className={`choice w-full overflow-hidden ${disabled ? 'cursor-not-allowed opacity-45' : ''}`}>
       {children}
       <span className="block p-4">
         {Icon && <Icon size={28} strokeWidth={1.5} className="mb-3 text-ink-2" aria-hidden />}
         <span className="flex items-center justify-between gap-2"><span className="font-medium">{title}</span>{badge && <span className="pencil">{badge}</span>}</span>
         {line && <span className="mt-0.5 block text-sm text-muted">{line}</span>}
+        {note && <span className="mt-2 block text-xs text-warn">{note}</span>}
       </span>
     </button>
   )
@@ -402,18 +399,6 @@ const TARGETS: [BuildTargetId, string, string][] = [
 ]
 
 /** The first-screen effects, described by what the visitor experiences — never by how it's built. */
-const EFFECTS: { hero: HeroId; name: string; line: string; lead: LeadId; motion: MotionLevel; trending?: boolean }[] = [
-  { hero: 'scroll-video', name: 'Film on the first screen', line: 'The opening scene plays forward as visitors scroll, then the rest of the page carries on as normal.', lead: 'video', motion: 'immersive', trending: true },
-  { hero: 'scroll-video-page', name: 'Film behind the whole page', line: 'The film stays in the background from top to bottom, moving forward with every scroll until the very end.', lead: 'video', motion: 'immersive', trending: true },
-  { hero: 'parallax-photo', name: 'Photo with depth', line: 'The photo drifts slower than the page, so it feels three-dimensional.', lead: 'photography', motion: 'dynamic', trending: true },
-  { hero: 'kinetic-type', name: 'Words in motion', line: 'Big headlines slide and reveal themselves as visitors scroll.', lead: 'typography', motion: 'dynamic', trending: true },
-  { hero: 'webgl-scene', name: 'Object you can play with', line: 'A 3D object visitors can turn and explore with their mouse or finger.', lead: '3d', motion: 'dynamic', trending: true },
-  { hero: 'ambient-video', name: 'Moving background', line: 'A calm, looping clip plays quietly behind your headline.', lead: 'video', motion: 'subtle' },
-  { hero: 'editorial-image', name: 'One big photo', line: 'A single striking image, calm and still.', lead: 'photography', motion: 'subtle' },
-  { hero: 'product-stage', name: 'Product in the spotlight', line: 'Your product, large and clean, like a shop window.', lead: 'product', motion: 'subtle' },
-  { hero: 'type-statement', name: 'Just bold words', line: 'A confident headline and nothing else. Fast and clear.', lead: 'typography', motion: 'still' },
-  { hero: 'illustrated', name: 'Illustrated scene', line: 'A drawn world that sets your tone from the first second.', lead: 'illustration', motion: 'subtle' },
-]
 const effectOf = (d: Draft) => EFFECTS.find((e) => e.hero === d.hero)
 /** Movement levels the chosen first screen works with (e.g. the scroll-through film only works fully immersive). */
 const motionChoices = (d: Draft) => (Object.keys(motionLevels) as MotionLevel[]).filter((m) => !d.hero || heroes[d.hero].motion.includes(m))
@@ -424,13 +409,15 @@ const EFFECT_CLIP: Partial<Record<HeroId, string>> = { 'scroll-video': CLIP, 'sc
 const PURPOSE_ICON: Record<PurposeId, LucideIcon> = {
   portfolio: Images, agency: Briefcase, studio: PenTool, fashion: Shirt, restaurant: UtensilsCrossed, ecommerce: ShoppingBag,
   product: Package, saas: AppWindow, 'personal-brand': User, experiment: Sparkles, other: Globe,
+  blog: Newspaper, event: PartyPopper, nonprofit: HandHeart, 'real-estate': House, hotel: BedDouble, course: GraduationCap, clinic: Stethoscope,
 }
-const GOAL_ICON: Record<GoalId, LucideIcon> = { contact: Mail, book: CalendarCheck, buy: ShoppingCart, signup: UserPlus, subscribe: BellRing, explore: Compass }
+const GOAL_ICON: Record<GoalId, LucideIcon> = { contact: Mail, book: CalendarCheck, buy: ShoppingCart, signup: UserPlus, subscribe: BellRing, explore: Compass, call: Phone, visit: MapPin, donate: HeartHandshake, apply: ClipboardCheck, download: Download }
 
 /** The goal most sites of each kind are built around — shown as a hint, never preselected. */
 const TYPICAL_GOAL: Record<PurposeId, GoalId> = {
   portfolio: 'contact', agency: 'contact', studio: 'contact', fashion: 'buy', restaurant: 'book', ecommerce: 'buy',
   product: 'buy', saas: 'signup', 'personal-brand': 'subscribe', experiment: 'explore', other: 'contact',
+  blog: 'subscribe', event: 'book', nonprofit: 'donate', 'real-estate': 'book', hotel: 'book', course: 'apply', clinic: 'book',
 }
 
 const OFFER_EXAMPLE: Record<PurposeId, [string, string]> = {
@@ -445,6 +432,13 @@ const OFFER_EXAMPLE: Record<PurposeId, [string, string]> = {
   'personal-brand': ['Sam Rivera', 'I write about typography and teach type design online.'],
   experiment: ['Tidal Type', 'A typeface that changes with live ocean tide data.'],
   other: ['Field Notes Co.', 'A community garden network across six city neighbourhoods.'],
+  blog: ['Slow Type', 'Weekly essays on design history, for people who make things.'],
+  event: ['Aida & Kenan', 'Our wedding on 14 June in Sheki — the day, the place, the plan.'],
+  nonprofit: ['Open Shelves', 'We build free libraries in villages that have none.'],
+  'real-estate': ['Caspian Homes', 'New-build apartments by the sea, from studios to penthouses.'],
+  hotel: ['Casa Alba', 'Nine rooms in a restored farmhouse above the olive groves.'],
+  course: ['Type School', 'A six-week online course in lettering, taught live.'],
+  clinic: ['Kind Dental', 'Gentle family dentistry in the city centre, open late.'],
 }
 
 /** The palette and type the demos are drawn in: the user's current choices. */
@@ -457,7 +451,7 @@ function StepBody({ step, d, set, go, recipe }: { step: string; d: Draft; set: S
     case 'purpose':
       return (
         <div role="radiogroup" aria-label="What are you building" className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-          {Object.values(purposes).map((p) => <Card key={p.id} icon={PURPOSE_ICON[p.id]} selected={d.purpose === p.id} onClick={() => set({ purpose: p.id, ...(d.purpose !== p.id ? { pages: defaultPagesFor(p.id) } : {}) })} title={p.name} line={p.hint} />)}
+          {Object.values(purposes).sort((a, b) => Number(a.id === 'other') - Number(b.id === 'other')).map((p) => <Card key={p.id} icon={PURPOSE_ICON[p.id]} selected={d.purpose === p.id} onClick={() => set({ purpose: p.id, ...(d.purpose !== p.id ? { pages: defaultPagesFor(p.id) } : {}) })} title={p.name} line={p.hint} />)}
         </div>
       )
     case 'brief': {
@@ -554,12 +548,16 @@ function StepBody({ step, d, set, go, recipe }: { step: string; d: Draft; set: S
     }
     case 'touches': {
       const choices = signatureChoices(recipe)
-      const picked = d.signatures ?? recipe.signatures.map((x) => x.id)
+      // What actually ships — never show a touch as picked if the plan couldn't place it.
+      const picked = recipe.signatures.map((x) => x.id)
       const flip = (id: string) => set({ signatures: picked.includes(id) ? picked.filter((x) => x !== id) : [...picked, id].slice(-4) })
+      // A touch whose only sections are already taken by the current picks can't be added — say so instead of silently dropping it.
+      const fits = (id: string) => picked.includes(id) || composeRecipe(toSpec({ ...d, signatures: [...picked, id].slice(-4) })).signatures.some((x) => x.id === id)
       return (
         <div role="group" aria-label="Special touches"><Grid>
           {choices.map((x) => (
-            <Card key={x.id} role="checkbox" selected={picked.includes(x.id)} title={x.name} line={x.experience} badge={x.recommended ? 'Best fit' : undefined} onClick={() => flip(x.id)}>
+            <Card key={x.id} role="checkbox" selected={picked.includes(x.id)} title={x.name} line={x.experience} badge={x.recommended ? 'Best fit' : undefined} onClick={() => flip(x.id)}
+              disabled={!fits(x.id)} note={fits(x.id) ? undefined : 'No free spot — the section it needs already has one of your touches. Unpick one to use this.'}>
               <OptionDemo id={`sig:${x.id}`} shape={recipe.visualSystem.shape} {...demoLook(d)} />
             </Card>
           ))}
@@ -579,47 +577,10 @@ function StepBody({ step, d, set, go, recipe }: { step: string; d: Draft; set: S
         </div>
       )
     }
-    case 'review': return <ReviewStep d={d} go={go} r={recipe} />
   }
   return null
 }
 
-function ReviewStep({ d, go, r }: { d: Draft; go: (id: string) => void; r: UniversalRecipe }) {
-  const spec = r.metadata.spec
-  const b = d.brief
-  const tool = TARGETS.find(([x]) => x === spec.target)![1]
-  const rows: [string, string, ReactNode][] = [
-    ['purpose', 'Making', purposes[spec.purpose].name],
-    ['brief', 'Name', b.name?.trim() || <span className="text-muted">No name yet</span>],
-    ['goal', 'Main button', b.goal ? `“${r.contentDirection.ctaExamples[0]}”` : undefined],
-    ['pages', 'Pages', r.pages.map((x) => x.label).join(', ')],
-    ['direction', 'Style', directions[spec.direction].name],
-    ['lead', 'First screen', effectOf(d)?.name ?? leads[spec.lead].name],
-    ['motion', 'Movement', motionLevels[spec.motion].name],
-    ['palette', 'Colors', <Swatches key="c" colors={r.visualSystem.palette.tokens.map((x) => x.hex)} />],
-    ['typography', 'Lettering', typography[spec.typography].name],
-    ['shape', 'Shape', r.visualSystem.shape.name],
-    ['nav', 'Menu', r.chrome.nav.name],
-    ['touches', 'Special touches', r.signatures.map((x) => x.name).join(', ') || 'None'],
-    ['photos', 'Photos', r.media.imagery && `${r.media.imagery.photos ? `${r.media.imagery.photos} · ` : ''}${r.media.imagery.presentation.name}`],
-    ...(offShapeVideo(spec) ? [['media', 'Video shape', spec.videoFrame === 'original' ? 'Keeps its own shape' : '16:9 on wide screens, original on phones'] as [string, string, ReactNode]] : []),
-    ['target', 'Build with', tool],
-  ]
-  return (
-    <div className="max-w-2xl">
-      <ul className="divide-y divide-line border-y border-line">
-        {rows.map(([id, k, v]) => (
-          <li key={id} className="flex items-center gap-4 py-3">
-            <span className="w-32 shrink-0 text-sm text-muted sm:w-44">{k}</span>
-            <span className="min-w-0 flex-1">{v || <span className="text-muted">—</span>}</span>
-            <button type="button" onClick={() => go(id)} className="link text-sm" aria-label={`Change ${k}`}>Change</button>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-4 text-sm text-muted">You can still change anything after it&apos;s created.</p>
-    </div>
-  )
-}
 
 const UTILITY_PAGE_TYPES: PageTypeId[] = ['faq', 'sign-in', 'sign-up', 'privacy-policy', 'terms-of-service', 'cookie-policy', 'not-found', 'accessibility']
 
