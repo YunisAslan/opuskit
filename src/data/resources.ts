@@ -263,20 +263,6 @@ export const resources: Resource[] = [
     license: 'MIT; a few components need GSAP (its own free license)', verifiedAt: '2026-09-28',
   },
   {
-    id: 'react-bits', name: 'React Bits', category: 'libraries', url: 'https://reactbits.dev',
-    description: 'Open collection of 200+ animated React components, with gallery pieces such as Circular Gallery, Dome Gallery, Masonry, Stack and Flying Posters.',
-    why: 'WebGL galleries (ring, dome, posters) that turn a photo set into the experience itself, in JS/TS and CSS/Tailwind variants.',
-    useCases: ['photo gallery', '3d gallery', 'masonry', 'card stack'], families: ['experimental', 'futuristic', 'cinematic'], technologies: ['react', 'webgl'], recipes: [],
-    license: 'MIT + Commons Clause: free in personal and commercial sites; do not resell the components', verifiedAt: '2026-09-28',
-  },
-  {
-    id: 'aceternity-ui', name: 'Aceternity UI', category: 'libraries', url: 'https://ui.aceternity.com',
-    description: 'Copy-paste React + Tailwind + Motion components; free ones include Apple Cards Carousel, Parallax Scroll, 3D Marquee, Focus Cards and Images Slider.',
-    why: 'Polished scroll and carousel patterns for photos — restyle them to the recipe; their demo look is widely recognised.',
-    useCases: ['carousel', 'parallax grid', 'marquee'], families: [], technologies: ['react', 'tailwind', 'motion'], recipes: [],
-    license: 'Free components usable in unlimited end products (client work included); components themselves may not be redistributed or resold', verifiedAt: '2026-09-28',
-  },
-  {
     id: 'magic-ui', name: 'Magic UI', category: 'libraries', url: 'https://magicui.design',
     description: 'Open-source animated React components for Tailwind and Motion, installed with the shadcn CLI.',
     why: 'Its Marquee is the simplest dependable base for endless rows of photos or logos.',

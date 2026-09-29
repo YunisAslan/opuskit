@@ -50,4 +50,6 @@ export const KEYS = {
   draft: 'opuskit:draft',
   entitlements: 'opuskit:entitlements',
   user: 'opuskit:user',
+  kit: 'opuskit:kit', // retired 2026-09-29: pieces-only kit, migrated into plan
+  plan: 'opuskit:plan',
 } as const

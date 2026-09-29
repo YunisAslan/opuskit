@@ -4,6 +4,14 @@ import type {
 } from '@/types/domain'
 
 export const heroes: Record<HeroId, HeroPattern> = {
+  'orbit-stickers': {
+    id: 'orbit-stickers', name: 'Sticker orbit', leads: ['illustration', 'photography'], motion: ['dynamic', 'immersive'],
+    composition: 'A centred two-voice headline with a sentence eyebrow above and one line below; 10–14 brand stickers and small photos sit on an ellipse around it, each at its own slight angle.',
+    behavior: 'Scrolling turns the ellipse (the stickers travel around the headline) while the whole ring drifts up and away; on load the stickers pop in one by one.',
+    responsive: 'Mobile: a smaller ellipse with 6–8 stickers behind the headline; motion stays scroll-linked but half the distance.',
+    requires: ['10–14 brand stickers or marks (transparent PNG/SVG) and a few square photos'],
+    fallback: 'Temporary shapes in the chapter colours with placeholder words, clearly marked for replacement.',
+  },
   'editorial-image': {
     id: 'editorial-image', name: 'Editorial image hero', leads: ['photography', 'illustration'], motion: ['still', 'subtle'],
     composition: 'One strong photograph (portrait 4:5 or wide 3:2) beside or beneath a restrained headline. Clear focal point, generous empty space.',
@@ -264,8 +272,6 @@ export const motionPatterns: MotionPattern[] = [
 
 /** Ways to show a set of photos, by approach. The engine recommends one from the site, the photos and the owner's note; the user can override it. */
 const CY = 'https://componentry.dev/docs/components/'
-const RB = 'https://reactbits.dev/components/'
-const AC = 'https://ui.aceternity.com/components/'
 export const imagePresentations: Record<ImagePresentationId, ImagePresentation> = {
   // ── calm ──
   'single-feature': {
@@ -294,15 +300,15 @@ export const imagePresentations: Record<ImagePresentationId, ImagePresentation> 
     composition: 'Masonry columns (3 desktop, 2 tablet) using each photo’s native ratio — no forced crops; gutters from the spacing scale; one or two photos span two columns to break the grid.',
     behavior: 'Staggered reveal (40–60 ms per item); click opens an accessible lightbox with arrow keys, Esc and swipe.',
     responsive: 'Two columns on mobile down to 360 px, then one; the lightbox swipes.',
-    components: [{ name: 'React Bits — Masonry', url: `${RB}masonry` }, { name: 'PhotoSwipe (lightbox)', url: 'https://photoswipe.com' }],
-    resources: ['react-bits', 'photoswipe'],
+    components: [{ name: 'PhotoSwipe (lightbox)', url: 'https://photoswipe.com' }],
+    resources: ['photoswipe'],
   },
   'uniform-grid': {
     id: 'uniform-grid', group: 'calm', name: 'Even grid', line: 'Same-size tiles in tidy rows — easy to compare side by side.', ideal: '6+ photos',
     composition: 'Even grid (4 / 3 / 2 columns) with one fixed ratio for every tile (4:5 for products and people, 3:2 for places); caption below each tile.',
     behavior: 'Hover: subtle image scale (1.03) or a second photo; the hovered tile stays sharp while the others dim slightly (focus cards).',
     responsive: '2 columns on mobile; never 1 unless the photos are the product itself.',
-    components: [{ name: 'Aceternity — Focus Cards', url: `${AC}focus-cards` }], resources: ['aceternity-ui'],
+    components: [], resources: [],
   },
   'hover-reveal': {
     id: 'hover-reveal', group: 'calm', name: 'Names that reveal photos', line: 'A clean list of titles; hovering one shows its photo beside the cursor.', ideal: '5–20 projects or items',
@@ -324,32 +330,34 @@ export const imagePresentations: Record<ImagePresentationId, ImagePresentation> 
     composition: 'Cards at 80% of the container width (35% on desktop), the next card peeking; arrows and a progress bar in the utility face; captions on the card.',
     behavior: 'Drag, swipe, trackpad and arrow keys; momentum with snap; tapping a card can expand it (Apple-style cards).',
     responsive: 'Same component; one card + peek on mobile. Respect prefers-reduced-motion by removing momentum, not the carousel.',
-    components: [{ name: 'Embla Carousel', url: 'https://www.embla-carousel.com' }, { name: 'Aceternity — Apple Cards Carousel', url: `${AC}apple-cards-carousel` }],
-    resources: ['embla-carousel', 'aceternity-ui'],
+    components: [{ name: 'Embla Carousel', url: 'https://www.embla-carousel.com' }],
+    resources: ['embla-carousel'],
   },
   'marquee-rows': {
     id: 'marquee-rows', group: 'moving', name: 'Endless rows', line: 'Rows of photos drifting endlessly in opposite directions.', ideal: '10+ photos (they repeat)',
     composition: '2–3 rows of same-height photos; alternate rows run opposite ways; rows may tilt slightly in 3D for depth.',
     behavior: 'Continuous CSS/transform loop (duplicated track), slows on hover, pauses when off-screen; reduced motion shows a static grid.',
     responsive: 'One or two rows on mobile, smaller photos, same speed in px/s.',
-    components: [{ name: 'Magic UI — Marquee', url: 'https://magicui.design/docs/components/marquee' }, { name: 'Aceternity — 3D Marquee', url: `${AC}3d-marquee` }, { name: 'Motion Primitives — Infinite Slider', url: 'https://motion-primitives.com/docs/infinite-slider' }],
-    resources: ['magic-ui', 'aceternity-ui', 'motion-primitives'],
+    piece: 'marquee',
+    components: [{ name: 'Magic UI — Marquee', url: 'https://magicui.design/docs/components/marquee' }, { name: 'Motion Primitives — Infinite Slider', url: 'https://motion-primitives.com/docs/infinite-slider' }],
+    resources: ['magic-ui', 'motion-primitives'],
   },
   'tilted-grid': {
     id: 'tilted-grid', group: 'moving', name: 'Tilted scroll grid', line: 'A grid that tilts and flattens in 3D as visitors scroll through it.', ideal: '9+ photos',
     composition: 'Dense grid (4–6 columns) set in perspective; columns offset vertically; one headline floats above it.',
     behavior: 'Scroll drives rotateX / translateZ from tilted to flat (or columns moving at different speeds, parallax-scroll style).',
     responsive: 'Mobile: 2–3 columns, milder tilt; reduced motion keeps it flat.',
-    components: [{ name: 'Componentry — Scroll Tilted Grid', url: `${CY}scroll-tilted-grid` }, { name: 'Aceternity — Parallax Scroll', url: `${AC}parallax-scroll` }],
-    resources: ['componentry', 'aceternity-ui'],
+    piece: 'tilted-grid',
+    components: [{ name: 'Componentry — Scroll Tilted Grid', url: `${CY}scroll-tilted-grid` }],
+    resources: ['componentry'],
   },
   'card-stack': {
     id: 'card-stack', group: 'moving', name: 'Card stack', line: 'Photos stacked like prints; flick the top one away to see the next.', ideal: '3–10 photos',
     composition: 'A stack of 4:5 cards with slight random rotation (±4°) in the centre of a calm section, a caption beside it.',
     behavior: 'Drag or click the top card to send it to the back; springy physics; keyboard: arrows cycle.',
     responsive: 'Works as-is on touch — a good mobile answer when a grid would be too small.',
-    components: [{ name: 'React Bits — Stack', url: `${RB}stack` }, { name: 'Componentry — Orbit Card Stack', url: `${CY}orbit-card-stack` }],
-    resources: ['react-bits', 'componentry'],
+    components: [{ name: 'Componentry — Orbit Card Stack', url: `${CY}orbit-card-stack` }],
+    resources: ['componentry'],
   },
   // ── immersive ──
   'infinite-canvas': {
@@ -357,23 +365,25 @@ export const imagePresentations: Record<ImagePresentationId, ImagePresentation> 
     composition: 'Photos placed on an infinite 2D field (wrapping tiles), varied sizes; optional fisheye distortion near the edges; a small “drag to explore” hint.',
     behavior: 'Drag / wheel / trackpad pans with inertia; clicking a photo zooms it to a focused view with its caption.',
     responsive: 'Touch pans natively; offer a plain grid link for visitors who prefer it; reduced motion = static grid.',
-    components: [{ name: 'Componentry — Infinite Image Field', url: `${CY}infinite-image-field` }, { name: 'Componentry — Fisheye Infinite Grid', url: `${CY}fisheye-infinite-grid` }, { name: 'React Bits — Infinite Menu', url: `${RB}infinite-menu` }],
-    resources: ['componentry', 'react-bits'],
+    piece: 'image-field',
+    components: [{ name: 'Componentry — Infinite Image Field', url: `${CY}infinite-image-field` }, { name: 'Componentry — Fisheye Infinite Grid', url: `${CY}fisheye-infinite-grid` }],
+    resources: ['componentry'],
   },
   'ring-3d': {
     id: 'ring-3d', group: 'immersive', name: '3D photo ring', line: 'Photos arranged in a ring or spiral that turns as visitors scroll or drag.', ideal: '6–16 photos',
     composition: 'Photos on a circular or spiral path in 3D (WebGL or CSS 3D), the front one largest and sharpest; caption for the front photo only.',
     behavior: 'Scroll or drag rotates the ring with easing; the front photo snaps to centre; bend/curve shader optional.',
     responsive: 'Fewer, larger photos on mobile; reduced motion = swipe carousel.',
-    components: [{ name: 'React Bits — Circular Gallery', url: `${RB}circular-gallery` }, { name: 'Componentry — Wheel Carousel', url: `${CY}wheel-carousel` }, { name: 'Componentry — Spiral 3D Slider', url: `${CY}spiral-3d-slider` }, { name: 'React Bits — Flying Posters', url: `${RB}flying-posters` }],
-    resources: ['react-bits', 'componentry'],
+    piece: 'ring-carousel',
+    components: [{ name: 'Componentry — Wheel Carousel', url: `${CY}wheel-carousel` }, { name: 'Componentry — Spiral 3D Slider', url: `${CY}spiral-3d-slider` }],
+    resources: ['componentry'],
   },
   'dome-gallery': {
     id: 'dome-gallery', group: 'immersive', name: 'Photo dome', line: 'Visitors stand inside a sphere of photos and turn to look around.', ideal: '15+ photos (they repeat)',
     composition: 'Photos mapped on the inside of a sphere, uniform tile size, background in the palette ground.',
     behavior: 'Drag rotates the dome with inertia; clicking a photo flies it forward into a focused view.',
     responsive: 'Touch drag works; smaller tile count on mobile; reduced motion = masonry gallery.',
-    components: [{ name: 'React Bits — Dome Gallery', url: `${RB}dome-gallery` }], resources: ['react-bits'],
+    components: [], resources: [],
   },
   'liquid-glass': {
     id: 'liquid-glass', group: 'immersive', name: 'Liquid glass carousel', line: 'An endless strip of photos seen through a moving glass lens that bends light.', ideal: '6+ photos',
@@ -433,6 +443,7 @@ export const sections: Record<SectionId, SectionPattern> = {
   faq: { id: 'faq', name: 'FAQ', purpose: 'Answer real objections', composition: 'Accordion list in a narrow column', content: '5–8 genuine questions', behavior: 'Accordion expand', responsive: 'Full width' },
   journal: { id: 'journal', name: 'Journal', purpose: 'Show ongoing thinking and activity', composition: '3 latest entries as editorial list or cards', content: 'Title, date, category', behavior: 'Hover underline', responsive: 'List view' },
   'contact-cta': { id: 'contact-cta', name: 'Closing CTA', purpose: 'End with one clear next step', composition: 'Large headline + one action + real contact detail', content: 'Headline in brand voice, email address', behavior: 'Static', responsive: 'Large tap target' },
+  chapters: { id: 'chapters', name: 'Colour Chapters', purpose: 'Walk through 2–4 offers, each in its own colour', composition: 'Split screen per chapter: sentence eyebrow, a big word and a short paragraph on the neutral half; the other half is a full field in that chapter’s accent, holding a sticky photo or clip', content: '2–4 chapters: eyebrow sentence, one-word title, 40–70 words, one media each', behavior: 'The text half scrolls, the colour half stays; the colour and media change as each chapter arrives', responsive: 'Stack: colour field with media first, then the text, per chapter' },
   footer: { id: 'footer', name: 'Footer', purpose: 'Practical information and a calm ending', composition: '3–4 columns: contact, links, social, legal', content: 'Address/email, links, copyright', behavior: 'Static', responsive: 'Stacked columns' },
 }
 
@@ -519,7 +530,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Within a ~120px radius, translate the button by 30% of the pointer offset (label by 15% for depth), eased back with a spring on leave. transform only.',
     mobile: 'Off on touch; a short press-scale (0.97) instead.',
     reducedMotion: 'Static button with the normal hover state.',
-    components: [{ name: 'React Bits — Magnet', url: 'https://reactbits.dev/animations/magnet' }],
+    components: [],
   },
   {
     id: 'rolling-links', name: 'Links that roll on hover', sections: ['navbar', 'footer'],
@@ -545,7 +556,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Pin the section; GSAP ScrollTrigger maps vertical scroll to translateX of the track (scrub: 1, end = track width − viewport). Images lazy-load one ahead.',
     mobile: 'Native horizontal swipe with scroll-snap instead of pinning.',
     reducedMotion: 'Plain horizontal scroll-snap row.',
-    components: [{ name: 'Aceternity — Apple Cards Carousel', url: 'https://ui.aceternity.com/components/apple-cards-carousel' }],
+    components: [],
   },
   {
     id: 'stacking-cards', name: 'Cards that stack as you scroll', sections: ['process', 'services', 'feature-grid', 'how-it-works'],
@@ -554,7 +565,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Cards are position: sticky with increasing top offsets; as the next card arrives, scale the previous one to 0.94 and dim it via a scroll-linked timeline (or CSS animation-timeline: view()).',
     mobile: 'Same effect with smaller offsets; drop the scale if it stutters.',
     reducedMotion: 'Normal vertical list of cards.',
-    components: [{ name: 'React Bits — Scroll Stack', url: 'https://reactbits.dev/components/scroll-stack' }, { name: 'Componentry — Sticky Scroll Cards', url: 'https://componentry.dev/docs/components/sticky-scroll-cards' }],
+    components: [{ name: 'Componentry — Sticky Scroll Cards', url: 'https://componentry.dev/docs/components/sticky-scroll-cards' }],
   },
   {
     id: 'velocity-marquee', name: 'Ribbon that reacts to scrolling', sections: ['clients', 'manifesto'],
@@ -563,7 +574,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Duplicate the content for a seamless loop; base speed ~40px/s; add scroll velocity (from Lenis or ScrollTrigger getVelocity) and flip direction with scroll direction; transform only.',
     mobile: 'Constant slow drift, no velocity coupling.',
     reducedMotion: 'Static row, wrapped.',
-    components: [{ name: 'Magic UI — Scroll Based Velocity', url: 'https://magicui.design/docs/components/scroll-based-velocity' }, { name: 'React Bits — Scroll Velocity', url: 'https://reactbits.dev/text-animations/scroll-velocity' }],
+    components: [{ name: 'Magic UI — Scroll Based Velocity', url: 'https://magicui.design/docs/components/scroll-based-velocity' }],
   },
   {
     id: 'reading-highlight', name: 'Words that light up as you read', sections: ['manifesto', 'intro', 'about', 'editorial-story'],
@@ -572,7 +583,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Split the paragraph into words; scroll-linked timeline over the section moves each word from muted to text colour in sequence (CSS animation-timeline: view() or GSAP scrub).',
     mobile: 'Same, with a shorter scroll range.',
     reducedMotion: 'Text shown at full colour.',
-    components: [{ name: 'Magic UI — Text Reveal', url: 'https://magicui.design/docs/components/text-reveal' }, { name: 'React Bits — Scroll Reveal', url: 'https://reactbits.dev/text-animations/scroll-reveal' }],
+    components: [{ name: 'Magic UI — Text Reveal', url: 'https://magicui.design/docs/components/text-reveal' }],
   },
   {
     id: 'curtain-reveal', name: 'Photos revealed like a curtain', sections: ['gallery', 'lookbook', 'featured-work', 'editorial-story', 'about'],
@@ -589,7 +600,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Map pointer position inside the card to rotateX/rotateY (max 6°) with perspective 800px; a radial-gradient highlight follows the pointer at 12% opacity; ease back on leave.',
     mobile: 'No tilt; a subtle scale on press.',
     reducedMotion: 'Flat cards with the normal hover.',
-    components: [{ name: 'React Bits — Tilted Card', url: 'https://reactbits.dev/components/tilted-card' }, { name: 'Aceternity — 3D Card Effect', url: 'https://ui.aceternity.com/components/3d-card-effect' }],
+    components: [],
   },
   {
     id: 'zoom-into-image', name: 'Scroll into a full-screen image', sections: ['editorial-story', 'product-highlight', 'intro'],
@@ -622,7 +633,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'A full-screen overlay with a radial-gradient mask centred on the pointer (radius ~22vmin), lerped for smoothness; content below stays in the DOM for accessibility.',
     mobile: 'The light slowly drifts on its own; tap moves it.',
     reducedMotion: 'Image shown fully lit.',
-    components: [{ name: 'Aceternity — Following Pointer', url: 'https://ui.aceternity.com/components/following-pointer' }],
+    components: [],
   },
   {
     id: 'number-ticker', name: 'Numbers that count up', sections: ['intro', 'about', 'product-highlight', 'feature-grid', 'clients'],
@@ -630,7 +641,7 @@ export const signaturePatterns: SignaturePattern[] = [
     experience: 'Key figures (customers, years, speed) roll up from zero the moment they come into view — real numbers become a small event.',
     implementation: 'Tabular figures in a fixed-width box so nothing shifts; spring from 0 to the value over ~1.2s once, on first view (IntersectionObserver).',
     mobile: 'Same, 2 figures per row.', reducedMotion: 'Final numbers shown immediately.',
-    components: [{ name: 'Magic UI — Number Ticker', url: 'https://magicui.design/docs/components/number-ticker' }, { name: 'React Bits — Counter', url: 'https://reactbits.dev/components/counter' }],
+    components: [{ name: 'Magic UI — Number Ticker', url: 'https://magicui.design/docs/components/number-ticker' }],
   },
   {
     id: 'glow-cards', name: 'Cards that glow under the cursor', sections: ['feature-grid', 'services', 'pricing', 'how-it-works'],
@@ -638,7 +649,7 @@ export const signaturePatterns: SignaturePattern[] = [
     experience: 'A soft light follows the pointer across feature cards and their borders glow where it passes — the grid feels responsive and alive.',
     implementation: 'One pointermove on the grid sets --x/--y per card; a radial-gradient (accent at 15%) on the card and its 1px border uses them; pure CSS paint, no layout.',
     mobile: 'Static subtle highlight on the first card; none on the rest.', reducedMotion: 'Plain cards.',
-    components: [{ name: 'React Bits — Spotlight Card', url: 'https://reactbits.dev/components/spotlight-card' }, { name: 'Magic UI — Magic Card', url: 'https://magicui.design/docs/components/magic-card' }, { name: 'Aceternity — Glowing Effect', url: 'https://ui.aceternity.com/components/glowing-effect' }],
+    components: [{ name: 'Magic UI — Magic Card', url: 'https://magicui.design/docs/components/magic-card' }],
   },
   {
     id: 'word-rotate', name: 'Headline with a changing word', sections: ['hero', 'intro'],
@@ -646,7 +657,7 @@ export const signaturePatterns: SignaturePattern[] = [
     experience: 'One word in the main headline changes every few seconds (“for cafés / for studios / for shops”) — one line says many things.',
     implementation: 'Fixed-width slot sized to the longest word; words slide up out and in (400ms) every 2.5s; the word keeps the headline’s exact style — no colour or italic change.',
     mobile: 'Same; keep words short so the line never re-wraps.', reducedMotion: 'Show the first word only.',
-    components: [{ name: 'Magic UI — Word Rotate', url: 'https://magicui.design/docs/components/word-rotate' }, { name: 'Aceternity — Flip Words', url: 'https://ui.aceternity.com/components/flip-words' }],
+    components: [{ name: 'Magic UI — Word Rotate', url: 'https://magicui.design/docs/components/word-rotate' }],
   },
   {
     id: 'text-pressure', name: 'Letters that react to the cursor', sections: ['hero', 'manifesto', 'footer'],
@@ -654,7 +665,7 @@ export const signaturePatterns: SignaturePattern[] = [
     experience: 'The big headline letters grow bolder or wider as the cursor comes near them, like the words are breathing.',
     implementation: 'Split into letters; per letter, distance to pointer maps to font-variation-settings (wght/wdth) of the recipe’s display face — only if it is a variable font; otherwise use a small scale.',
     mobile: 'Letters slowly pulse in weight once on load.', reducedMotion: 'Static headline.',
-    components: [{ name: 'React Bits — Variable Proximity', url: 'https://reactbits.dev/text-animations/variable-proximity' }, { name: 'React Bits — Text Pressure', url: 'https://reactbits.dev/text-animations/text-pressure' }],
+    components: [],
   },
   {
     id: 'product-lens', name: 'Zoom lens on product photos', sections: ['product-highlight', 'product-grid', 'collection'],
@@ -662,7 +673,7 @@ export const signaturePatterns: SignaturePattern[] = [
     experience: 'Hovering a product photo shows a round magnified lens of the fabric, stitching or finish — detail you could only get in a shop.',
     implementation: 'A circular overlay (160px) showing the same image at 2.5× with background-position tied to the pointer; load the 2400px source only on first hover.',
     mobile: 'Tap opens the photo full screen with pinch-zoom.', reducedMotion: 'Unchanged (no animation involved).',
-    components: [{ name: 'Aceternity — Lens', url: 'https://ui.aceternity.com/components/lens' }, { name: 'Magic UI — Lens', url: 'https://magicui.design/docs/components/lens' }],
+    components: [{ name: 'Magic UI — Lens', url: 'https://magicui.design/docs/components/lens' }],
   },
   {
     id: 'before-after', name: 'Drag to compare before and after', sections: ['case-study', 'product-highlight', 'editorial-story', 'featured-work'],
@@ -670,7 +681,7 @@ export const signaturePatterns: SignaturePattern[] = [
     experience: 'Two images sit on top of each other; dragging a handle across reveals the before and the after — the result explains itself.',
     implementation: 'clip-path: inset(0 calc(100% - var(--pos)) 0 0) on the top image; pointer and keyboard (arrow keys) move --pos; role="slider" with aria-valuenow.',
     mobile: 'Same, drag with a finger; a larger handle (44px).', reducedMotion: 'Unchanged (user-driven).',
-    components: [{ name: 'Aceternity — Compare', url: 'https://ui.aceternity.com/components/compare' }],
+    components: [],
   },
   {
     id: 'scroll-device', name: 'Product rising out of a screen', sections: ['product-highlight', 'how-it-works', 'feature-grid'],
@@ -678,7 +689,7 @@ export const signaturePatterns: SignaturePattern[] = [
     experience: 'A laptop or phone tilts up flat as you scroll, and the product screen inside it comes to life — a demo without a video.',
     implementation: 'Scrub rotateX 20° → 0 and scale 0.9 → 1 on a device frame over ~120vh; the screenshot inside is a real image (or short loop) of the product.',
     mobile: 'Phone frame instead of laptop; shorter scroll.', reducedMotion: 'Flat device frame, no tilt.',
-    components: [{ name: 'Aceternity — Container Scroll Animation', url: 'https://ui.aceternity.com/components/container-scroll-animation' }, { name: 'Aceternity — Macbook Scroll', url: 'https://ui.aceternity.com/components/macbook-scroll' }, { name: 'Magic UI — Safari', url: 'https://magicui.design/docs/components/safari' }],
+    components: [{ name: 'Magic UI — Safari', url: 'https://magicui.design/docs/components/safari' }],
   },
   {
     id: 'timeline-line', name: 'A line that draws through your story', sections: ['about', 'process', 'how-it-works', 'editorial-story'],
@@ -686,7 +697,7 @@ export const signaturePatterns: SignaturePattern[] = [
     experience: 'Milestones sit along a vertical line that fills in as you scroll, so history or process reads as one journey.',
     implementation: 'A 1–2px track with a filled bar whose scaleY follows section scroll progress; each milestone’s dot lights up as the bar passes it.',
     mobile: 'Line on the left edge, milestones stacked to its right.', reducedMotion: 'Full line shown.',
-    components: [{ name: 'Aceternity — Timeline', url: 'https://ui.aceternity.com/components/timeline' }],
+    components: [],
   },
   {
     id: 'expandable-cards', name: 'Cards that open in place', sections: ['services', 'featured-work', 'feature-grid', 'menu'],
@@ -694,7 +705,7 @@ export const signaturePatterns: SignaturePattern[] = [
     experience: 'Tapping a card smoothly grows it into the full detail view, and closing shrinks it back to where it was — no page jump.',
     implementation: 'Shared-layout animation (Motion layoutId) from card to an accessible dialog; focus moves into it, Esc closes; image and title share their transition.',
     mobile: 'Opens as a full-screen sheet.', reducedMotion: 'Dialog opens without the morph.',
-    components: [{ name: 'Aceternity — Expandable Card', url: 'https://ui.aceternity.com/components/expandable-card' }],
+    components: [],
   },
   {
     id: 'pixel-transition', name: 'Photos that dissolve in pixels', sections: ['featured-work', 'gallery', 'collection'],
@@ -702,7 +713,7 @@ export const signaturePatterns: SignaturePattern[] = [
     experience: 'Hovering a work thumbnail breaks it into pixels that rebuild as a second image — digital and a little retro.',
     implementation: 'A grid of blocks over the image fades in with random delays, swaps the image, then fades out (≈500ms total); canvas or CSS grid of ~12×12.',
     mobile: 'Tap swaps the image with a simple crossfade.', reducedMotion: 'Crossfade only.',
-    components: [{ name: 'React Bits — Pixel Transition', url: 'https://reactbits.dev/animations/pixel-transition' }],
+    components: [],
   },
 ]
 
@@ -714,22 +725,26 @@ export const navStyles: Record<NavStyleId, NavStyle> = {
   'floating-pill': { id: 'floating-pill', name: 'Floating pill', line: 'A rounded bar that floats above the page and tucks away while you read.', trending: true,
     composition: 'A centred, rounded capsule (max 720px) floating 16px from the top: logo, links, one action; translucent surface with backdrop blur.',
     behavior: 'Hides on scroll down, returns on scroll up; the active link has a sliding highlight.', responsive: 'Mobile: capsule with logo + menu button; menu expands inside the capsule.',
-    components: [{ name: 'React Bits — Pill Nav', url: 'https://reactbits.dev/components/pill-nav' }, { name: 'Aceternity — Floating Navbar', url: 'https://ui.aceternity.com/components/floating-navbar' }, { name: 'Aceternity — Resizable Navbar', url: 'https://ui.aceternity.com/components/resizable-navbar' }] },
+    components: [] },
   'fullscreen-menu': { id: 'fullscreen-menu', name: 'Full-screen menu', line: 'Just the logo and “Menu” — it opens into huge links over the whole screen.', trending: true,
     composition: 'Minimal bar: logo and a “Menu” label only. The menu is a full-viewport panel with display-size links, one per line, plus contact details.',
     behavior: 'Panel slides or wipes in; links stagger in (40ms); hovering a link can reveal an image or run a flowing marquee.', responsive: 'Same on every screen — it is already touch-first.',
-    components: [{ name: 'React Bits — Staggered Menu', url: 'https://reactbits.dev/components/staggered-menu' }, { name: 'React Bits — Flowing Menu', url: 'https://reactbits.dev/components/flowing-menu' }] },
+    components: [] },
   'centered-logo': { id: 'centered-logo', name: 'Centered logo', line: 'Logo in the middle, links split on either side — like a boutique.',
     composition: 'Symmetric bar: links left, logo centred, secondary links and the action right; generous height at the top that shrinks after scrolling.',
     behavior: 'Shrinks to a compact bar after 80px.', responsive: 'Mobile: centred logo, menu button left, action right.', components: [] },
   'card-menu': { id: 'card-menu', name: 'Menu with cards', line: 'A compact bar that opens into image cards for each part of the site.',
     composition: 'Compact bar; opening it reveals 3–4 cards below, each a section of the site with a photo, title and 2–3 links.',
     behavior: 'Cards drop in with a short stagger; the bar grows to hold them.', responsive: 'Mobile: cards stack vertically in a sheet.',
-    components: [{ name: 'React Bits — Card Nav', url: 'https://reactbits.dev/components/card-nav' }, { name: 'React Bits — Bubble Menu', url: 'https://reactbits.dev/components/bubble-menu' }] },
+    components: [] },
   'bottom-dock': { id: 'bottom-dock', name: 'Floating dock', line: 'An app-style dock at the bottom of the screen with icons that grow as you pass.', trending: true,
     composition: 'A floating dock centred 20px from the bottom: 4–6 labelled icons for the main pages plus the action; the logo sits alone at the top-left.',
     behavior: 'Icons magnify under the pointer (macOS-style); a tooltip shows the page name.', responsive: 'Mobile: a fixed bottom tab bar with the same icons — thumb-friendly.',
-    components: [{ name: 'Magic UI — Dock', url: 'https://magicui.design/docs/components/dock' }, { name: 'Aceternity — Floating Dock', url: 'https://ui.aceternity.com/components/floating-dock' }, { name: 'React Bits — Dock', url: 'https://reactbits.dev/components/dock' }] },
+    components: [{ name: 'Magic UI — Dock', url: 'https://magicui.design/docs/components/dock' }] },
+  'split-pill': { id: 'split-pill', name: 'Split pill', line: 'Logo left, a small white pill of links in the middle, the main action on its own on the right.', trending: true,
+    composition: 'Three separate pieces at the top edge: signature logo left, a compact white pill of 3–4 uppercase links centred, and one boxed action with a status dot (● Contact) right. No bar behind them.',
+    behavior: 'Fixed; the pill stays white over every section. Hovering a link draws a hand-made squiggle under it; the current page keeps its squiggle.', responsive: 'Mobile: logo + menu button; the pill opens as a full-width sheet with the same squiggles.',
+    components: [] },
   'side-index': { id: 'side-index', name: 'Side index', line: 'A quiet list of pages fixed down the left side, like a book’s contents.',
     composition: 'Fixed left column (≈220px): logo, then the page list in the utility face, the current page marked; content fills the rest.',
     behavior: 'Current section updates while scrolling (scroll-spy).', responsive: 'Mobile: collapses to a top bar with a menu button.', components: [] },
@@ -802,6 +817,7 @@ export const uiNames: Record<string, string> = {
 
 /** The first-screen question: each option is a hero, described by what the visitor experiences — never by how it's built. */
 export const EFFECTS: { hero: HeroId; name: string; line: string; lead: LeadId; motion: MotionLevel; trending?: boolean }[] = [
+  { hero: 'orbit-stickers', name: 'Stickers around the headline', line: 'Brand stickers and photos circle the headline and turn as visitors scroll.', lead: 'illustration', motion: 'dynamic', trending: true },
   { hero: 'scroll-video', name: 'Film on the first screen', line: 'The opening scene plays forward as visitors scroll, then the rest of the page carries on as normal.', lead: 'video', motion: 'immersive', trending: true },
   { hero: 'scroll-video-page', name: 'Film behind the whole page', line: 'The film stays in the background from top to bottom, moving forward with every scroll until the very end.', lead: 'video', motion: 'immersive', trending: true },
   { hero: 'parallax-photo', name: 'Photo with depth', line: 'The photo drifts slower than the page, so it feels three-dimensional.', lead: 'photography', motion: 'dynamic', trending: true },

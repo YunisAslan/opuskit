@@ -5,13 +5,21 @@ import { spawnSync } from 'node:child_process'
 import { palettes, typography } from '../src/data/ingredients'
 import { contrast, deltaE, oklab } from '../src/lib/color'
 import { recipeSeeds } from '../src/data/recipes'
-import { imagePresentations } from '../src/data/patterns'
+import { imagePresentations, signaturePatterns } from '../src/data/patterns'
+import { pieces } from '../src/data/pieces'
+import { blockSource, pieceSource } from '../src/data/pieces-source.generated'
+import { blockFor } from '../src/data/blocks'
+import { sections } from '../src/data/patterns'
+import { TYPE_UTILITIES } from '../src/lib/type-tokens'
+import { GENERATED, piecesSource } from './pieces-source'
+import { readFileSync } from 'node:fs'
+import { EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, planToSpec, sectionGroups, setHero, setStyle, start, togglePiece } from '../src/features/kit/plan'
 import { resources } from '../src/data/resources'
 import { directions, families, goals } from '../src/data/taxonomy'
 import { adapters } from '../src/features/build-packages'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
-import { composeRecipe, isValidSpec, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
+import { cleanPieces, pieceIssues, composeRecipe, isValidSpec, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
 assert.equal(recipeSeeds.length, 10, 'exactly 10 seed recipes')
 assert.equal(new Set(recipeSeeds.map((s) => s.slug)).size, 10, 'unique slugs')
@@ -196,6 +204,9 @@ const main = async () => {
   const sh = vid.files.find((f) => f.path === 'scripts/prepare-video.sh')
   assert.ok(sh && /-crf 20 -g 6/.test(sh.content), 'video recipe ships prepare-video.sh')
   assert.equal(spawnSync('bash', ['-n'], { input: sh.content }).status, 0, 'prepare-video.sh is valid bash')
+  // bash reads the bytes of "…"/"×" as part of an unbraced name ($DIR… → "unbound variable"): always ${DIR}…
+  assert.ok(!/\$[A-Za-z_][A-Za-z0-9_]*[^\x00-\x7F]/.test(sh.content), 'prepare-video.sh braces every $VAR next to non-ASCII')
+  assert.match(sh.content, /realesrgan-ncnn-vulkan-20220424-\$os\.zip/, 'prepare-video.sh fetches Real-ESRGAN itself')
   assert.ok(!(await adapters['claude-code'].generate(composeRecipe(specFromSeed(recipeSeeds[3])))).files.some((f) => f.path.endsWith('prepare-video.sh')), 'no script without video')
 
   // Photos work under any lead: count + shape decide the layout, the user's choice wins, and the files back "Your photos" only.
@@ -219,6 +230,94 @@ const main = async () => {
   assert.equal(composeRecipe({ ...vspec, brief: { photos: 'Fotolar üçün 3D slayder' } }).media.imagery?.presentation.id, 'ring-3d', 'Azerbaijani note: 3D slider → ring')
   assert.ok(asked.resources.includes('componentry') && /componentry\.dev/.test(recipeToMarkdown(asked)) && /Owner’s request/.test(recipeToMarkdown(asked)), 'component source + note reach the recipe')
   for (const x of Object.values(imagePresentations)) for (const id of x.resources) assert.ok(resources.some((r) => r.id === id), `${x.id}: resource ${id} exists`)
+
+  // Kit: pieces ship as the exact code OpusKit type-checks, MIT only, one per slot, with notices.
+  assert.equal(readFileSync(GENERATED, 'utf8'), piecesSource(), 'pieces-source.generated.ts is up to date (run npm run pieces)')
+  for (const p of Object.values(pieces)) {
+    const src = readFileSync(new URL(`../src/pieces/${p.file}`, import.meta.url), 'utf8')
+    assert.match(src, new RegExp(p.source.license), `${p.id}: source file carries its ${p.source.license} attribution`)
+    assert.match(src, new RegExp(`export function ${p.exportName}\\b`), `${p.id}: exports ${p.exportName}`)
+    assert.ok(!/@\/lib\/utils|from ['"](?!react|motion\/react|@paper-design\/shaders-react|next\/navigation)[^'"]+['"]/.test(src), `${p.id}: no imports beyond react, motion, Paper Shaders and next/navigation`)
+    assert.ok(/reactbits|aceternity|hover\.dev/.test(p.source.url) === false, `${p.id}: never from a library that forbids redistribution`)
+  }
+  assert.deepEqual(cleanPieces(['text-effect', 'text-loop', 'marquee', 'nope']), ['text-loop', 'marquee'], 'one piece per slot, later pick wins, unknown dropped')
+  const kitted = composeRecipe({ ...vspec, pieces: ['text-effect', 'number-ticker', 'ring-carousel', 'image-field' as never] })
+  assert.equal(kitted.pieces.length, 3, 'photo slot keeps one piece')
+  const kitPkg = await adapters['claude-code'].generate(kitted)
+  for (const p of kitted.pieces) assert.ok(kitPkg.files.some((f) => f.path === p.path && f.content === pieceSource[p.id]), `${p.id}: shipped verbatim`)
+  assert.ok(kitPkg.files.some((f) => f.path === 'THIRD-PARTY-NOTICES.md' && /Motion Primitives[\s\S]*Permission is hereby granted/.test(f.content)), 'MIT notices ship with the kit')
+  assert.match(kitPkg.files.find((f) => f.path === 'recipe/motion.md')!.content, /## Your Kit/, 'kit reaches recipe/motion.md')
+  assert.ok(kitted.implementation.dependencies.some((x) => x.name === 'motion'), 'kit adds the motion dependency')
+  assert.ok(pieceIssues({ motion: 'still', pieces: ['text-effect'] })['text-effect'], 'a moving piece on a still site is flagged')
+  assert.equal(composeRecipe({ ...vspec, imagePresentation: 'marquee-rows', uploads: [photo(1, 3000, 2000), photo(2, 3000, 2000), photo(3, 3000, 2000)] }).pieces[0]?.id, 'marquee', 'photo layout brings its piece')
+  for (const x of [...Object.values(imagePresentations).flatMap((i) => i.components), ...signaturePatterns.flatMap((s) => s.components ?? [])]) assert.ok(!/reactbits|aceternity|hover\.dev/.test(x.url), `no link to a redistribution-restricted library: ${x.url}`)
+
+  // Ready sections: every content section has a component, shipped verbatim for the sections a recipe uses.
+  for (const sid of Object.keys(sections) as (keyof typeof sections)[]) {
+    if (sid === 'navbar' || sid === 'hero') continue
+    const b = blockFor(sid)
+    assert.ok(b, `${sid}: has ready section code`)
+    const src = readFileSync(new URL(`../src/sections/${b!.file}`, import.meta.url), 'utf8')
+    assert.match(src, new RegExp(`export function ${b!.exportName}\\b`), `${sid}: exports ${b!.exportName}`)
+    assert.ok(!/from ['"](?!react|motion\/react)[^'"]+['"]/.test(src), `${sid}: section imports nothing but react and motion`)
+    assert.ok(!/#[0-9a-fA-F]{3,6}\b/.test(src), `${sid}: no raw hex — tokens only`)
+  }
+  const secPkg = await adapters.cursor.generate(composeRecipe(specFromSeed(recipeSeeds[0])))
+  const used = [...new Set(composeRecipe(specFromSeed(recipeSeeds[0])).pages.flatMap((p) => p.sections).filter((s) => s.code).map((s) => s.id))]
+  assert.ok(used.length > 0 && used.every((id) => secPkg.files.some((f) => f.path === `src/components/sections/${blockFor(id)!.file}` && f.content === blockSource[id])), 'used sections ship their code')
+  assert.match(recipeToMarkdown(composeRecipe(specFromSeed(recipeSeeds[0]))), /Ready code:\*\* `src\/components\/sections\//, 'ready code reaches the recipe')
+  const tokens = secPkg.files.find((f) => f.path.endsWith('tokens.css'))!.content
+  assert.ok(tokens.includes(TYPE_UTILITIES) && readFileSync(new URL('../src/app/globals.css', import.meta.url), 'utf8').includes(TYPE_UTILITIES), 'type utilities identical in packages and OpusKit previews')
+
+  // Showcase plan: style for every page, then page by page with pieces attached to exact sections.
+  let plan = start(EMPTY_PLAN, 'event')
+  plan = setStyle(plan, 'direction', 'swiss-editorial')
+  plan = setHero(plan, 'scroll-video')
+  const home = plan.pages[0], second = plan.pages[1]
+  plan = addSection(plan, second.id, 'gallery', 0)
+  const heroKey = plan.pages[0].sections[0].key
+  plan = togglePiece(plan, home.id, heroKey, 'shader-grain')
+  plan = togglePiece(plan, home.id, heroKey, 'text-effect')
+  plan = togglePiece(plan, home.id, heroKey, 'cut-reveal') // same job as text-effect on the same section → replaces it
+  plan = addPage(plan, 'faq').plan
+  const gKey = plan.pages[1].sections[0].key
+  plan = moveSection(plan, second.id, gKey, 1)
+  const fromPlan = composeRecipe(planToSpec(plan))
+  assert.equal(fromPlan.metadata.spec.purpose, 'event', 'starter sets the kind of site')
+  assert.equal(fromPlan.metadata.spec.direction, 'swiss-editorial', 'look sets the direction')
+  assert.equal(fromPlan.media.hero.id, 'scroll-video', 'chosen first screen is kept')
+  assert.equal(fromPlan.pages[0].sections[0].id, 'hero', 'the first screen tops the first page')
+  assert.equal(fromPlan.pages[1].sections[1]?.id, 'gallery', 'a section lands where it was inserted, and moves')
+  assert.ok(fromPlan.pages.some((p) => p.type === 'faq'), 'added pages are in the recipe')
+  assert.deepEqual(fromPlan.pieces.map((p) => p.id).sort(), ['cut-reveal', 'shader-grain'], 'one piece per job per section')
+  assert.ok(fromPlan.pieces.every((p) => p.where.startsWith(`${home.label} → Hero`)), 'pieces are placed on the section they were attached to')
+  assert.equal(fromPlan.signatures.length, 0, 'no touches the user did not place')
+  assert.ok(piecesFor(plan.pages[0].sections[0]).every((id) => pieces[id].sections.includes('hero')), 'only pieces made for a section are offered on it')
+  assert.equal(inferPurpose({ ...EMPTY_PLAN, pages: [addPage(EMPTY_PLAN, 'shop').plan.pages[0]] }), 'ecommerce', 'purpose inferred from pages')
+  assert.equal(setStyle(setStyle(plan, 'palette', 'signal-white'), 'direction', 'japanese-minimal').palette, undefined, 'a new look resets colours to its own')
+  const legacy = cleanPlan({ pages: [{ id: 'x', type: 'home', label: 'Home', purpose: '', sections: ['intro', 'bogus'] }], direction: 'nope', pieces: ['grain'] })
+  assert.deepEqual(legacy.pages[0].sections.map((s) => s.id), ['intro'], 'older flat plans upgrade; unknown sections dropped')
+  assert.equal(legacy.direction, undefined, 'unknown ids are dropped at the trust boundary')
+  assert.ok(planToSpec(EMPTY_PLAN).pages.length > 0, 'an empty plan still composes a whole site')
+  for (const g of sectionGroups) for (const id of g.ids) assert.ok(sections[id] && hasBlock(id), `library section ${id} exists and has code`)
+
+  // Sticker Studio (extrafazant-style): two voices, colour chapters, orbit hero, whole-site pieces, brand stickers.
+  let st = start(EMPTY_PLAN, 'agency')
+  st = setStyle(st, 'direction', 'sticker-studio')
+  st = setHero(st, 'orbit-stickers')
+  st = addSection(st, st.pages[0].id, 'chapters', 1)
+  for (const id of ['blob-transition', 'brand-cursor', 'cookie-note'] as const) st = toggleSitePiece(st, id)
+  const sr = composeRecipe(planToSpec(st))
+  assert.equal(sr.visualSystem.typography.id, 'two-voice', 'the look brings its two-voice lettering')
+  assert.equal(sr.visualSystem.rotation?.id, 'sticker-pop', 'the look brings its colour chapters')
+  assert.ok(sr.contentDirection.voice.includes('small joke'), 'the look brings its cheeky voice')
+  assert.ok(sr.assetRequirements.some((a) => a.asset === 'stickers' && a.level === 'required'), 'the orbit hero asks for brand stickers')
+  assert.ok(sr.pieces.filter((p) => p.slot === 'site').every((p) => p.where.startsWith('Whole site')), 'site pieces go in the root layout')
+  const sp = await adapters['claude-code'].generate(sr)
+  for (const f of ['src/components/sections/OrbitHero.tsx', 'src/components/sections/ColourChapters.tsx', 'src/components/sections/Footer.tsx', 'src/components/pieces/BlobTransition.tsx', 'src/components/pieces/BrandCursor.tsx', 'src/components/pieces/CookieNote.tsx']) assert.ok(sp.files.some((x) => x.path === f && x.content.length > 200), `ships ${f}`)
+  assert.match(sp.files.find((x) => x.path.endsWith('tokens.css'))!.content, /--color-chapter-1: #0038FF/, 'chapter colours reach tokens.css')
+  assert.equal(composeRecipe(planToSpec(setStyle(st, 'rotation', 'off'))).visualSystem.rotation, undefined, 'colour chapters can be switched off')
+  assert.ok(composeRecipe(specFromSeed(recipeSeeds[0])).chrome.footer.code, 'every recipe ships the footer code')
 
   console.log(`✓ ${recipeSeeds.length} recipes × ${Object.keys(adapters).length} adapters, remix and asset logic OK`)
 }

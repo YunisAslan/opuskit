@@ -1,0 +1,2 @@
+:HL["/live/swiss-modern-event-site-claude-code/_next/static/chunks/3_v1s8v158p5o.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"JRz4PN9okJUFe_0ghA3eB"}

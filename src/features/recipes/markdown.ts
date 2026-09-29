@@ -21,7 +21,9 @@ export const recipeSections = {
     const p = r.visualSystem.palette
     const rows = p.tokens.map((t) => `| ${t.role} | \`${t.hex}\` | ${t.purpose} | ${t.usage} | ${t.contrast ?? '—'} |`).join('\n')
     const css = p.tokens.map((t) => `  --color-${t.role}: ${t.hex};`).join('\n')
+    const rot = r.visualSystem.rotation
     return `## Color System — ${p.name}\n\n| Role | Hex | Purpose | Usage | Contrast |\n|---|---|---|---|---|\n${rows}\n\n\`\`\`css\n:root {\n${css}\n}\n\`\`\``
+      + (rot ? `\n\n### Colour chapters — ${rot.name}\n\n${rot.line}. ${rot.why} The page stays on the palette above; each chapter section (Colour Chapters, and any section you mark as a chapter) takes the next colour in turn as a full field — \`--color-chapter-1\` ${rot.colors[0]}, \`--color-chapter-2\` ${rot.colors[1]}, \`--color-chapter-3\` ${rot.colors[2]}. Never two chapter colours in one view; never a thin stripe of one.` : '')
   },
 
   typography: (r: UniversalRecipe) => {
@@ -37,7 +39,7 @@ export const recipeSections = {
 
   structure: (r: UniversalRecipe) => {
     const section = (s: UniversalRecipe['chrome']['navbar'], i: number) =>
-      `### ${String(i + 1).padStart(2, '0')} ${s.name}\n- **Purpose:** ${s.purpose}\n- **Composition:** ${s.composition}\n- **Content:** ${s.content}\n- **Behavior:** ${s.behavior}\n- **Responsive:** ${s.responsive}${s.note ? `\n- **Recipe note:** ${s.note}` : ''}`
+      `### ${String(i + 1).padStart(2, '0')} ${s.name}\n- **Purpose:** ${s.purpose}\n- **Composition:** ${s.composition}\n- **Content:** ${s.content}\n- **Behavior:** ${s.behavior}\n- **Responsive:** ${s.responsive}${s.note ? `\n- **Recipe note:** ${s.note}` : ''}${'code' in s && s.code ? `\n- **Ready code:** \`${s.code.path}\` → \`${s.code.usage}\` — start from it: real copy and media through props, proportions tuned to this recipe, tokens only.` : ''}`
     const pages = r.pages.map((p) => `## ${p.label}\n\n${p.purpose}\n\n${p.sections.map(section).join('\n\n') || '_No composed sections — see purpose above._'}`).join('\n\n---\n\n')
     return `## Page Structure\n\nPages: ${r.pages.map((p) => p.label).join(' · ')}\n\n---\n\n${pages}\n\n---\n\n## Site Chrome\n\n${[r.chrome.navbar, r.chrome.footer].map(section).join('\n\n')}`
   },
@@ -64,6 +66,10 @@ export const recipeSections = {
   signatures: (r: UniversalRecipe) => r.signatures.length
     ? `## Signature Moments\n\nThe small interactions people remember. Build each one exactly where it is placed — they are part of the design, not optional polish.\n\n${r.signatures.map((s) => `### ${s.name} — ${s.where}\n- **What visitors experience:** ${s.experience}\n- **How:** ${s.implementation}\n- **Mobile:** ${s.mobile}\n- **Reduced motion:** ${s.reducedMotion}` + (s.components?.length ? `\n- **Start from:** ${s.components.map((c) => `[${c.name}](${c.url})`).join(', ')} — restyle to this recipe’s tokens; never ship the demo look.` : '')).join('\n\n')}`
     : '## Signature Moments\n\nNone — this recipe keeps interaction deliberately quiet.',
+
+  kit: (r: UniversalRecipe) => r.pieces.length
+    ? `## Your Kit — ready pieces\n\nThe owner picked these components. Their code is already in the project at \`src/components/pieces/\` — import and use it; do not rebuild or replace them, and do not add other animation libraries for the same job. They read colours and fonts from the recipe tokens (\`--color-*\`, \`--font-*\`) and already handle reduced motion. Adjust sizes, spacing and copy to the recipe — never their core behaviour.\n\n${r.pieces.map((p) => `### ${p.name} — ${p.where}\n${p.line}\n- **Code:** \`${p.path}\` → \`import { ${p.exportName} } from '@/components/pieces/${p.file.replace(/\.tsx$/, '')}'\`\n- **Use:** \`${p.usage}\`\n${p.rules.map((x) => `- ${x}`).join('\n')}` + (p.issue ? `\n- **Note:** ${p.issue}` : '')).join('\n\n')}\n\nLicences: adapted from MIT-licensed libraries — see \`THIRD-PARTY-NOTICES.md\`.`
+    : '',
 
   content: (r: UniversalRecipe) => {
     const c = r.contentDirection
@@ -102,4 +108,4 @@ export const recipeSections = {
 export type RecipeSectionKey = keyof typeof recipeSections
 
 export const recipeToMarkdown = (r: UniversalRecipe) =>
-  Object.values(recipeSections).map((fn) => fn(r)).join('\n\n---\n\n') + '\n'
+  Object.values(recipeSections).map((fn) => fn(r)).filter(Boolean).join('\n\n---\n\n') + '\n'

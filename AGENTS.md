@@ -6,6 +6,21 @@ Next.js 16 (App Router) + TypeScript + Tailwind v4. Version-matched Next.js docs
 - Recipe engine (deterministic composition): `src/features/recipes/engine.ts`.
 - Build Package adapters: `src/features/build-packages/`.
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
+- Showcase (`/kit`) is a second way in, separate from the questionnaire — a builder in three steps, always visible in its
+  step bar: 1 Style (same on every page: look, colours, lettering, shape, menu, photo layout), 2 Pages (outline left,
+  the page top to bottom in the middle drawn with the real section components, a library on the right for exactly the
+  spot clicked: a section slot, a section's effects, the first screen, a new page), 3 Create. Ready pieces attach to a
+  section instance and move with it. Logic: `src/features/kit/plan.ts` (pure, tested in check.ts); storage: `src/lib/kit.ts`.
+- Ready sections: every content section (all but navbar, hero, footer) is a component in `src/sections/`, listed in
+  `src/data/blocks.ts`, shipped to `src/components/sections/` for the sections a recipe uses. OpusKit-written, tokens only
+  (`--color-*`, `--radius-*`, `type-display|heading|body|utility` from `src/lib/type-tokens.ts`), content through props,
+  no import beyond `react`. The showcase renders them for real with sample content (`SectionPreview`).
+- Ready pieces (backgrounds + components) ship as code in every Build Package's `src/components/pieces/`.
+  Sources live in `src/pieces/` (type-checked with OpusKit), metadata in `src/data/pieces.ts`; run `npm run pieces` after editing a piece or a section (it bundles both).
+  Adapt only from MIT libraries (Motion Primitives, Magic UI, Cult UI, Animata, Componentry, Fancy Components) or depend on
+  Apache-2.0 ones (Paper Shaders) — never React Bits, Aceternity or Hover.dev (their terms forbid redistributing
+  components), and nothing that needs GSAP (its free licence excludes Webflow-competing tools). Tokens only
+  (`--color-*`, `--font-*`), a reduced-motion version, no import beyond `react`/`motion`/`@paper-design/shaders-react`.
 - `npm run check` composes every seed recipe and every adapter and asserts completeness — and distinctiveness: palette grounds ≥ 0.06 ΔE_OK apart, no cream-band or clay-accent clusters, no AI-default fonts, each family in ≤ 2 pairings, no two seeds sharing a palette or pairing. Add to the library only what passes.
 
 ## Example projects
@@ -51,8 +66,8 @@ To (re)generate `public/live/{slug}/` from `examples/{slug}/`:
 2. Temporarily add `output: 'export'`, `basePath: '/live/{slug}'`, `images: { unoptimized: true }`,
    `npm install && npx next build`, then restore the real config. If Turbopack fails on
    `next/font/google` ("queries have exactly one entry"), build with `npx next build --webpack`.
-3. In `out/`, grep every `.html`/`.txt`/`.js` for `"/media/` and replace with
-   `"/examples/{slug}/media/`. Copy everything **except** `out/media/` into `public/live/{slug}/`.
+3. In `out/`, grep every `.html`/`.txt`/`.js`/`.css` for `"/media/`, `` `/media/ `` (template literals) and `url(/media/`,
+   and point each at `/examples/{slug}/media/`. Copy everything **except** `out/media/` into `public/live/{slug}/`.
 4. Inner links (`/live/{slug}/about`) resolve via the `fallback` rewrites in `next.config.ts` (→ `about.html`).
    Link to `.../index.html` explicitly, not a trailing slash — `public/` files are exact-match only,
    and the app's default trailing-slash redirect (`/live/{slug}/` → `/live/{slug}`) 404s otherwise.

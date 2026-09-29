@@ -70,6 +70,14 @@ function render(id: string, { c, display, r, shape }: Ctx): ReactNode {
       <Copy x={6} y={26} c={c} display={display} word="Welcome" />
       <Box x={58} y={22} w={36} h={34} style={{ borderRadius: r.media }}><Photo k="interior" className="inset-0 h-full w-full" /></Box>
     </>
+    case 'nav:split-pill': return <>
+      <span className="absolute" style={{ ...display, left: '5cqw', top: '4cqw', fontSize: '4cqw', fontStyle: 'italic', color: c.accent }}>Studio</span>
+      <Box x={36} y={4} w={28} h={6} style={{ background: c.surface, borderRadius: r.button, border: `1px solid ${c.border}` }} />
+      {[39, 48, 56].map((x, i) => <Bar key={x} x={x} y={6.4} w={i === 2 ? 6 : 6} h={1.2} color={c.text} />)}
+      <svg viewBox="0 0 100 12" className="absolute od-draw" style={{ left: '55cqw', top: '8.6cqw', width: '8cqw', height: '1.6cqw' }}><path d="M2 7 C 12 3, 22 10, 34 6 S 58 2, 70 6 S 92 11, 98 5" fill="none" stroke={c.accent} strokeWidth="6" /></svg>
+      <Box x={82} y={4} w={13} h={6} style={{ background: c.surface, border: `1px solid ${c.border}` }}><Bar x={1.5} y={2.3} w={1.4} h={1.4} color={c.accent} /><Bar x={4} y={2.4} w={7} h={1.2} color={c.text} /></Box>
+      <Copy x={6} y={30} c={c} display={display} word="Everything moves" size={6} />
+    </>
     case 'nav:floating-pill': return <>
       <Photo k="landscape" className="inset-0 h-full w-full" />
       <div className="od-pill absolute z-10 flex items-center justify-between" style={{ left: '20cqw', top: '4cqw', width: '60cqw', height: '7cqw', borderRadius: '99cqw', background: `${c.surface}d9`, backdropFilter: 'blur(4px)', padding: '0 3cqw' }}>
@@ -384,3 +392,4 @@ function render(id: string, { c, display, r, shape }: Ctx): ReactNode {
   }
   return <Copy x={8} y={20} c={c} display={display} />
 }
+

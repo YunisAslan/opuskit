@@ -1,5 +1,6 @@
 import { recipeSections as S, recipeToMarkdown } from '@/features/recipes/markdown'
-import type { BuildPackageAdapter, BuildTarget } from '@/types/domain'
+import { blockSource, heroSource, pieceSource } from '@/data/pieces-source.generated'
+import type { BuildFile, BuildPackageAdapter, BuildTarget, UniversalRecipe } from '@/types/domain'
 import { claudeCodeAdapter } from './claude-code'
 import { cursorAdapter } from './cursor'
 import { lovableAdapter } from './lovable'
@@ -28,16 +29,36 @@ const ownCodeAdapter: BuildPackageAdapter = {
   },
 }
 
+// Every package whose recipe has a kit ships the pieces' real code, plus the MIT notices of the libraries they came from.
+export function kitFiles(r: UniversalRecipe): BuildFile[] {
+  // Ready sections: one file per distinct section with code, used anywhere in the recipe's pages.
+  const secs = [...new Map([...r.pages.flatMap((p) => p.sections), r.chrome.footer].filter((s) => s.code).map((s) => [s.code!.path, s])).values()]
+  const sectionFiles = secs.map((s) => ({ path: s.code!.path, content: s.id === 'hero' ? heroSource[r.media.hero.id]! : blockSource[s.id]! }))
+  if (!r.pieces.length) return sectionFiles
+  const libs = [...new Map(r.pieces.map((p) => [p.source.library, p.source])).values()]
+  return [
+    ...sectionFiles,
+    ...r.pieces.map((p) => ({ path: p.path, content: pieceSource[p.id] })),
+    { path: 'THIRD-PARTY-NOTICES.md', content: `# Third-party notices\n\nThe components in src/components/pieces/ were adapted by OpusKit from these libraries (MIT), or use them as an npm dependency (Apache-2.0).\n\n${libs.map((l) => l.license === 'MIT'
+      ? `## ${l.library} — ${l.url}\n\nMIT License\n\n${l.copyright}\n\n${MIT}`
+      : `## ${l.library} — ${l.url}\n\nUsed as an npm dependency. ${l.copyright}. Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.`).join('\n\n')}\n` },
+  ]
+}
+const MIT = 'Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.'
+
 // Every package whose recipe needs a video also gets scripts/prepare-video.sh — added here once, for every tool.
 const withVideoScript = (a: BuildPackageAdapter): BuildPackageAdapter => ({
   ...a,
   async generate(r) {
-    const pkg = await a.generate(r)
+    const pkg0 = await a.generate(r)
+    const kit = kitFiles(r)
+    const secCount = kit.filter((f) => f.path.startsWith('src/components/sections/')).length
+    const pkg = kit.length ? { ...pkg0, files: [...pkg0.files, ...kit], instructions: `${pkg0.instructions}${secCount ? `\nReady sections: ${secCount} section component${secCount > 1 ? 's' : ''} in src/components/sections/ — build each page from them, passing real copy and media as props.` : ''}${r.pieces.length ? `\nYour kit: ${r.pieces.length} ready component${r.pieces.length > 1 ? 's' : ''} in src/components/pieces/ (${r.pieces.map((p) => p.exportName).join(', ')}) — keep them in the project${r.pieces.some((p) => p.deps.length) ? `; run npm i ${[...new Set(r.pieces.flatMap((p) => p.deps))].join(' ')}` : ''}.` : ''}` } : pkg0
     if (!needsVideo(r)) return pkg
     return {
       ...pkg,
       files: [...pkg.files, ...videoFiles(r)],
-      instructions: `0. Video — do this first, before anything else:\n   bash scripts/prepare-video.sh path/to/your-original-video.mp4\n   Use --upscale footage (people, real scenes) or --upscale cgi (product, 3D, animation) if your source is under 1920 px wide.\n   Always pass the original export from your camera or AI tool — never a web-compressed copy.\n${pkg.instructions}`,
+      instructions: `0. Video — do this first, before anything else:\n   bash scripts/prepare-video.sh path/to/your-original-video.mp4\n   A source too small for the screen (under 1920 px wide) is sharpened automatically with Real-ESRGAN (free; downloaded once). For people and real scenes add --upscale footage — slower, most natural.\n   Always pass the original export from your camera or AI tool — never a web-compressed copy.\n${pkg.instructions}`,
     }
   },
 })

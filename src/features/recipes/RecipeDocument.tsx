@@ -3,6 +3,7 @@
 // The page shows what a person needs to judge and adjust the design; every detail (components, resources,
 // references, implementation, "why it works") still ships in full inside the Build Package and the copied recipe.
 
+import { PieceDemo } from '@/components/PieceDemo'
 import { ArrowLeft, Bookmark, BookmarkCheck, Check, Circle, Download, Pencil, Search, TriangleAlert, X } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState, type ReactNode } from 'react'
@@ -152,7 +153,7 @@ function Overview({ r, look, editHref }: { r: UniversalRecipe; look: Look; editH
   const name = spec.brief?.name?.trim()
   const c = look.colors
   const t = look.type
-  const tiles: { label: string; value: string; step: string; visual: ReactNode }[] = [
+  const tiles: { label: string; value: string; step: string; href?: string; visual: ReactNode }[] = [
     { label: 'Style', value: directions[spec.direction].name, step: 'direction',
       visual: <div className="flex h-full flex-col justify-end p-4" style={{ background: c.background, color: c.text }}><span style={{ fontFamily: `'${t.display.family}'`, fontWeight: t.display.weight, fontSize: '1.4rem', lineHeight: 1.05 }}>{r.creativeDirection.mood.slice(0, 3).join(' · ')}</span></div> },
     { label: 'Colors', value: r.visualSystem.palette.name, step: 'palette',
@@ -166,6 +167,8 @@ function Overview({ r, look, editHref }: { r: UniversalRecipe; look: Look; editH
     { label: 'Menu', value: r.chrome.nav.name, step: 'nav', visual: <OptionDemo id={`nav:${r.chrome.nav.id}`} {...look} /> },
     { label: 'Special touches', value: r.signatures.map((s) => s.name).join(', ') || 'None', step: 'touches',
       visual: r.signatures[0] ? <OptionDemo id={`sig:${r.signatures[0].id}`} {...look} /> : <div className="h-full" style={{ background: c.surface }} /> },
+    ...(r.pieces.length ? [{ label: 'Your kit', value: r.pieces.map((p) => p.name).join(', '), step: 'kit', href: '/kit?step=pages',
+      visual: <PieceDemo id={r.pieces[0].id} colors={c} fonts={{ display: t.display.family, body: t.body.family, utility: t.utility.family }} className="!h-full" /> }] : []),
     { label: 'Pages', value: `${r.pages.length} — ${r.pages.map((p) => p.label).join(', ')}`, step: 'pages',
       visual: <div className="grid h-full grid-cols-3 gap-1.5 p-3" style={{ background: c.background }}>{r.pages.slice(0, 6).map((p) => <span key={p.id} className="flex items-end rounded p-1.5 text-[10px] leading-tight" style={{ background: c.surface, color: c.muted }}>{p.label}</span>)}</div> },
   ]
@@ -177,7 +180,7 @@ function Overview({ r, look, editHref }: { r: UniversalRecipe; look: Look; editH
         <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {tiles.map((x) => (
             <li key={x.label}>
-              <Link href={editHref(x.step)} className="choice group block overflow-hidden" aria-label={`${x.label}: ${x.value}. Change`}>
+              <Link href={x.href ?? editHref(x.step)} className="choice group block overflow-hidden" aria-label={`${x.label}: ${x.value}. Change`}>
                 <div className="aspect-[16/10] overflow-hidden border-b border-line">{x.visual}</div>
                 <div className="flex items-start justify-between gap-2 p-3.5">
                   <span className="min-w-0"><span className="block text-xs text-muted">{x.label}</span><span className="mt-0.5 block truncate font-medium">{x.value}</span></span>
@@ -451,6 +454,26 @@ function Motion({ r, look, editHref }: { r: UniversalRecipe; look: Look; editHre
           </ul>
         ) : <p className="mt-4 text-sm text-muted">None — this recipe keeps interaction deliberately quiet.</p>}
       </div>
+      {r.pieces.length > 0 && (
+        <div>
+          <Heading title="Your kit"><ChangeLink href="/kit?step=pages" label="Open in the showcase" /></Heading>
+          <p className="mt-2 max-w-2xl text-sm text-ink-2">Ready components — their code ships in your Build Package (src/components/pieces/), already in your colours and fonts.</p>
+          <ul className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {r.pieces.map((p) => (
+              <li key={p.id} className="overflow-hidden rounded-lg border border-line bg-white">
+                <PieceDemo id={p.id} colors={look.colors} fonts={{ display: look.type.display.family, body: look.type.body.family, utility: look.type.utility.family }} />
+                <div className="p-4">
+                  <p className="text-xs text-muted">{p.where}</p>
+                  <p className="mt-0.5 font-medium">{p.name}</p>
+                  <p className="mt-1.5 text-sm text-ink-2">{p.line}</p>
+                  {p.issue && <p className="mt-2 text-sm text-warn">{p.issue}</p>}
+                  <p className="mt-2 text-xs text-muted">Adapted from {p.source.library} (MIT)</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {r.media.storytelling && (
         <div>
           <Heading title="How the film tells your story" />

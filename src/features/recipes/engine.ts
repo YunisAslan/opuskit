@@ -2,13 +2,15 @@
 // Same spec in → same recipe out. Remix = change one spec field and recompose.
 
 import { characters, directions, goals, leads, motionLevels, purposes } from '@/data/taxonomy'
-import { colorRoles, layouts, palettes, typography } from '@/data/ingredients'
+import { accentSets, colorRoles, layouts, palettes, typography } from '@/data/ingredients'
 import { GENERIC_TELLS, components, heroes, imagePresentations, media, motionPatterns, navStyles, pageTypes, sections, shapeStyles, signaturePatterns, UI_ALWAYS, uiByGoal, uiByPage, uiBySection, uiNames } from '@/data/patterns'
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
+import { MAX_HEAVY_PIECES, pieces as pieceCatalog } from '@/data/pieces'
+import { blockFor, heroBlocks } from '@/data/blocks'
 import { resources } from '@/data/resources'
 import { contrast, contrastLabel, isHex } from '@/lib/color'
 import type {
-  AssetCreationPath, AssetRequirement, AssetSpec, Brief, BuildTarget, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern, ImagePresentationId, ImageryPlan,
+  AssetCreationPath, AssetRequirement, AssetSpec, Brief, BuildTarget, DirectionId, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern, ImagePresentationId, ImageryPlan, PieceId, RecipePiece,
   GoalId, LeadId, MotionLevel, NavStyleId, ShapeStyle, UiKit, SignaturePattern, PageBlueprint, ShapeId, SignatureMoment, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
 } from '@/types/domain'
 
@@ -32,10 +34,12 @@ export function heroOptions(lead: LeadId, motion: MotionLevel): HeroPattern[] {
   return Object.values(heroes).filter((h) => h.leads.includes(lead) && h.motion.includes(motion))
 }
 
-export function resolveHero(spec: Pick<RecipeSpec, 'lead' | 'motion' | 'hero'>): HeroPattern {
+export function resolveHero(spec: Pick<RecipeSpec, 'lead' | 'motion' | 'hero'> & { direction?: DirectionId }): HeroPattern {
   const options = heroOptions(spec.lead, spec.motion)
   const chosen = spec.hero && options.find((h) => h.id === spec.hero)
   if (chosen) return chosen
+  const preferred = spec.direction && directions[spec.direction].hero
+  if (preferred && options.some((h) => h.id === preferred)) return heroes[preferred]
   const byLead: Record<LeadId, HeroId> = {
     photography: spec.motion === 'dynamic' || spec.motion === 'immersive' ? 'parallax-photo' : 'editorial-image',
     video: spec.motion === 'immersive' ? 'scroll-video' : 'ambient-video',
@@ -54,6 +58,43 @@ function cleanBrief(b: unknown): Brief | undefined {
   return { name: text(x.name, 60), offer: text(x.offer, 160), goal, photos: text(x.photos, 400) }
 }
 
+/** Known ids only, no repeats, one per slot (the later pick wins) — so a kit never gives a page two voices for one job. */
+export function cleanPieces(ids: unknown): PieceId[] {
+  if (!Array.isArray(ids)) return []
+  const bySlot = new Map<string, PieceId>()
+  for (const id of ids) if (typeof id === 'string' && Object.hasOwn(pieceCatalog, id)) bySlot.set(pieceCatalog[id as PieceId].slot, id as PieceId)
+  const keep = new Set(bySlot.values())
+  return [...new Set(ids as PieceId[])].filter((id) => keep.has(id))
+}
+
+/** Soft problems with a kit for this recipe: said plainly, never silently removed (the user may keep a piece). */
+export function pieceIssues(spec: Pick<RecipeSpec, 'motion' | 'pieces'>): Partial<Record<PieceId, string>> {
+  const out: Partial<Record<PieceId, string>> = {}
+  const ids = spec.pieces ?? []
+  for (const id of ids) {
+    if (!pieceCatalog[id].levels.includes(spec.motion)) out[id] = `Needs more movement than “${motionLevels[spec.motion].name}” — it will feel out of place.`
+  }
+  ids.filter((id) => pieceCatalog[id].heavy).slice(MAX_HEAVY_PIECES).forEach((id) => { out[id] = `More than ${MAX_HEAVY_PIECES} big interactive pieces compete for attention — keep the one that matters most.` })
+  return out
+}
+
+/** Places each kit piece on the first page section it suits; navbar/footer pieces go to the site chrome. */
+function placePieces(spec: RecipeSpec, pages: PageBlueprint[]): RecipePiece[] {
+  const issues = pieceIssues(spec)
+  // The chosen photo layout brings its own piece, unless the kit already fills the photo slot.
+  const fromPhotos = imageryPlan(spec)?.presentation.piece
+  const ids = [...(spec.pieces ?? [])]
+  if (fromPhotos && !ids.some((id) => pieceCatalog[id].slot === 'photos')) ids.push(fromPhotos)
+  return ids.map((id) => {
+    const p = pieceCatalog[id]
+    const placed = (spec.piecePlacements ?? []).filter((x) => x.piece === id).map((x) => { if (x.page === '*') return 'Whole site — mount once in app/layout.tsx'; const pg = pages.find((q) => q.id === x.page)!; return `${pg.label} → ${pg.sections[x.index].name.split(' — ')[0]}` })
+    const hit = pages.flatMap((pg) => pg.sections.map((s) => ({ pg, s }))).find(({ s }) => p.sections.includes(s.id))
+    const chrome = p.sections.find((s) => s === 'navbar' || s === 'footer')
+    const where = placed.length ? placed.join('; ') : hit ? `${hit.pg.label} → ${hit.s.name.split(' — ')[0]}` : chrome ? (chrome === 'navbar' ? 'Navigation (every page)' : 'Footer (every page)') : 'The home page section where it fits best'
+    return { ...p, where, path: `src/components/pieces/${p.file}`, ...(issues[id] ? { issue: issues[id] } : {}) }
+  })
+}
+
 /** Keeps a spec coherent after any change (questionnaire or Remix). Only dependent decisions move. */
 export function normalizeSpec(spec: RecipeSpec): RecipeSpec {
   const next = { ...spec, characters: spec.characters.slice(0, 2), brief: cleanBrief(spec.brief) }
@@ -70,6 +111,12 @@ export function normalizeSpec(spec: RecipeSpec): RecipeSpec {
   if (next.signatures) next.signatures = next.signatures.filter((id) => signaturePatterns.some((p) => p.id === id)).slice(0, 4)
   if (next.customPalette && !Object.values(next.customPalette).every(isHex)) delete next.customPalette
   if (next.imagePresentation && !Object.hasOwn(imagePresentations, next.imagePresentation)) delete next.imagePresentation
+  if (next.piecePlacements) next.piecePlacements = next.piecePlacements.filter((x) => Object.hasOwn(pieceCatalog, x.piece) && (x.page === '*' || next.pages.some((p) => p.id === x.page && x.index >= 0 && x.index < p.sections.length)))
+  if (next.rotation && next.rotation !== 'off' && !Object.hasOwn(accentSets, next.rotation)) delete next.rotation
+  if (next.piecePlacements?.length) next.pieces = [...new Set(next.piecePlacements.map((x) => x.piece))] // placed per section: the one-per-slot rule is per section, set by the plan
+  else if (next.pieces) next.pieces = cleanPieces(next.pieces)
+  if (next.piecePlacements && !next.piecePlacements.length) delete next.piecePlacements
+  if (next.pieces && !next.pieces.length) delete next.pieces
   if (!seedBySlug[next.base]) next.base = directions[next.direction].baseRecipe
   if (next.pages.length === 0) next.pages = defaultPagesFor(next.purpose)
   return next
@@ -160,6 +207,7 @@ function assetStatus(spec: RecipeSpec, a: AssetSpec): AssetRequirement['status']
 }
 
 const SOURCE: Record<string, string> = {
+  stickers: 'Your brand identity (or an illustrator)',
   images: 'Unsplash / Pexels', video: 'Pexels Videos / Coverr', 'product-photos': 'Own photoshoot', illustrations: 'Commissioned illustrator',
   '3d': 'Spline / Poly Haven', fonts: 'Google Fonts', copy: 'Written by you', logo: 'Your brand identity',
 }
@@ -262,6 +310,8 @@ function buildAssets(spec: RecipeSpec, hero: HeroPattern): AssetRequirement[] {
   const off = offShapeVideo(spec)
   if (off && spec.videoFrame !== 'original') list.push({ asset: 'video', label: 'Widescreen version', quantity: '1 file', level: 'recommended', usage: 'Desktop and tablet hero — fills 16:9 screens',
     specs: `16:9, 1920×1080 or larger, made from your ${off.width}×${off.height} video. Best: an AI “expand” to 16:9, which keeps every pixel of your video sharp. Otherwise prepare-video.sh crops and upscales it. Phones keep your original.` })
+  // Brand stickers: the orbit hero and the sticker piece are only as good as the brand's own marks.
+  if (hero.id === 'orbit-stickers' || spec.pieces?.includes('stickers')) list.push({ asset: 'stickers', label: 'Brand stickers', quantity: '8–14', level: hero.id === 'orbit-stickers' ? 'required' : 'recommended', usage: 'Sticker orbit, stickers on sections', specs: 'Transparent PNG (1200px) or SVG; bold outlines, the brand’s own slogans, marks and characters — never AI-generated clip art' })
   if (TEXTURED.has(spec.direction)) list.push({ asset: 'images', label: 'Texture', quantity: '1–2', level: 'optional', usage: 'Subtle paper/grain overlay at ≤ 4% opacity', specs: 'Seamless tile, 1024px, WebP' })
 
   // Ties uploaded files to the first requirement row of the same asset type (list order), so a single
@@ -305,7 +355,7 @@ function buildCreationPaths(spec: RecipeSpec, reqs: AssetRequirement[]): AssetCr
       `Your video is ${off.width}×${off.height}. Desktop screens are 16:9, so the site shows a widescreen version there and your original on phones.`,
       'Best quality: open your ORIGINAL file in an AI video tool with “Expand” / “Reframe” / “Outpaint”, choose 16:9 and 1920×1080 or larger. It paints the missing sides, so nothing is cut and your subject stays sharp.',
       'Then run: bash scripts/prepare-video.sh original.mp4 --wide widescreen.mp4 — desktop files come from the widescreen version, phone files from your original.',
-      `No AI tool? Run bash scripts/prepare-video.sh original.mp4 --upscale footage (or cgi). It crops a 16:9 window and sharpens it back to full size. Move the window with FOCUS_Y=0 (top) … 1 (bottom)${off.tall ? ' — a vertical video keeps only a band of its height, so check the subject stays in frame' : ''}.`,
+      `No AI tool? Run bash scripts/prepare-video.sh original.mp4 — it crops a 16:9 window and sharpens it back to full size automatically (add --upscale footage for people and real scenes). Move the window with FOCUS_Y=0 (top) … 1 (bottom)${off.tall ? ' — a vertical video keeps only a band of its height, so check the subject stays in frame' : ''}.`,
       'Never let the browser stretch a small crop — that is what makes a hero look soft.',
     ],
     settings: { 'Source': `Your ${off.width}×${off.height} original`, 'Target': '16:9, 1920×1080 or larger', 'Phones': 'Your original, unchanged' },
@@ -316,7 +366,7 @@ function buildCreationPaths(spec: RecipeSpec, reqs: AssetRequirement[]): AssetCr
     steps: [
       `Your video is ${smallVideo.width}×${smallVideo.height}. A full-screen hero is stretched ~${(1920 / smallVideo.width!).toFixed(1)}× on a laptop and more on large screens, which is what makes it look soft.`,
       'Best: export the original again at 1920 px or wider (or 4K) from your camera or AI tool. Many tools offer this at no extra cost.',
-      'Otherwise upscale it free on your own computer: install ffmpeg, download Real-ESRGAN, then run bash scripts/prepare-video.sh original.mp4 --upscale footage (people, fabric, real scenes) or --upscale cgi (product, 3D, liquid, animation — much faster).',
+      'Otherwise it is sharpened free on your own computer: install ffmpeg and run bash scripts/prepare-video.sh original.mp4 — it downloads Real-ESRGAN once and upscales automatically (fast model). For people, fabric and real scenes add --upscale footage: slower, most natural.',
       'Always start from the original file, never from a copy already compressed for the web.',
     ],
     tools: ['real-esrgan', 'ffmpeg'],
@@ -452,6 +502,7 @@ function pickSignatures(spec: RecipeSpec, hero: HeroPattern, pages: PageBlueprin
 /** Menu style that suits the kind of site, unless the user picked one. */
 export function recommendedNav(spec: Pick<RecipeSpec, 'purpose' | 'direction'>): NavStyleId {
   const d = directions[spec.direction]
+  if (d.nav) return d.nav
   if (d.families.includes('editorial') && (spec.purpose === 'portfolio' || spec.purpose === 'studio')) return 'side-index'
   const byPurpose: Record<PurposeId, NavStyleId> = {
     portfolio: 'fullscreen-menu', agency: 'fullscreen-menu', studio: 'fullscreen-menu', fashion: 'centered-logo', restaurant: 'centered-logo',
@@ -561,7 +612,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const slug = unchanged ? seed.slug : camel(composedTitle).replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`).replace(/^-/, '')
 
   const baseSummary = unchanged && !brief.name ? seed.summary
-    : `A ${purpose.noun.toLowerCase()} with a ${direction.name.toLowerCase()} direction: ${type.name.toLowerCase()} typography, a ${palette.name.toLowerCase()} palette, ${leads[spec.lead].name.toLowerCase()} leading the experience and ${motion.name.toLowerCase()} motion.`
+    : `${/^[aeiou]/i.test(purpose.noun) ? 'An' : 'A'} ${purpose.noun.toLowerCase()} with a ${direction.name.toLowerCase()} direction: ${type.name.toLowerCase()} typography, a ${palette.name.toLowerCase()} palette, ${leads[spec.lead].name.toLowerCase()} leading the experience and ${motion.name.toLowerCase()} motion.`
   const summary = [
     brief.offer && `${brief.name ?? 'The project'}: ${brief.offer.replace(/\.$/, '')}.`,
     baseSummary,
@@ -569,6 +620,8 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   ].filter(Boolean).join(' ')
 
   const colors = { ...palette.colors, ...spec.customPalette }
+  const rotationId = spec.rotation === 'off' ? undefined : spec.rotation ?? direction.rotation
+  const rotationSet = rotationId ? accentSets[rotationId] : undefined
   const patterns = motionPatterns.filter((p) => p.levels.includes(spec.motion) && (!p.leads || p.leads.includes(spec.lead)))
   const techs = uniq(patterns.map((p) => p.tech))
   const assetRequirements = buildAssets(spec, hero)
@@ -577,9 +630,10 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const resolveSection = (sid: SectionId) => {
     const base = sections[sid]
     const note = sameDirection && seed.spec.purpose === spec.purpose ? seed.sectionNotes[sid] : undefined
+    const heroCode = heroBlocks[hero.id]
     return sid === 'hero'
-      ? { ...base, name: `Hero — ${hero.name}`, composition: hero.composition, behavior: hero.behavior, responsive: hero.responsive, note }
-      : { ...base, note }
+      ? { ...base, name: `Hero — ${hero.name}`, composition: hero.composition, behavior: hero.behavior, responsive: hero.responsive, note, ...(heroCode ? { code: { path: `src/components/sections/${heroCode.file}`, exportName: heroCode.exportName, usage: heroCode.usage } } : {}) }
+      : { ...base, note, ...(blockFor(sid) ? { code: { path: `src/components/sections/${blockFor(sid)!.file}`, exportName: blockFor(sid)!.exportName, usage: blockFor(sid)!.usage } } : {}) }
   }
   const nav = navStyles[spec.nav ?? recommendedNav(spec)]
   const shape = shapeStyles[spec.shape ?? recommendedShape(spec)]
@@ -588,12 +642,14 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     footer: resolveSection('footer'), nav,
   }
   const pages: PageBlueprint[] = spec.pages.map((p) => ({ id: p.id, type: p.type, label: p.label, purpose: p.purpose, sections: p.sections.map(resolveSection) }))
+  const kit = placePieces(spec, pages)
 
   const componentIds = uniq<ComponentId>([...purpose.components, 'MediaAsset', 'SectionHeader'])
 
   const deps: { name: string; why: string }[] = []
-  if (techs.includes('motion')) deps.push({ name: 'motion', why: 'Viewport reveals, hover and layout animations in React' })
+  if (techs.includes('motion') || kit.some((k) => k.deps.includes('motion')) || heroBlocks[hero.id]) deps.push({ name: 'motion', why: kit.length ? 'Viewport reveals, hover and layout animations — and the kit pieces in src/components/pieces/' : 'Viewport reveals, hover and layout animations in React' })
   if (techs.includes('gsap')) deps.push({ name: 'gsap', why: 'ScrollTrigger for pinned and scrubbed sequences (all plugins are free)' })
+  if (kit.some((k) => k.deps.includes('@paper-design/shaders-react'))) deps.push({ name: '@paper-design/shaders-react', why: 'GPU backgrounds used by your kit (Apache-2.0)' })
   if (techs.includes('lenis')) deps.push({ name: 'lenis', why: 'Smooth scroll synced to ScrollTrigger (desktop only)' })
   if (techs.includes('three')) deps.push({ name: 'three', why: 'WebGL renderer' }, { name: '@react-three/fiber', why: 'Declarative Three.js in React' }, { name: '@react-three/drei', why: 'Loaders, controls and helpers (useGLTF, Environment)' })
 
@@ -614,6 +670,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     visualSystem: {
       palette: { id: palette.id, name: spec.customPalette ? `${palette.name} (customised)` : palette.name, custom: !!spec.customPalette, dark: palette.dark, tokens: paletteTokens(colors, palette.usage) },
       typography: type,
+      ...(rotationSet ? { rotation: rotationSet } : {}),
       spacing: { base: '8px', scale: ['4', '8', '12', '16', '24', '32', '48', '64', '96', '128', '160', '240'].map((n) => `${n}px`), sectionSpacing: layout.sectionSpacing, note: 'Use only values from the scale. Space between sections is always larger than space within them.' },
       grid: { container: layout.container, columns: layout.grid, gutters: layout.gutters },
       shape,
@@ -629,6 +686,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     media: { ...lead, hero, storytelling: filmStory(spec, hero), imagery, framing: videoFraming(spec) },
     motion: { level: motion, principle: motion.principle, patterns, libraries: techs.map((t) => TECH_LABEL[t]) },
     signatures: pickSignatures(spec, hero, pages),
+    pieces: kit,
     contentDirection: {
       tone: sameDirection ? seed.content.tone : chars.flatMap((c) => c.tone).join(', ') || direction.mood.join(', ').toLowerCase(),
       voice: chars.map((c) => c.voice).join(' ') || 'Plain, specific, confident.',
@@ -652,6 +710,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
         '  app/            — routes; layout.tsx loads fonts via next/font',
         '  components/     — ' + componentIds.join(', '),
         '  config/assets.ts — asset reference layer (every image/video by key)',
+        kit.length ? `  components/pieces/ — your kit, ready to use: ${kit.map((k) => k.exportName).join(', ')}` : '',
         '  styles/tokens.css — palette + type tokens as CSS variables',
         techs.includes('gsap') || techs.includes('lenis') ? '  lib/motion.ts   — ScrollTrigger/Lenis setup, reduced-motion guard' : '',
         techs.includes('three') ? '  components/scene/ — R3F canvas, lazy-loaded' : '',

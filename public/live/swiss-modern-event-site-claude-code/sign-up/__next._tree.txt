@@ -1,0 +1,4 @@
+:HL["/live/swiss-modern-event-site-claude-code/_next/static/chunks/3_v1s8v158p5o.css","style"]
+:HL["/live/swiss-modern-event-site-claude-code/_next/static/media/ae7d61738604de60.p.01o688h-2k2ls.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/live/swiss-modern-event-site-claude-code/_next/static/media/db7a528be82579ae.p.2jw5f0vfksgct.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"sign-up","param":null,"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"JRz4PN9okJUFe_0ghA3eB"}

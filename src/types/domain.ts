@@ -19,10 +19,10 @@ export type DirectionId =
   | 'swiss-modern' | 'typography-first' | 'neo-brutalist' | 'raw-editorial'
   | 'organic-modern' | 'warm-hospitality' | 'art-direction' | 'digital-futurism' | 'technical-minimal'
   | 'soft-pastel' | 'coastal-calm' | 'modern-heritage' | 'news-grid' | 'gothic-modern' | 'retro-seventies'
-  | 'playful-pop' | 'y2k-chrome' | 'bento-product'
+  | 'playful-pop' | 'y2k-chrome' | 'bento-product' | 'sticker-studio'
 
 export type CharacterId =
-  | 'elegant' | 'warm' | 'mysterious' | 'playful' | 'technical' | 'futuristic' | 'sophisticated' | 'raw'
+  | 'elegant' | 'warm' | 'mysterious' | 'playful' | 'technical' | 'futuristic' | 'sophisticated' | 'raw' | 'cheeky'
 
 export type LeadId = 'photography' | 'video' | 'typography' | 'product' | 'illustration' | '3d'
 export type MotionLevel = 'still' | 'subtle' | 'dynamic' | 'immersive'
@@ -33,21 +33,21 @@ export type PaletteId =
   | 'hazard-yellow' | 'celery-room' | 'bottle-green' | 'night-ink' | 'plum-velvet' | 'oxblood-room'
   | 'wet-slate' | 'black-box' | 'rose-leaf' | 'airmail-blue'
   | 'espresso' | 'lavender-haze' | 'cherry-red' | 'mint-fresh' | 'chrome-silver' | 'electric-lime'
-  | 'peach-fuzz' | 'deep-teal' | 'butter-cup' | 'cobalt-sky'
+  | 'peach-fuzz' | 'deep-teal' | 'butter-cup' | 'cobalt-sky' | 'studio-aqua'
 
 export type TypographyId =
   | 'quiet-page' | 'ink-and-paper' | 'soft-couture' | 'printed-word' | 'opening-credits' | 'gala-night'
   | 'loud-and-clear' | 'grid-discipline' | 'photocopy-zine' | 'workshop-manual' | 'corner-bakery'
   | 'main-street' | 'stretch-test' | 'high-low' | 'control-room' | 'data-sheet'
   | 'soft-seventies' | 'round-future' | 'letterpress-modern' | 'new-gothic' | 'friendly-app' | 'newsroom'
-  | 'moonlit-italic' | 'swiss-italic' | 'bubble-pop' | 'poster-warp'
+  | 'moonlit-italic' | 'swiss-italic' | 'bubble-pop' | 'poster-warp' | 'two-voice'
 
 export type HeroId =
   | 'editorial-image' | 'parallax-photo' | 'ambient-video' | 'scroll-video' | 'scroll-video-page' | 'type-statement'
-  | 'kinetic-type' | 'product-stage' | 'illustrated' | 'webgl-scene'
+  | 'kinetic-type' | 'product-stage' | 'illustrated' | 'webgl-scene' | 'orbit-stickers'
 
 export type AssetId =
-  | 'logo' | 'images' | 'video' | 'product-photos' | 'illustrations' | '3d' | 'fonts' | 'copy'
+  | 'logo' | 'images' | 'video' | 'product-photos' | 'illustrations' | '3d' | 'fonts' | 'copy' | 'stickers'
 
 /** How a set of photos is laid out on the site (see data/patterns.ts → imagePresentations). */
 export type ImagePresentationId =
@@ -62,6 +62,8 @@ export type ImagePresentation = {
   /** Ready-made components to start from (copy-paste / shadcn registry) — adapt to the recipe's tokens, never ship their demo styling. */
   components: { name: string; url: string }[]
   resources: string[]
+  /** The kit piece that implements it — shipped as code whenever this layout is chosen. */
+  piece?: PieceId
 }
 /** The photo plan the engine resolved: the user's choice, or the recommendation from their photos and brief. */
 export type ImageryPlan = { presentation: ImagePresentation; photos: number; orientation: string; recommended: ImagePresentationId; why: string; note?: string }
@@ -78,7 +80,7 @@ export type SectionId =
   | 'navbar' | 'hero' | 'intro' | 'featured-work' | 'case-study' | 'services' | 'process' | 'about'
   | 'gallery' | 'editorial-story' | 'manifesto' | 'clients' | 'menu' | 'reservation' | 'location'
   | 'collection' | 'lookbook' | 'product-grid' | 'product-highlight' | 'feature-grid' | 'how-it-works'
-  | 'pricing' | 'faq' | 'journal' | 'contact-cta' | 'footer'
+  | 'pricing' | 'faq' | 'journal' | 'contact-cta' | 'footer' | 'chapters'
 
 export type PageTypeId =
   | 'home' | 'work' | 'about' | 'contact' | 'services' | 'collections' | 'shop' | 'product-detail'
@@ -145,6 +147,13 @@ export type Direction = Compat & {
   typography: TypographyId[]
   why: string
   image: ImageKey
+  /** Default voice when nobody picked one (the showcase asks no questions). */
+  voice?: CharacterId
+  /** Default colour chapters (see data/ingredients accentSets). */
+  rotation?: AccentSetId
+  /** Preferred first screen and menu for this look, when they fit the lead and motion. */
+  hero?: HeroId
+  nav?: NavStyleId
 }
 
 export type Character = {
@@ -160,6 +169,10 @@ export type Character = {
 
 export type ColorRole = 'background' | 'surface' | 'text' | 'muted' | 'primary' | 'secondary' | 'accent' | 'border'
 export type PaletteColors = Record<ColorRole, string>
+
+/** Colour chapters: 3 accents that rotate section by section over any palette (one full colour field per chapter). */
+export type AccentSetId = 'sticker-pop' | 'riso-print' | 'fruit-market'
+export type AccentSet = { id: AccentSetId; name: string; line: string; colors: [string, string, string]; why: string }
 
 export type Palette = Compat & {
   id: PaletteId
@@ -268,6 +281,57 @@ export type MotionPattern = {
 /** A ready-made component to start from — adapt it to the recipe's tokens and type, never ship its demo styling. */
 export type LibraryComponent = { name: string; url: string }
 
+// ─── Pieces (the kit: ready components users collect and a recipe ships as code) ───
+export type PieceId =
+  | 'text-effect' | 'text-scramble' | 'text-roll' | 'text-loop' | 'spinning-text' | 'text-reveal' | 'split-flap'
+  | 'number-ticker' | 'marquee' | 'image-comparison' | 'ring-carousel' | 'image-field' | 'tilted-grid' | 'image-trail' | 'tilt'
+  | 'scroll-progress' | 'velocity-band' | 'sticky-cards' | 'cursor-area' | 'magnetic' | 'hover-highlight'
+  | 'grid-pattern' | 'grain' | 'magnet-lines' | 'video-dialog'
+  | 'media-between-text' | 'parallax-floating' | 'cut-reveal' | 'underline-fill' | 'drag-photos' | 'text-along-path' | 'shader-grain' | 'shader-dither'
+  | 'duo-headline' | 'scribble-link' | 'wavy-link' | 'swap-button' | 'stickers' | 'blob-transition' | 'brand-cursor' | 'cookie-note'
+/** Where a piece lives on the page. A kit holds at most one piece per slot, so the site keeps one voice. */
+/** 'site' pieces work across the whole site (page transition, cursor, cookie notice) and are chosen in the Style step. */
+export type PieceSlot = 'headline' | 'label' | 'statement' | 'numbers' | 'photos' | 'scroll' | 'pointer' | 'background' | 'video' | 'button' | 'decor' | 'site'
+export type Piece = {
+  id: PieceId; name: string; line: string; slot: PieceSlot
+  /** Library it was adapted from (MIT) or uses as a dependency (Apache-2.0) — both allow shipping inside every Build Package. */
+  source: { library: 'Motion Primitives' | 'Magic UI' | 'Cult UI' | 'Animata' | 'Componentry' | 'Fancy Components' | 'Paper Shaders' | 'OpusKit'; url: string; copyright: string; license: 'MIT' | 'Apache-2.0' }
+  file: string; exportName: string; deps: string[]
+  /** Motion levels it belongs to; outside them the engine flags it (the user may still keep it). */
+  levels: MotionLevel[]
+  /** WebGL-ish or full-screen interaction: a kit carries at most two. */
+  heavy?: boolean
+  sections: SectionId[]
+  usage: string
+  rules: string[]
+}
+/**
+ * A site planned from the showcase (/kit): everything the user took off the shelves, in order — no questions asked.
+ * Unset choices fall back to the chosen look's tested defaults. planToSpec (features/kit/plan.ts) turns it into a RecipeSpec.
+ */
+export type KitPlan = {
+  name?: string
+  purpose?: PurposeId
+  /** Step 1 — the same on every page. */
+  direction?: DirectionId; palette?: PaletteId; typography?: TypographyId; shape?: ShapeId; nav?: NavStyleId; imagePresentation?: ImagePresentationId
+  rotation?: AccentSetId | 'off'
+  /** Site-wide ready pieces: page transition, cursor, cookie notice. */
+  sitePieces?: PieceId[]
+  /** Step 2 — page by page. The first page's first screen is `hero`. */
+  hero?: HeroId
+  pages: PlanPage[]
+  target?: BuildTargetId
+}
+/** A page in the plan. Each section is an instance with its own key, so the pieces attached to it move with it. */
+export type PlanPage = { id: string; type: PageTypeId; label: string; purpose: string; sections: PlanSection[] }
+export type PlanSection = { key: string; id: SectionId; pieces: PieceId[] }
+/** Where the user attached a ready piece: page id + section index on that page, or page '*' for the whole site. */
+export type PiecePlacement = { piece: PieceId; page: string; index: number }
+
+/** A kit piece as the recipe places it: which page and section, and where its code lands in the project. */
+export type RecipePiece = Piece & { where: string; path: string; issue?: string }
+
+
 export type SignaturePattern = {
   id: string
   name: string
@@ -281,7 +345,7 @@ export type SignaturePattern = {
   components?: LibraryComponent[]
 }
 
-export type NavStyleId = 'classic-bar' | 'floating-pill' | 'fullscreen-menu' | 'centered-logo' | 'card-menu' | 'bottom-dock' | 'side-index'
+export type NavStyleId = 'classic-bar' | 'floating-pill' | 'fullscreen-menu' | 'centered-logo' | 'card-menu' | 'bottom-dock' | 'side-index' | 'split-pill'
 export type NavStyle = { id: NavStyleId; name: string; line: string; trending?: boolean; composition: string; behavior: string; responsive: string; components: LibraryComponent[] }
 
 export type ShapeId = 'sharp' | 'soft' | 'round' | 'pill' | 'brutal' | 'outline'
@@ -384,6 +448,12 @@ export type RecipeSpec = {
   /** Signature moment ids the user picked (max 4). Absent = the engine's own pick. */
   signatures?: string[]
   imagePresentation?: ImagePresentationId
+  /** Colour chapters over the palette — one accent per chapter section ('off' overrides the look's default). */
+  rotation?: AccentSetId | 'off'
+  /** Pieces the user put in their kit (see data/pieces.ts). */
+  pieces?: PieceId[]
+  /** Exactly where each piece goes (showcase plans). Without it, a piece lands on the first section it suits. */
+  piecePlacements?: PiecePlacement[]
   pages: PageSpec[]
   target: BuildTargetId
 }
@@ -418,11 +488,14 @@ export type VisualSystem = {
   spacing: { base: string; scale: string[]; sectionSpacing: string; note: string }
   grid: { container: string; columns: string; gutters: string }
   shape: ShapeStyle
+  /** Colour chapters: the three accents that take turns, one per chapter section (tokens --color-chapter-1..3). */
+  rotation?: AccentSet
 }
 
 export type LayoutSystem = Omit<LayoutPattern, 'tags' | 'compatibleWith' | 'incompatibleWith' | 'line'>
 
-export type PageSection = SectionPattern & { note?: string }
+/** code: the ready component for this section, shipped at `path` in every Build Package. */
+export type PageSection = SectionPattern & { note?: string; code?: { path: string; exportName: string; usage: string } }
 
 export type PageBlueprint = { id: string; type: PageTypeId; label: string; purpose: string; sections: PageSection[] }
 
@@ -503,6 +576,8 @@ export type UniversalRecipe = {
   motion: MotionRecipe
   /** 2–4 memorable interactions, each on its own section — the moments people remember and share. */
   signatures: SignatureMoment[]
+  /** The user's kit: ready components shipped as code in src/components/pieces/. */
+  pieces: RecipePiece[]
   contentDirection: ContentDirection
   assetRequirements: AssetRequirement[]
   assetCreationPaths: AssetCreationPath[]

@@ -282,7 +282,7 @@ export const families: Record<FamilyId, Family> = {
   bold: { id: 'bold', name: 'Bold', line: 'Big type, strong structure, confident', directions: ['swiss-modern', 'typography-first', 'news-grid'] },
   raw: { id: 'raw', name: 'Raw', line: 'Honest, unpolished, visible structure', directions: ['neo-brutalist', 'raw-editorial', 'gothic-modern'] },
   organic: { id: 'organic', name: 'Organic', line: 'Natural, tactile, warm to the touch', directions: ['organic-modern', 'soft-pastel', 'retro-seventies', 'warm-hospitality'] },
-  experimental: { id: 'experimental', name: 'Experimental', line: 'Unexpected, art-directed, playful', directions: ['art-direction', 'playful-pop', 'y2k-chrome', 'typography-first'] },
+  experimental: { id: 'experimental', name: 'Experimental', line: 'Unexpected, art-directed, playful', directions: ['art-direction', 'playful-pop', 'y2k-chrome', 'typography-first', 'sticker-studio'] },
   futuristic: { id: 'futuristic', name: 'Futuristic', line: 'Precise, technical, a little otherworldly', directions: ['digital-futurism', 'technical-minimal', 'immersive-portfolio', 'y2k-chrome', 'bento-product'] },
 }
 
@@ -682,6 +682,20 @@ export const directions: Record<DirectionId, Direction> = {
     tags: ['playful', 'pop', 'bold'],
     why: 'Bright colour and bubbly type are impossible to ignore — great for brands that want to be remembered and shared.',
   },
+  'sticker-studio': {
+    id: 'sticker-studio', name: 'Sticker Studio', families: ['experimental'],
+    line: 'Neutral page, two-voice type, stickers everywhere',
+    description: 'A creative-studio look: a calm neutral page covered in brand stickers, headlines split between a loud grotesk and a light serif, and each chapter in its own bright colour.',
+    baseRecipe: 'typography-first', image: 'studio',
+    mood: ['Cheeky', 'Energetic', 'Crafted'],
+    principles: ['A neutral page so stickers and chapter colours can shout', 'Split big headlines between two whole voices', 'Every interaction has a small wink'],
+    do: ['Put a full sentence in the serif above each big heading', 'Give each chapter one accent as a full colour field, never a stripe', 'Let stickers overlap edges and move a little with scroll'],
+    avoid: ['Gradients and glass', 'More than one accent in the same view', 'Stickers made by AI — use the brand’s own marks'],
+    defaults: { palette: 'studio-aqua', typography: 'two-voice', layout: 'balanced', lead: 'illustration', motion: 'dynamic' },
+    palettes: ['studio-aqua', 'signal-white', 'wet-concrete'], typography: ['two-voice', 'loud-and-clear', 'grid-discipline'],
+    tags: ['playful', 'studio', 'stickers', 'bold'], voice: 'cheeky', rotation: 'sticker-pop', hero: 'orbit-stickers', nav: 'split-pill',
+    why: 'Stickers make a brand feel like a place with people in it; a neutral page and one colour per chapter keep that energy readable instead of chaotic.',
+  },
   'y2k-chrome': {
     id: 'y2k-chrome', name: 'Y2K Chrome', families: ['futuristic', 'experimental'],
     line: 'Silver, wide type, a little retro-future',
@@ -716,6 +730,7 @@ export const characters: Record<CharacterId, Character> = {
   elegant: { id: 'elegant', name: 'Elegant', adjective: 'Refined', line: 'Graceful and composed', tone: ['composed', 'precise'], voice: 'Measured sentences, no exclamation marks.', headlineStyle: 'Short, poised statements', wordsToUse: ['crafted', 'considered', 'quiet'] },
   warm: { id: 'warm', name: 'Warm', adjective: 'Warm', line: 'Welcoming and human', tone: ['welcoming', 'generous'], voice: 'Speak directly to the visitor, like a host.', headlineStyle: 'Invitations — "Come in", "Stay a while"', wordsToUse: ['together', 'welcome', 'made'] },
   mysterious: { id: 'mysterious', name: 'Mysterious', adjective: 'Nocturne', line: 'Intriguing, reveals slowly', tone: ['intriguing', 'withholding'], voice: 'Say less than you know. Let media finish the sentence.', headlineStyle: 'Fragments and single words', wordsToUse: ['after dark', 'unseen', 'between'] },
+  cheeky: { id: 'cheeky', name: 'Cheeky', adjective: 'Cheeky', line: 'Wordplay with a wink', tone: ['cheeky', 'quick', 'confident'], voice: 'Every heading is a small joke with a point: a problem, then its answer in the same breath. Short sentences. No jargon.', headlineStyle: 'Problem? Answer. — “Hard story? Easily told.” “No talk. All pictures.”', wordsToUse: ['no fuss', 'moves', 'sticks', 'quick'] },
   playful: { id: 'playful', name: 'Playful', adjective: 'Playful', line: 'Witty and surprising', tone: ['witty', 'light'], voice: 'Short, clever lines; humor in microcopy.', headlineStyle: 'Wordplay, unexpected pairings', wordsToUse: ['try', 'play', 'hello'] },
   technical: { id: 'technical', name: 'Technical', adjective: 'Precise', line: 'Exact and knowledgeable', tone: ['exact', 'factual'], voice: 'Specific numbers, real specs, no superlatives.', headlineStyle: 'Declarative facts', wordsToUse: ['built', 'measured', 'specified'] },
   futuristic: { id: 'futuristic', name: 'Futuristic', adjective: 'Future', line: 'Forward-looking, calm', tone: ['visionary', 'calm'], voice: 'Describe what becomes possible, concretely.', headlineStyle: 'Short, forward statements', wordsToUse: ['next', 'signal', 'system'] },

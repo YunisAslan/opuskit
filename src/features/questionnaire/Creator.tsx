@@ -22,6 +22,7 @@ import { seedBySlug } from '@/data/recipes'
 import { deleteFile, getFile, storeUpload } from '@/lib/files'
 import { examples } from '@/data/examples'
 import { KEYS, get, write } from '@/lib/store'
+import { TARGETS } from '@/data/targets'
 import { EFFECTS, heroes, imagePresentations, navStyles, pageTypes, shapeStyles } from '@/data/patterns'
 import { OptionDemo } from '@/components/OptionDemo'
 import { ToolIcon } from '@/components/ToolIcon'
@@ -32,6 +33,7 @@ import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import type {
+  PieceId,
   AssetId, Brief, HeroId, BuildTargetId, ImagePresentationGroup, ImagePresentationId, CharacterId, DirectionId, FamilyId, GoalId, LayoutId, LeadId, MediaPlan, MotionLevel,
   NavStyleId, PageSpec, PageTypeId, PaletteColors, PaletteId, PurposeId, RecipeSpec, ShapeId, TypographyId, UniversalRecipe, UploadedAsset,
 } from '@/types/domain'
@@ -40,7 +42,7 @@ type Draft = {
   purpose?: PurposeId; brief: Brief; feel?: FamilyId; direction?: DirectionId; characters: CharacterId[]; lead?: LeadId; motion?: MotionLevel
   hero?: HeroId; layout?: LayoutId; palette?: PaletteId; customPalette?: PaletteColors; typography?: TypographyId; assets: AssetId[]
   uploads: UploadedAsset[]; mediaPlan?: MediaPlan; videoFrame?: 'wide' | 'original'; imagePresentation?: ImagePresentationId; pages: PageSpec[]; target?: BuildTargetId
-  nav?: NavStyleId; shape?: ShapeId; signatures?: string[]
+  nav?: NavStyleId; shape?: ShapeId; signatures?: string[]; pieces?: PieceId[]
 }
 const EMPTY: Draft = { brief: {}, characters: [], assets: [], uploads: [], pages: [] }
 
@@ -87,7 +89,7 @@ function toSpec(d: Draft): RecipeSpec {
     base: dir.baseRecipe, brief: d.brief, purpose: d.purpose ?? 'other', direction: dir.id, characters: d.characters,
     lead: d.lead ?? dir.defaults.lead, motion: d.motion ?? dir.defaults.motion, hero: d.hero, layout: d.layout ?? dir.defaults.layout,
     palette: d.palette ?? dir.defaults.palette, customPalette: d.customPalette, typography: d.typography ?? dir.defaults.typography,
-    assets: d.assets, uploads: d.uploads, mediaPlan: needsMediaPlan(d) ? d.mediaPlan : 'have', videoFrame: d.videoFrame, imagePresentation: d.imagePresentation, nav: d.nav, shape: d.shape, signatures: d.signatures,
+    assets: d.assets, uploads: d.uploads, mediaPlan: needsMediaPlan(d) ? d.mediaPlan : 'have', videoFrame: d.videoFrame, imagePresentation: d.imagePresentation, nav: d.nav, shape: d.shape, signatures: d.signatures, pieces: d.pieces,
     pages: d.pages.length ? d.pages : defaultPagesFor(d.purpose ?? 'other'), target: d.target ?? 'not-sure',
   })
 }
@@ -311,7 +313,7 @@ function specToDraft(s: RecipeSpec): Draft {
     ...EMPTY, purpose: s.purpose, brief: s.brief ?? {}, feel: directions[s.direction].families[0], direction: s.direction, characters: s.characters,
     lead: s.lead, motion: s.motion, hero: s.hero, layout: s.layout, palette: s.palette, customPalette: s.customPalette, typography: s.typography,
     assets: s.assets, uploads: s.uploads ?? [], mediaPlan: s.mediaPlan, videoFrame: s.videoFrame, imagePresentation: s.imagePresentation,
-    pages: s.pages, target: s.target, nav: s.nav, shape: s.shape, signatures: s.signatures,
+    pages: s.pages, target: s.target, nav: s.nav, shape: s.shape, signatures: s.signatures, pieces: s.pieces ?? [],
   }
 }
 
@@ -391,12 +393,6 @@ function Card({ selected, onClick, title, line, children, badge, icon: Icon, rol
   )
 }
 
-const TARGETS: [BuildTargetId, string, string][] = [
-  ['not-sure', 'Decide later', 'Choose your tool on the result page'],
-  ['lovable', 'Lovable', 'Build it by chatting — no code needed'], ['v0', 'v0', 'Paste one prompt, get a site'],
-  ['claude-code', 'Claude Code', 'An AI assistant that writes the code for you'], ['cursor', 'Cursor', 'An AI code editor, for people who code a little'],
-  ['own-code', 'I’ll code it myself', 'Full design notes, colors and fonts as code'],
-]
 
 /** The first-screen effects, described by what the visitor experiences — never by how it's built. */
 const effectOf = (d: Draft) => EFFECTS.find((e) => e.hero === d.hero)
@@ -722,7 +718,7 @@ export function uploadAdvice(u: UploadedAsset): string | null {
     const ratio = u.width / u.height
     if (u.height > u.width) return `Vertical video (${u.width}×${u.height}). Phones show it exactly as it is; wide desktop screens need a 16:9 version — choose below.`
     if (Math.abs(ratio / (16 / 9) - 1) > 0.05) return `${u.width}×${u.height} isn’t 16:9. Wide screens need a 16:9 version — choose below.`
-    if (u.width < 1920) return `${u.width}×${u.height} will look soft full-screen (it gets stretched on large displays). Upload the original export if you have it — otherwise your Build Package includes a free sharpening step.`
+    if (u.width < 1920) return `${u.width}×${u.height} will look soft full-screen (it gets stretched on large displays). Upload the original export if you have it — otherwise your Build Package sharpens it to full size automatically (free). Downloads from Pinterest, Instagram and similar sites are small web copies — the original file always looks better.`
     if (u.duration > 20) return `${u.duration.toFixed(0)}s is long; trim to 5–15s for a hero loop.`
     if (Math.abs(ratio - 16 / 9) > 0.1 && Math.abs(ratio - 9 / 16) > 0.1) return `Aspect ${ratio.toFixed(2)} — hero video works best at 16:9 (desktop) or 9:16 (mobile).`
     return `Good: ${u.width}×${u.height}, ${u.duration.toFixed(1)}s.`

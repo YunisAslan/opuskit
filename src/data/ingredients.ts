@@ -1,5 +1,5 @@
 import type {
-  ColorRole, LayoutId, LayoutPattern, Palette, PaletteId, TypographyId, TypographyPairing,
+  ColorRole, LayoutId, LayoutPattern, Palette, PaletteId, TypographyId, TypographyPairing, AccentSet, AccentSetId,
 } from '@/types/domain'
 
 export const colorRoles: Record<ColorRole, { purpose: string; usage: string }> = {
@@ -16,7 +16,20 @@ export const colorRoles: Record<ColorRole, { purpose: string; usage: string }> =
 // Curated for spread, not count: grounds sit in different lightness bands, chroma levels and hue
 // families (npm run check enforces ≥ 0.06 ΔE_OK between any two grounds). Deliberately absent: the
 // cream-ground + terracotta accent and near-black + acid accent defaults that read as AI-generated.
+/** Colour chapters: over a neutral palette, each chapter section takes the next accent as a full colour field. */
+export const accentSets: Record<AccentSetId, AccentSet> = {
+  'sticker-pop': { id: 'sticker-pop', name: 'Sticker Pop', line: 'Klein blue, bubblegum pink, safety orange', colors: ['#0038FF', '#FF77CD', '#FF5F04'], why: 'Three loud primaries-with-a-twist, each owning a chapter, so colour tells visitors where they are.' },
+  'riso-print': { id: 'riso-print', name: 'Riso Print', line: 'Fluorescent pink, teal, sunflower', colors: ['#FF48B0', '#00838A', '#FFB511'], why: 'The ink drums of a risograph: slightly off, printed-looking and warm.' },
+  'fruit-market': { id: 'fruit-market', name: 'Fruit Market', line: 'Lime, tomato, plum', colors: ['#B7E500', '#F0412A', '#6B2C91'], why: 'Market-stall colours that feel edible and cheerful without going pastel.' },
+}
+
 export const palettes: Record<PaletteId, Palette> = {
+  'studio-aqua': {
+    id: 'studio-aqua', name: 'Studio Aqua', line: 'Pale pool water, paper cards, Klein blue', dark: false, tags: ['playful', 'studio', 'bold'],
+    colors: { background: '#B6DADA', surface: '#F4F4F4', text: '#101010', muted: '#324545', primary: '#101010', secondary: '#9CCACA', accent: '#0038FF', border: '#8DBABA' },
+    usage: { surface: 'Paper-white cards and the nav pill — the calm layer stickers sit on', accent: 'Klein blue for links and the active state; chapter colours do the rest' },
+    why: 'A pale water-blue page reads fresh and a little cheeky without going pastel-sweet; paper-white cards and near-black type keep it crisp, so brand stickers and chapter colours can be as loud as they like.',
+  },
   'signal-white': {
     id: 'signal-white', name: 'Signal White', line: 'True white, black, one red', dark: false, tags: ['swiss', 'grid', 'bold'],
     colors: { background: '#FFFFFF', surface: '#F1F1EF', text: '#000000', muted: '#5E5E5E', primary: '#000000', secondary: '#E6E6E4', accent: '#D7261E', border: '#DCDCDA' },
@@ -185,6 +198,7 @@ const GF = {
   shipporiMincho: 'Shippori+Mincho:wght@400;500;600;700;800',
   lineSeedJp: 'LINE+Seed+JP:wght@100;400;700;800',
   notoSerifDisplay: 'Noto+Serif+Display:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900',
+  archivo: 'Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900',
   caslonDisplay: 'Libre+Caslon+Display',
   caslonText: 'Libre+Caslon+Text:ital,wght@0,400;0,700;1,400',
   imbue: 'Imbue:opsz,wght@10..100,100..900',
@@ -229,6 +243,15 @@ const GF = {
 }
 
 export const typography: Record<TypographyId, TypographyPairing> = {
+  'two-voice': {
+    id: 'two-voice', name: 'Two Voices', line: 'Compressed grotesk shouts, compressed serif answers', tags: ['playful', 'bold', 'editorial'],
+    display: { family: 'Archivo', weight: 800, size: 'clamp(3.25rem, 10vw, 9rem)', lineHeight: '0.88', letterSpacing: '-0.035em', use: 'The loud half of a headline — whole words, uppercase', uppercase: true, stretch: '72%' },
+    heading: { family: 'Noto Serif Display', weight: 300, size: 'clamp(1.6rem, 3vw, 2.6rem)', lineHeight: '1', letterSpacing: '-0.02em', use: 'The quiet half of a headline and section statements', stretch: '62.5%' },
+    body: { family: 'Archivo', weight: 400, size: '1.0625rem', lineHeight: '1.5', letterSpacing: '0', use: 'Paragraphs' },
+    utility: { family: 'Noto Serif Display', weight: 400, size: 'clamp(1.25rem, 2vw, 1.9rem)', lineHeight: '1.1', letterSpacing: '-0.01em', use: 'Sentence eyebrows above headings — a full line, never a mono label', stretch: '62.5%' },
+    googleFamilies: [GF.archivo, GF.notoSerifDisplay], source: 'Google Fonts', sample: 'Everything moves',
+    why: 'Two whole voices of equal size — a heavy compressed grotesk and a light compressed serif — split one headline between them. It is contrast of family, not one decorated word, and both come from width axes in free variable files.',
+  },
   'quiet-page': {
     id: 'quiet-page', name: 'Quiet Page', line: 'One good serif, lots of air', tags: ['quiet', 'editorial'],
     display: { family: 'Literata', weight: 300, size: 'clamp(2.75rem, 6vw, 5.5rem)', lineHeight: '1.05', letterSpacing: '-0.02em', use: 'Hero lines, chapter titles' },

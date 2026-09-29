@@ -8,13 +8,16 @@
     "start": "next start",
     "check": "tsx scripts/check.ts",
     "audit": "tsx scripts/choice-audit.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "pieces": "tsx scripts/pieces-source.ts"
   },
   "dependencies": {
+    "@paper-design/shaders-react": "^0.0.81",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
     "fflate": "^0.8.3",
     "lucide-react": "^1.48.0",
+    "motion": "^13.4.6",
     "next": "^16.3.6",
     "radix-ui": "^1.6.7",
     "react": "^19.3.0",

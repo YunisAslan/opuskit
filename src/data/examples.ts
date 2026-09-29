@@ -33,6 +33,31 @@ export type ExampleProject = {
 
 export const examples: ExampleProject[] = [
   {
+    slug: 'swiss-modern-event-site-claude-code',
+    title: 'RALPH&LAUREN — Sheki Polo Weekend, 11–13 June 2027',
+    summary: 'Three days of polo on the grass ground in Sheki, 11–13 June 2027. Seats by RSVP.',
+    mood: ['Rational', 'Direct', 'Timeless'],
+    hero: { kind: 'video', src: '/examples/swiss-modern-event-site-claude-code/media/heroVideo.mp4', poster: '/examples/swiss-modern-event-site-claude-code/media/posterImage.jpg' },
+    livePath: '/live/swiss-modern-event-site-claude-code/index.html',
+    // From CLAUDE.md + recipe/*.md. The owner's 720×404 web-copy video was sharpened afterwards with the automatic
+    // Real-ESRGAN step now built into prepare-video.sh (the version it was built with only suggested it).
+    choices: [
+      { label: 'Making', value: 'Event / wedding' },
+      { label: 'Name', value: 'RALPH&LAUREN' },
+      { label: 'Visitors should', value: 'Book or reserve' },
+      { label: 'Style', value: 'Swiss Modern' },
+      { label: 'First screen', value: 'Film on the first screen (own video uploaded)' },
+      { label: 'Movement', value: 'Immersive' },
+      { label: 'Colors', value: 'Signal White' },
+      { label: 'Lettering', value: 'Loud and Clear' },
+      { label: 'Layout', value: 'Grid-driven' },
+      { label: 'Photos', value: 'Even grid (temporary stock photos)' },
+      { label: 'Pages', value: 'Home, RSVP, Venue & travel, FAQ, Gallery, Contact, Sign In, Sign Up, Privacy Policy, Terms of Service, Cookie Policy, Accessibility' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Its 720×404 source video was sharpened to 1920×1078 by the prepare-video.sh step that now runs automatically for every small upload.',
+  },
+  {
     slug: 'cheeky911',
     title: 'CHEEKY, a fashion house for the 911',
     summary: 'Porsche 911s, filmed and shown like a collection. Selected cars, one season at a time.',
