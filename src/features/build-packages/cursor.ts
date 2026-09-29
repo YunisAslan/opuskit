@@ -17,6 +17,7 @@ function rules(r: UniversalRecipe): BuildFile[] {
   ]
   if (r.motion.level.id !== 'still') out.push({ path: '.cursor/rules/motion.mdc', content: mdc({ description: `Motion system for ${r.title}. Apply when adding animation, scroll effects, transitions or reduced-motion handling.`, alwaysApply: false }, [S.motion(r), S.signatures(r)].join('\n\n') + '\n') })
   if (r.metadata.spec.lead !== 'typography') out.push({ path: '.cursor/rules/media.mdc', content: mdc({ description: 'Media handling: asset config layer, posters, crops, temporary assets. Apply when rendering images, video or 3D.', alwaysApply: false }, `${S.media(r)}\n\n## Asset layer\n- Render all media via <MediaAsset id="…" /> reading src/config/assets.ts.\n- Asset statuses live in @assets/manifest.json. Temporary assets must stay replaceable.\n`) })
+  out.push({ path: '.cursor/rules/ui-components.mdc', content: mdc({ description: 'Controls and forms from shadcn/ui, themed to the recipe. Apply when adding buttons, fields, selects, date pickers, dialogs, menus, tabs or toasts.', globs: 'src/components/**/*.tsx,src/app/**/*.tsx', alwaysApply: false }, S.ui(r) + '\n') })
   out.push({ path: '.cursor/rules/visual-qa.mdc', content: mdc({ alwaysApply: false }, `# Visual QA (invoke with @visual-qa)\n\nCompare the implementation to @docs/recipe.md and report deviations (section → expected → actual → fix).\n\n${visualQa(r).map((x) => `- [ ] ${x}`).join('\n')}\n`) })
   return out
 }

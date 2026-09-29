@@ -74,7 +74,7 @@ export const palettes: Record<PaletteId, Palette> = {
   'night-ink': {
     id: 'night-ink', name: 'Night Ink', line: 'Navy depth, lemon signal', dark: true, tags: ['futuristic', 'technical', 'cinematic'],
     colors: { background: '#11254B', surface: '#1B315B', text: '#F1F3F8', muted: '#A7B2C8', primary: '#F1F3F8', secondary: '#253C67', accent: '#F2E14C', border: '#34497A' },
-    usage: { accent: 'Lemon for live states, focus rings and data highlights — never large fills' },
+    usage: { accent: 'Lemon for live states and data highlights — never large fills' },
     why: 'Ink navy is unmistakably blue, so technical content feels precise rather than "hacker black". A lemon signal is its natural opposite.',
   },
   'plum-velvet': {
@@ -92,7 +92,7 @@ export const palettes: Record<PaletteId, Palette> = {
   'wet-slate': {
     id: 'wet-slate', name: 'Wet Slate', line: 'Mid-dark slate, cyan readouts', dark: true, tags: ['technical', 'futuristic', 'cinematic'],
     colors: { background: '#404952', surface: '#4D5660', text: '#F2F4F6', muted: '#C8CED5', primary: '#F2F4F6', secondary: '#58626D', accent: '#86E0F7', border: '#5B646F' },
-    usage: { accent: 'Pale cyan for readouts and focus states' },
+    usage: { accent: 'Pale cyan for readouts and live states' },
     why: 'A dark mode that is honestly grey, not black — easier on the eyes for long sessions and more atmospheric under footage.',
   },
   'black-box': {

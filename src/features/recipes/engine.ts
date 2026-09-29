@@ -3,13 +3,13 @@
 
 import { characters, directions, goals, leads, motionLevels, purposes } from '@/data/taxonomy'
 import { colorRoles, layouts, palettes, typography } from '@/data/ingredients'
-import { GENERIC_TELLS, components, heroes, imagePresentations, media, motionPatterns, pageTypes, sections, signaturePatterns } from '@/data/patterns'
+import { GENERIC_TELLS, components, heroes, imagePresentations, media, motionPatterns, navStyles, pageTypes, sections, shapeStyles, signaturePatterns, UI_ALWAYS, uiByPage, uiBySection, uiNames } from '@/data/patterns'
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { resources } from '@/data/resources'
 import { contrast, contrastLabel, isHex } from '@/lib/color'
 import type {
   AssetCreationPath, AssetRequirement, AssetSpec, Brief, BuildTarget, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern, ImagePresentationId, ImageryPlan,
-  LeadId, MotionLevel, PageBlueprint, SignatureMoment, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
+  LeadId, MotionLevel, NavStyleId, ShapeStyle, UiKit, SignaturePattern, PageBlueprint, ShapeId, SignatureMoment, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
 } from '@/types/domain'
 
 // ─── Spec helpers ────────────────────────────────────────────────────────────
@@ -64,6 +64,10 @@ export function normalizeSpec(spec: RecipeSpec): RecipeSpec {
   const locked = directions[next.direction].layoutLocked
   if (locked) next.layout = locked
   if (next.lead !== 'video' && next.mediaPlan === 'image-to-video') delete next.mediaPlan
+  if (next.videoFrame !== 'wide' && next.videoFrame !== 'original') delete next.videoFrame
+  if (next.nav && !Object.hasOwn(navStyles, next.nav)) delete next.nav
+  if (next.shape && !Object.hasOwn(shapeStyles, next.shape)) delete next.shape
+  if (next.signatures) next.signatures = next.signatures.filter((id) => signaturePatterns.some((p) => p.id === id)).slice(0, 4)
   if (next.customPalette && !Object.values(next.customPalette).every(isHex)) delete next.customPalette
   if (next.imagePresentation && !Object.hasOwn(imagePresentations, next.imagePresentation)) delete next.imagePresentation
   if (!seedBySlug[next.base]) next.base = directions[next.direction].baseRecipe
@@ -224,6 +228,22 @@ export function imageryPlan(spec: RecipeSpec): ImageryPlan | undefined {
   return { presentation: imagePresentations[spec.imagePresentation ?? rec.id], photos: rec.photos, orientation: rec.orientation, recommended: rec.id, why: rec.why, note: spec.brief?.photos }
 }
 
+/** The owner's uploaded hero video, when its shape is not already 16:9 (±5%) — vertical phone clips, square, 4:3, ultra-wide. */
+export function offShapeVideo(spec: Pick<RecipeSpec, 'lead' | 'uploads'>) {
+  const u = spec.lead === 'video' ? spec.uploads?.find((x) => x.asset === 'video' && x.width && x.height) : undefined
+  if (!u || Math.abs(u.width! / u.height! / (16 / 9) - 1) <= 0.05) return undefined
+  return { width: u.width!, height: u.height!, tall: u.height! > u.width!, name: u.name }
+}
+
+function videoFraming(spec: RecipeSpec): string | undefined {
+  const v = offShapeVideo(spec)
+  if (!v) return undefined
+  const shape = `${v.width}×${v.height}${v.tall ? ', vertical' : ''}`
+  return spec.videoFrame === 'original'
+    ? `The owner asked to keep the video in its own shape (${shape}) on every screen. Desktop: a tall frame at full viewport height, width set by the video’s own ratio, with headline and scene text in the columns beside it — never cropped wide, stretched or blurred-filled. Phones: full screen.`
+    : `The owner’s video is ${shape}, but desktop and tablet screens are wide: always present it 16:9, edge to edge (object-fit: cover on a 16:9 or full-viewport frame) — never letterboxed, pillarboxed, stretched or shown as a narrow strip. Desktop plays the 16:9 files made by scripts/prepare-video.sh (heroVideo / scrubReadyEncode); phones play the original shape (mobileVideoEncode), which needs no crop. Pick <source media> by aspect-ratio or width so each screen downloads only its own file.`
+}
+
 function buildAssets(spec: RecipeSpec, hero: HeroPattern): AssetRequirement[] {
   const t = typography[spec.typography]
   const list: AssetSpec[] = [
@@ -239,6 +259,9 @@ function buildAssets(spec: RecipeSpec, hero: HeroPattern): AssetRequirement[] {
       usage: `${imagery.presentation.name} — ${imagery.presentation.line.toLowerCase()}`, specs: 'Min 2400px long edge, one consistent grade; keep each photo’s original shape unless the layout says otherwise' })
   }
   if (hero.id === 'scroll-video' || hero.id === 'scroll-video-page') list.push({ asset: 'video', label: 'Scrub-ready encode', quantity: '1 file', level: 'required', usage: hero.id === 'scroll-video' ? 'Scroll-controlled hero' : 'Scroll-controlled page background', specs: 'Made by scripts/prepare-video.sh from the ORIGINAL file: CRF 20, keyframe every 6 frames, ≤ 1920 px' })
+  const off = offShapeVideo(spec)
+  if (off && spec.videoFrame !== 'original') list.push({ asset: 'video', label: 'Widescreen version', quantity: '1 file', level: 'recommended', usage: 'Desktop and tablet hero — fills 16:9 screens',
+    specs: `16:9, 1920×1080 or larger, made from your ${off.width}×${off.height} video. Best: an AI “expand” to 16:9, which keeps every pixel of your video sharp. Otherwise prepare-video.sh crops and upscales it. Phones keep your original.` })
   if (TEXTURED.has(spec.direction)) list.push({ asset: 'images', label: 'Texture', quantity: '1–2', level: 'optional', usage: 'Subtle paper/grain overlay at ≤ 4% opacity', specs: 'Seamless tile, 1024px, WebP' })
 
   // Ties uploaded files to the first requirement row of the same asset type (list order), so a single
@@ -249,7 +272,7 @@ function buildAssets(spec: RecipeSpec, hero: HeroPattern): AssetRequirement[] {
     files.forEach((u) => claimed.add(u.fileId!))
     // Another row of this type holds the actual upload: derived rows (mobile encode) come from it; an optional extra (secondary video) is still missing.
     const sibling = !files.length && !!spec.uploads?.some((u) => u.asset === a.asset && u.fileId)
-    const status = files.length ? 'have' : sibling && a.level === 'optional' ? 'optional' : assetStatus(spec, a)
+    const status = a.label === 'Widescreen version' ? 'create' : files.length ? 'have' : sibling && a.level === 'optional' ? 'optional' : assetStatus(spec, a)
     const providedFiles = files.length ? files.map((u) => ({ fileId: u.fileId!, name: u.name })) : undefined
     const providedNote = providedFiles ? `user-provided: ${providedFiles.map((f) => f.name).join(', ')}` : sibling ? 'made from your uploaded file' : 'marked as available — no file attached yet'
     return {
@@ -275,6 +298,19 @@ function buildCreationPaths(spec: RecipeSpec, reqs: AssetRequirement[]): AssetCr
   const missing = new Set(reqs.filter((r) => r.level === 'required' && r.status !== 'have').map((r) => r.asset))
   const paths: AssetCreationPath[] = []
   const smallVideo = spec.uploads?.find((u) => u.asset === 'video' && u.width && u.width < 1920)
+  const off = offShapeVideo(spec)
+  if (off && spec.videoFrame !== 'original') paths.push({
+    asset: 'video', title: `Make a widescreen version of your ${off.tall ? 'vertical ' : ''}video`,
+    steps: [
+      `Your video is ${off.width}×${off.height}. Desktop screens are 16:9, so the site shows a widescreen version there and your original on phones.`,
+      'Best quality: open your ORIGINAL file in an AI video tool with “Expand” / “Reframe” / “Outpaint”, choose 16:9 and 1920×1080 or larger. It paints the missing sides, so nothing is cut and your subject stays sharp.',
+      'Then run: bash scripts/prepare-video.sh original.mp4 --wide widescreen.mp4 — desktop files come from the widescreen version, phone files from your original.',
+      `No AI tool? Run bash scripts/prepare-video.sh original.mp4 --upscale footage (or cgi). It crops a 16:9 window and sharpens it back to full size. Move the window with FOCUS_Y=0 (top) … 1 (bottom)${off.tall ? ' — a vertical video keeps only a band of its height, so check the subject stays in frame' : ''}.`,
+      'Never let the browser stretch a small crop — that is what makes a hero look soft.',
+    ],
+    settings: { 'Source': `Your ${off.width}×${off.height} original`, 'Target': '16:9, 1920×1080 or larger', 'Phones': 'Your original, unchanged' },
+    tools: ['runway', 'luma', 'real-esrgan', 'ffmpeg'],
+  })
   if (smallVideo) paths.push({
     asset: 'video', title: 'Sharpen your video for free',
     steps: [
@@ -369,29 +405,109 @@ function filmStory(spec: RecipeSpec, hero: HeroPattern): string[] | undefined {
 const FEATURE_HEROES = new Set<HeroId>(['scroll-video', 'scroll-video-page', 'webgl-scene', 'ambient-video'])
 
 /** 2–4 signature interactions that fit this recipe: on sections it actually has, at its motion level, scored by purpose and style. */
-function pickSignatures(spec: RecipeSpec, hero: HeroPattern, pages: PageBlueprint[]): SignatureMoment[] {
-  const d = directions[spec.direction]
-  const style = new Set<string>([...d.tags, ...d.families, ...spec.characters])
+/** Where a signature pattern could live in this recipe: the first matching section that exists and is not taken. */
+function signatureSlots(spec: RecipeSpec, hero: HeroPattern, pages: PageBlueprint[]) {
   const where = (sid: SectionId) => {
     if (sid === 'navbar') return 'Navigation'
     if (sid === 'footer') return 'Footer'
     const page = pages.find((p) => p.sections.some((s) => s.id === sid))
     return page && `${page.label} — ${page.sections.find((s) => s.id === sid)!.name}`
   }
-  const candidates = signaturePatterns.flatMap((p, order) => {
-    if (!p.levels.includes(spec.motion)) return []
-    const score = (p.fits.includes(spec.purpose) ? 3 : 0) + p.fits.filter((f) => style.has(f)).length
-    return score > 0 ? [{ p, score, order }] : []
-  }).sort((a, b) => b.score - a.score || a.order - b.order)
+  const fits = (p: SignaturePattern, used: Set<SectionId>) => p.levels.includes(spec.motion)
+    ? p.sections.find((s) => !used.has(s) && where(s) && !(s === 'hero' && FEATURE_HEROES.has(hero.id))) : undefined
+  return { where, fits }
+}
+
+/** Every signature pattern that can be placed in this recipe, best fit first, with the engine's own pick marked. */
+export function signatureChoices(r: UniversalRecipe) {
+  const spec = r.metadata.spec
+  const { fits } = signatureSlots(spec, r.media.hero, r.pages)
+  const auto = pickSignatures({ ...spec, signatures: undefined }, r.media.hero, r.pages).map((m) => m.id)
+  return signaturePatterns.filter((p) => fits(p, new Set())).map((p) => ({ ...p, recommended: auto.includes(p.id) }))
+    .sort((a, b) => Number(b.recommended) - Number(a.recommended))
+}
+
+/** 2–4 signature interactions: the user's own picks if any, else the best fits for sections, motion level, purpose and style. */
+function pickSignatures(spec: RecipeSpec, hero: HeroPattern, pages: PageBlueprint[]): SignatureMoment[] {
+  const d = directions[spec.direction]
+  const style = new Set<string>([...d.tags, ...d.families, ...spec.characters])
+  const { where, fits } = signatureSlots(spec, hero, pages)
+  const candidates = spec.signatures
+    ? spec.signatures.map((id) => signaturePatterns.find((p) => p.id === id)!).filter(Boolean)
+    : signaturePatterns.flatMap((p, order) => {
+      const score = (p.fits.includes(spec.purpose) ? 3 : 0) + p.fits.filter((f) => style.has(f)).length
+      return score > 0 ? [{ p, score, order }] : []
+    }).sort((a, b) => b.score - a.score || a.order - b.order).map((c) => c.p)
   const used = new Set<SectionId>()
   const out: SignatureMoment[] = []
-  for (const { p } of candidates) {
-    const sid = p.sections.find((s) => !used.has(s) && where(s) && !(s === 'hero' && FEATURE_HEROES.has(hero.id)))
+  for (const p of candidates) {
+    const sid = fits(p, used)
     if (out.length === 4 || !sid) continue
     used.add(sid)
-    out.push({ id: p.id, name: p.name, where: where(sid)!, experience: p.experience, implementation: p.implementation, mobile: p.mobile, reducedMotion: p.reducedMotion })
+    out.push({ id: p.id, name: p.name, where: where(sid)!, experience: p.experience, implementation: p.implementation, mobile: p.mobile, reducedMotion: p.reducedMotion, components: p.components })
   }
   return out
+}
+
+/** Menu style that suits the kind of site, unless the user picked one. */
+export function recommendedNav(spec: Pick<RecipeSpec, 'purpose' | 'direction'>): NavStyleId {
+  const d = directions[spec.direction]
+  if (d.families.includes('editorial') && (spec.purpose === 'portfolio' || spec.purpose === 'studio')) return 'side-index'
+  const byPurpose: Record<PurposeId, NavStyleId> = {
+    portfolio: 'fullscreen-menu', agency: 'fullscreen-menu', studio: 'fullscreen-menu', fashion: 'centered-logo', restaurant: 'centered-logo',
+    ecommerce: 'classic-bar', product: 'floating-pill', saas: 'floating-pill', 'personal-brand': 'bottom-dock', experiment: 'card-menu', other: 'classic-bar',
+  }
+  return byPurpose[spec.purpose]
+}
+
+/** Corner language that suits the direction, unless the user picked one. */
+export function recommendedShape(spec: Pick<RecipeSpec, 'direction'>): ShapeId {
+  const d = directions[spec.direction]
+  if (d.tags.some((t) => t === 'brutalist' || t === 'raw')) return 'brutal'
+  if (['playful-pop', 'soft-pastel'].includes(d.id)) return 'pill'
+  if (['bento-product', 'y2k-chrome', 'digital-futurism'].includes(d.id)) return 'round'
+  if (d.families.some((f) => f === 'quiet' || f === 'organic')) return 'soft'
+  if (d.families.includes('minimal')) return 'outline'
+  return 'sharp'
+}
+
+
+/** Every control and form this site has, built from shadcn/ui and themed with the recipe's exact colors and shape. */
+function uiKit(pages: PageBlueprint[], colors: PaletteColors, shape: ShapeStyle): UiKit {
+  const where = new Map<string, Set<string>>()
+  const add = (slug: string, place: string) => where.set(slug, (where.get(slug) ?? new Set()).add(place))
+  UI_ALWAYS.forEach((slug) => add(slug, 'every page'))
+  uiBySection.navbar?.forEach((slug) => add(slug, 'navigation'))
+  for (const p of pages) {
+    uiByPage[p.type]?.forEach((slug) => add(slug, p.label))
+    p.sections.forEach((sec) => uiBySection[sec.id]?.forEach((slug) => add(slug, `${p.label} — ${sec.name}`)))
+  }
+  const components = [...where].map(([slug, places]) => ({ slug, name: uiNames[slug] ?? slug, where: [...places] }))
+  const radius = shape.button === '999px' ? '1rem' : shape.card
+  const theme = [
+    ':root {',
+    `  --background: ${colors.background}; --foreground: ${colors.text};`,
+    `  --card: ${colors.surface}; --card-foreground: ${colors.text}; --popover: ${colors.surface}; --popover-foreground: ${colors.text};`,
+    `  --primary: ${colors.primary}; --primary-foreground: ${colors.background}; --secondary: ${colors.secondary}; --secondary-foreground: ${colors.text};`,
+    `  --muted: ${colors.surface}; --muted-foreground: ${colors.muted}; --accent: ${colors.secondary}; --accent-foreground: ${colors.text};`,
+    `  --border: ${colors.border}; --input: ${colors.muted}; --ring: ${colors.text}; --radius: ${radius};`,
+    '}',
+  ].join('\n')
+  return {
+    library: 'shadcn/ui (Radix primitives)', url: 'https://ui.shadcn.com/docs/components',
+    components,
+    install: `npx shadcn@latest init && npx shadcn@latest add ${components.map((c) => c.slug).join(' ')}`,
+    theme,
+    rules: [
+      'Every interactive control — select, date picker, checkbox, radio, switch, tabs, accordion, dialog, menu, toast — comes from these components. Never ship an unstyled native <select>, <input type="date"> or a hand-rolled dropdown.',
+      'Date fields are a Calendar inside a Popover (shadcn “Date Picker” pattern); times and party sizes are a Select. Forms use Form (react-hook-form + zod) with inline errors under each field.',
+      'After `shadcn init`, replace the :root color values it writes with the theme block below — hex values, so shadcn components and the recipe tokens always match. Do not map them back to --color-* (that makes a loop).',
+      `Restyle, don't ship the demo look: recipe fonts, ${shape.name.toLowerCase()} shape (buttons ${shape.button}, cards ${shape.card}), ${shape.border} borders.`,
+      'No focus rings, glows or outlines on fields, selects, menus or their options — remove shadcn’s ring-* / outline classes. A focused field only darkens its border to the text color; a highlighted option only changes its background.',
+      'Keep Radix accessibility intact: labels tied to fields, keyboard navigation, 44px touch targets, prefers-reduced-motion on every open/close animation.',
+      'Mobile: Select, Popover and Dropdown open as a bottom Sheet/Drawer on screens under 640px.',
+    ],
+  }
 }
 
 const TECH_LABEL = { css: 'CSS (transitions, scroll-driven animations)', motion: 'Motion', gsap: 'GSAP + ScrollTrigger', lenis: 'Lenis', three: 'React Three Fiber + drei' } as const
@@ -440,7 +556,12 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
       ? { ...base, name: `Hero — ${hero.name}`, composition: hero.composition, behavior: hero.behavior, responsive: hero.responsive, note }
       : { ...base, note }
   }
-  const chrome = { navbar: resolveSection('navbar'), footer: resolveSection('footer') }
+  const nav = navStyles[spec.nav ?? recommendedNav(spec)]
+  const shape = shapeStyles[spec.shape ?? recommendedShape(spec)]
+  const chrome = {
+    navbar: { ...resolveSection('navbar'), name: `Navigation — ${nav.name}`, composition: nav.composition, behavior: nav.behavior, responsive: nav.responsive },
+    footer: resolveSection('footer'), nav,
+  }
   const pages: PageBlueprint[] = spec.pages.map((p) => ({ id: p.id, type: p.type, label: p.label, purpose: p.purpose, sections: p.sections.map(resolveSection) }))
 
   const componentIds = uniq<ComponentId>([...purpose.components, 'MediaAsset', 'SectionHeader'])
@@ -470,6 +591,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
       typography: type,
       spacing: { base: '8px', scale: ['4', '8', '12', '16', '24', '32', '48', '64', '96', '128', '160', '240'].map((n) => `${n}px`), sectionSpacing: layout.sectionSpacing, note: 'Use only values from the scale. Space between sections is always larger than space within them.' },
       grid: { container: layout.container, columns: layout.grid, gutters: layout.gutters },
+      shape,
     },
     layoutSystem: {
       id: layout.id, name: layout.name, container: layout.container, grid: layout.grid, columns: layout.columns, gutters: layout.gutters,
@@ -479,7 +601,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     chrome,
     pages,
     components: componentIds.map((c) => c === 'Hero' ? { ...components.Hero, anatomy: hero.composition, behavior: hero.behavior } : components[c]),
-    media: { ...lead, hero, storytelling: filmStory(spec, hero), imagery },
+    media: { ...lead, hero, storytelling: filmStory(spec, hero), imagery, framing: videoFraming(spec) },
     motion: { level: motion, principle: motion.principle, patterns, libraries: techs.map((t) => TECH_LABEL[t]) },
     signatures: pickSignatures(spec, hero, pages),
     contentDirection: {
@@ -499,7 +621,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     references: seed.references,
     implementation: {
       stack: ['Next.js (App Router)', 'TypeScript', 'Tailwind CSS', ...techs.filter((t) => t !== 'css').map((t) => TECH_LABEL[t])],
-      dependencies: deps,
+      dependencies: [...deps, { name: 'shadcn/ui', why: 'Accessible, themeable controls and forms (Radix primitives) — see UI components' }],
       fileStructure: [
         'src/',
         '  app/            — routes; layout.tsx loads fonts via next/font',
@@ -529,13 +651,14 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
       ],
       accessibility: [
         'Semantic landmarks (header, nav, main, footer) and one h1 per page.',
-        'Visible focus states using the accent color (2px outline, 2px offset).',
+        'Keyboard focus is shown without rings or outlines: a focused field darkens its border, a focused link or button gets an underline or background change.',
         'Every animation has a prefers-reduced-motion alternative (see Motion System).',
         'Alt text for meaningful images; empty alt for decorative ones.',
         ...(spec.lead === 'video' ? ['Video: pause control, no autoplay with sound, captions if speech.'] : []),
         ...(spec.lead === '3d' ? ['3D canvas is decorative (aria-hidden); all information also exists in HTML.'] : []),
         `Check contrast: body text must pass AA (${contrast(colors.text, colors.background).toFixed(1)}:1 on background).`,
       ],
+      ui: uiKit(pages, colors, shapeStyles[spec.shape ?? recommendedShape(spec)]),
       performance: [
         'Only the hero media uses priority loading; everything else lazy-loads.',
         'Animate transform and opacity only; avoid animating layout properties.',

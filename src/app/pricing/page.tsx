@@ -24,7 +24,7 @@ export default function PricingPage() {
 
 function Plan({ name, price, line, items, cta, featured }: { name: string; price: string; line: string; items: string[]; cta: React.ReactNode; featured?: boolean }) {
   return (
-    <div className={`flex flex-col rounded-xl border p-6 md:p-8 ${featured ? 'border-ink bg-white' : 'border-line'}`}>
+    <div className={`flex flex-col rounded-xl border bg-white p-6 md:p-8 ${featured ? 'border-ink' : 'border-line'}`}>
       <p className="text-lg font-medium">{name}</p>
       <p className="display mt-3 text-5xl">{price}</p>
       <p className="mt-2 text-ink-2">{line}</p>

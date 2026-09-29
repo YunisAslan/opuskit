@@ -1,0 +1,122 @@
+@import "../styles/tokens.css";
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+  ::selection { background: var(--color-primary); color: var(--color-surface); }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  a { text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+}
+
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3rem, 9vw, 8.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+}
+@utility type-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+@utility type-utility {
+  font-family: var(--font-utility);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  font-stretch: 87.5%;
+}
+/* Page-level statements: display face, scaled to ~8vw on mobile */
+@utility type-statement {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 8vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+@utility container-text {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+@layer components {
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 12px 24px; border-radius: var(--radius-button);
+  font-weight: 600; background: var(--color-primary); color: var(--color-surface);
+  transition: background-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out;
+}
+.btn:hover { background: var(--color-text); }
+.btn:active { transform: translateY(1px); }
+.btn-secondary { background: var(--color-secondary); color: var(--color-text); }
+.btn-secondary:hover { background: var(--color-surface); }
+
+.field { display: grid; gap: 8px; }
+.field label { font-weight: 600; font-size: 0.9375rem; }
+.field input, .field select, .field textarea {
+  min-height: 48px; width: 100%; padding: 12px 16px; border-radius: var(--radius-button);
+  border: 1px solid var(--color-muted); background: var(--color-surface); color: var(--color-text);
+  font: inherit; transition: border-color 150ms ease-out;
+}
+.field input:hover, .field select:hover, .field textarea:hover { border-color: var(--color-text); }
+
+.prose-legal { max-width: 65ch; }
+.prose-legal h2 { font-weight: 700; font-size: 1.25rem; letter-spacing: -0.01em; margin-top: 48px; }
+.prose-legal p, .prose-legal ul { margin-top: 12px; }
+.prose-legal ul { list-style: disc; padding-left: 24px; }
+.prose-legal a { text-decoration: underline; }
+}
+
+/* ---------- Reveal system (IntersectionObserver toggles .is-in, see RevealObserver) ---------- */
+.js [data-reveal="rise"] { opacity: 0; transform: translateY(16px); transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out); }
+.js [data-reveal="stagger"] > * { opacity: 0; transform: translateY(16px); transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out); transition-delay: calc(var(--i, 0) * 60ms); }
+.js [data-reveal="rise"].is-in, .js [data-reveal="stagger"].is-in > * { opacity: 1; transform: none; }
+
+.line { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+.line > span { display: block; }
+.js [data-reveal="lines"] .line > span { transform: translateY(105%); transition: transform 700ms var(--ease-out); transition-delay: calc(var(--i, 0) * 80ms); }
+.js [data-reveal="lines"].is-in .line > span { transform: none; }
+
+.js [data-reveal="clip"] { clip-path: inset(100% 0 0 0); transition: clip-path 1000ms var(--ease-in-out); transition-delay: calc(var(--i, 0) * 60ms); }
+.js [data-reveal="clip"] img { transform: scale(1.15); transition: transform 1000ms var(--ease-in-out); transition-delay: inherit; }
+.js [data-reveal="clip"].is-in { clip-path: inset(0); }
+.js [data-reveal="clip"].is-in img { transform: none; }
+@media (max-width: 639px) {
+  .js [data-reveal="clip"], .js [data-reveal="clip"] img { transition-duration: 700ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal="rise"], .js [data-reveal="stagger"] > * { transform: none; transition: opacity 200ms linear; }
+  .js [data-reveal="lines"] .line > span { transform: none; transition: none; }
+  .js [data-reveal="clip"] { clip-path: none; opacity: 0; transition: opacity 200ms linear; }
+  .js [data-reveal="clip"].is-in { opacity: 1; }
+  .js [data-reveal="clip"] img { transform: none; transition: none; }
+  .btn:active { transform: none; }
+}
+
+/* ---------- FAQ accordion (native details) ---------- */
+details.faq::details-content { block-size: 0; overflow: hidden; transition: block-size 300ms var(--ease-out), content-visibility 300ms allow-discrete; }
+details.faq[open]::details-content { block-size: auto; }
+:root { interpolate-size: allow-keywords; }
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq .chev { transition: transform 200ms ease-out; }
+details.faq[open] .chev { transform: rotate(45deg); }
+@media (prefers-reduced-motion: reduce) {
+  details.faq::details-content, details.faq .chev { transition: none; }
+}
+
+/* ---------- Page transition (React ViewTransition around <main>) ---------- */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+::view-transition-group(page) { animation-duration: 500ms; animation-timing-function: var(--ease-in-out); }
+::view-transition-old(page) { animation: 250ms var(--ease-in-out) both vt-out; }
+::view-transition-new(page) { animation: 500ms var(--ease-in-out) 100ms both vt-in; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(16px); } }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}

@@ -1,4 +1,6 @@
 'use client'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -41,9 +43,9 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
 
 function Field({ name, label, type = 'text', autoComplete }: { name: string; label: string; type?: string; autoComplete?: string }) {
   return (
-    <label className="block text-sm">
-      <span>{label}</span>
-      <input name={name} type={type} autoComplete={autoComplete} required className="mt-1 block w-full rounded-md border border-line bg-white px-3 py-3 text-base" />
-    </label>
+    <div className="space-y-1.5 text-sm">
+      <Label htmlFor={`f-${name}`}>{label}</Label>
+      <Input id={`f-${name}`} name={name} type={type} autoComplete={autoComplete} required className="h-12 text-base" />
+    </div>
   )
 }

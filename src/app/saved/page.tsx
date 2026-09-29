@@ -1,4 +1,5 @@
 'use client'
+import { Checkbox } from '@/components/ui/checkbox'
 import Link from 'next/link'
 import { useState } from 'react'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
@@ -34,7 +35,7 @@ export default function SavedPage() {
                 <li key={ref}>
                   <Link href={hit!.href} className="group block"><SitePreview {...previewFromRecipe(hit!.recipe)} className="rounded-lg border border-line" /><p className="mt-3 text-lg font-medium group-hover:text-pencil">{hit!.recipe.title}</p></Link>
                   <div className="mt-2 flex gap-4 text-sm">
-                    <label className="flex items-center gap-2"><input type="checkbox" className="accent-pencil" checked={compare.includes(ref)} onChange={(e) => setCompare(e.target.checked ? [...compare, ref].slice(-2) : compare.filter((c) => c !== ref))} />Compare</label>
+                    <label className="flex cursor-pointer items-center gap-2"><Checkbox checked={compare.includes(ref)} onCheckedChange={(v) => setCompare(v === true ? [...compare, ref].slice(-2) : compare.filter((c) => c !== ref))} />Compare</label>
                     <button type="button" className="link" onClick={() => toggleSaved(ref)}>Remove</button>
                   </div>
                 </li>

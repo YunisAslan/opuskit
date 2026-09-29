@@ -107,6 +107,45 @@ const main = async () => {
   assert.ok(!shopFilm.signatures.some((s) => s.where.startsWith('Home — Hero')), 'no cursor gimmick on top of a scroll film')
   for (const a of Object.values(adapters)) assert.match((await a.generate(store)).files.map((f) => f.content).join('') + '', /List with a floating preview/, `${a.id} carries signature moments`)
 
+  // Off-shape uploads: a vertical video fills wide screens at 16:9 unless the owner keeps its shape.
+  const tallUp = [{ asset: 'video' as const, name: 'tall.mp4', kind: 'video' as const, width: 1080, height: 1920, duration: 8, fileId: 't' }]
+  const tall = composeRecipe({ ...specFromSeed(recipeSeeds[1]), lead: 'video', motion: 'immersive', hero: 'scroll-video', assets: ['video'], uploads: tallUp })
+  assert.match(tall.media.framing ?? '', /16:9, edge to edge/, 'vertical upload is shown 16:9 on desktop')
+  assert.ok(tall.assetRequirements.some((a) => a.label === 'Widescreen version' && a.status === 'create'), 'vertical upload needs a widescreen version')
+  assert.ok(tall.assetCreationPaths.some((p) => /widescreen/.test(p.title)), 'vertical upload gets a widescreen creation path')
+  const kept = composeRecipe({ ...tall.metadata.spec, videoFrame: 'original' })
+  assert.match(kept.media.framing ?? '', /own shape/, 'owner can keep the original shape')
+  assert.ok(!kept.assetRequirements.some((a) => a.label === 'Widescreen version'), 'no widescreen version when the shape is kept')
+  const wideUp = [{ ...tallUp[0], width: 1920, height: 1080 }]
+  assert.equal(composeRecipe({ ...tall.metadata.spec, uploads: wideUp }).media.framing, undefined, '16:9 uploads need no framing rule')
+
+  // Design choices: user picks for menu, shape and special touches reach the recipe and every package.
+  const picked = composeRecipe({ ...specFromSeed(recipeSeeds[0]), nav: 'bottom-dock', shape: 'pill', signatures: ['number-ticker', 'timeline-line', 'nope'] })
+  assert.equal(picked.chrome.nav.id, 'bottom-dock', 'menu choice is kept')
+  assert.match(picked.chrome.navbar.composition, /dock/, 'menu choice drives the navbar composition')
+  assert.equal(picked.visualSystem.shape.id, 'pill', 'shape choice is kept')
+  assert.deepEqual(picked.metadata.spec.signatures, ['number-ticker', 'timeline-line'], 'unknown signature ids are dropped')
+  assert.ok(picked.signatures.every((x) => ['number-ticker', 'timeline-line'].includes(x.id)), 'only picked signatures are used')
+  for (const a of Object.values(adapters)) {
+    const all = (await a.generate(picked)).files.map((f) => f.content).join('')
+    assert.match(all, /Floating dock/, `${a.id} carries the menu style`)
+    assert.match(all, /--radius-button: 999px|Pill/, `${a.id} carries the shape`)
+  }
+  for (const seed of recipeSeeds) assert.ok(composeRecipe(specFromSeed(seed)).chrome.nav && composeRecipe(specFromSeed(seed)).visualSystem.shape, `${seed.slug} gets a menu and shape`)
+
+  // UI kit: controls come from shadcn/ui, chosen by page, themed with the recipe's own hex values.
+  const table = composeRecipe({ ...specFromSeed(recipeSeeds.find((x) => x.spec.purpose === 'restaurant')!) })
+  const slugs = table.implementation.ui.components.map((c) => c.slug)
+  assert.ok(['calendar', 'popover', 'select', 'form'].every((x) => slugs.includes(x)), 'reservations get a real date picker and form')
+  assert.match(table.implementation.ui.theme, new RegExp(`--background: ${table.visualSystem.palette.tokens[0].hex}`, 'i'), 'shadcn theme uses the recipe hex values')
+  assert.ok(!/var\(--color-/.test(table.implementation.ui.theme), 'shadcn theme never points back at --color-* (no loop)')
+  for (const a of Object.values(adapters)) assert.match((await a.generate(table)).files.map((f) => f.content).join(''), /shadcn\/ui/, `${a.id} asks for shadcn/ui controls`)
+
+  // No focus rings in generated sites: the rules forbid them and nothing asks for one.
+  const md = recipeToMarkdown(table)
+  assert.match(md, /No focus rings/, 'generated rules forbid focus rings')
+  assert.ok(!/focus rings use|2px outline, 2px offset/.test(md), 'nothing asks the builder for a focus ring')
+
   // Remix: video → photography drops video requirements and the scroll-video hero.
   const cinematic = specFromSeed(recipeSeeds[1])
   const before = composeRecipe(cinematic)

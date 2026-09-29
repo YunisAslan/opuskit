@@ -1,343 +1,132 @@
 'use client'
-import { Check, Circle, Pencil, Plus, Search, TriangleAlert } from 'lucide-react'
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import { PaletteEditor } from '@/components/PaletteEditor'
+// The result page: one recipe, shown visually in tabs, with a fixed action bar.
+// The page shows what a person needs to judge and adjust the design; every detail (components, resources,
+// references, implementation, "why it works") still ships in full inside the Build Package and the copied recipe.
+
+import { ArrowLeft, Bookmark, BookmarkCheck, Check, Circle, Download, Pencil, Search, TriangleAlert, X } from 'lucide-react'
+import Link from 'next/link'
+import { useEffect, useState, type ReactNode } from 'react'
+import { OptionDemo } from '@/components/OptionDemo'
+import { ToolIcon } from '@/components/ToolIcon'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { toast } from 'sonner'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { TypeSpecimen } from '@/components/TypeSpecimen'
 import { CopyButton } from '@/components/ui'
-import { lockedSections } from '@/config/pricing'
-import { layouts, palettes, typography } from '@/data/ingredients'
-import { inspirationSources } from '@/data/patterns'
+import { buildPackageLocked, lockedSections } from '@/config/pricing'
+import { img } from '@/data/images'
+import { directions, purposes } from '@/data/taxonomy'
 import { resources } from '@/data/resources'
-import { directions, leads, motionLevels, purposes } from '@/data/taxonomy'
 import { useAccess } from '@/features/billing'
 import { CheckoutDialog } from '@/features/billing/CheckoutDialog'
-import { BuildPanel } from '@/features/build-packages/BuildPanel'
-import type { LayoutId, LeadId, MotionLevel, PageSection, PaletteColors, PaletteId, RecipeSpec, TypographyId, UniversalRecipe } from '@/types/domain'
-import { heroOptions, remix } from './engine'
+import { adapters } from '@/features/build-packages'
+import { BuildTab, downloadPackage, useBuildPackage } from '@/features/build-packages/BuildPanel'
+import { deleteFile, getFile, storeUpload } from '@/lib/files'
+import type { AssetId, BuildTarget, PageSection, PaletteColors, RecipeSpec, UniversalRecipe, UploadedAsset } from '@/types/domain'
+import { normalizeSpec } from './engine'
 import { markRecent, toggleSaved, useSaved } from './library'
-import { recipeSections, recipeToMarkdown, type RecipeSectionKey } from './markdown'
+import { recipeToMarkdown } from './markdown'
 
-const TOC: { id: string; label: string; md?: RecipeSectionKey }[] = [
-  { id: 'direction', label: 'Creative Direction', md: 'direction' },
-  { id: 'visual', label: 'Visual System', md: 'color' },
-  { id: 'structure', label: 'Page Structure', md: 'structure' },
-  { id: 'components', label: 'Components', md: 'components' },
-  { id: 'media', label: 'Media', md: 'media' },
-  { id: 'motion', label: 'Motion', md: 'motion' },
-  { id: 'signatures', label: 'Signature Moments', md: 'signatures' },
-  { id: 'assets', label: 'Asset Checklist', md: 'assets' },
-  { id: 'resources', label: 'Resources', md: 'resources' },
-  { id: 'references', label: 'References', md: 'references' },
-  { id: 'why', label: 'Why It Works', md: 'why' },
-  { id: 'implementation', label: 'Implementation', md: 'implementation' },
-  { id: 'build', label: 'Build with…' },
-]
+const TABS = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'design', label: 'Design' },
+  { id: 'pages', label: 'Pages' },
+  { id: 'media', label: 'Your files' },
+  { id: 'motion', label: 'Motion' },
+  { id: 'build', label: 'Build' },
+] as const
+type TabId = (typeof TABS)[number]['id']
 
 const STATUS: Record<string, { label: string; mark: typeof Check; cls: string }> = {
-  have: { label: 'Have it', mark: Check, cls: 'text-ink' },
-  create: { label: 'Create it', mark: Pencil, cls: 'text-pencil' },
-  find: { label: 'Find it', mark: Search, cls: 'text-ink-2' },
-  temporary: { label: 'Temporary placeholder', mark: TriangleAlert, cls: 'text-warn' },
+  have: { label: 'Ready', mark: Check, cls: 'text-ink' },
+  create: { label: 'To create', mark: Pencil, cls: 'text-pencil' },
+  find: { label: 'To find', mark: Search, cls: 'text-ink-2' },
+  temporary: { label: 'Placeholder for now', mark: TriangleAlert, cls: 'text-warn' },
   optional: { label: 'Optional', mark: Circle, cls: 'text-muted' },
 }
 
-export function RecipeDocument({ recipe, recipeRef, onRemix }: { recipe: UniversalRecipe; recipeRef: string; onRemix: (spec: RecipeSpec) => void }) {
+export function RecipeDocument({ recipe: r, recipeRef, onChange }: { recipe: UniversalRecipe; recipeRef: string; onChange: (spec: RecipeSpec) => void }) {
   const { unlocked } = useAccess(recipeRef)
   const saved = useSaved().some((s) => s.ref === recipeRef)
   const [checkout, setCheckout] = useState(false)
-  const [remixOpen, setRemixOpen] = useState(false)
-  const r = recipe
+  const [tab, setTab] = useState<TabId>('overview')
+  // The tool the user picked in the questionnaire; none if they chose to decide later. We never pick one for them.
+  const [target, setTarget] = useState<BuildTarget | null>(r.metadata.spec.target === 'not-sure' ? null : r.metadata.spec.target)
+  const [zipping, setZipping] = useState(false)
   const spec = r.metadata.spec
   const colors = Object.fromEntries(r.visualSystem.palette.tokens.map((t) => [t.role, t.hex])) as PaletteColors
+  const look = { colors, type: r.visualSystem.typography, shape: r.visualSystem.shape }
+  const { pkg, error } = useBuildPackage(r, target, unlocked)
+  const [kind, key] = recipeRef.split(':')
+  const editHref = (step?: string) => `/create?${kind === 'seed' ? `seed=${key}` : `edit=${key}`}${step ? `&step=${step}` : ''}`
+  const isLocked = (t: TabId) => !unlocked && ((t === 'motion' && lockedSections.includes('motion')) || (t === 'build' && buildPackageLocked))
 
   useEffect(() => { markRecent(recipeRef) }, [recipeRef])
+  // Tab survives reloads and is linkable (#design).
+  useEffect(() => { const h = location.hash.slice(1) as TabId; if (TABS.some((t) => t.id === h)) setTab(h) }, [])
+  const pick = (t: TabId) => { setTab(t); history.replaceState(null, '', `#${t}`) }
 
-  const locked = (k?: RecipeSectionKey) => !unlocked && !!k && lockedSections.includes(k)
-  // Stable component identity so <details> state survives unrelated re-renders (save, checkout).
-  const Section = useMemo(() => function Section(p: { id: string; title: string; children: ReactNode; md?: RecipeSectionKey }) {
-    return <DocSection {...p} recipe={r} isLocked={!unlocked && !!p.md && lockedSections.includes(p.md)} onUnlock={() => setCheckout(true)} />
-  }, [r, unlocked])
+  const update = (patch: Partial<RecipeSpec>) => onChange(normalizeSpec({ ...spec, ...patch }))
 
   return (
-    <article className="mx-auto max-w-[1440px] px-5 pb-24 md:px-8">
-      {/* Header */}
-      <header className="grid gap-10 pb-14 pt-10 lg:grid-cols-[5fr_7fr] lg:pt-16">
-        <div className="flex flex-col">
-          <p className="text-sm text-muted">{purposes[spec.purpose].name} · {directions[spec.direction].name} · {r.metadata.complexity} build</p>
-          <h1 className="display mt-4 text-[clamp(2.6rem,5.4vw,5rem)]">{r.title}</h1>
-          <p className="prose-serif mt-5 max-w-lg text-ink-2">{r.summary}</p>
-          <div className="mt-8 flex flex-wrap gap-2">
-            <button type="button" className="btn btn-ink btn-sm" onClick={() => setRemixOpen((o) => !o)} aria-expanded={remixOpen} aria-controls="remix">Remix</button>
-            <button type="button" className="btn btn-line btn-sm" aria-pressed={saved} onClick={() => toggleSaved(recipeRef)}>{saved ? 'Saved' : 'Save recipe'}</button>
-            {unlocked ? <CopyButton text={() => recipeToMarkdown(r)} label="Copy full recipe" /> : <button type="button" className="btn btn-line btn-sm" onClick={() => setCheckout(true)}>Unlock full recipe</button>}
-          </div>
-          {unlocked && <p className="mt-4 text-sm text-pencil">Full recipe unlocked.</p>}
-        </div>
-        <div>
-          <SitePreview {...previewFromRecipe(r, { brand: purposes[spec.purpose].name === 'Restaurant' ? 'Maison' : 'Studio' })} className="rounded-lg border border-line" />
-          <p className="mt-3 text-sm text-muted">Live preview: {r.visualSystem.typography.name} type, {r.visualSystem.palette.name} palette, {layouts[r.layoutSystem.id].name.toLowerCase()} layout, {r.motion.level.name.toLowerCase()} motion.</p>
-        </div>
+    <article className="mx-auto max-w-[1440px] px-5 pb-40 md:px-8">
+      <header className="pt-10 lg:pt-14">
+        <p className="text-sm text-muted">{purposes[spec.purpose].name} · {directions[spec.direction].name} · {r.metadata.complexity} build</p>
+        <h1 className="display mt-3 max-w-4xl text-[clamp(2.2rem,4.6vw,4.2rem)]">{r.title}</h1>
+        <p className="prose-serif mt-4 line-clamp-2 max-w-2xl text-ink-2">{r.summary}</p>
       </header>
 
-      {remixOpen && <RemixPanel spec={spec} onChange={(s) => onRemix(s)} />}
+      <div role="tablist" aria-label="Recipe" className="sticky top-16 z-20 -mx-5 mt-8 flex gap-1 overflow-x-auto overflow-y-hidden bg-paper/95 px-5 shadow-[inset_0_-1px_0_var(--color-line)] backdrop-blur-sm [scrollbar-width:none] md:-mx-8 md:px-8"
+        onKeyDown={(e) => {
+          const i = TABS.findIndex((t) => t.id === tab)
+          const n = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : -1
+          if (n >= 0 && n < TABS.length) { pick(TABS[n].id); document.getElementById(`tab-${TABS[n].id}`)?.focus() }
+        }}>
+        {TABS.map((t) => (
+          <button key={t.id} id={`tab-${t.id}`} type="button" role="tab" aria-selected={tab === t.id} aria-controls={`panel-${t.id}`} tabIndex={tab === t.id ? 0 : -1}
+            onClick={() => pick(t.id)} className={`shrink-0 border-b-2 px-3 py-3.5 text-sm transition-colors ${tab === t.id ? 'border-ink text-ink' : 'border-transparent text-muted hover:text-ink'}`}>
+            {t.label}{isLocked(t.id) && <span className="ml-1 text-xs text-muted">· locked</span>}
+          </button>
+        ))}
+      </div>
 
-      <div className="grid gap-10 lg:grid-cols-[13rem_1fr]">
-        <nav aria-label="Recipe sections" className="hidden lg:block">
-          <ol className="sticky top-24 space-y-1.5 text-sm">
-            {TOC.map((t) => <li key={t.id}><a href={`#${t.id}`} className="text-ink-2 hover:text-pencil">{t.label}{locked(t.md) && <span className="text-muted"> · locked</span>}</a></li>)}
-          </ol>
-        </nav>
+      <section id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="pt-10">
+        {isLocked(tab) ? <Locked onUnlock={() => setCheckout(true)} what={tab === 'build' ? 'Build Packages' : 'The motion system'} />
+          : tab === 'overview' ? <Overview r={r} look={look} editHref={editHref} />
+          : tab === 'design' ? <Design r={r} look={look} colors={colors} editHref={editHref} />
+          : tab === 'pages' ? <Pages r={r} editHref={editHref} />
+          : tab === 'media' ? <Media r={r} spec={spec} update={update} editHref={editHref} />
+          : tab === 'motion' ? <Motion r={r} look={look} editHref={editHref} />
+          : <BuildTab recipe={r} target={target} onTarget={setTarget} pkg={pkg} error={error} />}
+      </section>
 
-        <div className="min-w-0">
-          <Section id="direction" title="Creative Direction" md="direction">
-            <div className="grid gap-10 md:grid-cols-2">
-              <div>
-                <p className="text-sm text-muted">Mood</p>
-                <p className="mt-1 text-2xl tracking-tight">{r.creativeDirection.mood.join(', ')}</p>
-                <p className="mt-6 text-sm text-muted">Personality</p>
-                <p className="prose-serif mt-1">{r.creativeDirection.personality}</p>
-                <p className="mt-6 text-sm text-muted">Design principles</p>
-                <ul className="prose-serif mt-1 list-disc space-y-1 pl-5">{r.designPrinciples.map((x) => <li key={x}>{x}</li>)}</ul>
-              </div>
-              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
-                <List title="Do" items={r.creativeDirection.do} />
-                <List title="Avoid" items={r.creativeDirection.avoid} />
-                <div className="sm:col-span-2 md:col-span-1 xl:col-span-2"><List title="Not the generic AI look" items={r.creativeDirection.genericAvoid} /></div>
-              </div>
-            </div>
-          </Section>
-
-          <Section id="visual" title="Visual System" md="color">
-            <h3 className="text-xl font-medium">Palette: {r.visualSystem.palette.name}</h3>
-            <div className="mt-4 grid gap-6 xl:grid-cols-[1fr_1fr]">
-              <PalettePreview colors={colors} recipe={r} />
-              <table className="w-full text-sm">
-                <thead className="text-left text-muted"><tr><th className="pb-2 font-normal">Role</th><th className="pb-2 font-normal">Hex</th><th className="pb-2 font-normal">Usage</th></tr></thead>
-                <tbody>
-                  {r.visualSystem.palette.tokens.map((t) => (
-                    <tr key={t.role} className="border-t border-line align-top">
-                      <td className="py-2 pr-3"><span className="flex items-center gap-2 capitalize"><span className="h-4 w-4 rounded-full ring-1 ring-black/10" style={{ background: t.hex }} />{t.role}</span></td>
-                      <td className="py-2 pr-3 font-mono text-xs">{t.hex}</td>
-                      <td className="py-2 text-ink-2">{t.usage}{t.contrast && <span className="block text-xs text-muted">{t.contrast}</span>}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="mt-12 flex flex-wrap items-baseline justify-between gap-3">
-              <h3 className="text-xl font-medium">Typography: {r.visualSystem.typography.name}</h3>
-              <CopyButton text={() => recipeSections.typography(r)} label="Copy typography" />
-            </div>
-            <div className="mt-4"><TypeSpecimen t={r.visualSystem.typography} colors={{ bg: colors.background, fg: colors.text, muted: colors.muted }} /></div>
-            <div className="mt-12 flex flex-wrap items-baseline justify-between gap-3">
-              <h3 className="text-xl font-medium">Layout, spacing and grid: {r.layoutSystem.name}</h3>
-              <CopyButton text={() => recipeSections.layout(r)} label="Copy layout" />
-            </div>
-            <dl className="mt-4 grid gap-x-8 gap-y-4 text-sm sm:grid-cols-2 xl:grid-cols-3">
-              {([['Container', r.layoutSystem.container], ['Grid', r.layoutSystem.grid], ['Columns', r.layoutSystem.columns], ['Gutters', r.layoutSystem.gutters], ['Section spacing', r.layoutSystem.sectionSpacing], ['Alignment', r.layoutSystem.alignment], ['Hero composition', r.layoutSystem.heroComposition], ['Card proportions', r.layoutSystem.cardProportions], ['Media proportions', r.layoutSystem.mediaProportions]] as const).map(([k, v]) => (
-                <div key={k} className="border-t border-line pt-2"><dt className="text-muted">{k}</dt><dd className="mt-0.5">{v}</dd></div>
-              ))}
-            </dl>
-            <p className="mt-6 text-sm text-ink-2">Spacing scale ({r.visualSystem.spacing.base} base): {r.visualSystem.spacing.scale.join(' · ')}. {r.visualSystem.spacing.note}</p>
-          </Section>
-
-          <Section id="structure" title="Page Structure" md="structure">
-            <div className="space-y-8">
-              {r.pages.map((p) => (
-                <div key={p.id}>
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <h3 className="font-medium">{p.label}</h3>
-                    <span className="pencil">{p.type}</span>
-                  </div>
-                  <p className="mt-1 text-sm text-ink-2">{p.purpose}</p>
-                  {p.sections.length > 0 && <div className="mt-3"><SectionList sections={p.sections} keyPrefix={p.id} /></div>}
-                </div>
-              ))}
-              <div>
-                <h3 className="font-medium">Site Chrome</h3>
-                <p className="mt-1 text-sm text-ink-2">Shared across every page.</p>
-                <div className="mt-3"><SectionList sections={[r.chrome.navbar, r.chrome.footer]} keyPrefix="chrome" /></div>
-              </div>
-            </div>
-          </Section>
-
-          <Section id="components" title="Components" md="components">
-            <div className="grid gap-4 md:grid-cols-2">
-              {r.components.map((c) => (
-                <div key={c.id} className="border-t border-line pt-3">
-                  <p className="font-mono text-sm">{`<${c.id} />`}</p>
-                  <p className="mt-1">{c.purpose}</p>
-                  <p className="mt-1 text-sm text-muted">{c.anatomy}. {c.behavior}.</p>
-                </div>
-              ))}
-            </div>
-          </Section>
-
-          <Section id="media" title={`Media: ${r.media.name}`} md="media">
-            <p className="prose-serif max-w-2xl">{r.media.direction}</p>
-            <div className="mt-8 grid gap-8 md:grid-cols-2">
-              <div>
-                <h3 className="font-medium">Hero: {r.media.hero.name}</h3>
-                <dl className="mt-3 space-y-3 text-sm">
-                  {([['Composition', r.media.hero.composition], ['Behavior', r.media.hero.behavior], ['Mobile', r.media.hero.responsive], ['Needs', r.media.hero.requires.join('; ')], ['If you don\'t have it', r.media.hero.fallback]] as const).map(([k, v]) => <div key={k}><dt className="text-muted">{k}</dt><dd>{v}</dd></div>)}
-                </dl>
-              </div>
-              <div>
-                <List title="Treatment" items={r.media.treatment} />
-                <p className="mt-4 text-sm text-muted">Formats: {r.media.formats}</p>
-              </div>
-              {r.media.imagery && (
-                <div>
-                  <h3 className="font-medium">Photos: {r.media.imagery.presentation.name}</h3>
-                  <p className="mt-1 text-sm text-muted">
-                    {r.media.imagery.photos ? `${r.media.imagery.photos} photos, ${r.media.imagery.orientation}` : `Suits ${r.media.imagery.presentation.ideal}`}
-                    {r.media.imagery.recommended === r.media.imagery.presentation.id ? ` · ${r.media.imagery.why}` : ' · your choice'}
-                  </p>
-                  {r.media.imagery.note && <p className="mt-2 text-sm">Your request: “{r.media.imagery.note}”</p>}
-                  <dl className="mt-3 space-y-3 text-sm">
-                    {([['Composition', r.media.imagery.presentation.composition], ['Behavior', r.media.imagery.presentation.behavior], ['Mobile', r.media.imagery.presentation.responsive]] as const).map(([k, v]) => <div key={k}><dt className="text-muted">{k}</dt><dd>{v}</dd></div>)}
-                  </dl>
-                  {r.media.imagery.presentation.components.length > 0 && (
-                    <p className="mt-3 text-sm"><span className="text-muted">Start from: </span>
-                      {r.media.imagery.presentation.components.map((c, i) => <span key={c.url}>{i > 0 && ', '}<a href={c.url} target="_blank" rel="noreferrer" className="link">{c.name}</a></span>)}
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
-          </Section>
-
-          <Section id="motion" title={`Motion: ${r.motion.level.name}`} md="motion">
-            <p className="prose-serif max-w-2xl">{r.motion.principle} Animation for demonstration, not decoration.</p>
-            <p className="mt-3 text-sm text-muted">Libraries: {r.motion.libraries.join(', ')}</p>
-            <div className="mt-8 space-y-px overflow-hidden rounded-lg border border-line bg-line">
-              {r.motion.patterns.map((p) => (
-                <details key={p.id} className="group bg-white">
-                  <summary className="flex cursor-pointer items-baseline justify-between gap-4 p-4 marker:content-none"><span className="font-medium">{p.name}</span><span className="text-sm text-muted">{p.duration} · {p.tech}</span></summary>
-                  <dl className="grid gap-3 px-4 pb-5 text-sm md:grid-cols-2">
-                    {([['Purpose', p.purpose], ['Trigger', p.trigger], ['Behavior', p.behavior], ['Easing', p.easing], ['Implementation', p.implementation], ['Performance', p.performance], ['Reduced motion', p.reducedMotion]] as const).map(([k, v]) => <div key={k}><dt className="text-muted">{k}</dt><dd>{v}</dd></div>)}
-                  </dl>
-                </details>
-              ))}
-            </div>
-          </Section>
-
-          <Section id="signatures" title="Signature moments" md="signatures">
-            <p className="prose-serif max-w-2xl">The small interactions people remember and share — each one placed on its own section of your site.</p>
-            {r.signatures.length ? (
-              <div className="mt-8 grid gap-3 md:grid-cols-2">
-                {r.signatures.map((s) => (
-                  <div key={s.id} className="rounded-lg border border-line bg-white p-5">
-                    <p className="text-sm text-muted">{s.where}</p>
-                    <p className="mt-1 font-medium">{s.name}</p>
-                    <p className="mt-2 text-sm text-ink-2">{s.experience}</p>
-                    <p className="mt-3 text-xs text-muted">On phones: {s.mobile}</p>
-                  </div>
-                ))}
-              </div>
-            ) : <p className="mt-4 text-sm text-muted">None — this recipe keeps interaction deliberately quiet.</p>}
-          </Section>
-
-          <Section id="assets" title="What you'll need" md="assets">
-            <ul className="divide-y divide-line border-y border-line">
-              {r.assetRequirements.map((a) => {
-                const status = STATUS[a.status]
-                return (
-                  <li key={a.key} className="grid gap-1 py-3 sm:grid-cols-[1.5rem_1fr_10rem_12rem] sm:items-baseline">
-                    <status.mark size={16} className={status.cls} aria-hidden />
-                    <span><span className="font-medium">{a.label}</span> <span className="text-muted">· {a.quantity}</span><span className="block text-sm text-muted">{a.specs}</span></span>
-                    <span className="text-sm capitalize text-ink-2">{a.level}</span>
-                    <span className={`text-sm ${status.cls}`}>
-                      {status.label}
-                      {a.providedFiles ? <span className="block text-xs text-ink-2">{a.providedFiles.map((f) => f.name).join(', ')}</span>
-                        : a.status === 'have' && <span className="block text-xs text-warn">No file attached yet</span>}
-                    </span>
-                  </li>
-                )
-              })}
-            </ul>
-            {r.assetRequirements.some((a) => a.status === 'temporary') && <p className="mt-4 text-sm text-warn">Temporary placeholders are marked in your Build Package. Replace them with your own assets before launch.</p>}
-            {spec.lead === 'video' && r.assetRequirements.some((a) => a.asset === 'video' && a.level === 'required' && a.status !== 'have') && (
-              <div className="mt-6 rounded-lg border border-pencil bg-pencil-soft/40 p-5">
-                <p className="font-medium">This recipe needs a hero video.</p>
-                <p className="mt-1 text-sm text-ink-2">You can upload one later, create one from an image (prompt below), use a temporary clip, or switch to the image-led variant.</p>
-                <button type="button" className="btn btn-line btn-sm mt-4" onClick={() => onRemix(remix(spec, { lead: 'photography' }))}>Switch to image-led variant</button>
-              </div>
-            )}
-            {r.assetCreationPaths.length > 0 && (
-              <div className="mt-10 grid gap-6 xl:grid-cols-2">
-                {r.assetCreationPaths.map((p) => (
-                  <div key={p.title} className="rounded-lg border border-line bg-white p-5">
-                    <h3 className="font-medium">{p.title}</h3>
-                    <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm">{p.steps.map((s) => <li key={s}>{s}</li>)}</ol>
-                    {p.settings && <dl className="mt-4 grid grid-cols-2 gap-2 text-sm">{Object.entries(p.settings).map(([k, v]) => <div key={k}><dt className="text-muted">{k}</dt><dd>{v}</dd></div>)}</dl>}
-                    {p.prompt && (
-                      <div className="mt-4 rounded-md bg-ink p-4 text-paper">
-                        <p className="font-mono text-xs leading-relaxed">{p.prompt}</p>
-                        <CopyButton text={p.prompt} label="Copy prompt" className="mt-3 border-paper! text-paper" />
-                      </div>
-                    )}
-                    <p className="mt-4 text-sm text-muted">Use: {p.tools.map((id) => resources.find((x) => x.id === id)).filter(Boolean).map((x, i) => <span key={x!.id}>{i > 0 && ', '}<a className="link text-ink" href={x!.url} target="_blank" rel="noreferrer">{x!.name}</a></span>)}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </Section>
-
-          <Section id="resources" title="Curated Resources" md="resources">
-            <ul className="grid gap-x-8 gap-y-5 md:grid-cols-2">
-              {r.resources.map((id) => resources.find((x) => x.id === id)).filter(Boolean).map((x) => (
-                <li key={x!.id} className="border-t border-line pt-3">
-                  <a href={x!.url} target="_blank" rel="noreferrer" className="font-medium hover:text-pencil">{x!.name}</a> <span className="text-sm text-muted">{x!.category}</span>
-                  <p className="mt-1 text-sm text-ink-2">{x!.why}</p>
-                  <p className="mt-1 text-xs text-muted">{x!.license} · verified {x!.verifiedAt}</p>
-                </li>
-              ))}
-            </ul>
-          </Section>
-
-          <Section id="references" title="References" md="references">
-            <p className="mb-6 text-ink-2">Study the principle. Build something original.</p>
-            <ul className="space-y-6">
-              {r.references.map((x) => (
-                <li key={x.title} className="grid gap-2 border-t border-line pt-3 md:grid-cols-[1fr_2fr]">
-                  <div><a href={x.url} target="_blank" rel="noreferrer" className="font-medium hover:text-pencil">{x.title}</a><p className="text-sm text-muted">{inspirationSources.find((s) => s.id === x.source)?.name}</p></div>
-                  <dl className="grid gap-2 text-sm sm:grid-cols-3">
-                    <div><dt className="text-muted">What to study</dt><dd>{x.study}</dd></div>
-                    <div><dt className="text-muted">Why it matters</dt><dd>{x.why}</dd></div>
-                    <div><dt className="text-muted">Principle</dt><dd>{x.principle}</dd></div>
-                  </dl>
-                </li>
-              ))}
-            </ul>
-          </Section>
-
-          <Section id="why" title="Why It Works" md="why">
-            <div className="grid gap-x-10 gap-y-8 md:grid-cols-2">
-              {([['The visual direction', r.whyItWorks.direction], ['The typography', r.whyItWorks.typography], ['The palette', r.whyItWorks.palette], ['The layout', r.whyItWorks.layout], ['The motion', r.whyItWorks.motion], ['The chosen assets', r.whyItWorks.assets]] as const).map(([k, v]) => (
-                <div key={k}><h3 className="font-medium">{k}</h3><p className="prose-serif mt-2 text-ink-2">{v}</p></div>
-              ))}
-            </div>
-          </Section>
-
-          <Section id="implementation" title="Implementation" md="implementation">
-            <p><span className="text-muted">Stack:</span> {r.implementation.stack.join(', ')}</p>
-            {r.implementation.dependencies.length > 0 && <ul className="mt-3 space-y-1 text-sm">{r.implementation.dependencies.map((d) => <li key={d.name}><code className="font-mono">{d.name}</code> <span className="text-muted">{d.why}</span></li>)}</ul>}
-            <pre className="mt-6 overflow-x-auto rounded-lg bg-ink p-5 font-mono text-xs leading-relaxed text-paper">{r.implementation.fileStructure}</pre>
-            <div className="mt-8 grid gap-8 md:grid-cols-2">
-              <div><h3 className="font-medium">Sequence</h3><ol className="mt-2 list-decimal space-y-1 pl-5 text-sm">{r.implementation.sequence.map((s) => <li key={s}>{s}</li>)}</ol></div>
-              <List title="Responsive" items={r.implementation.responsive} />
-              <List title="Accessibility" items={r.implementation.accessibility} />
-              <List title="Performance" items={r.implementation.performance} />
-            </div>
-          </Section>
-
-          <section id="build" aria-labelledby="build-h" className="scroll-mt-24 border-t border-ink pt-6">
-            <h2 id="build-h" className="text-3xl font-medium tracking-tight md:text-4xl">How do you want to build it?</h2>
-            <p className="mt-3 max-w-xl text-ink-2">Same Universal Recipe, packaged for the tool you use.</p>
-            <div className="mt-8"><BuildPanel recipe={r} locked={!unlocked} onUnlock={() => setCheckout(true)} /></div>
-          </section>
+      {/* One fixed action bar: everything the user can do with this recipe, always in reach. */}
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper/95 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-2 px-5 py-3 md:px-8">
+          <Link href={editHref()} className="btn btn-line btn-sm inline-flex items-center gap-1.5"><ArrowLeft size={15} aria-hidden />Edit answers</Link>
+          <button type="button" className="btn btn-sm inline-flex items-center gap-1.5 text-ink-2 hover:text-ink" aria-pressed={saved} onClick={() => { toggleSaved(recipeRef); toast(saved ? 'Removed from saved' : 'Saved — find it under Saved') }}>
+            {saved ? <BookmarkCheck size={16} aria-hidden /> : <Bookmark size={16} aria-hidden />}{saved ? 'Saved' : 'Save'}
+          </button>
+          <div className="ml-auto flex flex-wrap items-center gap-2">
+            {unlocked ? (
+              <>
+                <CopyButton text={() => recipeToMarkdown(r)} label="Copy recipe" />
+                <Select value={target ?? undefined} onValueChange={(v) => setTarget(v as BuildTarget)}>
+                  <SelectTrigger aria-label="Build with" className="min-w-44 rounded-full"><SelectValue placeholder="Choose your tool" /></SelectTrigger>
+                  <SelectContent side="top" align="end" sideOffset={8}>
+                    {Object.values(adapters).map((a) => (
+                      <SelectItem key={a.id} value={a.id}><ToolIcon id={a.id} className="size-4" />{a.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <button type="button" disabled={!pkg || zipping} className="btn btn-ink inline-flex items-center gap-2 disabled:opacity-50"
+                  onClick={async () => { if (!pkg) return; setZipping(true); try { await downloadPackage(pkg, r) } finally { setZipping(false) } }}>
+                  <Download size={16} aria-hidden />{zipping ? 'Preparing…' : 'Download build kit'}
+                </button>
+              </>
+            ) : <button type="button" className="btn btn-ink" onClick={() => setCheckout(true)}>Unlock full recipe</button>}
+          </div>
         </div>
       </div>
 
@@ -346,51 +135,338 @@ export function RecipeDocument({ recipe, recipeRef, onRemix }: { recipe: Univers
   )
 }
 
-function DocSection({ id, title, children, md, recipe, isLocked, onUnlock }: { id: string; title: string; children: ReactNode; md?: RecipeSectionKey; recipe: UniversalRecipe; isLocked: boolean; onUnlock: () => void }) {
+type Look = { colors: PaletteColors; type: UniversalRecipe['visualSystem']['typography']; shape: UniversalRecipe['visualSystem']['shape'] }
+type Edit = (step?: string) => string
+
+const ChangeLink = ({ href, label = 'Change' }: { href: string; label?: string }) =>
+  <Link href={href} className="link inline-flex items-center gap-1 text-sm"><Pencil size={13} aria-hidden />{label}</Link>
+
+const Heading = ({ title, children }: { title: string; children?: ReactNode }) => (
+  <div className="flex flex-wrap items-baseline justify-between gap-3"><h2 className="text-2xl font-medium tracking-tight">{title}</h2>{children}</div>
+)
+
+// ─── Overview: the site at a glance, every decision as a picture ─────────────
+
+function Overview({ r, look, editHref }: { r: UniversalRecipe; look: Look; editHref: Edit }) {
+  const spec = r.metadata.spec
+  const name = spec.brief?.name?.trim()
+  const c = look.colors
+  const t = look.type
+  const tiles: { label: string; value: string; step: string; visual: ReactNode }[] = [
+    { label: 'Style', value: directions[spec.direction].name, step: 'direction',
+      visual: <div className="flex h-full flex-col justify-end p-4" style={{ background: c.background, color: c.text }}><span style={{ fontFamily: `'${t.display.family}'`, fontWeight: t.display.weight, fontSize: '1.4rem', lineHeight: 1.05 }}>{r.creativeDirection.mood.slice(0, 3).join(' · ')}</span></div> },
+    { label: 'Colors', value: r.visualSystem.palette.name, step: 'palette',
+      visual: <div className="flex h-full">{r.visualSystem.palette.tokens.map((x) => <span key={x.role} className="flex-1" style={{ background: x.hex }} />)}</div> },
+    { label: 'Lettering', value: t.name, step: 'typography',
+      visual: <div className="flex h-full items-center justify-center" style={{ background: c.surface, color: c.text }}><span style={{ fontFamily: `'${t.display.family}'`, fontWeight: t.display.weight, fontSize: '3.4rem', lineHeight: 1 }}>Aa</span></div> },
+    { label: 'First screen', value: r.media.hero.name, step: 'lead',
+      // eslint-disable-next-line @next/next/no-img-element -- small decorative thumbnail
+      visual: <img src={img(r.metadata.image, 480)} alt="" className="h-full w-full object-cover" /> },
+    { label: 'Shape', value: r.visualSystem.shape.name, step: 'shape', visual: <OptionDemo id={`shape:${r.visualSystem.shape.id}`} {...look} /> },
+    { label: 'Menu', value: r.chrome.nav.name, step: 'nav', visual: <OptionDemo id={`nav:${r.chrome.nav.id}`} {...look} /> },
+    { label: 'Special touches', value: r.signatures.map((s) => s.name).join(', ') || 'None', step: 'touches',
+      visual: r.signatures[0] ? <OptionDemo id={`sig:${r.signatures[0].id}`} {...look} /> : <div className="h-full" style={{ background: c.surface }} /> },
+    { label: 'Pages', value: `${r.pages.length} — ${r.pages.map((p) => p.label).join(', ')}`, step: 'pages',
+      visual: <div className="grid h-full grid-cols-3 gap-1.5 p-3" style={{ background: c.background }}>{r.pages.slice(0, 6).map((p) => <span key={p.id} className="flex items-end rounded p-1.5 text-[10px] leading-tight" style={{ background: c.surface, color: c.muted }}>{p.label}</span>)}</div> },
+  ]
   return (
-    <section id={id} aria-labelledby={`${id}-h`} className="scroll-mt-24 border-t border-ink pt-6 pb-16">
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 id={`${id}-h`} className="text-3xl font-medium tracking-tight md:text-4xl">{title}</h2>
-        {md && !isLocked && <CopyButton text={() => recipeSections[md](recipe)} label="Copy section" />}
+    <div className="space-y-12">
+      <SitePreview {...previewFromRecipe(r, name ? { title: name, brand: name } : {})} className="rounded-xl border border-line" />
+      <div>
+        <Heading title="Your choices"><ChangeLink href={editHref()} label="Edit all answers" /></Heading>
+        <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {tiles.map((x) => (
+            <li key={x.label}>
+              <Link href={editHref(x.step)} className="choice group block overflow-hidden" aria-label={`${x.label}: ${x.value}. Change`}>
+                <div className="aspect-[16/10] overflow-hidden border-b border-line">{x.visual}</div>
+                <div className="flex items-start justify-between gap-2 p-3.5">
+                  <span className="min-w-0"><span className="block text-xs text-muted">{x.label}</span><span className="mt-0.5 block truncate font-medium">{x.value}</span></span>
+                  <Pencil size={14} className="mt-1 shrink-0 text-muted group-hover:text-ink" aria-hidden />
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="mt-8">{isLocked ? <Locked title={title} onUnlock={onUnlock} /> : children}</div>
-    </section>
+    </div>
   )
 }
 
-function SectionList({ sections, keyPrefix }: { sections: PageSection[]; keyPrefix: string }) {
+// ─── Design: colors, type, shape, menu, layout — shown, then explained in one line ─
+
+function Design({ r, look, colors, editHref }: { r: UniversalRecipe; look: Look; colors: PaletteColors; editHref: Edit }) {
+  const l = r.layoutSystem
   return (
-    <ol className="space-y-px overflow-hidden rounded-lg border border-line bg-line">
-      {sections.map((s, i) => (
-        <li key={`${keyPrefix}-${s.id}`} className="bg-white">
-          <details className="group">
-            <summary className="flex cursor-pointer items-baseline gap-4 p-4 marker:content-none">
-              <span className="w-6 text-sm tabular-nums text-muted">{i + 1}</span>
-              <span className="flex-1 font-medium">{s.name}</span>
-              <span className="hidden text-sm text-muted sm:block">{s.purpose}</span>
-              <Plus size={16} className="shrink-0 text-muted transition-transform group-open:rotate-45" aria-hidden />
-            </summary>
-            <dl className="grid gap-4 px-4 pb-5 pl-14 text-sm md:grid-cols-2">
-              {([['Composition', s.composition], ['Content', s.content], ['Behavior', s.behavior], ['Responsive', s.responsive]] as const).map(([k, v]) => <div key={k}><dt className="text-muted">{k}</dt><dd>{v}</dd></div>)}
-              {s.note && <div className="md:col-span-2"><dt className="text-pencil">Recipe note</dt><dd>{s.note}</dd></div>}
-            </dl>
-          </details>
-        </li>
-      ))}
-    </ol>
+    <div className="space-y-16">
+      <div>
+        <Heading title={`Colors — ${r.visualSystem.palette.name}`}><ChangeLink href={editHref('palette')} /></Heading>
+        <p className="mt-2 max-w-2xl text-sm text-ink-2">{r.whyItWorks.palette}</p>
+        <div className="mt-6 grid gap-6 xl:grid-cols-2">
+          <PalettePreview colors={colors} recipe={r} />
+          <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {r.visualSystem.palette.tokens.map((x) => (
+              <li key={x.role}>
+                <button type="button" title={`Copy ${x.hex}`} onClick={() => { navigator.clipboard?.writeText(x.hex); toast(`Copied ${x.hex}`) }} className="w-full overflow-hidden rounded-lg border border-line text-left">
+                  <span className="block h-16" style={{ background: x.hex }} />
+                  <span className="block p-2 text-xs"><span className="block font-medium capitalize">{x.role}</span><span className="font-mono text-muted">{x.hex}</span></span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <Heading title={`Lettering — ${r.visualSystem.typography.name}`}><ChangeLink href={editHref('typography')} /></Heading>
+        <p className="mt-2 max-w-2xl text-sm text-ink-2">{r.whyItWorks.typography}</p>
+        <div className="mt-6"><TypeSpecimen t={r.visualSystem.typography} colors={{ bg: colors.background, fg: colors.text, muted: colors.muted }} /></div>
+      </div>
+
+      <div className="grid gap-10 lg:grid-cols-2">
+        <div>
+          <Heading title={`Shape — ${r.visualSystem.shape.name}`}><ChangeLink href={editHref('shape')} /></Heading>
+          <p className="mt-2 text-sm text-ink-2">{r.visualSystem.shape.rule}</p>
+          <OptionDemo id={`shape:${r.visualSystem.shape.id}`} {...look} className="mt-5 rounded-lg border border-line" />
+        </div>
+        <div>
+          <Heading title={`Menu — ${r.chrome.nav.name}`}><ChangeLink href={editHref('nav')} /></Heading>
+          <p className="mt-2 text-sm text-ink-2">{r.chrome.nav.line}</p>
+          <OptionDemo id={`nav:${r.chrome.nav.id}`} {...look} className="mt-5 rounded-lg border border-line" />
+        </div>
+      </div>
+
+      <div>
+        <Heading title="Controls & forms" />
+        <p className="mt-2 max-w-2xl text-sm text-ink-2">Every field, menu and button is a polished, accessible component (shadcn/ui), restyled to your colors and shape — never a plain browser default.</p>
+        <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,26rem)_1fr]">
+          <ControlsPreview colors={colors} r={r} />
+          <ul className="flex flex-wrap content-start gap-2">
+            {r.implementation.ui.components.map((c) => <li key={c.slug} title={c.where.join(', ')} className="rounded-full border border-line bg-white px-3 py-1.5 text-sm">{c.name}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <Heading title={`Layout — ${l.name}`} />
+        <p className="mt-2 max-w-2xl text-sm text-ink-2">{l.why}</p>
+        <dl className="mt-5 grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2 xl:grid-cols-4">
+          {([['Width', l.container], ['Columns', l.columns], ['Space between sections', l.sectionSpacing], ['Photo shapes', l.mediaProportions]] as const).map(([k, v]) => (
+            <div key={k} className="border-t border-line pt-2"><dt className="text-muted">{k}</dt><dd className="mt-0.5">{v}</dd></div>
+          ))}
+        </dl>
+      </div>
+    </div>
   )
 }
 
-function List({ title, items }: { title: string; items: string[] }) {
-  return <div><h3 className="font-medium">{title}</h3><ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-2">{items.map((x) => <li key={x}>{x}</li>)}</ul></div>
+// ─── Pages: each page as its ordered sections; details on demand ─────────────
+
+function Pages({ r, editHref }: { r: UniversalRecipe; editHref: Edit }) {
+  return (
+    <div className="space-y-4">
+      <Heading title={`${r.pages.length} pages`}><ChangeLink href={editHref('pages')} label="Change pages" /></Heading>
+      <p className="max-w-2xl text-sm text-ink-2">Every page is planned section by section. Open a section to see exactly what goes in it.</p>
+      <div className="grid gap-4 pt-2 lg:grid-cols-2">
+        {r.pages.map((p) => <PageCard key={p.id} title={p.label} line={p.purpose} sections={p.sections} />)}
+        <PageCard title="On every page" line="The menu and footer, shared across the site." sections={[r.chrome.navbar, r.chrome.footer]} />
+      </div>
+    </div>
+  )
 }
 
-function Locked({ title, onUnlock }: { title: string; onUnlock: () => void }) {
+function PageCard({ title, line, sections }: { title: string; line: string; sections: PageSection[] }) {
   return (
-    <div className="rounded-lg border border-dashed border-muted p-6">
-      <p className="font-medium">{title} is part of the full recipe.</p>
-      <p className="mt-1 text-sm text-ink-2">Unlock to see every detail, copy it, and generate Build Packages for Claude Code, Cursor, v0 and Lovable.</p>
-      <button type="button" className="btn btn-ink btn-sm mt-4" onClick={onUnlock}>See what&apos;s included</button>
+    <div className="rounded-lg border border-line bg-white p-5">
+      <p className="font-medium">{title}</p>
+      <p className="mt-1 text-sm text-muted">{line}</p>
+      {sections.length > 0 && (
+        <Accordion type="multiple" className="mt-4 space-y-1.5">
+          {sections.map((s, i) => (
+            <AccordionItem key={`${s.id}-${i}`} value={`${s.id}-${i}`} className="rounded-md border border-line last:border-b">
+              <AccordionTrigger className="gap-3 px-3 py-2 text-sm hover:no-underline">
+                <span className="flex flex-1 gap-3"><span className="w-4 tabular-nums text-muted">{i + 1}</span>{s.name}</span>
+              </AccordionTrigger>
+              <AccordionContent>
+                <dl className="grid gap-2 px-3 pb-1 pl-10 text-sm">
+                  {([['What it does', s.purpose], ['Layout', s.composition], ['Content', s.content], ['On phones', s.responsive]] as const).map(([k, v]) => <div key={k}><dt className="text-muted">{k}</dt><dd>{v}</dd></div>)}
+                </dl>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      )}
+    </div>
+  )
+}
+
+// ─── Your files: upload or replace logo, photos, video right here ────────────
+
+const SLOTS: { asset: AssetId; label: string; line: string; accept: string; many: boolean; show: (s: RecipeSpec) => boolean }[] = [
+  { asset: 'logo', label: 'Logo', line: 'SVG or PNG. Used in the menu, footer and browser tab.', accept: 'image/*,.svg', many: false, show: () => true },
+  { asset: 'video', label: 'Hero video', line: 'The film on your first screen.', accept: 'video/*', many: false, show: (s) => s.lead === 'video' },
+  { asset: '3d', label: '3D scene', line: 'GLB or GLTF for your first screen.', accept: '.glb,.gltf', many: false, show: (s) => s.lead === '3d' },
+  { asset: 'product-photos', label: 'Product photos', line: 'Front, three-quarter and a detail of each product.', accept: 'image/*', many: true, show: (s) => s.lead === 'product' || s.purpose === 'ecommerce' || s.purpose === 'product' },
+  { asset: 'images', label: 'Photos', line: 'Work, people, places and details for the rest of the site.', accept: 'image/*', many: true, show: () => true },
+]
+
+function Media({ r, spec, update, editHref }: { r: UniversalRecipe; spec: RecipeSpec; update: (p: Partial<RecipeSpec>) => void; editHref: Edit }) {
+  const uploads = spec.uploads ?? []
+  const add = async (asset: AssetId, many: boolean, files: FileList | null) => {
+    if (!files?.length) return
+    const metas = await Promise.all([...files].slice(0, many ? 24 : 1).map((f) => storeUpload(f, asset)))
+    const replaced = many ? [] : uploads.filter((u) => u.asset === asset)
+    await Promise.all(replaced.filter((u) => u.fileId).map((u) => deleteFile(u.fileId!)))
+    update({
+      uploads: [...uploads.filter((u) => !replaced.includes(u)), ...metas],
+      assets: spec.assets.includes(asset) ? spec.assets : [...spec.assets, asset],
+      ...(asset === 'video' ? { mediaPlan: 'have' as const } : {}),
+    })
+  }
+  const remove = async (u: UploadedAsset) => {
+    if (u.fileId) await deleteFile(u.fileId)
+    const rest = uploads.filter((x) => x !== u)
+    update({ uploads: rest, assets: rest.some((x) => x.asset === u.asset) ? spec.assets : spec.assets.filter((a) => a !== u.asset) })
+  }
+  const others = r.assetRequirements.filter((a) => !SLOTS.some((s) => s.asset === a.asset && s.show(spec)))
+  return (
+    <div className="space-y-14">
+      <div>
+        <Heading title="Your files" />
+        <p className="mt-2 max-w-2xl text-sm text-ink-2">Add or replace them here. They go straight into your build kit, at the exact paths the site uses. Files stay in this browser.</p>
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          {SLOTS.filter((s) => s.show(spec)).map((s) => {
+            const mine = uploads.filter((u) => u.asset === s.asset)
+            return (
+              <div key={s.asset} className="rounded-lg border border-line bg-white p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div><p className="font-medium">{s.label}</p><p className="mt-0.5 text-sm text-muted">{s.line}</p></div>
+                  <label className="btn btn-line btn-sm shrink-0 cursor-pointer">
+                    {mine.length && !s.many ? 'Replace' : 'Add'}
+                    <input type="file" accept={s.accept} multiple={s.many} className="sr-only" onChange={(e) => { add(s.asset, s.many, e.target.files); e.target.value = '' }} />
+                  </label>
+                </div>
+                {mine.length > 0
+                  ? <ul className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">{mine.map((u) => <Thumb key={u.fileId ?? u.name} u={u} onRemove={() => remove(u)} />)}</ul>
+                  : <p className="mt-4 rounded-md border border-dashed border-line p-4 text-center text-sm text-muted">Nothing yet — the build kit uses a clearly marked placeholder.</p>}
+              </div>
+            )
+          })}
+        </div>
+        {r.media.imagery && (
+          <div className="mt-8 grid items-center gap-6 rounded-lg border border-line bg-white p-5 md:grid-cols-[18rem_1fr]">
+            <OptionDemo id={`photo:${r.media.imagery.presentation.id}`} colors={Object.fromEntries(r.visualSystem.palette.tokens.map((t) => [t.role, t.hex])) as PaletteColors} type={r.visualSystem.typography} shape={r.visualSystem.shape} className="rounded-md" />
+            <div>
+              <p className="text-sm text-muted">Photos are shown as</p>
+              <p className="mt-0.5 font-medium">{r.media.imagery.presentation.name}</p>
+              <p className="mt-1 text-sm text-ink-2">{r.media.imagery.presentation.line}</p>
+              <div className="mt-3"><ChangeLink href={editHref('photos')} /></div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div>
+        <Heading title="Everything else the site needs" />
+        <ul className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+          {others.map((a) => {
+            const st = STATUS[a.status]
+            return (
+              <li key={a.key} className="flex items-start gap-3 rounded-lg border border-line bg-white p-4">
+                <st.mark size={16} className={`mt-0.5 shrink-0 ${st.cls}`} aria-hidden />
+                <span className="min-w-0"><span className="block font-medium">{a.label}</span><span className={`block text-sm ${st.cls}`}>{st.label}</span><span className="mt-1 block text-xs text-muted">{a.specs}</span></span>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+
+      {r.assetCreationPaths.length > 0 && (
+        <div>
+          <Heading title="How to get what's missing" />
+          <Accordion type="multiple" className="mt-5 space-y-2">
+            {r.assetCreationPaths.map((p) => (
+              <AccordionItem key={p.title} value={p.title} className="rounded-lg border border-line bg-white last:border-b">
+                <AccordionTrigger className="p-4 text-base font-medium hover:no-underline">{p.title}</AccordionTrigger>
+                <AccordionContent className="px-4 pb-5">
+                  <ol className="list-decimal space-y-1 pl-5 text-sm">{p.steps.map((s) => <li key={s}>{s}</li>)}</ol>
+                  {p.prompt && (
+                    <div className="mt-4 rounded-md bg-ink p-4 text-paper">
+                      <p className="font-mono text-xs leading-relaxed">{p.prompt}</p>
+                      <CopyButton text={p.prompt} label="Copy prompt" className="mt-3 border-paper! text-paper" />
+                    </div>
+                  )}
+                  <p className="mt-4 text-sm text-muted">Use: {p.tools.map((id) => resources.find((x) => x.id === id)).filter(Boolean).map((x, i) => <span key={x!.id}>{i > 0 && ', '}<a className="link text-ink" href={x!.url} target="_blank" rel="noreferrer">{x!.name}</a></span>)}</p>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function Thumb({ u, onRemove }: { u: UploadedAsset; onRemove: () => void }) {
+  const [url, setUrl] = useState<string>()
+  useEffect(() => {
+    let live = true, made: string | undefined
+    if (u.fileId && u.kind !== 'other') getFile(u.fileId).then((f) => { if (f && live) setUrl((made = URL.createObjectURL(f))) })
+    return () => { live = false; if (made) URL.revokeObjectURL(made) }
+  }, [u.fileId, u.kind])
+  return (
+    <li className="group relative aspect-square overflow-hidden rounded-md border border-line bg-paper">
+      {url && u.kind === 'video' ? <video src={url} muted loop autoPlay playsInline className="h-full w-full object-cover" />
+        // eslint-disable-next-line @next/next/no-img-element -- local object URL of the user's own file
+        : url ? <img src={url} alt={u.name} className="h-full w-full object-cover" />
+        : <span className="grid h-full place-items-center p-2 text-center text-xs text-muted">{u.name}</span>}
+      <button type="button" onClick={onRemove} aria-label={`Remove ${u.name}`} className="absolute right-1 top-1 rounded-full bg-ink/80 p-1 text-paper opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100"><X size={12} /></button>
+    </li>
+  )
+}
+
+// ─── Motion: the feel, and the moments people remember ───────────────────────
+
+function Motion({ r, look, editHref }: { r: UniversalRecipe; look: Look; editHref: Edit }) {
+  return (
+    <div className="space-y-14">
+      <div>
+        <Heading title={`Movement — ${r.motion.level.name}`}><ChangeLink href={editHref('motion')} /></Heading>
+        <p className="mt-2 max-w-2xl text-ink-2">{r.motion.principle}</p>
+        <ul className="mt-5 flex flex-wrap gap-2">{r.motion.patterns.map((p) => <li key={p.id} className="rounded-full border border-line bg-white px-3 py-1.5 text-sm">{p.name}</li>)}</ul>
+      </div>
+      <div>
+        <Heading title="Special touches"><ChangeLink href={editHref('touches')} /></Heading>
+        {r.signatures.length ? (
+          <ul className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {r.signatures.map((s) => (
+              <li key={s.id} className="overflow-hidden rounded-lg border border-line bg-white">
+                <OptionDemo id={`sig:${s.id}`} {...look} />
+                <div className="p-4">
+                  <p className="text-xs text-muted">{s.where}</p>
+                  <p className="mt-0.5 font-medium">{s.name}</p>
+                  <p className="mt-1.5 text-sm text-ink-2">{s.experience}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : <p className="mt-4 text-sm text-muted">None — this recipe keeps interaction deliberately quiet.</p>}
+      </div>
+      {r.media.storytelling && (
+        <div>
+          <Heading title="How the film tells your story" />
+          <ol className="mt-4 max-w-3xl list-decimal space-y-1.5 pl-5 text-sm text-ink-2">{r.media.storytelling.map((x) => <li key={x}>{x}</li>)}</ol>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function Locked({ what, onUnlock }: { what: string; onUnlock: () => void }) {
+  return (
+    <div className="mx-auto max-w-lg rounded-lg border border-dashed border-muted p-8 text-center">
+      <p className="text-lg font-medium">{what} are part of the full recipe.</p>
+      <p className="mt-2 text-sm text-ink-2">Unlock to download a build kit for Claude Code, Cursor, v0 or Lovable — with your files included.</p>
+      <button type="button" className="btn btn-ink mt-5" onClick={onUnlock}>See what&apos;s included</button>
     </div>
   )
 }
@@ -398,6 +474,7 @@ function Locked({ title, onUnlock }: { title: string; onUnlock: () => void }) {
 /** The palette in context — a small UI rendered with the recipe's own colors. */
 function PalettePreview({ colors: c, recipe }: { colors: PaletteColors; recipe: UniversalRecipe }) {
   const t = recipe.visualSystem.typography
+  const sh = recipe.visualSystem.shape
   return (
     <div className="overflow-hidden rounded-lg border border-line" style={{ background: c.background, color: c.text }}>
       <div className="flex items-center justify-between px-5 py-3 text-xs" style={{ borderBottom: `1px solid ${c.border}`, fontFamily: `'${t.utility.family}'` }}><span>Studio</span><span style={{ color: c.muted }}>Work · About · <span style={{ color: c.accent }}>Contact</span></span></div>
@@ -405,43 +482,37 @@ function PalettePreview({ colors: c, recipe }: { colors: PaletteColors; recipe: 
         <p style={{ fontFamily: `'${t.display.family}'`, fontWeight: t.display.weight, fontSize: '2rem', lineHeight: 1, letterSpacing: t.display.letterSpacing }}>{recipe.contentDirection.headlineExamples[0]}</p>
         <p className="mt-3 text-sm" style={{ color: c.muted, fontFamily: `'${t.body.family}'` }}>Secondary text uses the muted role. Links use the <span style={{ color: c.accent }}>accent</span>, sparingly.</p>
         <div className="mt-4 grid grid-cols-2 gap-3">
-          <div className="rounded p-3 text-sm" style={{ background: c.surface, border: `1px solid ${c.border}` }}>Surface card</div>
-          <div className="rounded p-3 text-sm" style={{ background: c.secondary }}>Secondary</div>
+          <div className="p-3 text-sm" style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: sh.card }}>Surface card</div>
+          <div className="p-3 text-sm" style={{ background: c.secondary, borderRadius: sh.card }}>Secondary</div>
         </div>
-        <div className="mt-4 flex gap-2 text-sm"><span className="rounded-full px-4 py-2" style={{ background: c.primary, color: c.background }}>Primary action</span><span className="rounded-full px-4 py-2" style={{ border: `1px solid ${c.border}` }}>Secondary</span></div>
+        <div className="mt-4 flex gap-2 text-sm"><span className="px-4 py-2" style={{ background: c.primary, color: c.background, borderRadius: sh.button }}>Primary action</span><span className="px-4 py-2" style={{ border: `1px solid ${c.border}`, borderRadius: sh.button }}>Secondary</span></div>
       </div>
     </div>
   )
 }
 
-function RemixPanel({ spec, onChange }: { spec: RecipeSpec; onChange: (s: RecipeSpec) => void }) {
-  const d = directions[spec.direction]
-  const change = (c: Partial<RecipeSpec>) => onChange(remix(spec, c))
-  const heroes = heroOptions(spec.lead, spec.motion)
-  const colors = { ...palettes[spec.palette].colors, ...spec.customPalette }
-  const Select = <T extends string>({ label, value, options, on }: { label: string; value: T; options: [T, string][]; on: (v: T) => void }) => (
-    <label className="text-sm"><span className="text-muted">{label}</span>
-      <select value={value} onChange={(e) => on(e.target.value as T)} className="mt-1 block w-full rounded-md border border-line bg-white px-3 py-2.5">
-        {options.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-      </select>
-    </label>
-  )
+/** A tiny form in the recipe's own colors and shape: how its selects, date picker and toggles will look. */
+function ControlsPreview({ colors: c, r }: { colors: PaletteColors; r: UniversalRecipe }) {
+  const sh = r.visualSystem.shape
+  const t = r.visualSystem.typography
+  const field = { background: c.surface, border: `1px solid ${c.muted}`, borderRadius: sh.button === '999px' ? '999px' : sh.card, color: c.text }
   return (
-    <section id="remix" aria-label="Remix" className="mb-14 rounded-xl border border-ink bg-white p-5 md:p-7">
-      <p className="text-xl font-medium">Remix</p>
-      <p className="mt-1 text-sm text-ink-2">Change one ingredient. Only the parts that depend on it update — the rest of the recipe stays as it is.</p>
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Select<PaletteId> label="Palette" value={spec.palette} on={(v) => change({ palette: v })} options={(Object.keys(palettes) as PaletteId[]).map((p) => [p, `${palettes[p].name}${d.palettes.includes(p) ? '' : ' (off-direction)'}`])} />
-        <Select<TypographyId> label="Font pairing" value={spec.typography} on={(v) => change({ typography: v })} options={(Object.keys(typography) as TypographyId[]).map((t) => [t, typography[t].name])} />
-        <Select<LayoutId> label={d.layoutLocked ? `Layout (set by ${d.name})` : 'Layout'} value={spec.layout} on={(v) => change({ layout: v })} options={(Object.keys(layouts) as LayoutId[]).map((l) => [l, layouts[l].name])} />
-        <Select<LeadId> label="Media" value={spec.lead} on={(v) => change({ lead: v })} options={(Object.keys(leads) as LeadId[]).map((l) => [l, leads[l].name])} />
-        <Select<MotionLevel> label="Motion intensity" value={spec.motion} on={(v) => change({ motion: v })} options={(Object.keys(motionLevels) as MotionLevel[]).map((m) => [m, motionLevels[m].name])} />
-        <Select<string> label="Hero" value={spec.hero ?? heroes[0]?.id ?? ''} on={(v) => change({ hero: v as RecipeSpec['hero'] })} options={heroes.map((h) => [h.id, h.name])} />
+    <div aria-hidden className="space-y-3 rounded-lg border border-line p-5 text-sm" style={{ background: c.background, color: c.text, fontFamily: `'${t.body.family}'` }}>
+      <div className="grid grid-cols-2 gap-3">
+        <div><p className="mb-1 text-xs" style={{ color: c.muted }}>Date</p><div className="flex items-center justify-between px-3 py-2" style={field}><span>Fri 12 Oct</span><span style={{ color: c.muted }}>▾</span></div></div>
+        <div><p className="mb-1 text-xs" style={{ color: c.muted }}>Guests</p><div className="flex items-center justify-between px-3 py-2" style={field}><span>2 people</span><span style={{ color: c.muted }}>▾</span></div></div>
       </div>
-      <details className="mt-6">
-        <summary className="cursor-pointer text-sm link">Customize palette colors</summary>
-        <div className="mt-4"><PaletteEditor colors={colors} changed={!!spec.customPalette} onReset={() => onChange({ ...spec, customPalette: undefined })} onChange={(c) => onChange({ ...spec, customPalette: c })} /></div>
-      </details>
-    </section>
+      <div className="p-3" style={{ ...field, borderRadius: sh.card }}>
+        <div className="grid grid-cols-7 gap-1 text-center text-xs">
+          {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => <span key={i} style={{ color: c.muted }}>{d}</span>)}
+          {[...Array(14)].map((_, i) => <span key={i} className="py-1" style={i === 11 ? { background: c.primary, color: c.background, borderRadius: sh.button === '0px' ? 0 : '999px' } : undefined}>{i + 1}</span>)}
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-2"><span className="grid h-4 w-4 place-items-center text-[10px]" style={{ background: c.primary, color: c.background, borderRadius: sh.button === '0px' ? 0 : 4 }}>✓</span>Window seat</span>
+        <span className="flex items-center gap-2">Reminders<span className="relative h-5 w-9 rounded-full" style={{ background: c.primary }}><span className="absolute right-0.5 top-0.5 h-4 w-4 rounded-full" style={{ background: c.background }} /></span></span>
+      </div>
+      <div className="flex justify-center px-4 py-2.5" style={{ background: c.primary, color: c.background, borderRadius: sh.button }}>{r.contentDirection.ctaExamples[0]}</div>
+    </div>
   )
 }

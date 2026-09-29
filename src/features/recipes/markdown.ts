@@ -32,7 +32,7 @@ export const recipeSections = {
   layout: (r: UniversalRecipe) => {
     const l = r.layoutSystem
     const s = r.visualSystem.spacing
-    return `## Layout System — ${l.name}\n\n| | |\n|---|---|\n| Container | ${l.container} |\n| Grid | ${l.grid} |\n| Columns | ${l.columns} |\n| Gutters | ${l.gutters} |\n| Section spacing | ${l.sectionSpacing} |\n| Alignment | ${l.alignment} |\n| Hero composition | ${l.heroComposition} |\n| Card proportions | ${l.cardProportions} |\n| Media proportions | ${l.mediaProportions} |\n\n**Spacing scale (base ${s.base}):** ${s.scale.join(', ')}. ${s.note}`
+    return `## Layout System — ${l.name}\n\n| | |\n|---|---|\n| Container | ${l.container} |\n| Grid | ${l.grid} |\n| Columns | ${l.columns} |\n| Gutters | ${l.gutters} |\n| Section spacing | ${l.sectionSpacing} |\n| Alignment | ${l.alignment} |\n| Hero composition | ${l.heroComposition} |\n| Card proportions | ${l.cardProportions} |\n| Media proportions | ${l.mediaProportions} |\n\n**Spacing scale (base ${s.base}):** ${s.scale.join(', ')}. ${s.note}\n\n### Shape — ${r.visualSystem.shape.name}\n\n${r.visualSystem.shape.line} Buttons ${r.visualSystem.shape.button}, cards ${r.visualSystem.shape.card}, media ${r.visualSystem.shape.media}, borders ${r.visualSystem.shape.border}, shadow ${r.visualSystem.shape.shadow}. ${r.visualSystem.shape.rule}\n\n### Menu — ${r.chrome.nav.name}\n\n${r.chrome.nav.line}\n- **Composition:** ${r.chrome.nav.composition}\n- **Behavior:** ${r.chrome.nav.behavior}\n- **Responsive:** ${r.chrome.nav.responsive}` + (r.chrome.nav.components.length ? `\n- **Start from:** ${r.chrome.nav.components.map((c) => `[${c.name}](${c.url})`).join(', ')} — restyle to this recipe’s tokens and type; never ship a component’s demo look.` : '')
   },
 
   structure: (r: UniversalRecipe) => {
@@ -47,7 +47,7 @@ export const recipeSections = {
 
   media: (r: UniversalRecipe) => {
     const m = r.media
-    return `## Media Direction — ${m.name}\n\n${m.direction}\n\n### Treatment\n${list(m.treatment)}\n\n**Formats:** ${m.formats}\n\n### Hero — ${m.hero.name}\n- **Composition:** ${m.hero.composition}\n- **Behavior:** ${m.hero.behavior}\n- **Responsive:** ${m.hero.responsive}\n- **Requires:** ${m.hero.requires.join('; ')}\n- **Fallback:** ${m.hero.fallback}` + (m.storytelling ? `\n\n### Scroll storytelling\n\nscroll → film moves → scene changes → its message arrives → it leaves → next scene. One coordinated timeline.\n\n${list(m.storytelling)}` : '')
+    return `## Media Direction — ${m.name}\n\n${m.direction}\n\n### Treatment\n${list(m.treatment)}\n\n**Formats:** ${m.formats}\n\n### Hero — ${m.hero.name}\n- **Composition:** ${m.hero.composition}\n- **Behavior:** ${m.hero.behavior}\n- **Responsive:** ${m.hero.responsive}\n- **Requires:** ${m.hero.requires.join('; ')}\n- **Fallback:** ${m.hero.fallback}` + (m.framing ? `\n\n### Your video’s shape\n\n${m.framing}` : '') + (m.storytelling ? `\n\n### Scroll storytelling\n\nscroll → film moves → scene changes → its message arrives → it leaves → next scene. One coordinated timeline.\n\n${list(m.storytelling)}` : '')
       + (m.imagery ? (() => {
         const i = m.imagery, x = i.presentation
         return `\n\n### Photos — ${x.name}\n\n${x.line} ${i.photos ? `${i.photos} photos supplied (${i.orientation}), in /media — keep their order.` : `Suits ${x.ideal}.`}${i.recommended === x.id ? ` Chosen because: ${i.why}.` : ' Chosen by the owner.'}`
@@ -62,7 +62,7 @@ export const recipeSections = {
     r.motion.patterns.map((p) => `### ${p.name}\n- **Purpose:** ${p.purpose}\n- **Trigger:** ${p.trigger}\n- **Behavior:** ${p.behavior}\n- **Duration:** ${p.duration}\n- **Easing:** ${p.easing}\n- **Implementation:** ${p.implementation}\n- **Performance:** ${p.performance}\n- **Reduced motion:** ${p.reducedMotion}`).join('\n\n'),
 
   signatures: (r: UniversalRecipe) => r.signatures.length
-    ? `## Signature Moments\n\nThe small interactions people remember. Build each one exactly where it is placed — they are part of the design, not optional polish.\n\n${r.signatures.map((s) => `### ${s.name} — ${s.where}\n- **What visitors experience:** ${s.experience}\n- **How:** ${s.implementation}\n- **Mobile:** ${s.mobile}\n- **Reduced motion:** ${s.reducedMotion}`).join('\n\n')}`
+    ? `## Signature Moments\n\nThe small interactions people remember. Build each one exactly where it is placed — they are part of the design, not optional polish.\n\n${r.signatures.map((s) => `### ${s.name} — ${s.where}\n- **What visitors experience:** ${s.experience}\n- **How:** ${s.implementation}\n- **Mobile:** ${s.mobile}\n- **Reduced motion:** ${s.reducedMotion}` + (s.components?.length ? `\n- **Start from:** ${s.components.map((c) => `[${c.name}](${c.url})`).join(', ')} — restyle to this recipe’s tokens; never ship the demo look.` : '')).join('\n\n')}`
     : '## Signature Moments\n\nNone — this recipe keeps interaction deliberately quiet.',
 
   content: (r: UniversalRecipe) => {
@@ -86,6 +86,11 @@ export const recipeSections = {
   why: (r: UniversalRecipe) => {
     const w = r.whyItWorks
     return `## Why It Works\n\n### Why the visual direction works\n${w.direction}\n\n### Why the typography works\n${w.typography}\n\n### Why the palette works\n${w.palette}\n\n### Why the layout works\n${w.layout}\n\n### Why the motion works\n${w.motion}\n\n### Why the chosen assets work\n${w.assets}`
+  },
+
+  ui: (r: UniversalRecipe) => {
+    const u = r.implementation.ui
+    return `## UI Components — ${u.library}\n\nEvery control and form uses these ready-made, accessible components (${u.url}), restyled to this recipe. Users expect polished fields — no unstyled browser defaults.\n\n\`\`\`bash\n${u.install}\n\`\`\`\n\n| Component | Used on |\n|---|---|\n${u.components.map((c) => `| ${c.name} (\`${c.slug}\`) | ${c.where.join(', ')} |`).join('\n')}\n\n### Theme (paste over the :root values shadcn init writes)\n\n\`\`\`css\n${u.theme}\n\`\`\`\n\n### Rules\n${list(u.rules)}`
   },
 
   implementation: (r: UniversalRecipe) => {

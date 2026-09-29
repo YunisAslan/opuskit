@@ -38,6 +38,7 @@ Every page shares the navbar (${r.chrome.navbar.composition}) and footer (${r.ch
 
 ## Components
 ${r.components.map((c) => `${c.id}: ${c.purpose}`).join('; ')}.
+Controls and forms: shadcn/ui (${r.implementation.ui.components.map((c) => c.slug).join(', ')}), restyled to the colors, fonts and ${r.visualSystem.shape.name.toLowerCase()} shape above; date fields are a Calendar in a Popover; never unstyled native selects or date inputs.
 All media goes through one MediaAsset component reading an assets config object. Temporary assets must stay replaceable.
 
 ## Motion

@@ -21,5 +21,5 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
       </div>
     )
   }
-  return <RecipeDocument recipe={recipe} recipeRef={`gen:${id}`} onRemix={(spec) => saveGeneration(spec, id)} />
+  return <RecipeDocument recipe={recipe} recipeRef={`gen:${id}`} onChange={(spec) => saveGeneration(spec, id)} />
 }

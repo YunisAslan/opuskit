@@ -1,16 +1,16 @@
 'use client'
 import { strToU8, zipSync } from 'fflate'
-import { Check, Circle } from 'lucide-react'
+import { FileText } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { CopyButton } from '@/components/ui'
+import { ToolIcon } from '@/components/ToolIcon'
 import { getFile } from '@/lib/files'
 import type { BuildPackage, BuildTarget, UniversalRecipe } from '@/types/domain'
 import { adapters } from '.'
 import { providedFilePaths } from './shared'
 
-const PREP = ['Recipe', 'Design System', 'Motion System', 'Assets', 'References', 'Implementation guide', 'Skills', 'Verification notes']
-
-async function download(pkg: BuildPackage, recipe: UniversalRecipe) {
+/** Builds the zip (package files + the user's own uploads + a README) and hands it to the browser. */
+export async function downloadPackage(pkg: BuildPackage, recipe: UniversalRecipe) {
   const files: Record<string, Uint8Array> = Object.fromEntries(pkg.files.map((f) => [f.path, strToU8(f.content)]))
   const provided = providedFilePaths(recipe)
   const included: typeof provided = []
@@ -35,85 +35,64 @@ async function download(pkg: BuildPackage, recipe: UniversalRecipe) {
   setTimeout(() => URL.revokeObjectURL(a.href), 1000)
 }
 
-export function BuildPanel({ recipe, locked, onUnlock }: { recipe: UniversalRecipe; locked: boolean; onUnlock: () => void }) {
-  const [target, setTarget] = useState<BuildTarget | null>(null)
+/** The package for one tool, regenerated whenever the recipe or tool changes. */
+export function useBuildPackage(recipe: UniversalRecipe, target: BuildTarget | null, enabled: boolean) {
   const [pkg, setPkg] = useState<BuildPackage | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [prepared, setPrepared] = useState(0)
-  const [file, setFile] = useState<string | null>(null)
-  const [zipping, setZipping] = useState(false)
-  const rec = recipe.metadata.recommendedTarget
-
   useEffect(() => {
-    if (!target) return
-    let cancelled = false
-    setPkg(null); setError(null); setPrepared(0); setFile(null)
-    adapters[target].generate(recipe).then((p) => {
-      if (cancelled) return
-      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
-      const steps = target === 'claude-code' ? PREP : PREP.filter((s) => s !== 'Skills')
-      steps.forEach((_, i) => setTimeout(() => !cancelled && setPrepared(i + 1), reduce ? 0 : (i + 1) * 160))
-      setTimeout(() => !cancelled && setPkg(p), reduce ? 0 : steps.length * 160 + 200)
-    }).catch((e: Error) => !cancelled && setError(e.message))
-    return () => { cancelled = true }
-  }, [target, recipe])
+    if (!enabled || !target) { setPkg(null); return }
+    let live = true
+    setPkg(null); setError(null)
+    adapters[target].generate(recipe).then((p) => live && setPkg(p)).catch((e: Error) => live && setError(e.message))
+    return () => { live = false }
+  }, [recipe, target, enabled])
+  return { pkg, error }
+}
 
-  const steps = target === 'claude-code' ? PREP : PREP.filter((s) => s !== 'Skills')
+/** Build tab: pick the tool, see the one prompt to start with, and look inside the kit. Download lives in the bottom bar. */
+export function BuildTab({ recipe, target, onTarget, pkg, error }: { recipe: UniversalRecipe; target: BuildTarget | null; onTarget: (t: BuildTarget) => void; pkg: BuildPackage | null; error: string | null }) {
+  const [file, setFile] = useState<string | null>(null)
   const open = pkg?.files.find((f) => f.path === file)
-
   return (
-    <div>
-      <div role="radiogroup" aria-label="Build tool" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="space-y-10">
+      <div role="radiogroup" aria-label="Build tool" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         {Object.values(adapters).map((a) => (
-          <button key={a.id} type="button" role="radio" aria-checked={target === a.id} onClick={() => (locked ? onUnlock() : setTarget(a.id))} className="choice p-5">
-            <span className="flex items-center justify-between gap-2"><span className="text-lg font-medium">{a.name}</span>{a.id === rec && <span className="pencil">Recommended</span>}</span>
+          <button key={a.id} type="button" role="radio" aria-checked={target === a.id} onClick={() => { onTarget(a.id); setFile(null) }} className="choice p-4 text-left">
+            <ToolIcon id={a.id} className="size-8" />
+            <span className="mt-3 block font-medium">{a.name}</span>
             <span className="mt-1 block text-sm text-ink-2">{a.description}</span>
-            <span className="mt-3 block text-xs text-muted">You&apos;ll receive: {a.receives.join(', ')}</span>
           </button>
         ))}
       </div>
-      {locked && <p className="mt-4 text-sm text-muted">Build Packages are part of the full recipe. <button type="button" className="link text-ink" onClick={onUnlock}>Unlock this recipe</button></p>}
 
-      {error && (
-        <p role="alert" className="mt-6 rounded-lg border border-warn p-4 text-warn">We can&apos;t build a package from this recipe yet: {error}. Your Universal Recipe is still available above.</p>
-      )}
+      {!target && <p className="rounded-lg border border-dashed border-line p-8 text-center text-sm text-muted">Choose the tool you build with to see your kit — every tool gets the same recipe, written the way it understands best.</p>}
 
-      {target && !error && (
-        <div className="mt-8 rounded-lg bg-ink p-6 text-paper md:p-8" aria-live="polite">
-          {!pkg ? (
-            <>
-              <p className="text-lg">Preparing your {adapters[target].name} package…</p>
-              <ul className="mt-4 grid gap-1 text-sm sm:grid-cols-2">
-                {steps.map((s, i) => (
-                  <li key={s} className={`flex items-center gap-2 ${i < prepared ? 'text-paper' : 'text-paper/30'}`}>
-                    {i < prepared ? <Check size={14} aria-hidden /> : <Circle size={14} aria-hidden />} {s}
-                  </li>
+      {error && <p role="alert" className="rounded-lg border border-warn p-4 text-warn">We can&apos;t build a package from this recipe yet: {error}.</p>}
+
+      {pkg && (
+        <>
+          <div className="rounded-lg bg-ink p-6 text-paper">
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
+              <p className="text-lg font-medium">How to start</p>
+              <CopyButton text={pkg.instructions} label="Copy steps" className="border-paper! text-paper hover:bg-paper! hover:text-ink!" />
+            </div>
+            <ol className="mt-4 list-decimal space-y-1.5 pl-5 text-sm text-paper/85">{pkg.instructions.split('\n').map((l) => <li key={l}>{l.replace(/^\d+\.\s*/, '')}</li>)}</ol>
+          </div>
+
+          <div>
+            <p className="font-medium">Inside your build kit <span className="font-normal text-muted">· {pkg.files.length} files, plus your own uploads</span></p>
+            <div className="mt-4 grid gap-4 md:grid-cols-[18rem_1fr]">
+              <ul className="max-h-[28rem] space-y-0.5 overflow-auto rounded-lg border border-line bg-white p-2 font-mono text-xs">
+                {pkg.files.map((f) => (
+                  <li key={f.path}><button type="button" onClick={() => setFile(f.path)} className={`flex w-full items-center gap-2 truncate rounded px-2 py-1.5 text-left ${f.path === file ? 'bg-ink text-paper' : 'text-ink-2 hover:bg-paper'}`}><FileText size={13} aria-hidden className="shrink-0" />{f.path}</button></li>
                 ))}
               </ul>
-            </>
-          ) : (
-            <>
-              <p className="display text-4xl">Your build kit is ready.</p>
-              <p className="mt-2 text-paper/70">{pkg.files.length} files for {adapters[target].name}, generated from the same Universal Recipe.</p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <button type="button" disabled={zipping} className="btn bg-paper text-ink hover:bg-white disabled:opacity-60" onClick={async () => { setZipping(true); try { await download(pkg, recipe) } finally { setZipping(false) } }}>{zipping ? 'Preparing download…' : 'Download package (.zip)'}</button>
-                <CopyButton text={pkg.instructions} label="Copy instructions" className="border-paper! text-paper hover:bg-paper! hover:text-ink!" />
-                <button type="button" className="btn btn-sm text-paper link" onClick={() => setFile(file ? null : pkg.files[0].path)}>{file ? 'Close build guide' : 'Open build guide'}</button>
-              </div>
-              <ol className="mt-6 list-decimal space-y-1 pl-5 text-sm text-paper/80">{pkg.instructions.split('\n').map((l) => <li key={l}>{l.replace(/^\d+\.\s*/, '')}</li>)}</ol>
-              {file && (
-                <div className="mt-6 grid gap-4 md:grid-cols-[16rem_1fr]">
-                  <ul className="space-y-0.5 font-mono text-xs">
-                    {pkg.files.map((f) => (
-                      <li key={f.path}><button type="button" onClick={() => setFile(f.path)} className={`w-full truncate rounded px-2 py-1 text-left ${f.path === file ? 'bg-paper text-ink' : 'text-paper/70 hover:text-paper'}`}>{f.path}</button></li>
-                    ))}
-                  </ul>
-                  <pre className="max-h-[32rem] overflow-auto rounded bg-black/40 p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap text-paper/90">{open?.content}</pre>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+              {open
+                ? <pre className="max-h-[28rem] overflow-auto rounded-lg bg-ink p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap text-paper/90">{open.content}</pre>
+                : <p className="grid place-items-center rounded-lg border border-dashed border-line p-8 text-sm text-muted">Pick a file to read it. Everything is written for {target && adapters[target].name}.</p>}
+            </div>
+          </div>
+        </>
       )}
     </div>
   )

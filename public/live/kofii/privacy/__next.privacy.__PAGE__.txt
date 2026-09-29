@@ -1,0 +1,20 @@
+1:"$Sreact.fragment"
+2:I[484,[],"OutletBoundary"]
+3:"$Sreact.suspense"
+7:I[484,[],"ViewportBoundary"]
+8:I[484,[],"MetadataBoundary"]
+9:I[6869,[],"IconMark"]
+b:I[7121,[],""]
+c:I[4581,[],""]
+6:X
+e:X
+e:C
+0:{"buildId":"8QFAOK4rOmL6gmGDfw-zd","data":[{"rsc":["$","$1","c",{"children":[[["$","header",null,{"className":"container-text pb-16 pt-40 md:pb-24 md:pt-48","children":[["$","h1",null,{"className":"type-display","data-reveal":"lines","children":[["$","span",null,{"className":"sr-only","children":"Privacy"}],["$","span",null,{"className":"block","aria-hidden":true,"children":[["$","span","Privacy",{"className":"line","children":["$","span",null,{"children":"Privacy"}]}]]}]]}],"$undefined"]}],["$","section",null,{"className":"container-text pb-32","children":["$","div",null,{"className":"prose-legal","children":[["$","p",null,{"children":"This page explains what we collect when you use this site, why, and what you can ask us to do with it."}],["$","h2",null,{"children":"What we collect"}],["$","ul",null,{"children":[["$","li",null,{"children":"Bookings: your name, phone number, date, time and party size."}],["$","li",null,{"children":"Orders and gift cards: your name, contact details and what you ordered."}],["$","li",null,{"children":"Accounts: your name, email and a securely stored password."}],["$","li",null,{"children":"Basic site statistics, without identifying you."}]]}],["$","h2",null,{"children":"Why we use it"}],["$","p",null,{"children":"Only to run your booking, prepare your order, send your gift card or keep your account working. We do not sell your data or use it for advertising."}],["$","h2",null,{"children":"How long we keep it"}],["$","p",null,{"children":"Booking details for 30 days. Order and account details for as long as your account is open, or as long as tax law requires."}],["$","h2",null,{"children":"Your rights"}],["$","p",null,{"children":["You can ask to see, correct or delete your data at any time. Email ",["$","a",null,{"href":"mailto:hello@kofii.coffee","children":"hello@kofii.coffee"}]," and we reply within 30 days."]}]]}]}]],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"isPartial":"$@5","staleTime":"$6","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$L7",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#CEDE91"}]]}],["$","div",null,{"hidden":true,"children":["$","$L8",null,{"children":["$","$3",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Privacy policy | KOFİİ"}],["$","meta","1",{"name":"description","content":"A small coffee shop in Old Town. Espresso, iced drinks, matcha and cake, each one made to order."}],["$","link","2",{"rel":"icon","href":"/live/kofii/icon.svg?c5922d8bb4bf848e","type":"image/svg+xml","sizes":"any"}],["$","$L9","3",{}]]}]}]}],null]}],"isPartial":"$@a","staleTime":"$6","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Lb",null,{"parallelRouterKey":"children","template":["$","$Lc",null,{}]}]]}],"isPartial":"$@d","staleTime":"$6","varyParams":"$e"}],"isUpgradeableISRFallback":false,"a":"$@f","rootVaryParams":null,"needsRuntimeRequest":"$@10"}
+4:null
+10:true
+6:300
+6:C
+f:0
+a:"$undefined"
+d:"$undefined"
+5:"$undefined"

@@ -1,4 +1,6 @@
 'use client'
+import { Search } from 'lucide-react'
+import { Input } from '@/components/ui/input'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useMemo, useState } from 'react'
@@ -56,7 +58,8 @@ function Recipes() {
           <FilterRow label="Motion">{(Object.keys(motionLevels) as MotionLevel[]).map((m) => <Chip key={m} active={motion === m} onClick={() => setMotion(motion === m ? null : m)}>{motionLevels[m].name}</Chip>)}</FilterRow>
         </div>
         <label className="self-start"><span className="sr-only">Search recipes</span>
-          <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search recipes" className="w-full rounded-full border border-line bg-white px-4 py-2.5 lg:w-72" />
+          <span className="relative block"><Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
+            <Input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search recipes" className="h-11 w-full rounded-full pl-10 lg:w-72" /></span>
         </label>
       </div>
       {list.length === 0 ? (

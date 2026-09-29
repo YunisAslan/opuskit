@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { JetBrains_Mono, Newsreader, Outfit } from 'next/font/google'
 import { Footer, Header } from '@/components/SiteChrome'
+import { Toaster } from '@/components/ui/sonner'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import './globals.css'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit', display: 'swap' })
@@ -19,9 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${outfit.variable} ${newsreader.variable} ${mono.variable}`}>
       <body className="min-h-screen">
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:text-paper">Skip to content</a>
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
+        <TooltipProvider delayDuration={200}>
+          <Header />
+          <main id="main">{children}</main>
+          <Footer />
+          <Toaster position="bottom-center" />
+        </TooltipProvider>
       </body>
     </html>
   )

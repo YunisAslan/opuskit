@@ -100,6 +100,27 @@ export const examples: ExampleProject[] = [
       { label: 'Built with', value: 'Claude Code' },
     ],
   },
+  {
+    slug: 'kofii',
+    title: 'KOFİİ — Coffee, made to order',
+    summary: 'A small coffee shop in Old Town. Espresso, iced drinks, matcha and cake, each one made to order.',
+    mood: ['Light', 'Friendly', 'Functional'],
+    hero: { kind: 'video', src: '/examples/kofii/media/heroVideo.mp4', poster: '/examples/kofii/media/posterImage.jpg' },
+    livePath: '/live/kofii/index.html',
+    choices: [
+      { label: 'Making', value: 'Restaurant' },
+      { label: 'Name', value: 'KOFİİ' },
+      { label: 'Visitors should', value: 'Explore the work' },
+      { label: 'Style', value: 'Scandinavian Minimal' },
+      { label: 'First screen', value: 'Film behind the whole page (own video uploaded)' },
+      { label: 'Movement', value: 'Immersive' },
+      { label: 'Colors', value: 'Celery Room' },
+      { label: 'Lettering', value: 'Grid Discipline' },
+      { label: 'Photos', value: 'Liquid glass carousel (9 own photos uploaded)' },
+      { label: 'Pages', value: 'Home, Menu, Reservations, About, Gallery, Contact, Order Online, Catering & Private Events, Locations, Gift Cards, Privacy Policy, FAQ, Sign In, Sign Up, Terms of Service, Cookie Policy, 404, Accessibility' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+  },
 ]
 
 export const exampleBySlug = Object.fromEntries(examples.map((e) => [e.slug, e])) as Record<string, ExampleProject>

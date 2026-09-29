@@ -1,34 +1,23 @@
 'use client'
-import { Check, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { Check } from 'lucide-react'
+import { useState } from 'react'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { formatPrice, products } from '@/config/pricing'
 import { billing } from '.'
 
 export function CheckoutDialog({ open, onClose, recipeRef, recipeTitle }: { open: boolean; onClose: () => void; recipeRef: string; recipeTitle: string }) {
-  const ref = useRef<HTMLDialogElement>(null)
   const [busy, setBusy] = useState(false)
-  useEffect(() => {
-    const d = ref.current
-    if (!d) return
-    if (open && !d.open) d.showModal()
-    if (!open && d.open) d.close()
-  }, [open])
-
   const buy = async (id: 'recipe' | 'library') => {
     setBusy(true)
     await billing.createCheckout(id, recipeRef)
     setBusy(false)
     onClose()
   }
-
   return (
-    <dialog ref={ref} onClose={onClose} aria-labelledby="checkout-title" className="m-auto w-[min(44rem,calc(100vw-2rem))] rounded-xl bg-paper p-0 text-ink backdrop:bg-ink/50">
-      <div className="p-6 md:p-8">
-        <div className="flex items-start justify-between gap-4">
-          <h2 id="checkout-title" className="display text-3xl">Unlock {recipeTitle}</h2>
-          <button type="button" onClick={onClose} className="-m-2 p-2 text-muted hover:text-ink" aria-label="Close"><X size={18} /></button>
-        </div>
-        <p className="mt-2 text-ink-2">One-time purchase. No subscription.</p>
+    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="gap-0 bg-paper p-6 text-base sm:max-w-2xl md:p-8">
+        <DialogTitle className="display pr-8 text-3xl">Unlock {recipeTitle}</DialogTitle>
+        <DialogDescription className="mt-2 text-ink-2">One-time purchase. No subscription.</DialogDescription>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {products.map((p) => (
             <div key={p.id} className="flex flex-col rounded-lg border border-line bg-white p-5">
@@ -41,7 +30,7 @@ export function CheckoutDialog({ open, onClose, recipeRef, recipeTitle }: { open
           ))}
         </div>
         <p className="mt-5 text-xs text-muted">Test checkout: no payment is taken. Purchases unlock instantly in this browser.</p>
-      </div>
-    </dialog>
+      </DialogContent>
+    </Dialog>
   )
 }

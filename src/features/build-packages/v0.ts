@@ -40,6 +40,7 @@ Visitors come to ${p.hint.toLowerCase()}. They should feel: ${r.creativeDirectio
 - Do: ${r.creativeDirection.do.join('; ')}.
 - Don't: ${r.creativeDirection.avoid.join('; ')}; no shadcn default look, no gradients, no generic SaaS cards.
 - Not the generic AI look: ${r.creativeDirection.genericAvoid.join('; ')}.
+- Controls and forms: shadcn/ui ${r.implementation.ui.components.map((x) => x.slug).join(', ')} — restyled to these colors, fonts and ${r.visualSystem.shape.name.toLowerCase()} shape (buttons ${r.visualSystem.shape.button}, cards ${r.visualSystem.shape.card}). Date fields = Calendar in a Popover; no native select/date inputs.
 - Mobile-first; no horizontal scroll at 390px.
 
 The attached recipe.md contains the full design rationale. Build static layout first; motion comes in a follow-up.`

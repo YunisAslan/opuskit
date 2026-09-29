@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 @theme {
   --color-paper: #F5F0E6;
@@ -20,7 +24,9 @@
 html { background: var(--color-paper); color: var(--color-ink); -webkit-text-size-adjust: 100%; }
 body { font-family: var(--font-sans); background: var(--color-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
 ::selection { background: var(--color-pencil); color: white; }
-:focus-visible { outline: 2px solid var(--color-pencil); outline-offset: 2px; border-radius: 2px; }
+:focus-visible:not([data-slot]) { outline: 2px solid var(--color-pencil); outline-offset: 2px; border-radius: 2px; }
+/* Fields, selects, menus and their options (shadcn/ui, data-slot) show focus with a darker border or highlight — no rings. */
+[data-slot]:focus, [data-slot]:focus-visible { outline: none; box-shadow: none; }
 
 /* Browsers don't give <button> a pointer cursor by default — every clickable native element gets one here. */
 button:not(:disabled), summary, select, label:has(input[type="checkbox"]), label:has(input[type="radio"]), label:has(input[type="file"]) { cursor: pointer; }
@@ -74,4 +80,156 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1; transform: none; }
   .scrub-demo { animation: none !important; }
+}
+
+/* ─── Option demos (components/OptionDemo.tsx): looping schematics of design choices ─── */
+@property --od-x { syntax: '<percentage>'; initial-value: 30%; inherits: false; }
+.od { --od-t: 4s; }
+.od-pill { animation: od-pill var(--od-t) ease-in-out infinite; }
+@keyframes od-pill { 0%, 25% { transform: none; } 35%, 65% { transform: translateY(-160%); } 75%, 100% { transform: none; } }
+.od-scroll { animation: od-scroll var(--od-t) ease-in-out infinite; }
+@keyframes od-scroll { 0%, 25% { transform: none; } 35%, 65% { transform: translateY(40%); } 75%, 100% { transform: none; } }
+.od-menu { animation: od-menu var(--od-t) cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-menu { 0%, 20% { clip-path: inset(0 0 100% 0); } 35%, 80% { clip-path: inset(0); } 95%, 100% { clip-path: inset(0 0 100% 0); } }
+.od-stagger { animation: od-stagger var(--od-t) ease-out infinite; }
+@keyframes od-stagger { 0%, 30% { opacity: 0; transform: translateY(40%); } 42%, 80% { opacity: 1; transform: none; } 95%, 100% { opacity: 0; } }
+.od-drop { animation: od-drop var(--od-t) ease-out infinite; }
+@keyframes od-drop { 0%, 15% { opacity: 0; transform: translateY(-12%); } 30%, 80% { opacity: 1; transform: none; } 95%, 100% { opacity: 0; } }
+.od-dock { animation: od-dock 1.75s ease-in-out infinite; transform-origin: bottom; }
+@keyframes od-dock { 0%, 60%, 100% { transform: none; } 20% { transform: scale(1.5) translateY(-10%); } }
+.od-spy { animation: od-spy var(--od-t) steps(1) infinite; }
+@keyframes od-spy { 0% { transform: none; } 25% { transform: translateY(5cqw); } 50% { transform: translateY(10cqw); } 75% { transform: translateY(15cqw); } }
+.od-press { animation: od-press 2s ease-in-out infinite; }
+@keyframes od-press { 0%, 70%, 100% { transform: none; } 80% { transform: scale(.94); } }
+.od-follow { animation: od-follow var(--od-t) ease-in-out infinite; }
+@keyframes od-follow { 0% { left: 48cqw; top: 6cqw; } 30% { left: 56cqw; top: 16cqw; } 60% { left: 44cqw; top: 28cqw; } 100% { left: 48cqw; top: 6cqw; } }
+.od-magnet { animation: od-magnet var(--od-t) ease-in-out infinite; }
+@keyframes od-magnet { 0%, 20%, 90%, 100% { transform: none; } 45%, 65% { transform: translate(4cqw, 2cqw); } }
+.od-cursor-near { animation: od-cursor-near var(--od-t) ease-in-out infinite; }
+@keyframes od-cursor-near { 0%, 10% { left: 88cqw; top: 56cqw; } 45%, 65% { left: 66cqw; top: 48cqw; } 100% { left: 88cqw; top: 56cqw; } }
+.od-roll { animation: od-roll 2s cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-roll { 0%, 30% { transform: none; } 50%, 80% { transform: translateY(-50%); } 100% { transform: none; } }
+.od-trail { opacity: 0; animation: od-trail 1.75s ease-out infinite; }
+@keyframes od-trail { 0% { opacity: 0; transform: scale(.8); } 15% { opacity: 1; transform: none; } 60% { opacity: 1; } 100% { opacity: 0; transform: scale(.95); } }
+.od-cursor-lr { animation: od-cursor-lr var(--od-t) ease-in-out infinite; }
+@keyframes od-cursor-lr { 0%, 100% { left: 8cqw; } 50% { left: 86cqw; } }
+.od-slide { animation: od-slide 6s cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-slide { 0%, 10% { transform: none; } 45%, 60% { transform: translateX(-110cqw); } 95%, 100% { transform: none; } }
+.od-stack-1 { animation: od-stack-1 var(--od-t) ease-out infinite; }
+.od-stack-2 { animation: od-stack-2 var(--od-t) ease-out infinite; }
+.od-stack-0 { animation: od-stack-0 var(--od-t) ease-out infinite; transform-origin: top; }
+@keyframes od-stack-0 { 0%, 25% { transform: none; } 40%, 90% { transform: scale(.94); filter: brightness(.92); } 100% { transform: none; } }
+@keyframes od-stack-1 { 0%, 15% { transform: translateY(80cqw); } 35%, 90% { transform: none; } 100% { transform: translateY(80cqw); } }
+@keyframes od-stack-2 { 0%, 45% { transform: translateY(80cqw); } 65%, 90% { transform: none; } 100% { transform: translateY(80cqw); } }
+.od-marquee-fast { animation: od-marquee 5s linear infinite; }
+.od-marquee-rev { animation: od-marquee 7s linear infinite reverse; }
+@keyframes od-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.od-ink { animation: od-ink-c 4s ease infinite both; }
+@keyframes od-ink-c { 0%, 5% { opacity: .35; } 15%, 85% { opacity: 1; } 100% { opacity: .35; } }
+.od-curtain { animation: od-curtain var(--od-t) cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-curtain { 0%, 10% { clip-path: inset(100% 0 0 0); } 40%, 85% { clip-path: inset(0); } 100% { clip-path: inset(100% 0 0 0); } }
+.od-settle { animation: od-settle var(--od-t) ease-out infinite; }
+@keyframes od-settle { 0%, 10% { transform: scale(1.18); } 50%, 100% { transform: none; } }
+.od-tilt { animation: od-tilt var(--od-t) ease-in-out infinite; }
+@keyframes od-tilt { 0%, 100% { transform: perspective(60cqw) rotateY(-10deg) rotateX(6deg); } 50% { transform: perspective(60cqw) rotateY(10deg) rotateX(-4deg); } }
+.od-glare { background: linear-gradient(115deg, transparent 35%, rgb(255 255 255 / .35) 50%, transparent 65%); background-size: 250% 100%; animation: od-glare var(--od-t) ease-in-out infinite; }
+@keyframes od-glare { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0 0; } }
+.od-cursor-small { animation: od-cursor-small var(--od-t) ease-in-out infinite; }
+@keyframes od-cursor-small { 0%, 100% { transform: translate(-6cqw, 4cqw); } 50% { transform: translate(6cqw, -4cqw); } }
+.od-zoom { animation: od-zoom var(--od-t) cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-zoom { 0%, 10% { clip-path: inset(28% 32% round 2cqw); } 55%, 90% { clip-path: inset(0 round 0); } 100% { clip-path: inset(28% 32% round 2cqw); } }
+.od-late { animation: od-late var(--od-t) ease infinite; }
+@keyframes od-late { 0%, 50% { opacity: 0; transform: translateY(20%); } 65%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.od-lift { animation: od-lift var(--od-t) cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-lift { 0%, 20% { transform: none; } 50%, 80% { transform: translateY(-58%); } 100% { transform: none; } }
+.od-fly { opacity: 0; animation: od-fly 2.5s cubic-bezier(.5,0,.3,1) infinite; }
+@keyframes od-fly { 0%, 20% { opacity: 0; transform: none; } 25% { opacity: 1; } 70% { opacity: 1; transform: translate(56cqw, -16cqw) scale(.3); } 80%, 100% { opacity: 0; transform: translate(56cqw, -16cqw) scale(.2); } }
+.od-bump { animation: od-bump 2.5s ease-out infinite; }
+@keyframes od-bump { 0%, 70%, 100% { transform: none; } 78% { transform: scale(1.35); } }
+.od-spot { background: radial-gradient(circle at var(--od-x) 55%, transparent 10cqw, rgb(0 0 0 / .94) 20cqw); animation: od-spot var(--od-t) ease-in-out infinite; }
+@keyframes od-spot { 0%, 100% { --od-x: 20%; } 50% { --od-x: 80%; } }
+.od-tick { animation: od-tick 3.5s cubic-bezier(.2,.7,.2,1) infinite; }
+@keyframes od-tick { 0%, 8% { transform: none; } 18% { transform: translateY(-25%); } 28% { transform: translateY(-50%); } 40%, 92% { transform: translateY(-75%); } 100% { transform: none; } }
+.od-glow { left: -10cqw; top: -10cqw; animation: od-glow var(--od-t) ease-in-out infinite; }
+@keyframes od-glow { 0%, 100% { transform: translate(-10cqw, 0); } 50% { transform: translate(30cqw, 4cqw); } }
+.od-words { animation: od-words 6s cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-words { 0%, 25% { transform: none; } 33%, 58% { transform: translateY(-25%); } 66%, 91% { transform: translateY(-50%); } 100% { transform: translateY(-75%); } }
+.od-press-letter { animation: od-press-letter 2.4s ease-in-out infinite; }
+@keyframes od-press-letter { 0%, 100% { transform: none; } 25% { transform: scaleY(1.25) scaleX(1.15); } }
+.od-lens { animation: od-lens var(--od-t) ease-in-out infinite; }
+@keyframes od-lens { 0%, 100% { left: 24cqw; } 50% { left: 56cqw; } }
+.od-lens-img { animation: od-lens-img var(--od-t) ease-in-out infinite; top: -20cqw; }
+@keyframes od-lens-img { 0%, 100% { left: -10cqw; } 50% { left: -90cqw; } }
+.od-compare { animation: od-compare var(--od-t) ease-in-out infinite; }
+@keyframes od-compare { 0%, 100% { width: 25%; } 50% { width: 75%; } }
+.od-device { animation: od-device var(--od-t) cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-device { 0%, 10% { transform: rotateX(45deg) scale(.9); } 50%, 90% { transform: none; } 100% { transform: rotateX(45deg) scale(.9); } }
+.od-draw { animation: od-draw var(--od-t) linear infinite; }
+@keyframes od-draw { 0% { transform: scaleY(0); } 80%, 100% { transform: scaleY(1); } }
+.od-dot { animation: od-dot var(--od-t) steps(1) infinite; }
+@keyframes od-dot { 0% { background: transparent; } 20%, 100% { background: currentColor; } }
+.od-expand { animation: od-expand var(--od-t) cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-expand { 0%, 15% { left: 8cqw; top: 4cqw; width: 40cqw; height: 24cqw; } 45%, 80% { left: 4cqw; top: 3cqw; width: 92cqw; height: 56cqw; } 100% { left: 8cqw; top: 4cqw; width: 40cqw; height: 24cqw; } }
+.od-swap { animation: od-swap var(--od-t) steps(1) infinite; }
+@keyframes od-swap { 0%, 50% { opacity: 0; } 51%, 100% { opacity: 1; } }
+.od-px { opacity: 0; animation: od-px var(--od-t) linear infinite; }
+@keyframes od-px { 0%, 38% { opacity: 0; } 46%, 54% { opacity: 1; } 62%, 100% { opacity: 0; } }
+.od-kenburns { animation: od-kenburns 8s ease-in-out infinite alternate; }
+@keyframes od-kenburns { from { transform: scale(1); } to { transform: scale(1.12) translate(-2%, -1%); } }
+.od-pop { animation: od-pop var(--od-t) ease-out infinite; }
+@keyframes od-pop { 0%, 5% { opacity: 0; transform: translateY(8%); } 20%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.od-carousel { animation: od-carousel 6s cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-carousel { 0%, 20% { transform: none; } 30%, 50% { transform: translateX(-43cqw); } 60%, 80% { transform: translateX(-86cqw); } 95%, 100% { transform: none; } }
+.od-rise-grid { animation: od-rise-grid 10s linear infinite; }
+@keyframes od-rise-grid { from { transform: none; } to { transform: translateY(-50%); } }
+.od-deck-0 { animation: od-deck 4.5s ease-in-out infinite; transform: rotate(-6deg); }
+.od-deck-1 { animation: od-deck 4.5s ease-in-out -1.5s infinite; transform: rotate(4deg); }
+.od-deck-2 { animation: od-deck 4.5s ease-in-out -3s infinite; }
+@keyframes od-deck { 0%, 25% { transform: rotate(-4deg); z-index: 3; } 33% { transform: translateX(45cqw) rotate(12deg); z-index: 3; } 40% { transform: translateX(0) rotate(3deg); z-index: 1; } 60% { transform: rotate(6deg); z-index: 1; } 70%, 100% { transform: rotate(-4deg); z-index: 2; } }
+.od-pan { animation: od-pan 12s ease-in-out infinite alternate; }
+@keyframes od-pan { from { transform: none; } to { transform: translate(-30cqw, -25cqw); } }
+.od-ring { animation: od-ring 12s linear infinite; }
+@keyframes od-ring { from { transform: rotateX(-8deg) rotateY(0); } to { transform: rotateX(-8deg) rotateY(-360deg); } }
+.od-dome { animation: od-dome 8s ease-in-out infinite alternate; }
+@keyframes od-dome { from { transform: rotateY(-8deg) rotateX(6deg); } to { transform: rotateY(8deg) rotateX(-4deg); } }
+@media (prefers-reduced-motion: reduce) { .od *, .od *::after { animation: none !important; } .od-tick { transform: translateY(-75%); } }
+
+/* ─── shadcn/ui theme: its components read these, mapped onto OpusKit's own palette ─── */
+@theme inline {
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  /* --color-muted stays OpusKit's muted *text* colour; shadcn "muted" surfaces are rewritten to bg-secondary in components/ui. */
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  --background: #F5F0E6; --foreground: #151413;
+  --card: #FFFFFF; --card-foreground: #151413; --popover: #FFFFFF; --popover-foreground: #151413;
+  --primary: #151413; --primary-foreground: #F5F0E6; --secondary: #ECE6D9; --secondary-foreground: #151413;
+  --muted-foreground: #6B665C; --accent: #DCE1FA; --accent-foreground: #151413;
+  --destructive: #B42318; --border: #DCD5C7; --input: #CFC6B4; --ring: #2E48D6; --radius: 0.625rem;
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  button:not(:disabled), [role="button"]:not(:disabled) { cursor: pointer; }
 }

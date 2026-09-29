@@ -1,6 +1,6 @@
 import type {
   ComponentId, ComponentPattern, HeroId, HeroPattern, ImagePresentation, ImagePresentationId, InspirationSource, LeadId, MediaPattern, MotionPattern, PageType, PageTypeId,
-  SectionId, SectionPattern, SignaturePattern,
+  NavStyle, NavStyleId, SectionId, SectionPattern, ShapeId, ShapeStyle, SignaturePattern,
 } from '@/types/domain'
 
 export const heroes: Record<HeroId, HeroPattern> = {
@@ -519,6 +519,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Within a ~120px radius, translate the button by 30% of the pointer offset (label by 15% for depth), eased back with a spring on leave. transform only.',
     mobile: 'Off on touch; a short press-scale (0.97) instead.',
     reducedMotion: 'Static button with the normal hover state.',
+    components: [{ name: 'React Bits — Magnet', url: 'https://reactbits.dev/animations/magnet' }],
   },
   {
     id: 'rolling-links', name: 'Links that roll on hover', sections: ['navbar', 'footer'],
@@ -535,6 +536,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Pool of 8–12 preloaded images; spawn the next one every ~80px of pointer travel at the pointer position, scale 0.8→1 and fade out over 900ms; recycle nodes, never create new ones.',
     mobile: 'Replace with a slow auto-playing crossfade of the same images.',
     reducedMotion: 'A static collage of 3 images.',
+    components: [{ name: 'Componentry — Image Trail', url: 'https://componentry.dev/docs/components/image-trail' }, { name: 'Componentry — Pixel Image Trail', url: 'https://componentry.dev/docs/components/pixel-image-trail' }],
   },
   {
     id: 'horizontal-gallery', name: 'Sideways scrolling gallery', sections: ['gallery', 'lookbook', 'featured-work', 'collection'],
@@ -543,6 +545,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Pin the section; GSAP ScrollTrigger maps vertical scroll to translateX of the track (scrub: 1, end = track width − viewport). Images lazy-load one ahead.',
     mobile: 'Native horizontal swipe with scroll-snap instead of pinning.',
     reducedMotion: 'Plain horizontal scroll-snap row.',
+    components: [{ name: 'Aceternity — Apple Cards Carousel', url: 'https://ui.aceternity.com/components/apple-cards-carousel' }],
   },
   {
     id: 'stacking-cards', name: 'Cards that stack as you scroll', sections: ['process', 'services', 'feature-grid', 'how-it-works'],
@@ -551,6 +554,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Cards are position: sticky with increasing top offsets; as the next card arrives, scale the previous one to 0.94 and dim it via a scroll-linked timeline (or CSS animation-timeline: view()).',
     mobile: 'Same effect with smaller offsets; drop the scale if it stutters.',
     reducedMotion: 'Normal vertical list of cards.',
+    components: [{ name: 'React Bits — Scroll Stack', url: 'https://reactbits.dev/components/scroll-stack' }, { name: 'Componentry — Sticky Scroll Cards', url: 'https://componentry.dev/docs/components/sticky-scroll-cards' }],
   },
   {
     id: 'velocity-marquee', name: 'Ribbon that reacts to scrolling', sections: ['clients', 'manifesto'],
@@ -559,6 +563,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Duplicate the content for a seamless loop; base speed ~40px/s; add scroll velocity (from Lenis or ScrollTrigger getVelocity) and flip direction with scroll direction; transform only.',
     mobile: 'Constant slow drift, no velocity coupling.',
     reducedMotion: 'Static row, wrapped.',
+    components: [{ name: 'Magic UI — Scroll Based Velocity', url: 'https://magicui.design/docs/components/scroll-based-velocity' }, { name: 'React Bits — Scroll Velocity', url: 'https://reactbits.dev/text-animations/scroll-velocity' }],
   },
   {
     id: 'reading-highlight', name: 'Words that light up as you read', sections: ['manifesto', 'intro', 'about', 'editorial-story'],
@@ -567,6 +572,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Split the paragraph into words; scroll-linked timeline over the section moves each word from muted to text colour in sequence (CSS animation-timeline: view() or GSAP scrub).',
     mobile: 'Same, with a shorter scroll range.',
     reducedMotion: 'Text shown at full colour.',
+    components: [{ name: 'Magic UI — Text Reveal', url: 'https://magicui.design/docs/components/text-reveal' }, { name: 'React Bits — Scroll Reveal', url: 'https://reactbits.dev/text-animations/scroll-reveal' }],
   },
   {
     id: 'curtain-reveal', name: 'Photos revealed like a curtain', sections: ['gallery', 'lookbook', 'featured-work', 'editorial-story', 'about'],
@@ -583,6 +589,7 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'Map pointer position inside the card to rotateX/rotateY (max 6°) with perspective 800px; a radial-gradient highlight follows the pointer at 12% opacity; ease back on leave.',
     mobile: 'No tilt; a subtle scale on press.',
     reducedMotion: 'Flat cards with the normal hover.',
+    components: [{ name: 'React Bits — Tilted Card', url: 'https://reactbits.dev/components/tilted-card' }, { name: 'Aceternity — 3D Card Effect', url: 'https://ui.aceternity.com/components/3d-card-effect' }],
   },
   {
     id: 'zoom-into-image', name: 'Scroll into a full-screen image', sections: ['editorial-story', 'product-highlight', 'intro'],
@@ -615,5 +622,174 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'A full-screen overlay with a radial-gradient mask centred on the pointer (radius ~22vmin), lerped for smoothness; content below stays in the DOM for accessibility.',
     mobile: 'The light slowly drifts on its own; tap moves it.',
     reducedMotion: 'Image shown fully lit.',
+    components: [{ name: 'Aceternity — Following Pointer', url: 'https://ui.aceternity.com/components/following-pointer' }],
+  },
+  {
+    id: 'number-ticker', name: 'Numbers that count up', sections: ['intro', 'about', 'product-highlight', 'feature-grid', 'clients'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['saas', 'product', 'agency', 'technical', 'bold', 'news', 'editorial', 'bento'],
+    experience: 'Key figures (customers, years, speed) roll up from zero the moment they come into view — real numbers become a small event.',
+    implementation: 'Tabular figures in a fixed-width box so nothing shifts; spring from 0 to the value over ~1.2s once, on first view (IntersectionObserver).',
+    mobile: 'Same, 2 figures per row.', reducedMotion: 'Final numbers shown immediately.',
+    components: [{ name: 'Magic UI — Number Ticker', url: 'https://magicui.design/docs/components/number-ticker' }, { name: 'React Bits — Counter', url: 'https://reactbits.dev/components/counter' }],
+  },
+  {
+    id: 'glow-cards', name: 'Cards that glow under the cursor', sections: ['feature-grid', 'services', 'pricing', 'how-it-works'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['saas', 'product', 'futuristic', 'technical', 'bento', 'digital', 'y2k'],
+    experience: 'A soft light follows the pointer across feature cards and their borders glow where it passes — the grid feels responsive and alive.',
+    implementation: 'One pointermove on the grid sets --x/--y per card; a radial-gradient (accent at 15%) on the card and its 1px border uses them; pure CSS paint, no layout.',
+    mobile: 'Static subtle highlight on the first card; none on the rest.', reducedMotion: 'Plain cards.',
+    components: [{ name: 'React Bits — Spotlight Card', url: 'https://reactbits.dev/components/spotlight-card' }, { name: 'Magic UI — Magic Card', url: 'https://magicui.design/docs/components/magic-card' }, { name: 'Aceternity — Glowing Effect', url: 'https://ui.aceternity.com/components/glowing-effect' }],
+  },
+  {
+    id: 'word-rotate', name: 'Headline with a changing word', sections: ['hero', 'intro'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['saas', 'agency', 'personal-brand', 'playful', 'bold', 'pop', 'product'],
+    experience: 'One word in the main headline changes every few seconds (“for cafés / for studios / for shops”) — one line says many things.',
+    implementation: 'Fixed-width slot sized to the longest word; words slide up out and in (400ms) every 2.5s; the word keeps the headline’s exact style — no colour or italic change.',
+    mobile: 'Same; keep words short so the line never re-wraps.', reducedMotion: 'Show the first word only.',
+    components: [{ name: 'Magic UI — Word Rotate', url: 'https://magicui.design/docs/components/word-rotate' }, { name: 'Aceternity — Flip Words', url: 'https://ui.aceternity.com/components/flip-words' }],
+  },
+  {
+    id: 'text-pressure', name: 'Letters that react to the cursor', sections: ['hero', 'manifesto', 'footer'],
+    levels: ['dynamic', 'immersive'], fits: ['experimental', 'typography', 'type', 'bold', 'art', 'playful', 'experiment', 'studio'],
+    experience: 'The big headline letters grow bolder or wider as the cursor comes near them, like the words are breathing.',
+    implementation: 'Split into letters; per letter, distance to pointer maps to font-variation-settings (wght/wdth) of the recipe’s display face — only if it is a variable font; otherwise use a small scale.',
+    mobile: 'Letters slowly pulse in weight once on load.', reducedMotion: 'Static headline.',
+    components: [{ name: 'React Bits — Variable Proximity', url: 'https://reactbits.dev/text-animations/variable-proximity' }, { name: 'React Bits — Text Pressure', url: 'https://reactbits.dev/text-animations/text-pressure' }],
+  },
+  {
+    id: 'product-lens', name: 'Zoom lens on product photos', sections: ['product-highlight', 'product-grid', 'collection'],
+    levels: ['still', 'subtle', 'dynamic', 'immersive'], fits: ['ecommerce', 'product', 'fashion', 'luxury', 'craft'],
+    experience: 'Hovering a product photo shows a round magnified lens of the fabric, stitching or finish — detail you could only get in a shop.',
+    implementation: 'A circular overlay (160px) showing the same image at 2.5× with background-position tied to the pointer; load the 2400px source only on first hover.',
+    mobile: 'Tap opens the photo full screen with pinch-zoom.', reducedMotion: 'Unchanged (no animation involved).',
+    components: [{ name: 'Aceternity — Lens', url: 'https://ui.aceternity.com/components/lens' }, { name: 'Magic UI — Lens', url: 'https://magicui.design/docs/components/lens' }],
+  },
+  {
+    id: 'before-after', name: 'Drag to compare before and after', sections: ['case-study', 'product-highlight', 'editorial-story', 'featured-work'],
+    levels: ['still', 'subtle', 'dynamic', 'immersive'], fits: ['agency', 'studio', 'portfolio', 'product', 'saas'],
+    experience: 'Two images sit on top of each other; dragging a handle across reveals the before and the after — the result explains itself.',
+    implementation: 'clip-path: inset(0 calc(100% - var(--pos)) 0 0) on the top image; pointer and keyboard (arrow keys) move --pos; role="slider" with aria-valuenow.',
+    mobile: 'Same, drag with a finger; a larger handle (44px).', reducedMotion: 'Unchanged (user-driven).',
+    components: [{ name: 'Aceternity — Compare', url: 'https://ui.aceternity.com/components/compare' }],
+  },
+  {
+    id: 'scroll-device', name: 'Product rising out of a screen', sections: ['product-highlight', 'how-it-works', 'feature-grid'],
+    levels: ['dynamic', 'immersive'], fits: ['saas', 'product', 'technical', 'futuristic', 'bento'],
+    experience: 'A laptop or phone tilts up flat as you scroll, and the product screen inside it comes to life — a demo without a video.',
+    implementation: 'Scrub rotateX 20° → 0 and scale 0.9 → 1 on a device frame over ~120vh; the screenshot inside is a real image (or short loop) of the product.',
+    mobile: 'Phone frame instead of laptop; shorter scroll.', reducedMotion: 'Flat device frame, no tilt.',
+    components: [{ name: 'Aceternity — Container Scroll Animation', url: 'https://ui.aceternity.com/components/container-scroll-animation' }, { name: 'Aceternity — Macbook Scroll', url: 'https://ui.aceternity.com/components/macbook-scroll' }, { name: 'Magic UI — Safari', url: 'https://magicui.design/docs/components/safari' }],
+  },
+  {
+    id: 'timeline-line', name: 'A line that draws through your story', sections: ['about', 'process', 'how-it-works', 'editorial-story'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['studio', 'agency', 'heritage', 'editorial', 'personal-brand', 'restaurant', 'craft'],
+    experience: 'Milestones sit along a vertical line that fills in as you scroll, so history or process reads as one journey.',
+    implementation: 'A 1–2px track with a filled bar whose scaleY follows section scroll progress; each milestone’s dot lights up as the bar passes it.',
+    mobile: 'Line on the left edge, milestones stacked to its right.', reducedMotion: 'Full line shown.',
+    components: [{ name: 'Aceternity — Timeline', url: 'https://ui.aceternity.com/components/timeline' }],
+  },
+  {
+    id: 'expandable-cards', name: 'Cards that open in place', sections: ['services', 'featured-work', 'feature-grid', 'menu'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['agency', 'studio', 'restaurant', 'saas', 'portfolio', 'hospitality'],
+    experience: 'Tapping a card smoothly grows it into the full detail view, and closing shrinks it back to where it was — no page jump.',
+    implementation: 'Shared-layout animation (Motion layoutId) from card to an accessible dialog; focus moves into it, Esc closes; image and title share their transition.',
+    mobile: 'Opens as a full-screen sheet.', reducedMotion: 'Dialog opens without the morph.',
+    components: [{ name: 'Aceternity — Expandable Card', url: 'https://ui.aceternity.com/components/expandable-card' }],
+  },
+  {
+    id: 'pixel-transition', name: 'Photos that dissolve in pixels', sections: ['featured-work', 'gallery', 'collection'],
+    levels: ['dynamic', 'immersive'], fits: ['experimental', 'y2k', 'pop', 'futuristic', 'raw', 'playful', 'digital'],
+    experience: 'Hovering a work thumbnail breaks it into pixels that rebuild as a second image — digital and a little retro.',
+    implementation: 'A grid of blocks over the image fades in with random delays, swaps the image, then fades out (≈500ms total); canvas or CSS grid of ~12×12.',
+    mobile: 'Tap swaps the image with a simple crossfade.', reducedMotion: 'Crossfade only.',
+    components: [{ name: 'React Bits — Pixel Transition', url: 'https://reactbits.dev/animations/pixel-transition' }],
   },
 ]
+
+// Menu styles. The engine recommends one from the purpose and direction; the user can pick any.
+export const navStyles: Record<NavStyleId, NavStyle> = {
+  'classic-bar': { id: 'classic-bar', name: 'Classic bar', line: 'Logo on the left, links on the right, always at the top.',
+    composition: 'Full-width bar: logo left, 4–6 links and the primary action right, on the page ground with a hairline bottom border.',
+    behavior: 'Sticky; gains a surface background after 40px of scroll.', responsive: 'Mobile: logo + menu button; opens a simple full-width sheet.', components: [] },
+  'floating-pill': { id: 'floating-pill', name: 'Floating pill', line: 'A rounded bar that floats above the page and tucks away while you read.', trending: true,
+    composition: 'A centred, rounded capsule (max 720px) floating 16px from the top: logo, links, one action; translucent surface with backdrop blur.',
+    behavior: 'Hides on scroll down, returns on scroll up; the active link has a sliding highlight.', responsive: 'Mobile: capsule with logo + menu button; menu expands inside the capsule.',
+    components: [{ name: 'React Bits — Pill Nav', url: 'https://reactbits.dev/components/pill-nav' }, { name: 'Aceternity — Floating Navbar', url: 'https://ui.aceternity.com/components/floating-navbar' }, { name: 'Aceternity — Resizable Navbar', url: 'https://ui.aceternity.com/components/resizable-navbar' }] },
+  'fullscreen-menu': { id: 'fullscreen-menu', name: 'Full-screen menu', line: 'Just the logo and “Menu” — it opens into huge links over the whole screen.', trending: true,
+    composition: 'Minimal bar: logo and a “Menu” label only. The menu is a full-viewport panel with display-size links, one per line, plus contact details.',
+    behavior: 'Panel slides or wipes in; links stagger in (40ms); hovering a link can reveal an image or run a flowing marquee.', responsive: 'Same on every screen — it is already touch-first.',
+    components: [{ name: 'React Bits — Staggered Menu', url: 'https://reactbits.dev/components/staggered-menu' }, { name: 'React Bits — Flowing Menu', url: 'https://reactbits.dev/components/flowing-menu' }] },
+  'centered-logo': { id: 'centered-logo', name: 'Centered logo', line: 'Logo in the middle, links split on either side — like a boutique.',
+    composition: 'Symmetric bar: links left, logo centred, secondary links and the action right; generous height at the top that shrinks after scrolling.',
+    behavior: 'Shrinks to a compact bar after 80px.', responsive: 'Mobile: centred logo, menu button left, action right.', components: [] },
+  'card-menu': { id: 'card-menu', name: 'Menu with cards', line: 'A compact bar that opens into image cards for each part of the site.',
+    composition: 'Compact bar; opening it reveals 3–4 cards below, each a section of the site with a photo, title and 2–3 links.',
+    behavior: 'Cards drop in with a short stagger; the bar grows to hold them.', responsive: 'Mobile: cards stack vertically in a sheet.',
+    components: [{ name: 'React Bits — Card Nav', url: 'https://reactbits.dev/components/card-nav' }, { name: 'React Bits — Bubble Menu', url: 'https://reactbits.dev/components/bubble-menu' }] },
+  'bottom-dock': { id: 'bottom-dock', name: 'Floating dock', line: 'An app-style dock at the bottom of the screen with icons that grow as you pass.', trending: true,
+    composition: 'A floating dock centred 20px from the bottom: 4–6 labelled icons for the main pages plus the action; the logo sits alone at the top-left.',
+    behavior: 'Icons magnify under the pointer (macOS-style); a tooltip shows the page name.', responsive: 'Mobile: a fixed bottom tab bar with the same icons — thumb-friendly.',
+    components: [{ name: 'Magic UI — Dock', url: 'https://magicui.design/docs/components/dock' }, { name: 'Aceternity — Floating Dock', url: 'https://ui.aceternity.com/components/floating-dock' }, { name: 'React Bits — Dock', url: 'https://reactbits.dev/components/dock' }] },
+  'side-index': { id: 'side-index', name: 'Side index', line: 'A quiet list of pages fixed down the left side, like a book’s contents.',
+    composition: 'Fixed left column (≈220px): logo, then the page list in the utility face, the current page marked; content fills the rest.',
+    behavior: 'Current section updates while scrolling (scroll-spy).', responsive: 'Mobile: collapses to a top bar with a menu button.', components: [] },
+}
+
+// Corner, border and shadow language. Values are CSS and become tokens.
+export const shapeStyles: Record<ShapeId, ShapeStyle> = {
+  sharp: { id: 'sharp', name: 'Sharp', line: 'Square corners, crisp lines — precise and editorial.', button: '0px', card: '0px', media: '0px', border: '1px', shadow: 'none', rule: 'No rounded corners anywhere; structure comes from lines and space.' },
+  soft: { id: 'soft', name: 'Soft', line: 'Gently rounded corners — calm and friendly.', button: '8px', card: '12px', media: '12px', border: '1px', shadow: 'none', rule: 'Small, consistent radii; never mix sharp and rounded.' },
+  round: { id: 'round', name: 'Round', line: 'Generous curves, like a modern app.', button: '14px', card: '24px', media: '20px', border: '1px', shadow: '0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.06)', rule: 'Large radii on cards and media; nested elements use radius − padding.' },
+  pill: { id: 'pill', name: 'Pill', line: 'Fully round buttons and bubbly cards — playful.', button: '999px', card: '32px', media: '28px', border: '1px', shadow: 'none', rule: 'Buttons, tags and inputs are full pills; cards and media are very round.' },
+  brutal: { id: 'brutal', name: 'Bold outline', line: 'Thick black borders and hard offset shadows — loud and graphic.', button: '0px', card: '0px', media: '0px', border: '2px', shadow: '4px 4px 0 var(--color-text)', rule: '2px ink borders on every module; hard offset shadow that collapses on press; no blur shadows.' },
+  outline: { id: 'outline', name: 'Hairline', line: 'Thin outlines and no fills — light and airy.', button: '4px', card: '6px', media: '4px', border: '1px', shadow: 'none', rule: 'Buttons and cards are outlined, not filled (except the one primary action); 1px borders in the border token.' },
+}
+
+// Controls and forms are built from shadcn/ui (Radix primitives: keyboard, focus, screen readers handled) and restyled
+// to the recipe's tokens. Keyed by what a section or page needs; the engine unions them for a recipe.
+// Names are shadcn registry slugs (`npx shadcn@latest add <slug>`).
+export const UI_ALWAYS = ['button', 'sheet', 'sonner', 'tooltip'] as const
+export const uiBySection: Partial<Record<SectionId, string[]>> = {
+  reservation: ['calendar', 'popover', 'select', 'input', 'textarea', 'form', 'label'],
+  'contact-cta': ['input', 'textarea', 'select', 'checkbox', 'form', 'label'],
+  pricing: ['tabs', 'switch', 'card', 'badge'],
+  faq: ['accordion'],
+  'product-grid': ['select', 'toggle-group', 'card', 'badge'],
+  collection: ['toggle-group', 'badge'],
+  'product-highlight': ['radio-group', 'select', 'badge'],
+  menu: ['tabs'],
+  gallery: ['dialog', 'carousel'],
+  lookbook: ['carousel'],
+  'feature-grid': ['card', 'tabs'],
+  journal: ['badge', 'pagination'],
+  navbar: ['navigation-menu', 'dropdown-menu'],
+}
+export const uiByPage: Partial<Record<PageTypeId, string[]>> = {
+  reservations: ['calendar', 'popover', 'select', 'input', 'form', 'label'],
+  contact: ['input', 'textarea', 'select', 'checkbox', 'form', 'label'],
+  cart: ['table', 'separator', 'input'],
+  checkout: ['input', 'select', 'radio-group', 'checkbox', 'separator', 'form', 'label'],
+  'product-detail': ['radio-group', 'select', 'accordion', 'carousel', 'breadcrumb'],
+  shop: ['select', 'toggle-group', 'slider', 'pagination'],
+  account: ['tabs', 'avatar', 'table', 'input', 'form'],
+  'sign-in': ['input', 'checkbox', 'form', 'label'],
+  'sign-up': ['input', 'input-otp', 'checkbox', 'form', 'label'],
+  newsletter: ['input', 'form'],
+  pricing: ['tabs', 'switch', 'card', 'table'],
+  faq: ['accordion', 'command'],
+  comparison: ['table', 'badge'],
+  'gift-cards': ['radio-group', 'input', 'form'],
+  catering: ['calendar', 'popover', 'select', 'textarea', 'form'],
+  'order-online': ['tabs', 'sheet', 'radio-group'],
+  locations: ['tabs', 'card'],
+  'size-guide': ['table', 'tabs'],
+  careers: ['accordion', 'badge'],
+}
+/** Plain-language names for the result page and prompts. */
+export const uiNames: Record<string, string> = {
+  button: 'Button', sheet: 'Slide-in panel', sonner: 'Toast messages', tooltip: 'Tooltip', calendar: 'Calendar', popover: 'Popover',
+  select: 'Select', input: 'Text field', textarea: 'Message field', form: 'Form with validation', label: 'Label', checkbox: 'Checkbox',
+  tabs: 'Tabs', switch: 'Switch', card: 'Card', badge: 'Badge', accordion: 'Accordion', 'toggle-group': 'Filter chips', 'radio-group': 'Option picker',
+  dialog: 'Dialog', carousel: 'Carousel', pagination: 'Pagination', 'navigation-menu': 'Navigation menu', 'dropdown-menu': 'Dropdown menu',
+  table: 'Table', separator: 'Separator', breadcrumb: 'Breadcrumb', slider: 'Range slider', avatar: 'Avatar', 'input-otp': 'One-time code', command: 'Search box',
+}

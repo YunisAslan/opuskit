@@ -264,6 +264,9 @@ export type MotionPattern = {
 }
 
 /** A memorable interactive component, placed on one section. `fits`: purposes and direction tags/families it suits best. */
+/** A ready-made component to start from — adapt it to the recipe's tokens and type, never ship its demo styling. */
+export type LibraryComponent = { name: string; url: string }
+
 export type SignaturePattern = {
   id: string
   name: string
@@ -274,7 +277,15 @@ export type SignaturePattern = {
   implementation: string
   mobile: string
   reducedMotion: string
+  components?: LibraryComponent[]
 }
+
+export type NavStyleId = 'classic-bar' | 'floating-pill' | 'fullscreen-menu' | 'centered-logo' | 'card-menu' | 'bottom-dock' | 'side-index'
+export type NavStyle = { id: NavStyleId; name: string; line: string; trending?: boolean; composition: string; behavior: string; responsive: string; components: LibraryComponent[] }
+
+export type ShapeId = 'sharp' | 'soft' | 'round' | 'pill' | 'brutal' | 'outline'
+/** Corner, border and shadow language for buttons, cards, inputs and media frames. Values are CSS. */
+export type ShapeStyle = { id: ShapeId; name: string; line: string; button: string; card: string; media: string; border: string; shadow: string; rule: string }
 
 /** A signature pattern resolved onto a real section of this recipe. */
 export type SignatureMoment = Omit<SignaturePattern, 'sections' | 'levels' | 'fits'> & { where: string }
@@ -364,6 +375,13 @@ export type RecipeSpec = {
   assets: AssetId[]
   uploads?: UploadedAsset[]
   mediaPlan?: MediaPlan
+  /** How an uploaded non-16:9 video is shown. Default 'wide': 16:9 on desktop, original on phones. 'original' only when the owner asks for its own shape. */
+  videoFrame?: 'wide' | 'original'
+  /** Design choices the user made; when absent the engine recommends one from the direction and purpose. */
+  nav?: NavStyleId
+  shape?: ShapeId
+  /** Signature moment ids the user picked (max 4). Absent = the engine's own pick. */
+  signatures?: string[]
   imagePresentation?: ImagePresentationId
   pages: PageSpec[]
   target: BuildTargetId
@@ -398,6 +416,7 @@ export type VisualSystem = {
   typography: TypographyPairing
   spacing: { base: string; scale: string[]; sectionSpacing: string; note: string }
   grid: { container: string; columns: string; gutters: string }
+  shape: ShapeStyle
 }
 
 export type LayoutSystem = Omit<LayoutPattern, 'tags' | 'compatibleWith' | 'incompatibleWith' | 'line'>
@@ -407,7 +426,8 @@ export type PageSection = SectionPattern & { note?: string }
 export type PageBlueprint = { id: string; type: PageTypeId; label: string; purpose: string; sections: PageSection[] }
 
 /** `storytelling`: for scroll-controlled film heroes, how video and text become one scroll timeline. */
-export type MediaRecipe = MediaPattern & { hero: HeroPattern; storytelling?: string[]; imagery?: ImageryPlan }
+/** `framing`: how the owner's own video is shaped per screen, when its shape isn't already 16:9. */
+export type MediaRecipe = MediaPattern & { hero: HeroPattern; storytelling?: string[]; imagery?: ImageryPlan; framing?: string }
 
 export type MotionRecipe = { level: MotionLevelInfo; principle: string; patterns: MotionPattern[]; libraries: string[] }
 
@@ -447,7 +467,13 @@ export type ImplementationGuide = {
   responsive: string[]
   accessibility: string[]
   performance: string[]
+  /** Ready-made accessible UI primitives for every control and form on this site, themed to the recipe. */
+  ui: UiKit
 }
+
+/** One shadcn/ui component this site needs, and the places it is used. */
+export type UiComponent = { name: string; slug: string; where: string[] }
+export type UiKit = { library: string; url: string; components: UiComponent[]; install: string; theme: string; rules: string[] }
 
 export type WhyItWorks = Record<'direction' | 'typography' | 'palette' | 'layout' | 'motion' | 'assets', string>
 
@@ -469,7 +495,7 @@ export type UniversalRecipe = {
   designPrinciples: string[]
   visualSystem: VisualSystem
   layoutSystem: LayoutSystem
-  chrome: { navbar: PageSection; footer: PageSection }
+  chrome: { navbar: PageSection; footer: PageSection; nav: NavStyle }
   pages: PageBlueprint[]
   components: ComponentPattern[]
   media: MediaRecipe

@@ -1,0 +1,20 @@
+1:"$Sreact.fragment"
+2:I[484,[],"OutletBoundary"]
+3:"$Sreact.suspense"
+7:I[484,[],"ViewportBoundary"]
+8:I[484,[],"MetadataBoundary"]
+9:I[6869,[],"IconMark"]
+b:I[7121,[],""]
+c:I[4581,[],""]
+6:X
+e:X
+e:C
+0:{"buildId":"8QFAOK4rOmL6gmGDfw-zd","data":[{"rsc":["$","$1","c",{"children":[[["$","header",null,{"className":"container-text pb-16 pt-40 md:pb-24 md:pt-48","children":[["$","h1",null,{"className":"type-display","data-reveal":"lines","children":[["$","span",null,{"className":"sr-only","children":"Accessibility"}],[["$","span",null,{"className":"block sm:hidden","aria-hidden":true,"children":[["$","span","Access-",{"className":"line","children":["$","span",null,{"children":"Access-"}]}],["$","span","ibility",{"className":"line","children":["$","span",null,{"children":"ibility"}]}]]}],["$","span",null,{"className":"hidden sm:block","aria-hidden":true,"children":[["$","span","Accessibility",{"className":"line","children":["$","span",null,{"children":"Accessibility"}]}]]}]]]}],"$undefined"]}],["$","section",null,{"className":"container-text pb-32","children":["$","div",null,{"className":"prose-legal","children":[["$","p",null,{"children":"We aim for this site to meet WCAG 2.2 at level AA, and for the shop to be easy to visit."}],["$","h2",null,{"children":"On this site"}],["$","ul",null,{"children":[["$","li",null,{"children":"Text colours pass AA contrast on every background."}],["$","li",null,{"children":"Every page works with a keyboard, with a visible focus outline."}],["$","li",null,{"children":"If your device asks for reduced motion, scroll effects are turned off and the film only plays if you ask."}],["$","li",null,{"children":"Videos are muted and have no speech."}]]}],["$","h2",null,{"children":"In the shop"}],["$","p",null,{"children":"Level entrance, an accessible toilet and a lower counter at the pickup point. Assistance dogs are always welcome."}],["$","h2",null,{"children":"Tell us what is not working"}],["$","p",null,{"children":["Email ",["$","a",null,{"href":"mailto:hello@kofii.coffee","children":"hello@kofii.coffee"}]," or call ",["$","a",null,{"href":"tel:+15550142290","children":"+1 555 014 2290"}],". We reply within two working days."]}]]}]}]],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"isPartial":"$@5","staleTime":"$6","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$L7",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#CEDE91"}]]}],["$","div",null,{"hidden":true,"children":["$","$L8",null,{"children":["$","$3",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Accessibility | KOFİİ"}],["$","meta","1",{"name":"description","content":"A small coffee shop in Old Town. Espresso, iced drinks, matcha and cake, each one made to order."}],["$","link","2",{"rel":"icon","href":"/live/kofii/icon.svg?c5922d8bb4bf848e","type":"image/svg+xml","sizes":"any"}],["$","$L9","3",{}]]}]}]}],null]}],"isPartial":"$@a","staleTime":"$6","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Lb",null,{"parallelRouterKey":"children","template":["$","$Lc",null,{}]}]]}],"isPartial":"$@d","staleTime":"$6","varyParams":"$e"}],"isUpgradeableISRFallback":false,"a":"$@f","rootVaryParams":null,"needsRuntimeRequest":"$@10"}
+4:null
+10:true
+6:300
+6:C
+f:0
+a:"$undefined"
+d:"$undefined"
+5:"$undefined"

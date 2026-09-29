@@ -37,7 +37,7 @@ const withVideoScript = (a: BuildPackageAdapter): BuildPackageAdapter => ({
     return {
       ...pkg,
       files: [...pkg.files, ...videoFiles(r)],
-      instructions: `${pkg.instructions}\nBefore building: run bash scripts/prepare-video.sh path/to/your-original-video.mp4 — it makes every video file the hero needs (add --upscale footage or --upscale cgi if the original is under 1920 px wide).`,
+      instructions: `0. Video — do this first, before anything else:\n   bash scripts/prepare-video.sh path/to/your-original-video.mp4\n   Use --upscale footage (people, real scenes) or --upscale cgi (product, 3D, animation) if your source is under 1920 px wide.\n   Always pass the original export from your camera or AI tool — never a web-compressed copy.\n${pkg.instructions}`,
     }
   },
 })

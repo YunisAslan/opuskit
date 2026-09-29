@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: 'Explore', description: 'Ten complete
 export default function ExplorePage() {
   return (
     <>
-      <PageIntro title="Ten recipes, made to be built.">Each one is a complete design system with assets, motion and a build package. Start from one, or remix it into yours.</PageIntro>
+      <PageIntro title="Ten recipes, made to be built.">Each one is a complete design system with assets, motion and a build package. Start from one and change any answer to make it yours.</PageIntro>
       <Suspense><Explore /></Suspense>
     </>
   )
