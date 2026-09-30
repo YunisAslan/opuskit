@@ -1,6 +1,6 @@
 import type {
   ComponentId, ComponentPattern, HeroId, HeroPattern, ImagePresentation, ImagePresentationId, InspirationSource, LeadId, MediaPattern, MotionLevel, MotionPattern, PageType, PageTypeId,
-  GoalId, NavStyle, NavStyleId, SectionId, SectionPattern, ShapeId, ShapeStyle, SignaturePattern,
+  FooterStyle, FooterStyleId, GoalId, NavStyle, NavStyleId, SectionId, SectionPattern, ShapeId, ShapeStyle, SignaturePattern,
 } from '@/types/domain'
 
 export const heroes: Record<HeroId, HeroPattern> = {
@@ -719,6 +719,22 @@ export const signaturePatterns: SignaturePattern[] = [
     components: [],
   },
 ]
+
+// Footer styles: how every page ends. Each is one variant of the ready footer (src/sections/Footer.tsx, `variant`).
+export const footerStyles: Record<FooterStyleId, FooterStyle> = {
+  signature: { id: 'signature', name: 'Signature columns', line: 'A big logo, columns of links and the legal line — dark, it closes the page.',
+    composition: 'Dark band (text colour as ground): the logo large on the left (5 of 12 columns), 2–3 link columns with headings, then a hairline and one row: copyright left, legal links right.',
+    behavior: 'Static; links get a wavy underline on hover and on the current page.', responsive: 'Mobile: logo, then the columns stacked, then the legal row wrapped.' },
+  wordmark: { id: 'wordmark', name: 'Big name', line: 'Your name set huge across the whole width — the last thing people see.',
+    composition: 'Links and contact in one row at the top, then the brand name in the display face spanning the full container width (sized to fit, one line), then copyright and legal small underneath.',
+    behavior: 'Static; the wordmark may rise 24px into place as it enters (reduced motion: none).', responsive: 'Mobile: links wrap in two columns; the wordmark still spans the full width.' },
+  contact: { id: 'contact', name: 'Say hello', line: 'One big invitation with your email or phone — the footer is the way in.',
+    composition: 'A large headline invitation (“Let’s talk”, “Book a table”) with the email/phone as display-size links, address and hours beside it, then one small row of links, copyright and legal.',
+    behavior: 'Static; the contact links underline on hover; email opens mail, phone dials.', responsive: 'Mobile: invitation, contact links, details and the links row stacked.' },
+  line: { id: 'line', name: 'One quiet line', line: 'Logo, a few links and © in a single calm line — nothing more.',
+    composition: 'One row on the page ground above a hairline: logo left, 3–5 links centred, copyright right.',
+    behavior: 'Static.', responsive: 'Mobile: logo, links and copyright centred on three short lines.' },
+}
 
 // Menu styles. The engine recommends one from the purpose and direction; the user can pick any.
 export const navStyles: Record<NavStyleId, NavStyle> = {

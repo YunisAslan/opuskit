@@ -7,17 +7,18 @@ import { palettes, typography } from '../src/data/ingredients'
 import { contrast, deltaE, oklab } from '../src/lib/color'
 import { recipeSeeds } from '../src/data/recipes'
 import { imagePresentations, signaturePatterns } from '../src/data/patterns'
-import { pieces } from '../src/data/pieces'
+import { behaviours, isMoment, pieces } from '../src/data/pieces'
 import { blockSource, pieceSource } from '../src/data/pieces-source.generated'
 import { blockFor } from '../src/data/blocks'
 import { sections } from '../src/data/patterns'
 import { TYPE_UTILITIES } from '../src/lib/type-tokens'
 import { GENERATED, piecesSource } from './pieces-source'
 import { existsSync, readFileSync } from 'node:fs'
-import { onChrome, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, placeEffect, effectOn, effectWhere, removeEffect, starters, setHero, setStyle, start, togglePiece } from '../src/features/kit/plan'
+import { heroTitle, libraryFor, removeSection, toggleChrome, behaviourPick, isPhotoSection, sectionPhotos, setBehaviour, setSectionPhotos, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, effectOn, effectWhere, starters, setHero, setStyle, start, togglePiece } from '../src/features/kit/plan'
 import { resources } from '../src/data/resources'
 import { directions, families, goals } from '../src/data/taxonomy'
 import { adapters } from '../src/features/build-packages'
+import { visualQa } from '../src/features/build-packages/shared'
 import { pageTypes } from '../src/data/patterns'
 import { examples } from '../src/data/examples'
 import { sectionGuide } from '../src/data/section-guide'
@@ -301,12 +302,39 @@ const main = async () => {
   assert.equal(inferPurpose({ ...EMPTY_PLAN, pages: [addPage(EMPTY_PLAN, 'shop').plan.pages[0]] }), 'ecommerce', 'purpose inferred from pages')
   assert.equal(setStyle(setStyle(plan, 'palette', 'signal-white'), 'direction', 'japanese-minimal').palette, 'signal-white', 'a new look keeps the colours you picked')
   assert.equal(setStyle(setStyle(plan, 'palette', undefined), 'direction', 'japanese-minimal').palette, undefined, 'colours you never picked follow the new look')
-  // Drag and drop: a section lands where it is dropped, keeps its pieces, and never goes above the first screen.
+  // Drag and drop: every part lands where it is dropped — the film/image part too, which can sit mid-page.
   const hp = plan.pages[0], last = hp.sections.at(-1)!
   const dropped = placeSection(plan, hp.id, last.key, 0).pages[0].sections
-  assert.equal(dropped[0].id, 'hero', 'nothing can be dropped above the first screen')
-  assert.equal(dropped[1].key, last.key, 'a dragged section lands at the drop spot')
-  assert.equal(placeSection(plan, hp.id, heroKey, 3).pages[0].sections[0].key, heroKey, 'the first screen cannot be dragged')
+  assert.equal(dropped[0].key, last.key, 'a dragged section lands at the drop spot, even above the first screen')
+  const mid = placeSection(plan, hp.id, heroKey, 3)
+  assert.equal(mid.pages[0].sections[2].key, heroKey, 'the film/image part moves mid-page')
+  assert.equal(moveSection(plan, hp.id, hp.sections[1].key, -1).pages[0].sections[0].key, hp.sections[1].key, 'a part can move above it')
+  assert.equal(setHero(mid, 'kinetic-type').pages[0].sections.filter((x) => x.id === 'hero').length, 1, 'picking what it shows never adds a second one')
+  {
+    const r = composeRecipe(planToSpec(mid)), hs = r.pages[0].sections[2]
+    assert.equal(hs.id, 'hero'); assert.equal(r.pages[0].sections[0].id, mid.pages[0].sections[0].id, 'the recipe keeps the page order')
+    assert.ok(hs.name.endsWith('mid-page') && hs.composition.startsWith('Placed mid-page'), 'a mid-page hero is described as a band at its spot, not a first screen')
+    assert.deepEqual(validateRecipe(r), [], 'a mid-page hero is a complete recipe')
+    assert.ok(visualQa(r).some((l) => l.includes('sits mid-page')), 'QA checks it stays mid-page')
+    assert.equal(effectWhere(mid, 'shader-grain'), `${hp.label} · Film or image`, 'its moments say where it sits')
+    // Menu & footer: a footer style flows to the recipe and its ready code; a page can leave either out.
+    const hid = toggleChrome(setStyle(plan, 'footer', 'wordmark'), hp.id, 'footer')
+    const rh = composeRecipe(planToSpec(hid))
+    assert.equal(rh.chrome.footerStyle.id, 'wordmark', 'the chosen footer is the recipe footer')
+    assert.ok(rh.chrome.footer.code?.usage.includes('variant="wordmark"'), 'its ready code gets the matching variant')
+    assert.deepEqual(rh.pages[0].hide, ['footer'], 'a page can leave the footer out')
+    assert.ok(visualQa(rh).some((l) => l.includes(`${hp.label} — no footer`)), 'QA names the page without a footer')
+    assert.equal(cleanPlan(JSON.parse(JSON.stringify(hid))).pages[0].hide?.[0], 'footer', 'it survives storage')
+    assert.equal(specToPlan(planToSpec(hid)).footer, 'wordmark', 'and Customise')
+    assert.equal(toggleChrome(hid, hp.id, 'footer').pages[0].hide, undefined, 'toggling again brings it back')
+    // "Add to page" follows the page: a FAQ page leads with questions, Home with the film/image part.
+    assert.equal(libraryFor('faq')[0].ids[0], 'faq', 'a FAQ page lists the FAQ first')
+    assert.equal(libraryFor('home')[0].ids[0], 'hero', 'Home lists the film or image first')
+    assert.equal(libraryFor('menu')[0].ids[0], 'menu', 'a menu page lists the menu first')
+    assert.equal(libraryFor('privacy-policy').flatMap((g) => g.ids).length, 1 + sectionGroups.flatMap((g) => g.ids).length, 'every part stays listed')
+    const noHero = removeSection(plan, hp.id, heroKey)
+    assert.deepEqual(validateRecipe(composeRecipe(planToSpec(noHero))), [], 'a site without the part is still complete')
+  }
   const down = placeSection(plan, hp.id, hp.sections[1].key, hp.sections.length).pages[0].sections
   assert.equal(down.at(-1)!.key, hp.sections[1].key, 'dropping at the end moves a section to the bottom')
   // Guided pages: no page starts blank by accident; suggestions land where they read right; missing pages are offered.
@@ -336,46 +364,83 @@ const main = async () => {
   // Pages arrive really filled: every kind of site starts with a Home of 4+ parts, like the example sites have.
   for (const st of starters) { const home = start(EMPTY_PLAN, st.id).pages[0]; assert.ok(home.sections.filter((x) => x.id !== 'hero').length >= 4, `${st.id}: Home starts with 4+ parts`) }
 
-  // Swap, don't build: every section on every starter page has something to swap to; effects always find a place.
+  // Swap, don't build: every section on every starter page has something to swap to. Moments sit on one section and
+  // stay there; behaviours are site-wide.
   for (const st of [...starters.map((x) => start(EMPTY_PLAN, x.id)), start(EMPTY_PLAN, null)]) {
     for (const pg of st.pages) {
       assert.ok(pg.sections.length || isStandardPage(pg.type), `${st.purpose ?? 'blank'}: ${pg.label} arrives filled`)
       for (const sec of pg.sections) if (sec.id !== 'hero') { const o = swapOptions(pg, sec.id); assert.ok(o.job.length + o.page.length > 0, `${pg.label}: ${sec.id} can be swapped`) }
     }
-    for (const id of Object.keys(pieces) as (keyof typeof pieces)[]) {
-      const on = placeEffect(st, id)
-      assert.ok(effectOn(on, id) && effectWhere(on, id), `${id} finds a place on a ${st.purpose ?? 'blank'} site`)
-      assert.ok(!effectOn(removeEffect(on, id), id), `${id} can be turned off`)
-      assert.ok(planToSpec(on).pieces?.includes(id), `${id} reaches the recipe`)
+    for (const pg of st.pages) for (const sec of pg.sections) for (const id of piecesFor(sec)) {
+      assert.ok(isMoment(id), `${id}: only moments are offered on a section`)
+      const on = togglePiece(st, pg.id, sec.key, id)
+      assert.equal(effectWhere(on, id), `${pg.label} · ${sec.id === 'hero' ? heroTitle(pg, sec) : sections[sec.id].name}`, `${id}: sits exactly where it was put`)
+      assert.ok(composeRecipe(planToSpec(on)).pieces.some((p) => p.id === id && p.where.startsWith(pg.label)), `${id} reaches the recipe on ${pg.label}`)
     }
-    const pg = st.pages.find((p) => p.sections.some((x) => x.id !== 'hero'))
+    const pg = st.pages.find((p) => p.sections.some((x) => x.id !== 'hero' && piecesFor(x).length))
     if (pg) {
-      const sec = pg.sections.find((x) => x.id !== 'hero')!
+      const sec = pg.sections.find((x) => x.id !== 'hero' && piecesFor(x).length)!
       const o = swapOptions(pg, sec.id), other = [...o.job, ...o.page][0]
       const swapped = replaceSection(st, pg.id, sec.key, other)
       const at = swapped.pages.find((p) => p.id === pg.id)!.sections.findIndex((x) => x.key === sec.key)
       assert.equal(swapped.pages.find((p) => p.id === pg.id)!.sections[at].id, other, 'swap replaces in place')
       assert.equal(at, pg.sections.indexOf(sec), 'swap keeps the position')
-      const withFx = placeEffect(st, (Object.keys(pieces) as (keyof typeof pieces)[]).find((id) => pieces[id].sections.includes(sec.id) && pieces[id].slot !== 'site')!)
-      const fx = withFx.pages.flatMap((p) => p.sections).flatMap((x) => x.pieces)
+      const fx = piecesFor(sec)[0]
+      const withFx = togglePiece(st, pg.id, sec.key, fx)
       assert.equal(resetPage(setPagePurpose(st, pg.id, 'custom'), pg.id).pages.find((p) => p.id === pg.id)!.purpose, pageTypes[pg.type].defaultPurpose, 'reset page restores its brief')
       const count = (x: typeof st) => x.pages.reduce((n, p) => n + p.sections.length, 0)
       assert.equal(count(replaceSection(withFx, pg.id, sec.key, other)), count(withFx), 'a swap never adds sections')
-      const fits = (x: typeof st, id: keyof typeof pieces) => x.pages.some((p) => p.sections.some((y) => pieces[id].sections.includes(y.id))) || (x.sitePieces ?? []).includes(id)
-      for (const moved of [replaceSection(withFx, pg.id, sec.key, other), resetPage(withFx, pg.id)])
-        for (const id of fx) assert.equal(effectOn(moved, id), fits(moved, id), `${id}: kept where it fits, off where it doesn't`)
+      const after = replaceSection(withFx, pg.id, sec.key, other)
+      assert.equal(effectOn(after, fx), pieces[fx].sections.includes(other), `${fx}: stays when the new look can carry it, else off`)
+      assert.ok(after.pages.flatMap((p) => p.sections).every((x) => x.key === sec.key || !x.pieces.includes(fx)), `${fx}: never wanders to another section`)
+      assert.ok(!effectOn(resetPage(withFx, pg.id), fx), 'reset page takes its moments with the old sections')
     }
   }
 
-  // Changing the kind of site later: the usual pages arrive, style / brief / first screen / effects stay.
+  // Behaviour: one per kind, on every page; the whole-site extras toggle.
   {
-    const id0 = (Object.keys(pieces) as (keyof typeof pieces)[]).find((x) => pieces[x].slot !== 'site' && !onChrome(x))!
-    let a0 = placeEffect(setHero(setStyle({ ...start(EMPTY_PLAN, 'portfolio'), name: 'Keep me' }, 'palette', 'signal-white'), 'kinetic-type'), id0)
+    let b = start(EMPTY_PLAN, 'agency')
+    b = setBehaviour(b, 'headlines', 'text-effect'); b = setBehaviour(b, 'headlines', 'cut-reveal'); b = setBehaviour(b, 'links', 'scribble-link')
+    assert.equal(behaviourPick(b, 'headlines'), 'cut-reveal', 'a new headline behaviour replaces the old one')
+    const r = composeRecipe(planToSpec(b))
+    assert.ok(r.pieces.some((p) => p.id === 'cut-reveal' && p.where.startsWith('Every page')), 'behaviours apply to every page')
+    assert.ok(!r.pieces.some((p) => p.id === 'text-effect'), 'the replaced behaviour is gone')
+    assert.equal(behaviourPick(setBehaviour(b, 'headlines', undefined), 'headlines'), undefined, 'a behaviour can be set to none')
+    for (const k of Object.keys(behaviours) as (keyof typeof behaviours)[]) for (const id of behaviours[k].ids) assert.ok(!piecesFor({ key: 'x', id: 'hero', pieces: [] }).includes(id) && !isMoment(id), `${id}: a behaviour, never a moment`)
+    // Older plans: behaviours found on sections move to the site; moments stay put.
+    const old = cleanPlan({ pages: [{ id: 'h', type: 'home', label: 'Home', purpose: '', sections: [{ key: 'a', id: 'hero', pieces: ['text-effect', 'shader-grain'] }] }] })
+    assert.deepEqual(old.sitePieces, ['text-effect'], 'a behaviour on a section becomes site-wide')
+    assert.deepEqual(old.pages[0].sections[0].pieces, ['shader-grain'], 'moments stay on their section')
+  }
+
+  // Photo layout, per photo section: each chooses its own; others get the recommendation; older site-wide picks spread.
+  {
+    let ph = start(EMPTY_PLAN, 'portfolio')
+    ph = addSection(ph, ph.pages[0].id, 'gallery', 1)
+    ph = addSection(ph, ph.pages[0].id, 'product-grid', 2)
+    const home = ph.pages[0], gal = home.sections.find((x) => x.id === 'gallery')!, grid = home.sections.find((x) => x.id === 'product-grid')!
+    ph = setSectionPhotos(ph, home.id, gal.key, 'ring-3d')
+    const r = composeRecipe(planToSpec(ph))
+    const secs = r.pages[0].sections
+    assert.equal(secs.find((x) => x.id === 'gallery')?.photos?.id, 'ring-3d', 'a section keeps its own photo layout')
+    assert.equal(secs.find((x) => x.id === 'product-grid')?.photos?.id, 'uniform-grid', 'another section gets its own recommendation')
+    assert.ok(!secs.find((x) => x.id === 'faq')?.photos, 'sections without photo sets have no photo layout')
+    assert.ok(r.pieces.some((p) => p.id === 'ring-carousel' && p.where.includes('Gallery')), 'a photo layout brings its ready code onto that section')
+    assert.ok(sectionPhotos(ph, grid).recommended === 'uniform-grid' && !sectionPhotos(ph, grid).chosen, 'recommendation shows until the owner picks')
+    assert.equal(specToPlan(planToSpec(ph)).pages[0].sections.find((x) => x.id === 'gallery')?.photos, 'ring-3d', 'section photo layouts survive Customise')
+    const legacy = cleanPlan({ imagePresentation: 'masonry-gallery', pages: [{ id: 'h', type: 'home', label: 'Home', purpose: '', sections: ['gallery', 'faq'] }] })
+    assert.equal(legacy.pages[0].sections[0].photos, 'masonry-gallery', 'an older site-wide photo layout moves onto its photo sections')
+    assert.equal(legacy.pages[0].sections[1].photos, undefined, 'and only onto photo sections')
+  }
+
+  // Changing the kind of site later: the usual pages arrive, style / brief / first screen / behaviours stay.
+  {
+    let a0 = setBehaviour(setHero(setStyle({ ...start(EMPTY_PLAN, 'portfolio'), name: 'Keep me' }, 'palette', 'signal-white'), 'kinetic-type'), 'links', 'wavy-link')
     const b0 = usualPages(a0, 'restaurant')
     assert.ok(b0.pages.some((p) => p.type === 'menu'), 'the new kind brings its usual pages')
     assert.equal(b0.name, 'Keep me'); assert.equal(b0.palette, 'signal-white'); assert.equal(b0.hero, 'kinetic-type')
     assert.equal(b0.pages[0].sections[0].id, 'hero', 'the first screen keeps its place')
-    assert.ok(effectOn(b0, id0), 'effects find a place on the new pages')
+    assert.equal(behaviourPick(b0, 'links'), 'wavy-link', 'behaviours stay with the site')
     a0 = b0
   }
 
@@ -420,11 +485,6 @@ const main = async () => {
     assert.ok(isValidSpec(spec), `${e.slug}: rebuilt recipe is valid`)
     assert.ok(!spec.pages.some((p) => p.type === 'custom'), `${e.slug}: every page is a known page type`)
   }
-  // Menu/footer effects: placed once for every page, and they reach the recipe.
-  const chromeId = (Object.keys(pieces) as (keyof typeof pieces)[]).find((id) => pieces[id].slot !== 'site' && pieces[id].sections.includes('navbar'))!
-  const chromePlan = toggleSitePiece(start(EMPTY_PLAN, 'agency'), chromeId)
-  assert.ok(cleanPlan(chromePlan).sitePieces?.includes(chromeId), 'menu effects survive the trust boundary')
-  assert.ok(composeRecipe(planToSpec(chromePlan)).pieces.some((p) => p.id === chromeId && p.where.startsWith('Menu and footer')), 'menu effects reach the recipe, placed on every page')
   const legacy = cleanPlan({ pages: [{ id: 'x', type: 'home', label: 'Home', purpose: '', sections: ['intro', 'bogus'] }], direction: 'nope', pieces: ['grain'] })
   assert.deepEqual(legacy.pages[0].sections.map((s) => s.id), ['intro'], 'older flat plans upgrade; unknown sections dropped')
   assert.equal(legacy.direction, undefined, 'unknown ids are dropped at the trust boundary')

@@ -3,7 +3,7 @@
 // whose terms forbid redistributing their components), restyled to the recipe tokens (--color-*, --font-*), with a
 // reduced-motion version and no dependency beyond `motion`. The source files live in src/pieces/ and are type-checked with OpusKit.
 
-import type { MotionLevel, Piece, PieceId, PieceSlot } from '@/types/domain'
+import type { BehaviourId, MotionLevel, Piece, PieceId, PieceSlot } from '@/types/domain'
 
 const MP = { license: 'MIT', library: 'Motion Primitives', url: 'https://motion-primitives.com', copyright: 'Copyright (c) 2024 ibelick' } as const
 const MU = { license: 'MIT', library: 'Magic UI', url: 'https://magicui.design', copyright: 'Copyright (c) Magic UI' } as const
@@ -284,3 +284,14 @@ export const pieces: Record<PieceId, Piece> = {
 }
 
 export const MAX_HEAVY_PIECES = 2
+
+/** Behaviours — the site's voice in motion, the same on every page (chosen in Style). Everything else is a moment:
+ *  a piece placed on one section, on one page (chosen in Pages). One per behaviour, except the whole-site extras. */
+export const behaviours: Record<BehaviourId, { name: string; line: string; ids: PieceId[]; many: boolean; none?: string }> = {
+  headlines: { name: 'Headlines', line: 'How every big heading arrives', ids: ['text-effect', 'cut-reveal', 'duo-headline'], many: false, none: 'Headings simply appear' },
+  links: { name: 'Links', line: 'What menu, footer and text links do on hover', ids: ['text-roll', 'scribble-link', 'wavy-link', 'underline-fill', 'text-scramble', 'hover-highlight'], many: false, none: 'A plain underline on hover' },
+  buttons: { name: 'Main button', line: 'How the main action of each page responds', ids: ['magnetic', 'swap-button'], many: false, none: 'The button just changes colour' },
+  site: { name: 'Whole site', line: 'Extras across every page — pick any', ids: ['blob-transition', 'brand-cursor', 'cookie-note', 'scroll-progress', 'grain'], many: true },
+}
+export const behaviourOf = (id: PieceId): BehaviourId | undefined => (Object.keys(behaviours) as BehaviourId[]).find((b) => behaviours[b].ids.includes(id))
+export const isMoment = (id: PieceId) => !behaviourOf(id)

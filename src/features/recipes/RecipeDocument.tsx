@@ -8,6 +8,7 @@ import { Bookmark, BookmarkCheck, Check, Circle, Download, Pencil, Search, Slide
 import Link from 'next/link'
 import { useEffect, useState, type ReactNode } from 'react'
 import { OptionDemo } from '@/components/OptionDemo'
+import { SectionPreview } from '@/components/SectionPreview'
 import { ToolIcon } from '@/components/ToolIcon'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -25,7 +26,7 @@ import { adapters } from '@/features/build-packages'
 import { BuildTab, downloadPackage, useBuildPackage } from '@/features/build-packages/BuildPanel'
 import { MediaSlots, SLOTS } from '@/components/MediaSlots'
 import type { AssetId, BuildTarget, PageSection, PaletteColors, RecipeSpec, UniversalRecipe, UploadedAsset } from '@/types/domain'
-import { normalizeSpec } from './engine'
+import { chromeNote, normalizeSpec } from './engine'
 import { markRecent, toggleSaved, useSaved } from './library'
 import { recipeToMarkdown } from './markdown'
 
@@ -146,8 +147,8 @@ type Edit = (step?: string) => string
 
 /** Questionnaire step → where the same choice lives in the kit: [kit step, style category or components shelf]. */
 const KIT_SPOT: Record<string, [string, string?]> = {
-  direction: ['style', 'look'], palette: ['style', 'colours'], typography: ['style', 'lettering'], shape: ['style', 'shape'], nav: ['style', 'menu'], photos: ['style', 'photos'],
-  lead: ['style', 'first-screen'], motion: ['style', 'motion'], touches: ['style', 'effects'], pages: ['pages'], kit: ['style', 'effects'],
+  direction: ['style', 'look'], palette: ['style', 'colours'], typography: ['style', 'lettering'], shape: ['style', 'shape'], nav: ['style', 'menu'], footer: ['style', 'menu'], photos: ['pages'],
+  lead: ['pages', 'first-screen'], motion: ['style', 'motion'], touches: ['pages'], pages: ['pages'], kit: ['style', 'behaviour'],
 }
 
 const ChangeLink = ({ href, label = 'Change' }: { href: string; label?: string }) =>
@@ -248,6 +249,11 @@ function Design({ r, look, colors, editHref }: { r: UniversalRecipe; look: Look;
           <p className="mt-2 text-sm text-ink-2">{r.chrome.nav.line}</p>
           <OptionDemo id={`nav:${r.chrome.nav.id}`} {...look} className="mt-5 rounded-lg border border-line" />
         </div>
+        <div>
+          <Heading title={`Footer — ${r.chrome.footerStyle.name}`}><ChangeLink href={editHref('footer')} /></Heading>
+          <p className="mt-2 text-sm text-ink-2">{r.chrome.footerStyle.line}</p>
+          <SectionPreview id="footer" footer={r.chrome.footerStyle.id} {...look} brand={r.metadata.spec.brief?.name} auto className="mt-5 overflow-hidden rounded-lg border border-line" />
+        </div>
       </div>
 
       <div>
@@ -282,8 +288,8 @@ function Pages({ r, editHref }: { r: UniversalRecipe; editHref: Edit }) {
       <Heading title={`${r.pages.length} pages`}><ChangeLink href={editHref('pages')} label="Change pages" /></Heading>
       <p className="max-w-2xl text-sm text-ink-2">Every page is planned section by section. Open a section to see exactly what goes in it.</p>
       <div className="grid gap-4 pt-2 lg:grid-cols-2">
-        {r.pages.map((p) => <PageCard key={p.id} title={p.label} line={p.purpose} sections={p.sections} />)}
-        <PageCard title="On every page" line="The menu and footer, shared across the site." sections={[r.chrome.navbar, r.chrome.footer]} />
+        {r.pages.map((p) => <PageCard key={p.id} title={p.label} line={[p.purpose, chromeNote(p)].filter(Boolean).join(' ')} sections={p.sections} />)}
+        <PageCard title="On every page" line={`The menu and footer, shared across the site${r.pages.some((p) => p.hide) ? ' — except where a page says otherwise' : ''}.`} sections={[r.chrome.navbar, r.chrome.footer]} />
       </div>
     </div>
   )

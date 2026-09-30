@@ -9,17 +9,29 @@ Next.js 16 (App Router) + TypeScript + Tailwind v4. Version-matched Next.js docs
 - The kit (`/kit`) is the only way to make or change a recipe (the questionnaire was retired 2026-09-30; `/create`
   redirects here). A builder in three steps, always visible in its
   step bar: 1 Style (same on every page: name, what it is, kind of site, what visitors should do; then biggest first —
-  look, first screen, movement, colours (+ optional colour chapters), lettering, shape, menu, photo layout, effects),
+  look, movement, colours (+ optional colour chapters), lettering, shape, menu & footer (`navStyles`, `footerStyles` —
+  each footer style is a `variant` of the ready `src/sections/Footer.tsx`), behaviour),
   2 Pages (pages and their sections, plus Your files: logo, video, photos, photo note), 3 Recipe — the result page itself (Next on Pages saves the recipe,
   or updates the one the plan came from, and opens it; the same `StepBar` shows there). Every page's brief (`purpose`) is
-  editable — it's how forms & legal pages (no sections) are customised. Every page arrives filled with what that kind of page usually
-  has (`start`, `resetPage`). Pages speaks plain words, not component names: a page is a list of parts, each titled by its
-  job (`sectionGroups[].job`, `jobOf`) with how it looks and when that's the right pick (`src/data/section-guide.ts`) and
-  "You'll need" (the section's content). The user changes a part's look among sections doing the same job (`swapOptions`,
-  `replaceSection`), moves it up/down, removes it, or adds a part between two — first "What should it do?" (a job), then
-  its looks; there is no shelf of components. Effects are picked
-  in Style and place themselves (`placeEffect`); a swap moves them to another section that fits, or turns them off — it
-  never adds sections. Logic: `src/features/kit/plan.ts` (pure, tested in check.ts); storage: `src/lib/kit.ts`.
+  editable (the page title's ⋯ menu → "What this page does", a dialog) — it's how forms & legal pages (no sections) are customised. Every page arrives filled with what that kind of page usually
+  has (`start`, `resetPage`). Pages speaks plain words, not component names, one idea per column: left the pages; middle
+  the page itself — menu at the top and footer at the bottom (the same on every page; a page can leave either out —
+  `toggleChrome`, `PageSpec.hide`, written into the recipe and QA), its parts in between, each titled by its job
+  (`sectionGroups[].job`, `jobOf`) with its look (`src/data/section-guide.ts`) and chips for its effects; drag, up/down or
+  remove on the row itself;
+  right one job at a time — "Add to page" (every part, grouped by job; drag one into the page or tap +, which adds after
+  the picked part, else before the closing parts) or, with a row picked, that row — one accordion, each heading showing its
+  current value: Look (sections doing the same job,
+  `swapOptions`, `replaceSection`; for the first screen, the first screens — `setHero`, which moves Movement into a
+  level it supports and says so), Photos (photo sections) and Effects (moments); the menu/footer row shows
+  "Show on this page" and its site-wide look. The film/image part (`hero`) is free like any
+  part: dragged anywhere, mid-page, onto any page, or removed; the engine then writes it as a full-width band at that spot
+  (`midPageHero`, QA checks it stays there), and only `setHero` on a site with none adds one (top of the first page). Structure and effects never share a list. Pages
+  never links back to Style. Pieces come in two kinds (`behaviours` in pieces.ts): behaviours — how
+  headlines arrive, what links and the main button do, whole-site extras — are site-wide, one per kind, set in Style
+  (`setBehaviour`); moments are picked on one part in Pages (`piecesFor`, `togglePiece`) and stay on it — a swap keeps
+  them when the new look can carry them, else turns them off; they never wander. Photo layout is per photo section
+  (`PHOTO_SECTIONS`, `setSectionPhotos`); a section without a pick gets `recommendSectionPhotos`. Logic: `src/features/kit/plan.ts` (pure, tested in check.ts); storage: `src/lib/kit.ts`.
 - The kit is the one editor. Every recipe opens in it — `/kit?from=seed:{slug}|gen:{id}|example:{slug}` (`specToPlan`;
   an example's recipe is rebuilt from its recorded `choices` by `specFromChoices`). What the kit doesn't edit rides along in
   `plan.from`; a plan opened from a saved recipe updates that recipe. Result/recipe "Change" links point into the kit.

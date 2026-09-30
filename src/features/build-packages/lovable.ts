@@ -3,6 +3,7 @@
 // Docs: https://docs.lovable.dev/features/knowledge · https://docs.lovable.dev/prompting/prompting-one
 
 import { purposes } from '@/data/taxonomy'
+import { chromeNote } from '@/features/recipes/engine'
 import { recipeSections as S, recipeToMarkdown } from '@/features/recipes/markdown'
 import type { BuildPackageAdapter, UniversalRecipe } from '@/types/domain'
 import { assertComplete, assetManifest, manifestJson, tokensCss } from './shared'
@@ -34,7 +35,7 @@ Not the generic AI look: ${r.creativeDirection.genericAvoid.join('; ')}.
 
 ## Page structure
 ${r.pages.map((p, i) => `${i + 1}. ${p.label} — ${p.purpose}`).join('\n')}
-Every page shares the navbar (${r.chrome.navbar.composition}) and footer (${r.chrome.footer.composition}).
+Every page shares the navbar (${r.chrome.navbar.composition}) and footer (${r.chrome.footer.composition}).${r.pages.filter((p) => p.hide).map((p) => ` ${p.label}: ${chromeNote(p)}`).join('')}
 
 ## Components
 ${r.components.map((c) => `${c.id}: ${c.purpose}`).join('; ')}.
@@ -67,8 +68,10 @@ export const lovableAdapter: BuildPackageAdapter = {
       `Build the shared navigation: ${r.chrome.navbar.composition} ${keep}`,
       ...r.pages.flatMap((p) => [
         `Set up the ${p.label} page: ${p.purpose}`,
-        ...p.sections.filter((s) => s.id !== 'hero').map((s) => `On the ${p.label} page, add the ${s.name} section: ${s.composition}. Content: ${s.content}. ${keep}`),
-        ...(p.sections.some((s) => s.id === 'hero') ? [`On the ${p.label} page, build the hero: ${r.media.hero.name}. ${r.media.hero.composition} ${keep}`] : []),
+        // In the page's own order: the hero can sit mid-page, so it is built where it stands.
+        ...p.sections.map((s) => s.id === 'hero'
+          ? `On the ${p.label} page, build the hero (${s.name}): ${s.composition} ${keep}`
+          : `On the ${p.label} page, add the ${s.name} section: ${s.composition}. Content: ${s.content}. ${keep}`),
       ]),
       `Add the shared footer: ${r.chrome.footer.composition} ${keep}`,
       `Make every page responsive: ${r.implementation.responsive.slice(0, 3).join(' ')} Only change layout at breakpoints.`,

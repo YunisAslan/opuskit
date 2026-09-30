@@ -29,7 +29,7 @@ export function Builder() {
   const params = useSearchParams()
   const router = useRouter()
   const [step, setStep] = useState<'style' | 'pages'>('style')
-  // Which Style category opens: from the URL (?cat=) or from a link in Pages (e.g. the first-screen row).
+  // Which Style category opens: from the URL (?cat=).
   const [styleCat, setStyleCat] = useState<string | null>(() => params.get('cat'))
   useEffect(() => { const s = params.get('step'); if (s === 'style' || s === 'pages') setStep(s); if (s === 'create') setStep('pages') }, [params])
   // Customise: /kit?from=seed:slug | gen:id | example:slug opens that recipe here — the kit is the one editor.
@@ -87,7 +87,7 @@ export function Builder() {
 
       <div className="mx-auto max-w-[1440px] px-5 pt-8 md:px-8">
         {step === 'style' && <StyleStep plan={plan} initialCat={styleCat} initialFeel={params.get('feel')} onDone={() => go('pages')} />}
-        {step === 'pages' && <PagesStep plan={plan} initialFocus={params.get('shelf')} onStyle={(cat) => { setStyleCat(cat); go('style') }} />}
+        {step === 'pages' && <PagesStep plan={plan} initialFocus={params.get('shelf')} />}
       </div>
     </div>
   )

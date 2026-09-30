@@ -323,7 +323,7 @@ export type KitPlan = {
   uploads?: UploadedAsset[]; assets?: AssetId[]; mediaPlan?: MediaPlan
   purpose?: PurposeId
   /** Step 1 — the same on every page. */
-  direction?: DirectionId; palette?: PaletteId; typography?: TypographyId; shape?: ShapeId; nav?: NavStyleId; imagePresentation?: ImagePresentationId
+  direction?: DirectionId; palette?: PaletteId; typography?: TypographyId; shape?: ShapeId; nav?: NavStyleId; footer?: FooterStyleId; imagePresentation?: ImagePresentationId
   rotation?: AccentSetId | 'off'
   /** Site-wide ready pieces: page transition, cursor, cookie notice. */
   sitePieces?: PieceId[]
@@ -337,8 +337,9 @@ export type KitPlan = {
   fromId?: string
 }
 /** A page in the plan. Each section is an instance with its own key, so the pieces attached to it move with it. */
-export type PlanPage = { id: string; type: PageTypeId; label: string; purpose: string; sections: PlanSection[] }
-export type PlanSection = { key: string; id: SectionId; pieces: PieceId[] }
+export type PlanPage = { id: string; type: PageTypeId; label: string; purpose: string; sections: PlanSection[]; hide?: ChromeId[] }
+/** A section on a plan page: its moments (ready pieces on this section only) and, for a photo section, how its photos are shown. */
+export type PlanSection = { key: string; id: SectionId; pieces: PieceId[]; photos?: ImagePresentationId }
 /** Where the user attached a ready piece: page id + section index on that page, or page '*' for the whole site. */
 export type PiecePlacement = { piece: PieceId; page: string; index: number }
 
@@ -360,6 +361,11 @@ export type SignaturePattern = {
 }
 
 export type NavStyleId = 'classic-bar' | 'floating-pill' | 'fullscreen-menu' | 'centered-logo' | 'card-menu' | 'bottom-dock' | 'side-index' | 'split-pill'
+/** Footer styles — the page's ending, chosen with the menu in Style (same on every page that shows it). */
+export type FooterStyleId = 'signature' | 'wordmark' | 'contact' | 'line'
+export type FooterStyle = { id: FooterStyleId; name: string; line: string; composition: string; behavior: string; responsive: string }
+/** The frame every page shares; a page can leave either out (`hide`). */
+export type ChromeId = 'navbar' | 'footer'
 export type NavStyle = { id: NavStyleId; name: string; line: string; trending?: boolean; composition: string; behavior: string; responsive: string; components: LibraryComponent[] }
 
 export type ShapeId = 'sharp' | 'soft' | 'round' | 'pill' | 'brutal' | 'outline'
@@ -432,7 +438,7 @@ export type UploadedAsset = {
 }
 
 /** One page as the user has configured it in the kit. */
-export type PageSpec = { id: string; type: PageTypeId; label: string; purpose: string; sections: SectionId[] }
+export type PageSpec = { id: string; type: PageTypeId; label: string; purpose: string; sections: SectionId[]; /** Menu or footer left out on this page. */ hide?: ChromeId[] }
 
 /** The project in the user's own words. Everything optional: a recipe without a brief still composes. */
 export type Brief = { name?: string; offer?: string; goal?: GoalId; /** Anything the user wants done with their photos, in their words. */ photos?: string }
@@ -458,6 +464,7 @@ export type RecipeSpec = {
   videoFrame?: 'wide' | 'original'
   /** Design choices the user made; when absent the engine recommends one from the direction and purpose. */
   nav?: NavStyleId
+  footer?: FooterStyleId
   shape?: ShapeId
   /** Signature moment ids the user picked (max 4). Absent = the engine's own pick. */
   signatures?: string[]
@@ -468,6 +475,8 @@ export type RecipeSpec = {
   pieces?: PieceId[]
   /** Exactly where each piece goes (showcase plans). Without it, a piece lands on the first section it suits. */
   piecePlacements?: PiecePlacement[]
+  /** How each photo section shows its photos (page id + section index). Photo sections without one get the recommendation. */
+  sectionPhotos?: { page: string; index: number; presentation: ImagePresentationId }[]
   pages: PageSpec[]
   target: BuildTargetId
 }
@@ -509,9 +518,11 @@ export type VisualSystem = {
 export type LayoutSystem = Omit<LayoutPattern, 'tags' | 'compatibleWith' | 'incompatibleWith' | 'line'>
 
 /** code: the ready component for this section, shipped at `path` in every Build Package. */
-export type PageSection = SectionPattern & { note?: string; code?: { path: string; exportName: string; usage: string } }
+export type PageSection = SectionPattern & { note?: string; code?: { path: string; exportName: string; usage: string }; photos?: ImagePresentation & { chosen: boolean } }
+/** Site-wide behaviours: how headlines arrive, links react, buttons respond, plus whole-site pieces. The same on every page. */
+export type BehaviourId = 'headlines' | 'links' | 'buttons' | 'site'
 
-export type PageBlueprint = { id: string; type: PageTypeId; label: string; purpose: string; sections: PageSection[] }
+export type PageBlueprint = { id: string; type: PageTypeId; label: string; purpose: string; sections: PageSection[]; hide?: ChromeId[] }
 
 /** `storytelling`: for scroll-controlled film heroes, how video and text become one scroll timeline. */
 /** `framing`: how the owner's own video is shaped per screen, when its shape isn't already 16:9. */
@@ -583,7 +594,7 @@ export type UniversalRecipe = {
   designPrinciples: string[]
   visualSystem: VisualSystem
   layoutSystem: LayoutSystem
-  chrome: { navbar: PageSection; footer: PageSection; nav: NavStyle }
+  chrome: { navbar: PageSection; footer: PageSection; nav: NavStyle; footerStyle: FooterStyle }
   pages: PageBlueprint[]
   components: ComponentPattern[]
   media: MediaRecipe

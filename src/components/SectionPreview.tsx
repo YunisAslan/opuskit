@@ -33,7 +33,7 @@ import { ServicesSection } from '@/sections/Services'
 import { StatsSection } from '@/sections/Stats'
 import { TeamSection } from '@/sections/Team'
 import { TestimonialsSection } from '@/sections/Testimonials'
-import type { PaletteColors, PurposeId, SectionId, ShapeStyle, TypographyPairing } from '@/types/domain'
+import type { FooterStyleId, PaletteColors, PurposeId, SectionId, ShapeStyle, TypographyPairing } from '@/types/domain'
 
 // Real photos already on disk (example sites' media), one set per "world" so a preview looks like the user's kind of site.
 const ph = ['arena', 'box', 'chestnut', 'gallop', 'groom', 'herd', 'jump', 'palomino', 'ponies', 'rider-grey', 'stables'].map((n) => `/examples/swiss-modern-event-site-claude-code/media/photos/${n}.jpg`)
@@ -192,12 +192,12 @@ const W: Record<World, Copy> = {
 }
 const a = { href: '#', label: 'Book a visit' }
 
-function sample(id: SectionId | 'orbit-hero', world: World, brand?: string): ReactNode {
+function sample(id: SectionId | 'orbit-hero', world: World, brand?: string, footer?: FooterStyleId): ReactNode {
   const w = W[world], img = w.img, pick = (i: number) => img[i % img.length]
   switch (id) {
     case 'orbit-hero': return <OrbitHeroSection eyebrow="What we do" loud="All" quiet="in motion" line="Brands, people, attention — we set them moving." items={[...STICKERS, ...car.slice(0, 4), ...STICKERS.slice(0, 3)].map((src, i) => ({ src, alt: '', size: src.endsWith('.svg') ? 130 : 110, tilt: [-8, 6, -4, 10, -6, 4][i % 6] }))} />
     case 'chapters': return <ColourChaptersSection chapters={w.services.slice(0, 2).map(([title, text], i) => ({ eyebrow: i ? 'No talk. All pictures.' : 'Hard story? Easily told.', title, text, media: { src: pick(i + 3), alt: '' }, sticker: { src: STICKERS[i * 3], alt: '' } }))} />
-    case 'footer': return <FooterSection logo={<span className="type-display [font-size:5rem] italic">{brand || 'Studio'}</span>} columns={[{ title: 'Navigation', links: [{ label: 'About', href: '#' }, { label: 'Work', href: '#', current: true }, { label: 'Contact', href: '#' }] }, { title: 'Contact', links: [{ label: 'hello@example.com', href: '#' }] }]} legal={[{ label: 'Privacy', href: '#' }, { label: 'Terms', href: '#' }]} copyright={`© 2026 ${brand || 'Studio'}`} />
+    case 'footer': return <FooterSection variant={footer} brand={brand || 'Studio'} contact={[{ label: 'hello@example.com', href: '#' }, { label: '+994 12 345 67 89', href: '#' }]} logo={<span className={`type-display italic ${footer === "line" || footer === "contact" ? "[font-size:1.6rem]" : "[font-size:5rem]"}`}>{brand || "Studio"}</span>} columns={[{ title: 'Navigation', links: [{ label: 'About', href: '#' }, { label: 'Work', href: '#', current: true }, { label: 'Contact', href: '#' }] }, { title: 'Contact', links: [{ label: 'hello@example.com', href: '#' }] }]} legal={[{ label: 'Privacy', href: '#' }, { label: 'Terms', href: '#' }]} copyright={`© 2026 ${brand || 'Studio'}`} />
     case 'intro': return <IntroSection label={brand || w.label} statement={w.statement} body={w.body} />
     case 'manifesto': return <ManifestoSection statement={w.manifesto} attribution={w.attribution} />
     case 'featured-work': return <FeaturedWorkSection title={w.work} projects={w.projects.map(([title, meta], i) => ({ title, meta, image: pick(i + 1), alt: '', href: `#${i}` }))} />
@@ -231,10 +231,10 @@ function sample(id: SectionId | 'orbit-hero', world: World, brand?: string): Rea
   }
 }
 
-export function SectionPreview({ id, colors, type, shape, chapters, className, auto, maxHeight, width, world = 'studio', brand }: { id: SectionId | 'orbit-hero'; colors: PaletteColors; type: TypographyPairing; shape: ShapeStyle; chapters?: readonly string[]; className?: string; auto?: boolean; maxHeight?: number; width?: number; world?: World; brand?: string }) {
+export function SectionPreview({ id, colors, type, shape, chapters, className, auto, maxHeight, width, world = 'studio', brand, footer }: { id: SectionId | 'orbit-hero'; footer?: FooterStyleId; colors: PaletteColors; type: TypographyPairing; shape: ShapeStyle; chapters?: readonly string[]; className?: string; auto?: boolean; maxHeight?: number; width?: number; world?: World; brand?: string }) {
   return (
     <ScaledFrame className={className} auto={auto} maxHeight={maxHeight} width={width}>
-      <TokenScope colors={colors} type={type} shape={shape} chapters={chapters}>{sample(id, world, brand)}</TokenScope>
+      <TokenScope colors={colors} type={type} shape={shape} chapters={chapters}>{sample(id, world, brand, footer)}</TokenScope>
     </ScaledFrame>
   )
 }

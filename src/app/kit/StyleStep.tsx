@@ -7,28 +7,27 @@ import { LazyMount } from '@/components/LazyMount'
 import { OptionDemo } from '@/components/OptionDemo'
 import { PieceDemo } from '@/components/PieceDemo'
 import { ScaledFrame } from '@/components/ScaledFrame'
+import { SectionPreview } from '@/components/SectionPreview'
 import { SitePreview, previewFromDirection, previewFromRecipe } from '@/components/SitePreview'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { accentSets, palettes, typography } from '@/data/ingredients'
-import { EFFECTS, heroes, imagePresentations, navStyles, shapeStyles } from '@/data/patterns'
-import { pieceSlots, pieces } from '@/data/pieces'
+import { footerStyles, heroes, navStyles, shapeStyles } from '@/data/patterns'
+import { behaviours, pieces } from '@/data/pieces'
 import { directions, families, goals, motionLevels, purposes } from '@/data/taxonomy'
-import { effectOn, effectWhere, planToSpec, setHero, setStyle, starters, toggleEffect, usualPages, type StyleKey } from '@/features/kit/plan'
+import { behaviourPick, planToSpec, setBehaviour, setStyle, starters, usualPages, type StyleKey } from '@/features/kit/plan'
 import { composeRecipe, recommendedNav, recommendedShape } from '@/features/recipes/engine'
 import { toast } from 'sonner'
 import { updatePlan } from '@/lib/kit'
-import type { DirectionId, FamilyId, GoalId, KitPlan, MotionLevel, PieceId, PieceSlot, PurposeId } from '@/types/domain'
-import { HeroPreview, heroName } from './HeroPreview'
+import type { BehaviourId, DirectionId, FamilyId, GoalId, KitPlan, MotionLevel, PieceId, PurposeId } from '@/types/domain'
+import { heroName } from './HeroPreview'
 import { lookOf } from './ProductVisual'
 
-// Biggest decisions first: the look, the first screen (it sets layout and limits movement), then movement, then the details.
-const CATS = ['look', 'first-screen', 'motion', 'colours', 'lettering', 'shape', 'menu', 'photos', 'effects'] as const
+// Biggest decisions first: the look, then movement, then the details. The first screen is part of the page — it is chosen in Pages.
+const CATS = ['look', 'motion', 'colours', 'lettering', 'shape', 'menu', 'behaviour'] as const
 type Cat = (typeof CATS)[number]
-const effectIds = Object.keys(pieces) as PieceId[]
-const effectSlots = [...new Set(effectIds.map((id) => pieces[id].slot))] as PieceSlot[]
 
 function Tile({ on, label, sub, children, onPick }: { on: boolean; label: string; sub?: string; children?: ReactNode; onPick: () => void }) {
   return (
@@ -43,7 +42,6 @@ function Tile({ on, label, sub, children, onPick }: { on: boolean; label: string
 
 export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: KitPlan; initialCat?: string | null; initialFeel?: string | null; onDone: () => void }) {
   const [cat, setCat] = useState<Cat>(() => (CATS.includes(initialCat as Cat) ? initialCat as Cat : 'look'))
-  const [slot, setSlot] = useState<PieceSlot | 'all'>('all')
   const [family, setFamily] = useState<FamilyId | 'all'>(() => (initialFeel && initialFeel in families ? initialFeel as FamilyId : 'all'))
   const scroller = useRef<HTMLDivElement>(null)
 
@@ -51,7 +49,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
   const recipe = composeRecipe(planToSpec(plan))
   const set = (k: StyleKey, v: string | undefined) => updatePlan((p) => setStyle(p, k, v))
   // A new look keeps what you picked; say so, with a one-tap way to take the look's own instead.
-  const OWN: [StyleKey, string][] = [['palette', 'colours'], ['typography', 'lettering'], ['shape', 'shape'], ['nav', 'menu'], ['motion', 'movement'], ['imagePresentation', 'photo layout'], ['rotation', 'colour chapters']]
+  const OWN: [StyleKey, string][] = [['palette', 'colours'], ['typography', 'lettering'], ['shape', 'shape'], ['nav', 'menu'], ['footer', 'footer'], ['motion', 'movement'], ['rotation', 'colour chapters']]
   // A new kind of site keeps your pages; its usual pages are one tap away.
   const pickPurpose = (id: PurposeId) => {
     updatePlan((p) => ({ ...p, purpose: id }))
@@ -75,14 +73,12 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
   // Left rail: every category with what it is set to now, so the whole style reads at a glance.
   const cats: { id: Cat; name: string; value: string; mini?: ReactNode }[] = [
     { id: 'look', name: 'Look', value: d.name },
-    { id: 'first-screen', name: 'First screen', value: heroName(plan.hero) },
     { id: 'motion', name: 'Movement', value: motionLevels[recipe.metadata.spec.motion].name },
     { id: 'colours', name: 'Colours', value: pal.name, mini: <span className="flex">{[pal.colors.background, pal.colors.text, pal.colors.accent].map((c, i) => <span key={i} className="size-3 rounded-full ring-1 ring-black/10 first:ml-0 -ml-1" style={{ background: c }} />)}</span> },
     { id: 'lettering', name: 'Lettering', value: look.type.name, mini: <span className="text-base leading-none" style={{ fontFamily: `'${look.type.display.family}'`, fontWeight: look.type.display.weight }}>Aa</span> },
     { id: 'shape', name: 'Shape', value: look.shape.name },
-    { id: 'menu', name: 'Menu', value: navStyles[plan.nav ?? navDefault].name },
-    { id: 'photos', name: 'Photo layout', value: plan.imagePresentation ? imagePresentations[plan.imagePresentation].name : 'Per section' },
-    { id: 'effects', name: 'Effects', value: String(effectIds.filter((id) => effectOn(plan, id)).length || 'None') },
+    { id: 'menu', name: 'Menu & footer', value: `${navStyles[plan.nav ?? navDefault].name} · ${recipe.chrome.footerStyle.name}` },
+    { id: 'behaviour', name: 'Behaviour', value: String((plan.sitePieces ?? []).filter((id) => behaviours.headlines.ids.concat(behaviours.links.ids, behaviours.buttons.ids, behaviours.site.ids).includes(id)).length || 'Plain') },
   ]
   const next = cats[cats.findIndex((c) => c.id === cat) + 1], prev = cats[cats.findIndex((c) => c.id === cat) - 1]
   const why: Record<Cat, string> = {
@@ -90,15 +86,13 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
     colours: `Swap the palette of ${d.name}. The first ones are made for it.`,
     lettering: 'The typefaces for headlines, text and labels.',
     shape: 'Corners and edges of buttons, cards and photos.',
-    menu: 'How visitors get around — the same menu on every page.',
-    'first-screen': 'What visitors see first. It shapes the layout and the media you need, and sets how lively the site can be.',
-    motion: 'How lively the site feels as people scroll. Your first screen sets the range; effects can raise it.',
-    photos: 'How sets of photos are shown wherever they appear.',
-    effects: 'Optional ready-made effects. Pick any — each finds the section it suits (you’ll see it there in Pages).',
+    menu: 'How visitors get around, and how every page ends. The same menu and footer on every page — in Pages you can leave either out of one page.',
+    motion: 'How lively the site feels as people scroll. Moments you add in Pages can raise it.',
+    behaviour: 'How the site acts, the same on every page: how headings arrive, what links and the main button do, and a few whole-site extras. Effects for one part of one page — a counting number, a photo ring — are added on that part, in Pages.',
   }
-  const reset: Partial<Record<Cat, StyleKey>> = { colours: 'palette', lettering: 'typography', shape: 'shape', menu: 'nav', motion: 'motion', photos: 'imagePresentation' }
+  const reset: Partial<Record<Cat, StyleKey[]>> = { colours: ['palette'], lettering: ['typography'], shape: ['shape'], menu: ['nav', 'footer'], motion: ['motion'] }
   const motions = (Object.keys(motionLevels) as MotionLevel[]).filter((m) => !plan.hero || heroes[plan.hero].motion.includes(m))
-  const picked = (k?: StyleKey) => !!k && plan[k as keyof KitPlan] !== undefined
+  const picked = (ks?: StyleKey[]) => !!ks?.some((k) => plan[k as keyof KitPlan] !== undefined)
 
   return (
     <Tabs value={cat} onValueChange={(v) => { setCat(v as Cat); scroller.current?.scrollTo({ top: 0 }) }} orientation="vertical" className="grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)_26rem] lg:items-start">
@@ -130,19 +124,24 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
       </div>
 
       <div className="flex min-w-0 flex-col rounded-lg border border-line bg-white/50 lg:sticky lg:top-40 lg:h-[calc(100svh-11.5rem)]">
-        <div ref={scroller} className="min-h-0 flex-1 p-4 lg:overflow-y-auto">
-        <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">
-          <p className="max-w-xl text-sm text-ink-2">{why[cat]}</p>
-          {picked(reset[cat]) && <button type="button" className="text-xs link inline-flex items-center gap-1" onClick={() => set(reset[cat]!, undefined)}><RotateCcw size={12} aria-hidden />Use the look’s default</button>}
+        {/* Fixed: what this category is, its reset and its filters. Only the options below scroll. */}
+        <div className="shrink-0 space-y-3 border-b border-line p-4">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <p className="max-w-xl text-sm text-ink-2">{why[cat]}</p>
+            {picked(reset[cat]) && <button type="button" className="text-xs link inline-flex items-center gap-1" onClick={() => updatePlan((p) => reset[cat]!.reduce((x, k) => setStyle(x, k, undefined), p))}><RotateCcw size={12} aria-hidden />Use the look’s default</button>}
+          </div>
+          {cat === 'look' && (
+            <div role="group" aria-label="Filter by feeling" className="flex flex-wrap gap-1.5">
+              {(['all', ...Object.keys(families)] as (FamilyId | 'all')[]).map((f) => (
+                <button key={f} type="button" aria-pressed={family === f} onClick={() => { setFamily(f); scroller.current?.scrollTo({ top: 0 }) }}
+                  className={`rounded-full border px-3 py-1 text-xs ${family === f ? 'border-ink bg-ink text-paper' : 'border-line bg-white hover:border-ink'}`}>{f === 'all' ? 'All' : families[f].name}</button>
+              ))}
+            </div>
+          )}
         </div>
+        <div ref={scroller} className="min-h-0 flex-1 p-4 [scrollbar-color:var(--color-line)_transparent] [scrollbar-width:thin] lg:overflow-y-auto">
 
         <TabsContent value="look">
-          <div role="group" aria-label="Filter by feeling" className="mb-4 flex flex-wrap gap-1.5">
-            {(['all', ...Object.keys(families)] as (FamilyId | 'all')[]).map((f) => (
-              <button key={f} type="button" aria-pressed={family === f} onClick={() => setFamily(f)}
-                className={`rounded-full border px-3 py-1 text-xs ${family === f ? 'border-ink bg-ink text-paper' : 'border-line bg-white hover:border-ink'}`}>{f === 'all' ? 'All' : families[f].name}</button>
-            ))}
-          </div>
           <div role="radiogroup" aria-label="Look" className={grid}>
             {(family === 'all' ? [...new Set(Object.values(families).flatMap((f) => f.directions))] : families[family].directions).map((id: DirectionId) => (
               <Tile key={id} on={d.id === id} onPick={() => pickLook(id)} label={directions[id].name} sub={directions[id].line}>
@@ -195,17 +194,11 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
         </TabsContent>
 
         <TabsContent value="menu">
+          <p className="mb-2 text-sm font-medium">Menu <span className="font-normal text-muted">· the top of every page</span></p>
           <div role="radiogroup" aria-label="Menu" className={grid}>{Object.values(navStyles).map((x) => <Tile key={x.id} on={(plan.nav ?? navDefault) === x.id} onPick={() => set('nav', x.id)} label={x.name} sub={x.id === navDefault ? 'Fits your site' : x.trending ? 'Trending' : undefined}><OptionDemo id={`nav:${x.id}`} {...demo} /></Tile>)}</div>
-        </TabsContent>
-
-        <TabsContent value="first-screen">
-          <div role="radiogroup" aria-label="First screen" className="grid gap-2 grid-cols-[repeat(auto-fill,minmax(13rem,1fr))]">
-            {[undefined, ...EFFECTS.map((e) => e.hero)].map((id) => (
-              <Tile key={id ?? 'look'} on={plan.hero === id} onPick={() => updatePlan((p) => setHero(p, id))} label={heroName(id)} sub={id ? EFFECTS.find((e) => e.hero === id)!.line : `${d.name}’s own first screen`}>
-                <LazyMount className="aspect-[16/10] overflow-hidden"><HeroPreview plan={plan} id={id} /></LazyMount>
-              </Tile>
-            ))}
-          </div>
+          <p className="mb-2 mt-8 text-sm font-medium">Footer <span className="font-normal text-muted">· the end of every page</span></p>
+          <div role="radiogroup" aria-label="Footer" className="grid gap-2 grid-cols-[repeat(auto-fill,minmax(13rem,1fr))]">{Object.values(footerStyles).map((x) => <Tile key={x.id} on={recipe.chrome.footerStyle.id === x.id} onPick={() => set('footer', x.id)} label={x.name} sub={x.line}>
+            <LazyMount className="pointer-events-none min-h-16 overflow-hidden"><SectionPreview id="footer" footer={x.id} auto colors={look.colors} type={look.type} shape={look.shape} brand={plan.name || undefined} /></LazyMount></Tile>)}</div>
         </TabsContent>
 
         <TabsContent value="motion">
@@ -216,35 +209,37 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
               </Tile>
             ))}
           </div>
-          {plan.hero && motions.length < 4 && <p className="mt-3 text-xs text-muted">{heroName(plan.hero)} works at these levels only — change the first screen for others.</p>}
+          {plan.hero && motions.length < 4 && <p className="mt-3 text-xs text-muted">{heroName(plan.hero)} (your first screen) works at these levels only — change the first screen in Pages for others.</p>}
         </TabsContent>
 
-        <TabsContent value="photos">
-          <div role="radiogroup" aria-label="Photo layout" className={grid}>{Object.values(imagePresentations).map((x) => <Tile key={x.id} on={plan.imagePresentation === x.id} onPick={() => set('imagePresentation', x.id)} label={x.name} sub={x.piece ? 'Comes with ready code' : x.ideal}><LazyMount className="overflow-hidden"><OptionDemo id={`photo:${x.id}`} {...demo} /></LazyMount></Tile>)}</div>
-          <p className="mt-4 text-xs text-muted">Your photos — and anything to say about them — go in Pages → Your files.</p>
-        </TabsContent>
-
-
-        <TabsContent value="effects">
-          <div role="group" aria-label="Kind of effect" className="mb-4 flex flex-wrap gap-1.5">
-            {(['all', ...effectSlots] as (PieceSlot | 'all')[]).map((x) => (
-              <button key={x} type="button" aria-pressed={slot === x} onClick={() => setSlot(x)}
-                className={`rounded-full border px-3 py-1 text-xs ${slot === x ? 'border-ink bg-ink text-paper' : 'border-line bg-white hover:border-ink'}`}>{x === 'all' ? 'All' : pieceSlots[x].name}</button>
-            ))}
-          </div>
-          <div className="grid gap-2 grid-cols-[repeat(auto-fill,minmax(13rem,1fr))]">
-            {effectIds.filter((id) => slot === 'all' || pieces[id].slot === slot).map((id) => {
-              const where = effectWhere(plan, id)
+        <TabsContent value="behaviour">
+          <div className="space-y-7">
+            {(Object.keys(behaviours) as BehaviourId[]).map((b) => {
+              const g = behaviours[b], pick = behaviourPick(plan, b)
+              const card = (id: PieceId | undefined) => {
+                const on = id ? (plan.sitePieces ?? []).includes(id) : !pick
+                const choose = () => updatePlan((p) => (g.many ? ({ ...p, sitePieces: on ? (p.sitePieces ?? []).filter((x) => x !== id) : [...(p.sitePieces ?? []), id!] }) : setBehaviour(p, b, id)))
+                return (
+                  // The demo is a sibling of the button (demos contain their own buttons); the button stretches over the card.
+                  <div key={id ?? 'none'} className={`relative overflow-hidden rounded-md border bg-white ${on ? 'border-pencil ring-2 ring-pencil' : 'border-line hover:border-ink'}`}>
+                    {id ? <LazyMount className="pointer-events-none aspect-video"><ScaledFrame width={420} className="aspect-video"><PieceDemo id={id} colors={look.colors} fonts={look.fonts} chapters={look.chapters} /></ScaledFrame></LazyMount>
+                      : <span className="grid aspect-video place-items-center text-xs text-muted">Plain — no effect</span>}
+                    <button type="button" role={g.many ? 'checkbox' : 'radio'} aria-checked={on} onClick={choose}
+                      className="flex w-full items-start justify-between gap-2 border-t border-line px-2.5 py-2 text-left after:absolute after:inset-0">
+                      <span className="min-w-0"><span className="block text-[13px] font-medium">{id ? pieces[id].name : 'None'}</span><span className="block truncate text-[11px] text-muted">{id ? pieces[id].line : g.none}</span></span>
+                      {on && <Check size={14} className="mt-0.5 shrink-0 text-pencil" aria-hidden />}
+                    </button>
+                  </div>
+                )
+              }
               return (
-                // The demo is a sibling of the button (demos contain their own buttons); the button stretches over the card.
-                <div key={id} className={`relative overflow-hidden rounded-md border bg-white ${where ? 'border-pencil ring-2 ring-pencil' : 'border-line hover:border-ink'}`}>
-                  <LazyMount className="pointer-events-none aspect-video"><ScaledFrame width={420} className="aspect-video"><PieceDemo id={id} colors={look.colors} fonts={look.fonts} chapters={look.chapters} /></ScaledFrame></LazyMount>
-                  <button type="button" role="checkbox" aria-checked={!!where} onClick={() => updatePlan((p) => toggleEffect(p, id))}
-                    className="flex w-full items-start justify-between gap-2 border-t border-line px-2.5 py-2 text-left after:absolute after:inset-0">
-                    <span className="min-w-0"><span className="block text-[13px] font-medium">{pieces[id].name}</span><span className={`block truncate text-[11px] ${where ? 'text-pencil' : 'text-muted'}`}>{where ?? pieces[id].line}</span></span>
-                    {where && <Check size={14} className="mt-0.5 shrink-0 text-pencil" aria-hidden />}
-                  </button>
-                </div>
+                <section key={b} aria-label={g.name}>
+                  <p className="text-sm font-medium">{g.name} <span className="font-normal text-muted">— {g.line}</span></p>
+                  <div role={g.many ? 'group' : 'radiogroup'} aria-label={g.name} className="mt-2 grid gap-2 grid-cols-[repeat(auto-fill,minmax(12rem,1fr))]">
+                    {!g.many && card(undefined)}
+                    {g.ids.map((id) => card(id))}
+                  </div>
+                </section>
               )
             })}
           </div>

@@ -1,4 +1,4 @@
-import { validateRecipe } from '@/features/recipes/engine'
+import { chromeNote, validateRecipe } from '@/features/recipes/engine'
 import { TYPE_UTILITIES, typeVars } from '@/lib/type-tokens'
 import type { AssetManifest, PageSection, UniversalRecipe } from '@/types/domain'
 
@@ -69,9 +69,11 @@ export function visualQa(r: UniversalRecipe): string[] {
     `Background is ${r.visualSystem.palette.tokens[0].hex}; no other page background colors are introduced.`,
     `Display text uses ${t.display.family} ${t.display.weight}; body uses ${t.body.family}; no other families appear.`,
     r.visualSystem.rotation ? `Colour chapters (${r.visualSystem.rotation.name}): each chapter section owns one accent as a full colour field (--color-chapter-1..3, in turn); never two chapter colours in one view, and text never sits on them without AA contrast.` : `Accent ${r.visualSystem.palette.tokens.find((x) => x.role === 'accent')?.hex} covers < 5% of any viewport.`,
-    `Pages: ${r.pages.map((p) => p.label).join(' · ')} — every page shares the same navbar and footer.`,
+    `Pages: ${r.pages.map((p) => p.label).join(' · ')} — every page shares the same navbar and footer${r.pages.some((p) => p.hide) ? `, except: ${r.pages.filter((p) => p.hide).map((p) => `${p.label} — ${chromeNote(p).toLowerCase()}`).join('; ')} Leave them out with a route group whose own layout.tsx omits them — never render and hide with CSS` : ''}.`,
+    `Footer “${r.chrome.footerStyle.name}”: ${r.chrome.footerStyle.composition}`,
     ...r.pages.map((p) => `${p.label} section order: ${p.sections.map((s) => s.name.split(' — ')[0]).join(' → ')}.`),
     `Hero matches "${r.media.hero.name}": ${r.media.hero.composition}`,
+    ...r.pages.flatMap((p) => p.sections.filter((s, i) => s.id === 'hero' && i > 0).map(() => `${p.label}: the hero sits mid-page exactly where the section order puts it — a full-width band after the sections above it, not moved to the top; the page's first section carries the h1.`)),
     `Controls and forms use shadcn/ui (${r.implementation.ui.components.map((c) => c.slug).join(', ')}) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.`,
     'Sections with ready code are built from their component in src/components/sections/ (real copy and media through props, no placeholder text left) and styled only through the recipe tokens. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.',
     ...r.pieces.map((p) => `Kit piece "${p.name}" (<${p.exportName}/> from ${p.path}) is used on ${p.where}, unchanged in behaviour and styled only through the recipe tokens.`),
