@@ -80,7 +80,7 @@ export type SectionId =
   | 'navbar' | 'hero' | 'intro' | 'featured-work' | 'case-study' | 'services' | 'process' | 'about'
   | 'gallery' | 'editorial-story' | 'manifesto' | 'clients' | 'menu' | 'reservation' | 'location'
   | 'collection' | 'lookbook' | 'product-grid' | 'product-highlight' | 'feature-grid' | 'how-it-works'
-  | 'pricing' | 'faq' | 'journal' | 'contact-cta' | 'footer' | 'chapters'
+  | 'pricing' | 'faq' | 'journal' | 'contact-cta' | 'footer' | 'chapters' | 'testimonials' | 'team' | 'stats'
 
 export type PageTypeId =
   | 'home' | 'work' | 'about' | 'contact' | 'services' | 'collections' | 'shop' | 'product-detail'

@@ -23,14 +23,21 @@ const inst = (id: SectionId): PlanSection => ({ key: key(), id, pieces: [] })
 // ─── Catalogues, grouped the way people think about a site ───────────────────
 
 /** Content sections you can place on a page (navbar, hero and footer are the page frame, set elsewhere). */
-export const sectionGroups: { name: string; line: string; ids: SectionId[] }[] = [
-  { name: 'Say who you are', line: 'Statements and story', ids: ['intro', 'manifesto', 'about', 'editorial-story'] },
-  { name: 'Show the work', line: 'Proof and atmosphere', ids: ['featured-work', 'case-study', 'gallery', 'clients'] },
-  { name: 'Explain the offer', line: 'What you do and how', ids: ['chapters', 'services', 'process', 'how-it-works', 'feature-grid', 'pricing'] },
-  { name: 'Sell', line: 'Products and collections', ids: ['collection', 'lookbook', 'product-grid', 'product-highlight'] },
-  { name: 'Bring people in', line: 'Food, bookings, places', ids: ['menu', 'reservation', 'location'] },
-  { name: 'Close the page', line: 'Answers, news, next step', ids: ['faq', 'journal', 'contact-cta'] },
+export const sectionGroups: { name: string; job: string; line: string; ids: SectionId[] }[] = [
+  { name: 'Say who you are', job: 'Introduce yourself', line: 'Statements and story', ids: ['intro', 'manifesto', 'about', 'editorial-story', 'team'] },
+  { name: 'Show the work', job: 'Show your work', line: 'Projects and atmosphere', ids: ['featured-work', 'case-study', 'gallery'] },
+  { name: 'Proof', job: 'Build trust', line: 'Who vouches for you', ids: ['testimonials', 'clients', 'stats'] },
+  { name: 'Explain the offer', job: 'Explain what you offer', line: 'What you do and how', ids: ['chapters', 'services', 'process', 'how-it-works', 'feature-grid', 'pricing'] },
+  { name: 'Sell', job: 'Show your products', line: 'Products and collections', ids: ['collection', 'lookbook', 'product-grid', 'product-highlight'] },
+  { name: 'Bring people in', job: 'Help people visit', line: 'Food, bookings, places', ids: ['menu', 'reservation', 'location'] },
+  // Three different jobs, not three looks of one: each ends a page in its own way.
+  { name: 'Next step', job: 'Ask for the next step', line: 'One clear action at the end', ids: ['contact-cta'] },
+  { name: 'Questions', job: 'Answer questions', line: 'What people ask before they decide', ids: ['faq'] },
+  { name: 'News', job: 'Share news', line: 'Posts, updates, what’s new', ids: ['journal'] },
 ]
+
+/** A section's job on the page, in plain words ("Show your work"); sections doing the same job can replace each other. */
+export const jobOf = (id: SectionId) => sectionGroups.find((g) => g.ids.includes(id))?.job ?? sections[id].name
 
 export const pageGroups: { name: string; ids: PageTypeId[] }[] = [
   { name: 'Main pages', ids: ['home', 'about', 'work', 'services', 'contact', 'journal', 'gallery', 'team', 'testimonials', 'press', 'careers'] },
@@ -59,9 +66,9 @@ export const pageSuggestions: Partial<Record<PageTypeId, SectionId[]>> = {
   menu: ['menu', 'gallery', 'reservation'],
   gallery: ['gallery', 'lookbook'],
   reservations: ['reservation', 'location', 'faq'],
-  team: ['about', 'gallery', 'contact-cta'],
+  team: ['team', 'about', 'contact-cta'],
   careers: ['editorial-story', 'process', 'faq', 'contact-cta'],
-  testimonials: ['clients', 'case-study', 'contact-cta'],
+  testimonials: ['testimonials', 'clients', 'case-study', 'contact-cta'],
   press: ['journal', 'clients', 'contact-cta'],
   integrations: ['feature-grid', 'faq'],
   changelog: ['journal'],

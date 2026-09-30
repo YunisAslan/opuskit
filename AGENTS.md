@@ -12,9 +12,12 @@ Next.js 16 (App Router) + TypeScript + Tailwind v4. Version-matched Next.js docs
   look, first screen, movement, colours (+ optional colour chapters), lettering, shape, menu, photo layout, effects),
   2 Pages (pages and their sections, plus Your files: logo, video, photos, photo note), 3 Recipe — the result page itself (Next on Pages saves the recipe,
   or updates the one the plan came from, and opens it; the same `StepBar` shows there). Every page's brief (`purpose`) is
-  editable — it's how forms & legal pages (no sections) are customised. Swap, don't build: every page arrives filled with what
-  that kind of page usually has (`start`, `resetPage`); the user swaps a section for one doing the same job (`swapOptions`,
-  `replaceSection`), removes, reorders, adds/drops whole pages — there is no shelf to add sections from. Effects are picked
+  editable — it's how forms & legal pages (no sections) are customised. Every page arrives filled with what that kind of page usually
+  has (`start`, `resetPage`). Pages speaks plain words, not component names: a page is a list of parts, each titled by its
+  job (`sectionGroups[].job`, `jobOf`) with how it looks and when that's the right pick (`src/data/section-guide.ts`) and
+  "You'll need" (the section's content). The user changes a part's look among sections doing the same job (`swapOptions`,
+  `replaceSection`), moves it up/down, removes it, or adds a part between two — first "What should it do?" (a job), then
+  its looks; there is no shelf of components. Effects are picked
   in Style and place themselves (`placeEffect`); a swap moves them to another section that fits, or turns them off — it
   never adds sections. Logic: `src/features/kit/plan.ts` (pure, tested in check.ts); storage: `src/lib/kit.ts`.
 - The kit is the one editor. Every recipe opens in it — `/kit?from=seed:{slug}|gen:{id}|example:{slug}` (`specToPlan`;
@@ -23,7 +26,10 @@ Next.js 16 (App Router) + TypeScript + Tailwind v4. Version-matched Next.js docs
 - Ready sections: every content section (all but navbar, hero, footer) is a component in `src/sections/`, listed in
   `src/data/blocks.ts`, shipped to `src/components/sections/` for the sections a recipe uses. OpusKit-written, tokens only
   (`--color-*`, `--radius-*`, `type-display|heading|body|utility` from `src/lib/type-tokens.ts`), content through props,
-  no import beyond `react`. The showcase renders them for real with sample content (`SectionPreview`).
+  no import beyond `react`. The kit renders them for real with sample content (`SectionPreview`), dressed as one of six
+  worlds (studio, food, shop, product, software, event — `worldFor(purpose)`) so a café sees cups and a shop sees products.
+  A new section also needs: its `SectionId`, a `sections` entry in patterns.ts, a `blocks.ts` entry, a sample per world,
+  a plain look + best-when in `section-guide.ts`, a job group in `sectionGroups` — then `npm run pieces`.
 - Ready pieces (backgrounds + components) ship as code in every Build Package's `src/components/pieces/`.
   Sources live in `src/pieces/` (type-checked with OpusKit), metadata in `src/data/pieces.ts`; run `npm run pieces` after editing a piece or a section (it bundles both).
   Adapt only from MIT libraries (Motion Primitives, Magic UI, Cult UI, Animata, Componentry, Fancy Components) or depend on
@@ -64,6 +70,9 @@ Record `choices` with the exact option names.
 
 Each example is registered in `src/data/examples.ts` (title/summary — copy from its own real
 `<title>`/meta description, not the abstract recipe doc, since a build often renames the brand).
+Its card on `/examples` shows `public/examples/{slug}.jpg` — a 1440×900 JPEG screenshot of its live homepage, taken
+once the hero video has real frames (a black first frame makes a blank card). After replacing one, clear
+`.next/dev/cache/images` or the dev server keeps serving the old one.
 
 Its media has exactly one copy on disk: `public/examples/{slug}` is a **symlink** to
 `examples/{slug}/public` (`ln -s ../../examples/{slug}/public public/examples/{slug}`), never a copy.

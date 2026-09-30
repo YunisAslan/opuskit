@@ -20,6 +20,7 @@ import { directions, families, goals } from '../src/data/taxonomy'
 import { adapters } from '../src/features/build-packages'
 import { pageTypes } from '../src/data/patterns'
 import { examples } from '../src/data/examples'
+import { sectionGuide } from '../src/data/section-guide'
 import exampleSpecs from '../src/data/example-specs.generated.json'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
@@ -332,6 +333,9 @@ const main = async () => {
     assert.deepEqual(back.pages.map((p) => p.sections), spec.pages.map((p) => p.sections), `${seed.slug}: pages survive Customise`)
     assert.equal(cleanPlan(JSON.parse(JSON.stringify(specToPlan(spec, 'gen1')))).fromId, 'gen1', 'the source id survives storage')
   }
+  // Pages arrive really filled: every kind of site starts with a Home of 4+ parts, like the example sites have.
+  for (const st of starters) { const home = start(EMPTY_PLAN, st.id).pages[0]; assert.ok(home.sections.filter((x) => x.id !== 'hero').length >= 4, `${st.id}: Home starts with 4+ parts`) }
+
   // Swap, don't build: every section on every starter page has something to swap to; effects always find a place.
   for (const st of [...starters.map((x) => start(EMPTY_PLAN, x.id)), start(EMPTY_PLAN, null)]) {
     for (const pg of st.pages) {
@@ -426,6 +430,8 @@ const main = async () => {
   assert.equal(legacy.direction, undefined, 'unknown ids are dropped at the trust boundary')
   assert.ok(planToSpec(EMPTY_PLAN).pages.length > 0, 'an empty plan still composes a whole site')
   for (const g of sectionGroups) for (const id of g.ids) assert.ok(sections[id] && hasBlock(id), `library section ${id} exists and has code`)
+  // Pages speaks plain words: every part has a job, a look and a 'best when'.
+  for (const g of sectionGroups) { assert.ok(g.job, `${g.name} has a job`); for (const id of g.ids) assert.ok(sectionGuide[id]?.look && sectionGuide[id]?.bestWhen, `${id} has a plain look and best-when`) }
 
   // In-site links in ready code go through the \`link\` component the site passes (next/link), never a bare <a> —
   // a bare one reloads the page and ignores basePath. Only mailto:, tel: and outside links stay <a>.
