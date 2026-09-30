@@ -33,10 +33,10 @@ export function HomeHero() {
     <section className="mx-auto grid max-w-[1440px] items-center gap-12 px-5 pb-20 pt-12 md:px-8 lg:grid-cols-[5fr_7fr] lg:gap-16 lg:pb-28 lg:pt-20">
       <div>
         <h1 className="display text-[clamp(3.2rem,7.4vw,7.2rem)]">Build websites worth remembering.</h1>
-        <p className="mt-7 max-w-md text-lg text-ink-2">Tell us what you want your website to feel like. We&apos;ll turn it into a buildable design recipe — for your AI tool or your own code.</p>
+        <p className="mt-7 max-w-md text-lg text-ink-2">Start from a real site or from scratch, pick how it looks and what’s on it. We turn it into a buildable design recipe — for your AI tool or your own code.</p>
         <div className="mt-9 flex flex-wrap gap-3">
-          <Link href="/create" className="btn btn-ink">Create your recipe</Link>
-          <Link href="/explore" className="btn btn-line">Explore recipes</Link>
+          <Link href="/kit" className="btn btn-ink">Start a site</Link>
+          <Link href="/examples" className="btn btn-line">See real sites</Link>
         </div>
       </div>
 

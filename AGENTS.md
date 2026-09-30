@@ -6,11 +6,20 @@ Next.js 16 (App Router) + TypeScript + Tailwind v4. Version-matched Next.js docs
 - Recipe engine (deterministic composition): `src/features/recipes/engine.ts`.
 - Build Package adapters: `src/features/build-packages/`.
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
-- Showcase (`/kit`) is a second way in, separate from the questionnaire — a builder in three steps, always visible in its
-  step bar: 1 Style (same on every page: look, colours, lettering, shape, menu, photo layout), 2 Pages (outline left,
-  the page top to bottom in the middle drawn with the real section components, a library on the right for exactly the
-  spot clicked: a section slot, a section's effects, the first screen, a new page), 3 Create. Ready pieces attach to a
-  section instance and move with it. Logic: `src/features/kit/plan.ts` (pure, tested in check.ts); storage: `src/lib/kit.ts`.
+- The kit (`/kit`) is the only way to make or change a recipe (the questionnaire was retired 2026-09-30; `/create`
+  redirects here). A builder in three steps, always visible in its
+  step bar: 1 Style (same on every page: name, what it is, kind of site, what visitors should do; then biggest first —
+  look, first screen, movement, colours (+ optional colour chapters), lettering, shape, menu, photo layout, effects),
+  2 Pages (pages and their sections, plus Your files: logo, video, photos, photo note), 3 Recipe — the result page itself (Next on Pages saves the recipe,
+  or updates the one the plan came from, and opens it; the same `StepBar` shows there). Every page's brief (`purpose`) is
+  editable — it's how forms & legal pages (no sections) are customised. Swap, don't build: every page arrives filled with what
+  that kind of page usually has (`start`, `resetPage`); the user swaps a section for one doing the same job (`swapOptions`,
+  `replaceSection`), removes, reorders, adds/drops whole pages — there is no shelf to add sections from. Effects are picked
+  in Style and place themselves (`placeEffect`); a swap moves them to another section that fits, or turns them off — it
+  never adds sections. Logic: `src/features/kit/plan.ts` (pure, tested in check.ts); storage: `src/lib/kit.ts`.
+- The kit is the one editor. Every recipe opens in it — `/kit?from=seed:{slug}|gen:{id}|example:{slug}` (`specToPlan`;
+  an example's recipe is rebuilt from its recorded `choices` by `specFromChoices`). What the kit doesn't edit rides along in
+  `plan.from`; a plan opened from a saved recipe updates that recipe. Result/recipe "Change" links point into the kit.
 - Ready sections: every content section (all but navbar, hero, footer) is a component in `src/sections/`, listed in
   `src/data/blocks.ts`, shipped to `src/components/sections/` for the sections a recipe uses. OpusKit-written, tokens only
   (`--color-*`, `--radius-*`, `type-display|heading|body|utility` from `src/lib/type-tokens.ts`), content through props,
@@ -43,6 +52,15 @@ Before the very first `npm install`/build ever runs inside a freshly dropped-in 
 project won't have it yet, and building it even once without the pin risks OpusKit's own `node_modules`.
 
 ### Showing one on the site
+
+After adding or changing an example, run `npm run examples`. It writes:
+- `src/data/example-specs.generated.json` — the exact recipe each example was built from, which "Customise in kit" opens.
+  Read from the example's `opuskit.json` (every Build Package ships one — keep it, it's committed with the example), or,
+  for older examples without it, rebuilt from its `choices` plus its own `recipe/layout.md` (pages, sections, first
+  screen, layout, shape, menu). `npm run check` composes each spec and asserts it matches that layout.md.
+- `public/downloads/{slug}.zip` ("Copy the code") — the real code with same-size placeholder photos, videos left out and
+  listed in `MEDIA.md`, no env files.
+Record `choices` with the exact option names.
 
 Each example is registered in `src/data/examples.ts` (title/summary — copy from its own real
 `<title>`/meta description, not the abstract recipe doc, since a build often renames the brand).

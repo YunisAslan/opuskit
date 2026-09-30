@@ -1,5 +1,5 @@
-// Do the questionnaire's options actually change what the AI is told to build?
-// For every question, every option is applied (exactly as the questionnaire applies it) to 10 different starting
+// Do the recipe's options (the kit's choices, and what a recipe carries in from its source) change what the AI is told to build?
+// For every choice, every option is applied to the spec to 10 different starting
 // sites, the recipe is composed, and its design-relevant output is fingerprinted. Reported per question:
 //   • ignored  — the option was overridden by the engine, so picking it changed nothing
 //   • twins    — two options that produce the identical output in most starting sites
@@ -47,7 +47,7 @@ const Qs: Q[] = [
   { id: 'typography', options: Object.keys(typography), apply: (s, o) => ({ ...s, typography: o as RecipeSpec['typography'] }), kept: (s, o) => s.typography === o },
   { id: 'shape', options: Object.keys(shapeStyles), apply: (s, o) => ({ ...s, shape: o as RecipeSpec['shape'] }), kept: (s, o) => s.shape === o },
   { id: 'menu', options: Object.keys(navStyles), apply: (s, o) => ({ ...s, nav: o as RecipeSpec['nav'] }), kept: (s, o) => s.nav === o },
-  // Special touches are checked separately below, the way the questionnaire offers them.
+  // Special touches are checked separately below, the way the engine offers them.
   { id: 'photo layout', options: Object.keys(imagePresentations), apply: (s, o) => ({ ...s, lead: 'photography', imagePresentation: o as RecipeSpec['imagePresentation'] }), kept: (s, o) => s.imagePresentation === o },
 ]
 
@@ -91,7 +91,7 @@ console.log('\n■ motion availability per first screen:', EFFECTS.map((e) => `$
 // ─── Deeper checks ─────────────────────────────────────────────────────────
 import { signatureChoices } from '../src/features/recipes/engine'
 
-// (a) Special touches as the questionnaire offers them: only placeable options are shown, and an option whose
+// (a) Special touches as the engine offers them: only placeable options are shown, and an option whose
 // section is already taken is blocked (with a note) instead of accepted and silently dropped.
 {
   let shown = 0, attempts = 0, blocked = 0, dropped = 0
@@ -105,7 +105,7 @@ import { signatureChoices } from '../src/features/recipes/engine'
         attempts++
         const next = [...picked, o]
         const got = composeRecipe(normalizeSpec({ ...c.spec, signatures: next })).signatures.map((x) => x.id)
-        if (!got.includes(o)) { blocked++; continue } // the questionnaire shows this card as "No free spot"
+        if (!got.includes(o)) { blocked++; continue } // no free spot for it
         dropped += picked.filter((p) => !got.includes(p)).length // accepting o must never push out an earlier pick
         picked = got
       }

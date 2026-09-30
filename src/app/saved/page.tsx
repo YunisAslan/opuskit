@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { PageIntro, Swatches } from '@/components/ui'
 import { resolveRef, toggleSaved, useGenerations, useRecent, useSaved } from '@/features/recipes/library'
+import { planSummary, usePlan } from '@/lib/kit'
 import { useHydrated } from '@/lib/store'
 import type { UniversalRecipe } from '@/types/domain'
 
@@ -14,6 +15,7 @@ export default function SavedPage() {
   const recent = useRecent().map((ref) => ({ ref, hit: resolveRef(ref, gens) })).filter((x) => x.hit)
   const [compare, setCompare] = useState<string[]>([])
   const hydrated = useHydrated()
+  const plan = usePlan(), draft = planSummary(plan)
   const pair = compare.map((ref) => saved.find((s) => s.ref === ref)?.hit?.recipe).filter(Boolean) as UniversalRecipe[]
 
   if (!hydrated) return <div className="min-h-screen" />
@@ -21,6 +23,15 @@ export default function SavedPage() {
     <>
       <PageIntro title="Saved recipes" />
       <div className="mx-auto max-w-[1440px] px-5 pb-24 md:px-8">
+        {/* The site being built in the kit — one draft, kept until it becomes a recipe. */}
+        {plan.pages.length > 0 && (
+          <Link href="/kit" className="choice mb-10 flex flex-wrap items-center justify-between gap-3 p-5">
+            <span><span className="block text-xs uppercase tracking-wider text-muted">Draft in the kit</span>
+              <span className="mt-1 block text-lg font-medium">{plan.name || 'Untitled site'}</span>
+              <span className="block text-sm text-muted">{draft.pages} page{draft.pages === 1 ? '' : 's'} · {draft.sections} section{draft.sections === 1 ? '' : 's'}{draft.pieces ? ` · ${draft.pieces} effect${draft.pieces === 1 ? '' : 's'}` : ''}</span></span>
+            <span className="btn btn-ink btn-sm">Continue</span>
+          </Link>
+        )}
         {saved.length === 0 ? (
           <div className="border-t border-line py-20">
             <p className="text-2xl tracking-tight">Nothing saved yet.</p>

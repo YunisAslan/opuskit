@@ -1,5 +1,6 @@
 'use client'
-import { Search } from 'lucide-react'
+import { Check, Plus, Search } from 'lucide-react'
+import { toast } from 'sonner'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -9,8 +10,10 @@ import { Chip } from '@/components/ui'
 import { components, inspirationSources, motionPatterns } from '@/data/patterns'
 import { recipeSeeds } from '@/data/recipes'
 import { directions, families, leads, motionLevels } from '@/data/taxonomy'
+import { setStyle, start } from '@/features/kit/plan'
 import { composeRecipe, specFromSeed } from '@/features/recipes/engine'
-import type { FamilyId, LeadId, MotionLevel } from '@/types/domain'
+import { updatePlan, usePlan } from '@/lib/kit'
+import type { DirectionId, FamilyId, LeadId, MotionLevel } from '@/types/domain'
 
 const TABS = [['recipes', 'Recipes'], ['styles', 'Styles'], ['motion', 'Motion'], ['components', 'Components'], ['references', 'References']] as const
 type Tab = (typeof TABS)[number][0]
@@ -96,11 +99,12 @@ function Styles() {
           <ul className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             {f.directions.map((id) => (
               <li key={id}>
-                <Link href={`/create?direction=${id}`} className="group block">
+                <Link href={`/kit?look=${id}`} className="group block">
                   <SitePreview {...previewFromDirection(id)} className="rounded-md border border-line" />
                   <p className="mt-3 font-medium group-hover:text-pencil">{directions[id].name}</p>
                   <p className="text-sm text-muted">{directions[id].line}</p>
                 </Link>
+                <AddStyleToKit id={id} />
               </li>
             ))}
           </ul>
@@ -160,5 +164,18 @@ function References() {
         ))}
       </ul>
     </div>
+  )
+}
+
+/** Puts a style into the kit (starting a blank site if there is none yet), so browsing can feed the bag. */
+function AddStyleToKit({ id }: { id: DirectionId }) {
+  const router = useRouter()
+  const plan = usePlan()
+  const on = plan.direction === id
+  return (
+    <button type="button" disabled={on} className="mt-2 inline-flex items-center gap-1 text-sm link disabled:no-underline disabled:opacity-60"
+      onClick={() => { updatePlan((p) => setStyle(p.pages.length ? p : start(p, null), 'direction', id)); toast(`${directions[id].name} is your kit’s style`, { action: { label: 'Open kit', onClick: () => router.push('/kit') } }) }}>
+      {on ? <><Check size={14} aria-hidden />Style in your kit</> : <><Plus size={14} aria-hidden />Use in kit</>}
+    </button>
   )
 }

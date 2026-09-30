@@ -177,7 +177,7 @@ export function ChooseFeeling() {
             <div><dt className="text-muted">Type</dt><dd className="mt-1 text-base">{p.type.name}</dd></div>
             <div><dt className="text-muted">Motion</dt><dd className="mt-1 text-base">{motionLevels[p.motion].name}</dd></div>
           </dl>
-          <Link href={`/create?feel=${f}`} className="btn btn-ink mt-8">Continue with {families[f].name.toLowerCase()}</Link>
+          <Link href={`/kit?feel=${f}`} className="btn btn-ink mt-8">Continue with {families[f].name.toLowerCase()}</Link>
         </div>
       </Wrap>
     </section>

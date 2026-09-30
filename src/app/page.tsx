@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { HomeHero } from '@/components/home/HomeHero'
+import { TwoWays } from '@/components/home/TwoWays'
 import { AssetReality, Assembly, BuildWithAI, ChooseFeeling, Ingredients, InspirationToRecipe, type ToolTree } from '@/components/home/HomeStory'
 import { inspirationSources } from '@/data/patterns'
 import { seedBySlug } from '@/data/recipes'
@@ -25,6 +26,7 @@ export default async function Home() {
   return (
     <>
       <HomeHero />
+      <TwoWays />
       <Assembly />
       <InspirationToRecipe />
       <ChooseFeeling />
@@ -56,8 +58,9 @@ export default async function Home() {
         <div className="mx-auto max-w-[1440px] px-5 py-24 md:px-8 md:py-36">
           <h2 id="cta" className="display max-w-5xl text-[clamp(2.8rem,7vw,7rem)]">Your next website starts with a direction.</h2>
           <div className="mt-10 flex flex-wrap items-center gap-6">
-            <Link href="/create" className="btn bg-paper text-ink hover:bg-white">Create your Opus</Link>
-            <span className="text-paper/60">6–10 visual decisions. No design vocabulary required.</span>
+            <Link href="/kit" className="btn bg-paper text-ink hover:bg-white">Start a site</Link>
+            <Link href="/examples" className="btn border border-paper/40 text-paper hover:bg-paper hover:text-ink">Start from a real site</Link>
+            <span className="text-paper/60">No design vocabulary required.</span>
           </div>
         </div>
       </section>

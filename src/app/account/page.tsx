@@ -33,7 +33,7 @@ export default function AccountPage() {
       <div className="mx-auto grid max-w-[1440px] gap-12 px-5 pb-24 md:grid-cols-3 md:px-8">
         <section aria-labelledby="mine" className="md:col-span-2">
           <h2 id="mine" className="border-t border-ink pt-3 text-2xl font-medium tracking-tight">Your recipes</h2>
-          {created.length === 0 ? <p className="mt-4 text-ink-2">None yet. <Link href="/create" className="link">Create your first recipe</Link>.</p> : (
+          {created.length === 0 ? <p className="mt-4 text-ink-2">None yet. <Link href="/kit" className="link">Start your first site</Link>.</p> : (
             <ul className="mt-4 divide-y divide-line">
               {created.map(([id]) => { const hit = resolveRef(`gen:${id}`, gens); return hit && <li key={id}><Link href={hit.href} className="flex justify-between py-3 hover:text-pencil"><span>{hit.recipe.title}</span><span className="text-sm text-muted">{new Date(gens[id].createdAt).toLocaleDateString()}</span></Link></li> })}
             </ul>

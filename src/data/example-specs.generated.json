@@ -1,0 +1,844 @@
+{
+ "ulooklonely": {
+  "base": "cinematic-editorial",
+  "brief": {
+   "name": "ulooklonely",
+   "offer": "Its presentation of loneliness",
+   "goal": "explore"
+  },
+  "purpose": "portfolio",
+  "direction": "film-inspired",
+  "characters": [],
+  "lead": "video",
+  "motion": "immersive",
+  "hero": "scroll-video",
+  "layout": "full-bleed",
+  "palette": "studio-aqua",
+  "typography": "loud-and-clear",
+  "assets": [
+   "video"
+  ],
+  "uploads": [
+   {
+    "asset": "video",
+    "name": "ulooklonely.mp4",
+    "kind": "video",
+    "width": 720,
+    "height": 1280,
+    "duration": 19.766341
+   }
+  ],
+  "mediaPlan": "have",
+  "imagePresentation": "tilted-grid",
+  "nav": "bottom-dock",
+  "shape": "brutal",
+  "signatures": [],
+  "pieces": [
+   "scribble-link",
+   "scroll-progress",
+   "velocity-band",
+   "brand-cursor"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "scribble-link",
+    "page": "p1",
+    "index": 0
+   },
+   {
+    "piece": "scroll-progress",
+    "page": "p1",
+    "index": 1
+   },
+   {
+    "piece": "velocity-band",
+    "page": "*",
+    "index": -1
+   },
+   {
+    "piece": "brand-cursor",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "journal"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "editorial-story"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "sign-in",
+    "label": "Sign In",
+    "purpose": "Standard sign-in: email/password, forgot-password link, link to sign up.",
+    "sections": []
+   },
+   {
+    "id": "p4",
+    "type": "sign-up",
+    "label": "Sign Up",
+    "purpose": "Standard sign-up: minimal required fields, clear value of creating an account.",
+    "sections": []
+   },
+   {
+    "id": "p5",
+    "type": "services",
+    "label": "Services",
+    "purpose": "Make the offer and the way of working clear enough to remove hesitation.",
+    "sections": [
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p6",
+    "type": "work",
+    "label": "Work",
+    "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+    "sections": [
+     "featured-work",
+     "case-study"
+    ]
+   }
+  ],
+  "target": "not-sure"
+ },
+ "swiss-modern-event-site-claude-code": {
+  "base": "swiss-modern",
+  "brief": {
+   "name": "RALPH&LAUREN"
+  },
+  "purpose": "event",
+  "direction": "swiss-modern",
+  "characters": [],
+  "layout": "grid",
+  "lead": "video",
+  "motion": "immersive",
+  "imagePresentation": "uniform-grid",
+  "palette": "signal-white",
+  "typography": "loud-and-clear",
+  "assets": [],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "intro"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "reservations",
+    "label": "RSVP",
+    "purpose": "Convert interest into a booking with minimal friction.",
+    "sections": [
+     "reservation",
+     "location"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "locations",
+    "label": "Venue & travel",
+    "purpose": "Help visitors find and choose the right location.",
+    "sections": []
+   },
+   {
+    "id": "p4",
+    "type": "faq",
+    "label": "FAQ",
+    "purpose": "Answer the questions that would otherwise stall a decision.",
+    "sections": [
+     "faq"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "gallery",
+    "label": "Gallery",
+    "purpose": "Let atmosphere and craft speak for themselves.",
+    "sections": [
+     "gallery"
+    ]
+   },
+   {
+    "id": "p6",
+    "type": "contact",
+    "label": "Contact",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p7",
+    "type": "sign-in",
+    "label": "Sign In",
+    "purpose": "Standard sign-in: email/password, forgot-password link, link to sign up.",
+    "sections": []
+   },
+   {
+    "id": "p8",
+    "type": "sign-up",
+    "label": "Sign Up",
+    "purpose": "Standard sign-up: minimal required fields, clear value of creating an account.",
+    "sections": []
+   },
+   {
+    "id": "p9",
+    "type": "privacy-policy",
+    "label": "Privacy Policy",
+    "purpose": "State plainly what data is collected and how it is used.",
+    "sections": []
+   },
+   {
+    "id": "p10",
+    "type": "terms-of-service",
+    "label": "Terms of Service",
+    "purpose": "State the terms of using the site or product.",
+    "sections": []
+   },
+   {
+    "id": "p11",
+    "type": "cookie-policy",
+    "label": "Cookie Policy",
+    "purpose": "Explain what cookies are used and why.",
+    "sections": []
+   },
+   {
+    "id": "p12",
+    "type": "accessibility",
+    "label": "Accessibility",
+    "purpose": "State the accessibility standard aimed for and how to report issues.",
+    "sections": []
+   }
+  ],
+  "target": "not-sure",
+  "hero": "scroll-video",
+  "shape": "sharp",
+  "nav": "centered-logo"
+ },
+ "cheeky911": {
+  "base": "cinematic-editorial",
+  "brief": {
+   "name": "CHEEKY"
+  },
+  "purpose": "fashion",
+  "direction": "film-inspired",
+  "characters": [],
+  "layout": "full-bleed",
+  "lead": "video",
+  "motion": "immersive",
+  "imagePresentation": "marquee-rows",
+  "palette": "oxblood-room",
+  "typography": "stretch-test",
+  "assets": [],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "collections",
+    "label": "Collections",
+    "purpose": "Present the current collection through an editorial, image-led experience.",
+    "sections": [
+     "collection",
+     "lookbook"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "editorial-story"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "contact",
+    "label": "Contact",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "size-guide",
+    "label": "Size Guide",
+    "purpose": "Remove size uncertainty with clear measurements and a fit chart.",
+    "sections": []
+   },
+   {
+    "id": "p6",
+    "type": "gift-cards",
+    "label": "Gift Cards",
+    "purpose": "Let someone buy a gift card in under a minute.",
+    "sections": []
+   },
+   {
+    "id": "p7",
+    "type": "wholesale",
+    "label": "Wholesale",
+    "purpose": "Explain wholesale terms and how a retailer applies to carry it.",
+    "sections": []
+   },
+   {
+    "id": "p8",
+    "type": "faq",
+    "label": "FAQ",
+    "purpose": "Answer the questions that would otherwise stall a decision.",
+    "sections": [
+     "faq"
+    ]
+   },
+   {
+    "id": "p9",
+    "type": "journal",
+    "label": "Journal",
+    "purpose": "Show ongoing thinking, in your own voice, over time.",
+    "sections": [
+     "journal"
+    ]
+   },
+   {
+    "id": "p10",
+    "type": "sign-in",
+    "label": "Sign In",
+    "purpose": "Standard sign-in: email/password, forgot-password link, link to sign up.",
+    "sections": []
+   },
+   {
+    "id": "p11",
+    "type": "cookie-policy",
+    "label": "Cookie Policy",
+    "purpose": "Explain what cookies are used and why.",
+    "sections": []
+   },
+   {
+    "id": "p12",
+    "type": "sign-up",
+    "label": "Sign Up",
+    "purpose": "Standard sign-up: minimal required fields, clear value of creating an account.",
+    "sections": []
+   },
+   {
+    "id": "p13",
+    "type": "privacy-policy",
+    "label": "Privacy Policy",
+    "purpose": "State plainly what data is collected and how it is used.",
+    "sections": []
+   },
+   {
+    "id": "p14",
+    "type": "terms-of-service",
+    "label": "Terms of Service",
+    "purpose": "State the terms of using the site or product.",
+    "sections": []
+   },
+   {
+    "id": "p15",
+    "type": "shop",
+    "label": "Shop",
+    "purpose": "Let visitors browse and choose confidently.",
+    "sections": [
+     "product-grid"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "hero": "scroll-video"
+ },
+ "buytolose": {
+  "base": "cinematic-editorial",
+  "brief": {
+   "name": "BUYTOLOSE"
+  },
+  "purpose": "ecommerce",
+  "direction": "gothic-modern",
+  "characters": [],
+  "layout": "full-bleed",
+  "lead": "video",
+  "motion": "immersive",
+  "palette": "pool-tile",
+  "typography": "round-future",
+  "assets": [],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "collection"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "shop",
+    "label": "Shop",
+    "purpose": "Let visitors browse and choose confidently.",
+    "sections": [
+     "product-grid",
+     "product-highlight"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "product-detail",
+    "label": "Product",
+    "purpose": "Show one product in full: gallery, price, variants, add-to-cart, and related items.",
+    "sections": []
+   },
+   {
+    "id": "p4",
+    "type": "cart",
+    "label": "Cart",
+    "purpose": "Let visitors review and adjust their selection before checkout.",
+    "sections": []
+   },
+   {
+    "id": "p5",
+    "type": "checkout",
+    "label": "Checkout",
+    "purpose": "Collect payment and shipping with as little friction as possible.",
+    "sections": []
+   },
+   {
+    "id": "p6",
+    "type": "account",
+    "label": "Account",
+    "purpose": "Let a returning customer see past orders and manage their details.",
+    "sections": []
+   },
+   {
+    "id": "p7",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about"
+    ]
+   },
+   {
+    "id": "p8",
+    "type": "contact",
+    "label": "Contact",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p9",
+    "type": "shipping-returns",
+    "label": "Shipping & Returns",
+    "purpose": "Answer shipping cost, timing and returns questions before checkout does.",
+    "sections": []
+   },
+   {
+    "id": "p10",
+    "type": "size-guide",
+    "label": "Size Guide",
+    "purpose": "Remove size uncertainty with clear measurements and a fit chart.",
+    "sections": []
+   },
+   {
+    "id": "p11",
+    "type": "gift-cards",
+    "label": "Gift Cards",
+    "purpose": "Let someone buy a gift card in under a minute.",
+    "sections": []
+   },
+   {
+    "id": "p12",
+    "type": "testimonials",
+    "label": "Testimonials",
+    "purpose": "Let real clients or customers make the case, in their own words.",
+    "sections": []
+   },
+   {
+    "id": "p13",
+    "type": "faq",
+    "label": "FAQ",
+    "purpose": "Answer the questions that would otherwise stall a decision.",
+    "sections": [
+     "faq"
+    ]
+   },
+   {
+    "id": "p14",
+    "type": "sign-in",
+    "label": "Sign In",
+    "purpose": "Standard sign-in: email/password, forgot-password link, link to sign up.",
+    "sections": []
+   },
+   {
+    "id": "p15",
+    "type": "sign-up",
+    "label": "Sign Up",
+    "purpose": "Standard sign-up: minimal required fields, clear value of creating an account.",
+    "sections": []
+   },
+   {
+    "id": "p16",
+    "type": "privacy-policy",
+    "label": "Privacy Policy",
+    "purpose": "State plainly what data is collected and how it is used.",
+    "sections": []
+   },
+   {
+    "id": "p17",
+    "type": "terms-of-service",
+    "label": "Terms of Service",
+    "purpose": "State the terms of using the site or product.",
+    "sections": []
+   },
+   {
+    "id": "p18",
+    "type": "cookie-policy",
+    "label": "Cookie Policy",
+    "purpose": "Explain what cookies are used and why.",
+    "sections": []
+   },
+   {
+    "id": "p19",
+    "type": "not-found",
+    "label": "404",
+    "purpose": "Acknowledge the wrong turn and offer a clear way back.",
+    "sections": []
+   }
+  ],
+  "target": "not-sure",
+  "hero": "scroll-video"
+ },
+ "keepers": {
+  "base": "swiss-modern",
+  "brief": {
+   "name": "KEEPERS"
+  },
+  "purpose": "product",
+  "direction": "news-grid",
+  "characters": [],
+  "layout": "full-bleed",
+  "lead": "video",
+  "motion": "immersive",
+  "palette": "electric-lime",
+  "typography": "workshop-manual",
+  "assets": [],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "product-highlight"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "features",
+    "label": "Features",
+    "purpose": "Explain what the product does with concrete, specific evidence, not adjectives.",
+    "sections": [
+     "feature-grid"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "contact",
+    "label": "Contact",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "testimonials",
+    "label": "Testimonials",
+    "purpose": "Let real clients or customers make the case, in their own words.",
+    "sections": []
+   },
+   {
+    "id": "p5",
+    "type": "privacy-policy",
+    "label": "Privacy Policy",
+    "purpose": "State plainly what data is collected and how it is used.",
+    "sections": []
+   },
+   {
+    "id": "p6",
+    "type": "terms-of-service",
+    "label": "Terms of Service",
+    "purpose": "State the terms of using the site or product.",
+    "sections": []
+   },
+   {
+    "id": "p7",
+    "type": "cookie-policy",
+    "label": "Cookie Policy",
+    "purpose": "Explain what cookies are used and why.",
+    "sections": []
+   },
+   {
+    "id": "p8",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about"
+    ]
+   },
+   {
+    "id": "p9",
+    "type": "pricing",
+    "label": "Pricing",
+    "purpose": "Remove the final uncertainty before signing up.",
+    "sections": [
+     "pricing"
+    ]
+   },
+   {
+    "id": "p10",
+    "type": "comparison",
+    "label": "Comparison",
+    "purpose": "Make an honest, specific case for why this over the obvious alternative.",
+    "sections": []
+   },
+   {
+    "id": "p11",
+    "type": "faq",
+    "label": "FAQ",
+    "purpose": "Answer the questions that would otherwise stall a decision.",
+    "sections": [
+     "faq"
+    ]
+   },
+   {
+    "id": "p12",
+    "type": "sign-in",
+    "label": "Sign In",
+    "purpose": "Standard sign-in: email/password, forgot-password link, link to sign up.",
+    "sections": []
+   },
+   {
+    "id": "p13",
+    "type": "sign-up",
+    "label": "Sign Up",
+    "purpose": "Standard sign-up: minimal required fields, clear value of creating an account.",
+    "sections": []
+   },
+   {
+    "id": "p14",
+    "type": "not-found",
+    "label": "404",
+    "purpose": "Acknowledge the wrong turn and offer a clear way back.",
+    "sections": []
+   },
+   {
+    "id": "p15",
+    "type": "accessibility",
+    "label": "Accessibility",
+    "purpose": "State the accessibility standard aimed for and how to report issues.",
+    "sections": []
+   }
+  ],
+  "target": "not-sure",
+  "hero": "scroll-video-page"
+ },
+ "kofii": {
+  "base": "organic-modern",
+  "brief": {
+   "name": "KOFİİ"
+  },
+  "purpose": "restaurant",
+  "direction": "scandinavian-minimal",
+  "characters": [],
+  "layout": "full-bleed",
+  "lead": "video",
+  "motion": "immersive",
+  "imagePresentation": "liquid-glass",
+  "palette": "celery-room",
+  "typography": "grid-discipline",
+  "assets": [],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "intro"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "menu",
+    "label": "Menu",
+    "purpose": "Let guests decide what they want before they arrive.",
+    "sections": [
+     "menu"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "reservations",
+    "label": "Reservations",
+    "purpose": "Convert interest into a booking with minimal friction.",
+    "sections": [
+     "reservation",
+     "location"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "gallery",
+    "label": "Gallery",
+    "purpose": "Let atmosphere and craft speak for themselves.",
+    "sections": [
+     "gallery"
+    ]
+   },
+   {
+    "id": "p6",
+    "type": "contact",
+    "label": "Contact",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p7",
+    "type": "order-online",
+    "label": "Order Online",
+    "purpose": "Get an order placed for pickup or delivery with minimal friction.",
+    "sections": []
+   },
+   {
+    "id": "p8",
+    "type": "catering",
+    "label": "Catering & Private Events",
+    "purpose": "Explain catering and private event options and how to inquire.",
+    "sections": []
+   },
+   {
+    "id": "p9",
+    "type": "locations",
+    "label": "Locations",
+    "purpose": "Help visitors find and choose the right location.",
+    "sections": []
+   },
+   {
+    "id": "p10",
+    "type": "gift-cards",
+    "label": "Gift Cards",
+    "purpose": "Let someone buy a gift card in under a minute.",
+    "sections": []
+   },
+   {
+    "id": "p11",
+    "type": "privacy-policy",
+    "label": "Privacy Policy",
+    "purpose": "State plainly what data is collected and how it is used.",
+    "sections": []
+   },
+   {
+    "id": "p12",
+    "type": "faq",
+    "label": "FAQ",
+    "purpose": "Answer the questions that would otherwise stall a decision.",
+    "sections": [
+     "faq"
+    ]
+   },
+   {
+    "id": "p13",
+    "type": "sign-in",
+    "label": "Sign In",
+    "purpose": "Standard sign-in: email/password, forgot-password link, link to sign up.",
+    "sections": []
+   },
+   {
+    "id": "p14",
+    "type": "sign-up",
+    "label": "Sign Up",
+    "purpose": "Standard sign-up: minimal required fields, clear value of creating an account.",
+    "sections": []
+   },
+   {
+    "id": "p15",
+    "type": "terms-of-service",
+    "label": "Terms of Service",
+    "purpose": "State the terms of using the site or product.",
+    "sections": []
+   },
+   {
+    "id": "p16",
+    "type": "cookie-policy",
+    "label": "Cookie Policy",
+    "purpose": "Explain what cookies are used and why.",
+    "sections": []
+   },
+   {
+    "id": "p17",
+    "type": "not-found",
+    "label": "404",
+    "purpose": "Acknowledge the wrong turn and offer a clear way back.",
+    "sections": []
+   },
+   {
+    "id": "p18",
+    "type": "accessibility",
+    "label": "Accessibility",
+    "purpose": "State the accessibility standard aimed for and how to report issues.",
+    "sections": []
+   }
+  ],
+  "target": "not-sure",
+  "hero": "scroll-video-page",
+  "shape": "soft",
+  "nav": "floating-pill"
+ }
+}

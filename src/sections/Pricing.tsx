@@ -1,7 +1,8 @@
+import type { ElementType } from 'react'
 // OpusKit section — Pricing: 2–3 plans side by side, one recommended, everything each includes in plain words.
 export type Plan = { name: string; price: string; period?: string; line?: string; features: string[]; action: { label: string; href: string }; recommended?: boolean }
 
-export function PricingSection({ title, plans, note }: { title: string; plans: Plan[]; note?: string }) {
+export function PricingSection({ link: L = 'a', title, plans, note }: { link?: ElementType; title: string; plans: Plan[]; note?: string }) {
   return (
     <section className="px-5 py-24 md:px-10 md:py-32">
       <div className="mx-auto max-w-[1440px]">
@@ -13,7 +14,7 @@ export function PricingSection({ title, plans, note }: { title: string; plans: P
               {p.line && <p className="type-body mt-2 text-(--color-muted)">{p.line}</p>}
               <p className="mt-6"><span className="type-display [font-size:clamp(2.5rem,4vw,3.5rem)]">{p.price}</span>{p.period && <span className="type-body text-(--color-muted)"> / {p.period}</span>}</p>
               <ul className="type-body mt-6 flex-1 space-y-2">{p.features.map((f) => <li key={f} className="border-t border-(--color-border) pt-2">{f}</li>)}</ul>
-              <a href={p.action.href} className={`type-body mt-8 rounded-(--radius-button) px-5 py-3 text-center ${p.recommended ? 'bg-(--color-primary) text-(--color-background)' : 'border border-(--color-text)'}`}>{p.action.label}</a>
+              <L href={p.action.href} className={`type-body mt-8 rounded-(--radius-button) px-5 py-3 text-center ${p.recommended ? 'bg-(--color-primary) text-(--color-background)' : 'border border-(--color-text)'}`}>{p.action.label}</L>
             </li>
           ))}
         </ul>

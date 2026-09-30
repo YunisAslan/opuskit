@@ -4,7 +4,7 @@
 // references, implementation, "why it works") still ships in full inside the Build Package and the copied recipe.
 
 import { PieceDemo } from '@/components/PieceDemo'
-import { ArrowLeft, Bookmark, BookmarkCheck, Check, Circle, Download, Pencil, Search, TriangleAlert, X } from 'lucide-react'
+import { Bookmark, BookmarkCheck, Check, Circle, Download, Pencil, Search, SlidersHorizontal, TriangleAlert, X } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState, type ReactNode } from 'react'
 import { OptionDemo } from '@/components/OptionDemo'
@@ -23,7 +23,7 @@ import { useAccess } from '@/features/billing'
 import { CheckoutDialog } from '@/features/billing/CheckoutDialog'
 import { adapters } from '@/features/build-packages'
 import { BuildTab, downloadPackage, useBuildPackage } from '@/features/build-packages/BuildPanel'
-import { deleteFile, getFile, storeUpload } from '@/lib/files'
+import { MediaSlots, SLOTS } from '@/components/MediaSlots'
 import type { AssetId, BuildTarget, PageSection, PaletteColors, RecipeSpec, UniversalRecipe, UploadedAsset } from '@/types/domain'
 import { normalizeSpec } from './engine'
 import { markRecent, toggleSaved, useSaved } from './library'
@@ -47,12 +47,13 @@ const STATUS: Record<string, { label: string; mark: typeof Check; cls: string }>
   optional: { label: 'Optional', mark: Circle, cls: 'text-muted' },
 }
 
-export function RecipeDocument({ recipe: r, recipeRef, onChange }: { recipe: UniversalRecipe; recipeRef: string; onChange: (spec: RecipeSpec) => void }) {
+/** `inKit`: shown as step 3 of the kit (its step bar is above), so the bar's own way back replaces "Customise in kit". */
+export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false }: { recipe: UniversalRecipe; recipeRef: string; onChange: (spec: RecipeSpec) => void; inKit?: boolean }) {
   const { unlocked } = useAccess(recipeRef)
   const saved = useSaved().some((s) => s.ref === recipeRef)
   const [checkout, setCheckout] = useState(false)
   const [tab, setTab] = useState<TabId>('overview')
-  // The tool the user picked in the questionnaire; none if they chose to decide later. We never pick one for them.
+  // The tool the user picked in the kit; none if they chose to decide later. We never pick one for them.
   const [target, setTarget] = useState<BuildTarget | null>(r.metadata.spec.target === 'not-sure' ? null : r.metadata.spec.target)
   const [zipping, setZipping] = useState(false)
   const spec = r.metadata.spec
@@ -60,7 +61,11 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange }: { recipe: Uni
   const look = { colors, type: r.visualSystem.typography, shape: r.visualSystem.shape }
   const { pkg, error } = useBuildPackage(r, target, unlocked)
   const [kind, key] = recipeRef.split(':')
-  const editHref = (step?: string) => `/create?${kind === 'seed' ? `seed=${key}` : `edit=${key}`}${step ? `&step=${step}` : ''}`
+  // Every change happens in the kit (the one editor), opened on this recipe at the matching spot.
+  const editHref = (step?: string) => {
+    const [at, spot] = KIT_SPOT[step ?? ''] ?? ['style']
+    return `/kit?from=${kind}:${key}&step=${at}${spot ? `&${at === 'style' ? 'cat' : 'shelf'}=${spot}` : ''}`
+  }
   const isLocked = (t: TabId) => !unlocked && ((t === 'motion' && lockedSections.includes('motion')) || (t === 'build' && buildPackageLocked))
 
   useEffect(() => { markRecent(recipeRef) }, [recipeRef])
@@ -105,7 +110,7 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange }: { recipe: Uni
       {/* One fixed action bar: everything the user can do with this recipe, always in reach. */}
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-2 px-5 py-3 md:px-8">
-          <Link href={editHref()} className="btn btn-line btn-sm inline-flex items-center gap-1.5"><ArrowLeft size={15} aria-hidden />Edit answers</Link>
+          {!inKit && <Link href={editHref()} className="btn btn-line btn-sm inline-flex items-center gap-1.5"><SlidersHorizontal size={15} aria-hidden />Customise in kit</Link>}
           <button type="button" className="btn btn-sm inline-flex items-center gap-1.5 text-ink-2 hover:text-ink" aria-pressed={saved} onClick={() => { toggleSaved(recipeRef); toast(saved ? 'Removed from saved' : 'Saved — find it under Saved') }}>
             {saved ? <BookmarkCheck size={16} aria-hidden /> : <Bookmark size={16} aria-hidden />}{saved ? 'Saved' : 'Save'}
           </button>
@@ -139,6 +144,12 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange }: { recipe: Uni
 type Look = { colors: PaletteColors; type: UniversalRecipe['visualSystem']['typography']; shape: UniversalRecipe['visualSystem']['shape'] }
 type Edit = (step?: string) => string
 
+/** Questionnaire step → where the same choice lives in the kit: [kit step, style category or components shelf]. */
+const KIT_SPOT: Record<string, [string, string?]> = {
+  direction: ['style', 'look'], palette: ['style', 'colours'], typography: ['style', 'lettering'], shape: ['style', 'shape'], nav: ['style', 'menu'], photos: ['style', 'photos'],
+  lead: ['style', 'first-screen'], motion: ['style', 'motion'], touches: ['style', 'effects'], pages: ['pages'], kit: ['style', 'effects'],
+}
+
 const ChangeLink = ({ href, label = 'Change' }: { href: string; label?: string }) =>
   <Link href={href} className="link inline-flex items-center gap-1 text-sm"><Pencil size={13} aria-hidden />{label}</Link>
 
@@ -167,7 +178,7 @@ function Overview({ r, look, editHref }: { r: UniversalRecipe; look: Look; editH
     { label: 'Menu', value: r.chrome.nav.name, step: 'nav', visual: <OptionDemo id={`nav:${r.chrome.nav.id}`} {...look} /> },
     { label: 'Special touches', value: r.signatures.map((s) => s.name).join(', ') || 'None', step: 'touches',
       visual: r.signatures[0] ? <OptionDemo id={`sig:${r.signatures[0].id}`} {...look} /> : <div className="h-full" style={{ background: c.surface }} /> },
-    ...(r.pieces.length ? [{ label: 'Your kit', value: r.pieces.map((p) => p.name).join(', '), step: 'kit', href: '/kit?step=pages',
+    ...(r.pieces.length ? [{ label: 'Your kit', value: r.pieces.map((p) => p.name).join(', '), step: 'kit', href: editHref('kit'),
       visual: <PieceDemo id={r.pieces[0].id} colors={c} fonts={{ display: t.display.family, body: t.body.family, utility: t.utility.family }} className="!h-full" /> }] : []),
     { label: 'Pages', value: `${r.pages.length} — ${r.pages.map((p) => p.label).join(', ')}`, step: 'pages',
       visual: <div className="grid h-full grid-cols-3 gap-1.5 p-3" style={{ background: c.background }}>{r.pages.slice(0, 6).map((p) => <span key={p.id} className="flex items-end rounded p-1.5 text-[10px] leading-tight" style={{ background: c.surface, color: c.muted }}>{p.label}</span>)}</div> },
@@ -176,12 +187,13 @@ function Overview({ r, look, editHref }: { r: UniversalRecipe; look: Look; editH
     <div className="space-y-12">
       <SitePreview {...previewFromRecipe(r, name ? { title: name, brand: name } : {})} className="rounded-xl border border-line" />
       <div>
-        <Heading title="Your choices"><ChangeLink href={editHref()} label="Edit all answers" /></Heading>
+        <Heading title="Your choices"><ChangeLink href={editHref()} label="Customise in kit" /></Heading>
         <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {tiles.map((x) => (
-            <li key={x.label}>
-              <Link href={x.href ?? editHref(x.step)} className="choice group block overflow-hidden" aria-label={`${x.label}: ${x.value}. Change`}>
-                <div className="aspect-[16/10] overflow-hidden border-b border-line">{x.visual}</div>
+            <li key={x.label} className="choice group relative overflow-hidden">
+              {/* The visual is a sibling of the link (demos contain their own links); the link stretches over the card. */}
+              <div className="pointer-events-none aspect-[16/10] overflow-hidden border-b border-line" inert>{x.visual}</div>
+              <Link href={x.href ?? editHref(x.step)} className="block after:absolute after:inset-0" aria-label={`${x.label}: ${x.value}. Change`}>
                 <div className="flex items-start justify-between gap-2 p-3.5">
                   <span className="min-w-0"><span className="block text-xs text-muted">{x.label}</span><span className="mt-0.5 block truncate font-medium">{x.value}</span></span>
                   <Pencil size={14} className="mt-1 shrink-0 text-muted group-hover:text-ink" aria-hidden />
@@ -304,57 +316,14 @@ function PageCard({ title, line, sections }: { title: string; line: string; sect
 
 // ─── Your files: upload or replace logo, photos, video right here ────────────
 
-const SLOTS: { asset: AssetId; label: string; line: string; accept: string; many: boolean; show: (s: RecipeSpec) => boolean }[] = [
-  { asset: 'logo', label: 'Logo', line: 'SVG or PNG. Used in the menu, footer and browser tab.', accept: 'image/*,.svg', many: false, show: () => true },
-  { asset: 'video', label: 'Hero video', line: 'The film on your first screen.', accept: 'video/*', many: false, show: (s) => s.lead === 'video' },
-  { asset: '3d', label: '3D scene', line: 'GLB or GLTF for your first screen.', accept: '.glb,.gltf', many: false, show: (s) => s.lead === '3d' },
-  { asset: 'product-photos', label: 'Product photos', line: 'Front, three-quarter and a detail of each product.', accept: 'image/*', many: true, show: (s) => s.lead === 'product' || s.purpose === 'ecommerce' || s.purpose === 'product' },
-  { asset: 'images', label: 'Photos', line: 'Work, people, places and details for the rest of the site.', accept: 'image/*', many: true, show: () => true },
-]
-
 function Media({ r, spec, update, editHref }: { r: UniversalRecipe; spec: RecipeSpec; update: (p: Partial<RecipeSpec>) => void; editHref: Edit }) {
-  const uploads = spec.uploads ?? []
-  const add = async (asset: AssetId, many: boolean, files: FileList | null) => {
-    if (!files?.length) return
-    const metas = await Promise.all([...files].slice(0, many ? 24 : 1).map((f) => storeUpload(f, asset)))
-    const replaced = many ? [] : uploads.filter((u) => u.asset === asset)
-    await Promise.all(replaced.filter((u) => u.fileId).map((u) => deleteFile(u.fileId!)))
-    update({
-      uploads: [...uploads.filter((u) => !replaced.includes(u)), ...metas],
-      assets: spec.assets.includes(asset) ? spec.assets : [...spec.assets, asset],
-      ...(asset === 'video' ? { mediaPlan: 'have' as const } : {}),
-    })
-  }
-  const remove = async (u: UploadedAsset) => {
-    if (u.fileId) await deleteFile(u.fileId)
-    const rest = uploads.filter((x) => x !== u)
-    update({ uploads: rest, assets: rest.some((x) => x.asset === u.asset) ? spec.assets : spec.assets.filter((a) => a !== u.asset) })
-  }
   const others = r.assetRequirements.filter((a) => !SLOTS.some((s) => s.asset === a.asset && s.show(spec)))
   return (
     <div className="space-y-14">
       <div>
         <Heading title="Your files" />
         <p className="mt-2 max-w-2xl text-sm text-ink-2">Add or replace them here. They go straight into your build kit, at the exact paths the site uses. Files stay in this browser.</p>
-        <div className="mt-6 grid gap-4 lg:grid-cols-2">
-          {SLOTS.filter((s) => s.show(spec)).map((s) => {
-            const mine = uploads.filter((u) => u.asset === s.asset)
-            return (
-              <div key={s.asset} className="rounded-lg border border-line bg-white p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div><p className="font-medium">{s.label}</p><p className="mt-0.5 text-sm text-muted">{s.line}</p></div>
-                  <label className="btn btn-line btn-sm shrink-0 cursor-pointer">
-                    {mine.length && !s.many ? 'Replace' : 'Add'}
-                    <input type="file" accept={s.accept} multiple={s.many} className="sr-only" onChange={(e) => { add(s.asset, s.many, e.target.files); e.target.value = '' }} />
-                  </label>
-                </div>
-                {mine.length > 0
-                  ? <ul className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">{mine.map((u) => <Thumb key={u.fileId ?? u.name} u={u} onRemove={() => remove(u)} />)}</ul>
-                  : <p className="mt-4 rounded-md border border-dashed border-line p-4 text-center text-sm text-muted">Nothing yet — the build kit uses a clearly marked placeholder.</p>}
-              </div>
-            )
-          })}
-        </div>
+        <div className="mt-6"><MediaSlots spec={spec} onChange={update} /></div>
         {r.media.imagery && (
           <div className="mt-8 grid items-center gap-6 rounded-lg border border-line bg-white p-5 md:grid-cols-[18rem_1fr]">
             <OptionDemo id={`photo:${r.media.imagery.presentation.id}`} colors={Object.fromEntries(r.visualSystem.palette.tokens.map((t) => [t.role, t.hex])) as PaletteColors} type={r.visualSystem.typography} shape={r.visualSystem.shape} className="rounded-md" />
@@ -406,24 +375,6 @@ function Media({ r, spec, update, editHref }: { r: UniversalRecipe; spec: Recipe
         </div>
       )}
     </div>
-  )
-}
-
-function Thumb({ u, onRemove }: { u: UploadedAsset; onRemove: () => void }) {
-  const [url, setUrl] = useState<string>()
-  useEffect(() => {
-    let live = true, made: string | undefined
-    if (u.fileId && u.kind !== 'other') getFile(u.fileId).then((f) => { if (f && live) setUrl((made = URL.createObjectURL(f))) })
-    return () => { live = false; if (made) URL.revokeObjectURL(made) }
-  }, [u.fileId, u.kind])
-  return (
-    <li className="group relative aspect-square overflow-hidden rounded-md border border-line bg-paper">
-      {url && u.kind === 'video' ? <video src={url} muted loop autoPlay playsInline className="h-full w-full object-cover" />
-        // eslint-disable-next-line @next/next/no-img-element -- local object URL of the user's own file
-        : url ? <img src={url} alt={u.name} className="h-full w-full object-cover" />
-        : <span className="grid h-full place-items-center p-2 text-center text-xs text-muted">{u.name}</span>}
-      <button type="button" onClick={onRemove} aria-label={`Remove ${u.name}`} className="absolute right-1 top-1 rounded-full bg-ink/80 p-1 text-paper opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100"><X size={12} /></button>
-    </li>
   )
 }
 

@@ -1,5 +1,6 @@
+import type { ElementType } from 'react'
 // OpusKit section — Case Study preview: one project in depth — wide media, facts, then problem / approach / result.
-export function CaseStudySection({ title, image, alt, facts, paragraphs, href }: { title: string; image: string; alt: string; facts: { label: string; value: string }[]; paragraphs: string[]; href?: string }) {
+export function CaseStudySection({ link: L = 'a', title, image, alt, facts, paragraphs, href }: { link?: ElementType; title: string; image: string; alt: string; facts: { label: string; value: string }[]; paragraphs: string[]; href?: string }) {
   return (
     <section className="px-5 py-24 md:px-10 md:py-32">
       <div className="mx-auto max-w-[1440px]">
@@ -13,7 +14,7 @@ export function CaseStudySection({ title, image, alt, facts, paragraphs, href }:
           </div>
           <div className="type-body space-y-5 md:col-span-7 md:col-start-6">
             {paragraphs.map((p, i) => <p key={i} className="max-w-[62ch]">{p}</p>)}
-            {href && <a href={href} className="inline-block underline underline-offset-4">Read the full case study</a>}
+            {href && <L href={href} className="inline-block underline underline-offset-4">Read the full case study</L>}
           </div>
         </div>
       </div>

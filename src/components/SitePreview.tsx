@@ -1,6 +1,6 @@
 'use client'
 // A miniature, live website rendered from ingredients. Scales with its container (cqw units),
-// so the same component works as a thumbnail, a questionnaire preview or a recipe hero.
+// so the same component works as a thumbnail, a kit preview or a recipe hero.
 
 import type { CSSProperties } from 'react'
 import { directions } from '@/data/taxonomy'

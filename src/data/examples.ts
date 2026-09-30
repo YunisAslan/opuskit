@@ -9,7 +9,7 @@ export type ExampleHero =
   | { kind: 'video'; src: string; poster: string }
   | { kind: 'image'; src: string }
 
-/** One answer from the questionnaire that produced the site, as the user saw it. */
+/** One choice that produced the site, as the user saw it (option names, exactly — `specFromChoices` reads them). */
 export type RecipeChoice = { label: string; value: string }
 
 export type ExampleProject = {
@@ -32,6 +32,33 @@ export type ExampleProject = {
 }
 
 export const examples: ExampleProject[] = [
+  {
+    slug: 'ulooklonely',
+    title: 'ulooklonely',
+    summary: 'Its presentation of loneliness. Short films and edits about being alone somewhere crowded.',
+    mood: ['Nostalgic', 'Warm', 'Dramatic'],
+    hero: { kind: 'video', src: '/examples/ulooklonely/media/heroVideo.mp4', poster: '/examples/ulooklonely/media/posterImage.jpg' },
+    livePath: '/live/ulooklonely/index.html',
+    // The first site made with the kit after the questionnaire was retired: its opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'Portfolio' },
+      { label: 'Name', value: 'ulooklonely' },
+      { label: 'Visitors should', value: 'Explore the work' },
+      { label: 'Style', value: 'Film-inspired' },
+      { label: 'First screen', value: 'Film on the first screen (own video uploaded)' },
+      { label: 'Movement', value: 'Immersive' },
+      { label: 'Colors', value: 'Studio Aqua' },
+      { label: 'Lettering', value: 'Loud and Clear' },
+      { label: 'Layout', value: 'Full-bleed' },
+      { label: 'Shape', value: 'Bold outline' },
+      { label: 'Menu', value: 'Floating dock' },
+      { label: 'Photos', value: 'Tilted scroll grid (stills from the film)' },
+      { label: 'Effects', value: 'Hand-drawn underline, Reading line, Type that races the scroll, Brand cursor' },
+      { label: 'Pages', value: 'Home, About, Sign In, Sign Up, Services, Work' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Its 720×1280 vertical phone video was sharpened to 1920×1080 by prepare-video.sh; phones play the original shape. The Work grid uses stills taken from the same film.',
+  },
   {
     slug: 'swiss-modern-event-site-claude-code',
     title: 'RALPH&LAUREN — Sheki Polo Weekend, 11–13 June 2027',

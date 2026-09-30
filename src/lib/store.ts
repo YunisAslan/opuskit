@@ -47,7 +47,6 @@ export const KEYS = {
   generations: 'opuskit:generations',
   saved: 'opuskit:saved',
   recent: 'opuskit:recent',
-  draft: 'opuskit:draft',
   entitlements: 'opuskit:entitlements',
   user: 'opuskit:user',
   kit: 'opuskit:kit', // retired 2026-09-29: pieces-only kit, migrated into plan

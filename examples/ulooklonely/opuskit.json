@@ -1,0 +1,123 @@
+{
+  "opuskit": 1,
+  "recipe": "09e9c8de",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "cinematic-editorial",
+    "brief": {
+      "name": "ulooklonely",
+      "offer": "Its presentation of loneliness",
+      "goal": "explore"
+    },
+    "purpose": "portfolio",
+    "direction": "film-inspired",
+    "characters": [],
+    "lead": "video",
+    "motion": "immersive",
+    "hero": "scroll-video",
+    "layout": "full-bleed",
+    "palette": "studio-aqua",
+    "typography": "loud-and-clear",
+    "assets": [
+      "video"
+    ],
+    "uploads": [
+      {
+        "asset": "video",
+        "name": "ulooklonely.mp4",
+        "kind": "video",
+        "width": 720,
+        "height": 1280,
+        "duration": 19.766341
+      }
+    ],
+    "mediaPlan": "have",
+    "imagePresentation": "tilted-grid",
+    "nav": "bottom-dock",
+    "shape": "brutal",
+    "signatures": [],
+    "pieces": [
+      "scribble-link",
+      "scroll-progress",
+      "velocity-band",
+      "brand-cursor"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "scribble-link",
+        "page": "xaq8n2h8",
+        "index": 0
+      },
+      {
+        "piece": "scroll-progress",
+        "page": "xaq8n2h8",
+        "index": 1
+      },
+      {
+        "piece": "velocity-band",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "brand-cursor",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "xaq8n2h8",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "journal"
+        ]
+      },
+      {
+        "id": "5be51rwh",
+        "type": "about",
+        "label": "About",
+        "purpose": "Put a human face and point of view on the work; build trust.",
+        "sections": [
+          "editorial-story"
+        ]
+      },
+      {
+        "id": "yqma4z0m",
+        "type": "sign-in",
+        "label": "Sign In",
+        "purpose": "Standard sign-in: email/password, forgot-password link, link to sign up.",
+        "sections": []
+      },
+      {
+        "id": "22f42uav",
+        "type": "sign-up",
+        "label": "Sign Up",
+        "purpose": "Standard sign-up: minimal required fields, clear value of creating an account.",
+        "sections": []
+      },
+      {
+        "id": "ph9ulmet",
+        "type": "services",
+        "label": "Services",
+        "purpose": "Make the offer and the way of working clear enough to remove hesitation.",
+        "sections": [
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "za115hgq",
+        "type": "work",
+        "label": "Work",
+        "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+        "sections": [
+          "featured-work",
+          "case-study"
+        ]
+      }
+    ],
+    "target": "not-sure"
+  }
+}

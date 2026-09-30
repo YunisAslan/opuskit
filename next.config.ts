@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
   },
   // public/live/{slug}/ holds static exports whose pages are written as `about.html` but linked as `/about`.
   // public/ files are exact-match, so map the extensionless link onto its file (only when nothing else matched).
+  // The questionnaire was retired (2026-09-30): the kit is the one way to make and change a recipe.
+  async redirects() {
+    return [{ source: '/create', destination: '/kit', permanent: true }]
+  },
   async rewrites() {
     return {
       beforeFiles: [],

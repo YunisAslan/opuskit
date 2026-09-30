@@ -73,7 +73,7 @@ export function visualQa(r: UniversalRecipe): string[] {
     ...r.pages.map((p) => `${p.label} section order: ${p.sections.map((s) => s.name.split(' — ')[0]).join(' → ')}.`),
     `Hero matches "${r.media.hero.name}": ${r.media.hero.composition}`,
     `Controls and forms use shadcn/ui (${r.implementation.ui.components.map((c) => c.slug).join(', ')}) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.`,
-    'Sections with ready code are built from their component in src/components/sections/ (real copy and media through props, no placeholder text left) and styled only through the recipe tokens.',
+    'Sections with ready code are built from their component in src/components/sections/ (real copy and media through props, no placeholder text left) and styled only through the recipe tokens. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.',
     ...r.pieces.map((p) => `Kit piece "${p.name}" (<${p.exportName}/> from ${p.path}) is used on ${p.where}, unchanged in behaviour and styled only through the recipe tokens.`),
     ...r.signatures.map((s) => `Signature moment "${s.name}" is built on ${s.where}, with its mobile and reduced-motion versions.`),
     ...(r.media.imagery ? [`Photos are shown as "${r.media.imagery.presentation.name}" (${r.media.imagery.presentation.behavior.split(';')[0]})${r.media.imagery.note ? `, and the owner's request is met: “${r.media.imagery.note}”` : ''}.`] : []),

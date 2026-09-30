@@ -39,7 +39,7 @@ export const recipeSections = {
 
   structure: (r: UniversalRecipe) => {
     const section = (s: UniversalRecipe['chrome']['navbar'], i: number) =>
-      `### ${String(i + 1).padStart(2, '0')} ${s.name}\n- **Purpose:** ${s.purpose}\n- **Composition:** ${s.composition}\n- **Content:** ${s.content}\n- **Behavior:** ${s.behavior}\n- **Responsive:** ${s.responsive}${s.note ? `\n- **Recipe note:** ${s.note}` : ''}${'code' in s && s.code ? `\n- **Ready code:** \`${s.code.path}\` → \`${s.code.usage}\` — start from it: real copy and media through props, proportions tuned to this recipe, tokens only.` : ''}`
+      `### ${String(i + 1).padStart(2, '0')} ${s.name}\n- **Purpose:** ${s.purpose}\n- **Composition:** ${s.composition}\n- **Content:** ${s.content}\n- **Behavior:** ${s.behavior}\n- **Responsive:** ${s.responsive}${s.note ? `\n- **Recipe note:** ${s.note}` : ''}${'code' in s && s.code ? `\n- **Ready code:** \`${s.code.path}\` → \`${s.code.usage}\` — start from it: real copy and media through props, \`link={Link}\` (next/link) for in-site links, proportions tuned to this recipe, tokens only.` : ''}`
     const pages = r.pages.map((p) => `## ${p.label}\n\n${p.purpose}\n\n${p.sections.map(section).join('\n\n') || '_No composed sections — see purpose above._'}`).join('\n\n---\n\n')
     return `## Page Structure\n\nPages: ${r.pages.map((p) => p.label).join(' · ')}\n\n---\n\n${pages}\n\n---\n\n## Site Chrome\n\n${[r.chrome.navbar, r.chrome.footer].map(section).join('\n\n')}`
   },

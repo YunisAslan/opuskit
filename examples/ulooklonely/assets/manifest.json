@@ -1,0 +1,129 @@
+{
+  "recipe": "09e9c8de",
+  "title": "ulooklonely — Film-inspired Portfolio",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Text wordmark in the display face (src/components/Logo.tsx) + src/app/icon.svg",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts via next/font (self-hosted)",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Special Gothic Expanded One, Special Gothic (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Draft copy in src/config/content.ts, src/config/site.ts and page files — project titles, years, email and social links are placeholders",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "yourPhotos": {
+      "required": false,
+      "level": "recommended",
+      "status": "temporary",
+      "source": "20 stills pulled from your hero film (public/media/stills/)",
+      "replaceWith": "user-owned-images",
+      "usage": "Tilted scroll grid — a grid that tilts and flattens in 3d as visitors scroll through it.",
+      "specs": "Min 2400px long edge, one consistent grade; keep each photo’s original shape unless the layout says otherwise"
+    },
+    "heroVideo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "user-provided: ulooklonely.mp4",
+      "replaceWith": "—",
+      "usage": "Hero (loop or scroll-controlled)",
+      "specs": "1920×1080 min, 5–15s, slow continuous motion, no text burned in",
+      "providedFiles": [
+        {
+          "fileId": "21d6860b-a0b",
+          "name": "ulooklonely.mp4"
+        }
+      ]
+    },
+    "posterImage": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "prepare-video.sh: first frame of the film",
+      "replaceWith": "—",
+      "usage": "Shown before video loads and on reduced motion",
+      "specs": "First frame of the video, same crop"
+    },
+    "mobileVideoEncode": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "made from your uploaded file",
+      "replaceWith": "—",
+      "usage": "Hero on small screens",
+      "specs": "1080×1920 (9:16) or 1080×1350 (4:5), ≤ 3MB"
+    },
+    "supportingImages": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Stills from your hero film (same set as yourPhotos)",
+      "replaceWith": "user-owned-images",
+      "usage": "Sections between video moments",
+      "specs": "Graded to match the video"
+    },
+    "secondaryVideo": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Pexels Videos / Coverr",
+      "replaceWith": "user-owned-video",
+      "usage": "Chapter transitions",
+      "specs": "Same grade as the hero"
+    },
+    "scrubReadyEncode": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "made from your uploaded file",
+      "replaceWith": "—",
+      "usage": "Scroll-controlled hero",
+      "specs": "Made by scripts/prepare-video.sh from the ORIGINAL file: CRF 20, keyframe every 6 frames, ≤ 1920 px"
+    },
+    "widescreenVersion": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "Your upload rotated 90° back to landscape (it is a 16:9 film stored sideways) — no crop, no AI expand",
+      "replaceWith": "—",
+      "usage": "Desktop and tablet hero — fills 16:9 screens",
+      "specs": "16:9, 1920×1080 or larger, made from your 720×1280 video. Best: an AI “expand” to 16:9, which keeps every pixel of your video sharp. Otherwise prepare-video.sh crops and upscales it. Phones keep your original."
+    },
+    "texture": {
+      "required": false,
+      "level": "optional",
+      "status": "have",
+      "source": "Inline SVG noise in src/config/assets.ts (3.5% opacity)",
+      "replaceWith": "—",
+      "usage": "Subtle paper/grain overlay at ≤ 4% opacity",
+      "specs": "Seamless tile, 1024px, WebP"
+    },
+    "posterMobile": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "prepare-video.sh: first frame, phone shape",
+      "replaceWith": "—",
+      "usage": "Phone poster",
+      "specs": "Same crop as mobileVideoEncode"
+    }
+  }
+}

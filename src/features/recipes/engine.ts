@@ -87,7 +87,7 @@ function placePieces(spec: RecipeSpec, pages: PageBlueprint[]): RecipePiece[] {
   if (fromPhotos && !ids.some((id) => pieceCatalog[id].slot === 'photos')) ids.push(fromPhotos)
   return ids.map((id) => {
     const p = pieceCatalog[id]
-    const placed = (spec.piecePlacements ?? []).filter((x) => x.piece === id).map((x) => { if (x.page === '*') return 'Whole site — mount once in app/layout.tsx'; const pg = pages.find((q) => q.id === x.page)!; return `${pg.label} → ${pg.sections[x.index].name.split(' — ')[0]}` })
+    const placed = (spec.piecePlacements ?? []).filter((x) => x.piece === id).map((x) => { if (x.page === '*') return pieceCatalog[id].slot === 'site' ? 'Whole site — mount once in app/layout.tsx' : 'Menu and footer — on every page'; const pg = pages.find((q) => q.id === x.page)!; return `${pg.label} → ${pg.sections[x.index].name.split(' — ')[0]}` })
     const hit = pages.flatMap((pg) => pg.sections.map((s) => ({ pg, s }))).find(({ s }) => p.sections.includes(s.id))
     const chrome = p.sections.find((s) => s === 'navbar' || s === 'footer')
     const where = placed.length ? placed.join('; ') : hit ? `${hit.pg.label} → ${hit.s.name.split(' — ')[0]}` : chrome ? (chrome === 'navbar' ? 'Navigation (every page)' : 'Footer (every page)') : 'The home page section where it fits best'
@@ -95,7 +95,7 @@ function placePieces(spec: RecipeSpec, pages: PageBlueprint[]): RecipePiece[] {
   })
 }
 
-/** Keeps a spec coherent after any change (questionnaire or Remix). Only dependent decisions move. */
+/** Keeps a spec coherent after any change (kit or Remix). Only dependent decisions move. */
 export function normalizeSpec(spec: RecipeSpec): RecipeSpec {
   const next = { ...spec, characters: spec.characters.slice(0, 2), brief: cleanBrief(spec.brief) }
   if (!next.brief) delete next.brief

@@ -140,7 +140,7 @@ export const pieces: Record<PieceId, Piece> = {
   'hover-highlight': {
     id: 'hover-highlight', name: 'Sliding highlight', line: 'A soft block slides between links as the pointer moves.', slot: 'label', source: MP,
     file: 'HoverHighlight.tsx', exportName: 'HoverHighlight', deps: M, levels: MOVING, sections: ['navbar', 'services', 'faq'],
-    usage: '<HoverHighlight items={[{ label: "Work", href: "/work" }, { label: "About", href: "/about" }]} />',
+    usage: '<HoverHighlight link={Link} items={[{ label: "Work", href: "/work" }, { label: "About", href: "/about" }]} />',
     rules: ['Uses the surface token; no shadow, no gradient.'],
   },
   'scroll-progress': {
@@ -242,13 +242,13 @@ export const pieces: Record<PieceId, Piece> = {
   'scribble-link': {
     id: 'scribble-link', name: 'Hand-drawn underline', line: 'A squiggle draws itself under a link on hover; the current page keeps it.', slot: 'label', source: OK,
     file: 'ScribbleLink.tsx', exportName: 'ScribbleLink', deps: M, levels: MOVING, sections: ['navbar', 'hero', 'contact-cta'],
-    usage: '<ScribbleLink href="/work" current={path === "/work"}>Work</ScribbleLink>',
+    usage: '<ScribbleLink link={Link} href="/work" current={path === "/work"}>Work</ScribbleLink>',
     rules: ['Navigation links; pass `current` for the page you are on.'],
   },
   'wavy-link': {
     id: 'wavy-link', name: 'Wavy underline', line: 'A link’s underline draws in as a wave on hover.', slot: 'label', source: OK,
     file: 'WavyLink.tsx', exportName: 'WavyLink', deps: M, levels: MOVING, sections: ['footer', 'contact-cta', 'about', 'journal'],
-    usage: '<WavyLink href="/faq">FAQ</WavyLink>',
+    usage: '<WavyLink link={Link} href="/faq">FAQ</WavyLink>',
     rules: ['Footer and inline links; the wave uses the second chapter colour (or the accent).'],
   },
   'swap-button': {

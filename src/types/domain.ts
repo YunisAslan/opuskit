@@ -311,6 +311,16 @@ export type Piece = {
  */
 export type KitPlan = {
   name?: string
+  /** One sentence on what the site is — becomes the brief's offer. */
+  about?: string
+  /** What visitors should do — drives the main action, forms and controls. */
+  goal?: GoalId
+  /** How lively the site is. Absent = the look's (or first screen's) own; effects can raise it. */
+  motion?: MotionLevel
+  /** Anything about the photos, in the owner's words. */
+  photoNote?: string
+  /** The owner's own files (bytes in IndexedDB, see lib/files.ts) and whether the first-screen media is theirs. */
+  uploads?: UploadedAsset[]; assets?: AssetId[]; mediaPlan?: MediaPlan
   purpose?: PurposeId
   /** Step 1 — the same on every page. */
   direction?: DirectionId; palette?: PaletteId; typography?: TypographyId; shape?: ShapeId; nav?: NavStyleId; imagePresentation?: ImagePresentationId
@@ -321,6 +331,10 @@ export type KitPlan = {
   hero?: HeroId
   pages: PlanPage[]
   target?: BuildTargetId
+  /** The recipe this plan was opened from (Customise). What the kit doesn't edit — brief, media, voice, layout — comes from here. */
+  from?: RecipeSpec
+  /** The saved recipe it was opened from: Create updates that one instead of making a copy. */
+  fromId?: string
 }
 /** A page in the plan. Each section is an instance with its own key, so the pieces attached to it move with it. */
 export type PlanPage = { id: string; type: PageTypeId; label: string; purpose: string; sections: PlanSection[] }
@@ -417,7 +431,7 @@ export type UploadedAsset = {
   fileId?: string
 }
 
-/** One page as the user has configured it in the questionnaire. */
+/** One page as the user has configured it in the kit. */
 export type PageSpec = { id: string; type: PageTypeId; label: string; purpose: string; sections: SectionId[] }
 
 /** The project in the user's own words. Everything optional: a recipe without a brief still composes. */

@@ -11,7 +11,7 @@ export default function PricingPage() {
     <>
       <PageIntro title="Pay once. Keep it.">Explore and preview for free. When a recipe is right, buy it once — the full design system, assets plan and Build Packages for every AI tool.</PageIntro>
       <div className="mx-auto grid max-w-[1440px] gap-6 px-5 pb-24 md:grid-cols-3 md:px-8">
-        <Plan name="Free" price="$0" line="See how OpusKit thinks." items={freeIncludes} cta={<Link href="/create" className="btn btn-line w-full">Create a recipe preview</Link>} />
+        <Plan name="Free" price="$0" line="See how OpusKit thinks." items={freeIncludes} cta={<Link href="/kit" className="btn btn-line w-full">Create a recipe preview</Link>} />
         {products.map((p) => (
           <Plan key={p.id} name={p.name} price={formatPrice(p)} line={p.line} items={p.includes} featured={p.id === 'recipe'}
             cta={<Link href="/explore" className={`btn w-full ${p.id === 'recipe' ? 'btn-ink' : 'btn-line'}`}>{p.id === 'recipe' ? 'Choose a recipe' : 'Browse the library'}</Link>} />

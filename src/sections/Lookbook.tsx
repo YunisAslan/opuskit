@@ -1,7 +1,8 @@
+import type { ElementType } from 'react'
 // OpusKit section — Lookbook: magazine spreads, a large and a small photo per look, with what is worn.
 export type Look = { number: string; image: string; alt: string; detail?: string; detailAlt?: string; pieces: string; href?: string }
 
-export function LookbookSection({ title, looks }: { title?: string; looks: Look[] }) {
+export function LookbookSection({ link: L = 'a', title, looks }: { link?: ElementType; title?: string; looks: Look[] }) {
   return (
     <section className="px-5 py-24 md:px-10 md:py-32">
       <div className="mx-auto max-w-[1440px] space-y-24">
@@ -13,7 +14,7 @@ export function LookbookSection({ title, looks }: { title?: string; looks: Look[
               {l.detail && <img src={l.detail} alt={l.detailAlt ?? ''} loading="lazy" className="mb-6 aspect-square w-2/3 rounded-(--radius-media) object-cover" />}
               <p className="type-display [font-size:clamp(2rem,4vw,3.5rem)]">Look {l.number}</p>
               <p className="type-body mt-3 text-(--color-muted)">{l.pieces}</p>
-              {l.href && <a href={l.href} className="type-body mt-4 inline-block underline underline-offset-4">Shop the look</a>}
+              {l.href && <L href={l.href} className="type-body mt-4 inline-block underline underline-offset-4">Shop the look</L>}
             </div>
           </article>
         ))}
