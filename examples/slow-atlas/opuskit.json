@@ -22,22 +22,50 @@
     "uploads": [],
     "mediaPlan": "have",
     "signatures": [],
+    "pieces": [
+      "cut-reveal",
+      "curtain-transition",
+      "preloader",
+      "smooth-scroll"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "cut-reveal",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "curtain-transition",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "preloader",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "smooth-scroll",
+        "page": "*",
+        "index": -1
+      }
+    ],
     "pages": [
       {
-        "id": "5dkrxxl6",
+        "id": "j5taclal",
         "type": "home",
         "label": "Home",
         "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
         "sections": [
           "hero",
-          "intro",
+          "editorial-story",
           "journal",
-          "about",
-          "contact-cta"
+          "categories",
+          "newsletter"
         ]
       },
       {
-        "id": "oyoieayu",
+        "id": "gwml52vv",
         "type": "journal",
         "label": "Articles",
         "purpose": "Show ongoing thinking, in your own voice, over time.",
@@ -46,7 +74,7 @@
         ]
       },
       {
-        "id": "72cqwsyn",
+        "id": "69ps4o22",
         "type": "about",
         "label": "About",
         "purpose": "Put a human face and point of view on the work; build trust.",
@@ -56,24 +84,24 @@
         ]
       },
       {
-        "id": "rgrk5w3c",
+        "id": "pz985qof",
         "type": "newsletter",
         "label": "Newsletter",
         "purpose": "Give a clear reason to subscribe and show what they’ll get.",
         "sections": [
-          "journal",
-          "contact-cta"
+          "newsletter",
+          "journal"
         ]
       },
       {
-        "id": "xpxto9jf",
+        "id": "emxfx3gp",
         "type": "custom",
         "label": "Article",
         "purpose": "",
         "sections": [
           "editorial-story",
           "journal",
-          "contact-cta"
+          "newsletter"
         ]
       }
     ],

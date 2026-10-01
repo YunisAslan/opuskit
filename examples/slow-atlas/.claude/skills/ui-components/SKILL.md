@@ -1,6 +1,6 @@
 ---
 name: ui-components
-description: "Builds every control and form for Slow Atlas — News Grid Magazine from shadcn/ui, themed to the recipe: button, sheet, sonner, tooltip, navigation-menu, dropdown-menu, form, input, badge, pagination, textarea, select, checkbox, label. Use when adding any button, field, select, date picker, dialog, menu, tabs, accordion or toast."
+description: "Builds every control and form for Slow Atlas — News Grid Magazine from shadcn/ui, themed to the recipe: button, sheet, sonner, tooltip, navigation-menu, dropdown-menu, form, input, badge, pagination, label. Use when adding any button, field, select, date picker, dialog, menu, tabs, accordion or toast."
 ---
 
 # UI components — shadcn/ui
@@ -8,7 +8,7 @@ description: "Builds every control and form for Slow Atlas — News Grid Magazin
 Read `recipe/ui.md`. Install once:
 
 ```bash
-npx shadcn@latest init && npx shadcn@latest add button sheet sonner tooltip navigation-menu dropdown-menu form input badge pagination textarea select checkbox label
+npx shadcn@latest init && npx shadcn@latest add button sheet sonner tooltip navigation-menu dropdown-menu form input badge pagination label
 ```
 
 ## Theme
@@ -31,14 +31,11 @@ Replace the :root values `shadcn init` writes with:
 - **Tooltip** (`tooltip`): every page
 - **Navigation menu** (`navigation-menu`): navigation
 - **Dropdown menu** (`dropdown-menu`): navigation
-- **Form with validation** (`form`): main action — subscribe, Home — Closing CTA, Newsletter, Newsletter — Closing CTA, Article — Closing CTA
-- **Text field** (`input`): main action — subscribe, Home — Closing CTA, Newsletter, Newsletter — Closing CTA, Article — Closing CTA
+- **Form with validation** (`form`): main action — subscribe, Home — Newsletter, Newsletter, Newsletter — Newsletter, Article — Newsletter
+- **Text field** (`input`): main action — subscribe, Home — Newsletter, Newsletter, Newsletter — Newsletter, Article — Newsletter
 - **Badge** (`badge`): Home — Journal, Articles — Journal, Newsletter — Journal, Article — Journal
 - **Pagination** (`pagination`): Home — Journal, Articles — Journal, Newsletter — Journal, Article — Journal
-- **Message field** (`textarea`): Home — Closing CTA, Newsletter — Closing CTA, Article — Closing CTA
-- **Select** (`select`): Home — Closing CTA, Newsletter — Closing CTA, Article — Closing CTA
-- **Checkbox** (`checkbox`): Home — Closing CTA, Newsletter — Closing CTA, Article — Closing CTA
-- **Label** (`label`): Home — Closing CTA, Newsletter — Closing CTA, Article — Closing CTA
+- **Label** (`label`): Home — Newsletter, Newsletter — Newsletter, Article — Newsletter
 
 ## Rules
 - Every interactive control — select, date picker, checkbox, radio, switch, tabs, accordion, dialog, menu, toast — comes from these components. Never ship an unstyled native <select>, <input type="date"> or a hand-rolled dropdown.

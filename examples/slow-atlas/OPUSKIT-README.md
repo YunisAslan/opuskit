@@ -5,5 +5,6 @@
 3. Run `claude` in the project folder.
 4. Prompt: "Read CLAUDE.md and build the whole site following build/implementation-plan.md." That is all — it works through every step, checks itself against build/verification.md, and replies with a localhost URL when done.
 Ready sections: 7 section components in src/components/sections/ — build each page from them, passing real copy and media as props.
+Your kit: 4 ready components in src/components/pieces/ (CutReveal, PageCurtain, Preloader, SmoothScroll) — keep them in the project; run npm i motion lenis.
 
 You didn't attach any files during creation, so `public/media/` only has placeholder paths — add your own files there before building.

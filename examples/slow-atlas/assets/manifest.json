@@ -6,53 +6,37 @@
       "required": true,
       "level": "required",
       "status": "temporary",
-      "source": "Your brand identity",
+      "source": "Made for this build: src/components/site/Logo.tsx (currentColor, light + dark) and src/app/icon.svg (favicon)",
       "replaceWith": "user-owned-logo",
       "usage": "Navigation, footer, favicon",
-      "specs": "SVG; dark and light versions; square symbol for favicon",
-      "files": [
-        "src/components/site/Logo.tsx",
-        "public/brand/symbol-light.svg",
-        "public/brand/symbol-dark.svg",
-        "src/app/icon.svg"
-      ],
-      "note": "Simple symbol + wordmark made during the build. Replace with the real identity."
+      "specs": "SVG; dark and light versions; square symbol for favicon"
     },
     "typefaces": {
       "required": true,
       "level": "required",
-      "status": "have",
+      "status": "find",
       "source": "Google Fonts",
       "replaceWith": "user-owned-fonts",
       "usage": "All text",
-      "specs": "Schibsted Grotesk, Source Serif 4 (Google Fonts)",
-      "note": "Loaded with next/font/google in src/app/layout.tsx"
+      "specs": "Schibsted Grotesk, Source Serif 4 (Google Fonts)"
     },
     "finalCopy": {
       "required": true,
       "level": "required",
-      "status": "temporary",
+      "status": "create",
       "source": "Written by you",
       "replaceWith": "user-owned-copy",
       "usage": "Headlines, body, CTAs",
-      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
-      "files": [
-        "src/content/magazine.ts"
-      ],
-      "note": "Written in the recipe voice for the build: essays, editor names, issue number, email editors@slowatlas.com. Replace with the real copy."
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
     },
     "finalHeadlineCopy": {
       "required": true,
       "level": "required",
-      "status": "temporary",
+      "status": "create",
       "source": "Written by you",
       "replaceWith": "user-owned-copy",
       "usage": "Hero and section statements",
-      "specs": "Short: 3–8 words each; written before layout",
-      "files": [
-        "src/content/magazine.ts",
-        "src/app/page.tsx"
-      ]
+      "specs": "Short: 3–8 words each; written before layout"
     },
     "punctuationImages": {
       "required": false,
@@ -62,86 +46,6 @@
       "replaceWith": "user-owned-images",
       "usage": "Between type sections",
       "specs": "High contrast, simple subjects"
-    },
-    "story": {
-      "required": false,
-      "level": "have",
-      "status": "have",
-      "source": "Unsplash (see media-src/SOURCES.md)",
-      "file": "public/media/story.avif",
-      "usage": "via src/config/assets.ts key \"story\""
-    },
-    "article1": {
-      "required": false,
-      "level": "have",
-      "status": "have",
-      "source": "Unsplash (see media-src/SOURCES.md)",
-      "file": "public/media/article-1.jpg",
-      "usage": "via src/config/assets.ts key \"article1\""
-    },
-    "article2": {
-      "required": false,
-      "level": "have",
-      "status": "have",
-      "source": "Unsplash (see media-src/SOURCES.md)",
-      "file": "public/media/article-2.jpg",
-      "usage": "via src/config/assets.ts key \"article2\""
-    },
-    "article3": {
-      "required": false,
-      "level": "have",
-      "status": "have",
-      "source": "Unsplash (see media-src/SOURCES.md)",
-      "file": "public/media/article-3.jpg",
-      "usage": "via src/config/assets.ts key \"article3\""
-    },
-    "article4": {
-      "required": false,
-      "level": "have",
-      "status": "have",
-      "source": "Unsplash (see media-src/SOURCES.md)",
-      "file": "public/media/article-4.jpg",
-      "usage": "via src/config/assets.ts key \"article4\""
-    },
-    "article5": {
-      "required": false,
-      "level": "have",
-      "status": "have",
-      "source": "Unsplash (see media-src/SOURCES.md)",
-      "file": "public/media/article-5.jpg",
-      "usage": "via src/config/assets.ts key \"article5\""
-    },
-    "article6": {
-      "required": false,
-      "level": "have",
-      "status": "have",
-      "source": "Unsplash (see media-src/SOURCES.md)",
-      "file": "public/media/article-6.jpg",
-      "usage": "via src/config/assets.ts key \"article6\""
-    },
-    "team1": {
-      "required": false,
-      "level": "have",
-      "status": "have",
-      "source": "Unsplash (see media-src/SOURCES.md)",
-      "file": "public/media/team-1.jpg",
-      "usage": "via src/config/assets.ts key \"team1\""
-    },
-    "team2": {
-      "required": false,
-      "level": "have",
-      "status": "have",
-      "source": "Unsplash (see media-src/SOURCES.md)",
-      "file": "public/media/team-2.jpg",
-      "usage": "via src/config/assets.ts key \"team2\""
-    },
-    "team3": {
-      "required": false,
-      "level": "have",
-      "status": "have",
-      "source": "Unsplash (see media-src/SOURCES.md)",
-      "file": "public/media/team-3.jpg",
-      "usage": "via src/config/assets.ts key \"team3\""
     }
   }
 }

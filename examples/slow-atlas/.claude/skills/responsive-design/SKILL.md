@@ -23,18 +23,18 @@ Mobile is its own composition, not a squeezed desktop.
 ## Section-specific
 - **Navigation — Classic bar:** Mobile: logo + menu button; opens a simple full-width sheet.
 - **Home — Hero — Typographic statement:** Mobile: re-break lines manually (don't rely on auto-wrapping) and scale to ~15vw.
-- **Home — Intro:** Scale statement to ~8vw; keep line breaks intentional
+- **Home — Editorial Story:** Single column, pull quote full width
 - **Home — Journal:** List view
-- **Home — About:** Portrait above text
-- **Home — Closing CTA:** Large tap target
+- **Home — Categories:** 2-column grid
+- **Home — Newsletter:** Field and button stack, full width
 - **Articles — Journal:** List view
 - **About — About:** Portrait above text
 - **About — Team:** 2-column grid
+- **Newsletter — Newsletter:** Field and button stack, full width
 - **Newsletter — Journal:** List view
-- **Newsletter — Closing CTA:** Large tap target
 - **Article — Editorial Story:** Single column, pull quote full width
 - **Article — Journal:** List view
-- **Article — Closing CTA:** Large tap target
+- **Article — Newsletter:** Field and button stack, full width
 - **Footer — Signature columns:** Mobile: logo, then the columns stacked, then the legal row wrapped.
 
 ## Verify

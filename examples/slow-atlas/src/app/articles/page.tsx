@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
-import { Archive } from './archive'
+import { Archive } from '@/components/site/Archive'
 
-export const metadata: Metadata = { title: 'Articles', description: 'Every Slow Atlas essay, newest first. One place each.' }
+export const metadata: Metadata = { title: 'Essays', description: 'Every Slow Atlas essay, newest first: one place per essay, told slowly.' }
 
-// Articles: Journal (page 1 of the archive; later pages live at /articles/page/[page])
-export default function ArticlesPage() {
+export default function Articles() {
   return <Archive page={1} />
 }

@@ -151,6 +151,77 @@ function render(id: string, { c, display, r, shape }: Ctx): ReactNode {
     }
 
     // ── signature moments ──
+    // From the award-site study: the concepts' own moments (patterns.ts → concepts).
+    case 'sig:giant-word-chapters': return <>
+      <span className="od-drift absolute whitespace-nowrap" style={{ ...display, left: '-6cqw', top: '4cqw', fontSize: '30cqw', lineHeight: 0.8, color: c.text }}>WORK</span>
+      <Box x={6} y={34} w={40} h={22} style={{ borderRadius: r.media }}><Photo k="studio" className="inset-0 h-full w-full" /></Box>
+      <Bar x={52} y={36} w={36} h={2} color={c.text} /><Bar x={52} y={41} w={30} color={c.muted} o={0.6} /><Bar x={52} y={45} w={26} color={c.muted} o={0.6} />
+    </>
+    case 'sig:pinned-proof': return <>
+      {(['architecture', 'ceramics', 'interior'] as ImageKey[]).map((k, i) => (
+        <div key={k} className="od-swap absolute inset-0" style={{ animationDelay: `${-i * 1.333}s` }}>
+          <Box x={6} y={8} w={52} h={46} style={{ borderRadius: r.media }}><Photo k={k} className="inset-0 h-full w-full" /></Box>
+          <span className="absolute" style={{ ...display, left: '63cqw', top: '10cqw', fontSize: '6cqw' }}>{['Harbour', 'Kiln', 'Rooms'][i]}</span>
+          <span className="absolute" style={{ left: '63cqw', top: '48cqw', fontSize: '2.6cqw', color: c.muted, fontVariantNumeric: 'tabular-nums' }}>0{i + 1} / 03</span>
+        </div>
+      ))}
+    </>
+    case 'sig:travelling-motif': return <>
+      <Copy x={8} y={8} c={c} display={display} word="Slow" size={8} />
+      <Bar x={50} y={30} w={40} h={1.6} color={c.text} /><Bar x={50} y={34} w={32} color={c.muted} o={0.6} />
+      <Bar x={8} y={48} w={36} h={1.6} color={c.text} /><Bar x={8} y={52} w={28} color={c.muted} o={0.6} />
+      <span className="od-travel absolute z-10 rounded-full" style={{ width: '9cqw', height: '9cqw', background: c.accent }} />
+    </>
+    case 'sig:entry-gate': return <>
+      <Copy x={8} y={14} c={c} display={display} word="Studio" />
+      <div className="od-gate absolute inset-0 z-10 grid place-items-center" style={{ background: c.text }}>
+        <div className="relative overflow-hidden" style={{ width: '34cqw', height: '9cqw', borderRadius: r.button, border: `1px solid ${c.background}` }}>
+          <span className="od-fill absolute inset-0 origin-left" style={{ background: c.accent }} />
+          <span className="relative grid h-full place-items-center" style={{ color: c.background, fontSize: '2.8cqw' }}>Hold to enter</span>
+        </div>
+      </div>
+    </>
+    case 'sig:live-status': return <>
+      <TopBar c={c} />
+      <span className="absolute flex items-center" style={{ left: '5cqw', top: '13cqw', gap: '1.4cqw', fontSize: '2.6cqw', color: c.text }}>
+        <span className="od-ink rounded-full" style={{ width: '1.6cqw', height: '1.6cqw', background: c.accent }} />Open now · closes 23:00
+      </span>
+      <Copy x={6} y={26} c={c} display={display} word="Dinner" />
+      <Box x={58} y={22} w={36} h={34} style={{ borderRadius: r.media }}><Photo k="food" className="inset-0 h-full w-full" /></Box>
+    </>
+    case 'sig:scramble-labels': return <>
+      <div className="absolute inset-0" style={{ backgroundImage: `linear-gradient(${c.border} 1px, transparent 1px), linear-gradient(90deg, ${c.border} 1px, transparent 1px)`, backgroundSize: '12.5cqw 12.5cqw' }} />
+      {['// 01 — SYNC', '// 02 — AUDIT', '// 03 — SHIP'].map((t, i) => (
+        <span key={t} className="od-ink absolute" style={{ left: `${6 + i * 31}cqw`, top: '10cqw', fontSize: '2.4cqw', fontFamily: 'ui-monospace, monospace', color: c.accent, animationDelay: `${i * 0.4}s` }}>{t}</span>
+      ))}
+      {[0, 1, 2].map((i) => <Box key={i} x={6 + i * 31} y={18} w={26} h={30} style={{ ...card }}><Bar x={2} y={4} w={16} h={1.6} color={c.text} /><Bar x={2} y={8} w={20} color={c.muted} o={0.6} /></Box>)}
+    </>
+    case 'sig:guided-stops': return <>
+      <Photo k="interior" className="inset-0 h-full w-full" />
+      <div className="absolute flex flex-col" style={{ left: '4cqw', top: '14cqw', gap: '2.4cqw', fontSize: '2.2cqw', color: '#fff' }}>{['The terrace', 'Room 4', 'The kitchen'].map((t, i) => <span key={t} style={{ opacity: i === 1 ? 1 : 0.6 }}>{t}</span>)}</div>
+      <span className="absolute rounded-full" style={{ left: '1.6cqw', top: '19.6cqw', width: '1.2cqw', height: '1.2cqw', background: '#fff' }} />
+      <div className="od-drop absolute" style={{ ...card, left: '58cqw', top: '30cqw', width: '36cqw', padding: '2.4cqw' }}>
+        <span className="block" style={{ fontSize: '2cqw', color: c.muted }}>STOP 2</span>
+        <span className="block" style={{ ...display, fontSize: '4.4cqw' }}>Room 4</span>
+        <Bar x={2.4} y={13} w={26} color={c.muted} o={0.6} />
+      </div>
+    </>
+    case 'sig:theme-per-variant': return <>
+      {([[c.accent, 'Mango', 'food'], [c.secondary, 'Fig', 'botanical'], [c.text, 'Plum', 'product']] as [string, string, ImageKey][]).map(([bg, name, k], i) => (
+        <div key={name} className="od-swap absolute inset-0" style={{ background: bg, animationDelay: `${-i * 1.333}s` }}>
+          <Box x={52} y={8} w={40} h={46} style={{ borderRadius: r.media }}><Photo k={k} className="inset-0 h-full w-full" /></Box>
+          <span className="absolute" style={{ ...display, left: '8cqw', top: '20cqw', fontSize: '10cqw', color: i === 2 ? c.background : c.text }}>{name}</span>
+        </div>
+      ))}
+    </>
+    case 'sig:footer-moment': return <>
+      <Bar x={6} y={8} w={30} h={1.6} color={c.text} /><Bar x={6} y={12} w={22} color={c.muted} o={0.6} />
+      <Box x={0} y={24} w={100} h={40} style={{ background: c.text }}>
+        <div className="absolute flex" style={{ left: '5cqw', top: '8cqw' }}>
+          {'ATLAS'.split('').map((l, i) => <span key={i} className="od-stagger" style={{ ...display, color: c.background, fontSize: '19cqw', lineHeight: 0.9, animationDelay: `${i * 0.08}s` }}>{l}</span>)}
+        </div>
+      </Box>
+    </>
     case 'sig:hover-preview-list': case 'photo:hover-reveal': return <>
       {['Crossing Hoodie', 'Star Sling', 'Cobalt Cap', 'Field Pant'].map((t, i) => (
         <div key={t} className="absolute flex justify-between" style={{ left: '8cqw', top: `${12 + i * 11}cqw`, width: '84cqw', borderBottom: `1px solid ${c.border}`, paddingBottom: '2cqw', fontSize: '3.2cqw' }}>

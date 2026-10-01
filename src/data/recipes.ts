@@ -42,7 +42,7 @@ export const recipeSeeds: RecipeSeed[] = [
     do: ['Use large-scale media edge to edge', 'Use restrained typography: one serif display, one sans', 'Use intentional whitespace between scenes (100svh breathing room)', 'Use slow, controlled motion with long easing'],
     avoid: ['Generic SaaS UI', 'Excessive cards', 'Decorative gradients', 'Unnecessary animation on every element'],
     sectionNotes: {
-      hero: 'Scroll-controlled video across 300vh; the title appears at 15% progress and dissolves at 70%. Chapter marker (1 of 5) in Albert Sans, powder blue, top-right — the chapters are a real sequence.',
+      hero: 'Scroll-controlled video across 300vh; the title appears at 15% progress and dissolves at 70%. Chapter marker (1 of 5) in Albert Sans, in the accent colour, top-right — the chapters are a real sequence.',
       'featured-work': 'One project per viewport: full-bleed still, title bottom-left in Newsreader 200 italic, year and discipline in Albert Sans. Hover preview on the index view.',
       'case-study': 'Pinned media with three advancing text chapters: Brief, Approach, Outcome.',
       intro: 'A single sentence in Newsreader 700 at 4rem, pale ink on oxblood, centred in 8 columns.',
@@ -89,9 +89,9 @@ export const recipeSeeds: RecipeSeed[] = [
     avoid: ['Rounded corners and soft shadows', 'Centred text', 'Decorative imagery', 'Motion that doesn\'t explain anything'],
     sectionNotes: {
       hero: 'Agency name or statement at 9.5rem across all 12 columns; beneath it a 4 × 3-column metadata row: Services / Clients / Location / Year founded.',
-      services: 'Numbered rows, red index numbers, hairline rules between rows.',
+      services: 'Numbered rows, index numbers in the accent, hairline rules between rows.',
       clients: 'A strict 6-column grid of client names set in the body face — no logos needed.',
-      process: 'Four columns, each with a big red numeral and 40 words.',
+      process: 'Four columns, each with a big numeral in the accent and 40 words.',
     },
     content: { tone: 'Objective, concise, factual', headlineExamples: ['Design is a method', 'Clarity, at scale', '12 people. 1 studio. 140 projects.'], ctaExamples: ['Start a project', 'Download credentials (PDF)'], density: 'Medium — information-rich but modular' },
     references: [
@@ -108,11 +108,11 @@ export const recipeSeeds: RecipeSeed[] = [
     mood: ['Loud', 'Honest', 'Energetic'],
     personality: 'A shopkeeper who tells you exactly what it is and what it costs.',
     principles: ['Structure is visible — borders are the aesthetic', 'Flat color, hard edges, zero blur', 'Interactions feel physical (press, snap)', 'Information like a receipt: SKU, price, stock'],
-    do: ['Use 2px ink borders on all modules', 'Hard offset shadows (4px 4px 0 ink) that collapse on press', 'Set prices and SKUs in Big Shoulders at small size', 'Invert to black on hover — no extra colour'],
+    do: ['Use 2px ink borders on all modules', 'Hard offset shadows (4px 4px 0 ink) that collapse on press', 'Set prices and SKUs in Big Shoulders at small size', 'Invert to the text colour on hover — no extra colour'],
     avoid: ['Blurred shadows, glass, gradients', 'Thin, delicate type', 'Hidden prices', 'Irony that hurts usability — checkout must be boringly clear'],
     sectionNotes: {
-      hero: 'Product on white surface inside a bordered module; product name in Big Shoulders 800 caps at 10rem breaking out of the module; price sticker rotated −4°.',
-      'product-grid': 'Bordered 4-column grid with zero gutters (shared borders); hover inverts the card to black and swaps image.',
+      hero: 'Product on the surface colour inside a bordered module; product name in Big Shoulders 800 caps at 10rem breaking out of the module; price sticker rotated −4°.',
+      'product-grid': 'Bordered 4-column grid with zero gutters (shared borders); hover inverts the card to the text colour and swaps image.',
       faq: 'Accordion with thick borders; plus sign rotates 45° on open.',
     },
     content: { tone: 'Blunt, funny, clear', headlineExamples: ['GOOD STUFF. FAIR PRICE.', 'No drop. Just stock.', 'Made to be used'], ctaExamples: ['Add to bag', 'Shop everything'], density: 'High but structured — modules keep it scannable' },
@@ -130,7 +130,7 @@ export const recipeSeeds: RecipeSeed[] = [
     mood: ['Warm', 'Tactile', 'Grounded'],
     personality: 'A maker who explains how things are made, with care.',
     principles: ['Materials over graphics', 'Soft geometry — arches and gentle radii, never bubbly', 'Calm, editorial pacing between product moments', 'Colors taken from the products themselves'],
-    do: ['Use close-up material photography (clay, linen, wood grain)', 'Mask key images with an arch (border-radius: 999px 999px 0 0)', 'Pair Young Serif with Alegreya Sans', 'Use deep violet as the primary action color'],
+    do: ['Use close-up material photography (clay, linen, wood grain)', 'Mask key images with an arch (border-radius: 999px 999px 0 0)', 'Pair Young Serif with Alegreya Sans', 'Use the primary colour for the main action only'],
     avoid: ['Pure black text', 'Neon or cool blue accents', 'Clinical, dense grids', 'Stock lifestyle photos with fake smiles'],
     sectionNotes: {
       hero: 'Arched product image centred with headline above in Young Serif 6rem; small "Handmade in small batches" label.',
@@ -152,7 +152,7 @@ export const recipeSeeds: RecipeSeed[] = [
     mood: ['Bold', 'Articulate', 'Graphic'],
     personality: 'A writer with strong opinions and a sense of humour.',
     principles: ['The words are the image', 'Scale contrast of at least 8:1 between display and body', 'Every line break is designed by hand', 'Media is punctuation, not wallpaper'],
-    do: ['Set hero words at 12–20vw', 'Use a variable display font and animate one axis on scroll', 'Break lines manually per breakpoint', 'Keep the whole page on the blue — white type, one pink mark'],
+    do: ['Set hero words at 12–20vw', 'Use a variable display font and animate one axis on scroll', 'Break lines manually per breakpoint', 'Keep the whole page on the background colour — type in the text colour, the accent as the one mark'],
     avoid: ['Filling space with stock photos', 'More than two families', 'Auto-wrapped display text', 'Low contrast "aesthetic" greys'],
     sectionNotes: {
       hero: 'One word per line, three lines, Libre Franklin 900 at 18vw; lines drift horizontally in opposite directions on scroll.',
@@ -175,7 +175,7 @@ export const recipeSeeds: RecipeSeed[] = [
     mood: ['Expressive', 'Unexpected', 'Crafted'],
     personality: 'A creative director who breaks rules knowingly.',
     principles: ['Every section is composed, never templated', 'Break the grid on purpose, keep one anchor per section', 'Transitions are part of the concept', 'One surprising interaction per page, not ten'],
-    do: ['Overlap type and media with deliberate crops', 'Keep to two inks — rose and leaf green — for everything', 'Vary section spacing to create rhythm', 'Keep navigation conventional so people never get lost'],
+    do: ['Overlap type and media with deliberate crops', 'Keep to two inks — the primary and the accent — for everything', 'Vary section spacing to create rhythm', 'Keep navigation conventional so people never get lost'],
     avoid: ['Random effects without a concept', 'Unreadable text over images', 'Custom cursors that hide the real cursor', 'Scroll hijacking'],
     sectionNotes: {
       hero: 'Studio name in Anybody 800 at 140% width, 9rem, the second word shifted down 1 line and overlapping a 2:3 image cropped by the viewport\'s right edge.',
@@ -220,7 +220,7 @@ export const recipeSeeds: RecipeSeed[] = [
     mood: ['Welcoming', 'Generous', 'Elegant'],
     personality: 'A host who remembers your name.',
     principles: ['The visit starts on the website', 'Atmosphere first, practical information always one tap away', 'Warm light in every photograph', 'Menus in real HTML, readable on a phone'],
-    do: ['Show hours and address in the first two screens', 'Keep a sticky "Book a table" on mobile', 'Use margin-line red only for booking actions', 'Photograph dishes in natural light at the table'],
+    do: ['Show hours and address in the first two screens', 'Keep a sticky "Book a table" on mobile', 'Use the accent only for booking actions', 'Photograph dishes in natural light at the table'],
     avoid: ['PDF menus', 'Cold, blue-tinted photography', 'Autoplaying music', 'Long intro animations before the menu'],
     sectionNotes: {
       hero: 'Warm interior photograph at 3:2 beside the restaurant name in Besley 800 at 6.5rem; hours in the utility face beneath.',

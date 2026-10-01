@@ -1,0 +1,45 @@
+# Verification
+
+The build is done when every item passes.
+
+- [ ] Background is #11254B; no other page background colors are introduced.
+- [ ] Display text uses Funnel Display 700; body uses Funnel Sans; no other families appear.
+- [ ] Accent #F2E14C covers < 5% of any viewport.
+- [ ] Pages: Home · Features · Pricing · FAQ — every page shares the same navbar and footer.
+- [ ] Footer “Signature columns”: Dark band (text colour as ground): the logo large on the left (5 of 12 columns), 2–3 link columns with headings, then a hairline and one row: copyright left, legal links right.
+- [ ] Home section order: Hero → Clients → Feature Rows → Features → Integrations → Testimonials → Closing CTA.
+- [ ] Features section order: Features → Product Highlight → How It Works → Closing CTA.
+- [ ] Pricing section order: Pricing → FAQ → Testimonials → Closing CTA.
+- [ ] FAQ section order: FAQ → Closing CTA.
+- [ ] Hero matches "3D / WebGL scene": A real-time 3D object or scene as the hero, lit with restraint; headline overlaid in HTML (never inside the canvas).
+- [ ] Controls and forms use shadcn/ui (button, sheet, sonner, tooltip, navigation-menu, dropdown-menu, form, input, input-otp, label, card, tabs, textarea, select, checkbox, radio-group, badge, switch, table, accordion, command) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.
+- [ ] Sections with ready code are built from their component in src/components/sections/ (real copy and media through props, no placeholder text left) and styled only through the recipe tokens. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.
+- [ ] Kit piece "Words that arrive" (<TextEffect/> from src/components/pieces/TextEffect.tsx) is used on Every page — the h1 and each section heading, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Scrambled labels" (<TextScramble/> from src/components/pieces/TextScramble.tsx) is used on Every page — menu, footer and text links, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Magnetic button" (<Magnetic/> from src/components/pieces/Magnetic.tsx) is used on Every page — the main action, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Curtain between pages" (<PageCurtain/> from src/components/pieces/PageCurtain.tsx) is used on Whole site — every internal link; mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Smooth scroll" (<SmoothScroll/> from src/components/pieces/SmoothScroll.tsx) is used on Whole site — mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Big idea “A live console” is visible on every page: console chrome everywhere, quietly: // labels in the utility face, a fine hairline grid behind key sections, numbers in tabular figures.
+- [ ] Chapters open as the big idea says: Chapters open with a numbered // label that decodes out of random characters as it arrives (// 02 — SYNC).
+- [ ] The site ends as the big idea says: The footer ends on the status line and a plain, monospaced sign-off.
+- [ ] Signature moment "Labels that decode" is built on Home — Features, with its mobile and reduced-motion versions.
+- [ ] Signature moment "A live status line" is built on Navigation, with its mobile and reduced-motion versions.
+- [ ] Every page passes the award checklist in the recipe (one idea, one unforgettable moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).
+- [ ] Layout: Modules snap to 3, 4, 6 or 12 columns; section spacing 96–128px, or sections separated by rules only.
+- [ ] Shape “Round”: buttons 14px, cards 24px, media 20px radius (rounded-button / rounded-card / rounded-media) — Large radii on cards and media; nested elements use radius − padding.
+- [ ] Menu “Floating pill”: A centred, rounded capsule (max 720px) floating 16px from the top: logo, links, one action; translucent surface with backdrop blur.
+- [ ] Absent: Purple-blue AI gradients.
+- [ ] Absent: Neon glow and lens flares.
+- [ ] Absent: Fake terminal typing animations.
+- [ ] Absent: Vague "the future of…" copy.
+- [ ] Absent: A cream or beige page ground with a clay/terracotta accent.
+- [ ] Absent: A near-black ground with one acid-green or orange accent, or tinted charcoal standing in for black.
+- [ ] Absent: Small uppercase, letter-spaced monospace labels above every heading.
+- [ ] Absent: Numbered markers (01 / 02) on content that is not a real sequence.
+- [ ] Absent: Meta strings joined with middle dots or spaced em dashes, and "→" appended to links.
+- [ ] Absent: One italic or coloured accent word inside an otherwise plain headline.
+- [ ] Absent: Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe's fonts.
+- [ ] Mobile (390px): no horizontal scroll, headlines re-broken intentionally, touch targets ≥ 44px.
+- [ ] prefers-reduced-motion: every animation has its documented alternative.
+- [ ] Every media element is rendered through the asset config layer; temporary assets are listed in the manifest.
+- [ ] Lighthouse on mobile: LCP < 2.5s, CLS < 0.1.

@@ -3,14 +3,14 @@
 
 import { characters, directions, goals, leads, motionLevels, purposes } from '@/data/taxonomy'
 import { accentSets, colorRoles, layouts, palettes, typography } from '@/data/ingredients'
-import { GENERIC_TELLS, components, heroes, imagePresentations, media, motionPatterns, footerStyles, navStyles, pageTypes, sections, shapeStyles, signaturePatterns, UI_ALWAYS, uiByGoal, uiByPage, uiBySection, uiNames } from '@/data/patterns'
+import { GENERIC_TELLS, components, concepts, heroes, imagePresentations, media, motionPatterns, footerStyles, navStyles, pageTypes, sections, shapeStyles, signaturePatterns, UI_ALWAYS, uiByGoal, uiByPage, uiBySection, uiNames } from '@/data/patterns'
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { MAX_HEAVY_PIECES, behaviourOf, pieces as pieceCatalog } from '@/data/pieces'
 import { blockFor, heroBlocks } from '@/data/blocks'
 import { resources } from '@/data/resources'
 import { contrast, contrastLabel, isHex } from '@/lib/color'
 import type {
-  AssetCreationPath, AssetRequirement, ChromeId, FooterStyle, AssetSpec, BehaviourId, Brief, BuildTarget, DirectionId, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern, ImagePresentationId, ImageryPlan, PieceId, RecipePiece,
+  AssetCreationPath, AssetRequirement, ChromeId, ConceptId, RecipeConcept, FooterStyle, AssetSpec, BehaviourId, Brief, BuildTarget, DirectionId, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern, ImagePresentationId, ImageryPlan, PieceId, RecipePiece,
   GoalId, LeadId, MotionLevel, NavStyleId, ShapeStyle, UiKit, SignaturePattern, PageBlueprint, PageSection, ShapeId, SignatureMoment, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
 } from '@/types/domain'
 
@@ -58,11 +58,12 @@ function cleanBrief(b: unknown): Brief | undefined {
   return { name: text(x.name, 60), offer: text(x.offer, 160), goal, photos: text(x.photos, 400) }
 }
 
-/** Known ids only, no repeats, one per slot (the later pick wins) — so a kit never gives a page two voices for one job. */
+/** Known ids only, no repeats, one per slot (the later pick wins) — so a kit never gives a page two voices for one job.
+ *  Whole-site extras (preloader, smooth scroll, sound…) each do their own job, so they never replace each other. */
 export function cleanPieces(ids: unknown): PieceId[] {
   if (!Array.isArray(ids)) return []
   const bySlot = new Map<string, PieceId>()
-  for (const id of ids) if (typeof id === 'string' && Object.hasOwn(pieceCatalog, id)) bySlot.set(pieceCatalog[id as PieceId].slot, id as PieceId)
+  for (const id of ids) if (typeof id === 'string' && Object.hasOwn(pieceCatalog, id)) { const p = pieceCatalog[id as PieceId]; bySlot.set(p.slot === 'site' ? p.id : p.slot, id as PieceId) }
   const keep = new Set(bySlot.values())
   return [...new Set(ids as PieceId[])].filter((id) => keep.has(id))
 }
@@ -85,7 +86,7 @@ function placePieces(spec: RecipeSpec, pages: PageBlueprint[]): RecipePiece[] {
   const fromPhotos = new Map<PieceId, string[]>()
   for (const pg of pages) for (const s of pg.sections) if (s.photos?.piece) fromPhotos.set(s.photos.piece, [...(fromPhotos.get(s.photos.piece) ?? []), `${pg.label} → ${s.name} (its photo layout)`])
   const ids = uniq([...(spec.pieces ?? []), ...fromPhotos.keys()])
-  const WHERE: Record<BehaviourId, string> = { headlines: 'Every page — the h1 and each section heading', links: 'Every page — menu, footer and text links', buttons: 'Every page — the main action', site: 'Whole site — mount once in app/layout.tsx' }
+  const WHERE: Record<BehaviourId, string> = { headlines: 'Every page — the h1 and each section heading', links: 'Every page — menu, footer and text links', buttons: 'Every page — the main action', transitions: 'Whole site — every internal link; mount once in app/layout.tsx', site: 'Whole site — mount once in app/layout.tsx' }
   return ids.map((id) => {
     const p = pieceCatalog[id]
     const b = behaviourOf(id)
@@ -112,6 +113,7 @@ export function normalizeSpec(spec: RecipeSpec): RecipeSpec {
   if (next.footer && !Object.hasOwn(footerStyles, next.footer)) delete next.footer
   if (next.shape && !Object.hasOwn(shapeStyles, next.shape)) delete next.shape
   if (next.signatures) next.signatures = next.signatures.filter((id) => signaturePatterns.some((p) => p.id === id)).slice(0, 4)
+  if (next.concept && next.concept !== 'off' && !(Object.hasOwn(concepts, next.concept) && concepts[next.concept].levels.includes(next.motion))) delete next.concept
   if (next.customPalette && !Object.values(next.customPalette).every(isHex)) delete next.customPalette
   if (next.imagePresentation && !Object.hasOwn(imagePresentations, next.imagePresentation)) delete next.imagePresentation
   if (next.sectionPhotos) next.sectionPhotos = next.sectionPhotos.filter((x) => Object.hasOwn(imagePresentations, x.presentation) && PHOTO_SECTIONS.includes(next.pages.find((p) => p.id === x.page)?.sections[x.index] as SectionId))
@@ -215,7 +217,7 @@ function assetStatus(spec: RecipeSpec, a: AssetSpec): AssetRequirement['status']
 const SOURCE: Record<string, string> = {
   stickers: 'Your brand identity (or an illustrator)',
   images: 'Unsplash / Pexels', video: 'Pexels Videos / Coverr', 'product-photos': 'Own photoshoot', illustrations: 'Commissioned illustrator',
-  '3d': 'Spline / Poly Haven', fonts: 'Google Fonts', copy: 'Written by you', logo: 'Your brand identity',
+  '3d': 'Spline / Poly Haven', audio: 'Pixabay Music / Freesound (check each file’s licence)', fonts: 'Google Fonts', copy: 'Written by you', logo: 'Your brand identity',
 }
 
 const PHOTO_WORDS = {
@@ -335,6 +337,7 @@ function buildAssets(spec: RecipeSpec, hero: HeroPattern): AssetRequirement[] {
     specs: `16:9, 1920×1080 or larger, made from your ${off.width}×${off.height} video. Best: an AI “expand” to 16:9, which keeps every pixel of your video sharp. Otherwise prepare-video.sh crops and upscales it. Phones keep your original.` })
   // Brand stickers: the orbit hero and the sticker piece are only as good as the brand's own marks.
   if (hero.id === 'orbit-stickers' || spec.pieces?.includes('stickers')) list.push({ asset: 'stickers', label: 'Brand stickers', quantity: '8–14', level: hero.id === 'orbit-stickers' ? 'required' : 'recommended', usage: 'Sticker orbit, stickers on sections', specs: 'Transparent PNG (1200px) or SVG; bold outlines, the brand’s own slogans, marks and characters — never AI-generated clip art' })
+  if (spec.pieces?.includes('ambient-sound')) list.push({ asset: 'audio', label: 'Ambient sound', quantity: '1 loop', level: 'required', usage: 'The sound switch (AmbientSound) — off until the visitor turns it on', specs: 'One calm, seamless loop of 30–90 s; MP3 128 kbps, ≤ 1.5 MB; no voice or lyrics; quiet (about −18 LUFS)' })
   if (TEXTURED.has(spec.direction)) list.push({ asset: 'images', label: 'Texture', quantity: '1–2', level: 'optional', usage: 'Subtle paper/grain overlay at ≤ 4% opacity', specs: 'Seamless tile, 1024px, WebP' })
 
   // Ties uploaded files to the first requirement row of the same asset type (list order), so a single
@@ -443,8 +446,7 @@ function pickResources(spec: RecipeSpec, textured: boolean): string[] {
   }
   ids.push(...byLead[spec.lead])
   if (spec.motion !== 'still') ids.push('motion')
-  if (spec.motion === 'dynamic' || spec.motion === 'immersive') ids.push('gsap')
-  if (spec.motion === 'immersive') ids.push('lenis')
+  if (spec.motion === 'immersive' || spec.pieces?.includes('smooth-scroll')) ids.push('lenis')
   if (textured) ids.push('texturelabs', 'ambientcg')
   const imagery = imageryPlan(spec)
   if (imagery) ids.push(...imagery.presentation.resources)
@@ -459,11 +461,11 @@ function filmStory(spec: RecipeSpec, hero: HeroPattern): string[] | undefined {
   const sells = ['ecommerce', 'product', 'fashion'].includes(spec.purpose)
   return [
     `Scroll controls time: map ${range} to the full video timeline (0 → duration). Slow scroll moves the film slowly, fast scroll moves it fast, scrolling up plays it backward. Never autoplay the sequence.`,
-    'Keep it tightly connected: scrub ≈ 0.5 with smooth scroll, and the scroll encode from scripts/prepare-video.sh (keyframe every 6 frames) so seeking never stutters.',
+    'Keep it tightly connected: smooth the progress with useSpring (no lag beyond ~0.3 s), and the scroll encode from scripts/prepare-video.sh (keyframe every 6 frames) so seeking never stutters.',
     'Before coding, watch the video and write a scene map in src/config/scenes.ts: every meaningful moment (a new subject, a pause, a zoom, a change of light) with its start and end as a fraction of the timeline, and the message that belongs to it.',
     'One message per scene, about what is on screen right now. It arrives as its scene begins, holds while the scene plays, and leaves before the next scene’s message arrives — never two at once, never at arbitrary scroll points.',
     ...(sells ? ['This site sells: when the camera pauses or zooms on a product, that scene’s message names the product, adds one line about it and its price, with a quiet link to its product page.'] : []),
-    'Video and type are one system: drive both from a single ScrollTrigger timeline, with each text tween placed at its scene’s fraction — not two separate animation setups.',
+    'Video and type are one system: drive both from one Motion scroll progress (useScroll), with each text’s useTransform range placed at its scene’s fraction — not two separate animation setups.',
     'Text transitions, varied per scene: masked line-by-line reveals, short vertical travel (≤ 24px), clip-path wipes, a small tracking or scale change. No repeated plain fade-ins, nothing bouncy.',
     'Legibility over footage: a soft gradient scrim only behind the text, never a flat dark overlay across the whole film.',
     hero.id === 'scroll-video'
@@ -495,22 +497,57 @@ function signatureSlots(spec: RecipeSpec, hero: HeroPattern, pages: PageBlueprin
 export function signatureChoices(r: UniversalRecipe) {
   const spec = r.metadata.spec
   const { fits } = signatureSlots(spec, r.media.hero, r.pages)
-  const auto = pickSignatures({ ...spec, signatures: undefined }, r.media.hero, r.pages).map((m) => m.id)
+  const auto = pickSignatures({ ...spec, signatures: undefined }, r.media.hero, r.pages, r.concept?.id).map((m) => m.id)
   return signaturePatterns.filter((p) => fits(p, new Set())).map((p) => ({ ...p, recommended: auto.includes(p.id) }))
     .sort((a, b) => Number(b.recommended) - Number(a.recommended))
 }
 
-/** 2–4 signature interactions: the user's own picks if any, else the best fits for sections, motion level, purpose and style. */
-function pickSignatures(spec: RecipeSpec, hero: HeroPattern, pages: PageBlueprint[]): SignatureMoment[] {
+/** How well a pattern's `fits` match this recipe: its kind of site counts 3, each shared style word 1. */
+function fitScore(fits: string[], spec: RecipeSpec) {
   const d = directions[spec.direction]
   const style = new Set<string>([...d.tags, ...d.families, ...spec.characters])
+  return (fits.includes(spec.purpose) ? 3 : 0) + fits.filter((f) => style.has(f)).length
+}
+
+/** The big idea that suits this recipe: at its motion level, carried by a signature that has a section to live on. */
+function recommendConcept(spec: RecipeSpec, hero: HeroPattern, pages: PageBlueprint[]): ConceptId | undefined {
+  const { fits } = signatureSlots(spec, hero, pages)
+  const placeable = Object.values(concepts).filter((c) => c.levels.includes(spec.motion) && c.signatures.some((id) => fits(signaturePatterns.find((p) => p.id === id)!, new Set())))
+  const ranked = placeable.map((c, order) => ({ c, score: fitScore(c.fits, spec), order })).sort((a, b) => b.score - a.score || a.order - b.order)
+  return ranked[0]?.c.id
+}
+
+/** Every big idea that works at this recipe's motion level, the recommended one marked. */
+export function conceptChoices(r: UniversalRecipe) {
+  const spec = r.metadata.spec
+  const auto = recommendConcept(spec, r.media.hero, r.pages)
+  return Object.values(concepts).filter((c) => c.levels.includes(spec.motion)).map((c) => ({ ...c, recommended: c.id === auto }))
+    .sort((a, b) => Number(b.recommended) - Number(a.recommended))
+}
+
+function resolveConcept(spec: RecipeSpec, hero: HeroPattern, pages: PageBlueprint[]): RecipeConcept | undefined {
+  if (spec.concept === 'off') return undefined
+  const auto = recommendConcept(spec, hero, pages)
+  const id = spec.concept ?? auto
+  if (!id) return undefined
+  const { fits: _f, levels: _l, signatures: _s, ...c } = concepts[id]
+  const why = spec.concept ? 'Chosen by the owner.' : `It suits ${/^[aeiou]/i.test(purposes[spec.purpose].noun) ? 'an' : 'a'} ${purposes[spec.purpose].noun.toLowerCase()} with a ${directions[spec.direction].name} look at ${motionLevels[spec.motion].name.toLowerCase()} movement.`
+  return { ...c, why, recommended: id === auto }
+}
+
+/** 2–4 signature interactions: the concept's own first, then the user's picks if any, else the best fits for sections,
+ *  motion level, purpose and style. */
+function pickSignatures(spec: RecipeSpec, hero: HeroPattern, pages: PageBlueprint[], concept?: ConceptId): SignatureMoment[] {
   const { where, fits } = signatureSlots(spec, hero, pages)
-  const candidates = spec.signatures
-    ? spec.signatures.map((id) => signaturePatterns.find((p) => p.id === id)!).filter(Boolean)
+  const byId = (id: string) => signaturePatterns.find((p) => p.id === id)
+  const own = spec.signatures
+    ? spec.signatures.map(byId).filter((p): p is SignaturePattern => !!p)
     : signaturePatterns.flatMap((p, order) => {
-      const score = (p.fits.includes(spec.purpose) ? 3 : 0) + p.fits.filter((f) => style.has(f)).length
+      const score = p.viaConcept ? 0 : fitScore(p.fits, spec)
       return score > 0 ? [{ p, score, order }] : []
     }).sort((a, b) => b.score - a.score || a.order - b.order).map((c) => c.p)
+  // The concept brings its first two (its ending is in its words); the rest stay the recipe's own best fits.
+  const candidates = uniq([...(concept ? concepts[concept].signatures.slice(0, 2).map(byId).filter((p): p is SignaturePattern => !!p) : []), ...own])
   const used = new Set<SectionId>()
   const out: SignatureMoment[] = []
   for (const p of candidates) {
@@ -611,7 +648,7 @@ const PURPOSE_COPY: Record<PurposeId, { headlines: string[]; cta: string[] }> = 
   clinic: { headlines: ['Gentle care, open late', 'Treatments for the whole family', 'Meet your dentist'], cta: ['Book an appointment', 'Call the practice'] },
 }
 
-const TECH_LABEL = { css: 'CSS (transitions, scroll-driven animations)', motion: 'Motion', gsap: 'GSAP + ScrollTrigger', lenis: 'Lenis', three: 'React Three Fiber + drei' } as const
+const TECH_LABEL = { css: 'CSS (transitions, scroll-driven animations)', motion: 'Motion', lenis: 'Lenis', three: 'React Three Fiber + drei' } as const
 
 export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const spec = normalizeSpec(input)
@@ -654,7 +691,8 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
 
   const resolveSection = (sid: SectionId) => {
     const base = sections[sid]
-    const note = sameDirection && seed.spec.purpose === spec.purpose ? seed.sectionNotes[sid] : undefined
+    // A seed's notes name its own fonts and roles — only when the lettering is the seed's too.
+    const note = sameDirection && seed.spec.purpose === spec.purpose && seed.spec.typography === spec.typography ? seed.sectionNotes[sid] : undefined
     const heroCode = heroBlocks[hero.id]
     return sid === 'hero'
       ? { ...base, name: `Hero — ${hero.name}`, composition: hero.composition, behavior: hero.behavior, responsive: hero.responsive, note, ...(heroCode ? { code: { path: `src/components/sections/${heroCode.file}`, exportName: heroCode.exportName, usage: heroCode.usage } } : {}) }
@@ -675,14 +713,15 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     return { ...s, photos: { ...imagePresentations[own ?? spec.imagePresentation ?? recommendSectionPhotos(spec, sid)], chosen: !!own } }
   }) }))
   const kit = placePieces(spec, pages)
+  const concept = resolveConcept(spec, hero, pages)
 
   const componentIds = uniq<ComponentId>([...purpose.components, 'MediaAsset', 'SectionHeader'])
 
   const deps: { name: string; why: string }[] = []
   if (techs.includes('motion') || kit.some((k) => k.deps.includes('motion')) || heroBlocks[hero.id]) deps.push({ name: 'motion', why: kit.length ? 'Viewport reveals, hover and layout animations — and the kit pieces in src/components/pieces/' : 'Viewport reveals, hover and layout animations in React' })
-  if (techs.includes('gsap')) deps.push({ name: 'gsap', why: 'ScrollTrigger for pinned and scrubbed sequences (all plugins are free)' })
   if (kit.some((k) => k.deps.includes('@paper-design/shaders-react'))) deps.push({ name: '@paper-design/shaders-react', why: 'GPU backgrounds used by your kit (Apache-2.0)' })
-  if (techs.includes('lenis')) deps.push({ name: 'lenis', why: 'Smooth scroll synced to ScrollTrigger (desktop only)' })
+  if (kit.some((k) => k.deps.includes('lenis'))) deps.push({ name: 'lenis', why: 'Smooth scroll for the SmoothScroll kit piece (MIT; mouse and trackpad only)' })
+  else if (techs.includes('lenis')) deps.push({ name: 'lenis', why: 'Smooth scroll on desktop; Motion useScroll reads the scroll it keeps' })
   if (techs.includes('three')) deps.push({ name: 'three', why: 'WebGL renderer' }, { name: '@react-three/fiber', why: 'Declarative Three.js in React' }, { name: '@react-three/drei', why: 'Loaders, controls and helpers (useGLTF, Environment)' })
 
   const heading = `${type.display.family} / ${type.body.family}`
@@ -717,7 +756,8 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     components: componentIds.map((c) => c === 'Hero' ? { ...components.Hero, anatomy: hero.composition, behavior: hero.behavior } : components[c]),
     media: { ...lead, hero, storytelling: filmStory(spec, hero), imagery, framing: videoFraming(spec) },
     motion: { level: motion, principle: motion.principle, patterns, libraries: techs.map((t) => TECH_LABEL[t]) },
-    signatures: pickSignatures(spec, hero, pages),
+    ...(concept ? { concept } : {}),
+    signatures: pickSignatures(spec, hero, pages, concept?.id),
     pieces: kit,
     contentDirection: {
       tone: sameDirection ? seed.content.tone : chars.flatMap((c) => c.tone).join(', ') || direction.mood.join(', ').toLowerCase(),
@@ -744,7 +784,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
         '  config/assets.ts — asset reference layer (every image/video by key)',
         kit.length ? `  components/pieces/ — your kit, ready to use: ${kit.map((k) => k.exportName).join(', ')}` : '',
         '  styles/tokens.css — palette + type tokens as CSS variables',
-        techs.includes('gsap') || techs.includes('lenis') ? '  lib/motion.ts   — ScrollTrigger/Lenis setup, reduced-motion guard' : '',
+        techs.includes('lenis') ? '  lib/motion.ts   — Lenis setup, reduced-motion guard' : '',
         techs.includes('three') ? '  components/scene/ — R3F canvas, lazy-loaded' : '',
         'public/media/     — optimised images and videos',
       ].filter(Boolean).join('\n'),
@@ -781,7 +821,6 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
         `Self-host fonts with next/font; ${heading} — subset display faces.`,
         ...(spec.lead === 'video' ? ['Video: preload="metadata", poster image, ≤ 6MB desktop / ≤ 3MB mobile, pause off-screen.'] : []),
         ...(spec.lead === '3d' ? ['3D: lazy-load the canvas, Draco-compress models, cap DPR at 2, stop rendering off-screen.'] : []),
-        ...(techs.includes('gsap') ? ['Import only the GSAP plugins you use; kill ScrollTriggers on unmount.'] : []),
         'Target: LCP < 2.5s, CLS < 0.1, INP < 200ms on a mid-range phone.',
       ],
     },

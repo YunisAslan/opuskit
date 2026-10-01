@@ -1,0 +1,55 @@
+/* tokens.css brings Tailwind itself, the recipe palette (--color-*), fonts, radii and the type-* utilities. */
+@import "../styles/tokens.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* shadcn/ui names the recipe tokens don't already own. background, primary, secondary, accent, muted and border come
+   from tokens.css (--color-*), so they are not remapped here (shadcn files use bg-secondary where they said bg-muted). */
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --font-sans: var(--font-body);
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+  --radius-xl: var(--radius);
+  --radius-2xl: var(--radius);
+  --radius-3xl: var(--radius);
+  --radius-4xl: var(--radius);
+  /* Section spacing between chapters (recipe/layout.md). */
+  --spacing-chapter: clamp(120px, 14vw, 200px);
+}
+
+/* shadcn theme — the recipe's block from recipe/ui.md, hex values on purpose. Errors use the accent for the field's
+   border only (3.8:1 is enough for a UI mark); error text stays in the text colour so it passes AA. */
+:root {
+  --background: #5AA9FF; --foreground: #0A0A23;
+  --card: #7FBDFF; --card-foreground: #0A0A23; --popover: #7FBDFF; --popover-foreground: #0A0A23;
+  --primary: #0A0A23; --primary-foreground: #5AA9FF; --secondary: #4A98EE; --secondary-foreground: #0A0A23;
+  --muted: #7FBDFF; --muted-foreground: #14204A; --accent: #4A98EE; --accent-foreground: #0A0A23;
+  --border: #3F8DE6; --input: #14204A; --ring: #0A0A23; --radius: 0px;
+  --destructive: #8E0D3C;
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { -webkit-font-smoothing: antialiased; }
+  body { @apply bg-background text-foreground; }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+  img { max-width: 100%; }
+  /* Focus without rings or outlines: links and buttons get an underline bar, fields darken (and thicken) their border. */
+  :focus-visible { outline: none; }
+  a:focus-visible, button:focus-visible, [role="button"]:focus-visible { box-shadow: inset 0 -2px 0 currentColor; }
+  [data-slot="input"]:focus-visible, [data-slot="textarea"]:focus-visible, [data-slot="select-trigger"]:focus-visible,
+  [data-slot="checkbox"]:focus-visible { box-shadow: inset 0 0 0 1px var(--color-text); }
+}

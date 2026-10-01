@@ -68,6 +68,14 @@ home anatomy (~150 live home pages), the user's 12 Awwwards sites, WebGL, palett
 - **2026-10-01:** Each kind of site gets its real-world length — longer *and* shorter (portfolio 3, restaurant 5…); testimonials only where real sites use them (user).
 - **2026-10-01:** No three.js / R3F rule change for now: WebGL without new dependencies first (D1–D2); D3 later (user).
 - **2026-10-01:** Order A → B → C → D, check + browser after each (user).
+- **2026-10-01 (C, how it was built):** The kit is "what you see is what you get", so new signatures can't appear by
+  themselves. The concept became a Design choice — **Big idea** (`concepts` in `src/data/patterns.ts`), recommended from
+  kind of site + look + motion until the owner picks one or "None". It brings its first two signature moments (the 9 new
+  ones are `viaConcept`: they arrive only through a big idea or an explicit pick, never as engine extras). Smooth scroll
+  uses Lenis (MIT) — the only piece allowed an import beyond react/motion/Paper (AGENTS.md). Page transitions became their
+  own behaviour ("Between pages", one at a time).
+
+- **2026-10-01:** D (WebGL pieces) put aside: new example sites come first (user). Slow Atlas clips wait too.
 
 ## 4. Progress
 
@@ -77,6 +85,6 @@ home anatomy (~150 live home pages), the user's 12 Awwwards sites, WebGL, palett
 | A. Style library | ✓ 2026-10-01: 11 palettes + 10 pairings (newsprint-1918 dropped), added to their looks; check ✓ |
 | B1. New sections | ✓ 2026-10-01: 8 sections, fully wired (AGENTS.md checklist) |
 | B2. Defaults per kind | ✓ 2026-10-01: all 18 kinds (docs/HANDOFF.md table); check asserts filled + 6+ for long kinds |
-| C. Engine vibe | – |
-| D1–D2. WebGL pieces (no rule change) | – |
+| C. Engine vibe | ✓ 2026-10-01: big idea per recipe (6 concepts, Design → Big idea), 9 award signatures, 4 site pieces (curtain transition, preloader, smooth scroll, sound + mute), award + WebGL checklists in every package; check ✓ |
+| D1–D2. WebGL pieces (no rule change) | put aside (user, 2026-10-01) — examples first |
 | D3. 3D stage (rule change) | deferred (user, 2026-10-01) |

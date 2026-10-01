@@ -1,0 +1,47 @@
+# Verification
+
+The build is done when every item passes.
+
+- [ ] Background is #5AA9FF; no other page background colors are introduced.
+- [ ] Display text uses Bayon 400; body uses Reddit Sans; no other families appear.
+- [ ] Accent #8E0D3C covers < 5% of any viewport.
+- [ ] Pages: Home · Case Studies · Services · About · Contact — every page shares the same navbar and footer.
+- [ ] Footer “Big name”: Links and contact in one row at the top, then the brand name in the display face spanning the full container width (sized to fit, one line), then copyright and legal small underneath.
+- [ ] Home section order: Hero → Manifesto → Featured Work → Services → Clients → Journal → Closing CTA.
+- [ ] Case Studies section order: Featured Work → Case Study Preview → Clients → Closing CTA.
+- [ ] Services section order: Services → Process → Pricing → FAQ → Closing CTA.
+- [ ] About section order: About → Team → Stats → Closing CTA.
+- [ ] Contact section order: Closing CTA → Location → FAQ.
+- [ ] Hero matches "Kinetic type hero": Oversized words that move with scroll: horizontal drift, weight or width shifts on a variable font, line-by-line masking.
+- [ ] Controls and forms use shadcn/ui (button, sheet, sonner, tooltip, navigation-menu, dropdown-menu, form, input, textarea, label, badge, pagination, select, checkbox, tabs, switch, card, accordion) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.
+- [ ] Sections with ready code are built from their component in src/components/sections/ (real copy and media through props, no placeholder text left) and styled only through the recipe tokens. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.
+- [ ] Kit piece "Cut-out headline" (<CutReveal/> from src/components/pieces/CutReveal.tsx) is used on Every page — the h1 and each section heading, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Rolling links" (<TextRoll/> from src/components/pieces/TextRoll.tsx) is used on Every page — menu, footer and text links, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Magnetic button" (<Magnetic/> from src/components/pieces/Magnetic.tsx) is used on Every page — the main action, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Curtain between pages" (<PageCurtain/> from src/components/pieces/PageCurtain.tsx) is used on Whole site — every internal link; mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Designed preloader" (<Preloader/> from src/components/pieces/Preloader.tsx) is used on Whole site — mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Smooth scroll" (<SmoothScroll/> from src/components/pieces/SmoothScroll.tsx) is used on Whole site — mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Big idea “Chapters in giant words” is visible on every page: type is the guide: one display size far above everything else, used only for the chapter words, so the page has a rhythm of loud word → quiet content → loud word.
+- [ ] Chapters open as the big idea says: Every main chapter opens with one word set huge and cropped at the screen edges — the chapter’s subject (Work, Menu, Programme), never a slogan.
+- [ ] The site ends as the big idea says: The brand name set as the last giant word, across the full width of the footer.
+- [ ] Signature moment "Chapters that open with a giant word" is built on Home — Manifesto, with its mobile and reduced-motion versions.
+- [ ] Signature moment "Proof, one at a time" is built on Home — Featured Work, with its mobile and reduced-motion versions.
+- [ ] Every page passes the award checklist in the recipe (one idea, one unforgettable moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).
+- [ ] Layout: Headlines 8 columns, body 5 columns max (~65ch), captions in the rail; section spacing clamp(120px, 14vw, 200px) between chapters, 48px within.
+- [ ] Shape “Sharp”: buttons 0px, cards 0px, media 0px radius (rounded-button / rounded-card / rounded-media) — No rounded corners anywhere; structure comes from lines and space.
+- [ ] Menu “Full-screen menu”: Minimal bar: logo and a “Menu” label only. The menu is a full-viewport panel with display-size links, one per line, plus contact details.
+- [ ] Absent: Filling space with stock photos.
+- [ ] Absent: More than two families.
+- [ ] Absent: Auto-wrapped display text.
+- [ ] Absent: Low contrast "aesthetic" greys.
+- [ ] Absent: A cream or beige page ground with a clay/terracotta accent.
+- [ ] Absent: A near-black ground with one acid-green or orange accent, or tinted charcoal standing in for black.
+- [ ] Absent: Small uppercase, letter-spaced monospace labels above every heading.
+- [ ] Absent: Numbered markers (01 / 02) on content that is not a real sequence.
+- [ ] Absent: Meta strings joined with middle dots or spaced em dashes, and "→" appended to links.
+- [ ] Absent: One italic or coloured accent word inside an otherwise plain headline.
+- [ ] Absent: Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe's fonts.
+- [ ] Mobile (390px): no horizontal scroll, headlines re-broken intentionally, touch targets ≥ 44px.
+- [ ] prefers-reduced-motion: every animation has its documented alternative.
+- [ ] Every media element is rendered through the asset config layer; temporary assets are listed in the manifest.
+- [ ] Lighthouse on mobile: LCP < 2.5s, CLS < 0.1.

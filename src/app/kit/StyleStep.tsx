@@ -15,21 +15,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { accentSets, palettes, typography } from '@/data/ingredients'
-import { footerStyles, heroes, navStyles, shapeStyles } from '@/data/patterns'
+import { concepts, footerStyles, heroes, navStyles, shapeStyles, signaturePatterns } from '@/data/patterns'
 import { behaviours, pieces } from '@/data/pieces'
 import { directions, families, goals, motionLevels, purposes } from '@/data/taxonomy'
 import { closestSite } from '@/features/kit/closest'
 import { behaviourPick, planToSpec, setBehaviour, setStyle, starters, usualPages, type StyleKey } from '@/features/kit/plan'
-import { composeRecipe, recommendedNav, recommendedShape } from '@/features/recipes/engine'
+import { composeRecipe, conceptChoices, recommendedNav, recommendedShape } from '@/features/recipes/engine'
 import { toast } from 'sonner'
 import { updatePlan } from '@/lib/kit'
 import type { BehaviourId, DirectionId, FamilyId, GoalId, KitPlan, MotionLevel, PieceId, PurposeId } from '@/types/domain'
 import { heroName } from './HeroPreview'
 import { lookOf } from './ProductVisual'
 
-// Biggest decisions first: the look, then movement, then the details. The first screen is part of the page — it is chosen in Pages.
+// Biggest decisions first: the look, then movement and the big idea, then the details. The first screen is part of the page — it is chosen in Pages.
 // 'site' (name, what it is, kind, goal) sits first in the list, but the step opens on Look: people see sites before a form.
-const CATS = ['site', 'look', 'motion', 'colours', 'lettering', 'shape', 'menu', 'behaviour'] as const
+const CATS = ['site', 'look', 'motion', 'idea', 'colours', 'lettering', 'shape', 'menu', 'behaviour'] as const
 type Cat = (typeof CATS)[number]
 
 function Tile({ on, label, sub, children, onPick }: { on: boolean; label: string; sub?: string; children?: ReactNode; onPick: () => void }) {
@@ -79,11 +79,12 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
     { id: 'site', name: 'About your site', value: plan.name || 'Untitled' },
     { id: 'look', name: 'Look', value: d.name },
     { id: 'motion', name: 'Movement', value: motionLevels[recipe.metadata.spec.motion].name },
+    { id: 'idea', name: 'Big idea', value: recipe.concept?.name ?? 'None' },
     { id: 'colours', name: 'Colours', value: pal.name, mini: <span className="flex">{[pal.colors.background, pal.colors.text, pal.colors.accent].map((c, i) => <span key={i} className="size-3 rounded-full ring-1 ring-black/10 first:ml-0 -ml-1" style={{ background: c }} />)}</span> },
     { id: 'lettering', name: 'Lettering', value: look.type.name, mini: <span className="text-base leading-none" style={{ fontFamily: `'${look.type.display.family}'`, fontWeight: look.type.display.weight }}>Aa</span> },
     { id: 'shape', name: 'Shape', value: look.shape.name },
     { id: 'menu', name: 'Menu & footer', value: `${navStyles[plan.nav ?? navDefault].name} · ${recipe.chrome.footerStyle.name}` },
-    { id: 'behaviour', name: 'Behaviour', value: String((plan.sitePieces ?? []).filter((id) => behaviours.headlines.ids.concat(behaviours.links.ids, behaviours.buttons.ids, behaviours.site.ids).includes(id)).length || 'Plain') },
+    { id: 'behaviour', name: 'Behaviour', value: String((plan.sitePieces ?? []).filter((id) => Object.values(behaviours).some((g) => g.ids.includes(id))).length || 'Plain') },
   ]
   const next = cats[cats.findIndex((c) => c.id === cat) + 1], prev = cats[cats.findIndex((c) => c.id === cat) - 1]
   const why: Record<Cat, string> = {
@@ -94,9 +95,10 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
     shape: 'Corners and edges of buttons, cards and photos.',
     menu: 'How visitors get around, and how every page ends. The same menu and footer on every page — in Pages you can leave either out of one page.',
     motion: 'How lively the site feels as people scroll. Moments you add in Pages can raise it.',
+    idea: 'The one idea the whole site is built around — what guides the scroll, how each part opens, the moment people remember and how it ends. Award-winning sites always have one. Its moments land on parts your pages already have.',
     behaviour: 'How the site acts, the same on every page: how headings arrive, what links and the main button do, and a few whole-site extras. Effects for one part of one page — a counting number, a photo ring — are added on that part, in Pages.',
   }
-  const reset: Partial<Record<Cat, StyleKey[]>> = { colours: ['palette'], lettering: ['typography'], shape: ['shape'], menu: ['nav', 'footer'], motion: ['motion'] }
+  const reset: Partial<Record<Cat, StyleKey[]>> = { colours: ['palette'], lettering: ['typography'], shape: ['shape'], menu: ['nav', 'footer'], motion: ['motion'], idea: ['concept'] }
   const motions = (Object.keys(motionLevels) as MotionLevel[]).filter((m) => !plan.hero || heroes[plan.hero].motion.includes(m))
   const picked = (ks?: StyleKey[]) => !!ks?.some((k) => plan[k as keyof KitPlan] !== undefined)
 
@@ -234,6 +236,20 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
             ))}
           </div>
           {plan.hero && motions.length < 4 && <p className="mt-3 text-xs text-muted">{heroName(plan.hero)} (your first screen) works at these levels only — change the first screen in Pages for others.</p>}
+        </TabsContent>
+
+        <TabsContent value="idea">
+          <div role="radiogroup" aria-label="Big idea" className="grid gap-2 grid-cols-[repeat(auto-fill,minmax(13rem,1fr))]">
+            {conceptChoices(recipe).map((x) => (
+              <Tile key={x.id} on={recipe.concept?.id === x.id} onPick={() => set('concept', x.id)} label={x.name} sub={x.recommended ? 'Fits your site' : x.line}>
+                <OptionDemo id={`sig:${x.signatures[0]}`} {...demo} />
+                <span className="block px-2.5 pt-2 text-[11px] leading-snug text-muted">{x.signatures.map((id) => signaturePatterns.find((p) => p.id === id)?.name).filter(Boolean).join(' · ')}</span>
+              </Tile>
+            ))}
+            <Tile on={!recipe.concept} onPick={() => set('concept', 'off')} label="None" sub="Keep it plain"><span className="grid aspect-[16/10] place-items-center text-xs text-muted">—</span></Tile>
+          </div>
+          {recipe.concept && <p className="mt-4 max-w-xl text-xs text-muted">{recipe.concept.line} {recipe.signatures.length ? `On your pages: ${recipe.signatures.map((s) => `${s.name} (${s.where.split(' — ').slice(0, 2).join(' · ')})`).join(', ')}.` : ''}</p>}
+          {conceptChoices(recipe).length < Object.keys(concepts).length && <p className="mt-2 text-xs text-muted">More ideas open up with more movement.</p>}
         </TabsContent>
 
         <TabsContent value="behaviour">

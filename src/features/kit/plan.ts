@@ -1,5 +1,5 @@
 // The kit plan — a site built in three steps:
-//   1. Style  — the same on every page (look, first screen, movement, colours, lettering, shape, menu, behaviour)
+//   1. Style  — the same on every page (look, movement, big idea, colours, lettering, shape, menu, behaviour)
 //   2. Pages  — page by page, top to bottom: sections, each with its look, its photo layout (photo sections) and its moments
 //   3. Recipe — the recipe and Build Package for a tool
 // Behaviours (how headlines, links and buttons act; whole-site extras) are site-wide; moments sit on one section and stay there.
@@ -7,7 +7,7 @@
 
 import { blockFor } from '@/data/blocks'
 import { accentSets, palettes, typography } from '@/data/ingredients'
-import { EFFECTS, footerStyles, heroes, imagePresentations, navStyles, pageTypes, sections, shapeStyles } from '@/data/patterns'
+import { EFFECTS, concepts, footerStyles, heroes, imagePresentations, navStyles, pageTypes, sections, shapeStyles } from '@/data/patterns'
 import { behaviourOf, behaviours, isMoment, pieces } from '@/data/pieces'
 import { directions, goals, motionLevels, purposes } from '@/data/taxonomy'
 import { PHOTO_SECTIONS, defaultPagesFor, isValidSpec, normalizeSpec, recommendSectionPhotos } from '@/features/recipes/engine'
@@ -70,8 +70,8 @@ export const pageSuggestions: Partial<Record<PageTypeId, SectionId[]>> = {
   team: ['team', 'about', 'contact-cta'],
   careers: ['editorial-story', 'process', 'faq', 'contact-cta'],
   testimonials: ['testimonials', 'clients', 'press', 'case-study', 'contact-cta'],
-  press: ['journal', 'clients', 'press', 'contact-cta'],
-  integrations: ['feature-grid', 'faq', 'integrations'],
+  press: ['press', 'journal', 'clients', 'contact-cta'],
+  integrations: ['integrations', 'feature-grid', 'faq'],
   changelog: ['journal'],
   security: ['feature-grid', 'faq', 'trust', 'contact-cta'],
   comparison: ['pricing', 'feature-grid', 'integrations', 'faq'],
@@ -82,7 +82,7 @@ export const pageSuggestions: Partial<Record<PageTypeId, SectionId[]>> = {
   locations: ['location', 'gallery', 'reservation'],
   catering: ['services', 'gallery', 'reservation', 'contact-cta'],
   'order-online': ['menu', 'faq'],
-  newsletter: ['journal', 'contact-cta', 'newsletter'],
+  newsletter: ['newsletter', 'journal', 'contact-cta'],
   wholesale: ['product-grid', 'contact-cta', 'categories', 'faq'],
   custom: ['intro', 'contact-cta'],
 }
@@ -168,7 +168,7 @@ export function start(plan: KitPlan, purpose: PurposeId | null): KitPlan {
   return { ...plan, purpose, pages: defaultPagesFor(purpose).map((p) => ({ id: key(), type: p.type, label: p.label, purpose: p.purpose, sections: (p.sections.length ? p.sections : newPage(p.type).sections.map((s) => s.id)).map(inst) })) }
 }
 
-export type StyleKey = 'direction' | 'palette' | 'typography' | 'shape' | 'nav' | 'footer' | 'rotation' | 'motion'
+export type StyleKey = 'direction' | 'palette' | 'typography' | 'shape' | 'nav' | 'footer' | 'rotation' | 'motion' | 'concept'
 /** Sets (or, with undefined, clears back to the look's default) one site-wide choice. A new look keeps every choice the
  *  user made (colours, lettering, shape…); only what they never picked follows the new look. */
 export function setStyle(plan: KitPlan, k: StyleKey, v: string | undefined): KitPlan {
@@ -334,7 +334,7 @@ export function planToSpec(plan: KitPlan): RecipeSpec {
     palette, customPalette: from?.palette === palette ? from.customPalette : undefined, typography: plan.typography ?? dir.defaults.typography,
     assets: plan.assets ?? from?.assets ?? [], uploads: plan.uploads ?? from?.uploads ?? [], videoFrame: from?.videoFrame,
     mediaPlan: plan.mediaPlan ?? from?.mediaPlan ?? (lead === 'video' || lead === '3d' ? 'temporary' : 'have'),
-    nav: plan.nav, footer: plan.footer, shape: plan.shape, rotation: plan.rotation,
+    nav: plan.nav, footer: plan.footer, shape: plan.shape, rotation: plan.rotation, concept: plan.concept,
     sectionPhotos: plan.pages.flatMap((p) => p.sections.flatMap((s, index) => (s.photos ? [{ page: p.id, index, presentation: s.photos }] : []))),
     signatures: same?.signatures ?? [], // what you see is what you get: no touches the user did not place
     pieces: [...new Set(placements.map((x) => x.piece))], piecePlacements: placements,
@@ -382,6 +382,7 @@ export function cleanPlan(x: unknown): KitPlan {
     shape: known(p.shape, shapeStyles), nav: known(p.nav, navStyles), footer: known(p.footer, footerStyles), hero: EFFECTS.some((e) => e.hero === p.hero) ? p.hero : undefined,
     pages, target: typeof p.target === 'string' ? p.target : undefined,
     rotation: p.rotation === 'off' ? 'off' : known(p.rotation, accentSets),
+    concept: p.concept === 'off' ? 'off' : known(p.concept, concepts),
     sitePieces: siteFrom(p.sitePieces, pages),
     from: isValidSpec(p.from) ? p.from : undefined, fromId: typeof p.fromId === 'string' ? p.fromId : undefined,
   }
@@ -401,7 +402,7 @@ export function specToPlan(spec: RecipeSpec, fromId?: string): KitPlan {
   }
   return cleanPlan({
     name: spec.brief?.name, about: spec.brief?.offer, goal: spec.brief?.goal, photoNote: spec.brief?.photos, purpose: spec.purpose, direction: spec.direction, palette: spec.palette, typography: spec.typography,
-    shape: spec.shape, nav: spec.nav, footer: spec.footer, imagePresentation: spec.imagePresentation, rotation: spec.rotation, hero: spec.hero,
+    shape: spec.shape, nav: spec.nav, footer: spec.footer, imagePresentation: spec.imagePresentation, rotation: spec.rotation, concept: spec.concept, hero: spec.hero,
     motion: spec.motion, sitePieces, pages, target: spec.target, from: spec, fromId, uploads: spec.uploads, assets: spec.assets, mediaPlan: spec.mediaPlan,
   })
 }
@@ -428,6 +429,7 @@ export function specFromChoices(choices: { label: string; value: string }[]): Re
     imagePresentation: byName(imagePresentations, v('Photos')?.split(' (')[0]) as RecipeSpec['imagePresentation'],
     palette: (byName(palettes, v('Colors')) as RecipeSpec['palette'] | undefined) ?? d.defaults.palette,
     typography: (byName(typography, v('Lettering')) as RecipeSpec['typography'] | undefined) ?? d.defaults.typography,
+    concept: v('Big idea') === 'none' ? 'off' : byName(concepts, v('Big idea')) as RecipeSpec['concept'],
     assets: [], pages: pages.length ? pages : defaultPagesFor(purpose), target: 'not-sure',
   })
 }

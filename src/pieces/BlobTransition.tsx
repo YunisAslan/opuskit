@@ -3,28 +3,30 @@
 // next page is revealed as the blob keeps travelling off the top. Mount once in the root layout. Respects reduced
 // motion (plain navigation). Original OpusKit code (MIT).
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 export function BlobTransition({ color = 'var(--color-chapter-1, var(--color-accent))' }: { color?: string }) {
-  const router = useRouter()
   const path = usePathname()
   const reduce = useReducedMotion()
   const [phase, setPhase] = useState<'idle' | 'cover' | 'reveal'>('idle')
   useEffect(() => {
     if (reduce) return
+    let replaying = false
     const onClick = (e: MouseEvent) => {
+      if (replaying) return
       const a = (e.target as HTMLElement).closest('a')
       if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank' || a.hasAttribute('download')) return
       const url = new URL(a.href, location.href)
       if (url.origin !== location.origin || (url.pathname === location.pathname && url.hash)) return
       e.preventDefault()
+      e.stopPropagation() // capture phase: hold the click before next/link sees it, then replay it once the page is covered
       setPhase('cover')
-      setTimeout(() => router.push(url.pathname + url.search + url.hash), 550)
+      setTimeout(() => { replaying = true; a.click(); replaying = false }, 550) // next/link navigates (basePath, prefetch, its own handlers)
     }
-    document.addEventListener('click', onClick)
-    return () => document.removeEventListener('click', onClick)
-  }, [reduce, router])
+    document.addEventListener('click', onClick, true)
+    return () => document.removeEventListener('click', onClick, true)
+  }, [reduce])
   useEffect(() => { setPhase((p) => (p === 'cover' ? 'reveal' : p)) }, [path])
   return (
     <AnimatePresence onExitComplete={() => setPhase('idle')}>

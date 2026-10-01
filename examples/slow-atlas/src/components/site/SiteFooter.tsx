@@ -1,21 +1,22 @@
+'use client'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { FooterSection } from '@/components/sections/Footer'
-import { essays, essayHref, site } from '@/content/magazine'
+import { categories, site } from '@/content/magazine'
 import { Logo } from './Logo'
 
+// Footer — Signature columns: the name set large once, three link columns, then copyright and legal.
 export function SiteFooter() {
+  const path = usePathname()
+  const l = (label: string, href: string) => ({ label, href, current: path === href })
   return (
-    <FooterSection
-      link={Link}
-      variant="signature"
-      logo={<Logo size="lg" />}
+    <FooterSection link={Link} variant="signature" logo={<Logo large />}
       columns={[
-        { title: 'Read', links: [{ label: 'Latest essay', href: essayHref(essays[0]) }, { label: 'Articles', href: '/articles' }, { label: 'Newsletter', href: '/newsletter' }] },
-        { title: 'Magazine', links: [{ label: 'About', href: '/about' }, { label: 'The editors', href: '/about#team' }, { label: 'Subscribe', href: '/newsletter#subscribe' }] },
-        { title: 'Contact', links: [{ label: site.email, href: `mailto:${site.email}` }, { label: 'Pitch an essay', href: `mailto:${site.email}?subject=Pitch` }] },
+        { title: 'Read', links: [l('All essays', '/articles'), ...categories.map((c) => l(c.name, `/routes/${c.slug}`))] },
+        { title: 'Magazine', links: [l('About', '/about'), l('Newsletter', '/newsletter'), l('Colophon', '/colophon')] },
+        { title: 'Write to us', links: [l(site.email, `mailto:${site.email}`), l('Pitch an essay', `mailto:${site.pitches}`)] },
       ]}
-      legal={[{ label: 'Privacy', href: '/newsletter#privacy' }, { label: 'Unsubscribe', href: `mailto:${site.email}?subject=Unsubscribe` }]}
-      copyright="© 2026 Slow Atlas"
-    />
+      legal={[l('Privacy', '/colophon#privacy'), l('Photo credits', '/colophon#credits')]}
+      copyright="© 2026 Slow Atlas. Independent since 2024." />
   )
 }

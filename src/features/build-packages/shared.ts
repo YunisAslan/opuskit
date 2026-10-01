@@ -51,10 +51,10 @@ export function tokensCss(r: UniversalRecipe) {
 export function assetsConfigTs(r: UniversalRecipe) {
   const provided = providedFilePaths(r)
   const entries = r.assetRequirements
-    .filter((a) => ['images', 'video', 'product-photos', 'illustrations', '3d'].includes(a.asset))
+    .filter((a) => ['images', 'video', 'product-photos', 'illustrations', '3d', 'audio'].includes(a.asset))
     .map((a) => {
       const mine = provided.filter((f) => f.key === a.key).map((f) => f.webPath)
-      const fallback = `/media/${a.key}.${a.asset === 'video' ? 'mp4' : a.asset === '3d' ? 'glb' : 'jpg'}`
+      const fallback = `/media/${a.key}.${a.asset === 'video' ? 'mp4' : a.asset === '3d' ? 'glb' : a.asset === 'audio' ? 'mp3' : 'jpg'}`
       const paths = mine.length ? mine : [fallback]
       const gallery = paths.length > 1 ? `, gallery: ${JSON.stringify(paths)}` : ''
       return `  ${a.key}: { src: ${JSON.stringify(paths[0])}, alt: '', status: '${a.status}', usage: ${JSON.stringify(a.usage)}${gallery} },`
@@ -77,7 +77,9 @@ export function visualQa(r: UniversalRecipe): string[] {
     `Controls and forms use shadcn/ui (${r.implementation.ui.components.map((c) => c.slug).join(', ')}) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.`,
     'Sections with ready code are built from their component in src/components/sections/ (real copy and media through props, no placeholder text left) and styled only through the recipe tokens. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.',
     ...r.pieces.map((p) => `Kit piece "${p.name}" (<${p.exportName}/> from ${p.path}) is used on ${p.where}, unchanged in behaviour and styled only through the recipe tokens.`),
+    ...(r.concept ? [`Big idea “${r.concept.name}” is visible on every page: ${r.concept.motif.charAt(0).toLowerCase()}${r.concept.motif.slice(1)}`, `Chapters open as the big idea says: ${r.concept.chapters}`, `The site ends as the big idea says: ${r.concept.ending}`] : []),
     ...r.signatures.map((s) => `Signature moment "${s.name}" is built on ${s.where}, with its mobile and reduced-motion versions.`),
+    'Every page passes the award checklist in the recipe (one idea, one unforgettable moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).',
     ...(r.media.imagery ? [`Photos are shown as "${r.media.imagery.presentation.name}" (${r.media.imagery.presentation.behavior.split(';')[0]})${r.media.imagery.note ? `, and the owner's request is met: “${r.media.imagery.note}”` : ''}.`] : []),
     ...(r.media.framing ? [r.metadata.spec.videoFrame === "original" ? "Owner’s video keeps its own shape on every screen — never cropped wide or stretched." : "Owner’s video fills desktop and tablet screens at 16:9 (no bars, no stretching, no narrow strip); phones play the original shape."] : []),
     ...(r.assetRequirements.some((a) => a.asset === "video") ? ["Video: public/media/heroVideo.mp4 and mobileVideoEncode.mp4 exist and were produced by prepare-video.sh (not raw browser uploads); file size ≤ 6 MB desktop / ≤ 3 MB mobile; poster images (posterImage.jpg, posterMobile.jpg) exist and load before the video.", "Video sharpness: ffprobe shows heroVideo.mp4 ≥ 1920 px wide and mobileVideoEncode.mp4 ≥ 1080 px tall — if not, re-run prepare-video.sh (it sharpens small sources) rather than letting the browser stretch it."] : []),

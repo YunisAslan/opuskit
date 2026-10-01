@@ -42,13 +42,13 @@ Establish mood and promise in seconds; orient the visitor to what this site is a
 - **Behavior:** Lines reveal once with a short stagger (80ms per line). Nothing else moves.
 - **Responsive:** Mobile: re-break lines manually (don't rely on auto-wrapping) and scale to ~15vw.
 
-### 02 Intro
-- **Purpose:** Say what this is and who it is for
-- **Composition:** Short statement in display face across 8 columns, with a small label
-- **Content:** 1–2 sentences, specific and concrete
-- **Behavior:** Line reveal
-- **Responsive:** Scale statement to ~8vw; keep line breaks intentional
-- **Ready code:** `src/components/sections/Intro.tsx` → `<IntroSection label="Studio" statement="…" body="…" />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
+### 02 Editorial Story
+- **Purpose:** Tell the story behind the brand in a readable, magazine-like format
+- **Composition:** Headline + narrow text column + large image; captions in margin rail
+- **Content:** 150–300 words, one pull quote
+- **Behavior:** Image clip reveal, text fade-rise
+- **Responsive:** Single column, pull quote full width
+- **Ready code:** `src/components/sections/EditorialStory.tsx` → `<EditorialStorySection title image alt caption paragraphs={[…]} />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
 
 ### 03 Journal
 - **Purpose:** Show ongoing thinking and activity
@@ -58,21 +58,21 @@ Establish mood and promise in seconds; orient the visitor to what this site is a
 - **Responsive:** List view
 - **Ready code:** `src/components/sections/Journal.tsx` → `<JournalSection title="Journal" entries={[{ title, date, category, href, image, alt }]} />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
 
-### 04 About
-- **Purpose:** Put a human face and point of view on the work
-- **Composition:** Portrait image + statement + short bio
-- **Content:** Real names, real history, no mission-statement clichés
-- **Behavior:** Fade-rise
-- **Responsive:** Portrait above text
-- **Ready code:** `src/components/sections/About.tsx` → `<AboutSection title="About" image alt statement bio />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
+### 04 Categories
+- **Purpose:** Show the range and let people go straight to their part of it
+- **Composition:** 3–4 column grid of image tiles, name and count under each
+- **Content:** 3–8 categories, each with a real picture and an honest count
+- **Behavior:** Image zooms slightly on hover
+- **Responsive:** 2-column grid
+- **Ready code:** `src/components/sections/Categories.tsx` → `<CategoriesSection title="Shop by category" items={[{ name, href, image, alt, count }]} />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
 
-### 05 Closing CTA
-- **Purpose:** End with one clear next step
-- **Composition:** Large headline + one action + real contact detail
-- **Content:** Headline in brand voice, email address
-- **Behavior:** Static
-- **Responsive:** Large tap target
-- **Ready code:** `src/components/sections/ContactCta.tsx` → `<ContactCtaSection headline quiet="second line in the serif" action={{ label, href }} email inverse />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
+### 05 Newsletter
+- **Purpose:** Turn a visit into a returning reader
+- **Composition:** One reason to subscribe beside an email field and a button, with a note under it
+- **Content:** What they get, how often, and that it is easy to leave
+- **Behavior:** Static; the form posts to your email provider
+- **Responsive:** Field and button stack, full width
+- **Ready code:** `src/components/sections/Newsletter.tsx` → `<NewsletterSection title text placeholder="you@example.com" button="Subscribe" note="Once a month." action="https://…" />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
 
 ---
 
@@ -116,21 +116,21 @@ Put a human face and point of view on the work; build trust.
 
 Give a clear reason to subscribe and show what they’ll get.
 
-### 01 Journal
+### 01 Newsletter
+- **Purpose:** Turn a visit into a returning reader
+- **Composition:** One reason to subscribe beside an email field and a button, with a note under it
+- **Content:** What they get, how often, and that it is easy to leave
+- **Behavior:** Static; the form posts to your email provider
+- **Responsive:** Field and button stack, full width
+- **Ready code:** `src/components/sections/Newsletter.tsx` → `<NewsletterSection title text placeholder="you@example.com" button="Subscribe" note="Once a month." action="https://…" />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
+
+### 02 Journal
 - **Purpose:** Show ongoing thinking and activity
 - **Composition:** 3 latest entries as editorial list or cards
 - **Content:** Title, date, category
 - **Behavior:** Hover underline
 - **Responsive:** List view
 - **Ready code:** `src/components/sections/Journal.tsx` → `<JournalSection title="Journal" entries={[{ title, date, category, href, image, alt }]} />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
-
-### 02 Closing CTA
-- **Purpose:** End with one clear next step
-- **Composition:** Large headline + one action + real contact detail
-- **Content:** Headline in brand voice, email address
-- **Behavior:** Static
-- **Responsive:** Large tap target
-- **Ready code:** `src/components/sections/ContactCta.tsx` → `<ContactCtaSection headline quiet="second line in the serif" action={{ label, href }} email inverse />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
 
 ---
 
@@ -154,13 +154,13 @@ Give a clear reason to subscribe and show what they’ll get.
 - **Responsive:** List view
 - **Ready code:** `src/components/sections/Journal.tsx` → `<JournalSection title="Journal" entries={[{ title, date, category, href, image, alt }]} />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
 
-### 03 Closing CTA
-- **Purpose:** End with one clear next step
-- **Composition:** Large headline + one action + real contact detail
-- **Content:** Headline in brand voice, email address
-- **Behavior:** Static
-- **Responsive:** Large tap target
-- **Ready code:** `src/components/sections/ContactCta.tsx` → `<ContactCtaSection headline quiet="second line in the serif" action={{ label, href }} email inverse />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
+### 03 Newsletter
+- **Purpose:** Turn a visit into a returning reader
+- **Composition:** One reason to subscribe beside an email field and a button, with a note under it
+- **Content:** What they get, how often, and that it is easy to leave
+- **Behavior:** Static; the form posts to your email provider
+- **Responsive:** Field and button stack, full width
+- **Ready code:** `src/components/sections/Newsletter.tsx` → `<NewsletterSection title text placeholder="you@example.com" button="Subscribe" note="Once a month." action="https://…" />` — start from it: real copy and media through props, `link={Link}` (next/link) for in-site links, proportions tuned to this recipe, tokens only.
 
 ---
 

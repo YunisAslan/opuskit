@@ -39,6 +39,10 @@ Libraries: CSS (transitions, scroll-driven animations), Motion. Use CSS for simp
 - Performance: Only transform; split into lines, not characters, for body-length text.
 - Reduced motion: Show lines immediately.
 
+## Signature moments (build each one where it is placed)
+- **Chapters that open with a giant word** on Home — Journal: Each main chapter opens on one word set huge — wider than the screen, cropped at the edges — before its content starts, so the page reads like a printed magazine with loud covers. How: A full-width divider before the section: one word (the chapter’s subject, not a slogan) in the display face at 18–26vw, line-height 0.8, tight tracking, allowed to overflow and clip (overflow: hidden on the band). On enter it slides 8% sideways over the band’s scroll range (Motion useScroll + useTransform on x). The same word is the section’s h2 for screen readers (visually the band, aria-hidden duplicate). Mobile: Same word at 28–32vw, still cropped; no sideways drift.
+- **Photos revealed like a curtain** on Home — Editorial Story: Images open from a thin line to full size as they come into view, with the photo inside settling from a slight zoom — like a curtain opening. How: clip-path: inset(100% 0 0 0) → inset(0) over 1s, with the inner image scaling 1.15 → 1; triggered once by IntersectionObserver. Mobile: Same, shorter (700ms).
+
 ## Rules
 - Animate transform and opacity only.
 - Wrap every effect in a reduced-motion check (`useReducedMotion()` or `matchMedia('(prefers-reduced-motion: reduce)')`).

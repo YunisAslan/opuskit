@@ -1,7 +1,7 @@
 // Pieces — the kit. Ready components users collect ("add to my kit") and every Build Package then ships as real code
 // in src/components/pieces/. Each one is adapted from an MIT-licensed library (never React Bits, Aceternity or Hover.dev,
 // whose terms forbid redistributing their components), restyled to the recipe tokens (--color-*, --font-*), with a
-// reduced-motion version and no dependency beyond `motion`. The source files live in src/pieces/ and are type-checked with OpusKit.
+// reduced-motion version and no dependency beyond `motion` (Paper Shaders and Lenis where a piece lists them). The source files live in src/pieces/ and are type-checked with OpusKit.
 
 import type { BehaviourId, MotionLevel, Piece, PieceId, PieceSlot } from '@/types/domain'
 
@@ -281,6 +281,30 @@ export const pieces: Record<PieceId, Piece> = {
     usage: '// app/layout.tsx:\n<CookieNote text="We use cookies to …" place="Zone 1" label="Note" />',
     rules: ['Say plainly what is collected; offer “only necessary” as an equal choice.'],
   },
+  'curtain-transition': {
+    id: 'curtain-transition', name: 'Curtain between pages', line: 'A plain panel rises over the page carrying the next page’s name, then lifts away.', slot: 'site', source: OK,
+    file: 'PageCurtain.tsx', exportName: 'PageCurtain', deps: M, levels: MOVING, sections: [],
+    usage: '// app/layout.tsx, inside <body>:\n<PageCurtain />',
+    rules: ['Mount once in the root layout; it handles every internal link.', 'Under 700 ms in total — the name is a beat, not a wait.'],
+  },
+  preloader: {
+    id: 'preloader', name: 'Designed preloader', line: 'The first visit opens on your name counting in while the page loads, then it lifts away.', slot: 'site', source: OK,
+    file: 'Preloader.tsx', exportName: 'Preloader', deps: M, levels: MOVING, sections: [],
+    usage: '// app/layout.tsx, inside <body>:\n<Preloader brand="Your name" />',
+    rules: ['Once per visit (session), never on every page.', 'It follows real loading (fonts and the first-screen media) and never holds people past 2.5 s.'],
+  },
+  'smooth-scroll': {
+    id: 'smooth-scroll', name: 'Smooth scroll', line: 'Scrolling glides instead of stepping, so every scroll effect moves as one.', slot: 'site', source: OK,
+    file: 'SmoothScroll.tsx', exportName: 'SmoothScroll', deps: ['lenis'], levels: MOVING, sections: [],
+    usage: '// app/layout.tsx, inside <body>:\n<SmoothScroll />',
+    rules: ['Mouse and trackpad only — touch keeps the phone’s own scroll.', 'Never hijack the scroll: the page moves exactly as far as the visitor scrolls.'],
+  },
+  'ambient-sound': {
+    id: 'ambient-sound', name: 'Sound, with a mute', line: 'A quiet sound loop visitors can turn on — the switch is always in view.', slot: 'site', source: OK,
+    file: 'AmbientSound.tsx', exportName: 'AmbientSound', deps: [], levels: MOVING, sections: [],
+    usage: '// app/layout.tsx, inside <body>:\n<AmbientSound src="/media/ambientSound.mp3" />',
+    rules: ['Off until the visitor turns it on; never autoplays.', 'One calm loop (30–90 s, seamless); the site works fully without it.'],
+  },
 }
 
 export const MAX_HEAVY_PIECES = 2
@@ -291,7 +315,8 @@ export const behaviours: Record<BehaviourId, { name: string; line: string; ids: 
   headlines: { name: 'Headlines', line: 'How every big heading arrives', ids: ['text-effect', 'cut-reveal', 'duo-headline'], many: false, none: 'Headings simply appear' },
   links: { name: 'Links', line: 'What menu, footer and text links do on hover', ids: ['text-roll', 'scribble-link', 'wavy-link', 'underline-fill', 'text-scramble', 'hover-highlight'], many: false, none: 'A plain underline on hover' },
   buttons: { name: 'Main button', line: 'How the main action of each page responds', ids: ['magnetic', 'swap-button'], many: false, none: 'The button just changes colour' },
-  site: { name: 'Whole site', line: 'Extras across every page — pick any', ids: ['blob-transition', 'brand-cursor', 'cookie-note', 'scroll-progress', 'grain'], many: true },
+  transitions: { name: 'Between pages', line: 'What happens when visitors go to another page', ids: ['curtain-transition', 'blob-transition'], many: false, none: 'The next page simply appears' },
+  site: { name: 'Whole site', line: 'Extras across every page — pick any', ids: ['preloader', 'smooth-scroll', 'ambient-sound', 'brand-cursor', 'cookie-note', 'scroll-progress', 'grain'], many: true },
 }
 export const behaviourOf = (id: PieceId): BehaviourId | undefined => (Object.keys(behaviours) as BehaviourId[]).find((b) => behaviours[b].ids.includes(id))
 export const isMoment = (id: PieceId) => !behaviourOf(id)

@@ -39,15 +39,43 @@ export type ExampleProject = {
 
 export const examples: ExampleProject[] = [
   {
+    slug: 'brasshand',
+    title: 'Brasshand, a branding studio in Baku',
+    summary: 'Brasshand is a three-person branding studio in Baku: names, identities and campaigns for food, music and culture.',
+    mood: ['Bold', 'Articulate', 'Graphic'],
+    // Its first screen is type, not media: the hero still is the site's own first screen.
+    hero: { kind: 'image', src: '/examples/brasshand/media/poster.jpg' },
+    livePath: '/live/brasshand/index.html',
+    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'Agency' },
+      { label: 'Name', value: 'Brasshand' },
+      { label: 'Visitors should', value: 'Get in touch' },
+      { label: 'Style', value: 'Typography First' },
+      { label: 'First screen', value: 'Kinetic type hero' },
+      { label: 'Movement', value: 'Dynamic' },
+      { label: 'Colors', value: 'Lido Blue' },
+      { label: 'Lettering', value: 'Poster Caps' },
+      { label: 'Layout', value: 'Editorial' },
+      { label: 'Shape', value: 'Sharp' },
+      { label: 'Menu', value: 'Full-screen menu' },
+      { label: 'Big idea', value: 'Chapters in giant words' },
+      { label: 'Pages', value: 'Home, Case Studies, Services, About, Contact' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Photos are from Unsplash (credits in media-src/SOURCES.md); the clients, team names and figures are made up; Claude Code drew the logo during the build.',
+  },
+  {
     slug: 'slow-atlas',
-    title: 'Slow Atlas — One place, told slowly',
-    summary: 'An independent magazine of long-form travel essays — one place, told slowly.',
+    title: 'Slow Atlas | Long-form travel essays',
+    summary: 'An independent magazine of long-form travel essays. One place per essay, told slowly, every second Sunday.',
     mood: ['Direct', 'Informed', 'Urgent'],
     // Its first screen is type, not media: the hero still is the site's own first screen.
     hero: { kind: 'image', src: '/examples/slow-atlas/media/poster.jpg' },
     livePath: '/live/slow-atlas/index.html',
-    clip: '/examples/slow-atlas/media/clip.mp4',
-    sectionClips: Object.fromEntries((['navbar', 'intro', 'journal', 'about', 'team', 'editorial-story', 'contact-cta', 'footer'] as const).map((id) => [id, `/examples/slow-atlas/media/clips/${id}.mp4`])),
+    // Rebuilt 2026-10-01 (plan-vibe C): clips are re-recorded by the user from the new live export — until then the kit
+    // offers no clip of it. Add `clip` and `sectionClips` (public/media/clips/{sectionId}.mp4) when they land.
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Blog / magazine' },
@@ -61,6 +89,7 @@ export const examples: ExampleProject[] = [
       { label: 'Layout', value: 'Grid-driven' },
       { label: 'Shape', value: 'Sharp' },
       { label: 'Menu', value: 'Classic bar' },
+      { label: 'Big idea', value: 'Loud covers, quiet reading' },
       { label: 'Pages', value: 'Home, Articles, About, Newsletter, Article' },
       { label: 'Built with', value: 'Claude Code' },
     ],

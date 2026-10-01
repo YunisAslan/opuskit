@@ -3,72 +3,48 @@
 @import "shadcn/tailwind.css";
 @import "../styles/tokens.css";
 
-/* No dark mode: the site has one ground. Keeps shadcn dark: classes from firing on dark-mode systems. */
-@custom-variant dark (&:is(.dark *));
-
-/* shadcn/ui theme names. Values come from recipe/ui.md as hex on purpose — not mapped back to --color-* */
+/* shadcn/ui names that the recipe tokens don't already own. background, primary, secondary, accent, muted and border
+   come from tokens.css (--color-*) so they are not remapped here. */
 @theme inline {
-  --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-ring: var(--ring);
   --color-input: var(--input);
-  --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --font-sans: var(--font-source-serif);
   --radius-sm: var(--radius);
   --radius-md: var(--radius);
   --radius-lg: var(--radius);
   --radius-xl: var(--radius);
+  --radius-2xl: var(--radius);
+  --radius-3xl: var(--radius);
+  --radius-4xl: var(--radius);
 }
 
+/* shadcn theme — the recipe's block from recipe/ui.md, hex values on purpose. */
 :root {
   --background: #8C0F1E; --foreground: #FFF1F2;
   --card: #9E1A2A; --card-foreground: #FFF1F2; --popover: #9E1A2A; --popover-foreground: #FFF1F2;
   --primary: #FFF1F2; --primary-foreground: #8C0F1E; --secondary: #A8283A; --secondary-foreground: #FFF1F2;
   --muted: #9E1A2A; --muted-foreground: #F5C2C8; --accent: #A8283A; --accent-foreground: #FFF1F2;
   --border: #B23A4A; --input: #F5C2C8; --ring: #FFF1F2; --radius: 0px;
-  /* Form errors sit on cherry, so they use the accent ink, not a second red */
   --destructive: #FFD8E0;
 }
 
 @layer base {
   * { @apply border-border; }
-  html { scroll-padding-top: 5rem; }
-  ::selection { background: var(--color-text); color: var(--color-background); }
-  /* Focus is shown without rings or outlines: links and buttons underline, fields darken their border (in each control). */
+  html { @apply font-sans; -webkit-font-smoothing: antialiased; }
+  body { @apply bg-background text-foreground; }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+  /* Focus without rings: links underline, buttons change ground (see button.tsx), fields darken their border. */
   :focus-visible { outline: none; }
-  a:focus-visible, button:focus-visible { text-decoration-line: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  a:focus-visible { text-decoration-line: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+  img { max-width: 100%; }
 }
-
-/* Motion — Line-by-line headline reveal. Each line is masked; the inner span rises from 100%. */
-@keyframes line-rise { from { transform: translateY(105%); } to { transform: translateY(0); } }
-@layer components {
-  .line-mask { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
-  .line-inner { display: block; }
-}
-.hero-line .line-inner { animation: line-rise 700ms var(--ease-out-quint) both; animation-delay: var(--d, 0ms); }
-@media (min-width: 768px) { .hero-line .line-inner { animation-delay: var(--dd, var(--d, 0ms)); } }
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-line .line-inner { animation: none; }
-  /* Sheet / select / menu open-close animations (tw-animate) become instant; colour transitions stay. */
-  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
-  [data-slot="button"] { translate: none !important; }
-}
-
-/* Motion — Editorial Story image: clip reveal from the bottom while the photo drifts from 106% to 100%. Plays once on load. */
-@keyframes clip-reveal { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
-@keyframes drift { from { transform: scale(1.06); } to { transform: scale(1); } }
-.story-clip { animation: clip-reveal 900ms var(--ease-out-quint) 150ms both; }
-.story-drift { animation: drift 1600ms var(--ease-out-quint) 150ms both; }

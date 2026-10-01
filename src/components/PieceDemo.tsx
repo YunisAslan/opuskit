@@ -3,6 +3,8 @@
 // (or OpusKit's own when shown in the catalog). The same code a Build Package ships.
 
 import type { CSSProperties, ReactNode } from 'react'
+import { useEffect, useState } from 'react'
+import { AmbientSound } from '@/pieces/AmbientSound'
 import { Grain } from '@/pieces/Grain'
 import { GridPattern } from '@/pieces/GridPattern'
 import { HoverHighlight } from '@/pieces/HoverHighlight'
@@ -102,8 +104,29 @@ function demo(id: PieceId): ReactNode {
     case 'blob-transition': return <div className="relative size-full overflow-hidden"><div className="absolute inset-x-[-20%] top-[30%] h-[140%] animate-[opuskit-blob_2.4s_cubic-bezier(.76,0,.24,1)_infinite] rounded-t-[50%] bg-(--color-chapter-1,var(--color-accent))" /><style>{'@keyframes opuskit-blob{0%{transform:translateY(100%)}45%,55%{transform:translateY(-10%)}100%{transform:translateY(-160%)}}'}</style><p className="relative p-6 text-sm">Every internal link sweeps a blob over the page.</p></div>
     case 'brand-cursor': return <div className="grid size-full place-items-center" style={{ cursor: `url("${CURSOR}") 3 2, auto` }}><p className="text-sm">Move the cursor here</p></div>
     case 'cookie-note': return <div className="relative size-full [&_[role=dialog]]:absolute [&_[role=dialog]]:bottom-3 [&_[role=dialog]]:right-3"><CookieNote text="We use cookies to see which films you watch — nothing else." storageKey="opuskit-demo-cookie" /></div>
+    case 'curtain-transition': return <div className="relative size-full overflow-hidden"><p className="p-6 text-sm">Every internal link raises a panel with the next page’s name.</p><div className="absolute inset-0 grid animate-[opuskit-curtain_2.4s_cubic-bezier(.76,0,.24,1)_infinite] place-items-center bg-(--color-text)"><p className={`${display} text-5xl text-(--color-background)`}>Journal</p></div><style>{'@keyframes opuskit-curtain{0%{transform:translateY(100%)}35%,60%{transform:translateY(0)}95%,100%{transform:translateY(-100%)}}'}</style></div>
+    case 'preloader': return <PreloaderDemo />
+    // Not the real piece: it would smooth-scroll the whole OpusKit app.
+    case 'smooth-scroll': return <div className="grid size-full grid-cols-2 gap-px bg-(--color-border)">{[['Step', 'steps(5)'], ['Glide', 'cubic-bezier(.22,1,.36,1)']].map(([l, ease]) => <div key={l} className="relative bg-(--color-background) p-5"><p className={utility}>{l}</p><span className="absolute left-1/2 top-12 size-3 rounded-full bg-(--color-accent)" style={{ animation: `opuskit-glide 2.4s ${ease} infinite alternate` }} /></div>)}<style>{'@keyframes opuskit-glide{to{transform:translateY(7rem)}}'}</style></div>
+    case 'ambient-sound': return <div className="relative grid size-full place-items-center [&>button]:absolute"><p className="text-sm text-(--color-muted)">The switch sits bottom-left on every page.</p><AmbientSound src="" /></div>
     default: { const missing: never = id; return missing } // every piece needs a demo
   }
+}
+
+// The preloader's count and lift, looping inside the card (the real one runs once per visit, full screen).
+function PreloaderDemo() {
+  const [n, setN] = useState(0)
+  useEffect(() => { const t = setInterval(() => setN((v) => (v >= 140 ? 0 : v + 2)), 30); return () => clearInterval(t) }, [])
+  const up = n > 100
+  return (
+    <div className="relative size-full overflow-hidden">
+      <p className="p-6 text-sm text-(--color-muted)">The page underneath.</p>
+      <div className={`absolute inset-0 flex flex-col justify-between border-b border-(--color-border) bg-(--color-background) p-5 ${up ? 'transition-transform duration-500 ease-[cubic-bezier(.76,0,.24,1)]' : ''}`} style={{ transform: up ? 'translateY(-100%)' : undefined }}>
+        <p className={`${display} text-4xl`}>Slow Atlas</p>
+        <p className={`${utility} self-end text-3xl tabular-nums`}>{Math.min(n, 100)}</p>
+      </div>
+    </div>
+  )
 }
 
 // These react to the page's own scroll: scroll past the card to see them move.

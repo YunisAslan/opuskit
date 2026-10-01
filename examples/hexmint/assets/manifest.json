@@ -1,0 +1,60 @@
+{
+  "recipe": "digital-futurism",
+  "title": "Hexmint — Digital Futurism Software Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "create",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "find",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Funnel Display, Funnel Sans (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "create",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "3dModelOrScene": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "curated-placeholder",
+      "replaceWith": "user-owned-3d",
+      "usage": "Hero scene",
+      "specs": "GLB < 3MB, < 100k triangles, or a Spline scene"
+    },
+    "preRenderedPoster": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "curated-placeholder",
+      "replaceWith": "user-owned-images",
+      "usage": "Loading state, mobile & reduced motion fallback",
+      "specs": "Rendered from the hero camera angle"
+    },
+    "supportingRenders": {
+      "required": false,
+      "level": "recommended",
+      "status": "find",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Feature sections",
+      "specs": "Same lighting setup"
+    }
+  }
+}

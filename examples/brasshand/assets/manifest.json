@@ -1,0 +1,68 @@
+{
+  "recipe": "typography-first",
+  "title": "Brasshand — Typography First Agency Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Made for the site (temporary until Brasshand has its own)",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon",
+      "files": [
+        "src/components/site/Logo.tsx",
+        "src/app/icon.svg",
+        "public/brand/symbol-dark.svg",
+        "public/brand/symbol-light.svg"
+      ]
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Bayon, Reddit Sans (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "files": [
+        "src/content/site.ts"
+      ],
+      "note": "Written in the recipe voice; clients, contact details and figures are invented placeholders"
+    },
+    "finalHeadlineCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Hero and section statements",
+      "specs": "Short: 3–8 words each; written before layout",
+      "files": [
+        "src/content/site.ts",
+        "src/components/site/Hero.tsx"
+      ]
+    },
+    "punctuationImages": {
+      "required": false,
+      "level": "optional",
+      "status": "have",
+      "source": "The owner's photos (media-src/SOURCES.md)",
+      "replaceWith": "user-owned-images",
+      "usage": "Between type sections",
+      "specs": "High contrast, simple subjects",
+      "files": [
+        "src/config/assets.ts"
+      ]
+    }
+  }
+}

@@ -16,7 +16,7 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 | A. Style library | ✓ 11 palettes + 10 pairings in `src/data/ingredients.ts`, ids in `domain.ts`, added to looks in `taxonomy.ts`; `npm run check` ✓ |
 | B1. 8 new sections | ✓ feature-rows, newsletter, categories, press, cta-band, trust, schedule, integrations — fully wired, in the kit's Add-to-page |
 | B2. Each kind's home defaults | ✓ applied (table below); `check.ts` now asserts "filled, 6+ for long kinds" instead of "4+ everywhere" |
-| C. Engine vibe | **next** |
+| C. Engine vibe | ✓ (below) |
 | D1–D2. WebGL pieces (no new deps) | after C |
 | D3. three.js / R3F 3D stage | deferred by the user |
 
@@ -29,6 +29,19 @@ best-when, a job group in `sectionGroups` + page suggestions (`src/features/kit/
 Follow-ups noted by the agent that built them: page types Press / Integrations / Newsletter list the new section at
 position 3+ of their suggestions (new pages of that type start with the first two) — consider moving it first; short
 sections (trust, CTA band) look sparse in 16:10 thumbnails; some world photos don't fit their sample names.
+
+### C — award-site vibe (done 2026-10-01)
+- **Big idea** (Design, after Movement): `concepts` in `src/data/patterns.ts` — one-guide, giant-chapters, live-console,
+  guided-walk, playful-way-in, loud-and-quiet. Engine: `resolveConcept` / `conceptChoices` (`engine.ts`), recommended until
+  picked; `spec.concept` / `plan.concept` ('off' = none). Its first two signatures are placed on the recipe's sections.
+- **9 new signatures** (`viaConcept: true`, end of `signaturePatterns`): giant-word chapters, pinned proof, travelling
+  motif, entry gate, live status, scramble labels, guided stops, theme per variant, footer moment. Demos in `OptionDemo`.
+- **Site pieces:** `curtain-transition` (PageCurtain), `preloader`, `smooth-scroll` (Lenis), `ambient-sound` (+ an
+  `audio` asset row). New behaviour `transitions` ("Between pages") holds curtain + blob.
+- **Build Package:** `recipe/design.md` = summary → Big Idea → direction → **award checklist** → why; CLAUDE.md names the
+  big idea; `recipe/media.md` + performance skill get the **WebGL checklist** when a shader piece or 3D hero is used;
+  visual QA checks the big idea. Recipe page shows it (tile + "Big idea" block).
+- Page types Press / Integrations / Newsletter now start with their own new section.
 
 ### B2 — default home sections per kind (applied 2026-10-01 in `purposes[kind].pages`, `src/data/taxonomy.ts`)
 Source: `docs/research/2026-10-home-anatomy.md`. The user agreed: real-world length, longer *and* shorter;
@@ -59,17 +72,20 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
 
 ## Next
 
-1. **C — award-site vibe in the engine** (`docs/plan-vibe.md` C): a concept per recipe written into the Build Package's
-   creative direction; new signatures from `docs/research/2026-10-awwwards.md` (giant-word chapter opener, pinned proof
-   sequence, travelling motif, playful gate, live status line, scramble text, guided stops, theme per variant, footer as
-   a moment); site-wide behaviours (preloader, page transitions, Lenis smooth scroll, optional sound + mute); an award
-   checklist and the WebGL checklist (`docs/research/2026-10-webgl.md`) in the Build Package. No GSAP (licence).
-2. **D1–D2 — WebGL pieces without new dependencies**: Paper Shaders (installed; 30 shaders, 2 used) — living gradient
-   field, logo as material, moving photo filter; OpusKit-written raw WebGL2 — image hover distortion, liquid image
-   transition, particles forming a word. Rules for pieces in AGENTS.md (tokens, reduced motion, react/motion/paper only).
-3. Then **example #2 Agency** (`docs/plan-for-fit.md` §5–§6), using the new defaults and the row's "Fresh picks".
+1. **Example #2 Brasshand** — built and registered 2026-10-01 (`examples/brasshand/`, live at
+   `/live/brasshand/index.html`). Open: clips (the user records them), and removing `cheeky911` with its kit photos
+   (plan-for-fit §9 — needs the user's OK).
+2. **Example #3 Hexmint** (SaaS, digital-futurism, 3D first screen in code, immersive, Big idea "A live console"):
+   recipe approved, building (`examples/hexmint/BUILD-LOG.md`). Then #4–#10 in the §5 order.
+3. Put aside by the user (2026-10-01): D1–D2 WebGL pieces; Slow Atlas clips (recorded later by the user).
 
 ## Done so far (2026-10-01)
+
+- Engine fixes after Brasshand (2026-10-01): **no GSAP guidance anywhere** — pinned/scrubbed patterns are Motion
+  (`useScroll` + `useTransform`, `position: sticky`) or CSS; check.ts asserts no adapter output mentions GSAP. Seed rules
+  and notes name colour roles, not hues; seed section notes (which name fonts) apply only with the seed's own lettering.
+  Kit pieces fixed from the builds: PageCurtain (click replay, aria-label for TextRoll links), Magnetic, CutReveal,
+  Preloader (hydration under reduced motion).
 
 - **Example #1 Slow Atlas** (`examples/slow-atlas/`): built from the kit by Claude Code (prompts in its `BUILD-LOG.md`),
   photos from Unsplash (`media-src/SOURCES.md`), registered on `/examples`, live at `/live/slow-atlas/index.html`,
@@ -89,6 +105,9 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
   a headless `claude -p --permission-mode bypassPermissions` from Claude's session is blocked by the safety check.
   Claude writes each prompt into `BUILD-LOG.md` first. With the user's OK, a fresh subagent may run a fix prompt.
   No hand-written code in examples.
+- **Rebuilds** go in a fresh `examples/{slug}-v2/` beside the old build (deleting the old folder in place was blocked by
+  the safety check); the swap into `examples/{slug}/` happens only with the user's OK. `scripts/build-package.ts` writes
+  a spec's Claude Code package into a folder (the same files as the result page's Download).
 - **Media:** Unsplash connector works (the account email had to be confirmed). Download "Original", resize for
   `public/media/` (≤ 2400 px long side), originals stay in `media-src/`, sources in `SOURCES.md`.
 - Use the design skills (gsap/threejs/motion-design/design-dna) only when relevant; animejs.com is a reference.
@@ -104,7 +123,6 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
 
 ## Open questions for the user
 
-- Rebuild Slow Atlas after C so it shows the new vibe?
 - Kit sample photos for some worlds are still old-example photos (`SectionPreview.tsx`): Porsches (cheeky911) in the
   studio/software worlds and the real **Keepers** can (a real drink brand) in the product world — now also in the new
   feature-rows sample. §9 of plan-for-fit replaces them as examples #4/#5/#7/#8/#10 land; the blog/editorial world could

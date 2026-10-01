@@ -148,7 +148,7 @@ type Edit = (step?: string) => string
 /** Questionnaire step → where the same choice lives in the kit: [kit step, style category or components shelf]. */
 const KIT_SPOT: Record<string, [string, string?]> = {
   direction: ['style', 'look'], palette: ['style', 'colours'], typography: ['style', 'lettering'], shape: ['style', 'shape'], nav: ['style', 'menu'], footer: ['style', 'menu'], photos: ['pages'],
-  lead: ['pages', 'first-screen'], motion: ['style', 'motion'], touches: ['pages'], pages: ['pages'], kit: ['style', 'behaviour'],
+  lead: ['pages', 'first-screen'], motion: ['style', 'motion'], touches: ['style', 'idea'], idea: ['style', 'idea'], pages: ['pages'], kit: ['style', 'behaviour'],
 }
 
 const ChangeLink = ({ href, label = 'Change' }: { href: string; label?: string }) =>
@@ -177,6 +177,8 @@ function Overview({ r, look, editHref }: { r: UniversalRecipe; look: Look; editH
       visual: <img src={img(r.metadata.image, 480)} alt="" className="h-full w-full object-cover" /> },
     { label: 'Shape', value: r.visualSystem.shape.name, step: 'shape', visual: <OptionDemo id={`shape:${r.visualSystem.shape.id}`} {...look} /> },
     { label: 'Menu', value: r.chrome.nav.name, step: 'nav', visual: <OptionDemo id={`nav:${r.chrome.nav.id}`} {...look} /> },
+    { label: 'Big idea', value: r.concept?.name ?? 'None', step: 'idea',
+      visual: <div className="flex h-full flex-col justify-end p-4" style={{ background: c.surface, color: c.text }}><span className="text-sm leading-snug">{r.concept?.line ?? 'No single idea — the look carries the site.'}</span></div> },
     { label: 'Special touches', value: r.signatures.map((s) => s.name).join(', ') || 'None', step: 'touches',
       visual: r.signatures[0] ? <OptionDemo id={`sig:${r.signatures[0].id}`} {...look} /> : <div className="h-full" style={{ background: c.surface }} /> },
     ...(r.pieces.length ? [{ label: 'Your kit', value: r.pieces.map((p) => p.name).join(', '), step: 'kit', href: editHref('kit'),
@@ -394,6 +396,17 @@ function Motion({ r, look, editHref }: { r: UniversalRecipe; look: Look; editHre
         <p className="mt-2 max-w-2xl text-ink-2">{r.motion.principle}</p>
         <ul className="mt-5 flex flex-wrap gap-2">{r.motion.patterns.map((p) => <li key={p.id} className="rounded-full border border-line bg-white px-3 py-1.5 text-sm">{p.name}</li>)}</ul>
       </div>
+      {r.concept && (
+        <div>
+          <Heading title={`Big idea — ${r.concept.name}`}><ChangeLink href={editHref('idea')} /></Heading>
+          <p className="mt-2 max-w-2xl text-ink-2">{r.concept.line} {r.concept.why}</p>
+          <dl className="mt-5 grid max-w-4xl gap-4 text-sm md:grid-cols-2">
+            {([['What guides the scroll', r.concept.motif], ['How each part opens', r.concept.chapters], ['The moment people remember', r.concept.moment], ['How the site ends', r.concept.ending]] as const).map(([k, v]) => (
+              <div key={k} className="rounded-lg border border-line bg-white p-4"><dt className="text-xs text-muted">{k}</dt><dd className="mt-1 text-ink-2">{v}</dd></div>
+            ))}
+          </dl>
+        </div>
+      )}
       <div>
         <Heading title="Special touches"><ChangeLink href={editHref('touches')} /></Heading>
         {r.signatures.length ? (

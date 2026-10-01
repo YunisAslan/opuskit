@@ -1,0 +1,78 @@
+@import "../styles/tokens.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* shadcn/ui theme (recipe/ui.md). Only names that don't collide with the recipe's --color-* tokens are mapped;
+   shadcn's bg-muted / bg-accent were rewritten to bg-secondary in src/components/ui. */
+:root {
+  --background: #11254B; --foreground: #F1F3F8;
+  --card: #1B315B; --card-foreground: #F1F3F8; --popover: #1B315B; --popover-foreground: #F1F3F8;
+  --primary: #F1F3F8; --primary-foreground: #11254B; --secondary: #253C67; --secondary-foreground: #F1F3F8;
+  --muted: #1B315B; --muted-foreground: #A7B2C8; --accent: #253C67; --accent-foreground: #F1F3F8;
+  --border: #34497A; --input: #A7B2C8; --ring: #F1F3F8; --radius: 24px;
+  --destructive: #F2E14C;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-funnel-sans);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: var(--radius-button);
+  --radius-xl: var(--radius-media);
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+  /* Focus without rings: links and buttons underline, fields darken their border (in the ui components). */
+  :focus-visible { outline: none; }
+  a:focus-visible, button:focus-visible { text-decoration-line: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+}
+
+/* Console chrome: a fine hairline grid behind key sections (off under 640px). */
+.console-grid {
+  background-image: linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: -1px -1px;
+}
+.console-grid-soft { position: relative; isolation: isolate; }
+.console-grid-soft::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0.45;
+  background-image: linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent);
+}
+@media (max-width: 639px) { .console-grid { background-image: none; } .console-grid-soft::before { display: none; } }
+
+/* Fade & rise: RevealObserver marks a section (or a [data-reveal-group]) with data-in when it enters the viewport;
+   its [data-reveal] children rise in, staggered by --i. Only with JS, so nothing is hidden without it. */
+[data-reveal] { transition: opacity 600ms var(--ease-out-soft), transform 600ms var(--ease-out-soft); transition-delay: calc(var(--i, 0) * 60ms); }
+html.js section:not([data-in]) [data-reveal],
+html.js [data-reveal-group]:not([data-in]) [data-reveal] { opacity: 0; transform: translateY(16px); }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { transition: opacity 200ms linear; transition-delay: 0ms; }
+  html.js section:not([data-in]) [data-reveal],
+  html.js [data-reveal-group]:not([data-in]) [data-reveal] { transform: none; }
+}
+
+/* Parallax drift: media moves at ~0.25x scroll inside its frame. CSS scroll-driven only; elsewhere it stays still. */
+@keyframes drift { from { transform: translateY(-7%) scale(1.16); } to { transform: translateY(7%) scale(1.16); } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .parallax > img { animation: drift linear both; animation-timeline: view(); }
+  }
+}

@@ -3,7 +3,7 @@
 Every control and form uses these ready-made, accessible components (https://ui.shadcn.com/docs/components), restyled to this recipe. Users expect polished fields — no unstyled browser defaults.
 
 ```bash
-npx shadcn@latest init && npx shadcn@latest add button sheet sonner tooltip navigation-menu dropdown-menu form input badge pagination textarea select checkbox label
+npx shadcn@latest init && npx shadcn@latest add button sheet sonner tooltip navigation-menu dropdown-menu form input badge pagination label
 ```
 
 | Component | Used on |
@@ -14,14 +14,11 @@ npx shadcn@latest init && npx shadcn@latest add button sheet sonner tooltip navi
 | Tooltip (`tooltip`) | every page |
 | Navigation menu (`navigation-menu`) | navigation |
 | Dropdown menu (`dropdown-menu`) | navigation |
-| Form with validation (`form`) | main action — subscribe, Home — Closing CTA, Newsletter, Newsletter — Closing CTA, Article — Closing CTA |
-| Text field (`input`) | main action — subscribe, Home — Closing CTA, Newsletter, Newsletter — Closing CTA, Article — Closing CTA |
+| Form with validation (`form`) | main action — subscribe, Home — Newsletter, Newsletter, Newsletter — Newsletter, Article — Newsletter |
+| Text field (`input`) | main action — subscribe, Home — Newsletter, Newsletter, Newsletter — Newsletter, Article — Newsletter |
 | Badge (`badge`) | Home — Journal, Articles — Journal, Newsletter — Journal, Article — Journal |
 | Pagination (`pagination`) | Home — Journal, Articles — Journal, Newsletter — Journal, Article — Journal |
-| Message field (`textarea`) | Home — Closing CTA, Newsletter — Closing CTA, Article — Closing CTA |
-| Select (`select`) | Home — Closing CTA, Newsletter — Closing CTA, Article — Closing CTA |
-| Checkbox (`checkbox`) | Home — Closing CTA, Newsletter — Closing CTA, Article — Closing CTA |
-| Label (`label`) | Home — Closing CTA, Newsletter — Closing CTA, Article — Closing CTA |
+| Label (`label`) | Home — Newsletter, Newsletter — Newsletter, Article — Newsletter |
 
 ### Theme (paste over the :root values shadcn init writes)
 

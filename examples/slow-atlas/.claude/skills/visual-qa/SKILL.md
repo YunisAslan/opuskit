@@ -13,14 +13,24 @@ Run the dev server, open each page (use a browser/screenshot tool if available),
 - [ ] Accent #FFD8E0 covers < 5% of any viewport.
 - [ ] Pages: Home · Articles · About · Newsletter · Article — every page shares the same navbar and footer.
 - [ ] Footer “Signature columns”: Dark band (text colour as ground): the logo large on the left (5 of 12 columns), 2–3 link columns with headings, then a hairline and one row: copyright left, legal links right.
-- [ ] Home section order: Hero → Intro → Journal → About → Closing CTA.
+- [ ] Home section order: Hero → Editorial Story → Journal → Categories → Newsletter.
 - [ ] Articles section order: Journal.
 - [ ] About section order: About → Team.
-- [ ] Newsletter section order: Journal → Closing CTA.
-- [ ] Article section order: Editorial Story → Journal → Closing CTA.
+- [ ] Newsletter section order: Newsletter → Journal.
+- [ ] Article section order: Editorial Story → Journal → Newsletter.
 - [ ] Hero matches "Typographic statement": A single sentence at display scale (8–14vw) set on the grid, with a small metadata row beneath. No image required.
-- [ ] Controls and forms use shadcn/ui (button, sheet, sonner, tooltip, navigation-menu, dropdown-menu, form, input, badge, pagination, textarea, select, checkbox, label) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.
+- [ ] Controls and forms use shadcn/ui (button, sheet, sonner, tooltip, navigation-menu, dropdown-menu, form, input, badge, pagination, label) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.
 - [ ] Sections with ready code are built from their component in src/components/sections/ (real copy and media through props, no placeholder text left) and styled only through the recipe tokens. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.
+- [ ] Kit piece "Cut-out headline" (<CutReveal/> from src/components/pieces/CutReveal.tsx) is used on Every page — the h1 and each section heading, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Curtain between pages" (<PageCurtain/> from src/components/pieces/PageCurtain.tsx) is used on Whole site — every internal link; mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Designed preloader" (<Preloader/> from src/components/pieces/Preloader.tsx) is used on Whole site — mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Smooth scroll" (<SmoothScroll/> from src/components/pieces/SmoothScroll.tsx) is used on Whole site — mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Big idea “Loud covers, quiet reading” is visible on every page: two volumes, never mixed: covers (the first screen, chapter openers, the start of each story) are loud — giant type, a full-bleed photo — and everything people read stays narrow, calm and quiet.
+- [ ] Chapters open as the big idea says: Chapters open like magazine covers: one giant word or a full-width photo, then the calm column starts.
+- [ ] The site ends as the big idea says: A quiet ending: the footer is as calm as the reading, with the name set large once.
+- [ ] Signature moment "Chapters that open with a giant word" is built on Home — Journal, with its mobile and reduced-motion versions.
+- [ ] Signature moment "Photos revealed like a curtain" is built on Home — Editorial Story, with its mobile and reduced-motion versions.
+- [ ] Every page passes the award checklist in the recipe (one idea, one unforgettable moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).
 - [ ] Layout: Modules snap to 3, 4, 6 or 12 columns; section spacing 96–128px, or sections separated by rules only.
 - [ ] Shape “Sharp”: buttons 0px, cards 0px, media 0px radius (rounded-button / rounded-card / rounded-media) — No rounded corners anywhere; structure comes from lines and space.
 - [ ] Menu “Classic bar”: Full-width bar: logo left, 4–6 links and the primary action right, on the page ground with a hairline bottom border.

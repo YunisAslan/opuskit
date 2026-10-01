@@ -18,6 +18,15 @@ export const recipeSections = {
     return `## Creative Direction\n\n**Mood:** ${c.mood.join(', ')}\n\n**Personality:** ${c.personality}\n\n### Visual principles\n${list(c.visualPrinciples)}\n\n### Do\n${list(c.do)}\n\n### Avoid\n${list(c.avoid)}\n\n### Not the generic AI look\n${list(c.genericAvoid)}\n\n### Design principles\n${list(r.designPrinciples)}`
   },
 
+  concept: (r: UniversalRecipe) => {
+    const c = r.concept
+    if (!c) return ''
+    return `## The Big Idea — ${c.name}\n\n${c.line} ${c.why}\n\nBuild the whole site around this one idea. Every page gets one moment that serves it, and nothing else competes with that moment.\n\n- **What guides the scroll:** ${c.motif}\n- **How each chapter opens:** ${c.chapters}\n- **The moment people remember:** ${c.moment}\n- **How the site ends:** ${c.ending}`
+      + (r.signatures.length ? `\n\nIt reaches the pages through these signature moments (details in the motion recipe): ${r.signatures.map((s) => `${s.name} — ${s.where}`).join('; ')}.` : '')
+  },
+
+  award: (r: UniversalRecipe) => `## Award checklist\n\nWhat separates an award-winning site from a good template (from a study of 12 Awwwards sites). Check every page against it.\n\n${list(awardChecklist(r))}`,
+
   color: (r: UniversalRecipe) => {
     const p = r.visualSystem.palette
     const rows = p.tokens.map((t) => `| ${t.role} | \`${t.hex}\` | ${t.purpose} | ${t.usage} | ${t.contrast ?? '—'} |`).join('\n')
@@ -59,6 +68,8 @@ export const recipeSections = {
           + (x.components.length ? `\n- **Start from:** ${x.components.map((c) => `[${c.name}](${c.url})`).join(', ')} — restyle to this recipe’s tokens and type; never ship a component’s demo look.` : '')
       })() : '')
   },
+
+  webgl: (r: UniversalRecipe) => usesWebgl(r) ? `## WebGL checklist\n\nThis site draws on the GPU (${webglParts(r).join(', ')}). Every canvas follows these rules.\n\n${list(WEBGL_CHECKLIST)}` : '',
 
   motion: (r: UniversalRecipe) =>
     `## Motion System — ${r.motion.level.name}\n\n${r.motion.principle}\n\n**Rule:** animation for demonstration, not decoration.\n\n**Libraries:** ${r.motion.libraries.join(', ')}\n\n` +
@@ -105,6 +116,46 @@ export const recipeSections = {
     return `## Implementation Guide\n\n**Recommended stack:** ${i.stack.join(', ')}\n\n### Dependencies\n${i.dependencies.length ? list(i.dependencies.map((d) => `\`${d.name}\` — ${d.why}`)) : '- None beyond the stack. CSS handles all motion.'}\n\n### Suggested file structure\n\`\`\`\n${i.fileStructure}\n\`\`\`\n\n### Implementation sequence\n${i.sequence.map((s, n) => `${n + 1}. ${s}`).join('\n')}\n\n### Responsive\n${list(i.responsive)}\n\n### Accessibility\n${list(i.accessibility)}\n\n### Performance\n${list(i.performance)}`
   },
 } satisfies Record<string, (r: UniversalRecipe) => string>
+
+/** Parts of this site that render with WebGL: Paper Shader pieces, a 3D first screen, a 3D lead. */
+export const webglParts = (r: UniversalRecipe) => [
+  ...r.pieces.filter((p) => p.deps.includes('@paper-design/shaders-react')).map((p) => `the ${p.name} piece`),
+  ...(r.media.hero.id === 'webgl-scene' || r.metadata.spec.lead === '3d' ? ['the 3D first screen'] : []),
+]
+export const usesWebgl = (r: UniversalRecipe) => webglParts(r).length > 0
+
+// From docs/research/2026-10-webgl.md.
+export const WEBGL_CHECKLIST = [
+  'Poster first: a still image (or the CSS gradient beneath a shader) is on screen before any WebGL loads, and stays if it fails.',
+  'Load it late: next/dynamic with ssr: false, mounted when the browser is idle or the canvas nears the viewport — never in the critical path.',
+  'Budgets: ≤ 250 KB gzipped of JS for all GL code, models ≤ 3 MB (Draco), ≤ 100 draw calls.',
+  'Device pixel ratio capped at 2 (1.5 on small screens).',
+  'Render on demand: stop the frame loop when nothing moves, and pause it whenever the canvas is off-screen (IntersectionObserver) or the tab is hidden.',
+  'Reduced motion: freeze the scene on a good frame (speed 0) — no movement, same look.',
+  'Coarse pointers turn pointer effects off; weak GPUs (low hardwareConcurrency / deviceMemory, or a failed context) get the poster.',
+  'Handle context loss (webglcontextlost / restored) and dispose geometries, materials and textures on unmount.',
+  'The canvas is decorative: aria-hidden; every word and link it shows also exists as real HTML.',
+  'Damp all motion (lerp 0.05–0.1); never hijack the scroll — the page moves exactly as far as the visitor scrolls.',
+  'Licences: only MIT / Apache-2.0 code (Paper Shaders, three.js, OpusKit pieces); no Spline or Unicorn runtimes, LYGIA or Theatre Studio.',
+  'Verify: Lighthouse on mobile and a 4× CPU-throttled run — still smooth, LCP still < 2.5 s.',
+]
+
+/** What separates an award site from a good template — the study's findings as checks, with this recipe's own idea in them. */
+export function awardChecklist(r: UniversalRecipe): string[] {
+  const t = r.visualSystem.typography
+  const preloader = r.pieces.some((p) => p.id === 'preloader')
+  return [
+    r.concept ? `One idea: everything serves “${r.concept.name}”. A part that doesn’t serve it gets quieter, not louder.` : 'One idea: everything serves the creative direction. A part that doesn’t serve it gets quieter, not louder.',
+    'One unforgettable moment per page — and only one. Everything else on that page supports it.',
+    `Type scale contrast: the biggest ${t.display.family} size is at least 6× the body size on desktop, labels stay small (11–14 px, ${t.utility.family}), and nothing in between competes.`,
+    'Motion choreography: one thing moves at a time; each arrival enters, holds and leaves; staggers of 40–80 ms; the same one or two easings everywhere.',
+    preloader ? 'The first seconds: the preloader follows real loading and is gone within 2.5 s; the first screen is complete the moment it lifts.' : 'The first seconds: the first screen is complete and readable before anything animates.',
+    'Mobile is its own composition: headlines re-broken by hand, media re-cropped, pinned and hover effects replaced by their mobile versions — never a squeezed desktop.',
+    `The ending is designed: the footer (${r.chrome.footerStyle.name}) is a moment${r.concept ? ` — ${r.concept.ending.charAt(0).toLowerCase()}${r.concept.ending.slice(1)}` : ', not leftovers'}`,
+    'Craft details: text selection in the accent colour, a favicon from the logo, designed focus states, no layout shift, real copy everywhere, a 404 page in the same voice.',
+    'Smooth is part of the effect: 60 fps on a mid-range laptop; animate transform and opacity only; nothing runs off-screen.',
+  ]
+}
 
 export type RecipeSectionKey = keyof typeof recipeSections
 

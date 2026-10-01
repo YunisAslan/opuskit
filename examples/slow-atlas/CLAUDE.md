@@ -11,6 +11,9 @@ This project is built from an OpusKit Universal Recipe. The recipe is the source
 - `build/verification.md` — definition of done
 - `.claude/skills/` — visual-direction, responsive-design, visual-qa, motion-system, ui-components
 
+## The big idea — Loud covers, quiet reading
+Covers are loud and giant; the reading underneath stays calm. Read it in `recipe/design.md` (“The Big Idea”) before building anything: every page serves it, and `recipe/design.md` ends with the award checklist every page must pass.
+
 ## Stack
 - Next.js (App Router)
 - TypeScript

@@ -220,7 +220,7 @@ export const resources: Resource[] = [
   {
     id: 'lenis', name: 'Lenis', category: 'motion', url: 'https://lenis.dev',
     description: 'Lightweight smooth-scroll library by darkroom.engineering, with React and Vue bindings.',
-    why: 'Smooths native scroll while keeping it native, and syncs with GSAP ScrollTrigger for steady scroll-linked motion.',
+    why: 'Smooths native scroll while keeping it native, so Motion scroll-linked effects move steadily.',
     useCases: ['smooth scroll', 'scroll animation'], families: ['cinematic', 'editorial', 'quiet'], technologies: ['javascript', 'react'], recipes: [],
     license: 'MIT', verifiedAt: V,
   },

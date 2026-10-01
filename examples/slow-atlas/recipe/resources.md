@@ -14,3 +14,5 @@
   Its expressive, often unconventional display faces suit art, culture and experimental sites that need a strong typographic voice. _License: Libre licenses (mostly SIL OFL); check each family_
 - **Motion** (motion) — https://motion.dev
   Layout animations, shared-element transitions and spring physics are declared directly on React components. _License: MIT_
+- **Lenis** (motion) — https://lenis.dev
+  Smooths native scroll while keeping it native, and syncs with GSAP ScrollTrigger for steady scroll-linked motion. _License: MIT_

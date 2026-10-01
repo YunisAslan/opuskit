@@ -52,7 +52,7 @@ export type HeroId =
   | 'kinetic-type' | 'product-stage' | 'illustrated' | 'webgl-scene' | 'orbit-stickers'
 
 export type AssetId =
-  | 'logo' | 'images' | 'video' | 'product-photos' | 'illustrations' | '3d' | 'fonts' | 'copy' | 'stickers'
+  | 'logo' | 'images' | 'video' | 'product-photos' | 'illustrations' | '3d' | 'fonts' | 'copy' | 'stickers' | 'audio'
 
 /** How a set of photos is laid out on the site (see data/patterns.ts → imagePresentations). */
 export type ImagePresentationId =
@@ -278,7 +278,7 @@ export type MotionPattern = {
   duration: string
   easing: string
   implementation: string
-  tech: 'css' | 'motion' | 'gsap' | 'lenis' | 'three'
+  tech: 'css' | 'motion' | 'lenis' | 'three'
   performance: string
   reducedMotion: string
 }
@@ -295,6 +295,7 @@ export type PieceId =
   | 'grid-pattern' | 'grain' | 'magnet-lines' | 'video-dialog'
   | 'media-between-text' | 'parallax-floating' | 'cut-reveal' | 'underline-fill' | 'drag-photos' | 'text-along-path' | 'shader-grain' | 'shader-dither'
   | 'duo-headline' | 'scribble-link' | 'wavy-link' | 'swap-button' | 'stickers' | 'blob-transition' | 'brand-cursor' | 'cookie-note'
+  | 'curtain-transition' | 'preloader' | 'smooth-scroll' | 'ambient-sound'
 /** Where a piece lives on the page. A kit holds at most one piece per slot, so the site keeps one voice. */
 /** 'site' pieces work across the whole site (page transition, cursor, cookie notice) and are chosen in the Design step. */
 export type PieceSlot = 'headline' | 'label' | 'statement' | 'numbers' | 'photos' | 'scroll' | 'pointer' | 'background' | 'video' | 'button' | 'decor' | 'site'
@@ -331,6 +332,8 @@ export type KitPlan = {
   /** Step 1 — the same on every page. */
   direction?: DirectionId; palette?: PaletteId; typography?: TypographyId; shape?: ShapeId; nav?: NavStyleId; footer?: FooterStyleId; imagePresentation?: ImagePresentationId
   rotation?: AccentSetId | 'off'
+  /** The big idea (absent = the recommended one, 'off' = none). */
+  concept?: ConceptId | 'off'
   /** Site-wide ready pieces: page transition, cursor, cookie notice. */
   sitePieces?: PieceId[]
   /** Step 2 — page by page. The first page's first screen is `hero`. */
@@ -355,6 +358,8 @@ export type RecipePiece = Piece & { where: string; path: string; issue?: string 
 
 export type SignaturePattern = {
   id: string
+  /** Arrives through a big idea (or the owner's pick), never as the engine's own extra. */
+  viaConcept?: true
   name: string
   sections: SectionId[]
   levels: MotionLevel[]
@@ -378,8 +383,23 @@ export type ShapeId = 'sharp' | 'soft' | 'round' | 'pill' | 'brutal' | 'outline'
 /** Corner, border and shadow language for buttons, cards, inputs and media frames. Values are CSS. */
 export type ShapeStyle = { id: ShapeId; name: string; line: string; button: string; card: string; media: string; border: string; shadow: string; rule: string }
 
+/** The recipe's one big idea (award sites are built around one): what guides the scroll, how chapters open, the one
+ *  moment people remember and how the site ends. Its signature moments carry it onto real sections. */
+export type ConceptId = 'one-guide' | 'giant-chapters' | 'live-console' | 'guided-walk' | 'playful-way-in' | 'loud-and-quiet'
+export type Concept = {
+  id: ConceptId; name: string; line: string
+  /** Purposes, families and direction tags it suits (scored like signature patterns). */
+  fits: string[]
+  levels: MotionLevel[]
+  motif: string; chapters: string; moment: string; ending: string
+  /** Signature pattern ids that carry it, best first — placed on sections the recipe has. */
+  signatures: string[]
+}
+/** The concept as written into a recipe. */
+export type RecipeConcept = Omit<Concept, 'fits' | 'levels' | 'signatures'> & { why: string; recommended: boolean }
+
 /** A signature pattern resolved onto a real section of this recipe. */
-export type SignatureMoment = Omit<SignaturePattern, 'sections' | 'levels' | 'fits'> & { where: string }
+export type SignatureMoment = Omit<SignaturePattern, 'sections' | 'levels' | 'fits' | 'viaConcept'> & { where: string }
 
 export type MotionLevelInfo = {
   id: MotionLevel
@@ -474,6 +494,8 @@ export type RecipeSpec = {
   shape?: ShapeId
   /** Signature moment ids the user picked (max 4). Absent = the engine's own pick. */
   signatures?: string[]
+  /** The big idea. Absent = the engine's recommendation; 'off' = none. */
+  concept?: ConceptId | 'off'
   imagePresentation?: ImagePresentationId
   /** Colour chapters over the palette — one accent per chapter section ('off' overrides the look's default). */
   rotation?: AccentSetId | 'off'
@@ -526,7 +548,7 @@ export type LayoutSystem = Omit<LayoutPattern, 'tags' | 'compatibleWith' | 'inco
 /** code: the ready component for this section, shipped at `path` in every Build Package. */
 export type PageSection = SectionPattern & { note?: string; code?: { path: string; exportName: string; usage: string }; photos?: ImagePresentation & { chosen: boolean } }
 /** Site-wide behaviours: how headlines arrive, links react, buttons respond, plus whole-site pieces. The same on every page. */
-export type BehaviourId = 'headlines' | 'links' | 'buttons' | 'site'
+export type BehaviourId = 'headlines' | 'links' | 'buttons' | 'transitions' | 'site'
 
 export type PageBlueprint = { id: string; type: PageTypeId; label: string; purpose: string; sections: PageSection[]; hide?: ChromeId[] }
 
@@ -605,6 +627,8 @@ export type UniversalRecipe = {
   components: ComponentPattern[]
   media: MediaRecipe
   motion: MotionRecipe
+  /** The one big idea the site is built around (absent when the owner turned it off). */
+  concept?: RecipeConcept
   /** 2–4 memorable interactions, each on its own section — the moments people remember and share. */
   signatures: SignatureMoment[]
   /** The user's kit: ready components shipped as code in src/components/pieces/. */

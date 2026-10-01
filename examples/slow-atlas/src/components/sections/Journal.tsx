@@ -1,75 +1,42 @@
-import type { ElementType } from 'react'
+import type { ElementType, ReactNode } from 'react'
+import { CutReveal } from '@/components/pieces/CutReveal'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/pagination'
-import { MediaAsset } from '@/components/site/MediaAsset'
-import { Headline, Reveal } from '@/components/site/motion'
-import type { AssetKey } from '@/config/assets'
+// OpusKit section — Journal: the latest entries as an editorial list — date, category, title.
+// Bordered 4:3 modules on 3 columns from tablet up; a plain list with a square thumbnail on phones.
+// layout="list": one row per entry at every width (the archive).
+export type Entry = { title: string; date: string; category: string; href: string; image?: string; alt?: string }
 
-// OpusKit section — Journal: entries as bordered modules (desktop) or a ruled list (mobile) — date, category, title.
-export type Entry = { title: string; date: string; dateTime: string; category: string; place?: string; href: string; image?: AssetKey }
-
-export function JournalSection({ link: L = 'a', title, titleLines, headingAs = 'h2', lede, entries, all, pages }: {
-  link?: ElementType
-  title: string
-  /** Manual line breaks for the page-level (h1) version; see Headline. */
-  titleLines?: (string | string[])[]
-  headingAs?: 'h1' | 'h2'
-  lede?: string
-  entries: Entry[]
-  all?: { label: string; href: string }
-  pages?: { current: number; total: number; href: (page: number) => string }
+export function JournalSection({ link: L = 'a', title, entries, allHref, allLabel = 'All essays', layout = 'cards', footer }: {
+  link?: ElementType; title: string; entries: Entry[]; allHref?: string; allLabel?: string; layout?: 'cards' | 'list'; footer?: ReactNode
 }) {
-  const page = headingAs === 'h1'
+  const cards = layout === 'cards'
   return (
-    <section className="border-t border-(--color-border) px-6 py-12 first:border-t-0 md:py-16">
-      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
-        <Headline
-          as={headingAs}
-          lines={titleLines ?? [title]}
-          className={page ? 'type-display [font-size:clamp(3rem,7vw,6.5rem)]' : 'type-display [font-size:clamp(2.25rem,5vw,4.5rem)]'}
-        />
-        {all && <L href={all.href} className="type-utility inline-flex min-h-11 items-center underline underline-offset-4 [font-size:1rem] hover:decoration-2">{all.label}</L>}
+    <section className="px-6 py-24 md:py-32">
+      <div className="flex items-baseline justify-between gap-4">
+        <CutReveal className="type-heading">{title}</CutReveal>
+        {allHref && <L href={allHref} className="type-utility inline-flex min-h-11 items-center underline decoration-(--color-border) decoration-2 underline-offset-[6px] [font-size:1rem] hover:decoration-current">{allLabel}</L>}
       </div>
-      {lede && <p className="type-body mt-6 max-w-[56ch]">{lede}</p>}
-
-      <ul className="mt-8 border-t border-(--color-border) md:mt-12 md:grid md:grid-cols-6 md:border-l lg:grid-cols-12">
-        {entries.map((e, i) => (
-          <li key={e.href} className="border-b border-(--color-border) md:col-span-3 md:border-r lg:col-span-4">
-            <Reveal delay={(i % 3) * 0.06} className="h-full">
-              <L href={e.href} className="group grid h-full grid-cols-[6rem_1fr] gap-4 py-6 md:flex md:flex-col md:gap-0 md:p-6">
-                {e.image && (
-                  <div className="aspect-square md:mb-6 md:aspect-[4/3]">
-                    <MediaAsset id={e.image} sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 96px" />
-                  </div>
-                )}
-                <div>
-                  <p className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                    <Badge variant="secondary" className="type-utility h-6 px-2">{e.category}</Badge>
-                    <time dateTime={e.dateTime} className="type-utility text-(--color-muted)">{e.date}</time>
-                  </p>
-                  <h3 className="type-heading mt-3 text-balance decoration-2 underline-offset-4 [font-size:clamp(1.25rem,2vw,1.75rem)] group-hover:underline group-focus-visible:underline">{e.title}</h3>
-                  {e.place && <p className="type-utility mt-2 text-(--color-muted) [font-size:0.9375rem]">{e.place}</p>}
-                </div>
-              </L>
-            </Reveal>
+      <ul className={`mt-10 border-t border-(--color-border) ${cards ? 'sm:grid sm:grid-cols-3 sm:border-l' : ''}`}>
+        {entries.map((e) => (
+          <li key={e.href} className={`border-b border-(--color-border) ${cards ? 'sm:border-r' : ''}`}>
+            <L href={e.href} className={`group flex gap-4 py-5 ${cards ? 'sm:h-full sm:flex-col sm:gap-0 sm:p-0' : 'md:grid md:grid-cols-12 md:items-center md:gap-4'}`}>
+              {e.image && (
+                <span className={`block shrink-0 overflow-hidden ${cards ? 'size-24 sm:aspect-[4/3] sm:size-auto' : 'size-24 md:col-span-2 md:aspect-[4/3] md:size-auto'}`}>
+                  <img src={e.image} alt={e.alt ?? ''} loading="lazy" className="size-full rounded-(--radius-media) object-cover transition-transform duration-500 motion-safe:group-hover:scale-[1.03]" />
+                </span>
+              )}
+              <div className={`flex min-w-0 flex-col gap-2 ${cards ? 'sm:flex-1 sm:p-5 sm:pb-8' : 'md:col-span-10 md:grid md:grid-cols-10 md:items-baseline md:gap-4'}`}>
+                <span className={`type-utility flex flex-wrap items-center gap-3 text-(--color-muted) ${cards ? '' : 'md:col-span-3'}`}>
+                  <time>{e.date}</time>
+                  <Badge variant="outline" className="h-6 border-(--color-border) px-2 text-(--color-text)">{e.category}</Badge>
+                </span>
+                <h3 className={`type-heading text-balance underline-offset-[6px] decoration-2 group-hover:underline group-focus-visible:underline ${cards ? '[font-size:clamp(1.2rem,1.8vw,1.6rem)]' : 'md:col-span-7 [font-size:clamp(1.2rem,2.4vw,2.1rem)]'}`}>{e.title}</h3>
+              </div>
+            </L>
           </li>
         ))}
       </ul>
-
-      {pages && pages.total > 1 && (
-        <Pagination className="mt-12 justify-start">
-          <PaginationContent className="gap-0 border-l border-(--color-border)">
-            {Array.from({ length: pages.total }, (_, i) => i + 1).map((n) => (
-              <PaginationItem key={n} className="border-y border-r border-(--color-border)">
-                <Button asChild variant={n === pages.current ? 'default' : 'ghost'} size="icon">
-                  <L href={pages.href(n)} aria-current={n === pages.current ? 'page' : undefined} aria-label={`Page ${n}`}>{n}</L>
-                </Button>
-              </PaginationItem>
-            ))}
-          </PaginationContent>
-        </Pagination>
-      )}
+      {footer}
     </section>
   )
 }

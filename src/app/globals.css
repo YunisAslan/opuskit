@@ -173,6 +173,16 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 .od-draw { animation: od-draw var(--od-t) linear infinite; }
 @keyframes od-draw { 0% { transform: scaleY(0); } 80%, 100% { transform: scaleY(1); } }
 .od-dot { animation: od-dot var(--od-t) steps(1) infinite; }
+.od-drift { animation: od-drift 6s ease-in-out infinite; }
+@keyframes od-drift { 0%, 100% { transform: none; } 50% { transform: translateX(-10cqw); } }
+.od-swap { opacity: 0; animation: od-swap var(--od-t) linear infinite; }
+@keyframes od-swap { 0%, 30% { opacity: 1; transform: none; } 34%, 96% { opacity: 0; transform: translateY(2cqw); } 100% { opacity: 1; transform: none; } }
+.od-travel { animation: od-travel 6s cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-travel { 0%, 10% { left: 30cqw; top: 8cqw; } 40%, 50% { left: 36cqw; top: 28cqw; transform: scale(.7); } 80%, 90% { left: 52cqw; top: 46cqw; transform: scale(1.1); } 100% { left: 30cqw; top: 8cqw; } }
+.od-fill { animation: od-fill var(--od-t) linear infinite; }
+@keyframes od-fill { 0%, 10% { transform: scaleX(0); } 50%, 100% { transform: scaleX(1); } }
+.od-gate { animation: od-gate var(--od-t) cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes od-gate { 0%, 55% { clip-path: inset(0); } 70%, 92% { clip-path: inset(0 0 100% 0); } 100% { clip-path: inset(0); } }
 @keyframes od-dot { 0% { background: transparent; } 20%, 100% { background: currentColor; } }
 .od-expand { animation: od-expand var(--od-t) cubic-bezier(.65,0,.35,1) infinite; }
 @keyframes od-expand { 0%, 15% { left: 8cqw; top: 4cqw; width: 40cqw; height: 24cqw; } 45%, 80% { left: 4cqw; top: 3cqw; width: 92cqw; height: 56cqw; } 100% { left: 8cqw; top: 4cqw; width: 40cqw; height: 24cqw; } }

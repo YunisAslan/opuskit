@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process'
 import { palettes, typography } from '../src/data/ingredients'
 import { contrast, deltaE, oklab } from '../src/lib/color'
 import { recipeSeeds } from '../src/data/recipes'
-import { imagePresentations, signaturePatterns } from '../src/data/patterns'
+import { concepts, imagePresentations, signaturePatterns } from '../src/data/patterns'
 import { behaviours, isMoment, pieces } from '../src/data/pieces'
 import { blockSource, pieceSource } from '../src/data/pieces-source.generated'
 import { blockFor } from '../src/data/blocks'
@@ -140,7 +140,7 @@ const main = async () => {
   assert.match(picked.chrome.navbar.composition, /dock/, 'menu choice drives the navbar composition')
   assert.equal(picked.visualSystem.shape.id, 'pill', 'shape choice is kept')
   assert.deepEqual(picked.metadata.spec.signatures, ['number-ticker', 'timeline-line'], 'unknown signature ids are dropped')
-  assert.ok(picked.signatures.every((x) => ['number-ticker', 'timeline-line'].includes(x.id)), 'only picked signatures are used')
+  assert.ok(picked.signatures.every((x) => ['number-ticker', 'timeline-line', ...(picked.concept ? concepts[picked.concept.id].signatures : [])].includes(x.id)), 'only picked signatures (and the big idea’s own) are used')
   for (const a of Object.values(adapters)) {
     const all = (await a.generate(picked)).files.map((f) => f.content).join('')
     assert.match(all, /Floating dock/, `${a.id} carries the menu style`)
@@ -244,7 +244,9 @@ const main = async () => {
     const src = readFileSync(new URL(`../src/pieces/${p.file}`, import.meta.url), 'utf8')
     assert.match(src, new RegExp(p.source.license), `${p.id}: source file carries its ${p.source.license} attribution`)
     assert.match(src, new RegExp(`export function ${p.exportName}\\b`), `${p.id}: exports ${p.exportName}`)
-    assert.ok(!/@\/lib\/utils|from ['"](?!react|motion\/react|@paper-design\/shaders-react|next\/navigation)[^'"]+['"]/.test(src), `${p.id}: no imports beyond react, motion, Paper Shaders and next/navigation`)
+    // Lenis (MIT) only in a piece that lists it as a dependency, so its package says to install it.
+    const own = p.deps.includes('lenis') ? '|lenis' : ''
+    assert.ok(!new RegExp(`@/lib/utils|from ['"](?!react|motion/react|@paper-design/shaders-react|next/navigation${own})[^'"]+['"]`).test(src), `${p.id}: no imports beyond react, motion, Paper Shaders, next/navigation (and Lenis, when listed)`)
     assert.ok(/reactbits|aceternity|hover\.dev/.test(p.source.url) === false, `${p.id}: never from a library that forbids redistribution`)
   }
   assert.deepEqual(cleanPieces(['text-effect', 'text-loop', 'marquee', 'nope']), ['text-loop', 'marquee'], 'one piece per slot, later pick wins, unknown dropped')
@@ -298,7 +300,32 @@ const main = async () => {
   assert.ok(fromPlan.pages.some((p) => p.type === 'faq'), 'added pages are in the recipe')
   assert.deepEqual(fromPlan.pieces.map((p) => p.id).sort(), ['cut-reveal', 'shader-grain'], 'one piece per job per section')
   assert.ok(fromPlan.pieces.every((p) => p.where.startsWith(`${home.label} → Hero`)), 'pieces are placed on the section they were attached to')
-  assert.equal(fromPlan.signatures.length, 0, 'no touches the user did not place')
+  // Touches come only from what the kit shows: the big idea (Design → Big idea, recommended until changed) — never extras.
+  assert.ok(fromPlan.concept && fromPlan.signatures.every((x) => concepts[fromPlan.concept!.id].signatures.includes(x.id)), 'a kit recipe gets only its big idea’s touches')
+  assert.equal(composeRecipe(planToSpec(setStyle(plan, 'concept', 'off'))).signatures.length, 0, 'no big idea, no touches')
+  assert.equal(composeRecipe(planToSpec(setStyle(plan, 'concept', 'live-console'))).concept?.id, 'live-console', 'a picked big idea is kept')
+  assert.equal(specToPlan(composeRecipe(planToSpec(setStyle(plan, 'concept', 'off'))).metadata.spec).concept, 'off', 'Customise keeps the big idea')
+  assert.equal(composeRecipe({ ...planToSpec(setStyle(plan, 'concept', 'playful-way-in')), motion: 'subtle' }).concept?.id !== 'playful-way-in', true, 'a big idea that needs more movement falls back to the recommendation')
+  // Recipes follow the owner's picks: no GSAP guidance anywhere (licence), and seed rules name colour roles, not hues.
+  for (const a of Object.values(adapters)) {
+    const all = (await a.generate(shopFilm)).files.map((f) => f.content).join('').replace(/No GSAP[^.]*\./g, '')
+    assert.ok(!/gsap|scrolltrigger/i.test(all), `${a.id}: no GSAP guidance`)
+  }
+  for (const seed of recipeSeeds) for (const line of [...seed.do, ...seed.principles, ...Object.values(seed.sectionNotes)] as string[]) assert.ok(!/\b(blue|pink|red|violet|rose|leaf green|powder)\b/i.test(line), `${seed.slug}: a rule names a hue of its own palette — use a colour role: ${line}`)
+  // Award vibe (docs/plan-vibe.md C): every seed has a big idea that its pages can carry, and the package says how.
+  for (const seed of recipeSeeds) { const r = composeRecipe(specFromSeed(seed)); assert.ok(r.concept && r.signatures.some((x) => concepts[r.concept!.id].signatures.includes(x.id)), `${seed.slug}: has a big idea with a moment on its pages`) }
+  {
+    const r = composeRecipe(planToSpec(toggleSitePiece(toggleSitePiece(setStyle(plan, 'concept', 'giant-chapters'), 'smooth-scroll'), 'ambient-sound'))) // shader-grain is on its first screen
+    const files = (await adapters['claude-code'].generate(r)).files, file = (path: string) => files.find((f) => f.path === path)!.content
+    assert.match(file('recipe/design.md'), /## The Big Idea — Chapters in giant words[\s\S]*## Award checklist/, 'design.md carries the big idea and the award checklist')
+    assert.match(file('CLAUDE.md'), /The big idea — Chapters in giant words/, 'CLAUDE.md names the big idea')
+    assert.match(file('recipe/media.md'), /## WebGL checklist/, 'a shader piece brings the WebGL checklist')
+    assert.ok(!/## WebGL checklist/.test(recipeToMarkdown(composeRecipe(specFromSeed(recipeSeeds[0])))), 'no WebGL checklist without WebGL')
+    assert.ok(r.implementation.dependencies.some((d) => d.name === 'lenis'), 'smooth scroll brings lenis')
+    assert.ok(r.assetRequirements.some((a) => a.asset === 'audio' && a.level === 'required'), 'sound needs its audio file')
+    assert.ok(visualQa(r).some((l) => l.startsWith('Big idea')), 'QA checks the big idea')
+  }
+  assert.equal(behaviourPick(setBehaviour(setBehaviour(plan, 'transitions', 'blob-transition'), 'transitions', 'curtain-transition'), 'transitions'), 'curtain-transition', 'one page transition at a time')
   assert.ok(piecesFor(plan.pages[0].sections[0]).every((id) => pieces[id].sections.includes('hero')), 'only pieces made for a section are offered on it')
   assert.equal(inferPurpose({ ...EMPTY_PLAN, pages: [addPage(EMPTY_PLAN, 'shop').plan.pages[0]] }), 'ecommerce', 'purpose inferred from pages')
   assert.equal(setStyle(setStyle(plan, 'palette', 'signal-white'), 'direction', 'japanese-minimal').palette, 'signal-white', 'a new look keeps the colours you picked')
@@ -500,7 +527,7 @@ const main = async () => {
     for (const src of [e.clip, ...Object.values(e.sectionClips ?? {})].filter(Boolean)) assert.ok(existsSync(`public${src}`), `${e.slug}: clip ${src} is on disk`)
     const chrome = (id: SectionId): id is 'navbar' | 'footer' => id === 'navbar' || id === 'footer'
     for (const id of Object.keys(e.sectionClips ?? {}) as SectionId[]) assert.ok(chrome(id) || spec.pages.some((p) => p.sections.includes(id)), `${e.slug}: has the ${id} it shows a clip of`)
-    if (e.legacy) continue
+    if (e.legacy || !e.clip) continue // a site waiting for its clip is simply not offered yet
     assert.equal(closestSite(spec)?.example.slug, e.slug, `${e.slug}: its own recipe finds it`)
     for (const id of Object.keys(e.sectionClips ?? {}) as SectionId[]) assert.equal((chrome(id) ? closestChrome(spec, id) : closestSection(spec, id))?.example.slug, e.slug, `${e.slug}: its own ${id} finds it`)
   }

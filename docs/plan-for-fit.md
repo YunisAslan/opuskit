@@ -179,14 +179,27 @@ the brief), picked by Claude at the user's request, and downloaded at Original s
 
 > **Sites 2–10 below are drafts.** Their real brief is written at step 2 of the loop, in the format above.
 
-**2. Agency — bold / kinetic-type.** 6 project images (16:10).
-- Pinterest: `kinetic typography website`, `bold agency portfolio`, `brutalist type poster`
-- Stock: `poster mockup wall`, `packaging mockup`, `brand identity flat lay`, `billboard mockup city`
+**2. Agency — Brasshand.** Brief written and approved 2026-10-01; all 10 files in (picked by Claude with the Unsplash connector). No video; Claude Code makes
+the logo. A small branding agency for food, music and culture, so the six projects are its (made-up) clients' work.
+Files: `examples/brasshand/media-src/` · sources: `media-src/SOURCES.md`. Every file: Unsplash, filter **Landscape** (team:
+**Portrait**), download **Original**. No readable real brand names or logos in any shot.
 
-**3. SaaS — futuristic / webgl-scene.** The first screen is code (shader); no media needed.
-Optional: 2 abstract images (for "About" etc.).
-- Pinterest: `webgl hero section`, `3d gradient tech website`, `futuristic saas landing page`
-- Stock: `abstract glass 3d render`, `iridescent gradient`, `server room blue light`
+| File | Site | Search term | Orientation | Min size | What it should show |
+|---|---|---|---|---|---|
+| work-1.jpg | Unsplash | `restaurant menu card table` | Landscape | 3000 px wide | A printed menu or card on a restaurant table — a restaurant identity |
+| work-2.jpg | Unsplash | `poster wall street` | Landscape | 3000 px wide | Posters pasted on a city wall — a festival campaign |
+| work-3.jpg | Unsplash | `coffee bag packaging` | Landscape | 3000 px wide | Plain or unbranded coffee bags — a packaging project |
+| work-4.jpg | Unsplash | `vinyl record sleeve` | Landscape | 3000 px wide | Record sleeves, graphic covers — a record-label identity |
+| work-5.jpg | Unsplash | `museum wayfinding sign` | Landscape | 3000 px wide | Signage or wayfinding in a gallery — a culture project |
+| work-6.jpg | Unsplash | `bakery shop window` | Landscape | 3000 px wide | A shopfront or window with painted lettering — a bakery identity |
+| studio.jpg | Unsplash | `design studio desk sketches` | Landscape | 3000 px wide | A worktable with sketches and printouts — the About page |
+| team-1.jpg | Unsplash | `portrait plain background` | Portrait | 2000 px tall | One person, plain background, looking at the camera |
+| team-2.jpg | Unsplash | `portrait plain background man` | Portrait | 2000 px tall | Same style as team-1 |
+| team-3.jpg | Unsplash | `portrait plain background woman` | Portrait | 2000 px tall | Same style as team-1 |
+
+**3. SaaS — Hexmint.** Brief written and approved 2026-10-01. **No files to download:** the first
+screen is a 3D scene built in code (procedural, no model file), its poster is rendered from the scene by Claude Code, and
+Claude Code makes the logo. The site has no team or photo sections.
 
 **4. Studio — experimental / orbit-stickers.** 6 project photos (4:5 or 1:1), colourful.
 - Pinterest: `sticker design studio website`, `playful creative studio portfolio`, `colorful product photography flat`
@@ -286,8 +299,8 @@ Before removing, grep for `/examples/{slug}`: no references must remain.
 | # | Site | Recipe | Media brief | Media | Build | Capture | Registered | Kit (§8) |
 |---|---|---|---|---|---|---|---|---|
 | 1 | Blog — Slow Atlas | ✓ (`examples/slow-atlas/opuskit.json`) | ✓ (§7) | ✓ 10/10 (`media-src/SOURCES.md`) | ✓ Prompt 1 + Prompt 2 (fix round 1, run by a subagent); `next build` passes, all routes static | ✓ poster + 13 s clip (from the live export, hero reveal included) | ✓ 2026-10-01: `examples.ts`, symlink, zip, live at `/live/slow-atlas/index.html` (click-through checked), `npm run check` ✓; `ulooklonely` removed | ✓ 2026-10-01: site clip + 6 section clips; shown in Design, Pages and `/examples/slow-atlas` |
-| 2 | Agency | – | – | – | – | – | – | – |
-| 3 | SaaS | – | – | – | – | – | – | – |
+| 2 | Agency — Brasshand | ✓ (`examples/brasshand/opuskit.json`, approved) | ✓ (§7) | ✓ 10/10 (`media-src/SOURCES.md`, Unsplash connector; work-4 replaced after the build — real label logo) | ✓ Prompt 1 + Prompt 2 (fix round 1), both by a subagent; 17 static routes | poster + card ✓; clips: waiting for the user's recordings | ✓ 2026-10-01: `examples.ts`, symlink, zip, live at `/live/brasshand/index.html` (click-through checked), `npm run check` ✓; cheeky911 not yet removed (needs the user's OK) | – (no clips yet) |
+| 3 | SaaS — Hexmint | ✓ (`examples/hexmint/opuskit.json`, approved) | ✓ (§7: no files) | ✓ none needed | in progress: Prompt 1 (subagent) | – | – | – |
 | 4 | Studio | – | – | – | – | – | – | – |
 | 5 | Product | – | – | – | – | – | – | – |
 | 6 | Clinic | – | – | – | – | – | – | – |
@@ -295,6 +308,12 @@ Before removing, grep for `/examples/{slug}`: no references must remain.
 | 8 | Fashion shop | – | – | – | – | – | – | – |
 | 9 | Hotel / spa | – | – | – | – | – | – | – |
 | 10 | Event | – | – | – | – | – | – | – |
+
+**Rebuild of #1 (2026-10-01, after plan-vibe C):** new recipe approved (Big idea "Loud covers, quiet reading", new blog
+defaults, curtain transition, preloader, smooth scroll); built beside the first build, then swapped into `examples/slow-atlas/`
+with the user's OK (BUILD-LOG.md §5–§8: Prompt 1 + fix round 1 for the curtain under basePath). Redone: card + poster,
+zip, live export (click-through checked), `npm run check` ✓. **Waiting for the user's screen recordings** for the site clip
+and section clips (the old ones showed the old site and were removed with it; `examples.ts` has no `clip` until then).
 
 Other:
 - [x] Root cleaned (2026-10-01): QA screenshots, `not-used-videos/`, `.DS_Store` (added to `.gitignore`).

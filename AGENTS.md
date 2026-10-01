@@ -14,7 +14,9 @@ Ongoing work: `docs/plan-vibe.md` (page anatomy, fresh style, award vibe, WebGL 
   redirects here). A builder in three steps, always visible in its
   step bar: 1 Design (same on every page: "About your site" first in the list — name, what it is, kind of site, what visitors
   should do, each saying what it shapes — though the step opens on Look, so people see sites before a form; then biggest first —
-  look, movement, colours (+ optional colour chapters), lettering, shape, menu & footer (`navStyles`, `footerStyles` —
+  look, movement, big idea (`concepts` in patterns.ts: the one idea the site is built around — recommended until picked, or
+  'off'; its first two signature moments land on the recipe's sections, its words go into the Build Package with the award
+  checklist), colours (+ optional colour chapters), lettering, shape, menu & footer (`navStyles`, `footerStyles` —
   each footer style is a `variant` of the ready `src/sections/Footer.tsx`), behaviour),
   2 Pages (pages and their sections, plus Your files: logo, video, photos, photo note), 3 Recipe — the result page itself (Next on Pages saves the recipe,
   or updates the one the plan came from, and opens it; the same `StepBar` shows there). Every page's brief (`purpose`) is
@@ -52,7 +54,8 @@ Ongoing work: `docs/plan-vibe.md` (page anatomy, fresh style, award vibe, WebGL 
   Adapt only from MIT libraries (Motion Primitives, Magic UI, Cult UI, Animata, Componentry, Fancy Components) or depend on
   Apache-2.0 ones (Paper Shaders) — never React Bits, Aceternity or Hover.dev (their terms forbid redistributing
   components), and nothing that needs GSAP (its free licence excludes Webflow-competing tools). Tokens only
-  (`--color-*`, `--font-*`), a reduced-motion version, no import beyond `react`/`motion`/`@paper-design/shaders-react`.
+  (`--color-*`, `--font-*`), a reduced-motion version, no import beyond `react`/`motion`/`@paper-design/shaders-react`
+  (plus `lenis`, MIT, in a piece that lists it in `deps` — SmoothScroll).
 - `npm run check` composes every seed recipe and every adapter and asserts completeness — and distinctiveness: palette grounds ≥ 0.06 ΔE_OK apart, no cream-band or clay-accent clusters, no AI-default fonts, each family in ≤ 2 pairings, no two seeds sharing a palette or pairing. Add to the library only what passes.
 
 ## Example projects

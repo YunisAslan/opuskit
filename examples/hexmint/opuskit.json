@@ -1,0 +1,112 @@
+{
+  "opuskit": 1,
+  "recipe": "digital-futurism",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "digital-futurism",
+    "brief": {
+      "name": "Hexmint",
+      "offer": "Invoices, expenses and quarterly books for small studios — set up in five minutes, closed in one click.",
+      "goal": "signup"
+    },
+    "purpose": "saas",
+    "direction": "digital-futurism",
+    "characters": [],
+    "lead": "3d",
+    "motion": "immersive",
+    "hero": "webgl-scene",
+    "layout": "grid",
+    "palette": "night-ink",
+    "typography": "funnel",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "temporary",
+    "signatures": [],
+    "pieces": [
+      "text-effect",
+      "text-scramble",
+      "magnetic",
+      "curtain-transition",
+      "smooth-scroll"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "text-effect",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "text-scramble",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "magnetic",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "curtain-transition",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "smooth-scroll",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "5m92atiq",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "clients",
+          "feature-rows",
+          "feature-grid",
+          "integrations",
+          "testimonials",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "83n5jywg",
+        "type": "features",
+        "label": "Features",
+        "purpose": "Explain what the product does with concrete, specific evidence, not adjectives.",
+        "sections": [
+          "feature-grid",
+          "product-highlight",
+          "how-it-works",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "kz8aqsnq",
+        "type": "pricing",
+        "label": "Pricing",
+        "purpose": "Remove the final uncertainty before signing up.",
+        "sections": [
+          "pricing",
+          "faq",
+          "testimonials",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "vvjleymq",
+        "type": "faq",
+        "label": "FAQ",
+        "purpose": "Answer the questions that would otherwise stall a decision.",
+        "sections": [
+          "faq",
+          "contact-cta"
+        ]
+      }
+    ],
+    "target": "not-sure"
+  }
+}
