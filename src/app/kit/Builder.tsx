@@ -6,7 +6,11 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import { useGoogleFonts } from '@/components/FontLoader'
+import { LazyMount } from '@/components/LazyMount'
+import { SitePreview, previewFromDirection } from '@/components/SitePreview'
 import { directions, purposes } from '@/data/taxonomy'
 import { examples } from '@/data/examples'
 import exampleSpecs from '@/data/example-specs.generated.json'
@@ -16,7 +20,7 @@ import { isValidSpec, specFromSeed } from '@/features/recipes/engine'
 import { saveGeneration, type Generation } from '@/features/recipes/library'
 import { readPlan, updatePlan, usePlan, writePlan } from '@/lib/kit'
 import { KEYS, get, useHydrated } from '@/lib/store'
-import type { PurposeId, RecipeSpec } from '@/types/domain'
+import type { DirectionId, PurposeId, RecipeSpec } from '@/types/domain'
 import { PagesStep } from './PagesStep'
 import { lookOf } from './ProductVisual'
 import { StepBar, type KitStep } from './StepBar'
@@ -31,6 +35,8 @@ export function Builder() {
   const [step, setStep] = useState<'style' | 'pages'>('style')
   // Which Style category opens: from the URL (?cat=).
   const [styleCat, setStyleCat] = useState<string | null>(() => params.get('cat'))
+  // Bumped to reopen Design on a category even when Design is already showing (the step bar's site name).
+  const [styleKey, setStyleKey] = useState(0)
   useEffect(() => { const s = params.get('step'); if (s === 'style' || s === 'pages') setStep(s); if (s === 'create') setStep('pages') }, [params])
   // Customise: /kit?from=seed:slug | gen:id | example:slug opens that recipe here — the kit is the one editor.
   const opened = useRef<string | null>(null)
@@ -83,33 +89,52 @@ export function Builder() {
 
   return (
     <div className="pb-24">
-      <StepBar plan={plan} step={step} onGo={go} />
+      <StepBar plan={plan} step={step} onGo={go} onSite={() => { setStyleCat('site'); setStyleKey((k) => k + 1); go('style') }} />
 
       <div className="mx-auto max-w-[1440px] px-5 pt-8 md:px-8">
-        {step === 'style' && <StyleStep plan={plan} initialCat={styleCat} initialFeel={params.get('feel')} onDone={() => go('pages')} />}
+        {step === 'style' && <StyleStep key={styleKey} plan={plan} initialCat={styleCat} initialFeel={params.get('feel')} onDone={() => go('pages')} />}
         {step === 'pages' && <PagesStep plan={plan} initialFocus={params.get('shelf')} />}
       </div>
     </div>
   )
 }
 
-/** First visit: pick the kind of site (it brings its usual pages) or start from a blank Home page. */
+/** Each starter card shows a first screen in a look that suits that kind of site, with a headline it might use. */
+const CARD: Partial<Record<PurposeId, [DirectionId, string]>> = {
+  portfolio: ['art-editorial', 'Selected work, 2019–2026'], agency: ['swiss-modern', 'Brands people remember'], studio: ['architectural-minimal', 'Houses for steep ground'],
+  fashion: ['fashion-editorial', 'The autumn collection'], restaurant: ['warm-hospitality', 'Dinner, from seven'], ecommerce: ['playful-pop', 'New in: the summer edit'],
+  product: ['bento-product', 'Meet the new speaker'], saas: ['technical-minimal', 'Close your books in one click'], 'personal-brand': ['modern-heritage', 'Writer, speaker, gardener'],
+  experiment: ['digital-futurism', 'A small experiment in light'], blog: ['news-grid', 'Notes from the field'], event: ['cinematic-editorial', 'Three days in June'],
+  nonprofit: ['soft-pastel', 'Clean water, one village at a time'], 'real-estate': ['scandinavian-minimal', 'Homes with light in them'], hotel: ['coastal-calm', 'Rooms by the sea'],
+  course: ['organic-modern', 'Learn to throw pots in six weeks'], clinic: ['japanese-minimal', 'Care that starts with listening'],
+}
+
+/** First visit: pick the kind of site (it brings its usual pages) or start from a blank Home page — or from a real site. */
 function Start({ onStart }: { onStart: (p: PurposeId | null) => void }) {
   return (
     <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-12 md:px-8">
-      <p className="text-sm text-muted">Kit · build a site in three steps: style, pages, create</p>
+      <p className="text-sm text-muted">Kit · build a site in three steps: design, pages, recipe</p>
       <h1 className="display mt-3 text-[clamp(2.2rem,5vw,4rem)]">What are you making?</h1>
-      <p className="mt-3 max-w-2xl text-ink-2">Pick the closest kind of site — it comes with its usual pages and sections, which you can change in step 2. Nothing here is final.</p>
-      <ul className="mt-10 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-        {starters.map((s) => (
-          <li key={s.id}>
-            <button type="button" onClick={() => onStart(s.id)} className="choice block h-full w-full p-4 text-left">
-              <span className="block font-medium">{purposes[s.id].name}</span>
-              <span className="mt-1 block text-sm text-muted">{s.pages.join(' · ')}</span>
-            </button>
-          </li>
-        ))}
-        <li><button type="button" onClick={() => onStart(null)} className="block h-full w-full rounded-lg border border-dashed border-muted p-4 text-left hover:border-ink"><span className="block font-medium">Start blank</span><span className="mt-1 block text-sm text-muted">One empty Home page — add everything yourself</span></button></li>
+      <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
+        <p className="max-w-2xl text-ink-2">Pick the closest kind of site — it comes with its usual pages and sections, which you can change later. Nothing here is final.</p>
+        <Link href="/examples" className="link inline-flex items-center gap-1 text-sm">Or start from one of {examples.length} real sites<ArrowRight size={14} aria-hidden /></Link>
+      </div>
+      <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {starters.map((s) => {
+          const card = CARD[s.id]
+          return (
+            <li key={s.id}>
+              <button type="button" onClick={() => onStart(s.id)} className="choice block h-full w-full overflow-hidden text-left">
+                {card && <LazyMount className="pointer-events-none overflow-hidden border-b border-line"><SitePreview {...previewFromDirection(card[0], { title: card[1] })} /></LazyMount>}
+                <span className="block p-4">
+                  <span className="block font-medium">{purposes[s.id].name}</span>
+                  <span className="mt-1 block text-sm text-muted">{s.pages.join(' · ')}</span>
+                </span>
+              </button>
+            </li>
+          )
+        })}
+        <li><button type="button" onClick={() => onStart(null)} className="grid h-full min-h-40 w-full place-content-center rounded-lg border border-dashed border-muted p-4 text-center hover:border-ink"><span className="block font-medium">Start blank</span><span className="mt-1 block text-sm text-muted">One empty Home page — add everything yourself</span></button></li>
       </ul>
     </div>
   )

@@ -1,0 +1,5 @@
+# Palettes & fonts (agent, 2026-10-01) — all pass check rules (verify.ts); candidates.ts ready to paste
+Palettes (11): apricot-hall (Frans Hals), yerba-leaf (Mana), console-lilac (KPR), limestone (own), graphite-sand (Getty; tightest 0.063), olive-grove (trend), lido-blue (Inside the Head), bubblegum (ChungiYoo/Dontboardme), mulberry (burgundy trend), mustard (ochre trend), midnight-chapters (Inside the Head).
+Pairings (11, all Google Fonts OFL + in next/font list): gallery-hours (Rubik), two-scripts (Amiri + IBM Plex Sans Arabic), funnel (Funnel Display/Sans), wide-spec (Hubot Sans 125% + IBM Plex Sans), diner-serif (Caprasimo + Wix Madefor Text), private-collection (Bellefair + Red Hat), newsprint-1918 (Brygada 1918 + Instrument Sans — flag: sister of banned Instrument Serif), kalnia-couture (Kalnia + SUSE), poster-caps (Bayon + Reddit Sans), campus (Ancizar Serif/Sans), stack (Stack Sans Headline/Text).
+Look assignments listed per candidate in agent report (go into directions[].palettes/typography, not defaults).
+Fontshare: ITF licence, not loadable via next/font — not now. Libre Caslon Condensed: not in Next 16.3.6 font list — later.

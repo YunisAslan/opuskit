@@ -1,66 +1,24 @@
 {
- "ulooklonely": {
-  "base": "cinematic-editorial",
+ "slow-atlas": {
+  "base": "swiss-modern",
   "brief": {
-   "name": "ulooklonely",
-   "offer": "Its presentation of loneliness",
-   "goal": "explore"
+   "name": "Slow Atlas",
+   "offer": "An independent magazine of long-form travel essays — one place, told slowly.",
+   "goal": "subscribe"
   },
-  "purpose": "portfolio",
-  "direction": "film-inspired",
+  "purpose": "blog",
+  "direction": "news-grid",
   "characters": [],
-  "lead": "video",
-  "motion": "immersive",
-  "hero": "scroll-video",
-  "layout": "full-bleed",
-  "palette": "studio-aqua",
-  "typography": "loud-and-clear",
-  "assets": [
-   "video"
-  ],
-  "uploads": [
-   {
-    "asset": "video",
-    "name": "ulooklonely.mp4",
-    "kind": "video",
-    "width": 720,
-    "height": 1280,
-    "duration": 19.766341
-   }
-  ],
+  "lead": "typography",
+  "motion": "subtle",
+  "hero": "type-statement",
+  "layout": "grid",
+  "palette": "cherry-red",
+  "typography": "newsroom",
+  "assets": [],
+  "uploads": [],
   "mediaPlan": "have",
-  "imagePresentation": "tilted-grid",
-  "nav": "bottom-dock",
-  "shape": "brutal",
   "signatures": [],
-  "pieces": [
-   "scribble-link",
-   "scroll-progress",
-   "velocity-band",
-   "brand-cursor"
-  ],
-  "piecePlacements": [
-   {
-    "piece": "scribble-link",
-    "page": "p1",
-    "index": 0
-   },
-   {
-    "piece": "scroll-progress",
-    "page": "p1",
-    "index": 1
-   },
-   {
-    "piece": "velocity-band",
-    "page": "*",
-    "index": -1
-   },
-   {
-    "piece": "brand-cursor",
-    "page": "*",
-    "index": -1
-   }
-  ],
   "pages": [
    {
     "id": "p1",
@@ -69,49 +27,50 @@
     "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
     "sections": [
      "hero",
-     "journal"
-    ]
-   },
-   {
-    "id": "p2",
-    "type": "about",
-    "label": "About",
-    "purpose": "Put a human face and point of view on the work; build trust.",
-    "sections": [
-     "editorial-story"
-    ]
-   },
-   {
-    "id": "p3",
-    "type": "sign-in",
-    "label": "Sign In",
-    "purpose": "Standard sign-in: email/password, forgot-password link, link to sign up.",
-    "sections": []
-   },
-   {
-    "id": "p4",
-    "type": "sign-up",
-    "label": "Sign Up",
-    "purpose": "Standard sign-up: minimal required fields, clear value of creating an account.",
-    "sections": []
-   },
-   {
-    "id": "p5",
-    "type": "services",
-    "label": "Services",
-    "purpose": "Make the offer and the way of working clear enough to remove hesitation.",
-    "sections": [
+     "intro",
+     "journal",
+     "about",
      "contact-cta"
     ]
    },
    {
-    "id": "p6",
-    "type": "work",
-    "label": "Work",
-    "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+    "id": "p2",
+    "type": "journal",
+    "label": "Articles",
+    "purpose": "Show ongoing thinking, in your own voice, over time.",
     "sections": [
-     "featured-work",
-     "case-study"
+     "journal"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "team"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "newsletter",
+    "label": "Newsletter",
+    "purpose": "Give a clear reason to subscribe and show what they’ll get.",
+    "sections": [
+     "journal",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "custom",
+    "label": "Article",
+    "purpose": "",
+    "sections": [
+     "editorial-story",
+     "journal",
+     "contact-cta"
     ]
    }
   ],

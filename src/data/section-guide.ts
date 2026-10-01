@@ -31,4 +31,12 @@ export const sectionGuide: Partial<Record<SectionId, { look: string; bestWhen: s
   faq: { look: 'questions and answers', bestWhen: 'people ask the same 5–8 questions before they decide.' },
   journal: { look: 'latest news and posts', bestWhen: 'you publish often and want it to look alive.' },
   'contact-cta': { look: 'a closing call to action', bestWhen: 'the page should end with one clear next step — write, book or buy.' },
+  'feature-rows': { look: 'one feature per row, with a picture', bestWhen: 'each of 3–6 features deserves a picture and a few sentences of its own.' },
+  newsletter: { look: 'an email sign-up', bestWhen: 'you send something worth reading and want people to come back.' },
+  categories: { look: 'category tiles with pictures', bestWhen: 'you have a wide range and people should jump straight to their part of it.' },
+  press: { look: 'press quotes and awards', bestWhen: 'magazines, critics or prizes have said something good about you.' },
+  'cta-band': { look: 'a slim offer band', bestWhen: 'there’s one offer worth repeating mid-page — a trial, a deadline, free delivery.' },
+  trust: { look: 'a row of short promises', bestWhen: 'small worries — delivery, returns, a trial, a guarantee — hold people back.' },
+  schedule: { look: 'a programme by day', bestWhen: 'things happen at set times and people plan around them.' },
+  integrations: { look: 'the tools it works with', bestWhen: 'people will ask whether it connects to what they already use.' },
 }

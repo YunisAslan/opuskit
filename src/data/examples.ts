@@ -5,6 +5,8 @@
 // public/live/{slug}/ is a real static export of the site's code only (no media in it — its <img>/
 // <video> tags are patched to point back at the symlinked path above), so visiting it is the actual site.
 
+import type { SectionId } from '@/types/domain'
+
 export type ExampleHero =
   | { kind: 'video'; src: string; poster: string }
   | { kind: 'image'; src: string }
@@ -23,6 +25,10 @@ export type ExampleProject = {
   livePath: string
   /** A short, light loop from the same site for small previews (the hero file can be a heavy scrub encode). */
   clip?: string
+  /** A few seconds of each of its sections arriving on screen — the kit shows one next to that part (plan §8). */
+  sectionClips?: Partial<Record<SectionId, string>>
+  /** One of the old examples (docs/plan-for-fit.md §9): stays on /examples until replaced, never offered in the kit as "a site like this". */
+  legacy?: true
   /** Exactly what was picked to make it — recovered from the recipe files the site shipped with. */
   choices: RecipeChoice[]
   /** Anything beyond the Build Package that went into the build, stated plainly. */
@@ -33,34 +39,36 @@ export type ExampleProject = {
 
 export const examples: ExampleProject[] = [
   {
-    slug: 'ulooklonely',
-    title: 'ulooklonely',
-    summary: 'Its presentation of loneliness. Short films and edits about being alone somewhere crowded.',
-    mood: ['Nostalgic', 'Warm', 'Dramatic'],
-    hero: { kind: 'video', src: '/examples/ulooklonely/media/heroVideo.mp4', poster: '/examples/ulooklonely/media/posterImage.jpg' },
-    livePath: '/live/ulooklonely/index.html',
-    // The first site made with the kit after the questionnaire was retired: its opuskit.json is the exact recipe.
+    slug: 'slow-atlas',
+    title: 'Slow Atlas — One place, told slowly',
+    summary: 'An independent magazine of long-form travel essays — one place, told slowly.',
+    mood: ['Direct', 'Informed', 'Urgent'],
+    // Its first screen is type, not media: the hero still is the site's own first screen.
+    hero: { kind: 'image', src: '/examples/slow-atlas/media/poster.jpg' },
+    livePath: '/live/slow-atlas/index.html',
+    clip: '/examples/slow-atlas/media/clip.mp4',
+    sectionClips: Object.fromEntries((['navbar', 'intro', 'journal', 'about', 'team', 'editorial-story', 'contact-cta', 'footer'] as const).map((id) => [id, `/examples/slow-atlas/media/clips/${id}.mp4`])),
+    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
-      { label: 'Making', value: 'Portfolio' },
-      { label: 'Name', value: 'ulooklonely' },
-      { label: 'Visitors should', value: 'Explore the work' },
-      { label: 'Style', value: 'Film-inspired' },
-      { label: 'First screen', value: 'Film on the first screen (own video uploaded)' },
-      { label: 'Movement', value: 'Immersive' },
-      { label: 'Colors', value: 'Studio Aqua' },
-      { label: 'Lettering', value: 'Loud and Clear' },
-      { label: 'Layout', value: 'Full-bleed' },
-      { label: 'Shape', value: 'Bold outline' },
-      { label: 'Menu', value: 'Floating dock' },
-      { label: 'Photos', value: 'Tilted scroll grid (stills from the film)' },
-      { label: 'Effects', value: 'Hand-drawn underline, Reading line, Type that races the scroll, Brand cursor' },
-      { label: 'Pages', value: 'Home, About, Sign In, Sign Up, Services, Work' },
+      { label: 'Making', value: 'Blog / magazine' },
+      { label: 'Name', value: 'Slow Atlas' },
+      { label: 'Visitors should', value: 'Subscribe' },
+      { label: 'Style', value: 'News Grid' },
+      { label: 'First screen', value: 'Typographic statement' },
+      { label: 'Movement', value: 'Subtle' },
+      { label: 'Colors', value: 'Cherry Red' },
+      { label: 'Lettering', value: 'Newsroom' },
+      { label: 'Layout', value: 'Grid-driven' },
+      { label: 'Shape', value: 'Sharp' },
+      { label: 'Menu', value: 'Classic bar' },
+      { label: 'Pages', value: 'Home, Articles, About, Newsletter, Article' },
       { label: 'Built with', value: 'Claude Code' },
     ],
-    note: 'Its 720×1280 vertical phone video was sharpened to 1920×1080 by prepare-video.sh; phones play the original shape. The Work grid uses stills taken from the same film.',
+    note: 'Photos are from Unsplash (credits in media-src/SOURCES.md); Claude Code drew the logo during the build.',
   },
   {
     slug: 'swiss-modern-event-site-claude-code',
+    legacy: true,
     title: 'RALPH&LAUREN — Sheki Polo Weekend, 11–13 June 2027',
     summary: 'Three days of polo on the grass ground in Sheki, 11–13 June 2027. Seats by RSVP.',
     mood: ['Rational', 'Direct', 'Timeless'],
@@ -86,6 +94,7 @@ export const examples: ExampleProject[] = [
   },
   {
     slug: 'cheeky911',
+    legacy: true,
     title: 'CHEEKY, a fashion house for the 911',
     summary: 'Porsche 911s, filmed and shown like a collection. Selected cars, one season at a time.',
     mood: ['Nostalgic', 'Warm', 'Dramatic'],
@@ -110,6 +119,7 @@ export const examples: ExampleProject[] = [
   },
   {
     slug: 'buytolose',
+    legacy: true,
     title: 'BUYTOLOSE — Fleece, carry and snacks',
     summary: 'Fleece, carry and snacks from one Porto workshop, made in runs of two hundred.',
     mood: ['Dramatic', 'Dark', 'Rebellious'],
@@ -134,6 +144,7 @@ export const examples: ExampleProject[] = [
   },
   {
     slug: 'keepers',
+    legacy: true,
     title: 'Keepers — Citrus Coffee Soda',
     summary: 'Sparkling cold-brew coffee with orange and lemon peel, in a 330 ml can. 45 mg caffeine, 35 kcal.',
     mood: ['Direct', 'Informed', 'Urgent'],
@@ -157,6 +168,7 @@ export const examples: ExampleProject[] = [
   },
   {
     slug: 'kofii',
+    legacy: true,
     title: 'KOFİİ — Coffee, made to order',
     summary: 'A small coffee shop in Old Town. Espresso, iced drinks, matcha and cake, each one made to order.',
     mood: ['Light', 'Friendly', 'Functional'],

@@ -5,7 +5,7 @@
 //           its parts in between, already filled with what that kind of page usually has. Drag to reorder.
 //   Right:  one job at a time — either "Add to page" (the parts you can add; drag one into the page, or tap +), or,
 //           with a part picked, "This part" (its look, its photos, its moments). Structure and effects never share a list.
-// Site-wide behaviour (headlines, links, buttons) lives in Style.
+// Site-wide behaviour (headlines, links, buttons) lives in Design.
 import { ArrowDown, ArrowLeft, ArrowUp, Check, Eye, EyeOff, FileText, GripVertical, ImageUp, MoreHorizontal, Pencil, Plus, RotateCcw, Sparkles, Trash2, X } from 'lucide-react'
 import { useState, type DragEvent, type ReactNode } from 'react'
 import { toast } from 'sonner'
@@ -14,7 +14,9 @@ import { MediaSlots, missingLeadFile } from '@/components/MediaSlots'
 import { OptionDemo } from '@/components/OptionDemo'
 import { PieceDemo } from '@/components/PieceDemo'
 import { ScaledFrame } from '@/components/ScaledFrame'
+import { RealSiteClip } from '@/components/RealSiteClip'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
+import { closestChrome, closestSection, closestSite } from '@/features/kit/closest'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
@@ -237,10 +239,12 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
   // The menu or the footer: on this page or not, and its look (the same on every page).
   const chromeInspector = (c: ChromeId) => {
     const hidden = !!page.hide?.includes(c), name = c === 'navbar' ? 'Menu' : 'Footer'
+    const real = closestChrome(spec, c)
     return (
       <>
         {back}
         <p className="font-medium">{name}</p>
+        {real && <div className="mt-3"><RealSiteClip match={real} label={`This ${name.toLowerCase()} on a real site`} /></div>}
         <label className="mt-3 flex items-center gap-2 rounded-md border border-line bg-white px-3 py-2.5 text-sm">
           <Checkbox checked={!hidden} onCheckedChange={() => change(hidden ? `${name} back on ${page.label}` : `${name} left out of ${page.label}`, (p) => toggleChrome(p, page.id, c))} />
           Show on {page.label}
@@ -264,6 +268,7 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
     const moments = piecesFor(sel)
     const looks = hero ? [] : [sel.id, ...swapOptions(page, sel.id).job]
     const ph = !hero && isPhotoSection(sel.id) ? sectionPhotos(plan, sel) : undefined
+    const real = hero ? closestSite(spec) : closestSection(spec, sel.id)
     const bestWhen = (id: SectionId) => (sectionGuide[id] ? `Best when ${sectionGuide[id]!.bestWhen}` : sections[id].purpose)
     const extras: [string, ReactNode, string][] = [
       ...(ph ? [[`photos-${ph.id}`, photoShot(ph.id), `Photos: ${imagePresentations[ph.id].name}`] as [string, ReactNode, string]] : []),
@@ -284,6 +289,7 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
             </ul>
           )}
         </figure>
+        {real && <div className="mt-3"><RealSiteClip match={real} label={hero ? 'A first screen like this' : 'This part on a real site'} /></div>}
 
         <Accordion type="single" collapsible key={sel.key} className="mt-3 gap-2">
           {(hero || looks.length > 1) && group('look', hero ? 'Change what it shows' : 'Change its look', hero ? heroName(plan.hero) : cap(lookOfSection(sel.id)), hero ? <>

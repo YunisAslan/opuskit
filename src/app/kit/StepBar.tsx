@@ -1,16 +1,7 @@
 "use client";
 // The kit's step bar: three wide cards, each a live summary of its step, over one progress rail.
 // 1 Style and 2 Pages live in the kit; 3 Recipe is the result page itself — the same bar shows there, so it reads as one flow.
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  FileText,
-  Files,
-  LayoutTemplate,
-  Palette,
-  RotateCcw,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, FileText, Files, LayoutTemplate, Palette, Pencil, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
@@ -25,11 +16,14 @@ export function StepBar({
   plan,
   step,
   onGo,
+  onSite,
   sticky = true,
 }: {
   plan: KitPlan;
   step: KitStep;
   onGo: (s: KitStep) => void;
+  /** Opens Design → About your site (name, what it is, kind, goal). */
+  onSite: () => void;
   sticky?: boolean;
 }) {
   const look = lookOf(plan);
@@ -55,7 +49,7 @@ export function StepBar({
     {
       id: "style",
       n: 1,
-      name: "Style",
+      name: "Design",
       icon: Palette,
       peek: (
         <>
@@ -100,14 +94,19 @@ export function StepBar({
       className={`${sticky ? "sticky top-16 z-30" : ""} border-b border-line bg-paper/95 backdrop-blur-sm`}
     >
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-x-4 gap-y-2 px-5 py-2.5 md:px-8">
-        <div className="hidden w-40 shrink-0 leading-tight xl:block">
-          <span className="block text-[11px] uppercase tracking-wider text-muted">
-            Building
+        {/* Same card as the steps beside it (same height, same hover), so it reads as something to click. */}
+        <button
+          type="button"
+          onClick={onSite}
+          aria-label={`About your site: ${plan.name || "Untitled site"}. Edit`}
+          className="group hidden w-44 shrink-0 items-center justify-between gap-2 self-stretch rounded-lg bg-white/60 px-3 py-2 text-left leading-tight ring-1 ring-line transition-colors hover:bg-white hover:ring-ink xl:flex"
+        >
+          <span className="min-w-0">
+            <span className="block text-[11px] uppercase tracking-wider text-muted">Building</span>
+            <span className="block truncate font-medium">{plan.name || "Untitled site"}</span>
           </span>
-          <span className="block truncate font-medium">
-            {plan.name || "Untitled site"}
-          </span>
-        </div>
+          <Pencil size={15} aria-hidden className="shrink-0 text-muted transition-colors group-hover:text-ink" />
+        </button>
         <ol
           className="grid min-w-0 flex-1 grid-cols-3 gap-1.5 max-sm:basis-full"
           aria-label="Steps"

@@ -1,0 +1,210 @@
+// Candidate palettes + type pairings for OpusKit (research draft, 2026-10-01).
+// Paste into src/data/ingredients.ts: add the GF keys to `GF`, the objects to `palettes` / `typography`,
+// and the ids to `PaletteId` / `TypographyId` in src/types/domain.ts:
+//   PaletteId    += 'apricot-hall' | 'yerba-leaf' | 'console-lilac' | 'limestone' | 'graphite-sand' | 'olive-grove'
+//                 | 'lido-blue' | 'bubblegum' | 'mulberry' | 'mustard' | 'midnight-chapters'
+//   TypographyId += 'gallery-hours' | 'two-scripts' | 'funnel' | 'wide-spec' | 'diner-serif' | 'private-collection'
+//                 | 'newsprint-1918' | 'kalnia-couture' | 'poster-caps' | 'campus' | 'stack'
+// Every value below passes the check.ts rules together with the existing 30 palettes / 37 pairings
+// (verified by verify.ts in this folder). Then add each id to the `palettes` / `typography` lists of the
+// directions named in REPORT.md §3 (not as defaults — that needs no other change).
+import type { Palette, TypographyPairing } from '@/types/domain'
+
+// Every family: Google Fonts, SIL OFL 1.1 (google/fonts repo `ofl/` dir, checked 2026-10-01), present in
+// Next 16.3.6's next/font/google font-data.json, and the css2 strings below return 200.
+export const GF_NEW = {
+  rubik: 'Rubik:ital,wght@0,300..900;1,300..900',
+  amiri: 'Amiri:ital,wght@0,400;0,700;1,400;1,700',
+  plexArabic: 'IBM+Plex+Sans+Arabic:wght@300;400;500;600;700',
+  funnelDisplay: 'Funnel+Display:wght@300..800',
+  funnelSans: 'Funnel+Sans:ital,wght@0,300..800;1,300..800',
+  hubot: 'Hubot+Sans:ital,wdth,wght@0,75..125,200..900;1,75..125,200..900',
+  plexSans: 'IBM+Plex+Sans:ital,wdth,wght@0,75..100,100..700;1,75..100,100..700',
+  caprasimo: 'Caprasimo',
+  wixText: 'Wix+Madefor+Text:ital,wght@0,400..800;1,400..800',
+  bellefair: 'Bellefair',
+  redHatText: 'Red+Hat+Text:ital,wght@0,300..700;1,300..700',
+  redHatDisplay: 'Red+Hat+Display:ital,wght@0,300..900;1,300..900',
+  brygada: 'Brygada+1918:ital,wght@0,400..700;1,400..700',
+  instrumentSans: 'Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700',
+  kalnia: 'Kalnia:wdth,wght@100..125,100..700',
+  suse: 'SUSE:ital,wght@0,100..900;1,100..900',
+  bayon: 'Bayon',
+  reddit: 'Reddit+Sans:ital,wght@0,200..900;1,200..900',
+  ancizarSerif: 'Ancizar+Serif:ital,wght@0,300..900;1,300..900',
+  ancizarSans: 'Ancizar+Sans:ital,wght@0,100..1000;1,100..1000',
+  stackHeadline: 'Stack+Sans+Headline:wght@200..700',
+  stackText: 'Stack+Sans+Text:wght@200..700',
+}
+const GF = GF_NEW
+
+export const newPalettes = {
+  'apricot-hall': {
+    id: 'apricot-hall', name: 'Apricot Hall', line: 'Apricot walls, petrol-black ink, olive', dark: false, tags: ['art', 'hospitality', 'organic'],
+    colors: { background: '#FECD8C', surface: '#FFE0B5', text: '#001317', muted: '#4A3A22', primary: '#001317', secondary: '#F5BC6E', accent: '#4F5E12', border: '#E5B06A' },
+    usage: { accent: 'Dark olive for links and the active state — the museum-label green', surface: 'Cards and long captions' },
+    why: 'A warm apricot field with near-black petrol ink is how a real museum (Frans Hals, Haarlem) dresses a whole site: warm and confident, never beige, and it flatters old paintings and food photos alike.',
+  },
+  'yerba-leaf': {
+    id: 'yerba-leaf', name: 'Yerba Leaf', line: 'Leaf green field, black ink, navy', dark: false, tags: ['organic', 'playful', 'hospitality'],
+    colors: { background: '#A6CC7C', surface: '#C6E0A6', text: '#0E1A0B', muted: '#2F4A22', primary: '#195E1C', secondary: '#93BD66', accent: '#22336B', border: '#8DB866' },
+    usage: { primary: 'Deep leaf green for buttons', accent: 'Navy for links and one mark per view', surface: 'Long copy sits on surface' },
+    why: 'A drinkable, sunny leaf green used as the whole page (MANA yerba mate does exactly this) — fresher and louder than sage, still natural. Navy keeps it grown-up.',
+  },
+  'console-lilac': {
+    id: 'console-lilac', name: 'Console Lilac', line: 'Mid lilac field, black type, nothing else', dark: false, tags: ['futuristic', 'bold', 'experimental'],
+    colors: { background: '#9D91E3', surface: '#B2A8EA', text: '#000000', muted: '#1E1640', primary: '#000000', secondary: '#8A7DD8', accent: '#000000', border: '#7D70CC' },
+    usage: { accent: 'Accent equals ink — black pills and black panels are the signal; a lime (#C0FB50) mark may live only inside black', surface: 'Cards and long copy' },
+    why: 'A mid-tone lilac with pure black is the brand-tech look of the moment (KPR, many web3 and AI-tool sites): it reads digital and friendly without the dark-mode default, and black does all the emphasis.',
+  },
+  limestone: {
+    id: 'limestone', name: 'Limestone', line: 'Carved sandstone, umber ink, lapis', dark: false, tags: ['art', 'editorial', 'heritage'],
+    colors: { background: '#CDB58F', surface: '#DCC8A6', text: '#1E1A14', muted: '#4A3F2E', primary: '#1E1A14', secondary: '#C0A57A', accent: '#1E3A8A', border: '#B39A70' },
+    usage: { accent: 'Lapis blue for links and the one highlight — the colour of the stone inlay', surface: 'Cards and long copy' },
+    why: 'A real stone colour, deeper than any cream, for archaeology, museums, architecture and craft. Lapis is the historical partner of sandstone (Persepolis, Egypt) — specific, not "tasteful beige".',
+  },
+  'graphite-sand': {
+    id: 'graphite-sand', name: 'Graphite & Sand', line: 'Soft graphite, warm white, desert sand', dark: true, tags: ['cinematic', 'editorial', 'heritage'],
+    colors: { background: '#303030', surface: '#3A3A3A', text: '#F5F2EC', muted: '#B5B0A8', primary: '#F5F2EC', secondary: '#444444', accent: '#F6CEA0', border: '#4A4A4A' },
+    usage: { accent: 'Sand for the active chapter, time-codes and one word — never fills', text: 'Warm white, never pure white' },
+    why: 'A graphite that is clearly grey (not black, not navy) under footage and 3D, with one warm sand note — the Getty "Persepolis Reimagined" palette. Calm, archival and cinematic.',
+  },
+  'olive-grove': {
+    id: 'olive-grove', name: 'Olive Grove', line: 'Dark olive, parchment type, lilac', dark: true, tags: ['organic', 'luxury', 'fashion'],
+    colors: { background: '#4A4A1F', surface: '#55552A', text: '#FAF8EA', muted: '#CFCBA8', primary: '#FAF8EA', secondary: '#5E5E30', accent: '#D9C2FF', border: '#66663A' },
+    usage: { accent: 'Lilac for one highlight — the complementary cool note', surface: 'Cards; long copy is fine on either (7.2:1)' },
+    why: 'Olive is the earth tone replacing grey in 2025–26 (fashion, interiors, wellness). As a dark it is warm and specific, and a lilac accent keeps it fresh instead of military.',
+  },
+  'lido-blue': {
+    id: 'lido-blue', name: 'Lido Blue', line: 'Bright swim blue, ink navy, burgundy', dark: false, tags: ['playful', 'bold', 'editorial'],
+    colors: { background: '#5AA9FF', surface: '#7FBDFF', text: '#0A0A23', muted: '#14204A', primary: '#0A0A23', secondary: '#4A98EE', accent: '#8E0D3C', border: '#3F8DE6' },
+    usage: { accent: 'Burgundy for one word or the active state (3.8:1 — UI marks and large type)', surface: 'Long copy sits on surface' },
+    why: 'A saturated mid blue as the whole page is sunny and editorial at once (Inside the Head uses it as a chapter field). Burgundy is the unexpected, grown-up accent.',
+  },
+  bubblegum: {
+    id: 'bubblegum', name: 'Bubblegum', line: 'Hot bubblegum pink, plum ink, Klein blue', dark: false, tags: ['playful', 'fashion', 'bold'],
+    colors: { background: '#FF8FC7', surface: '#FFB0D7', text: '#2A0A1F', muted: '#5A1A40', primary: '#2A0A1F', secondary: '#F27AB6', accent: '#0038FF', border: '#EE76B3' },
+    usage: { accent: 'Klein blue for links and one sticker (3.3:1 — marks and large type only)', surface: 'Long copy sits on surface' },
+    why: 'A saturated, sugary pink as the ground — the confident end of the pinks small brands love (ChungiYoo, Dontboardme) — with plum ink instead of black so it stays soft.',
+  },
+  mulberry: {
+    id: 'mulberry', name: 'Mulberry', line: 'Mulberry wine, blush type, mint', dark: true, tags: ['luxury', 'fashion', 'hospitality'],
+    colors: { background: '#6E1E4A', surface: '#7C2A57', text: '#FFF0F6', muted: '#E3B9CD', primary: '#FFF0F6', secondary: '#852F5F', accent: '#9FE6C4', border: '#8A3A66' },
+    usage: { accent: 'Mint for one highlight — the cool complement to the wine' },
+    why: 'Burgundy/merlot is the luxury colour of 2025–26; mulberry leans it pink-violet so it stays clearly apart from cherry and oxblood. Mint is its natural opposite.',
+  },
+  mustard: {
+    id: 'mustard', name: 'Mustard', line: 'Ochre mustard field, black, indigo', dark: false, tags: ['retro', 'raw', 'hospitality'],
+    colors: { background: '#D9A21B', surface: '#E6B743', text: '#140F00', muted: '#3D2E00', primary: '#140F00', secondary: '#C99212', accent: '#1A2E8A', border: '#B98510' },
+    usage: { accent: 'Indigo for links and one mark per view', surface: 'Cards and long copy' },
+    why: 'Ochre is the deeper, earthier yellow — seventies kitchens, enamel signs, workwear — warmer and calmer than signal yellow, and a classic with indigo.',
+  },
+  'midnight-chapters': {
+    id: 'midnight-chapters', name: 'Midnight Chapters', line: 'Ultraviolet night, white, coral', dark: true, tags: ['playful', 'cinematic', 'experimental'],
+    colors: { background: '#271A70', surface: '#33246F', text: '#FFFFFF', muted: '#C8C3E8', primary: '#FFFFFF', secondary: '#33267E', accent: '#FDA1A2', border: '#40338A' },
+    usage: { accent: 'Coral for the active chapter and one highlight' },
+    why: 'A deep ultraviolet, bluer than plum and brighter than navy, is a night sky that is plainly a colour (Inside the Head). Coral pink warms it without neon.',
+  },
+} satisfies Record<string, Omit<Palette, 'id'> & { id: string }>
+
+export const newTypography = {
+  'gallery-hours': {
+    id: 'gallery-hours', name: 'Gallery Hours', line: 'One soft-cornered grotesk, museum-plain', tags: ['art', 'hospitality', 'minimal'],
+    display: { family: 'Rubik', weight: 600, size: 'clamp(2.75rem, 7vw, 6rem)', lineHeight: '0.98', letterSpacing: '-0.03em', use: 'Hero headlines, exhibition titles' },
+    heading: { family: 'Rubik', weight: 500, size: 'clamp(1.5rem, 2.5vw, 2.1rem)', lineHeight: '1.1', letterSpacing: '-0.015em', use: 'Section headings' },
+    body: { family: 'Rubik', weight: 400, size: '1.0625rem', lineHeight: '1.6', letterSpacing: '0', use: 'Paragraphs' },
+    utility: { family: 'Rubik', weight: 500, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0', use: 'Opening hours, labels, navigation' },
+    googleFamilies: [GF.rubik], source: 'Google Fonts', sample: 'Open late on Thursdays',
+    why: 'Slightly rounded corners make a plain grotesk feel welcoming — the Frans Hals Museum sets its whole site in Rubik. Hebrew, Arabic and Cyrillic in one family.',
+  },
+  'two-scripts': {
+    id: 'two-scripts', name: 'Two Scripts', line: 'Naskh-born serif, Plex Arabic text, Arabic/Persian-ready', tags: ['editorial', 'heritage', 'rtl'],
+    display: { family: 'Amiri', weight: 400, size: 'clamp(2.75rem, 6vw, 5.25rem)', lineHeight: '1.15', letterSpacing: '0', use: 'Hero lines — never negative-track Arabic' },
+    heading: { family: 'Amiri', weight: 700, size: 'clamp(1.5rem, 2.5vw, 2.1rem)', lineHeight: '1.3', letterSpacing: '0', use: 'Section headings' },
+    body: { family: 'IBM Plex Sans Arabic', weight: 400, size: '1.0625rem', lineHeight: '1.75', letterSpacing: '0', use: 'Paragraphs (Latin + Arabic)' },
+    utility: { family: 'IBM Plex Sans Arabic', weight: 500, size: '0.8125rem', lineHeight: '1.5', letterSpacing: '0', use: 'Labels, navigation' },
+    googleFamilies: [GF.amiri, GF.plexArabic], source: 'Google Fonts', sample: 'A city carved in stone',
+    why: 'The Arabic-script counterpart of Ink and Paper: a classical Naskh serif with matching Latin over a modern Arabic sans that sets both scripts evenly — real bilingual sites, not a "Middle-East theme".',
+  },
+  funnel: {
+    id: 'funnel', name: 'Funnel', line: 'Quirky display grotesk over its own text cut', tags: ['futuristic', 'playful', 'technical'],
+    display: { family: 'Funnel Display', weight: 700, size: 'clamp(3rem, 8vw, 7rem)', lineHeight: '0.92', letterSpacing: '-0.035em', use: 'Hero statements' },
+    heading: { family: 'Funnel Display', weight: 600, size: 'clamp(1.5rem, 2.6vw, 2.25rem)', lineHeight: '1.05', letterSpacing: '-0.02em', use: 'Section headings' },
+    body: { family: 'Funnel Sans', weight: 400, size: '1.0625rem', lineHeight: '1.55', letterSpacing: '0', use: 'Paragraphs' },
+    utility: { family: 'Funnel Sans', weight: 500, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0', use: 'Labels, navigation' },
+    googleFamilies: [GF.funnelDisplay, GF.funnelSans], source: 'Google Fonts', sample: 'Built for what comes next',
+    why: 'A display cut with funnelled joins and a calm text sibling (NORD ID, 2024) — the free stand-in for the Neue Montreal / ABC Whyte register on award-site product pages.',
+  },
+  'wide-spec': {
+    id: 'wide-spec', name: 'Wide Spec', line: 'Expanded grotesk headlines, Plex text', tags: ['technical', 'bold', 'swiss'],
+    display: { family: 'Hubot Sans', weight: 800, size: 'clamp(2.5rem, 7vw, 6rem)', lineHeight: '0.95', letterSpacing: '-0.02em', use: 'Hero statements', stretch: '125%' },
+    heading: { family: 'Hubot Sans', weight: 700, size: 'clamp(1.4rem, 2.4vw, 2rem)', lineHeight: '1.1', letterSpacing: '-0.01em', use: 'Section headings', stretch: '112.5%' },
+    body: { family: 'IBM Plex Sans', weight: 400, size: '1.0625rem', lineHeight: '1.6', letterSpacing: '0', use: 'Paragraphs, specs' },
+    utility: { family: 'IBM Plex Sans', weight: 500, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0', use: 'Labels, navigation, data', stretch: '87.5%' },
+    googleFamilies: [GF.hubot, GF.plexSans], source: 'Google Fonts', sample: 'Ship the whole spec',
+    why: 'GitHub\'s wide Hubot for headlines over IBM Plex for reading — two corporate open families that real tech brands run on (KPR pairs a wide grotesk with Plex). Width, not colour, makes the hierarchy.',
+  },
+  'diner-serif': {
+    id: 'diner-serif', name: 'Diner Serif', line: 'Soft fat seventies serif, friendly text', tags: ['retro', 'hospitality', 'playful'],
+    display: { family: 'Caprasimo', weight: 400, size: 'clamp(3rem, 8vw, 6.75rem)', lineHeight: '0.95', letterSpacing: '-0.02em', use: 'Hero, menu titles' },
+    heading: { family: 'Caprasimo', weight: 400, size: 'clamp(1.5rem, 2.6vw, 2.2rem)', lineHeight: '1.1', letterSpacing: '-0.01em', use: 'Section headings' },
+    body: { family: 'Wix Madefor Text', weight: 400, size: '1.0625rem', lineHeight: '1.6', letterSpacing: '0', use: 'Paragraphs, menus' },
+    utility: { family: 'Wix Madefor Text', weight: 600, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0', use: 'Prices, labels, navigation' },
+    googleFamilies: [GF.caprasimo, GF.wixText], source: 'Google Fonts', sample: 'Pancakes all day',
+    why: 'A Cooper-style soft serif — the warm voice of cafés, bakeries and kids\' brands (ChungiYoo, Inside the Head use its licensed cousins) — over a Dalton Maag text face that stays clear at menu sizes.',
+  },
+  'private-collection': {
+    id: 'private-collection', name: 'Private Collection', line: 'Light flared roman, geometric-humanist sans', tags: ['luxury', 'quiet', 'cinematic'],
+    display: { family: 'Bellefair', weight: 400, size: 'clamp(3rem, 7.5vw, 7rem)', lineHeight: '1', letterSpacing: '-0.01em', use: 'Hero lines, property names' },
+    heading: { family: 'Bellefair', weight: 400, size: 'clamp(1.6rem, 2.8vw, 2.4rem)', lineHeight: '1.1', letterSpacing: '0', use: 'Section headings' },
+    body: { family: 'Red Hat Text', weight: 400, size: '1rem', lineHeight: '1.65', letterSpacing: '0.005em', use: 'Paragraphs' },
+    utility: { family: 'Red Hat Display', weight: 500, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0.02em', use: 'Labels, navigation, prices' },
+    googleFamilies: [GF.bellefair, GF.redHatText, GF.redHatDisplay], source: 'Google Fonts', sample: 'The art of the sublime',
+    why: 'A light, flared old-style for large quiet lines over a TT Commons-like sans — the luxury real-estate and hotel register (Sobha Privy Collection) without licensed type. Bellefair also sets Hebrew.',
+  },
+  'newsprint-1918': {
+    id: 'newsprint-1918', name: 'Newsprint 1918', line: 'Revived book serif, narrow sans labels', tags: ['editorial', 'heritage', 'film'],
+    display: { family: 'Brygada 1918', weight: 600, size: 'clamp(2.75rem, 6.5vw, 5.75rem)', lineHeight: '1', letterSpacing: '-0.02em', use: 'Hero, headlines — italic for decks' },
+    heading: { family: 'Brygada 1918', weight: 700, size: 'clamp(1.5rem, 2.5vw, 2.1rem)', lineHeight: '1.15', letterSpacing: '-0.01em', use: 'Section headings' },
+    body: { family: 'Brygada 1918', weight: 400, size: '1.125rem', lineHeight: '1.6', letterSpacing: '0', use: 'Long reading' },
+    utility: { family: 'Instrument Sans', weight: 500, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0', use: 'Bylines, captions, navigation', stretch: '87.5%' },
+    googleFamilies: [GF.brygada, GF.instrumentSans], source: 'Google Fonts', sample: 'Letters from the front page',
+    why: 'A 1918 Polish book face, revived with real italics — sturdier and less seen than Garamond or Caslon — with a narrowed neo-grotesk for the interface.',
+  },
+  'kalnia-couture': {
+    id: 'kalnia-couture', name: 'Kalnia Couture', line: 'Wide high-contrast serif, clean geometric text', tags: ['fashion', 'luxury', 'playful'],
+    display: { family: 'Kalnia', weight: 300, size: 'clamp(3rem, 8.5vw, 7.75rem)', lineHeight: '0.95', letterSpacing: '-0.02em', use: 'Hero, collection names', stretch: '125%' },
+    heading: { family: 'Kalnia', weight: 500, size: 'clamp(1.6rem, 2.8vw, 2.4rem)', lineHeight: '1.05', letterSpacing: '-0.01em', use: 'Section headings' },
+    body: { family: 'SUSE', weight: 400, size: '1.0625rem', lineHeight: '1.6', letterSpacing: '0', use: 'Paragraphs, product details' },
+    utility: { family: 'SUSE', weight: 500, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0', use: 'Navigation, prices, labels' },
+    googleFamilies: [GF.kalnia, GF.suse], source: 'Google Fonts', sample: 'Soft power, sharp edges',
+    why: 'A high-contrast display serif that widens on an axis — the Canela / Editorial New register with more warmth — over SUSE, a calm geometric sans from 2024.',
+  },
+  'poster-caps': {
+    id: 'poster-caps', name: 'Poster Caps', line: 'Tall condensed capitals, plain grotesk', tags: ['bold', 'playful', 'raw'],
+    display: { family: 'Bayon', weight: 400, size: 'clamp(4rem, 13vw, 12rem)', lineHeight: '0.85', letterSpacing: '0', use: 'Hero words — big, uppercase, few', uppercase: true },
+    heading: { family: 'Bayon', weight: 400, size: 'clamp(2rem, 4vw, 3.25rem)', lineHeight: '0.95', letterSpacing: '0.01em', use: 'Section headings', uppercase: true },
+    body: { family: 'Reddit Sans', weight: 400, size: '1.0625rem', lineHeight: '1.55', letterSpacing: '0', use: 'Paragraphs' },
+    utility: { family: 'Reddit Sans', weight: 600, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0', use: 'Labels, navigation' },
+    googleFamilies: [GF.bayon, GF.reddit], source: 'Google Fonts', sample: 'A tired dog is a happy dog',
+    why: 'Tall, tightly-set capitals shout like a flyer while a plain grotesk does the talking (Dontboardme pairs Bayon with Neue Montreal). Fresher than Bebas or Anton, which every template uses.',
+  },
+  campus: {
+    id: 'campus', name: 'Campus', line: 'A university superfamily, serif and sans', tags: ['editorial', 'quiet', 'technical'],
+    display: { family: 'Ancizar Serif', weight: 500, size: 'clamp(2.75rem, 6vw, 5.25rem)', lineHeight: '1.02', letterSpacing: '-0.02em', use: 'Hero lines, report titles' },
+    heading: { family: 'Ancizar Serif', weight: 600, size: 'clamp(1.5rem, 2.5vw, 2.1rem)', lineHeight: '1.15', letterSpacing: '-0.01em', use: 'Section headings' },
+    body: { family: 'Ancizar Sans', weight: 400, size: '1.0625rem', lineHeight: '1.6', letterSpacing: '0', use: 'Paragraphs' },
+    utility: { family: 'Ancizar Sans', weight: 600, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0', use: 'Labels, navigation, figures' },
+    googleFamilies: [GF.ancizarSerif, GF.ancizarSans], source: 'Google Fonts', sample: 'What we learned this year',
+    why: 'A 2025 serif-and-sans superfamily drawn for a university (UNAL, Colombia): matched proportions, wide weight range, Greek — built for institutions, reports and non-profits that need to read well and look current.',
+  },
+  stack: {
+    id: 'stack', name: 'Stack', line: 'Studio-made headline and text sans', tags: ['minimal', 'technical', 'playful'],
+    display: { family: 'Stack Sans Headline', weight: 600, size: 'clamp(2.75rem, 7.5vw, 6.5rem)', lineHeight: '0.95', letterSpacing: '-0.035em', use: 'Hero headlines' },
+    heading: { family: 'Stack Sans Headline', weight: 500, size: 'clamp(1.5rem, 2.5vw, 2.1rem)', lineHeight: '1.08', letterSpacing: '-0.02em', use: 'Section headings' },
+    body: { family: 'Stack Sans Text', weight: 400, size: '1.0625rem', lineHeight: '1.6', letterSpacing: '0', use: 'Paragraphs' },
+    utility: { family: 'Stack Sans Text', weight: 500, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0', use: 'Labels, navigation' },
+    googleFamilies: [GF.stackHeadline, GF.stackText], source: 'Google Fonts', sample: 'Everything in one place',
+    why: 'A 2025 open family by the branding studio Koto, with separate headline and text cuts — the agency-made product look without Inter or Geist.',
+  },
+} satisfies Record<string, Omit<TypographyPairing, 'id'> & { id: string }>

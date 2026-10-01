@@ -1,7 +1,7 @@
 // Runnable check: every seed composes into a complete recipe, remix updates dependents,
 // and every adapter produces a valid, tool-specific package.  Run: npm run check
 import assert from 'node:assert/strict'
-import type { RecipeSpec } from '../src/types/domain'
+import type { RecipeSpec, SectionId } from '../src/types/domain'
 import { spawnSync } from 'node:child_process'
 import { palettes, typography } from '../src/data/ingredients'
 import { contrast, deltaE, oklab } from '../src/lib/color'
@@ -23,6 +23,7 @@ import { pageTypes } from '../src/data/patterns'
 import { examples } from '../src/data/examples'
 import { sectionGuide } from '../src/data/section-guide'
 import exampleSpecs from '../src/data/example-specs.generated.json'
+import { closestChrome, closestSection, closestSite } from '../src/features/kit/closest'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
 import { cleanPieces, pieceIssues, composeRecipe, isValidSpec, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
@@ -361,8 +362,14 @@ const main = async () => {
     assert.deepEqual(back.pages.map((p) => p.sections), spec.pages.map((p) => p.sections), `${seed.slug}: pages survive Customise`)
     assert.equal(cleanPlan(JSON.parse(JSON.stringify(specToPlan(spec, 'gen1')))).fromId, 'gen1', 'the source id survives storage')
   }
-  // Pages arrive really filled: every kind of site starts with a Home of 4+ parts, like the example sites have.
-  for (const st of starters) { const home = start(EMPTY_PLAN, st.id).pages[0]; assert.ok(home.sections.filter((x) => x.id !== 'hero').length >= 4, `${st.id}: Home starts with 4+ parts`) }
+  // Pages arrive with their kind's real anatomy (docs/research/2026-10-home-anatomy.md): never empty, short where real
+  // sites are short (portfolio, experiment), and 6+ parts where real sites are long.
+  const LONG = new Set(['saas', 'product', 'ecommerce', 'clinic', 'nonprofit', 'course'])
+  for (const st of starters) {
+    const parts = start(EMPTY_PLAN, st.id).pages[0].sections.filter((x) => x.id !== 'hero').length
+    assert.ok(parts >= 1, `${st.id}: Home arrives filled`)
+    if (LONG.has(st.id)) assert.ok(parts >= 6, `${st.id}: a long kind's Home starts with 6+ parts`)
+  }
 
   // Swap, don't build: every section on every starter page has something to swap to. Moments sit on one section and
   // stay there; behaviours are site-wide.
@@ -476,6 +483,7 @@ const main = async () => {
     const kit = planToSpec(specToPlan(spec))
     assert.deepEqual(kit.pages.map((p) => p.sections), spec.pages.map((p) => p.sections), `${e.slug}: Customise in kit keeps every page as built`)
     assert.equal(kit.hero, spec.hero, `${e.slug}: Customise keeps the first screen`)
+    assert.equal(kit.motion, spec.motion, `${e.slug}: Customise keeps the movement`)
     assert.deepEqual([...(kit.pieces ?? [])].sort(), [...(spec.pieces ?? [])].sort(), `${e.slug}: Customise keeps every effect`)
     for (const x of spec.piecePlacements ?? []) assert.ok(x.page === '*' || spec.pages.some((p) => p.id === x.page), `${e.slug}: effect ${x.piece} points at a real page`)
   }
@@ -483,7 +491,26 @@ const main = async () => {
     const spec = specFromChoices(e.choices)
     assert.ok(spec, `${e.slug}: its recorded choices rebuild a recipe`)
     assert.ok(isValidSpec(spec), `${e.slug}: rebuilt recipe is valid`)
-    assert.ok(!spec.pages.some((p) => p.type === 'custom'), `${e.slug}: every page is a known page type`)
+    // Choices alone can't name a custom page; an example that ships opuskit.json carries it exactly.
+    if (!existsSync(`examples/${e.slug}/opuskit.json`)) assert.ok(!spec.pages.some((p) => p.type === 'custom'), `${e.slug}: every page is a known page type`)
+  }
+  // The kit's "a site like this" clips (plan §8): every clip exists, sits on a part the site has, and only fair matches show.
+  for (const e of examples) {
+    const spec = (exampleSpecs as Record<string, RecipeSpec>)[e.slug]
+    for (const src of [e.clip, ...Object.values(e.sectionClips ?? {})].filter(Boolean)) assert.ok(existsSync(`public${src}`), `${e.slug}: clip ${src} is on disk`)
+    const chrome = (id: SectionId): id is 'navbar' | 'footer' => id === 'navbar' || id === 'footer'
+    for (const id of Object.keys(e.sectionClips ?? {}) as SectionId[]) assert.ok(chrome(id) || spec.pages.some((p) => p.sections.includes(id)), `${e.slug}: has the ${id} it shows a clip of`)
+    if (e.legacy) continue
+    assert.equal(closestSite(spec)?.example.slug, e.slug, `${e.slug}: its own recipe finds it`)
+    for (const id of Object.keys(e.sectionClips ?? {}) as SectionId[]) assert.equal((chrome(id) ? closestChrome(spec, id) : closestSection(spec, id))?.example.slug, e.slug, `${e.slug}: its own ${id} finds it`)
+  }
+  {
+    const atlas = (exampleSpecs as Record<string, RecipeSpec>)['slow-atlas']
+    assert.ok(!closestSite({ ...atlas, lead: 'video', motion: 'immersive', hero: 'scroll-video' }), 'a film first screen gets no clip of a typographic site — and never an old example')
+    assert.ok(!closestSite({ ...atlas, motion: 'dynamic', hero: 'kinetic-type' }), 'same first screen but livelier movement is not "a site like this"')
+    assert.ok(!closestSection({ ...atlas, motion: 'immersive' }, 'journal'), 'a section clip needs the same kind of movement')
+    assert.ok(!closestSection(atlas, 'pricing'), 'no clip for a part no real site has yet')
+    assert.ok(!closestChrome({ ...atlas, nav: 'bottom-dock' }, 'navbar'), 'a different menu style gets no menu clip')
   }
   const legacy = cleanPlan({ pages: [{ id: 'x', type: 'home', label: 'Home', purpose: '', sections: ['intro', 'bogus'] }], direction: 'nope', pieces: ['grain'] })
   assert.deepEqual(legacy.pages[0].sections.map((s) => s.id), ['intro'], 'older flat plans upgrade; unknown sections dropped')

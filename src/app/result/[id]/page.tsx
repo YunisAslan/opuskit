@@ -31,7 +31,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
   }
   return (
     <>
-      <StepBar plan={plan} step="recipe" sticky={false} onGo={(s) => s !== 'recipe' && router.push(`/kit?step=${s}${own ? '' : `&from=gen:${id}`}`)} />
+      <StepBar plan={plan} step="recipe" sticky={false} onGo={(s) => s !== 'recipe' && router.push(`/kit?step=${s}${own ? '' : `&from=gen:${id}`}`)} onSite={() => router.push(`/kit?step=style&cat=site${own ? '' : `&from=gen:${id}`}`)} />
       <RecipeDocument recipe={recipe} recipeRef={`gen:${id}`} onChange={(spec) => {
         saveGeneration(spec, id)
         // Files added here are the kit's files too, so the next update from the kit keeps them.

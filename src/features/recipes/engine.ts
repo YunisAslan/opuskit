@@ -539,7 +539,9 @@ export function recommendedNav(spec: Pick<RecipeSpec, 'purpose' | 'direction'>):
 export function recommendedShape(spec: Pick<RecipeSpec, 'direction'>): ShapeId {
   const d = directions[spec.direction]
   if (d.tags.some((t) => t === 'brutalist' || t === 'raw')) return 'brutal'
-  if (['playful-pop', 'soft-pastel'].includes(d.id)) return 'pill'
+  if (['playful-pop', 'soft-pastel', 'pixel-art'].includes(d.id)) return 'pill'
+  if (d.id === 'ethereal') return 'glass'
+  if (d.id === 'maximalism') return 'clay'
   if (['bento-product', 'y2k-chrome', 'digital-futurism'].includes(d.id)) return 'round'
   if (d.families.some((f) => f === 'quiet' || f === 'organic')) return 'soft'
   if (d.families.includes('minimal')) return 'outline'

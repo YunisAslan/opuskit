@@ -5,9 +5,11 @@ import { ScaledFrame } from '@/components/ScaledFrame'
 import { TokenScope } from '@/components/TokenScope'
 import { AboutSection } from '@/sections/About'
 import { CaseStudySection } from '@/sections/CaseStudy'
+import { CategoriesSection } from '@/sections/Categories'
 import { ClientsSection } from '@/sections/Clients'
 import { CollectionSection } from '@/sections/Collection'
 import { ContactCtaSection } from '@/sections/ContactCta'
+import { CtaBandSection } from '@/sections/CtaBand'
 import { ColourChaptersSection } from '@/sections/ColourChapters'
 import { FooterSection } from '@/sections/Footer'
 import { OrbitHeroSection } from '@/sections/OrbitHero'
@@ -15,24 +17,30 @@ import { STICKERS } from '@/components/PieceDemo'
 import { EditorialStorySection } from '@/sections/EditorialStory'
 import { FaqSection } from '@/sections/Faq'
 import { FeatureGridSection } from '@/sections/FeatureGrid'
+import { FeatureRowsSection } from '@/sections/FeatureRows'
 import { FeaturedWorkSection } from '@/sections/FeaturedWork'
 import { GallerySection } from '@/sections/Gallery'
 import { HowItWorksSection } from '@/sections/HowItWorks'
+import { IntegrationsSection } from '@/sections/Integrations'
 import { IntroSection } from '@/sections/Intro'
 import { JournalSection } from '@/sections/Journal'
 import { LocationSection } from '@/sections/Location'
 import { LookbookSection } from '@/sections/Lookbook'
 import { ManifestoSection } from '@/sections/Manifesto'
 import { MenuSection } from '@/sections/Menu'
+import { NewsletterSection } from '@/sections/Newsletter'
+import { PressSection } from '@/sections/Press'
 import { PricingSection } from '@/sections/Pricing'
 import { ProcessSection } from '@/sections/Process'
 import { ProductGridSection } from '@/sections/ProductGrid'
 import { ProductHighlightSection } from '@/sections/ProductHighlight'
 import { ReservationSection } from '@/sections/Reservation'
+import { ScheduleSection } from '@/sections/Schedule'
 import { ServicesSection } from '@/sections/Services'
 import { StatsSection } from '@/sections/Stats'
 import { TeamSection } from '@/sections/Team'
 import { TestimonialsSection } from '@/sections/Testimonials'
+import { TrustSection } from '@/sections/Trust'
 import type { FooterStyleId, PaletteColors, PurposeId, SectionId, ShapeStyle, TypographyPairing } from '@/types/domain'
 
 // Real photos already on disk (example sites' media), one set per "world" so a preview looks like the user's kind of site.
@@ -61,6 +69,11 @@ type Copy = {
   faq: [string, string][]; journal: [string, string, string][]; cta: [string, string, string]
   quotes: [string, string, string][]; team: [string, string, string][]; stats: [string, string][]; statsNote: string
   where: { title: string; address: string; hours: string[]; notes: string }
+  // Newer parts: rows/cats carry the index of their photo in `img`.
+  rowsTitle: string; rows: [string, string, number, string?][]; news: [string, string, string, string]
+  catsTitle: string; cats: [string, string, number][]; press: [string, string][]; awards: string[]
+  band: [string, string, string]; trust: [string, string][]; scheduleTitle: string; days: [string, [string, string, string?][]][]
+  toolsTitle: string; toolsText: string; tools: string[]
 }
 const W: Record<World, Copy> = {
   studio: {
@@ -83,6 +96,14 @@ const W: Record<World, Copy> = {
     team: [['Lena Weiss', 'Director', 'Watches the light.'], ['Tomas Berg', 'Photographer', 'Keeps the lens still.'], ['Ines Roth', 'Colourist', 'Makes grey warm.'], ['Paul Adler', 'Producer', 'Answers the phone.']],
     stats: [['40', 'Shoots since 2019'], ['6', 'Years together'], ['3', 'Gallery screenings'], ['1', 'Hangar']], statsNote: 'Numbers from our own records, updated each season.',
     where: { title: 'Visit the hangar', address: 'Hangar 9, Airfield Road\nBerlin', hours: ['Mon–Fri, 10:00–18:00', 'By appointment'], notes: 'Ring the side door.' },
+    rowsTitle: 'What a shoot gives you', rows: [['Films that hold still', 'Sixty to ninety seconds, one lens, one move per shot. Cut for a gallery wall as much as for a phone.', 1, 'See the films'], ['Stills in series', 'Twenty graded frames from the same light, so they hang together on a page or a wall.', 3, 'See the stills'], ['A grade that lasts', 'We grade for the screen it will live on and hand over every file, raw and finished.', 5]],
+    news: ['Notes from the hangar', 'One email a season: the shoots we finished, the light we waited for and what we learned.', 'Subscribe', 'Four emails a year. Leave in one click.'],
+    catsTitle: 'Browse the work', cats: [['Films', '12 projects', 0], ['Stills', '21 series', 2], ['Campaigns', '7 projects', 4], ['Collectors', '9 cars', 6]],
+    press: [['Nordlicht', 'A studio that treats a car like a portrait sitter.'], ['Motorhall', 'The calmest car films being made right now.'], ['Foundry', 'They wait for the light, and it shows in every frame.']], awards: ['Motion Award, short film, 2025', 'Shortlisted, Still Life Prize 2024'],
+    band: ['Booking spring shoots now — three dates left.', 'Check dates', 'We reply within two days.'],
+    trust: [['Fixed price', 'Agreed before the shoot.'], ['Every file', 'Raw and graded, yours.'], ['Two rounds', 'Of edits on every film.'], ['Insured', 'Cars covered on set.']],
+    scheduleTitle: 'A shoot, day by day', days: [['Day one', [['09:00', 'Walk-round', 'We look at the car before any camera.'], ['14:00', 'Light test'], ['16:00', 'First frames', 'The hour we wait for.']]], ['Day two', [['10:00', 'The shoot'], ['16:00', 'Last light'], ['19:00', 'Wrap']]], ['The week after', [['Mon', 'First cut'], ['Wed', 'Grade'], ['Fri', 'Delivery', 'Every file, raw and graded.']]]],
+    toolsTitle: 'Delivered the way you work', toolsText: 'Files arrive ready for however you edit, review and publish.', tools: ['Review links', 'Shared drives', '4K masters', 'Vertical cuts', 'Print files', 'Colour LUTs', 'Proxy files', 'Stills archive', 'Captions'],
   },
   food: {
     img: cafe, label: 'The café', statement: 'Coffee made one cup at a time, by the person who greets you.', body: 'Eight seats, one espresso machine and a cake that changes every morning.',
@@ -104,6 +125,14 @@ const W: Record<World, Copy> = {
     team: [['Aylin', 'Owner', 'Pulls the first shot.'], ['Rauf', 'Barista', 'Latte art, mostly hearts.'], ['Nigar', 'Baker', 'Up at five.'], ['Elvin', 'Weekends', 'Knows everyone’s name.']],
     stats: [['8', 'Seats'], ['312', 'Cups on a Saturday'], ['1', 'Farm we buy from'], ['4.9', 'Rating, 600 reviews']], statsNote: 'Counted on our till, last summer.',
     where: { title: 'Find us', address: '12 Old Town Street\nBaku', hours: ['Mon–Fri, 07:30–18:00', 'Sat–Sun, 09:00–17:00'], notes: 'Two minutes from the metro.' },
+    rowsTitle: 'Why the queue starts at 7:30', rows: [['One farm, one bean', 'We buy from a single farm in Ethiopia and visit it every year. You can taste the fruit.', 1, 'Read about the farm'], ['Roasted every Monday', 'Light and in small batches, then rested five days before it meets the grinder.', 3], ['Cake, baked here', 'One cake a day, made at five in the morning. When it’s gone, it’s gone.', 5, 'This week’s cakes']],
+    news: ['Monday’s cake, in your inbox', 'A short note each week: the cake, the new bean and the days we stay open late.', 'Sign up', 'Once a week. No ads, ever.'],
+    catsTitle: 'On the counter', cats: [['Espresso', '6 drinks', 0], ['Iced', '5 drinks', 2], ['Matcha', '3 drinks', 4], ['Cake', 'One a day', 6]],
+    press: [['Time Out', 'Eight seats and the calmest espresso in the old town.'], ['City Eats', 'Go early: the cheesecake is gone by noon.'], ['Coffee Map', 'A light roast handled with real care.']], awards: ['Best small café, City Eats 2025', 'Coffee Map top ten, 2024'],
+    band: ['Order ahead and skip the queue.', 'Order ahead', 'Ready in ten minutes.'],
+    trust: [['Oat at no extra', 'Every milk costs the same.'], ['Baked daily', 'Cake out of the oven at 5 a.m.'], ['Fair price', 'We pay the farm above market.'], ['Bring a cup', '10% off when you do.']],
+    scheduleTitle: 'This week at the counter', days: [['Monday', [['07:30', 'New roast on', 'Washed Ethiopia, light.'], ['17:00', 'Cupping', 'Free, six places.']]], ['Thursday', [['07:30', 'Cake list opens'], ['18:00', 'Late opening', 'Until nine.']]], ['Saturday', [['09:00', 'Weekend bake', 'Cheesecake and orange loaf.'], ['11:00', 'Latte art class', '₼15, book at the counter.']]]],
+    toolsTitle: 'Order however suits you', toolsText: 'Walk in, order ahead or have it brought to your desk.', tools: ['Order online', 'Phone ahead', 'Delivery apps', 'Gift cards', 'Office accounts', 'Coffee club', 'Catering', 'Beans by post', 'Pay by card'],
   },
   shop: {
     img: shop, label: 'The workshop', statement: 'Fleece, carry and snacks from one small workshop, made in runs of two hundred.', body: 'Designed and sewn in Porto. When a run sells out, it’s gone.',
@@ -125,6 +154,14 @@ const W: Record<World, Copy> = {
     team: [['Rita', 'Design', 'Starts from the fabric.'], ['João', 'Sewing', 'Tests every seam.'], ['Inês', 'Shop', 'Packs in paper.'], ['Tiago', 'Repairs', 'Fixes it for life.']],
     stats: [['200', 'Pieces per run'], ['14', 'Runs sold out'], ['30', 'Day free returns'], ['0', 'Plastic in the box']], statsNote: 'Since the first run, autumn 2021.',
     where: { title: 'Visit the workshop', address: 'Rua das Flores 21\nPorto', hours: ['Thu–Sat, 11:00–19:00'], notes: 'Try everything on; we’ll put the kettle on.' },
+    rowsTitle: 'Made to be kept', rows: [['Small runs', 'Two hundred pieces, then we stop. Nothing sits in a warehouse waiting for a sale.', 3, 'Shop the current run'], ['Repair for life', 'Send any piece back, any year. We fix zips, seams and elbows for free.', 7, 'How repairs work'], ['Plastic-free', 'Paper, string and a handwritten note. That’s the whole box.', 5]],
+    news: ['Get the next run first', 'Runs sell out in days. The list hears about each one a week before everyone else.', 'Join the list', 'One email per run, about six a year.'],
+    catsTitle: 'Shop by category', cats: [['Fleece', '8 pieces', 3], ['Carry', '5 pieces', 6], ['Home', '6 pieces', 5], ['Trousers', '4 pieces', 4]],
+    press: [['Monocle', 'Small runs, made properly, in Porto.'], ['Kinfolk', 'The warmest fleece we tested this winter.'], ['Sidetracked', 'Built for a long walk, and it shows.']], awards: ['Outerwear design prize, 2025'],
+    band: ['Free shipping over €120, this week only.', 'Shop the run', 'Ends Sunday at midnight.'],
+    trust: [['Free shipping', 'Over €120, 3–5 days.'], ['Free returns', 'Within 30 days.'], ['Repair for life', 'Send it back, we fix it.'], ['Plastic-free', 'Paper and string only.']],
+    scheduleTitle: 'The autumn run', days: [['Week one', [['Mon', 'The list gets first look', 'A week before everyone.'], ['Thu', 'Run opens', '10:00, Porto time.']]], ['Week two', [['Sat', 'Workshop open day', 'Try everything on.'], ['Sun', 'Last sizes', 'Whatever comes back from returns.']]]],
+    toolsTitle: 'Pay and ship your way', toolsText: 'Checkout takes the cards and wallets you use; parcels go tracked.', tools: ['Cards', 'Wallet pay', 'Pay in three', 'Gift cards', 'Tracked courier', 'Pickup points', 'Collect in Porto', 'Returns label', 'Repairs by post'],
   },
   product: {
     img: can, label: 'Keepers', statement: 'Sparkling cold-brew coffee with orange and lemon peel, in one small can.', body: '330 ml, 45 mg caffeine, 35 kcal. Nothing else to read on the label.',
@@ -146,6 +183,14 @@ const W: Record<World, Copy> = {
     team: [['Lena', 'Co-founder', 'Tastes every batch.'], ['Marco', 'Co-founder', 'Runs the tank.'], ['Aida', 'Growth', 'Finds new shops.'], ['Sam', 'Ops', 'Keeps the fridge full.']],
     stats: [['45 mg', 'Caffeine'], ['35', 'Kcal'], ['18 h', 'Cold brew'], ['40', 'Shops']], statsNote: 'Per 330 ml can.',
     where: { title: 'Tasting room', address: 'Unit 4, Canal Yard\nLondon', hours: ['Sat, 10:00–16:00'], notes: 'Free cans, always cold.' },
+    rowsTitle: 'What’s in the can', rows: [['Cold brew, eighteen hours', 'Coarse beans and cold water, left overnight. It comes out smooth and never bitter.', 0, 'How we brew'], ['Real citrus peel', 'Orange and lemon peel, pressed the same morning. No flavouring, no concentrate.', 5], ['Light on everything', '35 kcal, no added sugar and 45 mg of caffeine. Steady, not a jolt.', 6, 'Read the label']],
+    news: ['First sip of every new flavour', 'Try new batches before anyone else, and hear when we land in a shop near you.', 'Subscribe', 'About once a month.'],
+    catsTitle: 'Find your can', cats: [['Citrus', 'The original', 4], ['Over ice', 'Summer serve', 3], ['Mixed case', '12 cans', 7], ['Gift box', '6 cans', 6]],
+    press: [['Coffee Lab', 'Cold brew that finally fizzes.'], ['Planet Organic', 'Gone from our fridges within a week.'], ['Grind', 'The 3 p.m. can our baristas reach for.']], awards: ['Great taste, two stars, 2025', 'Best new drink, 2024'],
+    band: ['Try six cans — delivery’s on us.', 'Order six', 'Skip or cancel any month.'],
+    trust: [['Free delivery', 'On every order.'], ['Skip any month', 'Subscriptions bend.'], ['Recyclable', 'Aluminium, endlessly.'], ['Money back', 'If you don’t love it.']],
+    scheduleTitle: 'Summer tasting tour', days: [['June', [['Sat 7', 'London', 'Tasting room, 10:00–16:00.'], ['Sat 21', 'Bristol', 'Harbour market.']]], ['July', [['Sat 5', 'Manchester', 'Northern Quarter.'], ['Sat 19', 'Leeds', 'Kirkgate market.']]]],
+    toolsTitle: 'Stock it in your shop', toolsText: 'Order cases the way independent shops and cafés already buy.', tools: ['Wholesale portal', 'Direct invoice', 'Café supply', 'Office pantry', 'Event bars', 'Hotel fridges', 'Cash & carry', 'Monthly standing order', 'Sample case'],
   },
   software: {
     img: car, label: 'Ledger', statement: 'Close your books in one click — invoices, receipts and VAT, done while you work.', body: 'For studios and small teams. Connects to your bank in two minutes.',
@@ -167,6 +212,14 @@ const W: Record<World, Copy> = {
     team: [['Anna', 'Co-founder', 'Former accountant.'], ['Ravi', 'Co-founder', 'Writes the matching.'], ['Sofia', 'Design', 'Hates spreadsheets.'], ['Leo', 'Support', 'Answers in an hour.']],
     stats: [['3,000', 'Teams'], ['10 min', 'Average month-end'], ['98%', 'Receipts matched'], ['4.8', 'Rating, 900 reviews']], statsNote: 'From our own usage data, last quarter.',
     where: { title: 'Our office', address: 'Kanalstraße 8\nBerlin', hours: ['Mon–Fri, 09:00–18:00'], notes: 'Support answers within an hour.' },
+    rowsTitle: 'Month-end, without the Sunday', rows: [['Your bank, matched', 'Connect read-only in two minutes. Every transaction lines up with its invoice or receipt as it lands.', 1, 'How bank feeds work'], ['Receipts, forwarded', 'Snap a photo or forward an email. Ledger reads it, files it and matches it — no shoebox.', 3, 'See the receipt inbox'], ['VAT from what you have', 'Your return is built from numbers already in Ledger. Review it, then file in one click.', 5]],
+    news: ['One useful email a month', 'Tax dates, small-business guides and what changed in Ledger. Nothing else.', 'Subscribe', 'Monthly. Unsubscribe any time.'],
+    catsTitle: 'Guides by topic', cats: [['Invoices', '14 guides', 0], ['Receipts', '9 guides', 2], ['VAT', '12 guides', 4], ['Payroll', '6 guides', 6]],
+    press: [['Small Business Weekly', 'The first accounting tool designers will open willingly.'], ['The Founder Letter', 'Month-end in ten minutes is not a slogan — we timed it.'], ['Studio Finance', 'Bank matching that simply works.']], awards: ['Best finance app for small teams, 2025'],
+    band: ['30 days free, no card needed.', 'Start free trial', 'Set up in two minutes.'],
+    trust: [['30-day trial', 'No card needed.'], ['Read-only bank', 'We can’t move money.'], ['Encrypted', 'At rest and in transit.'], ['Human support', 'Answers within an hour.']],
+    scheduleTitle: 'Launch week', days: [['Monday', [['10:00', 'Receipt inbox goes live', 'Rolling out to every team.'], ['16:00', 'Live demo', 'Thirty minutes, with questions.']]], ['Wednesday', [['11:00', 'VAT clinic', 'Bring your questions.'], ['15:00', 'Accountant session']]], ['Friday', [['15:00', 'Office hours', 'The founders, on a call.']]]],
+    toolsTitle: 'Works with what you already use', toolsText: 'Connect your bank, payroll and payments in a few clicks.', tools: ['Bank feeds', 'Card payments', 'Payroll', 'Expense cards', 'Online shop', 'Time tracking', 'Spreadsheets', 'Your accountant', 'Email inbox'],
   },
   event: {
     img: ph, label: 'The weekend', statement: 'Three days of polo on the grass ground below the Caucasus. Seats by RSVP.', body: '11–13 June 2027, Sheki. Four chukkas a match, picnics allowed.',
@@ -188,6 +241,14 @@ const W: Record<World, Copy> = {
     team: [['Kamran', 'Club captain', 'Plays number three.'], ['Leyla', 'Head groom', 'Knows every horse.'], ['Orkhan', 'Events', 'Runs the weekend.'], ['Sabina', 'Guests', 'Your first hello.']],
     stats: [['3', 'Days'], ['12', 'Matches'], ['1,200', 'Guests last year'], ['48', 'Horses']], statsNote: 'From the 2026 weekend.',
     where: { title: 'Getting there', address: 'Sheki Polo Ground\nSheki, Azerbaijan', hours: ['Gates open 10:00', 'First chukka 14:00'], notes: 'Parking on the upper field; shuttle from Baku twice a day.' },
+    rowsTitle: 'Three days on the grass', rows: [['Polo you can get close to', 'Field-side places sit a few metres from the boards. Bring a picnic and watch four chukkas a match.', 3, 'See the seats'], ['Dinner under the plane trees', 'Saturday night: long tables on the lower field and music until late.', 0, 'Book dinner'], ['A shuttle from Baku', 'Twice a day, both ways, from the old town. No need to drive.', 5]],
+    news: ['Hear when seats open', 'RSVPs open once a year. The list hears first, a week before anyone else.', 'Join the list', 'Three emails a year, all about the weekend.'],
+    catsTitle: 'The weekend', cats: [['Matches', '12 games', 6], ['Paddocks', '48 horses', 10], ['Picnics', 'Field side', 8], ['Grooms', 'Meet them', 4]],
+    press: [['Baku Weekly', 'The prettiest afternoon of the season.'], ['Riding Life', 'Polo the way it should be watched — from the grass.'], ['Caucasus Travel', 'Worth the drive for the Saturday dinner alone.']], awards: ['Event of the year, Sheki tourism awards 2025'],
+    band: ['RSVPs close on 1 May.', 'RSVP now', 'Under 12s go free.'],
+    trust: [['Seats by RSVP', 'No tickets, no queues.'], ['Free parking', 'On the upper field.'], ['Shuttle', 'From Baku, twice a day.'], ['Rain plan', 'Covered stand for everyone.']],
+    scheduleTitle: 'The programme', days: [['Friday 11 June', [['10:00', 'Gates open'], ['14:00', 'Opening match', 'Sheki vs Ganja.'], ['18:00', 'Paddock walk']]], ['Saturday 12 June', [['11:00', 'Grooms’ parade'], ['15:00', 'Semi-finals', 'Two matches, four chukkas each.'], ['20:00', 'Dinner under the planes']]], ['Sunday 13 June', [['12:00', 'Divot stomp', 'Flat shoes, please.'], ['16:00', 'The final'], ['18:30', 'Prize-giving']]]],
+    toolsTitle: 'Plan the trip', toolsText: 'Your RSVP links straight to the shuttle, nearby stays and a calendar invite.', tools: ['Calendar invite', 'Shuttle seats', 'Nearby hotels', 'Guest houses', 'Taxi rank', 'Car hire', 'Picnic hampers', 'Dinner tables', 'Paddock passes'],
   },
 }
 const a = { href: '#', label: 'Book a visit' }
@@ -227,6 +288,14 @@ function sample(id: SectionId | 'orbit-hero', world: World, brand?: string, foot
     case 'faq': return <FaqSection title="Questions" items={w.faq.map(([q, ans]) => ({ q, a: ans }))} />
     case 'journal': return <JournalSection title="Journal" entries={w.journal.map(([title, date, category], i) => ({ title, date, category, href: `#${i}`, image: pick(i + 2), alt: '' }))} />
     case 'contact-cta': return <ContactCtaSection headline={w.cta[0]} quiet={w.cta[1]} action={{ label: w.cta[2], href: '#' }} email="hello@example.com" inverse />
+    case 'feature-rows': return <FeatureRowsSection title={w.rowsTitle} rows={w.rows.map(([name, text, n, label], i) => ({ name, text, image: pick(n), alt: '', link: label ? { label, href: `#${i}` } : undefined }))} />
+    case 'newsletter': return <NewsletterSection title={w.news[0]} text={w.news[1]} placeholder="you@example.com" button={w.news[2]} note={w.news[3]} />
+    case 'categories': return <CategoriesSection title={w.catsTitle} items={w.cats.map(([name, count, n], i) => ({ name, count, image: pick(n), alt: '', href: `#${i}` }))} />
+    case 'press': return <PressSection title="Press" quotes={w.press.map(([outlet, quote]) => ({ outlet, quote }))} awards={w.awards} />
+    case 'cta-band': return <CtaBandSection text={w.band[0]} action={{ label: w.band[1], href: '#' }} note={w.band[2]} />
+    case 'trust': return <TrustSection items={w.trust.map(([title, text]) => ({ title, text }))} />
+    case 'schedule': return <ScheduleSection title={w.scheduleTitle} days={w.days.map(([label, items]) => ({ label, items: items.map(([time, title, detail]) => ({ time, title, detail })) }))} />
+    case 'integrations': return <IntegrationsSection title={w.toolsTitle} text={w.toolsText} tools={w.tools} />
     default: return null
   }
 }

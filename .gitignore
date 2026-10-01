@@ -2,3 +2,9 @@ node_modules
 .next
 next-env.d.ts
 *.tsbuildinfo
+.DS_Store
+
+# Raw screen recordings for example clips: large, and they can show private screens (autofill, other windows).
+examples/*/media-src/recordings/
+# Media whose source or licence is unknown — never published.
+examples/*/media-src/dropped/

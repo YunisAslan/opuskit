@@ -1,4 +1,0 @@
-:HL["/live/ulooklonely/_next/static/chunks/423r6kwe3h5dr.css","style"]
-:HL["/live/ulooklonely/_next/static/media/ae7d61738604de60.p.01o688h-2k2ls.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/live/ulooklonely/_next/static/media/db7a528be82579ae.p.2jw5f0vfksgct.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"sign-in","param":null,"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"w0RvajmofBKXGzMD5uewn"}

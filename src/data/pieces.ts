@@ -285,7 +285,7 @@ export const pieces: Record<PieceId, Piece> = {
 
 export const MAX_HEAVY_PIECES = 2
 
-/** Behaviours — the site's voice in motion, the same on every page (chosen in Style). Everything else is a moment:
+/** Behaviours — the site's voice in motion, the same on every page (chosen in Design). Everything else is a moment:
  *  a piece placed on one section, on one page (chosen in Pages). One per behaviour, except the whole-site extras. */
 export const behaviours: Record<BehaviourId, { name: string; line: string; ids: PieceId[]; many: boolean; none?: string }> = {
   headlines: { name: 'Headlines', line: 'How every big heading arrives', ids: ['text-effect', 'cut-reveal', 'duo-headline'], many: false, none: 'Headings simply appear' },

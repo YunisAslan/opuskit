@@ -6,6 +6,7 @@ import { useRef, useState, type ReactNode } from 'react'
 import { LazyMount } from '@/components/LazyMount'
 import { OptionDemo } from '@/components/OptionDemo'
 import { PieceDemo } from '@/components/PieceDemo'
+import { RealSiteClip } from '@/components/RealSiteClip'
 import { ScaledFrame } from '@/components/ScaledFrame'
 import { SectionPreview } from '@/components/SectionPreview'
 import { SitePreview, previewFromDirection, previewFromRecipe } from '@/components/SitePreview'
@@ -17,6 +18,7 @@ import { accentSets, palettes, typography } from '@/data/ingredients'
 import { footerStyles, heroes, navStyles, shapeStyles } from '@/data/patterns'
 import { behaviours, pieces } from '@/data/pieces'
 import { directions, families, goals, motionLevels, purposes } from '@/data/taxonomy'
+import { closestSite } from '@/features/kit/closest'
 import { behaviourPick, planToSpec, setBehaviour, setStyle, starters, usualPages, type StyleKey } from '@/features/kit/plan'
 import { composeRecipe, recommendedNav, recommendedShape } from '@/features/recipes/engine'
 import { toast } from 'sonner'
@@ -26,7 +28,8 @@ import { heroName } from './HeroPreview'
 import { lookOf } from './ProductVisual'
 
 // Biggest decisions first: the look, then movement, then the details. The first screen is part of the page — it is chosen in Pages.
-const CATS = ['look', 'motion', 'colours', 'lettering', 'shape', 'menu', 'behaviour'] as const
+// 'site' (name, what it is, kind, goal) sits first in the list, but the step opens on Look: people see sites before a form.
+const CATS = ['site', 'look', 'motion', 'colours', 'lettering', 'shape', 'menu', 'behaviour'] as const
 type Cat = (typeof CATS)[number]
 
 function Tile({ on, label, sub, children, onPick }: { on: boolean; label: string; sub?: string; children?: ReactNode; onPick: () => void }) {
@@ -47,6 +50,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
 
   const look = lookOf(plan)
   const recipe = composeRecipe(planToSpec(plan))
+  const real = closestSite(recipe.metadata.spec)
   const set = (k: StyleKey, v: string | undefined) => updatePlan((p) => setStyle(p, k, v))
   // A new look keeps what you picked; say so, with a one-tap way to take the look's own instead.
   const OWN: [StyleKey, string][] = [['palette', 'colours'], ['typography', 'lettering'], ['shape', 'shape'], ['nav', 'menu'], ['footer', 'footer'], ['motion', 'movement'], ['rotation', 'colour chapters']]
@@ -72,6 +76,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
 
   // Left rail: every category with what it is set to now, so the whole style reads at a glance.
   const cats: { id: Cat; name: string; value: string; mini?: ReactNode }[] = [
+    { id: 'site', name: 'About your site', value: plan.name || 'Untitled' },
     { id: 'look', name: 'Look', value: d.name },
     { id: 'motion', name: 'Movement', value: motionLevels[recipe.metadata.spec.motion].name },
     { id: 'colours', name: 'Colours', value: pal.name, mini: <span className="flex">{[pal.colors.background, pal.colors.text, pal.colors.accent].map((c, i) => <span key={i} className="size-3 rounded-full ring-1 ring-black/10 first:ml-0 -ml-1" style={{ background: c }} />)}</span> },
@@ -82,6 +87,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
   ]
   const next = cats[cats.findIndex((c) => c.id === cat) + 1], prev = cats[cats.findIndex((c) => c.id === cat) - 1]
   const why: Record<Cat, string> = {
+    site: 'The basics. They shape the words on your site, the pages it starts with and its main button — all optional, all changeable later.',
     look: 'A complete style — colours, lettering and layout tested together. Start here; the rest follows it.',
     colours: `Swap the palette of ${d.name}. The first ones are made for it.`,
     lettering: 'The typefaces for headlines, text and labels.',
@@ -97,22 +103,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
   return (
     <Tabs value={cat} onValueChange={(v) => { setCat(v as Cat); scroller.current?.scrollTo({ top: 0 }) }} orientation="vertical" className="grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)_26rem] lg:items-start">
       <div className="min-w-0 space-y-4 lg:sticky lg:top-40">
-      <div className="space-y-2 rounded-md border border-line bg-white p-3">
-        <p className="text-xs text-muted">Your site</p>
-        <Input value={plan.name ?? ''} maxLength={60} placeholder="Site name" aria-label="Site name" onChange={(e) => updatePlan((p) => ({ ...p, name: e.target.value }))} className="h-9 font-medium" />
-        <Textarea value={plan.about ?? ''} maxLength={160} rows={3} placeholder="What is it? e.g. A twelve-seat wood-fire counter in Baku." aria-label="What the site is about"
-          onChange={(e) => updatePlan((p) => ({ ...p, about: e.target.value }))} className="min-h-20 text-sm" />
-        <p className="text-right text-[11px] tabular-nums text-muted">{(plan.about ?? '').length}/160</p>
-        <Select value={plan.purpose ?? ''} onValueChange={(v) => pickPurpose(v as PurposeId)}>
-          <SelectTrigger className="h-9 w-full text-sm" aria-label="Kind of site"><SelectValue placeholder="Kind of site…" /></SelectTrigger>
-          <SelectContent className="max-h-80">{starters.map((x) => <SelectItem key={x.id} value={x.id}>{purposes[x.id].name}</SelectItem>)}</SelectContent>
-        </Select>
-        <Select value={plan.goal ?? ''} onValueChange={(v) => updatePlan((p) => ({ ...p, goal: v as GoalId }))}>
-          <SelectTrigger className="h-9 w-full text-sm" aria-label="What visitors should do"><SelectValue placeholder="Visitors should…" /></SelectTrigger>
-          <SelectContent>{Object.values(goals).map((g) => <SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>)}</SelectContent>
-        </Select>
-      </div>
-      <TabsList aria-label="Style" className="flex h-auto w-full flex-row gap-1 overflow-x-auto rounded-none bg-transparent p-0 lg:flex-col lg:overflow-visible">
+      <TabsList aria-label="Design" className="flex h-auto w-full flex-row gap-1 overflow-x-auto rounded-none bg-transparent p-0 lg:flex-col lg:overflow-visible">
         {cats.map((c) => (
           <TabsTrigger key={c.id} value={c.id}
             className="h-auto shrink-0 flex-none justify-between gap-3 rounded-md border border-transparent px-3 py-1.5 text-left after:hidden data-active:border-line data-active:bg-white data-active:shadow-sm lg:w-full">
@@ -140,6 +131,39 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
           )}
         </div>
         <div ref={scroller} className="min-h-0 flex-1 p-4 [scrollbar-color:var(--color-line)_transparent] [scrollbar-width:thin] lg:overflow-y-auto">
+
+        <TabsContent value="site">
+          <div className="max-w-xl space-y-6">
+            <div className="space-y-1.5">
+              <p className="text-sm font-medium">Name</p>
+              <Input value={plan.name ?? ''} maxLength={60} placeholder="e.g. Kofii" aria-label="Site name" onChange={(e) => updatePlan((p) => ({ ...p, name: e.target.value }))} className="h-10 bg-white font-medium" />
+              <p className="text-xs text-muted">Shown in the menu, the footer and every preview here.</p>
+            </div>
+            <div className="space-y-1.5">
+              <p className="text-sm font-medium">What is it, in one sentence?</p>
+              <Textarea value={plan.about ?? ''} maxLength={160} rows={3} placeholder="e.g. A twelve-seat wood-fire counter in Baku." aria-label="What the site is about" onChange={(e) => updatePlan((p) => ({ ...p, about: e.target.value }))} className="bg-white text-sm" />
+              <p className="text-xs text-muted">The AI writes your headlines and copy from this. {(plan.about ?? '').length}/160</p>
+            </div>
+            <div className="space-y-1.5">
+              <p className="text-sm font-medium">Kind of site</p>
+              <Select value={plan.purpose ?? ''} onValueChange={(v) => pickPurpose(v as PurposeId)}>
+                <SelectTrigger className="h-10 w-full bg-white text-sm" aria-label="Kind of site"><SelectValue placeholder="Choose…" /></SelectTrigger>
+                <SelectContent className="max-h-80">{starters.map((x) => <SelectItem key={x.id} value={x.id}>{purposes[x.id].name}</SelectItem>)}</SelectContent>
+              </Select>
+              <p className="text-xs text-muted">Sets the pages it starts with and the sample content in previews.</p>
+            </div>
+            <div className="space-y-1.5">
+              <p className="text-sm font-medium">What should visitors do?</p>
+              <div role="radiogroup" aria-label="What visitors should do" className="flex flex-wrap gap-1.5">
+                {Object.values(goals).map((g) => (
+                  <button key={g.id} type="button" role="radio" aria-checked={plan.goal === g.id} onClick={() => updatePlan((p) => ({ ...p, goal: g.id as GoalId }))}
+                    className={`rounded-full border px-3 py-1.5 text-sm ${plan.goal === g.id ? 'border-ink bg-ink text-paper' : 'border-line bg-white hover:border-ink'}`}>{g.name}</button>
+                ))}
+              </div>
+              <p className="text-xs text-muted">Sets the main button, the forms and what Pages suggests adding.</p>
+            </div>
+          </div>
+        </TabsContent>
 
         <TabsContent value="look">
           <div role="radiogroup" aria-label="Look" className={grid}>
@@ -256,13 +280,15 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
         </div>
       </div>
 
-      <aside className="lg:sticky lg:top-40" aria-label="Live preview">
-        <p className="mb-2 flex items-baseline justify-between text-sm"><span className="font-medium">Your site</span></p>
+      <aside className="[scrollbar-color:var(--color-line)_transparent] [scrollbar-width:thin] lg:sticky lg:top-40 lg:max-h-[calc(100svh-11rem)] lg:overflow-y-auto" aria-label="Live preview">
+        <p className="mb-2 flex items-baseline justify-between text-sm"><span className="font-medium">{plan.name || 'Your site'}</span>
+          {!plan.name && cat !== 'site' && <button type="button" className="text-xs text-pencil hover:underline" onClick={() => { setCat('site'); scroller.current?.scrollTo({ top: 0 }) }}>Name your site →</button>}</p>
         <SitePreview {...previewFromRecipe(recipe, plan.name ? { title: plan.name, brand: plan.name } : {})} className="rounded-lg border border-line" />
         <div className="mt-3 grid grid-cols-2 gap-2">
           <OptionDemo id={`shape:${look.shape.id}`} colors={look.colors} type={look.type} shape={look.shape} className="rounded-md border border-line" />
           <OptionDemo id={`nav:${recipe.chrome.nav.id}`} colors={look.colors} type={look.type} shape={look.shape} className="rounded-md border border-line" />
         </div>
+        {real && <div className="mt-3"><RealSiteClip match={real} label="A site like this" /></div>}
         <p className="mt-3 text-xs text-muted">Everything here applies to every page. Pages and their sections come next.</p>
       </aside>
     </Tabs>

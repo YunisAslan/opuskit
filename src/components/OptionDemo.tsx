@@ -130,9 +130,15 @@ function render(id: string, { c, display, r, shape }: Ctx): ReactNode {
     </>
 
     // ── shapes ──
-    case 'shape:sharp': case 'shape:soft': case 'shape:round': case 'shape:pill': case 'shape:brutal': case 'shape:outline': {
+    case 'shape:sharp': case 'shape:soft': case 'shape:round': case 'shape:pill': case 'shape:brutal': case 'shape:outline':
+    case 'shape:glass': case 'shape:relief': case 'shape:clay': {
       const filled = shape?.id !== 'outline'
+      // Surface treatments: glass needs something vivid behind it; relief sits on the page colour; clay gets a soft thick rim.
+      if (shape?.id === 'glass') Object.assign(card, { background: 'rgb(255 255 255 / 0.2)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', border: '1px solid rgb(255 255 255 / 0.4)' })
+      if (shape?.id === 'relief') Object.assign(card, { background: c.background, border: 'none' })
+      if (shape?.id === 'clay') Object.assign(card, { border: `3px solid color-mix(in srgb, ${c.text} 14%, transparent)` })
       return <>
+        {shape?.id === 'glass' && <Box x={0} y={0} w={100} h={62}><Photo k="sea" className="inset-0 h-full w-full" /></Box>}
         <Box x={6} y={8} w={40} h={46} style={card}>
           <div style={{ ...media, height: '60%', overflow: 'hidden', borderRadius: `${r.media} ${r.media} 0 0` }}><Photo k="ceramics" className="inset-0 h-full w-full" /></div>
           <Bar x={3} y={31} w={22} h={2} color={c.text} /><Bar x={3} y={36} w={30} color={c.muted} o={0.6} />

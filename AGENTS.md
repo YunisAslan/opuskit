@@ -2,13 +2,18 @@
 
 Next.js 16 (App Router) + TypeScript + Tailwind v4. Version-matched Next.js docs live in `node_modules/next/dist/docs/` — read them instead of relying on memory.
 
+**Start here: `docs/HANDOFF.md`** — where the work stands, what's next, and the user's working agreements.
+
+Ongoing work: `docs/plan-vibe.md` (page anatomy, fresh style, award vibe, WebGL — comes first), then `docs/plan-for-fit.md` — new example sites and kit clips that show "what kind of site you'll get". Read it before touching examples; keep its Progress table current.
+
 - Domain types: `src/types/domain.ts`. Knowledge base (curated ingredients): `src/data/`.
 - Recipe engine (deterministic composition): `src/features/recipes/engine.ts`.
 - Build Package adapters: `src/features/build-packages/`.
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
 - The kit (`/kit`) is the only way to make or change a recipe (the questionnaire was retired 2026-09-30; `/create`
   redirects here). A builder in three steps, always visible in its
-  step bar: 1 Style (same on every page: name, what it is, kind of site, what visitors should do; then biggest first —
+  step bar: 1 Design (same on every page: "About your site" first in the list — name, what it is, kind of site, what visitors
+  should do, each saying what it shapes — though the step opens on Look, so people see sites before a form; then biggest first —
   look, movement, colours (+ optional colour chapters), lettering, shape, menu & footer (`navStyles`, `footerStyles` —
   each footer style is a `variant` of the ready `src/sections/Footer.tsx`), behaviour),
   2 Pages (pages and their sections, plus Your files: logo, video, photos, photo note), 3 Recipe — the result page itself (Next on Pages saves the recipe,
@@ -27,8 +32,8 @@ Next.js 16 (App Router) + TypeScript + Tailwind v4. Version-matched Next.js docs
   "Show on this page" and its site-wide look. The film/image part (`hero`) is free like any
   part: dragged anywhere, mid-page, onto any page, or removed; the engine then writes it as a full-width band at that spot
   (`midPageHero`, QA checks it stays there), and only `setHero` on a site with none adds one (top of the first page). Structure and effects never share a list. Pages
-  never links back to Style. Pieces come in two kinds (`behaviours` in pieces.ts): behaviours — how
-  headlines arrive, what links and the main button do, whole-site extras — are site-wide, one per kind, set in Style
+  never links back to Design. Pieces come in two kinds (`behaviours` in pieces.ts): behaviours — how
+  headlines arrive, what links and the main button do, whole-site extras — are site-wide, one per kind, set in Design
   (`setBehaviour`); moments are picked on one part in Pages (`piecesFor`, `togglePiece`) and stay on it — a swap keeps
   them when the new look can carry them, else turns them off; they never wander. Photo layout is per photo section
   (`PHOTO_SECTIONS`, `setSectionPhotos`); a section without a pick gets `recommendSectionPhotos`. Logic: `src/features/kit/plan.ts` (pure, tested in check.ts); storage: `src/lib/kit.ts`.
@@ -82,6 +87,8 @@ Record `choices` with the exact option names.
 
 Each example is registered in `src/data/examples.ts` (title/summary — copy from its own real
 `<title>`/meta description, not the abstract recipe doc, since a build often renames the brand).
+Its clips: `clip` (10–15 s, first screen + scroll) and `sectionClips` (4–5 s per section, `examples/{slug}/public/media/clips/{sectionId}.mp4`)
+feed the kit's "a site like this" (`src/features/kit/closest.ts`, plan §8); an old example carries `legacy: true` and is never offered there.
 Its card on `/examples` shows `public/examples/{slug}.jpg` — a 1440×900 JPEG screenshot of its live homepage, taken
 once the hero video has real frames (a black first frame makes a blank card). After replacing one, clear
 `.next/dev/cache/images` or the dev server keeps serving the old one.

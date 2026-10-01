@@ -27,14 +27,14 @@ const inst = (id: SectionId): PlanSection => ({ key: key(), id, pieces: [] })
 export const sectionGroups: { name: string; job: string; line: string; ids: SectionId[] }[] = [
   { name: 'Say who you are', job: 'Introduce yourself', line: 'Statements and story', ids: ['intro', 'manifesto', 'about', 'editorial-story', 'team'] },
   { name: 'Show the work', job: 'Show your work', line: 'Projects and atmosphere', ids: ['featured-work', 'case-study', 'gallery'] },
-  { name: 'Proof', job: 'Build trust', line: 'Who vouches for you', ids: ['testimonials', 'clients', 'stats'] },
-  { name: 'Explain the offer', job: 'Explain what you offer', line: 'What you do and how', ids: ['chapters', 'services', 'process', 'how-it-works', 'feature-grid', 'pricing'] },
-  { name: 'Sell', job: 'Show your products', line: 'Products and collections', ids: ['collection', 'lookbook', 'product-grid', 'product-highlight'] },
-  { name: 'Bring people in', job: 'Help people visit', line: 'Food, bookings, places', ids: ['menu', 'reservation', 'location'] },
-  // Three different jobs, not three looks of one: each ends a page in its own way.
-  { name: 'Next step', job: 'Ask for the next step', line: 'One clear action at the end', ids: ['contact-cta'] },
+  { name: 'Proof', job: 'Build trust', line: 'Who vouches for you', ids: ['testimonials', 'clients', 'stats', 'press', 'trust'] },
+  { name: 'Explain the offer', job: 'Explain what you offer', line: 'What you do and how', ids: ['chapters', 'services', 'process', 'how-it-works', 'feature-grid', 'feature-rows', 'integrations', 'pricing'] },
+  { name: 'Sell', job: 'Show your products', line: 'Products and collections', ids: ['collection', 'lookbook', 'product-grid', 'product-highlight', 'categories'] },
+  { name: 'Bring people in', job: 'Help people visit', line: 'Food, bookings, places, programmes', ids: ['menu', 'reservation', 'location', 'schedule'] },
+  // Three different jobs, not three looks of one: each ends a page in its own way (the CTA band asks mid-page).
+  { name: 'Next step', job: 'Ask for the next step', line: 'One clear action, mid-page or at the end', ids: ['contact-cta', 'cta-band'] },
   { name: 'Questions', job: 'Answer questions', line: 'What people ask before they decide', ids: ['faq'] },
-  { name: 'News', job: 'Share news', line: 'Posts, updates, what’s new', ids: ['journal'] },
+  { name: 'News', job: 'Share news', line: 'Posts, updates, what’s new', ids: ['journal', 'newsletter'] },
 ]
 
 /** A section's job on the page, in plain words ("Show your work"); sections doing the same job can replace each other. */
@@ -50,31 +50,31 @@ export const pageGroups: { name: string; ids: PageTypeId[] }[] = [
 /** What each kind of page is usually made of, in reading order — used to start a new page and to suggest what to add.
  *  Pages with none (sign-in, legal, 404…) are standard pages written for you; they need no sections. */
 export const pageSuggestions: Partial<Record<PageTypeId, SectionId[]>> = {
-  home: ['intro', 'featured-work', 'clients', 'manifesto', 'product-highlight', 'how-it-works', 'gallery', 'faq', 'contact-cta'],
+  home: ['intro', 'featured-work', 'feature-rows', 'categories', 'clients', 'press', 'manifesto', 'product-highlight', 'how-it-works', 'schedule', 'gallery', 'trust', 'cta-band', 'faq', 'newsletter', 'contact-cta'],
   work: ['featured-work', 'case-study', 'clients', 'contact-cta'],
-  about: ['about', 'editorial-story', 'process', 'clients', 'contact-cta'],
+  about: ['about', 'editorial-story', 'process', 'clients', 'press', 'contact-cta'],
   contact: ['contact-cta', 'location', 'faq'],
-  services: ['services', 'process', 'pricing', 'clients', 'faq', 'contact-cta'],
-  collections: ['collection', 'lookbook', 'editorial-story'],
-  shop: ['product-grid', 'product-highlight', 'collection', 'faq'],
-  'product-detail': ['product-highlight', 'gallery', 'faq', 'product-grid'],
+  services: ['services', 'process', 'feature-rows', 'pricing', 'trust', 'clients', 'cta-band', 'faq', 'contact-cta'],
+  collections: ['collection', 'lookbook', 'editorial-story', 'categories'],
+  shop: ['categories', 'product-grid', 'product-highlight', 'collection', 'trust', 'faq', 'newsletter'],
+  'product-detail': ['product-highlight', 'gallery', 'feature-rows', 'trust', 'faq', 'product-grid'],
   cart: ['product-grid'],
-  features: ['feature-grid', 'how-it-works', 'product-highlight', 'pricing', 'faq', 'contact-cta'],
-  pricing: ['pricing', 'faq', 'clients', 'contact-cta'],
+  features: ['feature-grid', 'feature-rows', 'how-it-works', 'integrations', 'product-highlight', 'pricing', 'cta-band', 'faq', 'contact-cta'],
+  pricing: ['pricing', 'trust', 'faq', 'clients', 'contact-cta'],
   faq: ['faq', 'contact-cta'],
-  journal: ['journal', 'manifesto'],
+  journal: ['journal', 'categories', 'manifesto', 'newsletter'],
   experiment: ['gallery', 'editorial-story', 'manifesto'],
   menu: ['menu', 'gallery', 'reservation'],
   gallery: ['gallery', 'lookbook'],
-  reservations: ['reservation', 'location', 'faq'],
+  reservations: ['reservation', 'location', 'schedule', 'faq'],
   team: ['team', 'about', 'contact-cta'],
   careers: ['editorial-story', 'process', 'faq', 'contact-cta'],
-  testimonials: ['testimonials', 'clients', 'case-study', 'contact-cta'],
-  press: ['journal', 'clients', 'contact-cta'],
-  integrations: ['feature-grid', 'faq'],
+  testimonials: ['testimonials', 'clients', 'press', 'case-study', 'contact-cta'],
+  press: ['journal', 'clients', 'press', 'contact-cta'],
+  integrations: ['feature-grid', 'faq', 'integrations'],
   changelog: ['journal'],
-  security: ['feature-grid', 'faq', 'contact-cta'],
-  comparison: ['pricing', 'feature-grid', 'faq'],
+  security: ['feature-grid', 'faq', 'trust', 'contact-cta'],
+  comparison: ['pricing', 'feature-grid', 'integrations', 'faq'],
   partners: ['clients', 'contact-cta'],
   'shipping-returns': ['faq'],
   'size-guide': ['faq'],
@@ -82,8 +82,8 @@ export const pageSuggestions: Partial<Record<PageTypeId, SectionId[]>> = {
   locations: ['location', 'gallery', 'reservation'],
   catering: ['services', 'gallery', 'reservation', 'contact-cta'],
   'order-online': ['menu', 'faq'],
-  newsletter: ['journal', 'contact-cta'],
-  wholesale: ['product-grid', 'contact-cta', 'faq'],
+  newsletter: ['journal', 'contact-cta', 'newsletter'],
+  wholesale: ['product-grid', 'contact-cta', 'categories', 'faq'],
   custom: ['intro', 'contact-cta'],
 }
 
@@ -402,7 +402,7 @@ export function specToPlan(spec: RecipeSpec, fromId?: string): KitPlan {
   return cleanPlan({
     name: spec.brief?.name, about: spec.brief?.offer, goal: spec.brief?.goal, photoNote: spec.brief?.photos, purpose: spec.purpose, direction: spec.direction, palette: spec.palette, typography: spec.typography,
     shape: spec.shape, nav: spec.nav, footer: spec.footer, imagePresentation: spec.imagePresentation, rotation: spec.rotation, hero: spec.hero,
-    sitePieces, pages, target: spec.target, from: spec, fromId, uploads: spec.uploads, assets: spec.assets, mediaPlan: spec.mediaPlan,
+    motion: spec.motion, sitePieces, pages, target: spec.target, from: spec, fromId, uploads: spec.uploads, assets: spec.assets, mediaPlan: spec.mediaPlan,
   })
 }
 

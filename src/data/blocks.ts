@@ -36,6 +36,14 @@ export const blocks: Record<ContentSection, Block> = {
   journal: b('Journal', '<JournalSection title="Journal" entries={[{ title, date, category, href, image, alt }]} />'),
   'contact-cta': b('ContactCta', '<ContactCtaSection headline quiet="second line in the serif" action={{ label, href }} email inverse />'),
   chapters: b('ColourChapters', '<ColourChaptersSection chapters={[{ eyebrow, title, text, media: { src, alt, video }, sticker: { src, alt } }]} />'),
+  'feature-rows': b('FeatureRows', '<FeatureRowsSection title rows={[{ name, text, image, alt, link: { label, href } }]} />'),
+  newsletter: b('Newsletter', '<NewsletterSection title text placeholder="you@example.com" button="Subscribe" note="Once a month." action="https://…" />'),
+  categories: b('Categories', '<CategoriesSection title="Shop by category" items={[{ name, href, image, alt, count }]} />'),
+  press: b('Press', '<PressSection title="Press" quotes={[{ outlet, quote }]} awards={["…"]} />'),
+  'cta-band': b('CtaBand', '<CtaBandSection text="One line" action={{ label, href }} note="…" />'),
+  trust: b('Trust', '<TrustSection items={[{ title: "Free returns", text: "Within 30 days." }]} />'),
+  schedule: b('Schedule', '<ScheduleSection title="Programme" days={[{ label: "Friday", items: [{ time, title, detail }] }]} />'),
+  integrations: b('Integrations', '<IntegrationsSection title text tools={["…"]} />'),
   footer: b('Footer', '<FooterSection logo={<Logo />} columns={[{ title, links: [{ label, href, current }] }]} legal={[…]} copyright />'),
 }
 

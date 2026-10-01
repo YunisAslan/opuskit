@@ -20,6 +20,7 @@ export type DirectionId =
   | 'organic-modern' | 'warm-hospitality' | 'art-direction' | 'digital-futurism' | 'technical-minimal'
   | 'soft-pastel' | 'coastal-calm' | 'modern-heritage' | 'news-grid' | 'gothic-modern' | 'retro-seventies'
   | 'playful-pop' | 'y2k-chrome' | 'bento-product' | 'sticker-studio'
+  | 'synthwave' | 'cyberpunk' | 'pixel-art' | 'scrapbook' | 'surrealism' | 'maximalism' | 'conceptual-sketch' | 'ethereal' | 'bohemian' | 'victorian'
 
 export type CharacterId =
   | 'elegant' | 'warm' | 'mysterious' | 'playful' | 'technical' | 'futuristic' | 'sophisticated' | 'raw' | 'cheeky'
@@ -29,18 +30,22 @@ export type MotionLevel = 'still' | 'subtle' | 'dynamic' | 'immersive'
 export type LayoutId = 'balanced' | 'editorial' | 'asymmetric' | 'grid' | 'full-bleed' | 'experimental'
 
 export type PaletteId =
+  | 'apricot-hall' | 'yerba-leaf' | 'console-lilac' | 'limestone' | 'graphite-sand' | 'olive-grove' | 'lido-blue' | 'bubblegum' | 'mulberry' | 'mustard' | 'midnight-chapters'
   | 'signal-white' | 'wet-concrete' | 'legal-pad' | 'pink-plaster' | 'klein-field' | 'pool-tile'
   | 'hazard-yellow' | 'celery-room' | 'bottle-green' | 'night-ink' | 'plum-velvet' | 'oxblood-room'
   | 'wet-slate' | 'black-box' | 'rose-leaf' | 'airmail-blue'
   | 'espresso' | 'lavender-haze' | 'cherry-red' | 'mint-fresh' | 'chrome-silver' | 'electric-lime'
   | 'peach-fuzz' | 'deep-teal' | 'butter-cup' | 'cobalt-sky' | 'studio-aqua'
+  | 'neon-sunset' | 'night-market' | 'arcade'
 
 export type TypographyId =
+  | 'gallery-hours' | 'two-scripts' | 'funnel' | 'wide-spec' | 'diner-serif' | 'private-collection' | 'kalnia-couture' | 'poster-caps' | 'campus' | 'stack'
   | 'quiet-page' | 'ink-and-paper' | 'soft-couture' | 'printed-word' | 'opening-credits' | 'gala-night'
   | 'loud-and-clear' | 'grid-discipline' | 'photocopy-zine' | 'workshop-manual' | 'corner-bakery'
   | 'main-street' | 'stretch-test' | 'high-low' | 'control-room' | 'data-sheet'
   | 'soft-seventies' | 'round-future' | 'letterpress-modern' | 'new-gothic' | 'friendly-app' | 'newsroom'
   | 'moonlit-italic' | 'swiss-italic' | 'bubble-pop' | 'poster-warp' | 'two-voice'
+  | 'neon-drive' | 'terminal-city' | 'eight-bit' | 'sketchbook' | 'parlour' | 'dreamlight' | 'wanderer' | 'cut-and-paste' | 'dream-logic' | 'loud-mix'
 
 export type HeroId =
   | 'editorial-image' | 'parallax-photo' | 'ambient-video' | 'scroll-video' | 'scroll-video-page' | 'type-statement'
@@ -81,6 +86,7 @@ export type SectionId =
   | 'gallery' | 'editorial-story' | 'manifesto' | 'clients' | 'menu' | 'reservation' | 'location'
   | 'collection' | 'lookbook' | 'product-grid' | 'product-highlight' | 'feature-grid' | 'how-it-works'
   | 'pricing' | 'faq' | 'journal' | 'contact-cta' | 'footer' | 'chapters' | 'testimonials' | 'team' | 'stats'
+  | 'feature-rows' | 'newsletter' | 'categories' | 'press' | 'cta-band' | 'trust' | 'schedule' | 'integrations'
 
 export type PageTypeId =
   | 'home' | 'work' | 'about' | 'contact' | 'services' | 'collections' | 'shop' | 'product-detail'
@@ -290,7 +296,7 @@ export type PieceId =
   | 'media-between-text' | 'parallax-floating' | 'cut-reveal' | 'underline-fill' | 'drag-photos' | 'text-along-path' | 'shader-grain' | 'shader-dither'
   | 'duo-headline' | 'scribble-link' | 'wavy-link' | 'swap-button' | 'stickers' | 'blob-transition' | 'brand-cursor' | 'cookie-note'
 /** Where a piece lives on the page. A kit holds at most one piece per slot, so the site keeps one voice. */
-/** 'site' pieces work across the whole site (page transition, cursor, cookie notice) and are chosen in the Style step. */
+/** 'site' pieces work across the whole site (page transition, cursor, cookie notice) and are chosen in the Design step. */
 export type PieceSlot = 'headline' | 'label' | 'statement' | 'numbers' | 'photos' | 'scroll' | 'pointer' | 'background' | 'video' | 'button' | 'decor' | 'site'
 export type Piece = {
   id: PieceId; name: string; line: string; slot: PieceSlot
@@ -361,14 +367,14 @@ export type SignaturePattern = {
 }
 
 export type NavStyleId = 'classic-bar' | 'floating-pill' | 'fullscreen-menu' | 'centered-logo' | 'card-menu' | 'bottom-dock' | 'side-index' | 'split-pill'
-/** Footer styles — the page's ending, chosen with the menu in Style (same on every page that shows it). */
+/** Footer styles — the page's ending, chosen with the menu in Design (same on every page that shows it). */
 export type FooterStyleId = 'signature' | 'wordmark' | 'contact' | 'line'
 export type FooterStyle = { id: FooterStyleId; name: string; line: string; composition: string; behavior: string; responsive: string }
 /** The frame every page shares; a page can leave either out (`hide`). */
 export type ChromeId = 'navbar' | 'footer'
 export type NavStyle = { id: NavStyleId; name: string; line: string; trending?: boolean; composition: string; behavior: string; responsive: string; components: LibraryComponent[] }
 
-export type ShapeId = 'sharp' | 'soft' | 'round' | 'pill' | 'brutal' | 'outline'
+export type ShapeId = 'sharp' | 'soft' | 'round' | 'pill' | 'brutal' | 'outline' | 'glass' | 'relief' | 'clay'
 /** Corner, border and shadow language for buttons, cards, inputs and media frames. Values are CSS. */
 export type ShapeStyle = { id: ShapeId; name: string; line: string; button: string; card: string; media: string; border: string; shadow: string; rule: string }
 
