@@ -689,7 +689,7 @@ export const directions: Record<DirectionId, Direction> = {
     baseRecipe: 'typography-first', image: 'studio',
     mood: ['Cheeky', 'Energetic', 'Crafted'],
     principles: ['A neutral page so stickers and chapter colours can shout', 'Split big headlines between two whole voices', 'Every interaction has a small wink'],
-    do: ['Put a full sentence in the serif above each big heading', 'Give each chapter one accent as a full colour field, never a stripe', 'Let stickers overlap edges and move a little with scroll'],
+    do: ['Put a full sentence in the quieter voice above each big heading', 'Give each chapter one accent as a full colour field, never a stripe', 'Let stickers overlap edges and move a little with scroll'],
     avoid: ['Gradients and glass', 'More than one accent in the same view', 'Stickers made by AI — use the brand’s own marks'],
     defaults: { palette: 'studio-aqua', typography: 'two-voice', layout: 'balanced', lead: 'illustration', motion: 'dynamic' },
     palettes: ['studio-aqua', 'signal-white', 'wet-concrete', 'yerba-leaf', 'console-lilac', 'bubblegum'], typography: ['two-voice', 'loud-and-clear', 'grid-discipline', 'funnel', 'stack'],

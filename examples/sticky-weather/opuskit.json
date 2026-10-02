@@ -1,0 +1,124 @@
+{
+  "opuskit": 1,
+  "recipe": "typography-first",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "typography-first",
+    "brief": {
+      "name": "Sticky Weather",
+      "offer": "A small design studio for brands that want to be picked up — identities, packaging and websites that feel like stickers on a laptop.",
+      "goal": "contact"
+    },
+    "purpose": "studio",
+    "direction": "sticker-studio",
+    "characters": [
+      "cheeky"
+    ],
+    "lead": "illustration",
+    "motion": "dynamic",
+    "hero": "orbit-stickers",
+    "layout": "balanced",
+    "palette": "bubblegum",
+    "typography": "stack",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "have",
+    "signatures": [],
+    "pieces": [
+      "text-effect",
+      "wavy-link",
+      "magnetic",
+      "blob-transition",
+      "preloader",
+      "brand-cursor",
+      "smooth-scroll"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "text-effect",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "wavy-link",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "magnetic",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "blob-transition",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "preloader",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "brand-cursor",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "smooth-scroll",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "vkr0veeg",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "featured-work",
+          "manifesto",
+          "journal",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "l9wqf0xm",
+        "type": "work",
+        "label": "Practice",
+        "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+        "sections": [
+          "featured-work",
+          "editorial-story",
+          "gallery",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "ts067ip9",
+        "type": "about",
+        "label": "About",
+        "purpose": "Put a human face and point of view on the work; build trust.",
+        "sections": [
+          "about",
+          "team",
+          "process",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "6cmrkygj",
+        "type": "contact",
+        "label": "Contact",
+        "purpose": "Give one clear, low-friction way to get in touch.",
+        "sections": [
+          "contact-cta",
+          "location"
+        ]
+      }
+    ],
+    "target": "not-sure"
+  }
+}

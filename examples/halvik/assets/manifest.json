@@ -1,0 +1,76 @@
+{
+  "recipe": "swiss-modern",
+  "title": "Halvik — Bento Product Launch",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Made for this build: a keycap seen from above beside the name in Hubot Sans",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon",
+      "files": [
+        "src/components/Logo.tsx",
+        "src/app/icon.svg"
+      ],
+      "note": "Simple placeholder identity; replace with an owned logo when there is one (same component, same favicon path)."
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts via next/font (self-hosted at build)",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Hubot Sans, IBM Plex Sans (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written into the pages (src/app/*/page.tsx) and src/config/product.ts",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "productPhotography": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Owner-supplied photos (Unsplash License; see media-src/SOURCES.md), used as shot, no cut-outs",
+      "replaceWith": "user-owned-product-photos",
+      "usage": "Hero, product grid, detail views",
+      "specs": "Consistent angles: front, 3/4, detail; seamless background",
+      "files": [
+        "public/media/hero.jpg",
+        "public/media/product.jpg",
+        "public/media/product-2.jpg",
+        "public/media/row-1.jpg",
+        "public/media/row-2.jpg",
+        "public/media/row-3.jpg"
+      ],
+      "keys": "src/config/assets.ts: hero, product, product2, row1, row2, row3"
+    },
+    "lifestyleImages": {
+      "required": false,
+      "level": "recommended",
+      "status": "optional",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Editorial story sections",
+      "specs": "Product in context, same grade",
+      "note": "Not used: the recipe has no editorial section; product shots cover every section."
+    },
+    "turntableSequence": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Own photoshoot",
+      "replaceWith": "user-owned-product-photos",
+      "usage": "Scroll-rotating product",
+      "specs": "Fixed camera, 7.5–15° per frame",
+      "note": "Not used: Subtle motion uses the still product stage."
+    }
+  }
+}

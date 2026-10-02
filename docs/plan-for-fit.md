@@ -201,14 +201,42 @@ Files: `examples/brasshand/media-src/` · sources: `media-src/SOURCES.md`. Every
 screen is a 3D scene built in code (procedural, no model file), its poster is rendered from the scene by Claude Code, and
 Claude Code makes the logo. The site has no team or photo sections.
 
-**4. Studio — experimental / orbit-stickers.** 6 project photos (4:5 or 1:1), colourful.
-- Pinterest: `sticker design studio website`, `playful creative studio portfolio`, `colorful product photography flat`
-- Stock: `colorful objects flat lay`, `design studio workspace`, `risograph print`, `ceramic colorful`
+**4. Studio — Sticky Weather.** Recipe approved 2026-10-02 (`examples/sticky-weather/`). The hero stickers are drawn by
+Claude Code as SVG (illustration lead) — no files. Files: `examples/sticky-weather/media-src/` · sources: `SOURCES.md`.
+No brand names or logos readable in any shot (blank or invented labels only).
 
-**5. Product — minimal / product-stage.** 3–4 shots of one product from different angles, plain background
-(white/grey; background removal is handled at build). Plus 2 close-up details.
-- Pinterest: `bento grid product page`, `minimal product launch website`, `apple style product page`
-- Stock: `speaker product white background`, `headphones isolated`, `desk lamp minimal studio shot`
+| File | Site | Search term | Filter | Minimum | Should show |
+|---|---|---|---|---|---|
+| `work-1.jpg` | Unsplash | `colorful packaging design` | Portrait | 1600 px wide | Bright boxes/bags, no readable brand |
+| `work-2.jpg` | Unsplash | `sticker sheet` | Portrait | 1600 px wide | A sheet of colourful stickers |
+| `work-3.jpg` | Unsplash | `risograph print` | Portrait | 1600 px wide | Colourful printed poster/zine |
+| `work-4.jpg` | Unsplash | `colorful business cards` | Portrait | 1600 px wide | Stationery / identity cards |
+| `work-5.jpg` | Unsplash | `laptop stickers` | Portrait | 1600 px wide | A laptop lid covered in stickers, no device logo |
+| `work-6.jpg` | Unsplash | `colorful product packaging minimal` | Portrait | 1600 px wide | One product on a flat colour |
+| `studio-1.jpg` | Unsplash | `design studio desk colorful` | Landscape | 2400 px wide | A bright studio desk with work in progress |
+| `studio-2.jpg` | Unsplash | `paper swatches colorful` | Landscape | 2400 px wide | Colour swatches / paper samples |
+| `studio-3.jpg` | Unsplash | `screen printing studio` | Landscape | 2400 px wide | Printing in progress, hands OK |
+| `studio-4.jpg` | Unsplash | `cutting mat craft` | Landscape | 2400 px wide | Cutting stickers / craft tools |
+| `studio-5.jpg` | Unsplash | `pantone color cards` | Landscape | 2400 px wide | Colour cards fanned out (no readable brand) |
+| `team-1.jpg` | Unsplash | `portrait colorful background` | Portrait | 1600 px wide | Real person, bright flat background |
+| `team-2.jpg` | Unsplash | `portrait colorful background` | Portrait | 1600 px wide | A different person, same feel |
+| `team-3.jpg` | Unsplash | `portrait colorful background` | Portrait | 1600 px wide | A third person, same feel |
+
+**5. Product — Halvik.** Recipe approved 2026-10-02. The product is a compact mechanical keyboard (Halvik 65) with a
+matching dial pad: headphones were tried first, but every Unsplash series of one pair showed a real brand. One
+photographer's series (Alex de Koning) shows the same green-case, cream-key keyboard from several angles, so five of the six
+files come from it. Claude Code makes the logo. Files: `examples/halvik/media-src/` · sources: `SOURCES.md`. Every file:
+Unsplash, download **Original**. No brand names or logos readable in any shot (the small fox mark some keycap sets carry on
+Esc is retouched out before the build).
+
+| File | Site | Search term | Filter | Minimum | Should show |
+|---|---|---|---|---|---|
+| `hero.jpg` | Unsplash | `keyboard` (user `dekoningalex`) | Landscape | 3000 px wide | The keyboard side-on, cream keys over the green case, plain blurred ground — the product stage |
+| `product.jpg` | Unsplash | `keyboard` (user `dekoningalex`) | Portrait | 3000 px tall | The same keyboard from above at three-quarters, whole left half in view — Product Highlight (square crop) |
+| `product-2.jpg` | Unsplash | `keyboard` (user `dekoningalex`) | Portrait | 3000 px tall | A corner of the same keyboard tilted up close — the Features page's highlight |
+| `row-1.jpg` | Unsplash | `keyboard` (user `dekoningalex`) | Portrait | 3000 px tall | The case's curved side profile, low angle — feature row "the typing angle" |
+| `row-2.jpg` | Unsplash | `keyboard` (user `dekoningalex`) | Landscape | 3000 px wide | A small silver pad with cream keys and three knobs — feature row "the dial pad" |
+| `row-3.jpg` | Unsplash | `mechanical keyboard switches close up` | Landscape | 3000 px wide | One switch bare between cream keycaps — feature row "hot-swap switches" |
 
 **6. Clinic — quiet / editorial-image.** 6–8 calm photos, natural light.
 - Pinterest: `japanese minimal interior`, `calm clinic website`, `wabi sabi natural light`
@@ -301,8 +329,8 @@ Before removing, grep for `/examples/{slug}`: no references must remain.
 | 1 | Blog — Slow Atlas | ✓ (`examples/slow-atlas/opuskit.json`) | ✓ (§7) | ✓ 10/10 (`media-src/SOURCES.md`) | ✓ Prompt 1 + Prompt 2 (fix round 1, run by a subagent); `next build` passes, all routes static | ✓ poster + 13 s clip (from the live export, hero reveal included) | ✓ 2026-10-01: `examples.ts`, symlink, zip, live at `/live/slow-atlas` (click-through checked), `npm run check` ✓; `ulooklonely` removed | ✓ 2026-10-01: site clip + 6 section clips; shown in Design, Pages and `/examples/slow-atlas` |
 | 2 | Agency — Brasshand | ✓ (`examples/brasshand/opuskit.json`, approved) | ✓ (§7) | ✓ 10/10 (`media-src/SOURCES.md`, Unsplash connector; work-4 replaced after the build — real label logo) | ✓ Prompt 1 + Prompt 2 (fix round 1), both by a subagent; 17 static routes | poster + card ✓; clips: waiting for the user's recordings | ✓ 2026-10-01: `examples.ts`, symlink, zip, live at `/live/brasshand` (click-through checked), `npm run check` ✓; cheeky911 not yet removed (needs the user's OK) | – (no clips yet) |
 | 3 | SaaS — Hexmint | ✓ (`examples/hexmint/opuskit.json`, approved) | ✓ (§7: no files) | ✓ none needed | ✓ Prompt 1 (subagent; resumed once after an API limit); no fix round | card ✓ (poster rendered from the scene); clips: waiting for the user's recordings | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/hexmint` (click-through checked), `npm run check` ✓ | – (no clips yet) |
-| 4 | Studio | – | – | – | – | – | – | – |
-| 5 | Product | – | – | – | – | – | – | – |
+| 4 | Studio — Sticky Weather | ✓ (`examples/sticky-weather/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 14/14 (`media-src/SOURCES.md`, Unsplash connector) | ✓ Prompt 1 (subagent, resumed once after an interrupted session) + Prompt 2 (fix round 1: mobile stickers over the hero text); all routes static | poster + card ✓; clips: waiting for the user's recordings | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/sticky-weather` (click-through checked), `npm run check` ✓; cheeky911 not yet removed (needs the user's OK) | – (no clips yet) |
+| 5 | Product — Halvik | ✓ (`examples/halvik/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 6/6 (`media-src/SOURCES.md`, Unsplash connector; fox keycap mark retouched in 4) | ✓ Prompt 1 (subagent, resumed twice); export passes, all routes static; reviewed 1440 + 390 | – | – | – |
 | 6 | Clinic | – | – | – | – | – | – | – |
 | 7 | Restaurant | – | – | – | – | – | – | – |
 | 8 | Fashion shop | – | – | – | – | – | – | – |
@@ -314,6 +342,27 @@ defaults, curtain transition, preloader, smooth scroll); built beside the first 
 with the user's OK (BUILD-LOG.md §5–§8: Prompt 1 + fix round 1 for the curtain under basePath). Redone: card + poster,
 zip, live export (click-through checked), `npm run check` ✓. **Waiting for the user's screen recordings** for the site clip
 and section clips (the old ones showed the old site and were removed with it; `examples.ts` has no `clip` until then).
+
+**#5 Halvik — what's left (paused by the user 2026-10-02, after the build and Claude's review; `examples/halvik/BUILD-LOG.md`):**
+1. **Fix round 1 — waits for the user's choice.** (a) The first-screen photo is soft (shot wide open). Options: keep it;
+   a prompt to frame the hero on the photo's sharpest part (the top key row) and zoom less on phones — Claude's
+   recommendation; or find a sharper side-on shot. (b) The phone's pinned "Add to bag" bar also shows on Contact, over the
+   form — a prompt to hide it there. Claude Code's own note: "Words that arrive" delays Contact's first paint on slow 4G
+   (6.8 s); proposed to keep (the kit places it site-wide). Write the prompt into BUILD-LOG.md first, then send it to a
+   subagent; redo the 1440 + 390 review after it.
+2. Card + poster: 1440×900 JPEG of the live homepage → `public/examples/halvik.jpg` (then clear `.next/dev/cache/images`).
+3. Registration: `src/data/examples.ts` (title/summary from the site's own `<title>`/meta, tags, `choices` with exact option
+   names, `hero: { kind: 'image', src }`), symlink `public/examples/halvik` → `../../examples/halvik/public`, `npm run examples`.
+4. Live export `public/live/halvik/` (AGENTS.md "Showing one on the site"). The site ships `.webp` `srcset`s: rewrite
+   `, /media/` inside `srcset` as well as `"/media/`, `` `/media/ `` and `url(/media/`. Browser click-through from the nav.
+5. §9: remove `keepers` in the same step (`examples/keepers/`, symlink + `keepers.jpg`, `public/live/keepers/`,
+   `public/downloads/keepers.zip`, its `examples.ts` entry; grep `/examples/keepers` → none left). Replace the kit's
+   product world in `SectionPreview.tsx` (`can`) with Halvik's 6 photos **and its sample copy** (now a canned drink; its
+   "Stocked at" list names real shops — Whole Foods, Selfridges…). Open: the product world's team/founder sample used two
+   Keepers portraits; Halvik has no people — decide with the user.
+6. `npm run check`; update this row and HANDOFF.md. Commit/push only after telling the user (`git status` + `git pull`
+   first; shared files: `examples.ts`, this file, `public/live/`, `example-specs.generated.json`, the zips).
+7. Clips: the user records them later.
 
 Other:
 - [x] Root cleaned (2026-10-01): QA screenshots, `not-used-videos/`, `.DS_Store` (added to `.gitignore`).

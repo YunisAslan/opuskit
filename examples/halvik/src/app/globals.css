@@ -1,0 +1,97 @@
+@import "../styles/tokens.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* shadcn/ui names that do not collide with the recipe's --color-* tokens. background, primary, secondary and border
+   share the recipe's names and values already; muted and accent keep the recipe's meaning (muted = secondary text,
+   accent = black), so the ui files use bg-surface / bg-secondary / text-muted instead. */
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: 10px;
+  --radius-md: 12px;
+  --radius-lg: var(--radius-button);
+  --radius-xl: var(--radius-media);
+  --radius-4xl: 999px;
+}
+
+/* shadcn theme — the recipe's hex values (recipe/ui.md) */
+:root {
+  --background: #9D91E3; --foreground: #000000;
+  --card: #B2A8EA; --card-foreground: #000000; --popover: #B2A8EA; --popover-foreground: #000000;
+  --primary: #000000; --primary-foreground: #9D91E3; --secondary: #8A7DD8; --secondary-foreground: #000000;
+  --muted: #B2A8EA; --muted-foreground: #1E1640; --accent: #8A7DD8; --accent-foreground: #000000;
+  --border: #7D70CC; --input: #1E1640; --ring: #000000; --radius: 24px;
+  --destructive: #1E1640;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-curtain: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+  :focus-visible { outline: none; }
+  a:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+}
+
+/* ---- Fade & rise reveal (IntersectionObserver in Reveals.tsx adds .is-in; html.reveal-on is set before paint) ---- */
+[data-reveal] > * { transition: opacity 600ms var(--ease-out-soft), transform 600ms var(--ease-out-soft); }
+[data-reveal] > :nth-child(2) { transition-delay: 60ms; }
+[data-reveal] > :nth-child(3) { transition-delay: 120ms; }
+[data-reveal] > :nth-child(4) { transition-delay: 180ms; }
+[data-reveal] > :nth-child(5) { transition-delay: 240ms; }
+[data-reveal] > :nth-child(6) { transition-delay: 300ms; }
+html.reveal-on [data-reveal]:not(.is-in) > * { opacity: 0; transform: translateY(16px); }
+
+/* ---- Image clip reveal: the frame opens like a curtain, the photo settles from 1.15 ---- */
+[data-clip] { transition: clip-path 1000ms var(--ease-curtain); clip-path: inset(0 0 0 0 round var(--radius-media)); }
+[data-clip] img { transition: transform 1100ms var(--ease-curtain); }
+html.reveal-on [data-clip]:not(.is-in) { clip-path: inset(100% 0 0 0 round var(--radius-media)); }
+html.reveal-on [data-clip]:not(.is-in) img { transform: scale(1.15); }
+
+/* ---- Line-by-line headline reveal ---- */
+[data-lines] .line { display: block; transition: transform 700ms var(--ease-out-soft); }
+[data-lines] .line-mask { display: block; overflow: hidden; padding-bottom: 0.06em; }
+[data-lines] .line-mask:nth-child(2) .line { transition-delay: 80ms; }
+[data-lines] .line-mask:nth-child(3) .line { transition-delay: 160ms; }
+html.reveal-on [data-lines]:not(.is-in) .line { transform: translateY(105%); }
+
+/* ---- Hero: the product settles in (scale only, so the first screen is readable at once) ---- */
+@keyframes settle { from { transform: scale(1.05); } to { transform: scale(1); } }
+.hero-settle { animation: settle 1400ms var(--ease-out-soft) both; }
+
+/* ---- The travelling motif: slots show a still mark (mobile, no JS); the live layer takes over on desktop ---- */
+.motif-slot { display: inline-block; flex: none; vertical-align: middle; }
+html[data-motif-live] .motif-slot { visibility: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] > * { transition: opacity 200ms linear; transition-delay: 0ms !important; }
+  html.reveal-on [data-reveal]:not(.is-in) > * { transform: none; }
+  [data-clip] { transition: opacity 200ms linear; }
+  html.reveal-on [data-clip]:not(.is-in) { clip-path: inset(0 0 0 0 round var(--radius-media)); opacity: 0; }
+  html.reveal-on [data-clip]:not(.is-in) img { transform: none; }
+  html.reveal-on [data-lines]:not(.is-in) .line { transform: none; }
+  .hero-settle { animation: none; }
+  /* The motif sits still in the first chapter only. */
+  .motif-slot:not([data-first]) { visibility: hidden; }
+}
+
+/* Selects open as a bottom sheet on phones. */
+@media (max-width: 639px) {
+  [data-radix-popper-content-wrapper]:has(> [data-slot="select-content"]) {
+    position: fixed !important; inset: auto 0 0 0 !important; transform: none !important; min-width: 0 !important;
+  }
+  [data-slot="select-content"] { width: 100vw; max-height: 60vh; border-radius: var(--radius-card) var(--radius-card) 0 0; padding: 8px 8px 24px; }
+}

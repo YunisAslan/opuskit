@@ -64,3 +64,23 @@ tells in the ready sections ("→", middle dots, 01/02 markers) — all fixed in
 Reviewed by Claude on the static export at 1440 px and 390 px (Playwright, WebGL via SwiftShader): the canvas renders,
 no horizontal overflow, no console errors, no failed requests. No fix round needed. Registered with a live export at
 `/live/hexmint/index.html` (menu → Pricing click-through checked on desktop and phone).
+
+### Prompt 2 (2026-10-02) — fix round 1
+
+Reported by the user from their own screen (the 3D tiles looked doubled). Run by a fresh Claude Code subagent started
+from the OpusKit session (no OpusKit context), given only "work inside `examples/hexmint/` as the project root; read its
+CLAUDE.md and AGENTS.md first" — then the prompt below, word for word.
+
+```
+On the home page the 3D hexagons look doubled — two copies slightly out of line, most visible on the yellow tile. The
+still poster stays visible behind the live 3D scene, and the live scene is framed a little differently (screen size,
+pointer, scroll), so the two never line up. Once the live scene has faded in, the poster should be gone; keep the poster
+only while the scene is loading, and as the fallback when WebGL isn't available or fails. Check it at a few window sizes,
+then run the production build again.
+```
+
+Result: the poster is removed once the live scene has faded in, and comes back if the WebGL context is lost; it stays
+when there is no WebGL 2, with reduced motion and on weak devices; a scene error falls back to the poster instead of
+breaking the page (`Hero3D.tsx` only). `next build` (export) passes. Live export regenerated; checked by Claude at
+1440 px and 390 px in Chrome with WebGL: one set of tiles, no poster after the fade, menu → Pricing works, no failed
+requests or page errors.

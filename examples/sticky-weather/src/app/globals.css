@@ -1,0 +1,35 @@
+@import "../styles/tokens.css";
+
+/* Section rhythm (recipe/layout.md): clamp(96px, 12vw, 160px) between sections, so half of it on each side.
+   Colour-field sections (chapters, the dark close) carry a little more inside their own ground. */
+@utility section-y { padding-block: clamp(48px, 6vw, 80px); }
+@utility field-y { padding-block: clamp(96px, 11vw, 144px); }
+
+html { background: var(--color-background); -webkit-text-size-adjust: 100%; }
+body { font-family: var(--font-body), sans-serif; }
+::selection { background: var(--color-accent); color: var(--color-paper); }
+
+/* Designed focus: no rings or glows. Links and buttons get an underline or a ground change from their own classes;
+   anything without one gets a plain underline. */
+:focus { outline: none; }
+a:focus-visible:not([class*="bg-"]):not([class*="focus-visible:"]) { text-decoration: underline; text-underline-offset: 4px; }
+
+/* The gate never flashes on a returning visit: a head script sets data-gate before paint (app/layout.tsx). */
+html[data-gate="done"] [data-gate-overlay] { display: none; }
+
+/* Parallax drift: the photo drifts at a fraction of the scroll inside its frame (CSS scroll-driven animation).
+   Browsers without it, and reduced motion, keep the photo still. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .drift { scale: 1.2; animation: drift linear both; animation-timeline: view(); }
+    @keyframes drift { from { translate: 0 -8%; } to { translate: 0 8%; } }
+  }
+}
+
+/* Spot stickers drift up and turn a little as their section passes. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .spot { animation: spot linear both; animation-timeline: view(); }
+    @keyframes spot { from { translate: 0 40px; rotate: -6deg; } to { translate: 0 -40px; rotate: 6deg; } }
+  }
+}

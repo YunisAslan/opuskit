@@ -86,6 +86,9 @@ const main = async () => {
     assert.ok(lovableKnowledge(r).length <= LOVABLE_KNOWLEDGE_LIMIT, `${seed.slug} lovable knowledge fits`)
   }
 
+  assert.ok(composeRecipe({ ...specFromSeed(recipeSeeds[0]), motion: 'dynamic', pieces: ['smooth-scroll'] }).implementation.stack.includes('Lenis'), 'Lenis in the stack when the SmoothScroll piece ships')
+  assert.ok(!/\b(\w+) \1\b/.test(composeRecipe({ ...specFromSeed(recipeSeeds[0]), direction: 'sticker-studio', purpose: 'studio' }).title), 'no doubled word in a composed title')
+
   // Claude Code only ships relevant skills.
   const still = composeRecipe(remix(specFromSeed(recipeSeeds[3]), { motion: 'still' }))
   const cc = await adapters['claude-code'].generate(still)

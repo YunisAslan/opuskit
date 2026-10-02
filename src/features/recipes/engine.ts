@@ -667,7 +667,10 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const textured = TEXTURED.has(spec.direction)
 
   const adjective = chars[0]?.adjective ?? ''
-  const composedTitle = [direction.name.includes(adjective) ? '' : adjective, direction.name, purpose.noun].filter(Boolean).join(' ')
+  // "Cheeky Sticker Studio" + "Studio Site" reads "… Studio Site", not "… Studio Studio Site".
+  const [kind, ...rest] = purpose.noun.split(' ')
+  const noun = direction.name.endsWith(kind) ? rest.join(' ') : purpose.noun
+  const composedTitle = [direction.name.includes(adjective) ? '' : adjective, direction.name, noun].filter(Boolean).join(' ')
   const brief = spec.brief ?? {}
   const goal = brief.goal && goals[brief.goal]
   const title = brief.name ? `${brief.name} — ${composedTitle}` : unchanged ? seed.title : composedTitle
@@ -775,7 +778,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     resources: pickResources(spec, textured),
     references: seed.references,
     implementation: {
-      stack: ['Next.js (App Router)', 'TypeScript', 'Tailwind CSS', ...techs.filter((t) => t !== 'css').map((t) => TECH_LABEL[t])],
+      stack: uniq(['Next.js (App Router)', 'TypeScript', 'Tailwind CSS', ...techs.filter((t) => t !== 'css').map((t) => TECH_LABEL[t]), ...(deps.some((d) => d.name === 'lenis') ? [TECH_LABEL.lenis] : [])]),
       dependencies: [...deps, { name: 'shadcn/ui', why: 'Accessible, themeable controls and forms (Radix primitives) — see UI components' }],
       fileStructure: [
         'src/',

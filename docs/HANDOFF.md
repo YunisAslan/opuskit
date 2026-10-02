@@ -75,11 +75,17 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
 1. **Example #2 Brasshand** — built and registered 2026-10-01 (`examples/brasshand/`, live at
    `/live/brasshand`). Open: clips (the user records them), and removing `cheeky911` with its kit photos
    (plan-for-fit §9 — needs the user's OK).
-2. **Example #3 Hexmint** — built and registered 2026-10-02 (`/live/hexmint`); clips open. Next: **#4 Studio**
-   (experimental / sticker-studio, orbit stickers, lively — Bubblegum + Stack, playful entry gate, travelling motif).
+2. **Example #3 Hexmint** — built and registered 2026-10-02 (`/live/hexmint`); clips open. Fix round 1 (doubled 3D:
+   the poster stayed under the transparent canvas) done, live export regenerated.
    Builds since Brasshand also fixed OpusKit itself: rules name roles not fonts/hex; ready sections ship no "→",
    middle dots or 01/02 markers; TextScramble/TextEffect accessibility + hydration.
-3. Put aside by the user (2026-10-01): D1–D2 WebGL pieces; Slow Atlas clips (recorded later by the user).
+3. **Example #4 Sticky Weather** — built and registered 2026-10-02 (`examples/sticky-weather/`, live at
+   `/live/sticky-weather`); clips open. Kit fixes from it: no doubled word in composed titles ("Studio Studio Site"),
+   Lenis in the stack when SmoothScroll ships, Sticker Studio's "serif" rule made pairing-neutral, TextEffect spaces.
+   Open question for the user: Sticker Studio says "neutral page" but offers Bubblegum (a saturated pink ground).
+   **#5 runs in a separate chat** (`examples/halvik/`) — don't touch it from here; coordinate `examples.ts`,
+   the Progress table, `npm run examples`, `public/live` and commits.
+4. Put aside by the user (2026-10-01): D1–D2 WebGL pieces; Slow Atlas clips (recorded later by the user).
 
 ## Done so far (2026-10-01)
 

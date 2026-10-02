@@ -40,6 +40,34 @@ export type ExampleProject = {
 
 export const examples: ExampleProject[] = [
   {
+    slug: 'sticky-weather',
+    title: 'Sticky Weather, a design studio for brands that want to be picked up',
+    summary: 'Sticky Weather is a small design studio in Bristol making identities, packaging and websites that feel like stickers on a laptop.',
+    mood: ['Cheeky', 'Energetic', 'Crafted'],
+    // Its first screen is stickers drawn in code: the hero still is the site's own first screen.
+    hero: { kind: 'image', src: '/examples/sticky-weather/media/poster.jpg' },
+    livePath: '/live/sticky-weather',
+    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'Studio' },
+      { label: 'Name', value: 'Sticky Weather' },
+      { label: 'Visitors should', value: 'Get in touch' },
+      { label: 'Style', value: 'Sticker Studio' },
+      { label: 'First screen', value: 'Sticker orbit' },
+      { label: 'Movement', value: 'Dynamic' },
+      { label: 'Colors', value: 'Bubblegum' },
+      { label: 'Lettering', value: 'Stack' },
+      { label: 'Layout', value: 'Balanced' },
+      { label: 'Shape', value: 'Sharp' },
+      { label: 'Menu', value: 'Split pill' },
+      { label: 'Big idea', value: 'A playful way in' },
+      { label: 'Pages', value: 'Home, Practice, About, Contact' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Photos are from Unsplash (credits in media-src/SOURCES.md); the stickers and the logo were drawn in code by Claude Code during the build; the clients, team names and contact details are made up.',
+  },
+  {
     slug: 'hexmint',
     title: 'Hexmint: invoices, expenses and quarterly books for small studios',
     summary: 'Invoices, expenses and quarterly books for small studios. Set up in five minutes, closed in one click.',

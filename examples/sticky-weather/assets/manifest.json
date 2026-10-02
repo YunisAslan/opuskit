@@ -1,0 +1,70 @@
+{
+  "recipe": "typography-first",
+  "title": "Sticky Weather — Cheeky Sticker Studio Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Drawn in code: src/components/Logo.tsx (cloud sticker mark + name), favicon src/app/icon.svg",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon",
+      "note": "A simple starter logo made for launch; swap in a designed identity when there is one."
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts via next/font (src/app/layout.tsx)",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Stack Sans Headline, Stack Sans Text (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "src/content/site.ts and the page files; client names are made up",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "heroIllustration": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "The sticker orbit itself: drawn stickers (src/components/Stickers.tsx) and three work photos",
+      "replaceWith": "user-owned-illustrations",
+      "usage": "Hero key visual",
+      "specs": "Layered SVG (3 depth layers if animated)"
+    },
+    "spotIllustrations": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Stickers from src/components/Stickers.tsx stuck over section edges (src/components/Spot.tsx)",
+      "replaceWith": "user-owned-illustrations",
+      "usage": "Section accents",
+      "specs": "Same style and palette"
+    },
+    "brandStickers": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Drawn in code: src/components/Stickers.tsx (10 stickers built from the logo cloud and the studio slogans)",
+      "replaceWith": "user-owned-stickers",
+      "usage": "Sticker orbit, stickers on sections",
+      "specs": "Transparent PNG (1200px) or SVG; bold outlines, the brand’s own slogans, marks and characters — never AI-generated clip art"
+    },
+    "photos": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "media-src/SOURCES.md (Unsplash License)",
+      "replaceWith": "user-owned-photos",
+      "usage": "Featured Work, Practice, About, Team, Contact",
+      "specs": "public/media/work-1..6, studio-1..5, team-1..3; keys in src/config/assets.ts"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+# Verification
+
+The build is done when every item passes.
+
+- [ ] Background is #FF8FC7; no other page background colors are introduced.
+- [ ] Display text uses Stack Sans Headline 600; body uses Stack Sans Text; no other families appear.
+- [ ] Colour chapters (Sticker Pop): each chapter section owns one accent as a full colour field (--color-chapter-1..3, in turn); never two chapter colours in one view, and text never sits on them without AA contrast.
+- [ ] Pages: Home · Practice · About · Contact — every page shares the same navbar and footer.
+- [ ] Footer “Signature columns”: Dark band (text colour as ground): the logo large on the left (5 of 12 columns), 2–3 link columns with headings, then a hairline and one row: copyright left, legal links right.
+- [ ] Home section order: Hero → Featured Work → Manifesto → Journal → Closing CTA.
+- [ ] Practice section order: Featured Work → Editorial Story → Gallery → Closing CTA.
+- [ ] About section order: About → Team → Process → Closing CTA.
+- [ ] Contact section order: Closing CTA → Location.
+- [ ] Hero matches "Sticker orbit": A centred two-voice headline with a sentence eyebrow above and one line below; 10–14 brand stickers and small photos sit on an ellipse around it, each at its own slight angle.
+- [ ] Controls and forms use shadcn/ui (button, sheet, sonner, tooltip, navigation-menu, dropdown-menu, form, input, textarea, label, badge, pagination, select, checkbox, dialog, carousel) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.
+- [ ] Sections with ready code are built from their component in src/components/sections/ (real copy and media through props, no placeholder text left) and styled only through the recipe tokens. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.
+- [ ] Kit piece "Words that arrive" (<TextEffect/> from src/components/pieces/TextEffect.tsx) is used on Every page — the h1 and each section heading, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Wavy underline" (<WavyLink/> from src/components/pieces/WavyLink.tsx) is used on Every page — menu, footer and text links, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Magnetic button" (<Magnetic/> from src/components/pieces/Magnetic.tsx) is used on Every page — the main action, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Blob page transition" (<BlobTransition/> from src/components/pieces/BlobTransition.tsx) is used on Whole site — every internal link; mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Designed preloader" (<Preloader/> from src/components/pieces/Preloader.tsx) is used on Whole site — mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Brand cursor" (<BrandCursor/> from src/components/pieces/BrandCursor.tsx) is used on Whole site — mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Smooth scroll" (<SmoothScroll/> from src/components/pieces/SmoothScroll.tsx) is used on Whole site — mount once in app/layout.tsx, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Big idea “A playful way in” is visible on every page: play is the guide: the site invites a small action first, and keeps answering the visitor’s hand — things react, colours change, nothing is only to be read.
+- [ ] Chapters open as the big idea says: Chapters change colour: each item or part brings its own ground and ink as it arrives.
+- [ ] The site ends as the big idea says: A footer worth reaching: the brand name assembles letter by letter, as a small reward for scrolling to the end.
+- [ ] Signature moment "A playful way in" is built on Home — Hero — Sticker orbit, with its mobile and reduced-motion versions.
+- [ ] Signature moment "Each item brings its own colours" is built on Home — Featured Work, with its mobile and reduced-motion versions.
+- [ ] Every page passes the award checklist in the recipe (one idea, one unforgettable moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).
+- [ ] Layout: Text in 6–8 central columns; media spans 10–12; section spacing clamp(96px, 12vw, 160px) between sections.
+- [ ] Shape “Sharp”: buttons 0px, cards 0px, media 0px radius (rounded-button / rounded-card / rounded-media) — No rounded corners anywhere; structure comes from lines and space.
+- [ ] Menu “Split pill”: Three separate pieces at the top edge: signature logo left, a compact white pill of 3–4 uppercase links centred, and one boxed action with a status dot (● Contact) right. No bar behind them.
+- [ ] Absent: Gradients and glass.
+- [ ] Absent: More than one accent in the same view.
+- [ ] Absent: Stickers made by AI — use the brand’s own marks.
+- [ ] Absent: A cream or beige page ground with a clay/terracotta accent.
+- [ ] Absent: A near-black ground with one acid-green or orange accent, or tinted charcoal standing in for black.
+- [ ] Absent: Small uppercase, letter-spaced monospace labels above every heading.
+- [ ] Absent: Numbered markers (01 / 02) on content that is not a real sequence.
+- [ ] Absent: Meta strings joined with middle dots or spaced em dashes, and "→" appended to links.
+- [ ] Absent: One italic or coloured accent word inside an otherwise plain headline.
+- [ ] Absent: Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe's fonts.
+- [ ] Mobile (390px): no horizontal scroll, headlines re-broken intentionally, touch targets ≥ 44px.
+- [ ] prefers-reduced-motion: every animation has its documented alternative.
+- [ ] Every media element is rendered through the asset config layer; temporary assets are listed in the manifest.
+- [ ] Lighthouse on mobile: LCP < 2.5s, CLS < 0.1.
