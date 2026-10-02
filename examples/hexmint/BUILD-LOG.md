@@ -47,3 +47,20 @@ I don't have a logo yet — make a simple one for Hexmint.
 
 I want to publish this as a static site (next build with output: 'export'), so every page has to be static.
 ```
+
+The subagent stopped mid-build on an API session limit (while writing the 3D scene). On the user's "continue" (2026-10-02)
+the same subagent was resumed with the message below, word for word.
+
+```
+You were stopped by an API limit in the middle of the build. Continue from where you left off and finish the whole site as asked.
+```
+
+Result: the whole site built — four pages and a 404, a 3D field of hexagonal tiles built from shapes (one lemon tile as
+the signal), its poster and four stills rendered from the scene (`npm run stills`), a live status line counting down to
+the quarter's close, decoding // labels, a pinned "one-click close" on Features. `next build` with `output: 'export'`
+passes. It flagged rule conflicts in the package (a third font named for numbers; an em-dash label example) and generic
+tells in the ready sections ("→", middle dots, 01/02 markers) — all fixed in OpusKit's own sources afterwards.
+
+Reviewed by Claude on the static export at 1440 px and 390 px (Playwright, WebGL via SwiftShader): the canvas renders,
+no horizontal overflow, no console errors, no failed requests. No fix round needed. Registered with a live export at
+`/live/hexmint/index.html` (menu → Pricing click-through checked on desktop and phone).

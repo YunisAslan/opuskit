@@ -110,11 +110,11 @@ function Tiles({ variant, small, still, inView, onReady }: { variant: Variant; s
     g.rotation.y = ease(g.rotation.y, t.ry)
     g.rotation.x = ease(g.rotation.x, t.rx)
     // Camera: framing per aspect, then a dolly back and up as the hero scrolls away.
-    const pull = portrait ? 1.75 : 1
+    const pull = portrait ? 1.2 : 1
     const sc = ease(g.userData.scroll ?? 0, t.scroll)
     g.userData.scroll = sc
     camera.position.set(cam.pos[0] * pull, cam.pos[1] * pull + sc * 1.4, cam.pos[2] * pull + sc * 2.4)
-    tmp.look.set(cam.look[0], cam.look[1] - (portrait ? (variant === 'hero' ? 2.6 : 0) : 0) + sc * 0.4, cam.look[2])
+    tmp.look.set(cam.look[0], cam.look[1] - (portrait ? (variant === 'hero' ? -1 : 0) : 0) + sc * 0.4, cam.look[2])
     camera.lookAt(tmp.look)
     g.position.x = portrait ? 0 : cam.shiftX
 

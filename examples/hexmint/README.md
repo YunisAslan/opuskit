@@ -1,36 +1,17 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hexmint
 
-## Getting Started
-
-First, run the development server:
+Invoices, expenses and quarterly books for small studios. A static Next.js site built from an OpusKit recipe
+(`CLAUDE.md`, `recipe/`, `build/`).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev -- -p 3007   # http://localhost:3007
+npm run build            # static export to out/ (output: 'export'); upload out/ to any static host
+npm run stills           # with the dev server running: re-render the hero poster and the supporting renders
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Copy lives in `src/content/site.ts`; client names, quotes and numbers there are stand-ins.
+- Media is addressed by key through `src/config/assets.ts`. Every image in `public/media/` is rendered from the
+  3D scene in code (`src/components/scene/`), so after changing the scene run `npm run stills`.
+- The sign-up panel has no backend yet: wire `src/components/site/Signup.tsx` to your auth provider.
+- The logo (`src/components/site/Logo.tsx`, `src/app/icon.svg`, `public/brand/`) is a stand-in.

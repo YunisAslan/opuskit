@@ -23,8 +23,8 @@ const schema = z.object({
 })
 type Values = z.infer<typeof schema>
 
-export function Signup() {
-  const [open, setOpen] = useState(false)
+export function Signup({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
+  const [open, setOpen] = useState(initiallyOpen)
   const [email, setEmail] = useState<string | null>(null)
   const [code, setCode] = useState('')
   const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { email: '', changelog: true } })

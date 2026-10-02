@@ -24,7 +24,8 @@ export function Nav() {
     const prev = scrollY.getPrevious() ?? 0
     setHidden(y > 160 && y > prev)
   })
-  useEffect(() => setOpen(false), [path])
+  const [shownPath, setShownPath] = useState(path)
+  if (path !== shownPath) { setShownPath(path); setOpen(false) } // a new page closes the menu
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
@@ -37,7 +38,7 @@ export function Nav() {
   return (
     <motion.header className="fixed inset-x-0 top-4 z-50 flex flex-col items-center gap-2 px-4"
       animate={{ y: hidden && !open ? '-160%' : '0%' }} transition={reduce ? { duration: 0 } : { duration: 0.35, ease: [0.22, 1, 0.36, 1] }}>
-      <nav aria-label="Main" className={`w-full max-w-[720px] border border-(--color-border) bg-(--color-surface)/75 backdrop-blur-md transition-[border-radius] duration-200 ${open ? 'rounded-(--radius-card)' : 'rounded-full'}`}>
+      <nav aria-label="Main" className={`w-full max-w-[720px] border border-(--color-border) backdrop-blur-md transition-[border-radius] duration-200 ${open ? 'rounded-(--radius-card) bg-(--color-surface)' : 'rounded-full bg-(--color-surface)/75'}`}>
         <div className="flex h-14 items-center justify-between gap-4 pl-5 pr-2">
           <Link href="/" aria-label="Hexmint, home" className="shrink-0"><Logo /></Link>
           <ul className="hidden items-center sm:flex">

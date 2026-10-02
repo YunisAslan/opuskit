@@ -191,7 +191,7 @@ function render(id: string, { c, display, r, shape }: Ctx): ReactNode {
     </>
     case 'sig:scramble-labels': return <>
       <div className="absolute inset-0" style={{ backgroundImage: `linear-gradient(${c.border} 1px, transparent 1px), linear-gradient(90deg, ${c.border} 1px, transparent 1px)`, backgroundSize: '12.5cqw 12.5cqw' }} />
-      {['// 01 — SYNC', '// 02 — AUDIT', '// 03 — SHIP'].map((t, i) => (
+      {['// 01 SYNC', '// 02 AUDIT', '// 03 SHIP'].map((t, i) => (
         <span key={t} className="od-ink absolute" style={{ left: `${6 + i * 31}cqw`, top: '10cqw', fontSize: '2.4cqw', fontFamily: 'ui-monospace, monospace', color: c.accent, animationDelay: `${i * 0.4}s` }}>{t}</span>
       ))}
       {[0, 1, 2].map((i) => <Box key={i} x={6 + i * 31} y={18} w={26} h={30} style={{ ...card }}><Bar x={2} y={4} w={16} h={1.6} color={c.text} /><Bar x={2} y={8} w={20} color={c.muted} o={0.6} /></Box>)}

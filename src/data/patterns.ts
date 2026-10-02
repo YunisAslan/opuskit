@@ -765,7 +765,7 @@ export const signaturePatterns: SignaturePattern[] = [
   {
     id: 'scramble-labels', viaConcept: true, name: 'Labels that decode', sections: ['feature-grid', 'featured-work', 'integrations', 'how-it-works', 'stats', 'services', 'navbar'],
     levels: ['subtle', 'dynamic', 'immersive'], fits: ['saas', 'product', 'agency', 'technical', 'futuristic', 'digital', 'cyber', 'y2k', 'console'],
-    experience: 'Small labels (// FEATURES, 02 — SYNC) resolve out of random characters as they come into view, over a fine hairline grid — the section reads like a live console.',
+    experience: 'Small labels (// Features, // 02 Sync) resolve out of random characters as they come into view, over a fine hairline grid — the section reads like a live console.',
     implementation: 'Labels in the utility face, prefixed with “//”; each runs a character scramble once on first view (≈ 600ms, a fixed-width box so nothing shifts) — the TextScramble kit piece if it is in the kit, else a small rAF loop. The section gets a 1px hairline grid in the border colour behind it.',
     mobile: 'Same, labels only (no grid under 640px).', reducedMotion: 'Labels shown as they are.',
   },
@@ -821,7 +821,7 @@ export const concepts: Record<ConceptId, Concept> = {
     fits: ['saas', 'product', 'technical', 'futuristic', 'digital', 'tech', 'neon', 'cyber', 'y2k', 'chrome', 'grid'],
     levels: ['subtle', 'dynamic', 'immersive'],
     motif: 'Console chrome everywhere, quietly: // labels in the utility face, a fine hairline grid behind key sections, numbers in tabular figures.',
-    chapters: 'Chapters open with a numbered // label that decodes out of random characters as it arrives (// 02 — SYNC).',
+    chapters: 'Chapters open with a numbered // label that decodes out of random characters as it arrives (// 02 Sync).',
     moment: 'A live status line that is true right now (open, online, next release, local time) — the one thing that proves the site is alive.',
     ending: 'The footer ends on the status line and a plain, monospaced sign-off.',
     signatures: ['scramble-labels', 'live-status'],

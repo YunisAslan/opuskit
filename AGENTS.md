@@ -118,8 +118,9 @@ To (re)generate `public/live/{slug}/` from `examples/{slug}/`:
 3. In `out/`, grep every `.html`/`.txt`/`.js`/`.css` for `"/media/`, `` `/media/ `` (template literals) and `url(/media/`,
    and point each at `/examples/{slug}/media/`. Copy everything **except** `out/media/` into `public/live/{slug}/`.
 4. Inner links (`/live/{slug}/about`) resolve via the `fallback` rewrites in `next.config.ts` (→ `about.html`).
-   Link to `.../index.html` explicitly, not a trailing slash — `public/` files are exact-match only,
-   and the app's default trailing-slash redirect (`/live/{slug}/` → `/live/{slug}`) 404s otherwise.
+   The site's own home is `/live/{slug}` (no trailing slash; the same rewrite maps it to `index.html`) — that is the
+   `livePath`. Never link `.../index.html`: the page then sees `/index.html` as its path instead of `/` and marks the
+   wrong menu link as current (a hydration mismatch React never repairs). A trailing slash 404s (`public/` is exact-match).
 5. Verify with a real browser (not just curl), via a click-through from the nav, not just a direct
    URL — assert no failed requests and that the clicked-to page actually renders.
 

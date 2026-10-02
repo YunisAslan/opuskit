@@ -8,8 +8,8 @@ export function TestimonialsSection({ title, quotes }: { title: string; quotes: 
       <div className="mx-auto max-w-[1440px]">
         <h2><ChapterLabel>{title}</ChapterLabel></h2>
         {lead && (
-          <figure data-reveal className="mt-8 max-w-[34ch] md:max-w-[28ch]">
-            <blockquote className="type-heading text-balance [font-size:clamp(1.6rem,3.6vw,3rem)]">“{lead.quote}”</blockquote>
+          <figure data-reveal className="mt-8">
+            <blockquote className="type-heading max-w-[24ch] text-balance [font-size:clamp(1.6rem,3.6vw,3rem)]">“{lead.quote}”</blockquote>
             <figcaption className="type-body mt-6"><span className="block">{lead.name}</span><span className="block text-(--color-muted)">{lead.role}</span></figcaption>
           </figure>
         )}

@@ -21,6 +21,7 @@ export function Hero3D() {
     // Dev only: /?still=hero|invoices|expenses|books|close renders a full-screen still for `npm run stills`.
     if (process.env.NODE_ENV !== 'production') {
       const v = new URLSearchParams(location.search).get('still') as Variant | null
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- the URL is only readable after mount
       if (v) { setStill(v); return }
     }
     const nav = navigator as Navigator & { deviceMemory?: number }
@@ -40,7 +41,7 @@ export function Hero3D() {
   )
 
   return (
-    <div ref={box} aria-hidden className="absolute inset-0">
+    <div ref={box} aria-hidden className="absolute inset-x-0 top-0 h-[62svh] md:inset-0 md:h-auto">
       <MediaAsset id="heroPoster" priority className="absolute inset-0 size-full object-cover" />
       {live && (
         <div className={`absolute inset-0 transition-opacity duration-700 ${shown ? 'opacity-100' : 'opacity-0'}`}>

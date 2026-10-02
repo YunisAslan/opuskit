@@ -18,11 +18,11 @@ export function TextEffect({ children, as = 'h2', per = 'word', preset = 'slide'
   const Tag = motion[as as 'h2']
   const parts = per === 'word' ? children.split(/(\s+)/) : children.split('')
   return (
-    <Tag className={className} initial={reduce ? false : 'hidden'} whileInView="visible" viewport={{ once: true, amount: 0.6 }}
-      transition={{ staggerChildren: per === 'word' ? 0.06 : 0.025, delayChildren: delay }}>
+    <Tag className={className} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.6 }}
+      transition={reduce ? { duration: 0 } : { staggerChildren: per === 'word' ? 0.06 : 0.025, delayChildren: delay }}> {/* same markup either way (hydration); reduced motion only drops the timing */}
       <span className="sr-only">{children}</span>
       {parts.map((p, i) => (
-        <motion.span key={i} aria-hidden className="inline-block whitespace-pre" variants={ITEM[preset]} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>{p}</motion.span>
+        <motion.span key={i} aria-hidden className="inline-block whitespace-pre" variants={ITEM[preset]} transition={reduce ? { duration: 0 } : { duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>{p}</motion.span>
       ))}
     </Tag>
   )

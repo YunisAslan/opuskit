@@ -62,7 +62,7 @@ export const recipeSeeds: RecipeSeed[] = [
     mood: ['Refined', 'Unhurried', 'Exclusive'],
     personality: 'An atelier that never raises its voice.',
     principles: ['Photography sells; typography frames', 'Slowness signals value — long spacing, few elements', 'UI text is small and quiet — like a garment label, in sentence case', 'Product presentation is editorial first, commercial second'],
-    do: ['Set Noto Serif Display only at display sizes (≥ 48px)', 'Use 3:4 portrait images at full column height', 'Keep navigation to three plain words', 'Show prices quietly, in the utility face'],
+    do: ['Set the display face only at display sizes (≥ 48px)', 'Use 3:4 portrait images at full column height', 'Keep navigation to three plain words', 'Show prices quietly, in the utility face'],
     avoid: ['Sale badges, countdowns, pop-ups', 'Gold gradients or "luxury" ornaments', 'Dense product grids above the fold', 'Centred body paragraphs'],
     sectionNotes: {
       hero: 'Full-height portrait image (columns 5–12), collection title in Noto Serif Display 300 at 8rem — one phrase in italic — overlapping the image edge by one column.',
@@ -108,7 +108,7 @@ export const recipeSeeds: RecipeSeed[] = [
     mood: ['Loud', 'Honest', 'Energetic'],
     personality: 'A shopkeeper who tells you exactly what it is and what it costs.',
     principles: ['Structure is visible — borders are the aesthetic', 'Flat color, hard edges, zero blur', 'Interactions feel physical (press, snap)', 'Information like a receipt: SKU, price, stock'],
-    do: ['Use 2px ink borders on all modules', 'Hard offset shadows (4px 4px 0 ink) that collapse on press', 'Set prices and SKUs in Big Shoulders at small size', 'Invert to the text colour on hover — no extra colour'],
+    do: ['Use 2px ink borders on all modules', 'Hard offset shadows (4px 4px 0 ink) that collapse on press', 'Set prices and SKUs in the display face at small size', 'Invert to the text colour on hover — no extra colour'],
     avoid: ['Blurred shadows, glass, gradients', 'Thin, delicate type', 'Hidden prices', 'Irony that hurts usability — checkout must be boringly clear'],
     sectionNotes: {
       hero: 'Product on the surface colour inside a bordered module; product name in Big Shoulders 800 caps at 10rem breaking out of the module; price sticker rotated −4°.',
@@ -130,7 +130,7 @@ export const recipeSeeds: RecipeSeed[] = [
     mood: ['Warm', 'Tactile', 'Grounded'],
     personality: 'A maker who explains how things are made, with care.',
     principles: ['Materials over graphics', 'Soft geometry — arches and gentle radii, never bubbly', 'Calm, editorial pacing between product moments', 'Colors taken from the products themselves'],
-    do: ['Use close-up material photography (clay, linen, wood grain)', 'Mask key images with an arch (border-radius: 999px 999px 0 0)', 'Pair Young Serif with Alegreya Sans', 'Use the primary colour for the main action only'],
+    do: ['Use close-up material photography (clay, linen, wood grain)', 'Mask key images with an arch (border-radius: 999px 999px 0 0)', 'Let the display face lead and the body face carry the reading', 'Use the primary colour for the main action only'],
     avoid: ['Pure black text', 'Neon or cool blue accents', 'Clinical, dense grids', 'Stock lifestyle photos with fake smiles'],
     sectionNotes: {
       hero: 'Arched product image centred with headline above in Young Serif 6rem; small "Handmade in small batches" label.',
@@ -197,7 +197,7 @@ export const recipeSeeds: RecipeSeed[] = [
     mood: ['Precise', 'Advanced', 'Calm'],
     personality: 'A lab that publishes its data.',
     principles: ['Technical, not sci-fi costume', 'Depth through lighting, not glow effects', 'Data and specs are design material', 'One luminous accent, used as a signal'],
-    do: ['Use tabular figures in Atkinson Hyperlegible Next for numbers', 'Light 3D with a single key light and soft rim', 'Use hairline borders in the border token (#34497A)', 'Show real numbers (latency, uptime) in tabular figures'],
+    do: ['Use tabular figures in the utility face for numbers', 'Light 3D with a single key light and soft rim', 'Use hairline borders in the border token', 'Show real numbers (latency, uptime) in tabular figures'],
     avoid: ['Purple-blue AI gradients', 'Neon glow and lens flares', 'Fake terminal typing animations', 'Vague "the future of…" copy'],
     sectionNotes: {
       hero: '3D object centred-right, reacting to pointer ≤ 8°; headline left in Science Gothic at 150% width, 6rem; a status row in tabular figures: "v2.4, 99.99% uptime, 12ms p50".',

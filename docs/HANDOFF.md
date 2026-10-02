@@ -73,10 +73,12 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
 ## Next
 
 1. **Example #2 Brasshand** — built and registered 2026-10-01 (`examples/brasshand/`, live at
-   `/live/brasshand/index.html`). Open: clips (the user records them), and removing `cheeky911` with its kit photos
+   `/live/brasshand`). Open: clips (the user records them), and removing `cheeky911` with its kit photos
    (plan-for-fit §9 — needs the user's OK).
-2. **Example #3 Hexmint** (SaaS, digital-futurism, 3D first screen in code, immersive, Big idea "A live console"):
-   recipe approved, building (`examples/hexmint/BUILD-LOG.md`). Then #4–#10 in the §5 order.
+2. **Example #3 Hexmint** — built and registered 2026-10-02 (`/live/hexmint`); clips open. Next: **#4 Studio**
+   (experimental / sticker-studio, orbit stickers, lively — Bubblegum + Stack, playful entry gate, travelling motif).
+   Builds since Brasshand also fixed OpusKit itself: rules name roles not fonts/hex; ready sections ship no "→",
+   middle dots or 01/02 markers; TextScramble/TextEffect accessibility + hydration.
 3. Put aside by the user (2026-10-01): D1–D2 WebGL pieces; Slow Atlas clips (recorded later by the user).
 
 ## Done so far (2026-10-01)
@@ -88,7 +90,7 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
   Preloader (hydration under reduced motion).
 
 - **Example #1 Slow Atlas** (`examples/slow-atlas/`): built from the kit by Claude Code (prompts in its `BUILD-LOG.md`),
-  photos from Unsplash (`media-src/SOURCES.md`), registered on `/examples`, live at `/live/slow-atlas/index.html`,
+  photos from Unsplash (`media-src/SOURCES.md`), registered on `/examples`, live at `/live/slow-atlas`,
   old `ulooklonely` removed. Built before plan-vibe; may be rebuilt from its recipe after C.
 - **Kit connection (plan-for-fit §8)**: `src/features/kit/closest.ts` picks the closest real site / section / menu /
   footer clip; `src/components/RealSiteClip.tsx` shows it in Design and Pages and on `/examples/{slug}`. Old examples

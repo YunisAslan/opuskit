@@ -49,8 +49,8 @@ export function layout(variant: Variant, small = false): Tile[] {
 // Camera per variant: position and look-at for a landscape frame; portrait frames pull back and lift the field.
 export const cameras: Record<Variant, { pos: [number, number, number]; look: [number, number, number]; shiftX: number }> = {
   hero: { pos: [-0.6, 7.2, 10.8], look: [0, -0.5, 0.4], shiftX: 2.1 },
-  invoices: { pos: [0, 3.6, 6.2], look: [0, 0.6, 0], shiftX: 0 },
-  expenses: { pos: [0.6, 4.6, 6.0], look: [0, 0.3, 0], shiftX: 0 },
-  books: { pos: [-0.8, 3.8, 6.4], look: [0, 0.7, 0], shiftX: 0 },
-  close: { pos: [0, 6.8, 6.8], look: [0, 0, 0], shiftX: 0 },
+  invoices: { pos: [0, 3.5, 5.5], look: [0, 0.55, 0], shiftX: 0 },
+  expenses: { pos: [-0.3, 5.6, 8.4], look: [0.6, 0.2, 0], shiftX: 0 },
+  books: { pos: [-1.6, 4.4, 7.6], look: [0.3, 0.8, 0], shiftX: 0 },
+  close: { pos: [0, 9.2, 8.4], look: [0, -0.2, 0], shiftX: 0 },
 }

@@ -21,7 +21,8 @@ export type ExampleProject = {
   mood: string[]
   /** Real media from the site itself, shown directly — proof, not a mockup. */
   hero: ExampleHero
-  /** index.html of a real static export — opens the actual site, not a copy of it. */
+  /** A real static export (public/live/{slug}/, served at /live/{slug} by a rewrite) — opens the actual site, not a copy of it.
+   *  Never link its index.html: the page would see /index.html as its path, not /, and mark the wrong menu link. */
   livePath: string
   /** A short, light loop from the same site for small previews (the hero file can be a heavy scrub encode). */
   clip?: string
@@ -39,13 +40,41 @@ export type ExampleProject = {
 
 export const examples: ExampleProject[] = [
   {
+    slug: 'hexmint',
+    title: 'Hexmint: invoices, expenses and quarterly books for small studios',
+    summary: 'Invoices, expenses and quarterly books for small studios. Set up in five minutes, closed in one click.',
+    mood: ['Precise', 'Advanced', 'Calm'],
+    // Its first screen is a 3D scene built in code; the hero still is the poster rendered from that scene.
+    hero: { kind: 'image', src: '/examples/hexmint/media/hero-poster.jpg' },
+    livePath: '/live/hexmint',
+    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'SaaS' },
+      { label: 'Name', value: 'Hexmint' },
+      { label: 'Visitors should', value: 'Sign up or start a trial' },
+      { label: 'Style', value: 'Digital Futurism' },
+      { label: 'First screen', value: '3D / WebGL scene' },
+      { label: 'Movement', value: 'Immersive' },
+      { label: 'Colors', value: 'Night Ink' },
+      { label: 'Lettering', value: 'Funnel' },
+      { label: 'Layout', value: 'Grid-driven' },
+      { label: 'Shape', value: 'Round' },
+      { label: 'Menu', value: 'Floating pill' },
+      { label: 'Big idea', value: 'A live console' },
+      { label: 'Pages', value: 'Home, Features, Pricing, FAQ' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'No photos: the 3D scene is built in code and its stills are rendered from it; clients, quotes and product figures are made up; Claude Code drew the logo during the build.',
+  },
+  {
     slug: 'brasshand',
     title: 'Brasshand, a branding studio in Baku',
     summary: 'Brasshand is a three-person branding studio in Baku: names, identities and campaigns for food, music and culture.',
     mood: ['Bold', 'Articulate', 'Graphic'],
     // Its first screen is type, not media: the hero still is the site's own first screen.
     hero: { kind: 'image', src: '/examples/brasshand/media/poster.jpg' },
-    livePath: '/live/brasshand/index.html',
+    livePath: '/live/brasshand',
     // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
@@ -73,7 +102,7 @@ export const examples: ExampleProject[] = [
     mood: ['Direct', 'Informed', 'Urgent'],
     // Its first screen is type, not media: the hero still is the site's own first screen.
     hero: { kind: 'image', src: '/examples/slow-atlas/media/poster.jpg' },
-    livePath: '/live/slow-atlas/index.html',
+    livePath: '/live/slow-atlas',
     // Rebuilt 2026-10-01 (plan-vibe C): clips are re-recorded by the user from the new live export — until then the kit
     // offers no clip of it. Add `clip` and `sectionClips` (public/media/clips/{sectionId}.mp4) when they land.
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
@@ -102,7 +131,7 @@ export const examples: ExampleProject[] = [
     summary: 'Three days of polo on the grass ground in Sheki, 11–13 June 2027. Seats by RSVP.',
     mood: ['Rational', 'Direct', 'Timeless'],
     hero: { kind: 'video', src: '/examples/swiss-modern-event-site-claude-code/media/heroVideo.mp4', poster: '/examples/swiss-modern-event-site-claude-code/media/posterImage.jpg' },
-    livePath: '/live/swiss-modern-event-site-claude-code/index.html',
+    livePath: '/live/swiss-modern-event-site-claude-code',
     // From CLAUDE.md + recipe/*.md. The owner's 720×404 web-copy video was sharpened afterwards with the automatic
     // Real-ESRGAN step now built into prepare-video.sh (the version it was built with only suggested it).
     choices: [
@@ -128,7 +157,7 @@ export const examples: ExampleProject[] = [
     summary: 'Porsche 911s, filmed and shown like a collection. Selected cars, one season at a time.',
     mood: ['Nostalgic', 'Warm', 'Dramatic'],
     hero: { kind: 'video', src: '/examples/cheeky911/media/heroVideo.mp4', poster: '/examples/cheeky911/media/posterImage.jpg' },
-    livePath: '/live/cheeky911/index.html',
+    livePath: '/live/cheeky911',
     clip: '/examples/cheeky911/media/clip.mp4',
     // From CLAUDE.md + recipe/*.md (recipe e8e483ca).
     choices: [
@@ -153,7 +182,7 @@ export const examples: ExampleProject[] = [
     summary: 'Fleece, carry and snacks from one Porto workshop, made in runs of two hundred.',
     mood: ['Dramatic', 'Dark', 'Rebellious'],
     hero: { kind: 'video', src: '/examples/buytolose/media/heroVideo.mp4', poster: '/examples/buytolose/media/posterImage.webp' },
-    livePath: '/live/buytolose/index.html',
+    livePath: '/live/buytolose',
     clip: '/examples/buytolose/media/clip.mp4',
     // From CLAUDE.md + recipe/*.md (recipe 9858fffc).
     choices: [
@@ -178,7 +207,7 @@ export const examples: ExampleProject[] = [
     summary: 'Sparkling cold-brew coffee with orange and lemon peel, in a 330 ml can. 45 mg caffeine, 35 kcal.',
     mood: ['Direct', 'Informed', 'Urgent'],
     hero: { kind: 'video', src: '/examples/keepers/media/heroVideo.mp4', poster: '/examples/keepers/media/posterImage.jpg' },
-    livePath: '/live/keepers/index.html',
+    livePath: '/live/keepers',
     clip: '/examples/keepers/media/clip.mp4',
     // From CLAUDE.md + recipe/*.md (recipe 1c6a6cfc).
     choices: [
@@ -202,7 +231,7 @@ export const examples: ExampleProject[] = [
     summary: 'A small coffee shop in Old Town. Espresso, iced drinks, matcha and cake, each one made to order.',
     mood: ['Light', 'Friendly', 'Functional'],
     hero: { kind: 'video', src: '/examples/kofii/media/heroVideo.mp4', poster: '/examples/kofii/media/posterImage.jpg' },
-    livePath: '/live/kofii/index.html',
+    livePath: '/live/kofii',
     clip: '/examples/kofii/media/clip.mp4',
     choices: [
       { label: 'Making', value: 'Restaurant' },

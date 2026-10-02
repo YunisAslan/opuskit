@@ -5,7 +5,7 @@ import { SmoothScroll } from '@/components/pieces/SmoothScroll'
 import { Nav } from '@/components/site/Nav'
 import { RevealObserver } from '@/components/site/RevealObserver'
 import { SiteFooter } from '@/components/site/SiteFooter'
-import { Signup } from '@/components/site/Signup'
+import { SignupLoader } from '@/components/site/SignupLoader'
 import { Toaster } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import './globals.css'
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Nav />
           <main id="main">{children}</main>
           <SiteFooter />
-          <Signup />
+          <SignupLoader />
           <Toaster position="bottom-center" />
           <RevealObserver />
           <PageCurtain />

@@ -15,7 +15,10 @@ import { brand, clients, features, heroStats, quotes, rows, tools } from '@/cont
 export default function Home() {
   return (
     <>
-      <section className="relative flex min-h-[640px] flex-col justify-end overflow-hidden px-6 pb-8 pt-40 [height:100svh] md:pb-10">
+      {/* The poster is the first screen's largest paint: start fetching the right crop before anything else. */}
+      <link rel="preload" as="image" href={assets.heroPoster.mobile} media="(max-width: 639px)" fetchPriority="high" />
+      <link rel="preload" as="image" href={assets.heroPoster.src} media="(min-width: 640px)" fetchPriority="high" />
+      <section className="relative flex flex-col justify-end overflow-hidden px-6 pb-8 pt-[44svh] md:min-h-[640px] md:pb-10 md:pt-40 md:[height:100svh]">
         <Hero3D />
         <div className="relative mx-auto w-full max-w-[1440px]">
           {/* One h1, split into lines by hand: two lines on desktop, three on a phone. */}

@@ -5,11 +5,12 @@
     "logo": {
       "required": true,
       "level": "required",
-      "status": "create",
-      "source": "Your brand identity",
+      "status": "temporary",
+      "source": "Made during the build: a hexagon with a ledger slot (src/components/site/Logo.tsx, src/app/icon.svg, public/brand/)",
       "replaceWith": "user-owned-logo",
       "usage": "Navigation, footer, favicon",
-      "specs": "SVG; dark and light versions; square symbol for favicon"
+      "specs": "SVG; dark and light versions; square symbol for favicon",
+      "note": "Stand-in until the real logo exists"
     },
     "typefaces": {
       "required": true,
@@ -23,38 +24,50 @@
     "finalCopy": {
       "required": true,
       "level": "required",
-      "status": "create",
-      "source": "Written by you",
+      "status": "temporary",
+      "source": "src/content/site.ts",
       "replaceWith": "user-owned-copy",
       "usage": "Headlines, body, CTAs",
-      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "note": "Client names, quotes and product numbers are demo stand-ins; replace with real ones before launch"
     },
     "3dModelOrScene": {
       "required": true,
       "level": "required",
-      "status": "temporary",
-      "source": "curated-placeholder",
+      "status": "have",
+      "source": "Built in code from shapes, no model file: src/components/scene/HexScene.tsx + layouts.ts",
       "replaceWith": "user-owned-3d",
       "usage": "Hero scene",
-      "specs": "GLB < 3MB, < 100k triangles, or a Spline scene"
+      "specs": "GLB < 3MB, < 100k triangles, or a Spline scene",
+      "note": "Instanced bevelled hexagonal prisms, one key light and a rim; replace with a GLB only if the brand gets a real object"
     },
     "preRenderedPoster": {
       "required": true,
       "level": "required",
-      "status": "temporary",
-      "source": "curated-placeholder",
+      "status": "have",
+      "source": "Rendered from the scene itself: npm run stills (scripts/render-stills.mjs)",
       "replaceWith": "user-owned-images",
       "usage": "Loading state, mobile & reduced motion fallback",
-      "specs": "Rendered from the hero camera angle"
+      "specs": "Rendered from the hero camera angle",
+      "files": [
+        "public/media/hero-poster.jpg",
+        "public/media/hero-poster-mobile.jpg"
+      ]
     },
     "supportingRenders": {
       "required": false,
       "level": "recommended",
-      "status": "find",
-      "source": "Unsplash / Pexels",
+      "status": "have",
+      "source": "Rendered from the same scene and lights: npm run stills",
       "replaceWith": "user-owned-images",
       "usage": "Feature sections",
-      "specs": "Same lighting setup"
+      "specs": "Same lighting setup",
+      "files": [
+        "public/media/render-invoices.jpg",
+        "public/media/render-expenses.jpg",
+        "public/media/render-books.jpg",
+        "public/media/render-close.jpg"
+      ]
     }
   }
 }

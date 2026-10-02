@@ -10,10 +10,9 @@ export function FeatureRowsSection({ link: L = 'a', title, rows }: { link?: Elem
             <li key={r.name} className="grid items-center gap-8 md:grid-cols-12 md:gap-10">
               {r.image && <img src={r.image} alt={r.alt ?? ''} loading="lazy" className={`aspect-[4/3] w-full rounded-(--radius-media) bg-(--color-surface) object-cover md:col-span-7 ${i % 2 ? 'md:order-2 md:col-start-6' : ''}`} />}
               <div className={!r.image ? 'md:col-span-8' : i % 2 ? 'md:order-1 md:col-span-4 md:col-start-1' : 'md:col-span-4 md:col-start-9'}>
-                <p className="type-utility text-(--color-muted)">{String(i + 1).padStart(2, '0')}</p>
-                <h3 className="type-heading mt-3 text-balance [font-size:clamp(1.5rem,2.6vw,2.4rem)]">{r.name}</h3>
+                <h3 className="type-heading text-balance [font-size:clamp(1.5rem,2.6vw,2.4rem)]">{r.name}</h3>
                 <p className="type-body mt-4 max-w-[46ch] text-(--color-muted)">{r.text}</p>
-                {r.link && <L href={r.link.href} className="type-body mt-6 inline-block underline underline-offset-4">{r.link.label} →</L>}
+                {r.link && <L href={r.link.href} className="type-body mt-6 inline-block underline underline-offset-4">{r.link.label}</L>}
               </div>
             </li>
           ))}

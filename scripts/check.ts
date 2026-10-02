@@ -311,6 +311,12 @@ const main = async () => {
     const all = (await a.generate(shopFilm)).files.map((f) => f.content).join('').replace(/No GSAP[^.]*\./g, '')
     assert.ok(!/gsap|scrolltrigger/i.test(all), `${a.id}: no GSAP guidance`)
   }
+  // Ready sections never ship the generic tells the recipe forbids: "→" after links, middle-dot joins, 01/02 markers.
+  for (const [id, src] of Object.entries(blockSource)) assert.ok(!/→| · |padStart\(2, '0'\)/.test(src!), `${id}: ready section ships a generic tell`)
+  { // Rules hold for any pick: no seed or look rule names a font family or a hex value (section notes may — they apply only with the seed's own lettering).
+    const fams = [...new Set(Object.values(typography).flatMap((t) => [t.display.family, t.body.family, t.utility.family]))]
+    for (const line of [...recipeSeeds.flatMap((x) => [...x.do, ...x.principles, ...x.avoid]), ...Object.values(directions).flatMap((d) => [...d.do, ...d.principles, ...d.avoid])]) assert.ok(!/#[0-9a-f]{6}\b/i.test(line) && !fams.some((f) => line.includes(f)), `a rule names a font or a hex — use a role: ${line}`)
+  }
   for (const seed of recipeSeeds) for (const line of [...seed.do, ...seed.principles, ...Object.values(seed.sectionNotes)] as string[]) assert.ok(!/\b(blue|pink|red|violet|rose|leaf green|powder)\b/i.test(line), `${seed.slug}: a rule names a hue of its own palette — use a colour role: ${line}`)
   // Award vibe (docs/plan-vibe.md C): every seed has a big idea that its pages can carry, and the package says how.
   for (const seed of recipeSeeds) { const r = composeRecipe(specFromSeed(seed)); assert.ok(r.concept && r.signatures.some((x) => concepts[r.concept!.id].signatures.includes(x.id)), `${seed.slug}: has a big idea with a moment on its pages`) }
@@ -521,6 +527,7 @@ const main = async () => {
     // Choices alone can't name a custom page; an example that ships opuskit.json carries it exactly.
     if (!existsSync(`examples/${e.slug}/opuskit.json`)) assert.ok(!spec.pages.some((p) => p.type === 'custom'), `${e.slug}: every page is a known page type`)
   }
+  for (const e of examples) assert.ok(/^\/live\/[a-z0-9-]+$/.test(e.livePath) && existsSync(`public${e.livePath}/index.html`), `${e.slug}: livePath is /live/{slug} (never index.html) and its export exists`)
   // The kit's "a site like this" clips (plan §8): every clip exists, sits on a part the site has, and only fair matches show.
   for (const e of examples) {
     const spec = (exampleSpecs as Record<string, RecipeSpec>)[e.slug]

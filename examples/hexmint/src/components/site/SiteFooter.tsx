@@ -19,7 +19,7 @@ export function SiteFooter() {
       end={
         <div className="type-utility mx-auto mt-4 flex max-w-[1440px] flex-wrap items-center justify-between gap-x-6 gap-y-2 tabular-nums">
           <StatusLine dot="bg-(--color-background)" />
-          <p>// End of page. Your books can look this tidy.</p>
+          <p>{'// End of page. Your books can look this tidy.'}</p>
         </div>
       } />
   )

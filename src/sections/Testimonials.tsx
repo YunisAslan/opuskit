@@ -9,7 +9,7 @@ export function TestimonialsSection({ title, quotes }: { title: string; quotes: 
         {lead && (
           <figure className="mt-8 max-w-[34ch] md:max-w-[28ch]">
             <blockquote className="type-heading text-balance [font-size:clamp(1.6rem,3.6vw,3rem)]">“{lead.quote}”</blockquote>
-            <figcaption className="type-body mt-6 text-(--color-muted)">{lead.name} · {lead.role}</figcaption>
+            <figcaption className="type-body mt-6 text-(--color-muted)">{lead.name}, {lead.role}</figcaption>
           </figure>
         )}
         {rest.length > 0 && (
@@ -17,7 +17,7 @@ export function TestimonialsSection({ title, quotes }: { title: string; quotes: 
             {rest.map((q) => (
               <li key={q.name}>
                 <blockquote className="type-body">“{q.quote}”</blockquote>
-                <p className="type-utility mt-4 text-(--color-muted)">{q.name} · {q.role}</p>
+                <p className="type-utility mt-4 text-(--color-muted)">{q.name}, {q.role}</p>
               </li>
             ))}
           </ul>

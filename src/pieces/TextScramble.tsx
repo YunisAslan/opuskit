@@ -30,7 +30,8 @@ export function TextScramble({ children, duration = 0.8, className, replayOnHove
   useEffect(() => () => clearInterval(timer.current), [])
 
   return (
-    <span ref={ref} className={className} onMouseEnter={replayOnHover ? run : undefined} aria-label={children}>
+    <span ref={ref} className={className} onMouseEnter={replayOnHover ? run : undefined}>
+      <span className="sr-only">{children}</span>
       <span aria-hidden className="tabular-nums">{text}</span>
     </span>
   )
