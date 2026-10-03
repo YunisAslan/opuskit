@@ -1,0 +1,43 @@
+# Verification
+
+The build is done when every item passes.
+
+- [ ] Background is #6E1E4A; no other page background colors are introduced.
+- [ ] Display text uses Grenze Gotisch 700; body uses Work Sans; no other families appear.
+- [ ] Accent #9FE6C4 covers < 5% of any viewport.
+- [ ] Pages: Home · Collections · About · Contact — every page shares the same navbar and footer.
+- [ ] Footer “Signature columns”: Dark band (text colour as ground): the logo large on the left (5 of 12 columns), 2–3 link columns with headings, then a hairline and one row: copyright left, legal links right.
+- [ ] Home section order: Hero → Collection → Product Grid → Journal → Newsletter.
+- [ ] Collections section order: Collection → Lookbook → Product Grid.
+- [ ] About section order: About → Editorial Story → Team.
+- [ ] Contact section order: Closing CTA → Location → FAQ.
+- [ ] Hero matches "Ambient video hero": Full-viewport muted loop (8–15s) behind a short headline; a poster frame shows instantly while video loads.
+- [ ] Controls and forms use shadcn/ui (button, sheet, sonner, tooltip, navigation-menu, dropdown-menu, radio-group, select, toggle-group, badge, card, pagination, input, form, label, carousel, textarea, checkbox, accordion) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.
+- [ ] Sections with ready code are built from their component in src/components/sections/ (real copy and media through props, no placeholder text left) and styled only through the recipe tokens. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.
+- [ ] Kit piece "Rolling links" (<TextRoll/> from src/components/pieces/TextRoll.tsx) is used on Every page — menu, footer and text links, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Hopping arrow button" (<SwapButton/> from src/components/pieces/SwapButton.tsx) is used on Every page — the main action, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Big idea “Loud covers, quiet reading” is visible on every page: two volumes, never mixed: covers (the first screen, chapter openers, the start of each story) are loud — giant type, a full-bleed photo — and everything people read stays narrow, calm and quiet.
+- [ ] Chapters open as the big idea says: Chapters open like magazine covers: one giant word or a full-width photo, then the calm column starts.
+- [ ] The site ends as the big idea says: A quiet ending: the footer is as calm as the reading, with the name set large once.
+- [ ] Signature moment "Chapters that open with a giant word" is built on Home — Journal, with its mobile and reduced-motion versions.
+- [ ] Signature moment "Photos revealed like a curtain" is built on Collections — Lookbook, with its mobile and reduced-motion versions.
+- [ ] Every page passes the award checklist in the recipe (one idea, one unforgettable moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).
+- [ ] Video: public/media/heroVideo.mp4 and mobileVideoEncode.mp4 exist and were produced by prepare-video.sh (not raw browser uploads); file size ≤ 6 MB desktop / ≤ 3 MB mobile; poster images (posterImage.jpg, posterMobile.jpg) exist and load before the video.
+- [ ] Video sharpness: ffprobe shows heroVideo.mp4 ≥ 1920 px wide and mobileVideoEncode.mp4 ≥ 1080 px tall — if not, re-run prepare-video.sh (it sharpens small sources) rather than letting the browser stretch it.
+- [ ] Layout: Overlay text in 5–6 columns at bottom-left; interstitial text centred in 8; section spacing Media sections are 100svh; text sections 120–160px padding.
+- [ ] Shape “Sharp”: buttons 0px, cards 0px, media 0px radius (rounded-button / rounded-card / rounded-media) — No rounded corners anywhere; structure comes from lines and space.
+- [ ] Menu “Centered logo”: Symmetric bar: links left, logo centred, secondary links and the action right; generous height at the top that shrinks after scrolling.
+- [ ] Absent: Blackletter for paragraphs.
+- [ ] Absent: Bright pastel accents.
+- [ ] Absent: Cute illustrations.
+- [ ] Absent: A cream or beige page ground with a clay/terracotta accent.
+- [ ] Absent: A near-black ground with one acid-green or orange accent, or tinted charcoal standing in for black.
+- [ ] Absent: Small uppercase, letter-spaced monospace labels above every heading.
+- [ ] Absent: Numbered markers (01 / 02) on content that is not a real sequence.
+- [ ] Absent: Meta strings joined with middle dots or spaced em dashes, and "→" appended to links.
+- [ ] Absent: One italic or coloured accent word inside an otherwise plain headline.
+- [ ] Absent: Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe's fonts.
+- [ ] Mobile (390px): no horizontal scroll, headlines re-broken intentionally, touch targets ≥ 44px.
+- [ ] prefers-reduced-motion: every animation has its documented alternative.
+- [ ] Every media element is rendered through the asset config layer; temporary assets are listed in the manifest.
+- [ ] Lighthouse on mobile: LCP < 2.5s, CLS < 0.1.

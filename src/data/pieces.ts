@@ -303,7 +303,7 @@ export const pieces: Record<PieceId, Piece> = {
     id: 'ambient-sound', name: 'Sound, with a mute', line: 'A quiet sound loop visitors can turn on — the switch is always in view.', slot: 'site', source: OK,
     file: 'AmbientSound.tsx', exportName: 'AmbientSound', deps: [], levels: MOVING, sections: [],
     usage: '// app/layout.tsx, inside <body>:\n<AmbientSound src="/media/ambientSound.mp3" />',
-    rules: ['Off until the visitor turns it on; never autoplays.', 'One calm loop (30–90 s, seamless); the site works fully without it.'],
+    rules: ['Off until the visitor turns it on; never autoplays.', 'One calm loop (30–90 s, seamless); the site works fully without it.', 'The switch never covers text or another fixed bar: put it in the menu bar (`placement=""`) or keep the page clear of the corner it sits in.'],
   },
 }
 

@@ -25,23 +25,23 @@ const specs = [
 function Hero() {
   return (
     <section className="px-5 pt-24 md:px-10 md:pt-28">
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-8 lg:gap-6">
-        <div className="grid items-end gap-6 lg:grid-cols-12">
-          <div className="lg:col-span-8">
-            <Chapter as="h1" effect slot={{ className: "size-[clamp(2.25rem,6vw,5rem)]", rotate: -8, first: true }} className="type-display whitespace-nowrap">Halvik 65</Chapter>
-          </div>
-          <div className="lg:col-span-4">
+      <div className="mx-auto flex max-w-[1440px] flex-col gap-8 md:grid md:grid-cols-12 md:items-center md:gap-x-8 md:gap-y-10">
+        <div className="flex flex-col gap-6 md:col-span-7">
+          <Chapter as="h1" effect slot={{ className: "size-[clamp(2.25rem,6vw,5rem)]", rotate: -8, first: true }} className="type-display whitespace-nowrap">Halvik 65</Chapter>
+          <div>
             <p className="type-heading text-balance [font-size:clamp(1.15rem,1.6vw,1.4rem)]">A small keyboard, made to stay on your desk.</p>
-            <div className="mt-5 hidden items-center gap-5 md:flex">
+            <div className="mt-5 hidden flex-wrap items-center gap-5 md:flex">
               <Magnetic><BuyButton preset={{ build: "complete" }}>Add to bag</BuyButton></Magnetic>
               <p className="type-body"><span className="type-heading">{usd(builds.complete.price)}</span> <span className="text-(--color-muted)">or {usd(builds.barebones.price)} barebones</span></p>
             </div>
           </div>
         </div>
-        {/* Product stage: mobile shows it first, cropped tall on the keys; desktop runs it wide beneath the name. */}
-        <MediaAsset id="hero" priority sizes="100vw" frameClassName="order-first aspect-[4/5] sm:aspect-[16/10] lg:order-none lg:aspect-[21/9]"
-          className="object-[72%_50%] lg:object-[50%_40%]" />
-        <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-(--radius-card) border border-(--color-border) bg-(--color-border) lg:grid-cols-4">
+        {/* Product stage: phones show it first, cropped in on the top rows of keys (the photo's one sharp band;
+            right-anchored, as the board runs off the photo's right edge). Tablet and desktop frame it beside the name,
+            in a smaller frame, barely zoomed, so the shallow-focus photo is never magnified past what it holds. */}
+        <MediaAsset id="hero" priority sizes="(min-width: 1024px) 50vw, (min-width: 768px) 75vw, 100vw" frameClassName="order-first aspect-[4/3] md:order-none md:col-span-5 md:aspect-square lg:aspect-[5/4]"
+          className="object-[100%_0%] origin-[100%_15%] scale-[1.3] md:object-[100%_30%] md:origin-[100%_25%] md:scale-[1.08]" />
+        <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-(--radius-card) border border-(--color-border) bg-(--color-border) md:col-span-12 lg:grid-cols-4">
           {specs.map((s) => (
             <li key={s.label} className="bg-(--color-background) px-5 py-4">
               <p className="type-utility text-(--color-muted)">{s.label}</p>

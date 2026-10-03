@@ -1,0 +1,60 @@
+{
+  "recipe": "japanese-quiet-minimal",
+  "title": "Hane — Japanese Minimal Practice",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Made for this build: src/components/Logo.tsx (mark + wordmark, currentColor) and src/app/icon.svg (favicon)",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts via next/font (src/app/layout.tsx)",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Bellefair, Red Hat Text, Red Hat Display (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Written for this build in the recipe voice (src/content.ts, src/config/site.ts, pages); names, quotes, prices, address, phone and email are placeholders to replace",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "photographySet": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "The owner’s 8 photos in public/media/ (sources: media-src/SOURCES.md); WebP copies at 800/1600px beside each",
+      "replaceWith": "user-owned-images",
+      "usage": "Hero, section media, gallery",
+      "specs": "Min 2400px long edge, consistent grade, mix of wide (3:2) and portrait (4:5)"
+    },
+    "mobileHeroCrop": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "Not a separate file: hero.jpg is portrait and is cropped to 4:5 in CSS on phones",
+      "replaceWith": "user-owned-images",
+      "usage": "Hero on small screens",
+      "specs": "4:5 or 9:16 crop with focal point centred"
+    },
+    "texture": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Subtle paper/grain overlay at ≤ 4% opacity",
+      "specs": "Seamless tile, 1024px, WebP"
+    }
+  }
+}

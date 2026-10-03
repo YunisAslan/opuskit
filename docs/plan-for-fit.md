@@ -238,28 +238,164 @@ Esc is retouched out before the build).
 | `row-2.jpg` | Unsplash | `keyboard` (user `dekoningalex`) | Landscape | 3000 px wide | A small silver pad with cream keys and three knobs — feature row "the dial pad" |
 | `row-3.jpg` | Unsplash | `mechanical keyboard switches close up` | Landscape | 3000 px wide | One switch bare between cream keycaps — feature row "hot-swap switches" |
 
-**6. Clinic — quiet / editorial-image.** 6–8 calm photos, natural light.
-- Pinterest: `japanese minimal interior`, `calm clinic website`, `wabi sabi natural light`
-- Stock: `minimal clinic interior`, `hands close up care`, `linen natural light`, `tea ceremony minimal`, `stone garden`
+**6. Clinic — Hane.** Recipe approved 2026-10-02 (`examples/hane/`); all 8 files in (picked by Claude with the Unsplash connector).
+A small physiotherapy and slow-movement studio (made-up name). Kit choices, made with the kit's own functions:
+- Kind of site: Health & wellness (clinic) · name "Hane" · about "A small physiotherapy and slow-movement studio — hands-on
+  treatment, then exercises you can keep doing at home." · goal: Book or reserve
+- Look: Japanese Minimal · colours Pink Plaster (the look's own) · lettering **Private Collection** (fresh pick) · shape Soft
+- First screen: One big photo (`editorial-image`) · movement: Subtle
+- Big idea: A walk through named stops (the kit's recommendation; no earlier example uses it) → guided stops on Home —
+  Location, a live status line in the menu
+- Menu: Classic bar · footer: **Say hello** (the new contact footer) · behaviour: links — Filling underline; the rest plain
+- Pages (the clinic defaults): Home (hero → services → how it works → team → testimonials → pricing → location →
+  reservation), Treatments (services → process → pricing → FAQ), Practitioners (team → testimonials), Book an appointment
+  (reservation → location → FAQ), FAQ (FAQ → closing CTA)
+- Not used: "photo filter that moves" (plan-vibe D1, put aside).
 
-**7. Restaurant — organic / parallax-photo.** 1 tall hero photo (for parallax, portrait, ≥ 3000 px tall) + 8 photos.
-- Pinterest: `organic restaurant website`, `farm to table aesthetic`, `parallax food website`
-- Stock: `plated food overhead natural light`, `restaurant interior warm wood`, `chef hands herbs`, `bread table linen`, `vegetables market`
+Files: `examples/hane/media-src/` · sources: `SOURCES.md`. Every file: Unsplash, download **Original**. Natural light,
+low saturation, one calm grade. No readable brand names or logos, no clinic signage, no medical equipment brands.
 
-**8. Fashion shop — raw / ambient-video.** 1 loop video + 8 product photos (4:5, plain background).
-- Pinterest: `gothic fashion editorial`, `dark streetwear website`, `raw fashion lookbook`
-- Video: `fashion model walking dark slow motion`, `black fabric wind slow motion`, `smoke dark studio`
-- Photo: `black clothing studio`, `streetwear model concrete`, `leather jacket detail`
+| File | Site | Search term | Filter | Minimum | Should show |
+|---|---|---|---|---|---|
+| `hero.jpg` | Unsplash | `physiotherapy treatment natural light` | Portrait | 2400 px tall | Hands treating a shoulder or back in soft daylight, lots of calm space |
+| `step-1.jpg` | Unsplash | `minimal treatment room window light` | Landscape | 2400 px wide | A quiet room: treatment table, linen, window — the first visit |
+| `step-2.jpg` | Unsplash | `massage therapy hands close up` | Landscape | 2400 px wide | Hands-on treatment, close up — the treatment step |
+| `step-3.jpg` | Unsplash | `stretching on mat at home` | Landscape | 2400 px wide | One person stretching on a mat at home, daylight — exercises to keep |
+| `team-1.jpg` | Unsplash | `portrait natural light plain wall` | Portrait | 1600 px wide | A calm portrait against a plain light wall |
+| `team-2.jpg` | Unsplash | `portrait natural light plain wall` | Portrait | 1600 px wide | A different person, same light and wall |
+| `team-3.jpg` | Unsplash | `portrait natural light plain wall` | Portrait | 1600 px wide | A third person, same feel |
+| `location.jpg` | Unsplash | `minimal building entrance plants` | Landscape | 2400 px wide | A quiet entrance or doorway with plants, no signage |
 
-**9. Hotel / spa — quiet (ethereal) / ambient-video.** 1 calm loop video + 6 room/space photos.
-- Pinterest: `ethereal website design`, `dreamy spa website`, `soft light hotel aesthetic`
-- Video: `curtain wind slow motion`, `water ripple light`, `fog lake morning`, `sunlight through window`
-- Photo: `minimal hotel room light`, `spa stone water`, `bathtub natural light`, `white linen bed`
+Prompt 1 (first draft; the final wording, matched to the photos that arrived, is in `examples/hane/BUILD-LOG.md`):
 
-**10. Event — cinematic / scroll-video-page.** 1 continuous scroll video (no cuts) + 8 photos.
-- Pinterest: `cinematic event website`, `film festival website`, `scroll video storytelling website`
-- Video: `drone flying forward slow`, `tunnel walk forward`, `crowd concert lights slow motion`, `forest path gimbal`
-- Photo: `festival crowd night`, `stage lights`, `audience silhouette`, `venue empty`
+```
+Read CLAUDE.md and build the whole site following build/implementation-plan.md.
+
+My photos are already in public/media/ (where each one comes from is in media-src/SOURCES.md):
+- hero.jpg — hands treating a shoulder in soft daylight. This is the first screen.
+- step-1.jpg — our quiet treatment room, for the first step of How it works (the first visit: we listen and assess).
+- step-2.jpg — hands-on treatment close up, for the second step (the treatment).
+- step-3.jpg — stretching on a mat at home, for the third step (exercises you keep doing at home).
+- team-1.jpg, team-2.jpg, team-3.jpg — our three practitioners, for the team on Home and on Practitioners.
+- location.jpg — our entrance, for the Location section.
+
+I don't have a logo yet — make a simple one for Hane.
+
+Booking has no backend yet: the booking form can open the visitor's mail app with the details filled in.
+
+I want to publish this as a static site (next build with output: 'export'), so every page has to be static.
+```
+
+**7. Restaurant — Fennwood.** Recipe approved 2026-10-03 (`examples/fennwood/`); built and registered 2026-10-03. A forty-seat wood-fire kitchen (made-up name). Kit choices, made with the kit's own functions:
+- Kind of site: Restaurant · name "Fennwood" · about "A wood-fire kitchen with forty seats: vegetables from two farms,
+  bread baked in the same oven, a menu that changes with the week." · goal: Book or reserve
+- Look: Organic Modern · colours **Apricot Hall** · lettering **Gallery Hours** (both the row's fresh picks) · shape Soft ·
+  layout Balanced
+- First screen: Full-bleed photo with depth (`parallax-photo`) · movement: Dynamic (the first screen needs it)
+- Big idea: One thing guides the scroll (the kit's recommendation; Halvik uses it too, but no other idea fits a
+  restaurant — the "live status line" of §5 belongs to A live console, made for tech sites) → a travelling shape from the
+  first screen, a footer worth reaching
+- Menu: Centered logo · footer: Signature columns · behaviour: headlines — Cut-out headline; links — Hand-drawn underline
+- Pages (the restaurant defaults): Home (hero → intro → menu → reservation → location), Menu (menu → gallery →
+  reservation), Reservations (reservation → location → FAQ)
+
+Files: `examples/fennwood/media-src/` · sources: `SOURCES.md`. Every file: Unsplash, download **Original**. Warm natural
+light, one grade; no readable brand names, logos, menus with real restaurant names, or signage.
+
+| File | Site | Search term | Filter | Minimum | Should show |
+|---|---|---|---|---|---|
+| `hero.jpg` | Unsplash | `wood fired oven restaurant` | Portrait | 3000 px tall | Flames or a wood oven with a cook at work, warm and deep — the full-bleed first screen (parallax needs a tall frame) |
+| `dish-1.jpg` | Unsplash | `roasted vegetables plate` | Landscape | 2400 px wide | One plated dish of charred vegetables, overhead or 45° |
+| `dish-2.jpg` | Unsplash | `sourdough bread table linen` | Landscape | 2400 px wide | Bread on linen on a wooden table |
+| `dish-3.jpg` | Unsplash | `grilled fish lemon plate` | Landscape | 2400 px wide | A grilled main on a plain plate |
+| `room-1.jpg` | Unsplash | `restaurant interior warm wood` | Landscape | 2400 px wide | The dining room: wood tables, warm light, empty or soft people |
+| `room-2.jpg` | Unsplash | `chef hands herbs` | Landscape | 2400 px wide | Hands at work with herbs or vegetables |
+| `farm.jpg` | Unsplash | `vegetable farm harvest crate` | Landscape | 2400 px wide | A crate of just-picked vegetables — the farms |
+| `location.jpg` | Unsplash | `restaurant entrance street evening` | Landscape | 2400 px wide | A warm-lit doorway or window from the street, no sign |
+
+**8. Fashion shop — Saint Ashe.** Recipe approved 2026-10-03 (`examples/saint-ashe/`). The hero video was found and
+downloaded by Claude (Pexels allows a direct download link). Black clothing in small runs (made-up name). Kit choices, made with the kit's own functions:
+- Kind of site: Fashion · name "Saint Ashe" · about "Black clothing cut in small runs in Tbilisi: heavy cotton, waxed wool
+  and leather that ages with you." · goal: Buy something
+- Look: Gothic Modern · colours **Mulberry** (the row's fresh pick) · lettering New Gothic (the look's own) · shape Sharp ·
+  layout Full-bleed
+- First screen: Ambient video hero · movement: Dynamic
+- Big idea: Loud covers, quiet reading (the kit's recommendation) → chapters that open with a giant word (Home — Journal),
+  photos revealed like a curtain (Collections — Lookbook)
+- Menu: Centered logo · footer: Signature columns · behaviour: links — Rolling links; main button — Hopping arrow button
+- Pages (the fashion defaults): Home (hero → collection → product grid → journal → newsletter), Collections (collection →
+  lookbook → product grid), About (about → editorial story → team), Contact (closing CTA → location → FAQ)
+- Not used: "image hover distortion" (plan-vibe D2, put aside by the user).
+
+Files: `examples/saint-ashe/media-src/` · sources: `SOURCES.md`. One dark, low-key grade; no readable brand names, logos,
+labels or prints with words; no recognisable famous people. Photos: Unsplash, download **Original**. Video: Pexels
+(free licence), download the largest MP4.
+
+| File | Site | Search term | Filter | Minimum | Should show |
+|---|---|---|---|---|---|
+| `hero.mp4` | Pexels Videos | `black fabric wind slow motion` | Landscape | 1920×1080, 8–15 s | Dark fabric or a coat moving slowly in the dark, one shot, no cuts — the first screen loop |
+| `product-1.jpg` … `product-8.jpg` | Unsplash | `black clothing studio` / `black jacket plain background` / `black boots studio` | Portrait | 1600 px wide | One garment or item each on a plain light or grey ground: coat, jacket, tee, trousers, boots, bag, knit, cap |
+| `look-1.jpg`, `look-2.jpg`, `look-3.jpg` | Unsplash | `streetwear model concrete` | Portrait | 2000 px tall | One person in black clothes against concrete or a plain wall, face not the point |
+| `detail.jpg` | Unsplash | `leather jacket detail` | Landscape | 2400 px wide | Close-up of leather, stitching or a zip — the editorial story |
+| `studio.jpg` | Unsplash | `sewing workshop dark` | Landscape | 2400 px wide | A cutting table or sewing machine in a dim workshop — About |
+| `team-1.jpg` … `team-3.jpg` | Unsplash | `portrait black clothes dark background` | Portrait | 1600 px wide | Three people in black, dark plain background |
+| `shop.jpg` | Unsplash | `minimal clothing store interior dark` | Landscape | 2400 px wide | A dim, bare shop interior with a rail, no sign — Location |
+
+Prompt 1 (draft — final once the files are in; it goes into `examples/saint-ashe/BUILD-LOG.md` before it is run):
+
+```
+Read CLAUDE.md and build the whole site following build/implementation-plan.md.
+
+My files are already in public/media/ (where each one comes from is in media-src/SOURCES.md):
+- heroVideo.mp4 and mobileVideoEncode.mp4 — dark fabric moving slowly, made by prepare-video.sh; the first screen loop. posterImage.jpg is its first frame.
+- product-1.jpg … product-8.jpg — our eight pieces (coat, jacket, tee, trousers, boots, bag, knit, cap), for the product grids.
+- look-1.jpg, look-2.jpg, look-3.jpg — the season's looks, for the collection strip and the lookbook.
+- detail.jpg — leather and stitching up close, for the editorial story.
+- studio.jpg — our workshop, for About.
+- team-1.jpg, team-2.jpg, team-3.jpg — the three of us, for the team on About.
+- shop.jpg — our shop, for Location.
+
+I don't have a logo yet — make a simple one for Saint Ashe.
+
+There is no checkout yet: "Add to bag" can keep a simple bag in the browser, and checking out can open an email order.
+
+I want to publish this as a static site (next build with output: 'export'), so every page has to be static.
+```
+
+**9. Hotel / spa — Velmira.** Recipe approved 2026-10-03 (`examples/velmira/`); built and registered 2026-10-03. Film and sound found and downloaded by
+Claude (Pexels, Pixabay); photos from Pexels because the Unsplash connector needed a new sign-in. Nine rooms and a bathhouse on a lake (made-up name). Kit choices, made with the kit's own functions:
+- Kind of site: Hotel & travel · name "Velmira" · about "Nine rooms and a bathhouse on a lake in the Gabala hills: warm
+  water, cold air, long quiet mornings." · goal: Book or reserve
+- Look: Ethereal · colours **Midnight Chapters** · lettering **Kalnia Couture** (both the row's fresh picks) · shape
+  Frosted glass · layout Full-bleed
+- First screen: Ambient video hero · movement: Subtle
+- Big idea: One thing guides the scroll (the kit's recommendation — Halvik and Fennwood use it too)
+- Menu: Centered logo · footer: Signature columns · whole site: **Sound, with a mute** (the row's C3 pick)
+- Pages (the hotel defaults): Home (hero → intro → collection → feature rows → journal → reservation), Rooms
+  (collection → lookbook → reservation), Gallery, Book a stay (reservation → location → FAQ), Getting here (location → FAQ)
+
+Files: `examples/velmira/media-src/` · sources: `SOURCES.md`. One soft, misty, low-contrast grade; no brands, no signs,
+no recognisable people. Video and sound: Claude fetches them (Pexels allows a direct download; sound from Pixabay if it
+can, else the user downloads it).
+
+| File | Site | Search term | Filter | Minimum | Should show |
+|---|---|---|---|---|---|
+| `hero.mp4` | Pexels Videos | `fog lake morning` | Landscape | 1920×1080, 8–15 s | Mist moving slowly over still water, one shot — the first screen loop |
+| `ambient.mp3` | Pixabay Sound Effects | `lake water ambience` | — | 30–60 s, loops | Soft water and birds, no voices or music — the sound visitors can turn on |
+| `room-1.jpg` … `room-3.jpg` | Unsplash | `minimal hotel room light` / `white linen bed` | Portrait | 1600 px wide | Three calm rooms in soft light |
+| `bath.jpg`, `lake.jpg`, `sauna.jpg` | Unsplash | `spa stone water` / `misty lake dock` / `wooden sauna` | Landscape | 2400 px wide | The bathhouse, the lake, the sauna — feature rows |
+| `gallery-1.jpg` … `gallery-4.jpg` | Unsplash | `bathtub natural light`, `forest fog`, `tea cup window`, `towels stone` | Mixed | 1600 px | Details for the gallery wall and journal |
+| `arrival.jpg` | Unsplash | `wooden house lake forest` | Landscape | 2400 px wide | The house from the path — Getting here |
+
+**10. Event — Lowfield Nights.** Recipe made 2026-10-03 at the user's request, built in parallel with #9; registered 2026-10-03
+(`examples/lowfield-nights/`). Three nights of films and live scores in a disused hangar (made-up name).
+- Look: Cinematic Editorial · colours **Graphite & Sand** (fresh pick) · lettering High and Low · first screen:
+  Whole-page scroll video · movement: Immersive · big idea: A walk through named stops (the row's "guided stops") ·
+  footer: Big name · behaviour: Words that arrive, Curtain between pages
+- Pages (the event defaults): Home (hero → intro → schedule → team → location → FAQ → reservation), RSVP, Venue & travel,
+  FAQ
+- Film: "Silhouette Walking Through Tunnel to Light" by Dominik Zítka, Pexels (found and downloaded by Claude). Photos:
+  9 from Pexels (4 performers, 4 venue/atmosphere, the hangar), `media-src/SOURCES.md`.
 
 ## 8. Connecting to the kit (built with the first site, grows with each)
 
@@ -312,11 +448,11 @@ step**, along with everything it touches:
 | Old | Removed when | What changes at the same time |
 |---|---|---|
 | ~~ulooklonely~~ | removed 2026-10-01, when Slow Atlas was registered | `examples.ts` only (no kit dependencies) |
-| keepers | #5 Product | `SectionPreview` `can` (product world) → #5's photos |
-| kofii | #7 Restaurant | `SectionPreview` `cafe` (food world) → #7's photos |
-| buytolose | #8 Fashion shop | `SectionPreview` `shop` (shop world) → #8's photos |
-| swiss-modern-event-site-claude-code | #10 Event | `SectionPreview` `ph` (event world) → #10's photos |
-| cheeky911 | #4 Studio (or #2 Agency, if it comes first) | `SectionPreview` `car` + `PieceDemo` `P`/`POSTER`/`FILM` → the new site's photos/clip |
+| ~~keepers~~ | removed 2026-10-02, when Halvik was registered | `SectionPreview` product world → Halvik's photos and copy; founders → two Unsplash portraits in `public/kit/people/` |
+| ~~kofii~~ | removed 2026-10-03, when Fennwood was registered | `SectionPreview` food world → Fennwood's photos and copy (founders from `public/kit/people/`) |
+| ~~buytolose~~ | removed 2026-10-03, when Saint Ashe was registered | `SectionPreview` shop world → Saint Ashe's photos and copy (real magazine names in its press/clients replaced) |
+| ~~swiss-modern-event-site-claude-code~~ | removed 2026-10-03, when Lowfield Nights was registered | `SectionPreview` event world → Lowfield's photos and copy (players as people) |
+| ~~cheeky911~~ | removed 2026-10-03 with the user's OK | `SectionPreview` studio world → Brasshand (photos + copy), software world → Hexmint renders, sticker orbit → Sticky Weather; `PieceDemo` photos → Brasshand/Sticky Weather, film → Velmira |
 
 Removing one example = `examples/{slug}/`, the `public/examples/{slug}` symlink + `{slug}.jpg`, `public/live/{slug}/`,
 `public/downloads/{slug}.zip`, its entry in `src/data/examples.ts`, then `npm run examples` and `npm run check`.
@@ -330,12 +466,12 @@ Before removing, grep for `/examples/{slug}`: no references must remain.
 | 2 | Agency — Brasshand | ✓ (`examples/brasshand/opuskit.json`, approved) | ✓ (§7) | ✓ 10/10 (`media-src/SOURCES.md`, Unsplash connector; work-4 replaced after the build — real label logo) | ✓ Prompt 1 + Prompt 2 (fix round 1), both by a subagent; 17 static routes | poster + card ✓; clips: waiting for the user's recordings | ✓ 2026-10-01: `examples.ts`, symlink, zip, live at `/live/brasshand` (click-through checked), `npm run check` ✓; cheeky911 not yet removed (needs the user's OK) | – (no clips yet) |
 | 3 | SaaS — Hexmint | ✓ (`examples/hexmint/opuskit.json`, approved) | ✓ (§7: no files) | ✓ none needed | ✓ Prompt 1 (subagent; resumed once after an API limit); no fix round | card ✓ (poster rendered from the scene); clips: waiting for the user's recordings | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/hexmint` (click-through checked), `npm run check` ✓ | – (no clips yet) |
 | 4 | Studio — Sticky Weather | ✓ (`examples/sticky-weather/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 14/14 (`media-src/SOURCES.md`, Unsplash connector) | ✓ Prompt 1 (subagent, resumed once after an interrupted session) + Prompt 2 (fix round 1: mobile stickers over the hero text); all routes static | poster + card ✓; clips: waiting for the user's recordings | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/sticky-weather` (click-through checked), `npm run check` ✓; cheeky911 not yet removed (needs the user's OK) | – (no clips yet) |
-| 5 | Product — Halvik | ✓ (`examples/halvik/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 6/6 (`media-src/SOURCES.md`, Unsplash connector; fox keycap mark retouched in 4) | ✓ Prompt 1 (subagent, resumed twice); export passes, all routes static; reviewed 1440 + 390 | – | – | – |
-| 6 | Clinic | – | – | – | – | – | – | – |
-| 7 | Restaurant | – | – | – | – | – | – | – |
-| 8 | Fashion shop | – | – | – | – | – | – | – |
-| 9 | Hotel / spa | – | – | – | – | – | – | – |
-| 10 | Event | – | – | – | – | – | – | – |
+| 5 | Product — Halvik | ✓ (`examples/halvik/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 6/6 (`media-src/SOURCES.md`, Unsplash connector; fox keycap mark retouched in 4) | ✓ Prompt 1 (subagent, resumed twice) + Prompt 2 (fix round 1: hero crop, buy bar off Contact) + Prompt 3 (fix round 2: framed hero beside the headline on desktop); all routes static; reviewed 1440 + 390 | card ✓ (from the live export); clips: waiting for the user's recordings | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/halvik` (click-through checked), `npm run check` ✓; `keepers` removed, kit product world → Halvik | – (no clips yet) |
+| 6 | Clinic — Hane | ✓ (`examples/hane/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 8/8 (`media-src/SOURCES.md`, Unsplash connector) | ✓ Prompt 1 (subagent); no fix round; all routes static; reviewed 1440 + 390 | card ✓ (from the live export); clips: waiting for the user's recordings | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/hane` (click-through checked), `npm run check` ✓ | – (no clips yet) |
+| 7 | Restaurant — Fennwood | ✓ (`examples/fennwood/opuskit.json`, approved 2026-10-03) | ✓ (§7) | ✓ 8/8 (`media-src/SOURCES.md`, Unsplash connector; 3 cropped) | ✓ Prompt 1 + Prompt 2 (fix round 1: travelling mark kept in the margin, phone bar off the footer); all routes static; reviewed 1440 + 390 | card ✓ (from the live export); clips: waiting for the user's recordings | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/fennwood` (click-through checked), `npm run check` ✓; `kofii` removed, kit food world → Fennwood | – (no clips yet) |
+| 8 | Fashion shop — Saint Ashe | ✓ (`examples/saint-ashe/opuskit.json`, approved 2026-10-03) | ✓ (§7) | ✓ video (Pexels, found and downloaded by Claude) + 17 photos (`media-src/SOURCES.md`, Unsplash connector; 7 cropped) | ✓ Prompt 1 + Prompt 2 (fix round 1: giant words whole, phone collection layout); video re-encoded within budget; all routes static; reviewed 1440 + 390 | card ✓ (from the live export, video frames); clips: waiting for the user's recordings | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/saint-ashe` (click-through checked), `npm run check` ✓; `buytolose` removed, kit shop world → Saint Ashe | – (no clips yet) |
+| 9 | Hotel / spa — Velmira | ✓ (`examples/velmira/opuskit.json`, approved 2026-10-03) | ✓ (§7) | ✓ film (Pexels) + sound (Pixabay) + 11 photos (Pexels, `media-src/SOURCES.md`; 2 graded) | ✓ Prompt 1 + Prompt 2 (fix round 1: sound switch into the menu bar); all routes static; reviewed 1440 + 390 | card ✓ (from the live export, film frames); clips: waiting for the user's recordings | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/velmira` (click-through checked), `npm run check` ✓ | – (no clips yet) |
+| 10 | Event — Lowfield Nights | ✓ (`examples/lowfield-nights/opuskit.json`, 2026-10-03) | ✓ (§7) | ✓ film + 9 photos (Pexels, `media-src/SOURCES.md`; 4 cropped/graded) | ✓ Prompt 1 (resumed once after an API limit) + Prompt 2 (fix round 1: footer name fits, phone stop label clears controls); scrub film re-encoded within budget; all routes static; reviewed 1440 + 390 | card ✓ (from the live export, film frames); clips: waiting for the user's recordings | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/lowfield-nights` (click-through checked), `npm run check` ✓; `swiss-modern-event-site-claude-code` removed, kit event world → Lowfield | – (no clips yet) |
 
 **Rebuild of #1 (2026-10-01, after plan-vibe C):** new recipe approved (Big idea "Loud covers, quiet reading", new blog
 defaults, curtain transition, preloader, smooth scroll); built beside the first build, then swapped into `examples/slow-atlas/`
@@ -343,26 +479,7 @@ with the user's OK (BUILD-LOG.md §5–§8: Prompt 1 + fix round 1 for the curta
 zip, live export (click-through checked), `npm run check` ✓. **Waiting for the user's screen recordings** for the site clip
 and section clips (the old ones showed the old site and were removed with it; `examples.ts` has no `clip` until then).
 
-**#5 Halvik — what's left (paused by the user 2026-10-02, after the build and Claude's review; `examples/halvik/BUILD-LOG.md`):**
-1. **Fix round 1 — waits for the user's choice.** (a) The first-screen photo is soft (shot wide open). Options: keep it;
-   a prompt to frame the hero on the photo's sharpest part (the top key row) and zoom less on phones — Claude's
-   recommendation; or find a sharper side-on shot. (b) The phone's pinned "Add to bag" bar also shows on Contact, over the
-   form — a prompt to hide it there. Claude Code's own note: "Words that arrive" delays Contact's first paint on slow 4G
-   (6.8 s); proposed to keep (the kit places it site-wide). Write the prompt into BUILD-LOG.md first, then send it to a
-   subagent; redo the 1440 + 390 review after it.
-2. Card + poster: 1440×900 JPEG of the live homepage → `public/examples/halvik.jpg` (then clear `.next/dev/cache/images`).
-3. Registration: `src/data/examples.ts` (title/summary from the site's own `<title>`/meta, tags, `choices` with exact option
-   names, `hero: { kind: 'image', src }`), symlink `public/examples/halvik` → `../../examples/halvik/public`, `npm run examples`.
-4. Live export `public/live/halvik/` (AGENTS.md "Showing one on the site"). The site ships `.webp` `srcset`s: rewrite
-   `, /media/` inside `srcset` as well as `"/media/`, `` `/media/ `` and `url(/media/`. Browser click-through from the nav.
-5. §9: remove `keepers` in the same step (`examples/keepers/`, symlink + `keepers.jpg`, `public/live/keepers/`,
-   `public/downloads/keepers.zip`, its `examples.ts` entry; grep `/examples/keepers` → none left). Replace the kit's
-   product world in `SectionPreview.tsx` (`can`) with Halvik's 6 photos **and its sample copy** (now a canned drink; its
-   "Stocked at" list names real shops — Whole Foods, Selfridges…). Open: the product world's team/founder sample used two
-   Keepers portraits; Halvik has no people — decide with the user.
-6. `npm run check`; update this row and HANDOFF.md. Commit/push only after telling the user (`git status` + `git pull`
-   first; shared files: `examples.ts`, this file, `public/live/`, `example-specs.generated.json`, the zips).
-7. Clips: the user records them later.
+**#5 Halvik:** done except clips (the user records them later).
 
 Other:
 - [x] Root cleaned (2026-10-01): QA screenshots, `not-used-videos/`, `.DS_Store` (added to `.gitignore`).

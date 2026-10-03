@@ -1,0 +1,77 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "../styles/tokens.css";
+
+/* shadcn/ui colours that the recipe tokens don't already name (background, border, primary, secondary, accent and muted
+   come from tokens.css; shadcn components were rewritten to use bg-secondary where they used bg-muted / bg-accent). */
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --font-sans: var(--font-rubik);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/* recipe/ui.md theme — hex values, never mapped back to --color-* */
+:root {
+  --background: #FECD8C; --foreground: #001317;
+  --card: #FFE0B5; --card-foreground: #001317; --popover: #FFE0B5; --popover-foreground: #001317;
+  --primary: #001317; --primary-foreground: #FECD8C; --secondary: #F5BC6E; --secondary-foreground: #001317;
+  --muted: #FFE0B5; --muted-foreground: #4A3A22; --accent: #F5BC6E; --accent-foreground: #001317;
+  --border: #E5B06A; --input: #4A3A22; --ring: #001317; --radius: 12px;
+  --destructive: #8E2C0E;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-curtain: cubic-bezier(0.65, 0, 0.35, 1);
+  /* Half the section spacing: two neighbours add up to clamp(96px, 12vw, 160px). */
+  --section-pad: clamp(48px, 6vw, 80px);
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
+  body { -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+  /* Focus is shown without rings: links get an underline, buttons and fields change background or border (in the components). */
+  :focus-visible { outline: none; }
+  a:focus-visible { text-decoration: underline; text-underline-offset: 6px; }
+  [id] { scroll-margin-top: 96px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Parallax drift (recipe motion): CSS scroll-driven animation; where it isn't supported the photo simply stays still. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .drift { animation: drift linear both; animation-timeline: view(); }
+  }
+}
+@keyframes drift {
+  from { transform: translateY(-7%) scale(1.16); }
+  to { transform: translateY(7%) scale(1.16); }
+}
+
+/* Page transition: the whole page crossfades; named titles morph (see ChapterTitle). Off for reduced motion. */
+::view-transition-group(*) { animation-duration: 480ms; animation-timing-function: var(--ease-curtain); }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* Open/close animations of menus, sheets, dialogs and selects: none for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  [data-slot] { animation: none !important; }
+}

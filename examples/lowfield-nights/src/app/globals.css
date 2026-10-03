@@ -1,0 +1,95 @@
+/* The recipe tokens come first (they import Tailwind); shadcn's theme maps only the names the recipe doesn't own. */
+@import "../styles/tokens.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "lenis/dist/lenis.css";
+
+/* The site is dark only: shadcn's dark: styles always apply. */
+@custom-variant dark (&);
+
+/* shadcn/ui names that don't collide with the recipe tokens (background, primary, secondary, accent, muted, border
+   come straight from tokens.css — the UI files use bg-secondary where shadcn would fill with muted/accent). */
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --font-sans: var(--font-albert);
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+}
+
+/* shadcn theme — hex values from recipe/ui.md */
+:root {
+  --background: #303030; --foreground: #F5F2EC;
+  --card: #3A3A3A; --card-foreground: #F5F2EC; --popover: #3A3A3A; --popover-foreground: #F5F2EC;
+  --primary: #F5F2EC; --primary-foreground: #303030; --secondary: #444444; --secondary-foreground: #F5F2EC;
+  --muted: #3A3A3A; --muted-foreground: #B5B0A8; --accent: #444444; --accent-foreground: #F5F2EC;
+  --border: #4A4A4A; --input: #B5B0A8; --ring: #F5F2EC; --radius: 0px;
+  --destructive: #F6CEA0;
+
+  /* next/font families behind the recipe's font roles */
+  --font-display: var(--font-newsreader);
+  --font-heading: var(--font-newsreader);
+  --font-body: var(--font-albert);
+  --font-utility: var(--font-albert);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-curtain: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { @apply font-sans; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+  /* Focus without rings: links underline, buttons change ground (button variants), fields darken their border. */
+  :focus-visible { outline: none; }
+  a:focus-visible { text-decoration: underline; text-underline-offset: 5px; }
+}
+
+/* Light italic phrases inside the display voice (whole phrases only, never one word). */
+.quiet { font-weight: 200; font-style: italic; letter-spacing: -0.01em; }
+
+/* Fade & rise — section wrappers, children staggered 60 ms (InView toggles data-in). */
+.rise > * { opacity: 0; transform: translateY(16px); transition: opacity 0.6s var(--ease-out-soft), transform 0.6s var(--ease-out-soft); }
+.rise[data-in] > * { opacity: 1; transform: none; }
+.rise[data-in] > :nth-child(2) { transition-delay: 60ms; }
+.rise[data-in] > :nth-child(3) { transition-delay: 120ms; }
+.rise[data-in] > :nth-child(4) { transition-delay: 180ms; }
+.rise[data-in] > :nth-child(5) { transition-delay: 240ms; }
+
+/* Image clip reveal — every photo inside a .clip wrapper opens like a curtain. */
+.clip img { clip-path: inset(100% 0 0 0); transition: clip-path 1s var(--ease-curtain); }
+.clip[data-in] img { clip-path: inset(0 0 0 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise > * { transform: none; transition: opacity 0.2s linear; }
+  .rise[data-in] > * { transition-delay: 0s; }
+  .clip img { clip-path: none; opacity: 0; transition: opacity 0.2s linear; }
+  .clip[data-in] img { opacity: 1; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* Under 640px, popovers, selects and dropdowns open as a sheet from the bottom edge. */
+@media (max-width: 639px) {
+  [data-radix-popper-content-wrapper]:has(> [data-slot="popover-content"], > [data-slot="select-content"], > [data-slot="dropdown-menu-content"]) {
+    position: fixed !important; inset: auto 0 0 0 !important; transform: none !important; min-width: 100% !important;
+  }
+  [data-radix-popper-content-wrapper] > :is([data-slot="popover-content"], [data-slot="select-content"], [data-slot="dropdown-menu-content"]) {
+    width: 100%; max-height: 70svh; border-top: 1px solid var(--color-border); padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  [data-slot="popover-content"] [data-slot="calendar"] { margin-inline: auto; }
+}

@@ -1,5 +1,5 @@
 // Builds public/downloads/{slug}.zip for every example: the site's real code, as-is, with placeholder media.
-// Photos become flat placeholders of the same size and format (so layouts hold); videos are left out and listed
+// Photos become flat placeholders of the same size and format (so layouts hold); videos and sounds are left out and listed
 // in MEDIA.md with what to put back. No third-party media is redistributed. Run: npm run examples
 import { spawnSync } from 'node:child_process'
 import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
@@ -11,6 +11,7 @@ import { examples } from '../src/data/examples'
 const SKIP = new Set(['node_modules', '.next', 'out', 'media-src', '.git', '.DS_Store', 'tsconfig.tsbuildinfo', 'next-env.d.ts'])
 const IMAGE = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif'])
 const VIDEO = new Set(['.mp4', '.webm', '.mov', '.m4v'])
+const AUDIO = new Set(['.mp3', '.m4a', '.ogg', '.wav'])
 
 // Secrets never ship: env files, keys, deploy links.
 const secret = (n: string) => n.startsWith('.env') || n.endsWith('.pem') || n === '.vercel' || n === 'settings.local.json'
@@ -37,6 +38,7 @@ async function main() {
       const rel = relative(root, file), ext = extname(file).toLowerCase()
       const inPublic = rel.startsWith('public/')
       if (inPublic && VIDEO.has(ext)) { media.push(`| \`${rel}\` | video | ${probe(file)} | left out |`); continue }
+      if (inPublic && AUDIO.has(ext)) { media.push(`| \`${rel}\` | sound | — | left out |`); continue }
       if (inPublic && IMAGE.has(ext)) {
         const { width = 1600, height = 1000 } = await sharp(file).metadata()
         const fmt = ext === '.jpg' ? 'jpeg' : (ext.slice(1) as 'png' | 'webp' | 'avif' | 'jpeg')

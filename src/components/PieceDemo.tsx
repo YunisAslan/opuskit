@@ -47,12 +47,11 @@ import { WavyLink } from '@/pieces/WavyLink'
 import type { PaletteColors, PieceId } from '@/types/domain'
 
 // Real photos already on disk (the example sites' media), small ones first.
-const P = '/examples/cheeky911/media/yourPhotos-'
-const PHOTOS = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11].map((n) => ({ src: `${P}${n}.jpg`, alt: 'A Porsche 911, photographed by its owner' }))
+const PHOTOS = [...[1, 2, 3, 4, 5, 6].map((n) => `/examples/brasshand/media/work-${n}.jpg`), ...[1, 2, 3, 4].map((n) => `/examples/sticky-weather/media/work-${n}.jpg`)].map((src) => ({ src, alt: 'Studio work: print, packaging and signage' }))
 export const STICKERS = ['burst', 'pill', 'badge', 'smile', 'wing', 'star'].map((n) => `/stickers/${n}.svg`)
 const CURSOR = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="28" height="32"><path d="M3 2 C 9 12, 14 20, 17 28 L 19.5 19.5 L 27 17.5 C 19 12, 10 6, 3 2 Z" fill="#0038FF" stroke="#111" stroke-width="2"/></svg>')}`
-const POSTER = '/examples/cheeky911/media/posterImage.jpg'
-const FILM = '/examples/cheeky911/media/clip.mp4'
+const POSTER = '/examples/velmira/media/posterImage.jpg'
+const FILM = '/examples/velmira/media/heroVideo.mp4'
 
 type Fonts = { display: string; body: string; utility: string }
 const OPUSKIT: PaletteColors = { background: '#F5F0E6', surface: '#FFFFFF', text: '#151413', muted: '#6B665C', primary: '#151413', secondary: '#DCD5C7', accent: '#2E48D6', border: '#DCD5C7' }

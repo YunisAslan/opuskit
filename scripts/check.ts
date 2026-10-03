@@ -212,7 +212,7 @@ const main = async () => {
   // Video recipes ship scripts/prepare-video.sh (valid bash); others don't.
   const vid = await adapters['claude-code'].generate(composeRecipe(specFromSeed(recipeSeeds[1])))
   const sh = vid.files.find((f) => f.path === 'scripts/prepare-video.sh')
-  assert.ok(sh && /-crf 20 -g 6/.test(sh.content), 'video recipe ships prepare-video.sh')
+  assert.ok(sh && /-crf CRF -g 6/.test(sh.content) && /fit_budget/.test(sh.content), 'video recipe ships prepare-video.sh (budget-fitted, short GOP for scrubbing)')
   assert.equal(spawnSync('bash', ['-n'], { input: sh.content }).status, 0, 'prepare-video.sh is valid bash')
   // bash reads the bytes of "…"/"×" as part of an unbraced name ($DIR… → "unbound variable"): always ${DIR}…
   assert.ok(!/\$[A-Za-z_][A-Za-z0-9_]*[^\x00-\x7F]/.test(sh.content), 'prepare-video.sh braces every $VAR next to non-ASCII')
@@ -316,6 +316,8 @@ const main = async () => {
   }
   // Ready sections never ship the generic tells the recipe forbids: "→" after links, middle-dot joins, 01/02 markers.
   for (const [id, src] of Object.entries(blockSource)) assert.ok(!/→| · |padStart\(2, '0'\)/.test(src!), `${id}: ready section ships a generic tell`)
+  // Controls are the project's shadcn/ui parts: a ready section never ships a plain browser control or disclosure.
+  for (const [id, src] of Object.entries(blockSource)) assert.ok(!/<(select|details|summary)\b|type="(date|time|number|checkbox|radio)"/.test(src!), `${id}: ready section ships a native control`)
   { // Rules hold for any pick: no seed or look rule names a font family or a hex value (section notes may — they apply only with the seed's own lettering).
     const fams = [...new Set(Object.values(typography).flatMap((t) => [t.display.family, t.body.family, t.utility.family]))]
     for (const line of [...recipeSeeds.flatMap((x) => [...x.do, ...x.principles, ...x.avoid]), ...Object.values(directions).flatMap((d) => [...d.do, ...d.principles, ...d.avoid])]) assert.ok(!/#[0-9a-f]{6}\b/i.test(line) && !fams.some((f) => line.includes(f)), `a rule names a font or a hex — use a role: ${line}`)

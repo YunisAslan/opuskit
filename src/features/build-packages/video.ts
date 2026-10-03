@@ -108,13 +108,22 @@ else WORK="$ORIG"; fi
 FIT="scale='min(1920,iw)':-2:flags=lanczos"   # never wider than 1920
 X264="-c:v libx264 -preset slow -profile:v high -pix_fmt yuv420p -movflags +faststart -an"
 
-ffmpeg -v error -y -i "$WORK" -vf "$FIT" $X264 -crf 20 "$OUT/heroVideo.mp4"
+# Within the recipe's budget (desktop ≤ 6 MB, phone ≤ 3 MB): start at CRF 20 and only give up quality as far as it takes.
+fit_budget() { # $1 file, $2 max MB, then the ffmpeg encode with the CRF value written as the word CRF
+  local f="$1" max=$(( $2 * 1000000 )) crf=20 a args; shift 2
+  while :; do
+    args=(); for a in "$@"; do [ "$a" = CRF ] && a=$crf; args+=("$a"); done; "\${args[@]}"
+    [ "$(wc -c < "$f")" -le "$max" ] || [ "$crf" -ge 32 ] && break; crf=$((crf + 2))
+  done
+  if [ "$crf" -gt 20 ]; then echo "  (CRF $crf to stay within $(( max / 1000000 )) MB)"; fi
+}
+fit_budget "$OUT/heroVideo.mp4" 6 ffmpeg -v error -y -i "$WORK" -vf "$FIT" $X264 -crf CRF "$OUT/heroVideo.mp4"
 echo "✓ heroVideo.mp4 — normal playback"
 ${scrub ? `# Scroll-controlled: a keyframe every 6 frames keeps seeking instant without the size of all-intra.
-ffmpeg -v error -y -i "$WORK" -vf "$FIT" $X264 -crf 20 -g 6 -keyint_min 6 -sc_threshold 0 "$OUT/scrubReadyEncode.mp4"
+fit_budget "$OUT/scrubReadyEncode.mp4" 6 ffmpeg -v error -y -i "$WORK" -vf "$FIT" $X264 -crf CRF -g 6 -keyint_min 6 -sc_threshold 0 "$OUT/scrubReadyEncode.mp4"
 echo "✓ scrubReadyEncode.mp4 — scroll-scrubbed desktop hero"
 ` : ''}# Phones: from the ORIGINAL — a vertical source is already the right shape, a wide one gets a 9:16 centre crop.
-ffmpeg -v error -y -i "$ORIG" -vf "crop='min(iw,ih*9/16)':ih,scale=-2:'min(1920,ih)':flags=lanczos" $X264 -crf 22 -g 6 -keyint_min 6 -sc_threshold 0 "$OUT/mobileVideoEncode.mp4"
+fit_budget "$OUT/mobileVideoEncode.mp4" 3 ffmpeg -v error -y -i "$ORIG" -vf "crop='min(iw,ih*9/16)':ih,scale=-2:'min(1920,ih)':flags=lanczos" $X264 -crf CRF -g 6 -keyint_min 6 -sc_threshold 0 "$OUT/mobileVideoEncode.mp4"
 echo "✓ mobileVideoEncode.mp4 — phones (9:16)"
 # JPEG, not WebP: every ffmpeg build has it (Homebrew's lacks libwebp). next/image converts it for the browser anyway.
 ffmpeg -v error -y -i "$WORK" -vf "$FIT" -frames:v 1 -q:v 2 "$OUT/posterImage.jpg"

@@ -88,3 +88,46 @@ Reviewed by Claude on the static export (served from `out/`) at 1440 px and 390 
 no console errors, no failed requests (only aborted route prefetches); menu → Features click-through works; the mark
 lands beside "Fern green"; every photo loads. Seen: the first-screen photo is soft (the source is shot wide open, so the
 keys read out of focus at full width and in the phone crop); the phone's pinned buy bar also shows on Contact, over the form.
+
+### Prompt 2 — fix round 1 (2026-10-02)
+
+The user picked the fix for the soft first-screen photo (frame it on its sharpest part, keep the photo) and the Contact
+fix. Run by a fresh Claude Code subagent started from the OpusKit session (no OpusKit context), given only: "work inside
+`examples/halvik/` as the project root; read its CLAUDE.md and AGENTS.md first; port 3000 is taken, use port 3011 for its
+dev server" — then the prompt below, word for word.
+
+```
+Two fixes, please:
+
+1. The first-screen photo looks soft — most of the keyboard is out of focus when the whole photo fills the screen. Frame the first screen on the sharpest part of the photo (the top row of keys) instead of showing all of it, and on phones zoom in less so it doesn't get blurrier. Keep the same photo.
+
+2. On phones, the pinned "Add to bag" bar also shows on the Contact page, on top of the form. Don't show it on Contact.
+
+Keep everything else as it is. When you're done, run the static build again and make sure it still passes.
+```
+
+Result: the first screen is now cropped to the photo's top key rows (desktop 1.5×, tablet 1.4×, phone 4:3 at 1.3×), and the
+phone buy bar is hidden on `/contact`. `next build` passes, every route static. Its own note: at full desktop width the
+sharp band is too thin to fill the frame without blurring it further, so the front row stays soft; the footer keeps its
+96 px phone padding (room for the bar) on Contact too.
+
+Reviewed by Claude on the static export at 1440 px and 390 px: no overflow, no console errors, no failed requests (only
+aborted route prefetches); the buy bar is gone on Contact. Seen: on the phone the crop reads well; on desktop the 1.5×
+zoom makes the photo look soft and slightly pixelated at full width — the source photo itself is the limit.
+
+### Prompt 3 — fix round 2 (2026-10-02)
+
+The user picked: on desktop, show the first-screen photo smaller instead of full width. Run by a fresh Claude Code subagent
+started from the OpusKit session (no OpusKit context), given only: "work inside `examples/halvik/` as the project root; read
+its CLAUDE.md and AGENTS.md first; port 3000 is taken, use port 3011 for its dev server" — then the prompt below, word for word.
+
+```
+The first-screen photo still looks soft on a big screen — zooming in makes it blurry and a bit pixelated at full width. On desktop and tablet, don't stretch it across the whole width: show it smaller, next to the headline (a framed photo beside or under the title, not a full-bleed band), and zoom in less so the keys look crisp. Keep the phone version as it is now — it looks good. Same photo, keep everything else as it is, and run the static build again to make sure it still passes.
+```
+
+Result: from 768 px up the first screen is a 7/5 grid — headline, tagline, Add to bag and price on the left, the photo in
+a framed tile on the right (square on tablet, 5:4 from 1024 px) at 1.08× zoom; the phone layout is unchanged. The image
+`sizes` hint now matches the tile, so it loads the 1600 px file. `next build` passes, every route static.
+
+Reviewed by Claude on the static export at 1440 px and 390 px: no overflow, no console errors, no failed requests (only
+aborted route prefetches); the photo reads as a shallow-focus product shot instead of a blurred band.

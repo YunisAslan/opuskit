@@ -412,7 +412,7 @@ export const components: Record<ComponentId, ComponentPattern> = {
   PricingTable: { id: 'PricingTable', purpose: 'Compare plans honestly', anatomy: '2–3 plans, price, 5–7 differentiators, one recommended', behavior: 'Static; monthly/yearly toggle if relevant' },
   Marquee: { id: 'Marquee', purpose: 'Show breadth (clients, capabilities) in a compact strip', anatomy: 'Repeating row of names/logos', behavior: 'Slow CSS loop; pauses on hover; static under reduced motion' },
   SectionHeader: { id: 'SectionHeader', purpose: 'Name a section consistently', anatomy: 'Index number, label, heading', behavior: 'Static' },
-  Accordion: { id: 'Accordion', purpose: 'Keep FAQs and details scannable', anatomy: 'Native <details>/<summary> styled', behavior: 'Height animation via CSS interpolate-size where supported' },
+  Accordion: { id: 'Accordion', purpose: 'Keep FAQs and details scannable', anatomy: 'shadcn/ui Accordion (type="single" collapsible), restyled to the tokens', behavior: 'Height animates open and closed; one answer open at a time' },
   LookbookSpread: { id: 'LookbookSpread', purpose: 'Present a look like a magazine spread', anatomy: 'One large + one small image, look number, credits', behavior: 'Image clip reveal' },
   ServiceList: { id: 'ServiceList', purpose: 'List services as clear, scannable offers', anatomy: 'Numbered rows: service, one-line description, deliverables', behavior: 'Row hover highlight; optional hover preview' },
 }

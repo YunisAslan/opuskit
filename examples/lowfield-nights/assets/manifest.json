@@ -1,0 +1,87 @@
+{
+  "recipe": "cinematic-editorial",
+  "title": "Lowfield Nights — Cinematic Editorial Event Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Made for this build: src/components/site/Logo.tsx + src/app/icon.svg (arch over a horizon line)",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts via next/font (Newsreader, Albert Sans)",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Newsreader, Albert Sans (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Written for this build in src/content/site.ts and src/config/scenes.ts; names, programme, prices and contact details are invented",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "heroVideo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Pexels 33770785 (Dominik Zítka), prepared by scripts/prepare-video.sh; see media-src/SOURCES.md",
+      "replaceWith": "user-owned-video",
+      "usage": "Hero (loop or scroll-controlled)",
+      "specs": "1920×1080 min, 5–15s, slow continuous motion, no text burned in"
+    },
+    "posterImage": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Pexels 33770785 (Dominik Zítka), prepared by scripts/prepare-video.sh; see media-src/SOURCES.md",
+      "replaceWith": "user-owned-images",
+      "usage": "Shown before video loads and on reduced motion",
+      "specs": "First frame of the video, same crop"
+    },
+    "mobileVideoEncode": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "Pexels 33770785 (Dominik Zítka), prepared by scripts/prepare-video.sh; see media-src/SOURCES.md",
+      "replaceWith": "user-owned-video",
+      "usage": "Hero on small screens",
+      "specs": "1080×1920 (9:16) or 1080×1350 (4:5), ≤ 3MB"
+    },
+    "supportingImages": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Pexels, see media-src/SOURCES.md (artist-1..4, venue-1..4, location)",
+      "replaceWith": "user-owned-images",
+      "usage": "Sections between video moments",
+      "specs": "Graded to match the video"
+    },
+    "secondaryVideo": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Pexels Videos / Coverr",
+      "replaceWith": "user-owned-video",
+      "usage": "Chapter transitions",
+      "specs": "Same grade as the hero"
+    },
+    "scrubReadyEncode": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Pexels 33770785 (Dominik Zítka), prepared by scripts/prepare-video.sh; see media-src/SOURCES.md",
+      "replaceWith": "user-owned-video",
+      "usage": "Scroll-controlled page background",
+      "specs": "Made by scripts/prepare-video.sh from the ORIGINAL file: CRF 20, keyframe every 6 frames, ≤ 1920 px"
+    }
+  }
+}

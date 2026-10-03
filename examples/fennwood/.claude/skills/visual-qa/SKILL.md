@@ -1,0 +1,50 @@
+---
+name: visual-qa
+description: Compares the implemented site against the Fennwood — Organic Modern Restaurant Site recipe and lists deviations. Use after finishing a section or page, before declaring work done, or when asked to review the design.
+---
+
+# Visual QA
+
+Run the dev server, open each page (use a browser/screenshot tool if available), and compare against the recipe. Report deviations as a list: section → expected → actual → fix.
+
+## Checklist
+- [ ] Background is #FECD8C; no other page background colors are introduced.
+- [ ] Display text uses Rubik 600; body uses Rubik; no other families appear.
+- [ ] Accent #4F5E12 covers < 5% of any viewport.
+- [ ] Pages: Home · Menu · Reservations — every page shares the same navbar and footer.
+- [ ] Footer “Signature columns”: Dark band (text colour as ground): the logo large on the left (5 of 12 columns), 2–3 link columns with headings, then a hairline and one row: copyright left, legal links right.
+- [ ] Home section order: Hero → Intro → Menu → Reservation → Location.
+- [ ] Menu section order: Menu → Gallery → Reservation.
+- [ ] Reservations section order: Reservation → Location → FAQ.
+- [ ] Hero matches "Full-bleed photo with depth": 100svh full-bleed photograph, headline anchored bottom-left, image slightly larger than viewport (scale 1.1) to allow drift.
+- [ ] Controls and forms use shadcn/ui (button, sheet, sonner, tooltip, navigation-menu, dropdown-menu, calendar, popover, select, form, label, tabs, input, textarea, dialog, carousel, accordion) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.
+- [ ] Sections with ready code are built from their component in src/components/sections/ (real copy and media through props, no placeholder text left) and styled only through the recipe tokens. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.
+- [ ] Kit piece "Cut-out headline" (<CutReveal/> from src/components/pieces/CutReveal.tsx) is used on Every page — the h1 and each section heading, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Kit piece "Hand-drawn underline" (<ScribbleLink/> from src/components/pieces/ScribbleLink.tsx) is used on Every page — menu, footer and text links, unchanged in behaviour and styled only through the recipe tokens.
+- [ ] Big idea “One thing guides the scroll” is visible on every page: pick one element from the first screen — the product, the logo mark, a drawn line or a simple shape in the accent colour — and let it leave the hero and travel down the page with the visitor, turning up beside each chapter.
+- [ ] Chapters open as the big idea says: Each chapter opens where the motif comes to rest: the motif changes pose or size there, and the chapter title sits next to it.
+- [ ] The site ends as the big idea says: The motif comes to rest in the footer, beside the brand name: the journey visibly ends.
+- [ ] Signature moment "One shape travels down the page" is built on Home — Hero — Full-bleed photo with depth, with its mobile and reduced-motion versions.
+- [ ] Signature moment "A footer worth reaching" is built on Footer, with its mobile and reduced-motion versions.
+- [ ] Every page passes the award checklist in the recipe (one idea, one unforgettable moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).
+- [ ] Photos are shown as "Even grid" (Hover: subtle image scale (1.03) or a second photo).
+- [ ] Layout: Text in 6–8 central columns; media spans 10–12; section spacing clamp(96px, 12vw, 160px) between sections.
+- [ ] Shape “Soft”: buttons 8px, cards 12px, media 12px radius (rounded-button / rounded-card / rounded-media) — Small, consistent radii; never mix sharp and rounded.
+- [ ] Menu “Centered logo”: Symmetric bar: links left, logo centred, secondary links and the action right; generous height at the top that shrinks after scrolling.
+- [ ] Absent: Pure black text.
+- [ ] Absent: Neon or cool blue accents.
+- [ ] Absent: Clinical, dense grids.
+- [ ] Absent: Stock lifestyle photos with fake smiles.
+- [ ] Absent: A cream or beige page ground with a clay/terracotta accent.
+- [ ] Absent: A near-black ground with one acid-green or orange accent, or tinted charcoal standing in for black.
+- [ ] Absent: Small uppercase, letter-spaced monospace labels above every heading.
+- [ ] Absent: Numbered markers (01 / 02) on content that is not a real sequence.
+- [ ] Absent: Meta strings joined with middle dots or spaced em dashes, and "→" appended to links.
+- [ ] Absent: One italic or coloured accent word inside an otherwise plain headline.
+- [ ] Absent: Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe's fonts.
+- [ ] Mobile (390px): no horizontal scroll, headlines re-broken intentionally, touch targets ≥ 44px.
+- [ ] prefers-reduced-motion: every animation has its documented alternative.
+- [ ] Every media element is rendered through the asset config layer; temporary assets are listed in the manifest.
+- [ ] Lighthouse on mobile: LCP < 2.5s, CLS < 0.1.
+
+Do not mark work complete while any item fails. Fix, then re-check.

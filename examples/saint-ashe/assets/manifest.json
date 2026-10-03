@@ -1,0 +1,78 @@
+{
+  "recipe": "cinematic-editorial",
+  "title": "Saint Ashe — Gothic Modern Fashion House",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "create",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "find",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Grenze Gotisch, Work Sans (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "create",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "heroVideo": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "curated-placeholder",
+      "replaceWith": "user-owned-video",
+      "usage": "Hero (loop or scroll-controlled)",
+      "specs": "1920×1080 min, 5–15s, slow continuous motion, no text burned in"
+    },
+    "posterImage": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "curated-placeholder",
+      "replaceWith": "user-owned-images",
+      "usage": "Shown before video loads and on reduced motion",
+      "specs": "First frame of the video, same crop"
+    },
+    "mobileVideoEncode": {
+      "required": false,
+      "level": "recommended",
+      "status": "find",
+      "source": "Pexels Videos / Coverr",
+      "replaceWith": "user-owned-video",
+      "usage": "Hero on small screens",
+      "specs": "1080×1920 (9:16) or 1080×1350 (4:5), ≤ 3MB"
+    },
+    "supportingImages": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "curated-placeholder",
+      "replaceWith": "user-owned-images",
+      "usage": "Sections between video moments",
+      "specs": "Graded to match the video"
+    },
+    "secondaryVideo": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Pexels Videos / Coverr",
+      "replaceWith": "user-owned-video",
+      "usage": "Chapter transitions",
+      "specs": "Same grade as the hero"
+    }
+  }
+}

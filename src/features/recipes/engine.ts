@@ -86,7 +86,7 @@ function placePieces(spec: RecipeSpec, pages: PageBlueprint[]): RecipePiece[] {
   const fromPhotos = new Map<PieceId, string[]>()
   for (const pg of pages) for (const s of pg.sections) if (s.photos?.piece) fromPhotos.set(s.photos.piece, [...(fromPhotos.get(s.photos.piece) ?? []), `${pg.label} → ${s.name} (its photo layout)`])
   const ids = uniq([...(spec.pieces ?? []), ...fromPhotos.keys()])
-  const WHERE: Record<BehaviourId, string> = { headlines: 'Every page — the h1 and each section heading', links: 'Every page — menu, footer and text links', buttons: 'Every page — the main action', transitions: 'Whole site — every internal link; mount once in app/layout.tsx', site: 'Whole site — mount once in app/layout.tsx' }
+  const WHERE: Record<BehaviourId, string> = { headlines: 'Every page — the h1, plus at most two section headings per page (not every heading)', links: 'Every page — menu, footer and text links', buttons: 'Every page — the main action', transitions: 'Whole site — every internal link; mount once in app/layout.tsx', site: 'Whole site — mount once in app/layout.tsx' }
   return ids.map((id) => {
     const p = pieceCatalog[id]
     const b = behaviourOf(id)

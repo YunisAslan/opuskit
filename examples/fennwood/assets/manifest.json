@@ -1,0 +1,66 @@
+{
+  "recipe": "organic-modern",
+  "title": "Fennwood — Organic Modern Restaurant Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon",
+      "note": "Made for this build: src/components/Mark.tsx (the oven arch with the fire; currentColor, so dark and light) and src/app/icon.svg (favicon). Replace when a real logo exists."
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Rubik (Google Fonts)",
+      "note": "Rubik via next/font (src/app/layout.tsx)."
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "note": "Written for this build in src/config/site.ts. The address, phone, email, farm names, dishes and prices are invented stand-ins — confirm or replace."
+    },
+    "photographySet": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Hero, section media, gallery",
+      "specs": "Min 2400px long edge, consistent grade, mix of wide (3:2) and portrait (4:5)",
+      "note": "The owner's 8 photos in public/media/ (sources: media-src/SOURCES.md); WebP sizes made by scripts/media.sh."
+    },
+    "mobileHeroCrop": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Hero on small screens",
+      "specs": "4:5 or 9:16 crop with focal point centred",
+      "note": "public/media/hero-mobile.jpg, a 9:16 crop of hero.jpg made by scripts/media.sh."
+    },
+    "texture": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Subtle paper/grain overlay at ≤ 4% opacity",
+      "specs": "Seamless tile, 1024px, WebP",
+      "note": "Not used."
+    }
+  }
+}

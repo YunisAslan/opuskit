@@ -1,0 +1,112 @@
+@import "../styles/tokens.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* shadcn/ui names that do not collide with the recipe's --color-* tokens. background, primary, secondary and border
+   share the recipe's names and values; muted and accent keep the recipe's meaning (muted = secondary text,
+   accent = claret seal), so the ui files use bg-secondary instead of bg-muted / bg-accent. */
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: 6px;
+  --radius-md: var(--radius-button);
+  --radius-lg: var(--radius-button);
+  --radius-xl: var(--radius-card);
+  --radius-4xl: 999px;
+}
+
+/* shadcn theme — the recipe's hex values (recipe/ui.md) */
+:root {
+  --background: #EACDC3; --foreground: #1D2B4F;
+  --card: #F4DFD8; --card-foreground: #1D2B4F; --popover: #F4DFD8; --popover-foreground: #1D2B4F;
+  --primary: #1D2B4F; --primary-foreground: #EACDC3; --secondary: #E5BDAF; --secondary-foreground: #1D2B4F;
+  --muted: #F4DFD8; --muted-foreground: #5A4A55; --accent: #E5BDAF; --accent-foreground: #1D2B4F;
+  --border: #D8B5A8; --input: #5A4A55; --ring: #1D2B4F; --radius: 12px;
+  --destructive: #A3123A;
+  --header-h: 4rem;
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-curtain: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+  :focus-visible { outline: none; }
+  a:focus-visible, button:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+  [id] { scroll-margin-top: var(--header-h); }
+}
+
+/* Section rhythm: half the recipe's section spacing on each side, so two sections sit clamp(120px, 16vw, 240px) apart. */
+@utility section-y { padding-block: clamp(60px, 8vw, 120px); }
+
+/* ---- First screen: headline and image fade up once on load (CSS, so it runs before hydration) ---- */
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.rise { animation: rise 600ms var(--ease-soft) both; }
+.rise-late { animation: rise 600ms var(--ease-soft) 120ms both; }
+
+/* ---- Fade & rise reveal (Reveals.tsx adds .is-in; html.reveal-on is set before paint) ---- */
+[data-reveal] > :not(section), [data-reveal] > section > :not(:only-child), [data-reveal] > section > :only-child > * { transition: opacity 600ms var(--ease-soft), transform 600ms var(--ease-soft); }
+[data-reveal] > :nth-child(2), [data-reveal] > section > :nth-child(2):not(:only-child), [data-reveal] > section > :only-child > :nth-child(2) { transition-delay: 60ms; }
+[data-reveal] > :nth-child(3), [data-reveal] > section > :nth-child(3):not(:only-child), [data-reveal] > section > :only-child > :nth-child(3) { transition-delay: 120ms; }
+[data-reveal] > :nth-child(4), [data-reveal] > section > :nth-child(4):not(:only-child), [data-reveal] > section > :only-child > :nth-child(4) { transition-delay: 180ms; }
+html.reveal-on [data-reveal]:not(.is-in) > :not(section),
+html.reveal-on [data-reveal]:not(.is-in) > section > :not(:only-child), html.reveal-on [data-reveal]:not(.is-in) > section > :only-child > * { opacity: 0; transform: translateY(16px); }
+
+/* ---- Image clip reveal: the frame opens like a curtain, the photo settles from 1.15 ---- */
+[data-clip] { transition: clip-path 1000ms var(--ease-curtain); clip-path: inset(0 0 0 0 round var(--radius-media)); }
+[data-clip] img { transition: transform 1100ms var(--ease-curtain); }
+html.reveal-on [data-clip]:not(.is-in) { clip-path: inset(100% 0 0 0 round var(--radius-media)); }
+html.reveal-on [data-clip]:not(.is-in) img { transform: scale(1.15); }
+
+/* ---- Line-by-line headline reveal ---- */
+[data-lines] .line-mask { display: block; overflow: hidden; padding-bottom: 0.08em; }
+[data-lines] .line { display: block; transition: transform 700ms var(--ease-soft); }
+[data-lines] .line-mask:nth-child(2) .line { transition-delay: 80ms; }
+[data-lines] .line-mask:nth-child(3) .line { transition-delay: 160ms; }
+html.reveal-on [data-lines]:not(.is-in) .line { transform: translateY(105%); }
+
+/* ---- The walk (Home — Location): snapping only while the walk is on screen; each stop's card enters once ---- */
+@media (prefers-reduced-motion: no-preference) {
+  html.in-walk { scroll-snap-type: y proximity; }
+}
+.walk-stop { scroll-snap-align: start; }
+.walk-card { transition: opacity 600ms var(--ease-soft), transform 600ms var(--ease-soft); }
+html.reveal-on .walk-stop:not([data-seen]) .walk-card { opacity: 0; transform: translateY(16px); }
+html.in-walk .stop-index { opacity: 0; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .rise-late { animation: none; }
+  [data-reveal] > :not(section), [data-reveal] > section > :not(:only-child), [data-reveal] > section > :only-child > * { transition: opacity 200ms linear; transition-delay: 0ms !important; }
+  html.reveal-on [data-reveal]:not(.is-in) > :not(section),
+  html.reveal-on [data-reveal]:not(.is-in) > section > :not(:only-child), html.reveal-on [data-reveal]:not(.is-in) > section > :only-child > * { transform: none; }
+  [data-clip] { transition: opacity 200ms linear; }
+  html.reveal-on [data-clip]:not(.is-in) { clip-path: inset(0 0 0 0 round var(--radius-media)); opacity: 0; }
+  html.reveal-on [data-clip]:not(.is-in) img { transform: none; }
+  html.reveal-on [data-lines]:not(.is-in) .line { transform: none; }
+  html.reveal-on .walk-stop:not([data-seen]) .walk-card { opacity: 1; transform: none; }
+  [data-slot$="-content"] { animation: none !important; }
+}
+
+/* Selects and the date picker open as a bottom sheet on phones. */
+@media (max-width: 639px) {
+  [data-radix-popper-content-wrapper]:has(> [data-slot="select-content"]),
+  [data-radix-popper-content-wrapper]:has(> [data-slot="popover-content"]) {
+    position: fixed !important; inset: auto 0 0 0 !important; transform: none !important; min-width: 0 !important;
+  }
+  [data-slot="select-content"], [data-slot="popover-content"] {
+    width: 100vw !important; max-height: 70vh; border-radius: var(--radius-card) var(--radius-card) 0 0; padding: 8px 8px 24px;
+  }
+  [data-slot="select-item"] { min-height: 44px; }
+}

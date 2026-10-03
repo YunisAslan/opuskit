@@ -76,6 +76,8 @@ export function Nav() {
 
 /** Mobile: the main action stays under the thumb — price and "Add to bag" in a bar pinned to the bottom. */
 export function MobileBuyBar() {
+  // Not on Contact: the bar would sit over the form.
+  if (usePathname() === '/contact') return null
   return (
     <div className="fixed inset-x-3 bottom-3 z-40 flex items-center justify-between gap-3 rounded-(--radius-card) border border-(--color-border) bg-(--color-surface)/85 py-2 pl-5 pr-2 backdrop-blur-md md:hidden">
       <p className="type-utility leading-tight"><span className="block text-(--color-muted)">Halvik 65</span><span className="type-heading [font-size:1.15rem]">from $159</span></p>

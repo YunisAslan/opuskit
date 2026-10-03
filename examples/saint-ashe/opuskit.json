@@ -1,0 +1,91 @@
+{
+  "opuskit": 1,
+  "recipe": "cinematic-editorial",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "cinematic-editorial",
+    "brief": {
+      "name": "Saint Ashe",
+      "offer": "Black clothing cut in small runs in Tbilisi: heavy cotton, waxed wool and leather that ages with you.",
+      "goal": "buy"
+    },
+    "purpose": "fashion",
+    "direction": "gothic-modern",
+    "characters": [],
+    "lead": "video",
+    "motion": "dynamic",
+    "hero": "ambient-video",
+    "layout": "full-bleed",
+    "palette": "mulberry",
+    "typography": "new-gothic",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "temporary",
+    "signatures": [],
+    "pieces": [
+      "text-roll",
+      "swap-button"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "text-roll",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "swap-button",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "vrocnink",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "collection",
+          "product-grid",
+          "journal",
+          "newsletter"
+        ]
+      },
+      {
+        "id": "yykaixdq",
+        "type": "collections",
+        "label": "Collections",
+        "purpose": "Present the current collection through an editorial, image-led experience.",
+        "sections": [
+          "collection",
+          "lookbook",
+          "product-grid"
+        ]
+      },
+      {
+        "id": "bow06jz4",
+        "type": "about",
+        "label": "About",
+        "purpose": "Put a human face and point of view on the work; build trust.",
+        "sections": [
+          "about",
+          "editorial-story",
+          "team"
+        ]
+      },
+      {
+        "id": "r5wha8q4",
+        "type": "contact",
+        "label": "Contact",
+        "purpose": "Give one clear, low-friction way to get in touch.",
+        "sections": [
+          "contact-cta",
+          "location",
+          "faq"
+        ]
+      }
+    ],
+    "target": "not-sure"
+  }
+}

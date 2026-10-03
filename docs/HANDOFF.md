@@ -1,6 +1,6 @@
 # Handoff — where the work is and how to continue
 
-Last updated 2026-10-01 (work computer). Read this first in a new session, on any computer. Then read, in order:
+Last updated 2026-10-02. Read this first in a new session, on any computer. Then read, in order:
 `AGENTS.md` → `docs/plan-vibe.md` (current work) → `docs/plan-for-fit.md` (example sites, waits for plan-vibe).
 Keep this file current: update "Now" and "Next" whenever a step finishes.
 
@@ -73,7 +73,7 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
 ## Next
 
 1. **Example #2 Brasshand** — built and registered 2026-10-01 (`examples/brasshand/`, live at
-   `/live/brasshand`). Open: clips (the user records them), and removing `cheeky911` with its kit photos
+   `/live/brasshand`). Open: clips (the user records them). (`cheeky911` and its kit photos were removed 2026-10-03.)
    (plan-for-fit §9 — needs the user's OK).
 2. **Example #3 Hexmint** — built and registered 2026-10-02 (`/live/hexmint`); clips open. Fix round 1 (doubled 3D:
    the poster stayed under the transparent canvas) done, live export regenerated.
@@ -83,9 +83,32 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
    `/live/sticky-weather`); clips open. Kit fixes from it: no doubled word in composed titles ("Studio Studio Site"),
    Lenis in the stack when SmoothScroll ships, Sticker Studio's "serif" rule made pairing-neutral, TextEffect spaces.
    Open question for the user: Sticker Studio says "neutral page" but offers Bubblegum (a saturated pink ground).
-   **#5 runs in a separate chat** (`examples/halvik/`) — don't touch it from here; coordinate `examples.ts`,
-   the Progress table, `npm run examples`, `public/live` and commits.
-4. Put aside by the user (2026-10-01): D1–D2 WebGL pieces; Slow Atlas clips (recorded later by the user).
+4. **Example #5 Halvik** — built (Prompt 1 + two fix rounds: hero framed beside the headline on desktop, buy bar off
+   Contact) and registered 2026-10-02 (`/live/halvik`); clips open. `keepers` removed; the kit's product world now uses
+   Halvik's photos and copy, its founders two Unsplash portraits in `public/kit/people/` (credits `public/kit/SOURCES.md`).
+5. **Example #6 Hane** (clinic) — built (Prompt 1, no fix round) and registered 2026-10-02 (`/live/hane`); clips open.
+6. **Example #7 Fennwood** (restaurant) and **#8 Saint Ashe** (fashion) — built (Prompt 1 + one fix round each) and
+   registered 2026-10-03 (`/live/fennwood`, `/live/saint-ashe`); clips open. `kofii` and `buytolose` removed; the kit's
+   food and shop worlds now use their photos and copy. Kit fixes from them: `prepare-video.sh` steps the CRF up until the
+   desktop film is ≤ 6 MB and the phone one ≤ 3 MB (it had shipped 8.6 MB); the headline behaviour's placement now says
+   "the h1 plus at most two section headings", matching the pieces' own rules. Saint Ashe's film came from Pexels: its
+   download link (`https://www.pexels.com/download/video/{id}/`) works from here, so Claude can fetch Pexels videos.
+7. **Example #9 Velmira** (hotel) and **#10 Lowfield Nights** (event) — built in parallel (Prompt 1 + one fix round each)
+   and registered 2026-10-03 (`/live/velmira`, `/live/lowfield-nights`); clips open. `swiss-modern-event-site-claude-code`
+   removed (its untracked Pinterest source video went with the folder); the kit's event world now uses Lowfield's photos
+   and copy. All ten plan sites are built. `cheeky911`, the last old example, was removed with the user's OK: the kit's studio world
+   now uses Brasshand's photos and copy (a branding studio), the software world Hexmint's renders, the sticker orbit and
+   piece demos Brasshand/Sticky Weather photos and Velmira's film. No old example is left.
+   The Unsplash connector needed a new sign-in midway, so #9 and #10 use Pexels photos: plain curl gets a Cloudflare
+   challenge, a headed Chrome (Playwright `headless: false`, a fresh browser per search) passes; originals download from
+   `images.pexels.com/photos/<id>/pexels-photo-<id>.jpeg`. Sound from Pixabay (its page HTML carries the mp3 link).
+   Kit fixes from them: `prepare-video.sh` budget-fits every encode (desktop + scrub ≤ 6 MB, phone ≤ 3 MB, CRF up to 32;
+   its helper no longer trips `set -e`); AmbientSound takes a `placement` (e.g. the menu bar) and clamps its fade volume;
+   example zips leave sound files out like videos.
+   Kit fix from it: ready sections can only import `react`, so FAQ's list and Reservation's form are now slots
+   (`children` / `form`) the project fills with its own shadcn/ui Accordion and Calendar/Select form; check.ts fails if a
+   ready section ships a native select, date/time/number input, checkbox, radio or `<details>`.
+8. Put aside by the user (2026-10-01): D1–D2 WebGL pieces; Slow Atlas clips (recorded later by the user).
 
 ## Done so far (2026-10-01)
 
@@ -131,8 +154,5 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
 
 ## Open questions for the user
 
-- Kit sample photos for some worlds are still old-example photos (`SectionPreview.tsx`): Porsches (cheeky911) in the
-  studio/software worlds and the real **Keepers** can (a real drink brand) in the product world — now also in the new
-  feature-rows sample. §9 of plan-for-fit replaces them as examples #4/#5/#7/#8/#10 land; the blog/editorial world could
-  use Slow Atlas photos now.
+- Kit sample photos now all come from the ten plan sites (old examples removed 2026-10-03).
 - Clips total ~10 MB; offered to re-encode ~40 % smaller.
