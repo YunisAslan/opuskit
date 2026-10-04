@@ -1,5 +1,5 @@
 // OpusKit section — Footer in four variants (the recipe's footer style):
-//   signature — a big signature logo, columns of links with a wavy underline on hover (pure CSS, no script), the legal line. Dark.
+//   signature — a big signature logo, columns of links, the legal line. Dark.
 //   wordmark  — links and contact in a row, then the brand name spanning the full width (sized to fit: set
 //               --wordmark-em to the name's width in em in the display face; 4.1 fits "Brasshand" in Bayon).
 //   contact   — one big invitation with the email/phone as large links, details beside it.
@@ -10,7 +10,7 @@ export type FooterColumn = { title: string; links: { label: string; href: string
 export type FooterVariant = 'signature' | 'wordmark' | 'contact' | 'line'
 type Link = { label: string; href: string }
 
-const wavy = 'underline decoration-wavy decoration-transparent decoration-[1.5px] underline-offset-[6px] transition-[text-decoration-color] duration-200 hover:decoration-(--color-chapter-2,var(--color-accent)) focus-visible:decoration-(--color-chapter-2,var(--color-accent)) aria-[current=page]:decoration-(--color-chapter-2,var(--color-accent))'
+const wavy = 'underline decoration-transparent decoration-1 underline-offset-4 aria-[current=page]:decoration-current'
 
 export function FooterSection({ link: L = 'a', variant = 'signature', logo, brand, columns, legal, copyright, invite = 'Let’s talk', contact = [], light = false }: {
   link?: ElementType; variant?: FooterVariant; logo: ReactNode; /** The name as text — the wordmark variant sets it huge. */ brand?: string; columns: FooterColumn[]

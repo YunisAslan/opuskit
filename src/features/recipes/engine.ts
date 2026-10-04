@@ -7,17 +7,18 @@ import { GENERIC_TELLS, components, concepts, heroes, imagePresentations, media,
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { MAX_HEAVY_PIECES, behaviourOf, pieces as pieceCatalog } from '@/data/pieces'
 import { blockFor, heroBlocks } from '@/data/blocks'
+import { sectionVariants, variantFor } from '@/data/section-variants'
 import { resources } from '@/data/resources'
-import { contrast, contrastLabel, isHex } from '@/lib/color'
+import { contrast, contrastLabel, isHex, oklab } from '@/lib/color'
 import type {
   AssetCreationPath, AssetRequirement, ChromeId, ConceptId, RecipeConcept, FooterStyle, AssetSpec, BehaviourId, Brief, BuildTarget, DirectionId, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern, ImagePresentationId, ImageryPlan, PieceId, RecipePiece,
-  GoalId, LeadId, MotionLevel, NavStyleId, ShapeStyle, UiKit, SignaturePattern, PageBlueprint, PageSection, ShapeId, SignatureMoment, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
+  FamilyId, GoalId, LeadId, LayoutId, MediaPlacement, MotionPattern, FooterStyleId, SectionTone, MotionLevel, NavStyleId, ShapeStyle, UiKit, SignaturePattern, PageBlueprint, PageSection, ShapeId, SignatureMoment, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
 } from '@/types/domain'
 
 // ─── Spec helpers ────────────────────────────────────────────────────────────
 
-export function defaultPagesFor(purpose: PurposeId): PageSpec[] {
-  return purposes[purpose].pages.filter((p) => p.tier === 'recommended').map((p) => ({
+export function defaultPagesFor(purpose: PurposeId, starter?: string): PageSpec[] {
+  return (purposes[purpose].starters?.find((s) => s.id === starter)?.pages ?? purposes[purpose].pages).filter((p) => p.tier === 'recommended').map((p) => ({
     id: crypto.randomUUID().slice(0, 8),
     type: p.type,
     label: p.label,
@@ -80,13 +81,18 @@ export function pieceIssues(spec: Pick<RecipeSpec, 'motion' | 'pieces'>): Partia
 }
 
 /** Places each kit piece on the first page section it suits; navbar/footer pieces go to the site chrome. */
-function placePieces(spec: RecipeSpec, pages: PageBlueprint[]): RecipePiece[] {
+function placePieces(spec: RecipeSpec, pages: PageBlueprint[], signatures: SignatureMoment[]): RecipePiece[] {
   const issues = pieceIssues(spec)
   // Each photo section's layout brings its own piece (marquee, ring, field…) onto that very section.
   const fromPhotos = new Map<PieceId, string[]>()
   for (const pg of pages) for (const s of pg.sections) if (s.photos?.piece) fromPhotos.set(s.photos.piece, [...(fromPhotos.get(s.photos.piece) ?? []), `${pg.label} → ${s.name} (its photo layout)`])
-  const ids = uniq([...(spec.pieces ?? []), ...fromPhotos.keys()])
   const WHERE: Record<BehaviourId, string> = { headlines: 'Every page — the h1, plus at most two section headings per page (not every heading)', links: 'Every page — menu, footer and text links', buttons: 'Every page — the main action', transitions: 'Whole site — every internal link; mount once in app/layout.tsx', site: 'Whole site — mount once in app/layout.tsx' }
+  // A signature moment with a ready piece brings that piece to where the moment lands (a whole-site piece to the root layout).
+  for (const m of signatures) {
+    const id = signaturePatterns.find((p) => p.id === m.id)?.piece
+    if (id) fromPhotos.set(id, [...(fromPhotos.get(id) ?? []), pieceCatalog[id].slot === 'site' ? `${WHERE.site} (the “${m.name}” moment, ${m.where})` : `${m.where} (the “${m.name}” moment)`])
+  }
+  const ids = uniq([...(spec.pieces ?? []), ...fromPhotos.keys()])
   return ids.map((id) => {
     const p = pieceCatalog[id]
     const b = behaviourOf(id)
@@ -118,6 +124,10 @@ export function normalizeSpec(spec: RecipeSpec): RecipeSpec {
   if (next.imagePresentation && !Object.hasOwn(imagePresentations, next.imagePresentation)) delete next.imagePresentation
   if (next.sectionPhotos) next.sectionPhotos = next.sectionPhotos.filter((x) => Object.hasOwn(imagePresentations, x.presentation) && PHOTO_SECTIONS.includes(next.pages.find((p) => p.id === x.page)?.sections[x.index] as SectionId))
   if (next.sectionPhotos && !next.sectionPhotos.length) delete next.sectionPhotos
+  if (next.sectionVariants) next.sectionVariants = next.sectionVariants.filter((x) => sectionVariants[next.pages.find((p) => p.id === x.page)?.sections[x.index] as SectionId]?.options.some((o) => o.id === x.variant))
+  if (next.sectionVariants && !next.sectionVariants.length) delete next.sectionVariants
+  if (next.heroBands) next.heroBands = next.heroBands.filter((x) => Object.hasOwn(heroes, x.hero) && next.pages.find((p) => p.id === x.page)?.sections[x.index] === 'hero')
+  if (next.heroBands && !next.heroBands.length) delete next.heroBands
   if (next.piecePlacements) next.piecePlacements = next.piecePlacements.filter((x) => Object.hasOwn(pieceCatalog, x.piece) && (x.page === '*' || next.pages.some((p) => p.id === x.page && x.index >= 0 && x.index < p.sections.length)))
   if (next.rotation && next.rotation !== 'off' && !Object.hasOwn(accentSets, next.rotation)) delete next.rotation
   if (next.piecePlacements?.length) next.pieces = [...new Set(next.piecePlacements.map((x) => x.piece))] // placed per section: the one-per-slot rule is per section, set by the plan
@@ -143,9 +153,12 @@ export function remix(spec: RecipeSpec, change: Partial<RecipeSpec>): RecipeSpec
 // Palette/type ids retired on 2026-09-27 (the cream + trend-font library). Saved recipes are upgraded in place.
 // ponytail: drop once recipes saved before that date no longer matter.
 const LEGACY_PALETTE: Record<string, PaletteId> = {
-  'warm-ivory': 'legal-pad', 'rice-paper': 'pink-plaster', 'dark-cinematic': 'black-box', monochrome: 'signal-white', earthy: 'celery-room',
+  'warm-ivory': 'legal-pad', 'rice-paper': 'pink-plaster', 'dark-cinematic': 'black-box', monochrome: 'signal-white', earthy: 'yerba-leaf',
   'muted-color': 'pink-plaster', 'deep-color': 'oxblood-room', 'high-contrast': 'hazard-yellow', 'swiss-signal': 'signal-white',
   'atelier-noir': 'bottle-green', 'midnight-signal': 'night-ink', 'gallery-cobalt': 'klein-field',
+  // Retired 2026-10-04 (dusty mid-tone grounds, docs/research/2026-10-04-colour.md).
+  'pool-tile': 'mint-fresh', 'wet-slate': 'graphite-sand', 'rose-leaf': 'bubblegum', 'airmail-blue': 'studio-aqua',
+  'deep-teal': 'bottle-green', 'celery-room': 'yerba-leaf', 'peach-fuzz': 'signal-orange',
 }
 const LEGACY_TYPE: Record<string, TypographyId> = {
   'editorial-serif': 'high-low', 'modern-sans': 'grid-discipline', 'elegant-contrast': 'soft-couture', 'bold-display': 'photocopy-zine',
@@ -331,6 +344,13 @@ function buildAssets(spec: RecipeSpec, hero: HeroPattern): AssetRequirement[] {
     list.splice(3, 0, { asset: 'images', label: 'Your photos', quantity: imagery.photos ? `${imagery.photos} photos` : imagery.presentation.ideal, level: 'recommended',
       usage: `${imagery.presentation.name} — ${imagery.presentation.line.toLowerCase()}`, specs: 'Min 2400px long edge, one consistent grade; keep each photo’s original shape unless the layout says otherwise' })
   }
+  // A film band mid-page (a hero part showing its own video) needs its own film, even when the first screen has none.
+  // ponytail: prepare-video.sh names its files after the first screen (heroVideo.mp4…); a site with both renames the band's by hand.
+  const band = (spec.heroBands ?? []).map((b) => heroes[b.hero]).find((h) => h.leads.includes('video'))
+  if (band && !hero.leads.includes('video')) list.push(
+    { asset: 'video', label: 'Film for the band', quantity: '1 clip', level: 'required', usage: `The ${band.name.toLowerCase()} band mid-page — its own film, not the first screen's media`, specs: band.id.startsWith('scroll-video') ? '1920×1080 min, 15–30 s, one continuous shot with no cuts and a slow steady camera move (it plays as visitors scroll); scripts/prepare-video.sh makes the scrub-ready encode' : '1920×1080 min, 8–15 s, one slow continuous shot, no text burned in; run it through scripts/prepare-video.sh' },
+    { asset: 'images', label: 'Band poster', quantity: '1 image', level: 'required', usage: 'Shown before the band’s film loads and on reduced motion', specs: 'First frame of the film, same crop' },
+  )
   if (hero.id === 'scroll-video' || hero.id === 'scroll-video-page') list.push({ asset: 'video', label: 'Scrub-ready encode', quantity: '1 file', level: 'required', usage: hero.id === 'scroll-video' ? 'Scroll-controlled hero' : 'Scroll-controlled page background', specs: 'Made by scripts/prepare-video.sh from the ORIGINAL file: CRF 20, keyframe every 6 frames, ≤ 1920 px' })
   const off = offShapeVideo(spec)
   if (off && spec.videoFrame !== 'original') list.push({ asset: 'video', label: 'Widescreen version', quantity: '1 file', level: 'recommended', usage: 'Desktop and tablet hero — fills 16:9 screens',
@@ -352,7 +372,8 @@ function buildAssets(spec: RecipeSpec, hero: HeroPattern): AssetRequirement[] {
     const providedFiles = files.length ? files.map((u) => ({ fileId: u.fileId!, name: u.name })) : undefined
     const providedNote = providedFiles ? `user-provided: ${providedFiles.map((f) => f.name).join(', ')}` : sibling ? 'made from your uploaded file' : 'marked as available — no file attached yet'
     return {
-      ...a, key: camel(a.label), status, providedFiles,
+      // A key is a JS identifier in src/config/assets.ts: one that would start with a digit ("3D model…") gets a word first.
+      ...a, key: ((k) => (/^\d/.test(k) ? `asset${k[0]}${k.slice(1)}` : k))(camel(a.label)), status, providedFiles,
       source: status === 'have' ? providedNote : status === 'temporary' ? 'curated-placeholder' : status === 'create' && a.asset === 'video' ? 'image-to-video' : SOURCE[a.asset],
       replaceWith: status === 'have' ? '—' : `user-owned-${a.asset}`,
     }
@@ -554,10 +575,107 @@ function pickSignatures(spec: RecipeSpec, hero: HeroPattern, pages: PageBlueprin
     const sid = fits(p, used)
     if (out.length === 4 || !sid) continue
     used.add(sid)
-    out.push({ id: p.id, name: p.name, where: where(sid)!, experience: p.experience, implementation: p.implementation, mobile: p.mobile, reducedMotion: p.reducedMotion, components: p.components })
+    const experience = p.id === 'footer-moment' && concept ? concepts[concept].ending : p.experience
+    out.push({ id: p.id, name: p.name, where: where(sid)!, experience, implementation: p.implementation, mobile: p.mobile, reducedMotion: p.reducedMotion, components: p.components })
   }
   return out
 }
+
+// ─── Section entrance per family (replaces one fade-and-rise on every site) ────
+const ENTRANCE: Record<FamilyId, Partial<MotionPattern>> = {
+  quiet: { name: 'Soft fade', behavior: 'opacity 0→1 only, no movement; children 90ms apart.', duration: '800–1000ms', easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)', purpose: 'Let sections settle in like light changing — nothing moves, it simply appears.' },
+  minimal: { name: 'Soft fade', behavior: 'opacity 0→1 only, no movement; children 60ms apart.', duration: '600ms', easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)', purpose: 'A quiet entrance that keeps the layout perfectly still.' },
+  editorial: { name: 'Clip reveal', behavior: 'blocks unmask upward: clip-path inset(100% 0 0 0) → inset(0); images settle from scale 1.06; text lines follow 70ms apart.', duration: '700–900ms', easing: 'cubic-bezier(0.65, 0, 0.35, 1)', purpose: 'Sections open like turning a page — the frame first, then the words.' },
+  cinematic: { name: 'Clip reveal', behavior: 'media unmask from a thin line to full height; text fades in after the media lands.', duration: '900–1200ms', easing: 'cubic-bezier(0.65, 0, 0.35, 1)', purpose: 'Every section enters like a cut in a film — image first, words second.' },
+  bold: { name: 'Hard cut', behavior: 'elements snap in: opacity 0→1 in 120ms with a 24px slide over 250ms; children 40ms apart; no blur, no bounce.', duration: '250ms', easing: 'cubic-bezier(0.2, 0, 0, 1)', purpose: 'Fast and confident — content is simply there, like a poster being slapped up.' },
+  raw: { name: 'Hard cut', behavior: 'elements appear without easing (steps(2)), slightly offset then square; children 50ms apart.', duration: '200ms', easing: 'steps(2)', purpose: 'Unpolished on purpose — things land like paper on a table.' },
+  experimental: { name: 'Spring settle', behavior: 'elements rise 32px and settle with a spring (stiffness 180, damping 16), a 2° tilt straightening as they land.', duration: 'spring', easing: 'spring', purpose: 'Things arrive with a little life of their own.' },
+  organic: { name: 'Spring settle', behavior: 'elements rise 20px with a soft spring (stiffness 120, damping 20); images fade in under them.', duration: 'spring', easing: 'spring', purpose: 'Warm and unhurried — like something placed by hand.' },
+  futuristic: { name: 'Decode', behavior: 'opacity 0→1 with blur 8px→0; labels decode character by character; lines draw from left.', duration: '400–500ms', easing: 'cubic-bezier(0.16, 1, 0.3, 1)', purpose: 'Sections come online like a system booting — precise, not floaty.' },
+}
+
+// ─── Page rhythm: tone and media placement per section ─────────────────────────
+const PROOF: SectionId[] = ['testimonials', 'clients', 'stats', 'trust', 'press', 'integrations']
+const OFFER: SectionId[] = ['services', 'feature-grid', 'pricing', 'menu', 'schedule', 'curriculum', 'categories']
+export const MEDIA_SECTIONS: SectionId[] = ['about', 'location', 'product-highlight', 'editorial-story', 'case-study', 'feature-rows']
+const MEDIA_ORDER: Record<LayoutId, MediaPlacement[]> = {
+  balanced: ['side', 'full'], editorial: ['side', 'full', 'over'], asymmetric: ['side', 'over'], grid: ['full', 'side'],
+  'full-bleed': ['over', 'full'], experimental: ['over', 'side', 'full'],
+}
+/** Gives each section of a page a tone and, for image + text sections, a media placement, so a page has rhythm instead
+ *  of one strip: proof on the surface, one offer on a chapter colour (when the look has colour chapters), the closing
+ *  part on the inverse — never the same tone twice in a row; quiet looks stay mostly on the ground. Media placement
+ *  follows the layout and never repeats on consecutive image + text sections. */
+function pageRhythm(list: PageSection[], spec: RecipeSpec, chapters: boolean, footer: FooterStyleId): PageSection[] {
+  const quiet = directions[spec.direction].families.some((f) => f === 'quiet' || f === 'minimal')
+  let chapterUsed = false, media = 0
+  const order = MEDIA_ORDER[spec.layout]
+  const out = list.map((s, i): PageSection => {
+    const last = i === list.length - 1
+    let tone: SectionTone = 'ground'
+    if (s.id === 'contact-cta' && last && footer !== 'contact') tone = 'inverse'
+    else if (s.id === 'cta-band') tone = chapters ? 'chapter' : 'inverse'
+    else if (PROOF.includes(s.id)) tone = 'surface'
+    else if (!quiet && chapters && !chapterUsed && OFFER.includes(s.id)) { tone = 'chapter'; chapterUsed = true }
+    const m = MEDIA_SECTIONS.includes(s.id) ? order[media++ % order.length] : undefined
+    return { ...s, ...(tone !== 'ground' ? { tone } : {}), ...(m ? { media: m } : {}) }
+  })
+  // Never the same tone on two neighbours: the second one goes back to the ground.
+  for (let i = 1; i < out.length; i++) if (out[i].tone && out[i].tone === out[i - 1].tone) delete out[i].tone
+  return out
+}
+
+/** Footer that suits the look, unless the user picked one: quiet and minimal looks end on one calm line, bold ones on
+ *  the name set large, warm and raw ones on an open invitation, editorial and cinematic ones on full columns. */
+export function recommendedFooter(spec: Pick<RecipeSpec, 'direction' | 'purpose' | 'concept'>, concept = spec.concept): FooterStyleId {
+  const fam = directions[spec.direction].families[0]
+  const byFamily: Record<string, FooterStyleId> = { quiet: 'line', minimal: 'line', futuristic: 'line', bold: 'wordmark', experimental: 'wordmark', raw: 'contact', organic: 'contact', editorial: 'signature', cinematic: 'signature' }
+  // Shops and clinics need their full set of links whatever the look.
+  if (spec.purpose === 'ecommerce' || spec.purpose === 'clinic' || spec.purpose === 'hotel') return 'signature'
+  // Content-rich sites end on a map of everything they hold.
+  if (spec.purpose === 'blog') return 'index'
+  // A big idea brings its own ending: only giant chapters end on the name set huge.
+  const byConcept: Partial<Record<ConceptId, FooterStyleId>> = { 'giant-chapters': 'wordmark', 'loud-and-quiet': 'line', 'live-console': 'line', 'guided-walk': 'contact' }
+  return (concept && concept !== 'off' && byConcept[concept]) || byFamily[fam] || 'signature'
+}
+
+// ─── Palette by fit (docs/research/2026-10-04-colour.md §7) — never by "unused" ──────────────
+// Where colour lives decides the ground: photos, film and 3D bring the colour, so the ground goes neutral (light, dark or
+// deep); type- and illustration-led sites carry it in a committed or clear pale ground. Then the kind of site, then the
+// look's own pick as a tie-break. Only the look's palettes are candidates.
+const PURPOSE_PALETTES: Partial<Record<PurposeId, PaletteId[]>> = {
+  restaurant: ['limestone', 'warm-black', 'espresso', 'olive-grove', 'oxblood-room', 'apricot-hall'],
+  hotel: ['limestone', 'warm-black', 'espresso', 'olive-grove', 'oxblood-room'],
+  'real-estate': ['signal-white', 'limestone', 'gallery-grey', 'warm-black'],
+  fashion: ['black-box', 'signal-white', 'paper-cobalt', 'bubblegum', 'grape-soda'],
+  ecommerce: ['signal-white', 'paper-cobalt', 'limestone', 'black-box'],
+  saas: ['paper-cobalt', 'wet-concrete', 'console-lilac', 'night-market'],
+  product: ['paper-cobalt', 'wet-concrete', 'console-lilac', 'night-market'],
+  studio: ['charcoal-signal', 'gallery-grey', 'black-box', 'klein-field', 'grape-soda'],
+  agency: ['charcoal-signal', 'gallery-grey', 'black-box', 'klein-field', 'grape-soda'],
+  portfolio: ['charcoal-signal', 'gallery-grey', 'black-box', 'klein-field', 'grape-soda'],
+  event: ['black-box', 'charcoal-signal', 'grading-suite', 'midnight-chapters', 'hazard-yellow'],
+  nonprofit: ['sage-white', 'signal-white', 'paper-cobalt', 'mint-fresh'],
+  clinic: ['sage-white', 'signal-white', 'paper-cobalt', 'mint-fresh'],
+  course: ['sage-white', 'signal-white', 'paper-cobalt', 'mint-fresh'],
+  blog: ['signal-white', 'limestone', 'legal-pad', 'cherry-red'],
+}
+type Zone = 'neutral' | 'committed' | 'pale' | 'deep' | 'mid'
+const zoneOf = (hex: string): Zone => { const o = oklab(hex); return o.C < 0.03 ? 'neutral' : o.C >= 0.12 ? 'committed' : o.L >= 0.86 ? 'pale' : o.L < 0.36 ? 'deep' : 'mid' }
+
+/** The look's palettes ranked by fit to this site, best first. */
+export function rankPalettes(spec: Pick<RecipeSpec, 'direction' | 'purpose' | 'lead'>): PaletteId[] {
+  const d = directions[spec.direction]
+  const inMedia = spec.lead === 'photography' || spec.lead === 'video' || spec.lead === '3d'
+  const quiet = d.families.some((f) => f === 'quiet' || f === 'minimal')
+  const score = (id: PaletteId) => {
+    const z = zoneOf(palettes[id].colors.background)
+    const media = inMedia ? { neutral: 1, deep: 0.6, pale: 0.3, committed: 0, mid: 0 }[z] : { committed: 1, pale: 1, neutral: 0.5, deep: 0.5, mid: 0 }[z]
+    return 3 * media + 2 * Number(!!PURPOSE_PALETTES[spec.purpose]?.includes(id)) + 1.5 * Number(id === d.defaults.palette) + (quiet && z === 'neutral' ? 1 : 0)
+  }
+  return d.palettes.map((id, order) => ({ id, s: score(id), order })).sort((a, b) => b.s - a.s || a.order - b.order).map((x) => x.id)
+}
+export const recommendPalette = (spec: Pick<RecipeSpec, 'direction' | 'purpose' | 'lead'>) => rankPalettes(spec)[0]
 
 /** Menu style that suits the kind of site, unless the user picked one. */
 export function recommendedNav(spec: Pick<RecipeSpec, 'purpose' | 'direction'>): NavStyleId {
@@ -566,7 +684,7 @@ export function recommendedNav(spec: Pick<RecipeSpec, 'purpose' | 'direction'>):
   if (d.families.includes('editorial') && (spec.purpose === 'portfolio' || spec.purpose === 'studio')) return 'side-index'
   const byPurpose: Record<PurposeId, NavStyleId> = {
     portfolio: 'fullscreen-menu', agency: 'fullscreen-menu', studio: 'fullscreen-menu', fashion: 'centered-logo', restaurant: 'centered-logo',
-    ecommerce: 'classic-bar', product: 'floating-pill', saas: 'floating-pill', 'personal-brand': 'bottom-dock', experiment: 'card-menu', other: 'classic-bar',
+    ecommerce: 'classic-bar', product: 'floating-pill', saas: 'floating-pill', 'personal-brand': 'bottom-dock', experiment: 'status-bar', other: 'classic-bar',
     blog: 'classic-bar', event: 'centered-logo', nonprofit: 'floating-pill', 'real-estate': 'classic-bar', hotel: 'centered-logo', course: 'floating-pill', clinic: 'classic-bar',
   }
   return byPurpose[spec.purpose]
@@ -663,6 +781,9 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const lead = media[spec.lead]
   const chars = spec.characters.map((c) => characters[c])
   const sameDirection = seed.spec.direction === spec.direction
+  // The seed's own voice (personality, principles, do/avoid, tone) is written for its kind of site: a shop's "SKU, price,
+  // stock" must not reach a charity that shares its look. Other kinds get the look's own, purpose-neutral words.
+  const seedVoice = sameDirection && seed.spec.purpose === spec.purpose
   const unchanged = sameCore(seed.spec, spec)
   const textured = TEXTURED.has(spec.direction)
 
@@ -687,38 +808,57 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const colors = { ...palette.colors, ...spec.customPalette }
   const rotationId = spec.rotation === 'off' ? undefined : spec.rotation ?? direction.rotation
   const rotationSet = rotationId ? accentSets[rotationId] : undefined
-  const patterns = motionPatterns.filter((p) => p.levels.includes(spec.motion) && (!p.leads || p.leads.includes(spec.lead)))
+  // A picked headline behaviour replaces the generic line reveal; the section entrance speaks the look's own family.
+  const headlinePiece = (spec.pieces ?? []).some((id) => behaviourOf(id) === 'headlines')
+  const patterns = motionPatterns.filter((p) => p.levels.includes(spec.motion) && (!p.leads || p.leads.includes(spec.lead)) && !(headlinePiece && p.id === 'line-reveal'))
+    .map((p) => (p.id === 'fade-rise' ? { ...p, ...ENTRANCE[direction.families[0]] } : p))
   const techs = uniq(patterns.map((p) => p.tech))
   const assetRequirements = buildAssets(spec, hero)
   const imagery = imageryPlan(spec)
 
-  const resolveSection = (sid: SectionId) => {
+  const resolveSection = (sid: SectionId, h: HeroPattern = hero) => {
     const base = sections[sid]
     // A seed's notes name its own fonts and roles — only when the lettering is the seed's too.
     const note = sameDirection && seed.spec.purpose === spec.purpose && seed.spec.typography === spec.typography ? seed.sectionNotes[sid] : undefined
-    const heroCode = heroBlocks[hero.id]
+    const heroCode = heroBlocks[h.id]
     return sid === 'hero'
-      ? { ...base, name: `Hero — ${hero.name}`, composition: hero.composition, behavior: hero.behavior, responsive: hero.responsive, note, ...(heroCode ? { code: { path: `src/components/sections/${heroCode.file}`, exportName: heroCode.exportName, usage: heroCode.usage } } : {}) }
+      ? { ...base, name: `Hero — ${h.name}`, composition: h.composition, behavior: h.behavior, responsive: h.responsive, note, ...(heroCode ? { code: { path: `src/components/sections/${heroCode.file}`, exportName: heroCode.exportName, usage: heroCode.usage } } : {}) }
       : { ...base, note, ...(blockFor(sid) ? { code: { path: `src/components/sections/${blockFor(sid)!.file}`, exportName: blockFor(sid)!.exportName, usage: blockFor(sid)!.usage } } : {}) }
   }
   const nav = navStyles[spec.nav ?? recommendedNav(spec)]
-  const footerStyle = footerStyles[spec.footer ?? 'signature'] // ponytail: one default for every look; recommend per look if seeds need variety
   const shape = shapeStyles[spec.shape ?? recommendedShape(spec)]
-  const chrome = {
-    navbar: { ...resolveSection('navbar'), name: `Navigation — ${nav.name}`, composition: nav.composition, behavior: nav.behavior, responsive: nav.responsive },
-    footer: footerSection(resolveSection('footer'), footerStyle), nav, footerStyle,
-  }
-  const pages: PageBlueprint[] = spec.pages.map((p) => ({ id: p.id, type: p.type, label: p.label, purpose: p.purpose, ...(p.hide ? { hide: p.hide } : {}), sections: p.sections.map((sid, index) => {
-    const s = resolveSection(sid)
+  const laid: PageBlueprint[] = spec.pages.map((p) => ({ id: p.id, type: p.type, label: p.label, purpose: p.purpose, ...(p.hide ? { hide: p.hide } : {}), sections: p.sections.map((sid, index) => {
+    // A film/image part can show something other than the first screen does: then it needs media of its own.
+    const band = sid === 'hero' ? spec.heroBands?.find((x) => x.page === p.id && x.index === index) : undefined
+    const shows = band && band.hero !== hero.id ? heroes[band.hero] : undefined
+    const r = resolveSection(sid, shows)
+    const s = shows ? { ...r, composition: `${r.composition} This part shows ${shows.name}, not what the site's first screen shows — it needs its own ${shows.leads.join(' or ')}, separate from the first screen's media.` } : r
     if (sid === 'hero' && index > 0) return midPageHero(s, p.sections[0], p.sections[index - 1])
     if (!PHOTO_SECTIONS.includes(sid)) return s
     const own = spec.sectionPhotos?.find((x) => x.page === p.id && x.index === index)?.presentation
     return { ...s, photos: { ...imagePresentations[own ?? spec.imagePresentation ?? recommendSectionPhotos(spec, sid)], chosen: !!own } }
   }) }))
-  const kit = placePieces(spec, pages)
-  const concept = resolveConcept(spec, hero, pages)
+  const concept = resolveConcept(spec, hero, laid)
+  const footerStyle = footerStyles[spec.footer ?? recommendedFooter(spec, concept?.id)]
+  const chrome = {
+    navbar: { ...resolveSection('navbar'), name: `Navigation — ${nav.name}`, composition: nav.composition, behavior: nav.behavior, responsive: nav.responsive },
+    footer: footerSection(resolveSection('footer'), footerStyle, direction.families[0]), nav, footerStyle,
+  }
+  const fam = direction.families[0]
+  const pages = laid.map((p) => ({ ...p, sections: pageRhythm(p.sections, spec, !!rotationSet, footerStyle.id).map((s, index) => {
+    const picked = spec.sectionVariants?.find((x) => x.page === p.id && x.index === index)?.variant
+    const id = variantFor(s.id as SectionId, fam, picked)
+    const o = id ? sectionVariants[s.id as SectionId]!.options.find((x) => x.id === id)! : undefined
+    return o ? { ...s, variant: { ...o, chosen: !!picked && picked === id } } : s
+  }) }))
+  const signatures = pickSignatures(spec, hero, pages, concept?.id)
+  const kit = placePieces(spec, pages, signatures)
 
-  const componentIds = uniq<ComponentId>([...purpose.components, 'MediaAsset', 'SectionHeader'])
+  // Menu, footer, first screen and closing CTA are defined by the chosen patterns (chrome, hero, ready sections) — listing
+  // them again as generic components contradicted those picks. No forced SectionHeader: its "index number, label,
+  // heading" is the 01 / // label chrome the recipe's own generic-tells list forbids.
+  const CHROME: ComponentId[] = ['Navigation', 'Hero', 'CTA', 'Footer', 'SectionHeader']
+  const componentIds = uniq<ComponentId>([...purpose.components.filter((c) => !CHROME.includes(c)), 'MediaAsset'])
 
   const deps: { name: string; why: string }[] = []
   if (techs.includes('motion') || kit.some((k) => k.deps.includes('motion')) || heroBlocks[hero.id]) deps.push({ name: 'motion', why: kit.length ? 'Viewport reveals, hover and layout animations — and the kit pieces in src/components/pieces/' : 'Viewport reveals, hover and layout animations in React' })
@@ -733,14 +873,14 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     id: id ?? seed.slug,
     title, slug, summary,
     creativeDirection: {
-      mood: sameDirection ? seed.mood : uniq([...direction.mood, ...chars.map((c) => c.name)]),
-      personality: sameDirection ? seed.personality : chars.map((c) => `${c.name} — ${c.line.toLowerCase()}`).join('; ') || direction.line,
-      visualPrinciples: sameDirection ? seed.principles : direction.principles,
-      do: sameDirection ? seed.do : direction.do,
-      avoid: sameDirection ? seed.avoid : direction.avoid,
+      mood: seedVoice ? seed.mood : uniq([...direction.mood, ...chars.map((c) => c.name)]),
+      personality: seedVoice ? seed.personality : chars.map((c) => `${c.name} — ${c.line.toLowerCase()}`).join('; ') || direction.line,
+      visualPrinciples: seedVoice ? seed.principles : direction.principles,
+      do: seedVoice ? seed.do : direction.do,
+      avoid: seedVoice ? seed.avoid : direction.avoid,
       genericAvoid: GENERIC_TELLS,
     },
-    designPrinciples: uniq([...(sameDirection ? seed.principles : direction.principles), motion.principle]),
+    designPrinciples: uniq([...(seedVoice ? seed.principles : direction.principles), motion.principle]),
     visualSystem: {
       palette: { id: palette.id, name: spec.customPalette ? `${palette.name} (customised)` : palette.name, custom: !!spec.customPalette, dark: palette.dark, tokens: paletteTokens(colors, palette.usage) },
       typography: type,
@@ -760,10 +900,10 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     media: { ...lead, hero, storytelling: filmStory(spec, hero), imagery, framing: videoFraming(spec) },
     motion: { level: motion, principle: motion.principle, patterns, libraries: techs.map((t) => TECH_LABEL[t]) },
     ...(concept ? { concept } : {}),
-    signatures: pickSignatures(spec, hero, pages, concept?.id),
+    signatures,
     pieces: kit,
     contentDirection: {
-      tone: sameDirection ? seed.content.tone : chars.flatMap((c) => c.tone).join(', ') || direction.mood.join(', ').toLowerCase(),
+      tone: seedVoice ? seed.content.tone : chars.flatMap((c) => c.tone).join(', ') || direction.mood.join(', ').toLowerCase(),
       voice: chars.map((c) => c.voice).join(' ') || 'Plain, specific, confident.',
       headlineStyle: chars[0]?.headlineStyle ?? 'Short, specific statements',
       headlineExamples: seed.spec.purpose === spec.purpose ? seed.content.headlineExamples : PURPOSE_COPY[spec.purpose].headlines,
@@ -828,7 +968,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
       ],
     },
     whyItWorks: {
-      direction: sameDirection ? seed.whyDirection : direction.why,
+      direction: seedVoice ? seed.whyDirection : direction.why,
       typography: type.why,
       palette: spec.customPalette ? `${palette.why} Your custom colors keep the same roles, so the system still holds — check the contrast notes above.` : palette.why,
       layout: layout.why,
@@ -849,9 +989,15 @@ export const chromeNote = (p: { hide?: ChromeId[] }) => {
 }
 
 /** The footer as its chosen style: the style's layout, and the ready footer's matching `variant`. */
-function footerSection(s: PageSection, f: FooterStyle): PageSection {
-  const usage = f.id === 'signature' ? s.code?.usage : s.code?.usage.replace('<FooterSection ', `<FooterSection variant="${f.id}" ${f.id === 'wordmark' ? 'brand="…" ' : f.id === 'contact' ? 'invite="…" contact={[{ label, href }]} ' : ''}`)
-  return { ...s, name: `Footer — ${f.name}`, composition: f.composition, behavior: f.behavior, responsive: f.responsive, ...(s.code && usage ? { code: { ...s.code, usage } } : {}) }
+// The big name set whole, cut off by the page's bottom edge, or drawn as an outline — so wordmark footers differ.
+const WORDMARK: Partial<Record<FamilyId, 'cropped' | 'outline'>> = { raw: 'cropped', experimental: 'cropped', bold: 'cropped', editorial: 'outline', cinematic: 'outline', futuristic: 'outline' }
+const WORDMARK_LINE = { full: 'set whole', cropped: 'cut off by the bottom edge of the page (copyright and legal sit above it)', outline: 'drawn as an outline in the text colour, not filled' }
+
+function footerSection(s: PageSection, f: FooterStyle, family: FamilyId): PageSection {
+  const mark = f.id === 'wordmark' ? WORDMARK[family] ?? 'full' : undefined
+  const usage = f.id === 'signature' ? s.code?.usage : s.code?.usage.replace('<FooterSection ', `<FooterSection variant="${f.id}" ${mark ? `brand="…" ${mark === 'full' ? '' : `wordmark="${mark}" `}` : f.id === 'contact' ? 'invite="…" contact={[{ label, href }]} ' : ''}`)
+  const composition = mark ? `${f.composition} The name is ${WORDMARK_LINE[mark]}.` : f.composition
+  return { ...s, name: `Footer — ${f.name}`, composition, behavior: f.behavior, responsive: f.responsive, ...(s.code && usage ? { code: { ...s.code, usage } } : {}) }
 }
 
 /** The hero pattern placed lower on a page (the owner's choice): the same film or image, built as a full-width band at

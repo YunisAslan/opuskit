@@ -3,13 +3,13 @@
 import { accentSets, palettes, typography } from '@/data/ingredients'
 import { shapeStyles } from '@/data/patterns'
 import { directions } from '@/data/taxonomy'
-import { DEFAULT_LOOK } from '@/features/kit/plan'
+import { DEFAULT_LOOK, planToSpec } from '@/features/kit/plan'
 import { recommendedShape } from '@/features/recipes/engine'
 import type { KitPlan } from '@/types/domain'
 
 export function lookOf(plan: KitPlan) {
   const d = directions[plan.direction ?? DEFAULT_LOOK]
-  const colors = palettes[plan.palette ?? d.defaults.palette].colors
+  const colors = palettes[planToSpec(plan).palette].colors
   const type = typography[plan.typography ?? d.defaults.typography]
   const shape = shapeStyles[plan.shape ?? recommendedShape({ direction: d.id })]
   const rotId = plan.rotation === 'off' ? undefined : plan.rotation ?? d.rotation

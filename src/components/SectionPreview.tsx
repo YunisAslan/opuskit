@@ -1,17 +1,26 @@
 'use client'
 // A ready section rendered for real, with sample content, in a plan's tokens — the same component a Build Package ships.
-import type { ReactNode } from 'react'
+import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react'
 import { ScaledFrame } from '@/components/ScaledFrame'
 import { TokenScope } from '@/components/TokenScope'
 import { AboutSection } from '@/sections/About'
+import { ArticleSection } from '@/sections/Article'
+import { ProductBuySection } from '@/sections/ProductBuy'
+import { SpecsSection } from '@/sections/Specs'
+import { NameWallSection } from '@/sections/NameWall'
+import { StatementSection } from '@/sections/Statement'
+import { StepsSection } from '@/sections/Steps'
 import { CaseStudySection } from '@/sections/CaseStudy'
 import { CategoriesSection } from '@/sections/Categories'
-import { ClientsSection } from '@/sections/Clients'
 import { CollectionSection } from '@/sections/Collection'
 import { ContactCtaSection } from '@/sections/ContactCta'
 import { CtaBandSection } from '@/sections/CtaBand'
 import { ColourChaptersSection } from '@/sections/ColourChapters'
 import { FooterSection } from '@/sections/Footer'
+import { TimelineSection } from '@/sections/Timeline'
+import { DonateSection } from '@/sections/Donate'
+import { ListenSection } from '@/sections/Listen'
+import { CurriculumSection } from '@/sections/Curriculum'
 import { OrbitHeroSection } from '@/sections/OrbitHero'
 import { STICKERS } from '@/components/PieceDemo'
 import { EditorialStorySection } from '@/sections/EditorialStory'
@@ -20,18 +29,13 @@ import { FeatureGridSection } from '@/sections/FeatureGrid'
 import { FeatureRowsSection } from '@/sections/FeatureRows'
 import { FeaturedWorkSection } from '@/sections/FeaturedWork'
 import { GallerySection } from '@/sections/Gallery'
-import { HowItWorksSection } from '@/sections/HowItWorks'
-import { IntegrationsSection } from '@/sections/Integrations'
-import { IntroSection } from '@/sections/Intro'
 import { JournalSection } from '@/sections/Journal'
 import { LocationSection } from '@/sections/Location'
 import { LookbookSection } from '@/sections/Lookbook'
-import { ManifestoSection } from '@/sections/Manifesto'
 import { MenuSection } from '@/sections/Menu'
 import { NewsletterSection } from '@/sections/Newsletter'
 import { PressSection } from '@/sections/Press'
 import { PricingSection } from '@/sections/Pricing'
-import { ProcessSection } from '@/sections/Process'
 import { ProductGridSection } from '@/sections/ProductGrid'
 import { ProductHighlightSection } from '@/sections/ProductHighlight'
 import { ReservationSection } from '@/sections/Reservation'
@@ -41,7 +45,7 @@ import { StatsSection } from '@/sections/Stats'
 import { TeamSection } from '@/sections/Team'
 import { TestimonialsSection } from '@/sections/Testimonials'
 import { TrustSection } from '@/sections/Trust'
-import type { FooterStyleId, PaletteColors, PurposeId, SectionId, ShapeStyle, TypographyPairing } from '@/types/domain'
+import type { FooterStyleId, LayoutId, MediaPlacement, PaletteColors, PurposeId, SectionId, SectionTone, ShapeStyle, TypographyPairing } from '@/types/domain'
 
 // Real photos already on disk (example sites' media), one set per "world" so a preview looks like the user's kind of site.
 // Lowfield Nights: 0 hangar inside, 1 outdoor screening, 2 audience, 3 coast at dusk, 4 hangar outside.
@@ -86,6 +90,26 @@ type Copy = {
   catsTitle: string; cats: [string, string, number][]; press: [string, string][]; awards: string[]
   band: [string, string, string]; trust: [string, string][]; scheduleTitle: string; days: [string, [string, string, string?][]][]
   toolsTitle: string; toolsText: string; tools: string[]
+  timelineTitle: string; timeline: [string, string, string][]
+}
+const FOOTER_INDEX = [['Studio', ['About', 'Team', 'Careers', 'Contact']], ['Work', ['Identities', 'Campaigns', 'Packaging', 'Archive']], ['Journal', ['Notes', 'Craft', 'Studio life', 'All posts']], ['Elsewhere', ['Newsletter', 'Instagram', 'Are.na', 'Press kit']]]
+  .map(([title, links]) => ({ title: title as string, links: (links as string[]).map((label, i) => ({ label, href: '#', current: title === 'Work' && i === 0 })) }))
+// One product per world for the buy box, and the facts its Specs part lists.
+const BUY: Record<World, { name: string; price: string; line: string; option: [string, string[]] }> = {
+  studio: { name: 'Paper bag test, A2 print', price: '€45', line: 'Our test sheet, risograph-printed in two colours and signed by the three of us.', option: ['Size', ['A3', 'A2']] },
+  food: { name: 'Wood-fire house blend', price: '€14', line: 'The coffee we pour after dinner — 250 g, roasted on Mondays.', option: ['Grind', ['Whole bean', 'Espresso', 'Filter']] },
+  shop: { name: 'Narikala coat', price: '€640', line: 'Boiled wool, cut long and straight, made in a small run in Tbilisi.', option: ['Colour', ['Oat', 'Ink', 'Moss']] },
+  product: { name: 'Halvik speaker', price: '€390', line: 'One room, one knob, a sound that fills it — no app to set up.', option: ['Finish', ['Chalk', 'Graphite']] },
+  software: { name: 'Team plan', price: '€24 / month', line: 'Everything in Solo for up to ten people, billed once a month.', option: ['Billing', ['Monthly', 'Yearly']] },
+  event: { name: 'Weekend pass', price: '€120', line: 'Both days, every stage, and the boat to the island on Sunday.', option: ['Day', ['Weekend', 'Saturday', 'Sunday']] },
+}
+const SPECS: Record<World, [string, [string, string][]]> = {
+  studio: ['The project', [['Client', 'Salt & Ember'], ['Place', 'Baku'], ['Year', '2025'], ['Role', 'Name, identity, menus'], ['Team', 'Three people'], ['Length', 'Six weeks']]],
+  food: ['The room', [['Seats', '40'], ['Counter', '12 seats'], ['Private room', 'Up to 14'], ['Kitchen', 'Wood fire'], ['Open', 'Tue–Sat, 18:00'], ['Dress', 'As you are']]],
+  shop: ['Details', [['Fabric', '100% boiled wool'], ['Lining', 'Cupro'], ['Fit', 'Long, straight'], ['Length', '112 cm in size M'], ['Made in', 'Tbilisi'], ['Care', 'Dry clean']]],
+  product: ['Specs', [['Size', '18 × 18 × 21 cm'], ['Weight', '2.1 kg'], ['Drivers', 'One 4" woofer, two tweeters'], ['Battery', '14 hours'], ['Connect', 'Bluetooth 5.3, line in'], ['In the box', 'Speaker, cable, a card']]],
+  software: ['Limits', [['People', 'Up to 10'], ['Projects', 'Unlimited'], ['Storage', '200 GB'], ['History', '1 year'], ['Support', 'Within a day'], ['Data', 'Stored in the EU']]],
+  event: ['The venue', [['Capacity', '1,200'], ['Stages', 'Three'], ['Doors', '16:00'], ['Last boat', '01:30'], ['Access', 'Step-free'], ['Age', 'All ages']]],
 }
 const W: Record<World, Copy> = {
   studio: {
@@ -116,6 +140,7 @@ const W: Record<World, Copy> = {
     trust: [['Fixed price', 'Agreed before we start.'], ['Every file', 'Masters and guidelines, yours.'], ['Two rounds', 'Of changes on every piece.'], ['Printed proofs', 'Before anything goes out.']],
     scheduleTitle: 'A project, week by week', days: [['Week one', [['Mon', 'Listening day', 'With you and your customers.'], ['Thu', 'Three routes']]], ['Weeks two and three', [['Mon', 'One direction'], ['Fri', 'Printed tests']]], ['Week six', [['Mon', 'Final files'], ['Fri', 'Launch', 'Every file, every format.']]]],
     toolsTitle: 'Delivered the way you work', toolsText: 'Files arrive ready for your printer, your website and your team.', tools: ['Guidelines PDF', 'Shared drives', 'Print-ready files', 'Web assets', 'Social templates', 'Colour swatches', 'Font licences', 'Signage specs', 'Packaging dielines'],
+    timelineTitle: 'How we got here', timeline: [['2014', 'Two desks in a print shop', 'Posters for friends, paid in coffee.'], ['2017', 'First identity for a bank', 'Proof a small studio could carry a big brief.'], ['2021', 'A studio of eight', 'Naming, identity and campaigns under one roof.'], ['2026', 'Brands for three countries', 'Still drawn by hand first.']],
   },
   food: {
     img: fire, people: founders, label: 'Fennwood', statement: 'Cooked over one wood fire, with vegetables from two farms and bread from the same oven.', body: 'Forty seats, a menu that changes with the week, and a long table by the oven.',
@@ -145,6 +170,7 @@ const W: Record<World, Copy> = {
     trust: [['Two farms', 'Both under an hour away.'], ['Baked daily', 'Bread out at dawn.'], ['Fair price', 'We pay the farms above market.'], ['Free tap water', 'Always, without asking.']],
     scheduleTitle: 'This week at Fennwood', days: [['Wednesday', [['18:00', 'New menu', 'What the farms sent on Monday.'], ['20:00', 'Long table', 'Five courses, eight places.']]], ['Friday', [['18:00', 'Fish night'], ['21:00', 'Late bar', 'Until midnight.']]], ['Sunday', [['12:00', 'Weekend lunch', 'Slow lamb and bread.'], ['15:00', 'Bread class', '£15, book ahead.']]]],
     toolsTitle: 'Book however suits you', toolsText: 'Online, by phone or at the bar.', tools: ['Book online', 'Phone ahead', 'Walk in', 'Gift cards', 'Private dining', 'Long table', 'Catering', 'Bread to take home', 'Pay by card'],
+    timelineTitle: 'Fourteen years at the fire', timeline: [['2012', 'A wood oven in a barn', 'Bread on Saturdays, for the village.'], ['2016', 'The first dinner service', 'Six tables, one menu, what the farms sent.'], ['2020', 'Moved to the old forge', 'A longer table and a bigger fire.'], ['2025', 'A kitchen garden of our own', 'Half the vegetables now walk forty metres.']],
   },
   shop: {
     img: shop, people: ashePeople, label: 'Saint Ashe', statement: 'Black clothing cut in small runs in Tbilisi: heavy cotton, waxed wool and leather that ages with you.', body: 'Twenty-two pieces a season, forty of each. When a run sells out, it’s gone.',
@@ -174,6 +200,7 @@ const W: Record<World, Copy> = {
     trust: [['Free shipping', 'In Georgia over €200.'], ['Free returns', 'Within 30 days.'], ['Repair for life', 'Send it back, we fix it.'], ['Plastic-free', 'Black paper only.']],
     scheduleTitle: 'The autumn run', days: [['Week one', [['Mon', 'The letter gets first look', 'A week before everyone.'], ['Thu', 'Run opens', '12:00, Tbilisi time.']]], ['Week two', [['Sat', 'Workshop open day', 'Try everything on.'], ['Sun', 'Last sizes', 'Whatever comes back from returns.']]]],
     toolsTitle: 'Pay and ship your way', toolsText: 'Checkout takes the cards and wallets you use; parcels go tracked.', tools: ['Cards', 'Wallet pay', 'Pay in three', 'Gift cards', 'Tracked courier', 'Pickup points', 'Collect in Tbilisi', 'Returns label', 'Repairs by post'],
+    timelineTitle: 'Run by run', timeline: [['2019', 'Twelve coats, one colour', 'Cut in a Tbilisi flat, sold in a week.'], ['2021', 'The workshop on Leselidze', 'Our own cutting table and two machines.'], ['2023', 'Boots, then bags', 'Leather from a tannery we can visit.'], ['2026', 'The autumn run', 'Black, as always — in small numbers.']],
   },
   product: {
     img: kb, people: founders, label: 'Halvik', statement: 'A compact mechanical keyboard in a powder-coated aluminium case, made to stay on your desk.', body: '65% layout, hot-swap switches and a matching dial pad. Ships in five days.',
@@ -203,6 +230,7 @@ const W: Record<World, Copy> = {
     trust: [['Free shipping', 'Tracked, five days.'], ['30-day returns', 'Use it, then decide.'], ['10-year warranty', 'On the case and plate.'], ['Spare parts', 'Every part sold on its own.']],
     scheduleTitle: 'Summer workshop days', days: [['June', [['Sat 7', 'London', 'Workshop, 10:00–16:00.'], ['Sat 21', 'Bristol', 'Harbour market.']]], ['July', [['Sat 5', 'Manchester', 'Northern Quarter.'], ['Sat 19', 'Leeds', 'Kirkgate market.']]]],
     toolsTitle: 'Works with your setup', toolsText: 'Plug in and type; remap any key in the browser, no app to install.', tools: ['macOS', 'Windows', 'Linux', 'iPadOS', 'ChromeOS', 'Browser remapping', 'Open firmware', 'USB-C', 'Bluetooth adapter'],
+    timelineTitle: 'From a sketch to your desk', timeline: [['2021', 'The first case, milled by hand', 'Six weeks for one keyboard.'], ['2022', 'Hot-swap sockets', 'Change a switch without a soldering iron.'], ['2024', 'The Dial', 'A knob for volume, zoom and timelines.'], ['2026', 'Halvik 65, second run', 'Fern green, powder-coated, built to stay.']],
   },
   software: {
     img: app, label: 'Ledger', statement: 'Close your books in one click — invoices, receipts and VAT, done while you work.', body: 'For studios and small teams. Connects to your bank in two minutes.',
@@ -232,6 +260,7 @@ const W: Record<World, Copy> = {
     trust: [['30-day trial', 'No card needed.'], ['Read-only bank', 'We can’t move money.'], ['Encrypted', 'At rest and in transit.'], ['Human support', 'Answers within an hour.']],
     scheduleTitle: 'Launch week', days: [['Monday', [['10:00', 'Receipt inbox goes live', 'Rolling out to every team.'], ['16:00', 'Live demo', 'Thirty minutes, with questions.']]], ['Wednesday', [['11:00', 'VAT clinic', 'Bring your questions.'], ['15:00', 'Accountant session']]], ['Friday', [['15:00', 'Office hours', 'The founders, on a call.']]]],
     toolsTitle: 'Works with what you already use', toolsText: 'Connect your bank, payroll and payments in a few clicks.', tools: ['Bank feeds', 'Card payments', 'Payroll', 'Expense cards', 'Online shop', 'Time tracking', 'Spreadsheets', 'Your accountant', 'Email inbox'],
+    timelineTitle: 'How it grew', timeline: [['2020', 'Built for our own studio', 'Invoices in a spreadsheet had to go.'], ['2022', 'The first hundred studios', 'Bank feeds and receipts by email.'], ['2024', 'One-click quarter close', 'Books ready for the accountant in minutes.'], ['2026', 'Payroll, built in', 'One place for every number a studio has.']],
   },
   event: {
     img: ph, people: players, label: 'Lowfield Nights', statement: 'Three nights of silent films with live scores, in a hangar the airfield forgot. Entry free with an RSVP.', body: '12–14 June 2027, the Absheron coast. Doors at 19:00, the film at 20:30.',
@@ -261,27 +290,31 @@ const W: Record<World, Copy> = {
     trust: [['Seats by RSVP', 'No tickets, no queues.'], ['Free shuttle', 'Twice a night.'], ['Free parking', 'At the gate.'], ['Rain plan', 'Everything moves inside.']],
     scheduleTitle: 'The programme', days: [['Saturday 12 June', [['19:00', 'Doors and the long table'], ['20:30', 'Opening film', 'With a live score.'], ['22:40', 'Night set on the apron']]], ['Sunday 13 June', [['19:00', 'Doors'], ['22:30', 'Under the sky', 'The outdoor screen.']]], ['Monday 14 June', [['20:30', 'The last film'], ['22:30', 'Last light', 'The walk to the shore.']]]],
     toolsTitle: 'Plan the trip', toolsText: 'Your RSVP links straight to the shuttle, nearby stays and a calendar invite.', tools: ['Calendar invite', 'Shuttle seats', 'Nearby guesthouses', 'Taxi rank', 'Car hire', 'Bike racks', 'Accessible seating', 'Blankets on loan', 'Late shuttle'],
+    timelineTitle: 'Seven summers in the hangar', timeline: [['2019', 'One night, one film', 'Ninety people on borrowed chairs.'], ['2021', 'Three nights, live scores', 'A band under the screen.'], ['2024', 'The long table', 'Dinner before the first film.'], ['2027', '12–14 June', 'Four films, three nights, still free.']],
   },
 }
 const a = { href: '#', label: 'Book a visit' }
+
+/** The page's own tone and media placement for this part (from the recipe's rhythm), passed to the ready section. */
+const dress = (node: ReactNode, tone?: SectionTone, media?: MediaPlacement, variant?: string) => (isValidElement(node) && (tone || media || variant) ? cloneElement(node as ReactElement<{ tone?: SectionTone; media?: MediaPlacement; variant?: string }>, { ...(tone ? { tone } : {}), ...(media ? { media } : {}), ...(variant ? { variant } : {}) }) : node)
 
 function sample(id: SectionId | 'orbit-hero', world: World, brand?: string, footer?: FooterStyleId): ReactNode {
   const w = W[world], img = w.img, pick = (i: number) => img[i % img.length]
   switch (id) {
     case 'orbit-hero': return <OrbitHeroSection eyebrow="What we do" loud="All" quiet="in motion" line="Brands, people, attention — we set them moving." items={[...STICKERS, ...sticky, ...STICKERS.slice(0, 3)].map((src, i) => ({ src, alt: '', size: src.endsWith('.svg') ? 130 : 110, tilt: [-8, 6, -4, 10, -6, 4][i % 6] }))} />
     case 'chapters': return <ColourChaptersSection chapters={w.services.slice(0, 2).map(([title, text], i) => ({ eyebrow: i ? 'No talk. All pictures.' : 'Hard story? Easily told.', title, text, media: { src: pick(i + 3), alt: '' }, sticker: { src: STICKERS[i * 3], alt: '' } }))} />
-    case 'footer': return <FooterSection variant={footer} brand={brand || 'Studio'} contact={[{ label: 'hello@example.com', href: '#' }, { label: '+994 12 345 67 89', href: '#' }]} logo={<span className={`type-display italic ${footer === "line" || footer === "contact" ? "[font-size:1.6rem]" : "[font-size:5rem]"}`}>{brand || "Studio"}</span>} columns={[{ title: 'Navigation', links: [{ label: 'About', href: '#' }, { label: 'Work', href: '#', current: true }, { label: 'Contact', href: '#' }] }, { title: 'Contact', links: [{ label: 'hello@example.com', href: '#' }] }]} legal={[{ label: 'Privacy', href: '#' }, { label: 'Terms', href: '#' }]} copyright={`© 2026 ${brand || 'Studio'}`} />
-    case 'intro': return <IntroSection label={brand || w.label} statement={w.statement} body={w.body} />
-    case 'manifesto': return <ManifestoSection statement={w.manifesto} attribution={w.attribution} />
+    case 'footer': return <FooterSection variant={footer} brand={brand || 'Studio'} contact={[{ label: 'hello@example.com', href: '#' }, { label: '+994 12 345 67 89', href: '#' }]} logo={<span className={`type-display italic ${footer === "line" || footer === "contact" ? "[font-size:1.6rem]" : "[font-size:5rem]"}`}>{brand || "Studio"}</span>} columns={footer === 'index' ? FOOTER_INDEX : [{ title: 'Navigation', links: [{ label: 'About', href: '#' }, { label: 'Work', href: '#', current: true }, { label: 'Contact', href: '#' }] }, { title: 'Contact', links: [{ label: 'hello@example.com', href: '#' }] }]} legal={[{ label: 'Privacy', href: '#' }, { label: 'Terms', href: '#' }]} copyright={`© 2026 ${brand || 'Studio'}`} />
+    case 'intro': return <StatementSection variant="lead" label={brand || w.label} statement={w.statement} body={w.body} />
+    case 'manifesto': return <StatementSection variant="giant" statement={w.manifesto} attribution={w.attribution} />
     case 'featured-work': return <FeaturedWorkSection title={w.work} projects={w.projects.map(([title, meta], i) => ({ title, meta, image: pick(i + 1), alt: '', href: `#${i}` }))} />
     case 'case-study': return <CaseStudySection title={w.caseTitle} image={pick(3)} alt="" facts={w.facts.map(([label, value]) => ({ label, value }))} paragraphs={w.story} />
     case 'services': return <ServicesSection title={w.offer} items={w.services.map(([name, line]) => ({ name, line }))} />
-    case 'process': return <ProcessSection title="How it works" steps={w.process} />
-    case 'how-it-works': return <HowItWorksSection title={w.howTitle} steps={w.how.map((s, i) => ({ ...s, image: pick(i + 4), alt: '' }))} />
+    case 'process': return <StepsSection variant="columns" title="How it works" steps={w.process} />
+    case 'how-it-works': return <StepsSection variant="cards" title={w.howTitle} steps={w.how.map((s, i) => ({ ...s, image: pick(i + 4), alt: '' }))} />
     case 'about': return <AboutSection title="About" image={w.people?.[0] ?? pick(4)} alt="" statement={w.aboutStatement} bio={w.bio} />
     case 'gallery': return <GallerySection title={w.galleryTitle} photos={img.slice(0, 7).map((src) => ({ src, alt: '' }))} />
     case 'editorial-story': return <EditorialStorySection title={w.editorial.title} image={pick(5)} alt="" caption={w.editorial.caption} paragraphs={w.editorial.paragraphs} />
-    case 'clients': return <ClientsSection title={w.clientsTitle} names={w.clients} />
+    case 'clients': return <NameWallSection variant="grid" title={w.clientsTitle} names={w.clients} />
     case 'testimonials': return <TestimonialsSection title="What people say" quotes={w.quotes.map(([quote, name, role]) => ({ quote, name, role }))} />
     case 'team': return <TeamSection title="The team" people={w.team.map(([name, role, line], i) => ({ name, role, line, image: w.people ? w.people[i % w.people.length] : pick(i + 2), alt: '' }))} />
     case 'stats': return <StatsSection title="In numbers" stats={w.stats.map(([value, label]) => ({ value, label }))} note={w.statsNote} />
@@ -316,15 +349,33 @@ function sample(id: SectionId | 'orbit-hero', world: World, brand?: string, foot
     case 'cta-band': return <CtaBandSection text={w.band[0]} action={{ label: w.band[1], href: '#' }} note={w.band[2]} />
     case 'trust': return <TrustSection items={w.trust.map(([title, text]) => ({ title, text }))} />
     case 'schedule': return <ScheduleSection title={w.scheduleTitle} days={w.days.map(([label, items]) => ({ label, items: items.map(([time, title, detail]) => ({ time, title, detail })) }))} />
-    case 'integrations': return <IntegrationsSection title={w.toolsTitle} text={w.toolsText} tools={w.tools} />
+    case 'integrations': return <NameWallSection variant="split" title={w.toolsTitle} text={w.toolsText} names={w.tools} />
+    // A cause's own content (Kür Delta Watch) whatever the plan is; the project builds the form from shadcn/ui.
+    case 'donate': return <DonateSection title="Give once, or every month" text="Every gift buys something we can show you on the bank." gifts={[{ amount: '10 AZN', what: 'One sack of rubbish out of the reeds' }, { amount: '45 AZN', what: 'A month of water tests, published', detail: 'Six points, one lab' }, { amount: '120 AZN', what: 'A boat day on the channels' }]}
+      spend={[{ label: 'Cleanups and boats', share: 64 }, { label: 'The lab', share: 19 }, { label: 'Schools', share: 11 }, { label: 'Running costs', share: 6 }]} form={
+      <div aria-hidden className="grid gap-4">
+        <div className="type-body grid grid-cols-2 rounded-(--radius-button) border border-(--color-border)">{['Once', 'Monthly'].map((l, i) => <span key={l} className={`px-4 py-2 text-center ${i ? '' : 'bg-(--color-text) text-(--color-background)'}`}>{l}</span>)}</div>
+        <div className="type-body grid grid-cols-3 gap-2">{['10', '45', '120'].map((v, i) => <span key={v} className={`rounded-(--radius-button) border px-3 py-2 text-center ${i === 1 ? 'border-(--color-text)' : 'border-(--color-border)'}`}>{v} AZN</span>)}</div>
+        <div className="type-body rounded-(--radius-button) border border-(--color-border) bg-(--color-background) px-3 py-2 text-(--color-muted)">you@example.com</div>
+        <div className="type-body rounded-(--radius-button) bg-(--color-primary) px-5 py-3 text-center text-(--color-background)">Give 45 AZN</div>
+      </div>} />
+    // A sound artist's own tracks (Sela Mor) whatever the plan is — they play for real.
+    case 'listen': return <ListenSection title="Six tracks" text="Each is a short excerpt. Only one plays at a time." tracks={[['Northwind, Nardaran', 'wind-archive', 'Nardaran shore, January 2023'], ['Lathe Hymn No. 3', 'machine-hymns', 'A closed tool plant in Bayil'], ['Rain over the Dome', 'rain-caspian', 'Rooftops of Sabail, autumn 2023']].map(([title, file, recorded]) => ({ title, src: `/examples/sela-mor/media/tracks/${file}.mp3`, length: '1:15', details: [{ label: 'Recorded', value: recorded }] }))} />
+    // A course's own syllabus (Night Shift) whatever the plan is.
+    case 'product-buy': { const p = BUY[world], ims = world === 'shop' ? [shop[3], shop[1], shop[2]] : [pick(0), pick(1), pick(2)]
+      return <ProductBuySection name={p.name} price={p.price} line={p.line} images={ims.map((src) => ({ src, alt: '' }))} option={{ label: p.option[0], values: p.option[1] }} details={[{ title: 'Delivery', text: 'Ships in two working days; free over €100.' }, { title: 'Returns', text: '30 days, in the box it came in.' }, { title: 'Care', text: 'Keep it dry, out of the sun.' }]} action={{ label: 'Add to bag', href: '#' }} note="Free delivery over €100." /> }
+    case 'specs': return <SpecsSection title={SPECS[world][0]} text="Everything you would ask before deciding." specs={SPECS[world][1].map(([label, value]) => ({ label, value }))} />
+    case 'article': return <ArticleSection kicker={w.journal[0][2]} title={w.editorial.title} dek={w.statement} author={{ name: w.team[0][0], role: w.team[0][1], image: (w.people ?? img)[0], bio: w.team[0][2] }} date={w.journal[0][1]} image={{ src: pick(5), alt: '', caption: w.editorial.caption }} body={[w.editorial.paragraphs[0], { quote: w.quotes[0][0], by: w.quotes[0][1] }, w.editorial.paragraphs[1] ?? w.body, { image: pick(2), alt: '', caption: w.galleryTitle }, w.body]} tags={[w.journal[0][2], w.journal[1][2]]} />
+    case 'curriculum': return <CurriculumSection title="Eight weeks, one shot at a time" text="Live on Tuesday and Thursday evenings; every grade reviewed." modules={[['Week 1', 'Set up to see', 'Calibrating the monitor you own', 'A photo of your setup'], ['Week 2', 'Read the signal', 'Waveform, parade and the skin line', 'Scope notes on three frames'], ['Week 3', 'Lift, gamma, gain', 'Neutralising mixed street light', 'A matched pair of shots']].map(([label, title, lesson, handIn]) => ({ label, title, lessons: [lesson, 'Live review on Thursday'], outcome: { label: 'Hand in', value: handIn } }))} />
+    case 'timeline': return <TimelineSection title={w.timelineTitle} steps={w.timeline.map(([when, title, detail]) => ({ when, title, detail }))} />
     default: return null
   }
 }
 
-export function SectionPreview({ id, colors, type, shape, chapters, className, auto, maxHeight, width, world = 'studio', brand, footer }: { id: SectionId | 'orbit-hero'; footer?: FooterStyleId; colors: PaletteColors; type: TypographyPairing; shape: ShapeStyle; chapters?: readonly string[]; className?: string; auto?: boolean; maxHeight?: number; width?: number; world?: World; brand?: string }) {
+export function SectionPreview({ id, colors, type, shape, chapters, className, auto, maxHeight, width, world = 'studio', brand, footer, layout, tone, media, variant }: { id: SectionId | 'orbit-hero'; footer?: FooterStyleId; layout?: LayoutId; tone?: SectionTone; media?: MediaPlacement; variant?: string; colors: PaletteColors; type: TypographyPairing; shape: ShapeStyle; chapters?: readonly string[]; className?: string; auto?: boolean; maxHeight?: number; width?: number; world?: World; brand?: string }) {
   return (
     <ScaledFrame className={className} auto={auto} maxHeight={maxHeight} width={width}>
-      <TokenScope colors={colors} type={type} shape={shape} chapters={chapters}>{sample(id, world, brand, footer)}</TokenScope>
+      <TokenScope colors={colors} type={type} shape={shape} chapters={chapters} layout={layout}>{dress(sample(id, world, brand, footer), tone, media, variant)}</TokenScope>
     </ScaledFrame>
   )
 }

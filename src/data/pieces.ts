@@ -31,6 +31,7 @@ export const pieceSlots: Record<PieceSlot, { name: string; line: string }> = {
   video: { name: 'Video', line: 'How a film is played' },
   button: { name: 'Buttons', line: 'How the main action behaves' },
   decor: { name: 'Stickers', line: 'Brand marks stuck onto a section' },
+  open: { name: 'Opening photos', line: 'What tapping a photo does' },
   site: { name: 'Whole site', line: 'Page transitions, cursor, notices' },
 }
 
@@ -155,6 +156,12 @@ export const pieces: Record<PieceId, Piece> = {
     usage: '<VelocityBand text="Available for new work — " className="font-(family-name:--font-display) text-[12vw] leading-none" />',
     rules: ['One band, one short phrase, between two sections.'],
   },
+  'pinned-stage': {
+    id: 'pinned-stage', name: 'Held in place', line: 'The section holds still while scrolling moves it through its steps; a thin bar shows how far along you are.', slot: 'scroll', source: OK,
+    file: 'PinnedStage.tsx', exportName: 'PinnedStage', deps: M, levels: LIVELY, heavy: true, sections: ['featured-work', 'testimonials', 'case-study', 'feature-rows', 'editorial-story', 'product-highlight', 'process', 'how-it-works', 'stats'],
+    usage: '<PinnedStage label="Projects" steps={projects.map((p) => <Project key={p.slug} {...p} />)} />\n// or draw the stage yourself: <PinnedStage steps={…}>{({ progress, active }) => …}</PinnedStage>',
+    rules: ['3–6 steps with real content; each holds for about 70svh of scroll.', 'One pinned section per page — two in a row feel like the page is stuck.', 'Pinned and scrubbed moments (proof one at a time, scroll into an image) build on it instead of their own sticky code.'],
+  },
   'sticky-cards': {
     id: 'sticky-cards', name: 'Stacking cards', line: 'Cards pile up on each other while scrolling, each settling as the next arrives.', slot: 'scroll', source: CY,
     file: 'StickyCards.tsx', exportName: 'StickyCards', deps: M, levels: LIVELY, heavy: true, sections: ['featured-work', 'services', 'how-it-works', 'process'],
@@ -193,8 +200,8 @@ export const pieces: Record<PieceId, Piece> = {
   },
   'cut-reveal': {
     id: 'cut-reveal', name: 'Cut-out headline', line: 'Words slide up out of a hard mask — sharper than a fade.', slot: 'headline', source: FA,
-    file: 'CutReveal.tsx', exportName: 'CutReveal', deps: M, levels: MOVING, sections: ['hero', 'intro', 'manifesto', 'contact-cta'],
-    usage: '<CutReveal as="h1" className="font-(family-name:--font-display) text-8xl">Polo in Sheki</CutReveal>',
+    file: 'TextEffect.tsx', exportName: 'TextEffect', deps: M, levels: MOVING, sections: ['hero', 'intro', 'manifesto', 'contact-cta'],
+    usage: '<TextEffect as="h1" preset="cut" className="font-(family-name:--font-display) text-8xl">Polo in Sheki</TextEffect>',
     rules: ['Best with heavy, condensed or wide display faces.', 'h1 plus at most two section headlines.'],
   },
   'underline-fill': {
@@ -241,14 +248,14 @@ export const pieces: Record<PieceId, Piece> = {
   },
   'scribble-link': {
     id: 'scribble-link', name: 'Hand-drawn underline', line: 'A squiggle draws itself under a link on hover; the current page keeps it.', slot: 'label', source: OK,
-    file: 'ScribbleLink.tsx', exportName: 'ScribbleLink', deps: M, levels: MOVING, sections: ['navbar', 'hero', 'contact-cta'],
-    usage: '<ScribbleLink link={Link} href="/work" current={path === "/work"}>Work</ScribbleLink>',
+    file: 'DrawnLink.tsx', exportName: 'DrawnLink', deps: M, levels: MOVING, sections: ['navbar', 'hero', 'contact-cta'],
+    usage: '<DrawnLink link={Link} stroke="scribble" href="/work" current={path === "/work"}>Work</DrawnLink>',
     rules: ['Navigation links; pass `current` for the page you are on.'],
   },
   'wavy-link': {
     id: 'wavy-link', name: 'Wavy underline', line: 'A link’s underline draws in as a wave on hover.', slot: 'label', source: OK,
-    file: 'WavyLink.tsx', exportName: 'WavyLink', deps: M, levels: MOVING, sections: ['footer', 'contact-cta', 'about', 'journal'],
-    usage: '<WavyLink link={Link} href="/faq">FAQ</WavyLink>',
+    file: 'DrawnLink.tsx', exportName: 'DrawnLink', deps: M, levels: MOVING, sections: ['footer', 'contact-cta', 'about', 'journal'],
+    usage: '<DrawnLink link={Link} stroke="wave" href="/faq">FAQ</DrawnLink>',
     rules: ['Footer and inline links; the wave uses the second chapter colour (or the accent).'],
   },
   'swap-button': {
@@ -262,6 +269,12 @@ export const pieces: Record<PieceId, Piece> = {
     file: 'Stickers.tsx', exportName: 'Stickers', deps: M, levels: MOVING, sections: ['hero', 'intro', 'manifesto', 'chapters', 'about', 'contact-cta', 'gallery'],
     usage: '<section className="relative"><Stickers stickers={[{ src: "/media/sticker-1.png", alt: "…", x: "8%", y: "12%", w: "9rem", rotate: -8, depth: 1 }]} />…</section>',
     rules: ['2–4 per section, overlapping the edges of text blocks, never covering words.', 'Use the brand’s own marks (see the Brand stickers asset).'],
+  },
+  'fade-transition': {
+    id: 'fade-transition', name: 'Soft fade between pages', line: 'The page dims into its own colour and the next one fades in — quiet, half a second.', slot: 'site', source: OK,
+    file: 'PageFade.tsx', exportName: 'PageFade', deps: M, levels: ALL, sections: [],
+    usage: '// app/layout.tsx, inside <body>:\n<PageFade />',
+    rules: ['Mount once in the root layout; it handles every internal link.', 'About half a second in all — calm, never a wait.'],
   },
   'blob-transition': {
     id: 'blob-transition', name: 'Blob page transition', line: 'A blob of colour sweeps over the page between pages.', slot: 'site', source: OK,
@@ -305,6 +318,24 @@ export const pieces: Record<PieceId, Piece> = {
     usage: '// app/layout.tsx, inside <body>:\n<AmbientSound src="/media/ambientSound.mp3" />',
     rules: ['Off until the visitor turns it on; never autoplays.', 'One calm loop (30–90 s, seamless); the site works fully without it.', 'The switch never covers text or another fixed bar: put it in the menu bar (`placement=""`) or keep the page clear of the corner it sits in.'],
   },
+  'entry-gate': {
+    id: 'entry-gate', name: 'A playful way in', line: 'The first visit opens under a sheet visitors drag away or hold to open — three seconds, always skippable.', slot: 'site', source: OK,
+    file: 'EntryGate.tsx', exportName: 'EntryGate', deps: M, levels: LIVELY, sections: [],
+    usage: '// app/layout.tsx, inside <body>:\n<EntryGate title="Lift the tracing paper" hint="Drag the sheet up or off to the side." action="Lift the sheet" />',
+    rules: ['Once per visit (session); Skip is focused first and Esc skips.', 'The title says what to do in the brand’s own words; one action, never a puzzle.', 'Mount it as a direct child of <body> so it can make the page behind inert.'],
+  },
+  'chapter-colours': {
+    id: 'chapter-colours', name: 'Each item brings its own colours', line: 'As each item reaches the middle of the screen, the whole section turns its colours.', slot: 'scroll', source: OK,
+    file: 'ChapterColours.tsx', exportName: 'ChapterColours', deps: [], levels: MOVING, sections: ['featured-work', 'collection', 'product-grid', 'case-study', 'categories', 'product-highlight'],
+    usage: '<ChapterColours>\n  <article data-ground="var(--color-chapter-1)" data-ink="var(--color-text)">…</article>\n</ChapterColours>',
+    rules: ['Two colours per item (ground and ink) from its own photo or the colour chapters; text stays AA on every ground.', 'Wrap one section; the page’s own colours return above the first item.'],
+  },
+  lightbox: {
+    id: 'lightbox', name: 'Tap to open large', line: 'Any photo opens full screen; arrows and swipe move between them.', slot: 'open', source: OK,
+    file: 'Lightbox.tsx', exportName: 'Lightbox', deps: M, levels: ALL, sections: ['gallery', 'featured-work', 'collection', 'lookbook', 'about', 'editorial-story'],
+    usage: 'const [open, setOpen] = useState<number | null>(null)\n// each photo: <button onClick={() => setOpen(i)}>…</button>\n<Lightbox photos={photos} index={open} onIndex={setOpen} />',
+    rules: ['Every photo opens from a real <button> with the photo’s caption or alt as its name.', 'Captions travel with the photo into the viewer.'],
+  },
 }
 
 export const MAX_HEAVY_PIECES = 2
@@ -315,8 +346,8 @@ export const behaviours: Record<BehaviourId, { name: string; line: string; ids: 
   headlines: { name: 'Headlines', line: 'How every big heading arrives', ids: ['text-effect', 'cut-reveal', 'duo-headline'], many: false, none: 'Headings simply appear' },
   links: { name: 'Links', line: 'What menu, footer and text links do on hover', ids: ['text-roll', 'scribble-link', 'wavy-link', 'underline-fill', 'text-scramble', 'hover-highlight'], many: false, none: 'A plain underline on hover' },
   buttons: { name: 'Main button', line: 'How the main action of each page responds', ids: ['magnetic', 'swap-button'], many: false, none: 'The button just changes colour' },
-  transitions: { name: 'Between pages', line: 'What happens when visitors go to another page', ids: ['curtain-transition', 'blob-transition'], many: false, none: 'The next page simply appears' },
-  site: { name: 'Whole site', line: 'Extras across every page — pick any', ids: ['preloader', 'smooth-scroll', 'ambient-sound', 'brand-cursor', 'cookie-note', 'scroll-progress', 'grain'], many: true },
+  transitions: { name: 'Between pages', line: 'What happens when visitors go to another page', ids: ['fade-transition', 'curtain-transition', 'blob-transition'], many: false, none: 'The next page simply appears' },
+  site: { name: 'Whole site', line: 'Extras across every page — pick any', ids: ['entry-gate', 'preloader', 'smooth-scroll', 'ambient-sound', 'brand-cursor', 'cookie-note', 'scroll-progress', 'grain'], many: true },
 }
 export const behaviourOf = (id: PieceId): BehaviourId | undefined => (Object.keys(behaviours) as BehaviourId[]).find((b) => behaviours[b].ids.includes(id))
 export const isMoment = (id: PieceId) => !behaviourOf(id)

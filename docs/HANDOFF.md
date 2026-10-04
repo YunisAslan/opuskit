@@ -72,6 +72,43 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
 
 ## Next
 
+0. **Next: new example sites #11–#15** (docs/plan-for-fit.md §11). The user supplies every video; Claude finds photos.
+   State on 2026-10-03: all 10 examples have clips in the kit (site, section, effect, big-idea), section clips re-cut
+   standing still (§2 decisions), the user's full recordings kept in `examples/{slug}/media-src/recording/`. Many
+   section clips are a held frame — the "Re-recordings wanted" list in plan-for-fit says which. Kit changes that day:
+   Pages right column rebuilt (Add a part | Edit tabs, whole card adds, changes scroll to the part and glow, effects
+   tab first, "+ Effect" chip, real site ↔ your style `DualShot`), drawn `MenuDemo` / `LinkDemo`, each film/image part
+   keeps its own pick (`setPartHero`, `heroBands`), Timeline section, Soft fade transition, footer links follow the
+   Links behaviour (7 examples' footers + live exports updated). Uncommitted until the user asks.
+   **#11 Inkwell & Moth** (2026-10-03): built (Prompt 1 by a subagent, no fix round) and registered (`/live/inkwell-moth`);
+   clips open (the user records). Kit growth from it: `EntryGate`, `ChapterColours`, `Lightbox` pieces (a big-idea moment
+   with a ready piece now ships it — `SignaturePattern.piece`).
+   **#12 Kür Delta Watch** (2026-10-03/04): built (Prompt 1 by a subagent, no fix round) and registered
+   (`/live/kur-delta-watch`); clips open. Kit fixes from it: a film band mid-page asks for its own film and ships
+   prepare-video.sh; a seed's shop voice no longer reaches other kinds of site (`seedVoice`); UnderlineFill and SwapButton
+   take the site's `link`; SplitFlap lint. Kit growth from it: the Donate section + Donate page type (nonprofits start with it).
+   **#15 Sela Mor** (2026-10-04): built (Prompt 1 by a subagent, no fix round) and registered (`/live/sela-mor`); clips
+   open. Film the user's (made black and white; a tiny blurred amp maker's name shows briefly); sound + six Listen tracks
+   from Pixabay picked by Claude. Kit fixes: a scroll-scrubbed film band gets the scrub encode; AmbientSound/PageFade lint.
+   Kit growth: the Listen section + page type. The user: Sela Mor is the bar for every site. Screen recordings for all new
+   sites come at the very end.
+   **#13 Night Shift** (2026-10-04): recipe approved, 8 Unsplash photos in, Build Package written and installed in
+   `examples/night-shift/`; built (subagent, no fix round) and registered (`/live/night-shift`); clips open. Kit fix: asset
+   keys never start with a digit (`asset3dModelOrScene`). Fix round 1: palette → Grading Suite (new in the kit; the user disliked Wet Slate). Kit growth: Curriculum section.
+   The user: pick palettes by fit, previewed on a real page. 
+   **#14 Aster House** (2026-10-04): recipe approved (palette Limestone, chosen by comparison), 15 Pexels photos in, Build
+   Package in `examples/aster-house/`; built (subagent, no fix round) and registered (`/live/aster-house`); clips open.
+   All five §11 sites are built. Open: Availability list (kit growth question); screen recordings of #11–#15 (the user,
+   at the very end), then their clips.
+   **Research round (2026-10-04, the user's ask):** the kit repeats itself (forms and everything else), palettes can feel
+   dated, and the engine needs more variety and beauty — not more weight. Five research agents running, reports into
+   `docs/research/2026-10-04-*.md`: repetition audit (every layer + the 15 built sites), Awwwards collections map,
+   colour (palette audit + refreshed set), typography, use cases (per-kind anatomy + section variants). All five reports are in;
+   the plan is `docs/plan-variety.md` (phases A–G). The user approved A–C ("Gettik A-B-C ilə"); **A, B and C are done**
+   (2026-10-04, see the Progress table in plan-variety.md). Then the user asked for D–E–F before any new example
+   ("yeni nümunələr hazırlamamışdan əvvəl"): **D, E and F are done** too, then G ("G-ni et və v2 versiya çıxaraq") —
+   **all of A–G is done**. A Brasshand `-v2` rebuild showed the difference and was then deleted at the user's word.
+
 1. **Example #2 Brasshand** — built and registered 2026-10-01 (`examples/brasshand/`, live at
    `/live/brasshand`). Open: clips (the user records them). (`cheeky911` and its kit photos were removed 2026-10-03.)
    (plan-for-fit §9 — needs the user's OK).
@@ -128,10 +165,13 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
 
 ## Working agreements (from the user — they also live in Claude's local memory on the work computer only)
 
-- **Videos:** the user screen-records sites (optionally framed with Screen Studio / Cap) and drops them in
-  `examples/{slug}/media-src/recordings/` (git-ignored). Claude cuts clips with ffmpeg, removes anything private
-  (autofill popups, other windows), never crops to a fixed box (show at the clip's own aspect). Kit panels unframed;
-  framed versions for `/examples/{slug}` and the home page. No automated browser video (it dropped frames).
+- **Site videos (films in a site):** the user picks them, from 2026-10-03 on. Claude writes what each film should show
+  and waits for the files.
+- **Recordings for clips:** the user screen-records the live site and drops it in `examples/{slug}/media-src/recording/`
+  (committed, kept for re-cuts). Claude cuts with ffmpeg: never crops the site clip's frame; section clips stand still,
+  framed on the section; small effects zoomed in (a still 16:9 crop, 2–4×); no pasted or patched frames.
+  `still.py`-style analysis (frame-to-frame vertical shift) finds where the page stands still. No automated browser
+  video (it dropped frames).
 - **Example builds:** kit → Build Package → Claude Code, run in the user's terminal (`claude` in `examples/{slug}/`);
   a headless `claude -p --permission-mode bypassPermissions` from Claude's session is blocked by the safety check.
   Claude writes each prompt into `BUILD-LOG.md` first. With the user's OK, a fresh subagent may run a fix prompt.
@@ -139,7 +179,7 @@ Then `npm run check` (seed recipes are composed from these) and open a few kinds
 - **Rebuilds** go in a fresh `examples/{slug}-v2/` beside the old build (deleting the old folder in place was blocked by
   the safety check); the swap into `examples/{slug}/` happens only with the user's OK. `scripts/build-package.ts` writes
   a spec's Claude Code package into a folder (the same files as the result page's Download).
-- **Media:** Unsplash connector works (the account email had to be confirmed). Download "Original", resize for
+- **Photos:** Unsplash connector (re-authorise in claude.ai connector settings when it drops; the account email had to be confirmed once), or Pexels. Download "Original", resize for
   `public/media/` (≤ 2400 px long side), originals stay in `media-src/`, sources in `SOURCES.md`.
 - Use the design skills (gsap/threejs/motion-design/design-dna) only when relevant; animejs.com is a reference.
 

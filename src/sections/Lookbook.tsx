@@ -2,10 +2,10 @@ import type { ElementType } from 'react'
 // OpusKit section — Lookbook: magazine spreads, a large and a small photo per look, with what is worn.
 export type Look = { number: string; image: string; alt: string; detail?: string; detailAlt?: string; pieces: string; href?: string }
 
-export function LookbookSection({ link: L = 'a', title, looks }: { link?: ElementType; title?: string; looks: Look[] }) {
+export function LookbookSection({ tone, link: L = 'a', title, looks }: { tone?: 'ground' | 'surface' | 'inverse' | 'chapter'; link?: ElementType; title?: string; looks: Look[] }) {
   return (
-    <section className="px-5 py-24 md:px-10 md:py-32">
-      <div className="mx-auto max-w-[1440px] space-y-24">
+    <section data-tone={tone === 'ground' ? undefined : tone} className="px-(--gutter) py-(--section-y)">
+      <div className="mx-auto max-w-(--container) space-y-24">
         {title && <h2 className="type-heading">{title}</h2>}
         {looks.map((l, i) => (
           <article key={l.number} className={`grid items-end gap-6 md:grid-cols-12 ${i % 2 ? 'md:[direction:rtl]' : ''}`}>

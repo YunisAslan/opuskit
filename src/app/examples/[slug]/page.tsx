@@ -5,7 +5,9 @@ import { notFound } from 'next/navigation'
 import { examples, exampleBySlug } from '@/data/examples'
 import { sectionGuide } from '@/data/section-guide'
 import { jobOf } from '@/features/kit/plan'
-import type { SectionId } from '@/types/domain'
+import { signaturePatterns } from '@/data/patterns'
+import { pieces } from '@/data/pieces'
+import type { PieceId, SectionId } from '@/types/domain'
 
 // The kit's words for a part: the menu is "Menu" there, not "Navbar".
 const partName = (id: SectionId) => (id === 'navbar' ? 'Menu' : jobOf(id))
@@ -22,6 +24,10 @@ export default async function ExamplePage(props: PageProps<'/examples/[slug]'>) 
   const { slug } = await props.params
   const e = exampleBySlug[slug]
   if (!e) notFound()
+  const effects: [string, string, string][] = [
+    ...(Object.entries(e.pieceClips ?? {}) as [PieceId, string][]).map(([id, src]): [string, string, string] => [pieces[id].name, pieces[id].line, src]),
+    ...Object.entries(e.signatureClips ?? {}).map(([id, src]): [string, string, string] => { const p = signaturePatterns.find((x) => x.id === id); return [p?.name ?? id, 'Big-idea moment', src] }),
+  ]
 
   return (
     <article className="mx-auto max-w-[1440px] px-5 pb-24 pt-14 md:px-8 md:pt-20">
@@ -55,6 +61,22 @@ export default async function ExamplePage(props: PageProps<'/examples/[slug]'>) 
                 <video src={src} autoPlay muted loop playsInline preload="metadata" className="block h-auto w-full rounded-lg border border-line bg-paper-2" aria-label={`${e.title} — ${partName(id)}`} />
                 <p className="mt-2 text-sm">{partName(id)}</p>
                 {sectionGuide[id] && <p className="text-xs text-muted">{sectionGuide[id].look.charAt(0).toUpperCase() + sectionGuide[id].look.slice(1)}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {effects.length > 0 && (
+        <section className="mt-14" aria-labelledby="effects">
+          <h2 id="effects" className="text-2xl tracking-tight">Effects</h2>
+          <p className="mt-2 text-ink-2">The kit’s effects and big-idea moments as this site uses them. The kit shows these next to the same effect.</p>
+          <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {effects.map(([name, line, src]) => (
+              <li key={src}>
+                <video src={src} autoPlay muted loop playsInline preload="metadata" className="block h-auto w-full rounded-lg border border-line bg-paper-2" aria-label={`${e.title} — ${name}`} />
+                <p className="mt-2 text-sm">{name}</p>
+                <p className="text-xs text-muted">{line}</p>
               </li>
             ))}
           </ul>

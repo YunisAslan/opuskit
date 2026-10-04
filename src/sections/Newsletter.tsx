@@ -1,8 +1,8 @@
 // OpusKit section — Newsletter: one reason to subscribe, an email field and a button, and a plain note on how often.
-export function NewsletterSection({ title, text, placeholder, button, note, action, label = 'Email address' }: { title: string; text: string; placeholder: string; button: string; note?: string; action?: string; label?: string }) {
+export function NewsletterSection({ tone, title, text, placeholder, button, note, action, label = 'Email address' }: { tone?: 'ground' | 'surface' | 'inverse' | 'chapter'; title: string; text: string; placeholder: string; button: string; note?: string; action?: string; label?: string }) {
   return (
-    <section className="px-5 py-24 md:px-10 md:py-32">
-      <div className="mx-auto grid max-w-[1440px] gap-10 md:grid-cols-12 md:items-end">
+    <section data-tone={tone === 'ground' ? undefined : tone} className="px-(--gutter) py-(--section-y)">
+      <div className="mx-auto grid max-w-(--container) gap-10 md:grid-cols-12 md:items-end">
         <div className="md:col-span-6">
           <h2 className="type-heading text-balance">{title}</h2>
           <p className="type-body mt-4 max-w-[52ch] text-(--color-muted)">{text}</p>

@@ -12,7 +12,9 @@ export function needsVideo(r: UniversalRecipe) {
 }
 
 export function prepareVideoScript(r: UniversalRecipe): string {
-  const scrub = r.media.hero.id === 'scroll-video' || r.media.hero.id === 'scroll-video-page'
+  // A scroll-scrubbed film — the first screen's, or a film band mid-page — needs the keyframe-dense encode.
+  const SCRUB = ['scroll-video', 'scroll-video-page']
+  const scrub = SCRUB.includes(r.media.hero.id) || (r.metadata.spec.heroBands ?? []).some((b) => SCRUB.includes(b.hero))
   const frame = r.metadata.spec.videoFrame ?? 'wide'
   return `#!/usr/bin/env bash
 # ${r.title} — turn ONE source video into every file the hero needs. Free tools only.

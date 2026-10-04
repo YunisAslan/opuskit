@@ -11,9 +11,9 @@ export function SplitFlap({ text, className }: { text: string; className?: strin
   const inView = useInView(ref, { once: true, amount: 0.8 })
   const reduce = useReducedMotion()
   const target = text.toUpperCase()
-  const [shown, setShown] = useState(reduce ? target : target.replace(/\S/g, ' '))
+  const [shown, setShown] = useState(target.replace(/\S/g, ' '))
   useEffect(() => {
-    if (!inView || reduce) { setShown(target); return }
+    if (!inView || reduce) return
     let tick = 0
     const t = setInterval(() => {
       tick++
@@ -24,7 +24,7 @@ export function SplitFlap({ text, className }: { text: string; className?: strin
   }, [inView, reduce, target])
   return (
     <span ref={ref} className={`inline-flex gap-[0.08em] ${className ?? ''}`} aria-label={text}>
-      {shown.split('').map((c, i) => (
+      {(reduce ? target : shown).split('').map((c, i) => (
         <span key={i} aria-hidden className="relative inline-grid w-[0.78em] place-items-center overflow-hidden rounded-[0.08em] bg-(--color-text) py-[0.08em] text-(--color-background) tabular-nums">
           {c === ' ' ? ' ' : c}
           <span className="absolute inset-x-0 top-1/2 h-px bg-(--color-background)/40" />

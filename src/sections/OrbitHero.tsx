@@ -25,7 +25,7 @@ export function OrbitHeroSection({ eyebrow, loud, quiet, line, items }: { eyebro
   const turn = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 140])
   const lift = useTransform(scrollYProgress, [0, 1], ['0%', reduce ? '0%' : '-35%'])
   return (
-    <section ref={ref} className="relative h-[100svh] min-h-[640px] overflow-hidden px-5 md:px-10">
+    <section ref={ref} className="relative h-[100svh] min-h-[640px] overflow-hidden px-(--gutter)">
       <motion.div aria-hidden={false} className="absolute inset-0" style={{ y: lift }}>
         {items.map((it, i) => <Orbiter key={it.src + i} item={it} i={i} n={items.length} turn={turn} />)}
       </motion.div>

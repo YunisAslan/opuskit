@@ -5,8 +5,9 @@ import { ArrowLeft, ArrowRight, Check, RotateCcw } from 'lucide-react'
 import { useRef, useState, type ReactNode } from 'react'
 import { LazyMount } from '@/components/LazyMount'
 import { OptionDemo } from '@/components/OptionDemo'
+import { LinkDemo, type LinkPiece } from '@/components/LinkDemo'
 import { PieceDemo } from '@/components/PieceDemo'
-import { RealSiteClip } from '@/components/RealSiteClip'
+import { RealSiteClip, TileClip } from '@/components/RealSiteClip'
 import { ScaledFrame } from '@/components/ScaledFrame'
 import { SectionPreview } from '@/components/SectionPreview'
 import { SitePreview, previewFromDirection, previewFromRecipe } from '@/components/SitePreview'
@@ -18,9 +19,9 @@ import { accentSets, palettes, typography } from '@/data/ingredients'
 import { concepts, footerStyles, heroes, navStyles, shapeStyles, signaturePatterns } from '@/data/patterns'
 import { behaviours, pieces } from '@/data/pieces'
 import { directions, families, goals, motionLevels, purposes } from '@/data/taxonomy'
-import { closestSite } from '@/features/kit/closest'
+import { closestChrome, closestConcept, closestLook, closestPiece, closestSite, exactLook, type Match } from '@/features/kit/closest'
 import { behaviourPick, planToSpec, setBehaviour, setStyle, starters, usualPages, type StyleKey } from '@/features/kit/plan'
-import { composeRecipe, conceptChoices, recommendedNav, recommendedShape } from '@/features/recipes/engine'
+import { composeRecipe, conceptChoices, rankPalettes, recommendedNav, recommendedShape } from '@/features/recipes/engine'
 import { toast } from 'sonner'
 import { updatePlan } from '@/lib/kit'
 import type { BehaviourId, DirectionId, FamilyId, GoalId, KitPlan, MotionLevel, PieceId, PurposeId } from '@/types/domain'
@@ -32,14 +33,17 @@ import { lookOf } from './ProductVisual'
 const CATS = ['site', 'look', 'motion', 'idea', 'colours', 'lettering', 'shape', 'menu', 'behaviour'] as const
 type Cat = (typeof CATS)[number]
 
-function Tile({ on, label, sub, children, onPick }: { on: boolean; label: string; sub?: string; children?: ReactNode; onPick: () => void }) {
+// An option a real site built with OpusKit shows plays that site as its picture (`real`), instead of the drawn preview.
+// The pick button stretches over the card (after:inset-0), so the picture can hold its own "see larger" button.
+function Tile({ on, label, sub, children, onPick, real }: { on: boolean; label: string; sub?: string; children?: ReactNode; onPick: () => void; real?: Match }) {
   return (
-    <button type="button" role="radio" aria-checked={on} onClick={onPick}
-      className={`group relative overflow-hidden rounded-md border bg-white text-left transition-[border-color,box-shadow] duration-150 ${on ? 'border-pencil ring-2 ring-pencil' : 'border-line hover:border-ink'}`}>
-      {children}
-      <span className="flex items-center justify-between gap-1 px-2.5 py-2"><span className="truncate text-[13px] font-medium">{label}</span>{on && <Check size={14} className="shrink-0 text-pencil" aria-hidden />}</span>
-      {sub && <span className="-mt-1.5 block truncate px-2.5 pb-2 text-[11px] text-muted">{sub}</span>}
-    </button>
+    <div className={`group relative overflow-hidden rounded-md border bg-white text-left transition-[border-color,box-shadow] duration-150 ${on ? 'border-pencil ring-2 ring-pencil' : 'border-line hover:border-ink'}`}>
+      {real ? <TileClip match={real} /> : children}
+      <button type="button" role="radio" aria-checked={on} onClick={onPick} className="block w-full text-left after:absolute after:inset-0">
+        <span className="flex items-center justify-between gap-1 px-2.5 py-2"><span className="truncate text-[13px] font-medium">{label}</span>{on && <Check size={14} className="shrink-0 text-pencil" aria-hidden />}</span>
+        {sub && <span className="-mt-1.5 block truncate px-2.5 pb-2 text-[11px] text-muted">{sub}</span>}
+      </button>
+    </div>
   )
 }
 
@@ -50,7 +54,14 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
 
   const look = lookOf(plan)
   const recipe = composeRecipe(planToSpec(plan))
-  const real = closestSite(recipe.metadata.spec)
+  const spec = recipe.metadata.spec
+  // The right-hand column plays the real site that shows what this tab is about.
+  const reals: [Match | undefined, string][] =
+    cat === 'menu' ? [[closestChrome(spec, 'navbar'), 'This menu on a real site'], [closestChrome(spec, 'footer'), 'This footer on a real site']]
+    : cat === 'idea' ? [[recipe.concept && closestConcept(spec, recipe.concept.id), 'This big idea on a real site']]
+    : cat === 'behaviour' ? (plan.sitePieces ?? []).map((id) => [closestPiece(spec, id), `${pieces[id].name} on a real site`])
+    : cat === 'look' ? [[closestLook(spec), 'A site like this']]
+    : [[closestSite(spec), 'A site like this']]
   const set = (k: StyleKey, v: string | undefined) => updatePlan((p) => setStyle(p, k, v))
   // A new look keeps what you picked; say so, with a one-tap way to take the look's own instead.
   const OWN: [StyleKey, string][] = [['palette', 'colours'], ['typography', 'lettering'], ['shape', 'shape'], ['nav', 'menu'], ['footer', 'footer'], ['motion', 'movement'], ['rotation', 'colour chapters']]
@@ -72,7 +83,8 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
   const shapeDefault = recommendedShape({ direction: d.id })
   const navDefault = recommendedNav({ purpose: recipe.metadata.spec.purpose, direction: d.id })
   const grid = 'grid gap-2 grid-cols-[repeat(auto-fill,minmax(9.5rem,1fr))]'
-  const pal = palettes[plan.palette ?? d.defaults.palette]
+  const pal = palettes[recipe.metadata.spec.palette]
+  const ranked = rankPalettes(recipe.metadata.spec), best = ranked[0]
 
   // Left rail: every category with what it is set to now, so the whole style reads at a glance.
   const cats: { id: Cat; name: string; value: string; mini?: ReactNode }[] = [
@@ -90,7 +102,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
   const why: Record<Cat, string> = {
     site: 'The basics. They shape the words on your site, the pages it starts with and its main button — all optional, all changeable later.',
     look: 'A complete style — colours, lettering and layout tested together. Start here; the rest follows it.',
-    colours: `Swap the palette of ${d.name}. The first ones are made for it.`,
+    colours: `Swap the palette of ${d.name}. The first ones are made for it, best fit first — photos and film bring their own colour, so their sites get a calm ground.`,
     lettering: 'The typefaces for headlines, text and labels.',
     shape: 'Corners and edges of buttons, cards and photos.',
     menu: 'How visitors get around, and how every page ends. The same menu and footer on every page — in Pages you can leave either out of one page.',
@@ -150,7 +162,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
               <p className="text-sm font-medium">Kind of site</p>
               <Select value={plan.purpose ?? ''} onValueChange={(v) => pickPurpose(v as PurposeId)}>
                 <SelectTrigger className="h-10 w-full bg-white text-sm" aria-label="Kind of site"><SelectValue placeholder="Choose…" /></SelectTrigger>
-                <SelectContent className="max-h-80">{starters.map((x) => <SelectItem key={x.id} value={x.id}>{purposes[x.id].name}</SelectItem>)}</SelectContent>
+                <SelectContent className="max-h-80">{starters.filter((x) => !x.starter).map((x) => <SelectItem key={x.id} value={x.id}>{purposes[x.id].name}</SelectItem>)}</SelectContent>
               </Select>
               <p className="text-xs text-muted">Sets the pages it starts with and the sample content in previews.</p>
             </div>
@@ -170,7 +182,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
         <TabsContent value="look">
           <div role="radiogroup" aria-label="Look" className={grid}>
             {(family === 'all' ? [...new Set(Object.values(families).flatMap((f) => f.directions))] : families[family].directions).map((id: DirectionId) => (
-              <Tile key={id} on={d.id === id} onPick={() => pickLook(id)} label={directions[id].name} sub={directions[id].line}>
+              <Tile key={id} on={d.id === id} onPick={() => pickLook(id)} label={directions[id].name} sub={directions[id].line} real={exactLook({ ...spec, direction: id })}>
                 <LazyMount className="aspect-[16/10] overflow-hidden"><SitePreview {...previewFromDirection(id, { title: plan.name || directions[id].name })} /></LazyMount>
               </Tile>
             ))}
@@ -179,10 +191,10 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
 
         <TabsContent value="colours">
           <div role="radiogroup" aria-label="Colours" className="grid gap-2 grid-cols-[repeat(auto-fill,minmax(7.5rem,1fr))]">
-            {[...d.palettes, ...Object.keys(palettes).filter((x) => !d.palettes.includes(x as never))].map((id) => {
+            {[...ranked, ...Object.keys(palettes).filter((x) => !d.palettes.includes(x as never))].map((id) => {
               const c = palettes[id as keyof typeof palettes]
               return (
-                <Tile key={id} on={pal.id === id} onPick={() => set('palette', id)} label={c.name} sub={d.palettes.includes(id as never) ? 'Made for this look' : undefined}>
+                <Tile key={id} on={pal.id === id} onPick={() => set('palette', id)} label={c.name} sub={id === best ? 'Fits your site' : d.palettes.includes(id as never) ? 'Made for this look' : undefined}>
                   <span className="grid h-9 grid-cols-[2fr_1fr_1fr_1fr]" aria-hidden>{[c.colors.background, c.colors.text, c.colors.accent, c.colors.surface].map((x, i) => <span key={i} style={{ background: x }} />)}</span>
                 </Tile>
               )
@@ -221,16 +233,16 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
 
         <TabsContent value="menu">
           <p className="mb-2 text-sm font-medium">Menu <span className="font-normal text-muted">· the top of every page</span></p>
-          <div role="radiogroup" aria-label="Menu" className={grid}>{Object.values(navStyles).map((x) => <Tile key={x.id} on={(plan.nav ?? navDefault) === x.id} onPick={() => set('nav', x.id)} label={x.name} sub={x.id === navDefault ? 'Fits your site' : x.trending ? 'Trending' : undefined}><OptionDemo id={`nav:${x.id}`} {...demo} /></Tile>)}</div>
+          <div role="radiogroup" aria-label="Menu" className="grid gap-2 grid-cols-[repeat(auto-fill,minmax(17rem,1fr))]">{Object.values(navStyles).map((x) => <Tile key={x.id} on={(plan.nav ?? navDefault) === x.id} onPick={() => set('nav', x.id)} label={x.name} sub={x.id === navDefault ? 'Fits your site' : x.trending ? 'Trending' : undefined}><OptionDemo id={`nav:${x.id}`} {...demo} /></Tile>)}</div>
           <p className="mb-2 mt-8 text-sm font-medium">Footer <span className="font-normal text-muted">· the end of every page</span></p>
-          <div role="radiogroup" aria-label="Footer" className="grid gap-2 grid-cols-[repeat(auto-fill,minmax(13rem,1fr))]">{Object.values(footerStyles).map((x) => <Tile key={x.id} on={recipe.chrome.footerStyle.id === x.id} onPick={() => set('footer', x.id)} label={x.name} sub={x.line}>
+          <div role="radiogroup" aria-label="Footer" className="grid gap-2 grid-cols-[repeat(auto-fill,minmax(13rem,1fr))]">{Object.values(footerStyles).map((x) => <Tile key={x.id} real={closestChrome({ ...spec, footer: x.id }, 'footer')} on={recipe.chrome.footerStyle.id === x.id} onPick={() => set('footer', x.id)} label={x.name} sub={x.line}>
             <LazyMount className="pointer-events-none min-h-16 overflow-hidden"><SectionPreview id="footer" footer={x.id} auto colors={look.colors} type={look.type} shape={look.shape} brand={plan.name || undefined} /></LazyMount></Tile>)}</div>
         </TabsContent>
 
         <TabsContent value="motion">
           <div role="radiogroup" aria-label="Movement" className="grid gap-2 grid-cols-[repeat(auto-fill,minmax(13rem,1fr))]">
             {motions.map((m) => (
-              <Tile key={m} on={recipe.metadata.spec.motion === m} onPick={() => set('motion', m)} label={motionLevels[m].name} sub={m === d.defaults.motion ? 'Look default' : motionLevels[m].line}>
+              <Tile key={m} real={closestSite({ ...spec, motion: m })} on={recipe.metadata.spec.motion === m} onPick={() => set('motion', m)} label={motionLevels[m].name} sub={m === d.defaults.motion ? 'Look default' : motionLevels[m].line}>
                 <LazyMount className="aspect-[16/10] overflow-hidden"><SitePreview {...previewFromRecipe(composeRecipe(planToSpec(setStyle(plan, 'motion', m))), plan.name ? { title: plan.name, brand: plan.name } : {})} /></LazyMount>
               </Tile>
             ))}
@@ -242,7 +254,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
           <div role="radiogroup" aria-label="Big idea" className="grid gap-2 grid-cols-[repeat(auto-fill,minmax(13rem,1fr))]">
             {conceptChoices(recipe).map((x) => (
               <Tile key={x.id} on={recipe.concept?.id === x.id} onPick={() => set('concept', x.id)} label={x.name} sub={x.recommended ? 'Fits your site' : x.line}>
-                <OptionDemo id={`sig:${x.signatures[0]}`} {...demo} />
+                {(() => { const m = closestConcept(spec, x.id); return m ? <TileClip match={m} /> : <OptionDemo id={`sig:${x.signatures[0]}`} {...demo} /> })()}
                 <span className="block px-2.5 pt-2 text-[11px] leading-snug text-muted">{x.signatures.map((id) => signaturePatterns.find((p) => p.id === id)?.name).filter(Boolean).join(' · ')}</span>
               </Tile>
             ))}
@@ -262,7 +274,10 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
                 return (
                   // The demo is a sibling of the button (demos contain their own buttons); the button stretches over the card.
                   <div key={id ?? 'none'} className={`relative overflow-hidden rounded-md border bg-white ${on ? 'border-pencil ring-2 ring-pencil' : 'border-line hover:border-ink'}`}>
-                    {id ? <LazyMount className="pointer-events-none aspect-video"><ScaledFrame width={420} className="aspect-video"><PieceDemo id={id} colors={look.colors} fonts={look.fonts} chapters={look.chapters} /></ScaledFrame></LazyMount>
+                    {/* Links are too small in a recording: they play on the real footer, framed close (LinkDemo). */}
+                    {b === 'links' ? <LazyMount className="pointer-events-none aspect-video"><LinkDemo piece={id as LinkPiece | undefined} colors={look.colors} type={look.type} shape={look.shape} brand={plan.name || undefined} /></LazyMount>
+                      : id && closestPiece(spec, id) ? <TileClip match={closestPiece(spec, id)!} />
+                      : id ? <LazyMount className="pointer-events-none aspect-video"><ScaledFrame width={420} className="aspect-video"><PieceDemo id={id} colors={look.colors} fonts={look.fonts} chapters={look.chapters} /></ScaledFrame></LazyMount>
                       : <span className="grid aspect-video place-items-center text-xs text-muted">Plain — no effect</span>}
                     <button type="button" role={g.many ? 'checkbox' : 'radio'} aria-checked={on} onClick={choose}
                       className="flex w-full items-start justify-between gap-2 border-t border-line px-2.5 py-2 text-left after:absolute after:inset-0">
@@ -275,7 +290,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
               return (
                 <section key={b} aria-label={g.name}>
                   <p className="text-sm font-medium">{g.name} <span className="font-normal text-muted">— {g.line}</span></p>
-                  <div role={g.many ? 'group' : 'radiogroup'} aria-label={g.name} className="mt-2 grid gap-2 grid-cols-[repeat(auto-fill,minmax(12rem,1fr))]">
+                  <div role={g.many ? 'group' : 'radiogroup'} aria-label={g.name} className={`mt-2 grid gap-2 ${b === 'links' ? 'grid-cols-[repeat(auto-fill,minmax(17rem,1fr))]' : 'grid-cols-[repeat(auto-fill,minmax(12rem,1fr))]'}`}>
                     {!g.many && card(undefined)}
                     {g.ids.map((id) => card(id))}
                   </div>
@@ -304,7 +319,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
           <OptionDemo id={`shape:${look.shape.id}`} colors={look.colors} type={look.type} shape={look.shape} className="rounded-md border border-line" />
           <OptionDemo id={`nav:${recipe.chrome.nav.id}`} colors={look.colors} type={look.type} shape={look.shape} className="rounded-md border border-line" />
         </div>
-        {real && <div className="mt-3"><RealSiteClip match={real} label="A site like this" /></div>}
+        {reals.map(([m, label]) => m && <div key={label} className="mt-3"><RealSiteClip match={m} label={label} /></div>)}
         <p className="mt-3 text-xs text-muted">Everything here applies to every page. Pages and their sections come next.</p>
       </aside>
     </Tabs>

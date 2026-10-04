@@ -10,8 +10,8 @@ export function ColourChaptersSection({ chapters }: { chapters: Chapter[] }) {
           <div className="md:order-2">
             <div className="grid place-items-center px-8 py-16 md:sticky md:top-0 md:h-svh md:px-14" style={{ background: `var(--color-chapter-${(i % 3) + 1}, var(--color-accent))` }}>
               {c.media.video
-                ? <video src={c.media.src} autoPlay muted loop playsInline aria-label={c.media.alt} className="aspect-[4/5] w-full max-w-[34rem] rounded-(--radius-media) object-cover" />
-                : <img src={c.media.src} alt={c.media.alt} loading="lazy" className="aspect-[4/5] w-full max-w-[34rem] rounded-(--radius-media) object-cover" />}
+                ? <video src={c.media.src} autoPlay muted loop playsInline aria-label={c.media.alt} className="aspect-(--ratio-card) w-full max-w-[34rem] rounded-(--radius-media) object-cover" />
+                : <img src={c.media.src} alt={c.media.alt} loading="lazy" className="aspect-(--ratio-card) w-full max-w-[34rem] rounded-(--radius-media) object-cover" />}
             </div>
           </div>
           <div className="relative grid content-start px-6 py-20 text-center md:sticky md:top-0 md:h-svh md:content-center md:px-16">

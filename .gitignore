@@ -6,5 +6,11 @@ next-env.d.ts
 
 # Raw screen recordings for example clips: large, and they can show private screens (autofill, other windows).
 examples/*/media-src/recordings/
+examples/*/media-src/recording/
+# Raw source footage and sound before processing: large, reference-only (the processed copies live in public/media/).
+examples/*/media-src/**/*.mp4
+examples/*/media-src/**/*.mov
+examples/*/media-src/**/*.mp3
+examples/*/media-src/**/*.wav
 # Media whose source or licence is unknown — never published.
 examples/*/media-src/dropped/

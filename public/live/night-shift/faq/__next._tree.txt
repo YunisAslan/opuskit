@@ -1,0 +1,5 @@
+:HL["/live/night-shift/_next/static/chunks/3804d077c4xl6.css","style"]
+:HL["/live/night-shift/_next/static/chunks/0w2u1kjg89brh.css","style"]
+:HL["/live/night-shift/_next/static/media/79f912dd4696ed62.p.0646hfywr4bl6.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/live/night-shift/_next/static/media/847c6af3f14ca2aa.p.2dv7oiayrgfo5.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"faq","param":null,"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"H3JOsVIp2aKty21h-_jwn"}

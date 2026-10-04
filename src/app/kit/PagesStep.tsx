@@ -6,18 +6,17 @@
 //   Right:  one job at a time — either "Add to page" (the parts you can add; drag one into the page, or tap +), or,
 //           with a part picked, "This part" (its look, its photos, its moments). Structure and effects never share a list.
 // Site-wide behaviour (headlines, links, buttons) lives in Design.
-import { ArrowDown, ArrowLeft, ArrowUp, Check, Eye, EyeOff, FileText, GripVertical, ImageUp, MoreHorizontal, Pencil, Plus, RotateCcw, Sparkles, Trash2, X } from 'lucide-react'
-import { useState, type DragEvent, type ReactNode } from 'react'
+import { ArrowDown, ArrowUp, Check, Eye, EyeOff, FileText, GripVertical, ImageUp, MoreHorizontal, Pencil, Plus, RotateCcw, Sparkles, Trash2, X } from 'lucide-react'
+import { useEffect, useRef, useState, type DragEvent, type ReactNode } from 'react'
 import { toast } from 'sonner'
 import { LazyMount } from '@/components/LazyMount'
 import { MediaSlots, missingLeadFile } from '@/components/MediaSlots'
 import { OptionDemo } from '@/components/OptionDemo'
 import { PieceDemo } from '@/components/PieceDemo'
 import { ScaledFrame } from '@/components/ScaledFrame'
-import { RealSiteClip } from '@/components/RealSiteClip'
+import { DualShot, RealSiteClip } from '@/components/RealSiteClip'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
-import { closestChrome, closestSection, closestSite } from '@/features/kit/closest'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { anySection, closestChrome, closestPiece, closestSection, closestSite, heroSite } from '@/features/kit/closest'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -26,13 +25,14 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Textarea } from '@/components/ui/textarea'
 import { EFFECTS, footerStyles, imagePresentations, navStyles, pageTypes, sections, uiByPage } from '@/data/patterns'
 import { pieces } from '@/data/pieces'
+import { sectionVariants } from '@/data/section-variants'
 import { sectionGuide } from '@/data/section-guide'
 import { motionLevels } from '@/data/taxonomy'
 import {
   addPage, addSection, addSuggested, effectOn, effectWhere, inferPurpose, isPhotoSection, isStandardPage, jobOf, pageGroups, piecesFor, placeSection,
-  heroTitle, libraryFor, planToSpec, setStyle, toggleChrome, removePage, removeSection, renamePage, replaceSection, resetPage, sectionPhotos, setHero, setPagePurpose, setSectionPhotos, swapOptions, togglePiece,
+  heroOf, heroTitle, libraryFor, planToSpec, setPartHero, setStyle, toggleChrome, removePage, removeSection, renamePage, replaceSection, resetPage, sectionPhotos, setPagePurpose, setSectionPhotos, setSectionVariant, swapOptions, togglePiece,
 } from '@/features/kit/plan'
-import { recommendedNav } from '@/features/recipes/engine'
+import { composeRecipe, recommendedNav } from '@/features/recipes/engine'
 import { readPlan, updatePlan, writePlan } from '@/lib/kit'
 import type { ChromeId, ImagePresentationId, KitPlan, PageTypeId, PieceId, SectionId } from '@/types/domain'
 import { HeroPreview, heroName } from './HeroPreview'
@@ -62,13 +62,32 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
   const [menuOpen, setMenuOpen] = useState(false)
   const [briefOpen, setBriefOpen] = useState(false)
   const [view, setView] = useState<'page' | 'files'>(initialFocus === 'files' ? 'files' : 'page')
+  // The right column does one job at a time, and says which: adding parts, or editing the part picked in the page.
+  const [tab, setTab] = useState<'add' | 'edit'>(initialFocus === 'first-screen' ? 'edit' : 'add')
+  const [editTab, setEditTab] = useState<'effects' | 'design' | 'photos'>()
+  // A part just added or changed: the page scrolls to it and it glows for a moment, so a change is never silent.
+  const [flash, setFlash] = useState<string>()
+  const [justAdded, setJustAdded] = useState<SectionId>()
+  // A new job in the right column starts at its top.
+  const panel = useRef<HTMLElement>(null)
+  useEffect(() => { panel.current?.scrollTo({ top: 0 }) }, [tab, selKey])
+  const pick = (key?: string, t?: 'effects' | 'design' | 'photos') => { setSelKey(key); setTab(key ? 'edit' : 'add'); setEditTab(t) }
+  const land = (key: string) => {
+    setFlash(key)
+    requestAnimationFrame(() => document.querySelector(`[data-part="${key}"]`)?.scrollIntoView({ block: 'center', behavior: 'smooth' }))
+    setTimeout(() => setFlash((k) => (k === key ? undefined : k)), 1800)
+  }
   const spec = planToSpec(plan)
   const lead = missingLeadFile(spec)
   const fileCount = (plan.uploads ?? []).length
   const navId = plan.nav ?? recommendedNav({ purpose: spec.purpose, direction: look.d.id }), navName = navStyles[navId].name
-  const footerId = spec.footer ?? 'signature', footerName = footerStyles[footerId].name
   // Previews dress as the user's kind of site (a café sees cups, a shop sees products) and carry its name.
-  const pv = { colors: look.colors, type: look.type, shape: look.shape, chapters: look.chapters, world: worldFor(inferPurpose(plan)), brand: plan.name || undefined }
+  const pv = { colors: look.colors, type: look.type, shape: look.shape, chapters: look.chapters, world: worldFor(inferPurpose(plan)), brand: plan.name || undefined, layout: spec.layout }
+  // Each part as the recipe will place it: its tone (ground / surface / inverse / chapter) and media placement.
+  const composed = composeRecipe(spec)
+  const footerId = composed.chrome.footerStyle.id, footerName = composed.chrome.footerStyle.name
+  const rhythmOf = (pageIdOf: string, i: number) => { const s = composed.pages.find((x) => x.id === pageIdOf)?.sections[i]; return { tone: s?.tone, media: s?.media, variant: s?.variant?.id } }
+  const designOf = (pageIdOf: string, i: number) => composed.pages.find((x) => x.id === pageIdOf)?.sections[i]?.variant?.name
   const lookOfSection = (id: SectionId) => (id === 'hero' ? `film or image · ${heroName(plan.hero).toLowerCase()}` : sectionGuide[id]?.look ?? sections[id].name)
   const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1)
 
@@ -82,7 +101,7 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
     })
     toast(message, { description: notes.join(' ') || undefined, action: { label: 'Undo', onClick: () => writePlan(before) } })
   }
-  const openPage = (id: string) => { setPageId(id); setSelKey(undefined); setRenaming(false); setView('page') }
+  const openPage = (id: string) => { setPageId(id); pick(undefined); setRenaming(false); setView('page') }
   const addPageOf = (type: PageTypeId) => { let nid = ''; updatePlan((p) => { const r = addPage(p, type); nid = r.id; return r.plan }); openPage(nid) }
 
   if (!page) return null
@@ -99,7 +118,9 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
       key = next.pages.find((x) => x.id === page.id)!.sections.find((x) => !before.has(x.key))?.key
       return next
     })
-    setSelKey(key)
+    if (key) land(key)
+    setJustAdded(id)
+    setTimeout(() => setJustAdded((x) => (x === id ? undefined : x)), 1600)
   }
 
   // ─── drag and drop: a new part from the library, or a part moved within the page. Parts only mark where it would
@@ -136,7 +157,7 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
         <LazyMount className={`pointer-events-none aspect-[16/10] w-36 shrink-0 overflow-hidden rounded-md border border-line ${hidden ? 'opacity-30' : ''}`}>
           {c === 'navbar' ? <OptionDemo id={`nav:${navId}`} colors={look.colors} type={look.type} shape={look.shape} /> : <SectionPreview id="footer" footer={footerId} {...pv} className="aspect-[16/10]" />}
         </LazyMount>
-        <button type="button" aria-pressed={on} onClick={() => setSelKey(on ? undefined : `chrome:${c}`)} className="min-w-0 flex-1 text-left after:absolute after:inset-0">
+        <button type="button" aria-pressed={on} onClick={() => pick(on ? undefined : `chrome:${c}`)} className="min-w-0 flex-1 text-left after:absolute after:inset-0">
           <span className={`block text-sm font-medium ${hidden ? 'text-muted' : ''}`}>{name}</span>
           <span className="block truncate text-xs text-muted">{hidden ? `Not on ${page.label}` : `${c === 'navbar' ? navName : footerName} · same on every page`}</span>
         </button>
@@ -150,18 +171,18 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
   const part = (i: number) => {
     const s = page.sections[i], hero = s.id === 'hero', on = sel?.key === s.key, title = hero ? heroTitle(page, s) : jobOf(s.id)
     return (
-      <li key={s.key} draggable
+      <li key={s.key} data-part={s.key} draggable
         onDragStart={(e) => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', s.key); setDrag({ kind: 'move', key: s.key }) }} onDragEnd={endDrag}
         onDragOver={(e) => overPart(e, i)}
-        className={`group relative flex items-center gap-4 rounded-lg border bg-white p-2.5 transition-shadow ${drag?.kind === 'move' && drag.key === s.key ? 'opacity-40' : ''} ${on ? 'border-ink shadow-[0_0_0_1px_var(--color-ink)]' : 'border-line hover:shadow-sm'}`}>
+        className={`group relative flex items-center gap-4 rounded-lg border bg-white p-2.5 transition-shadow ${drag?.kind === 'move' && drag.key === s.key ? 'opacity-40' : ''} ${on ? 'border-ink shadow-[0_0_0_1px_var(--color-ink)]' : 'border-line hover:shadow-sm'} ${flash === s.key ? 'animate-[kit-flash_1.8s_ease-out]' : ''}`}>
         <span className="flex w-4 shrink-0 justify-center text-muted"><GripVertical size={14} className="cursor-grab opacity-40 group-hover:opacity-100" aria-hidden /></span>
-        <LazyMount className="pointer-events-none aspect-[16/10] w-36 shrink-0 overflow-hidden rounded-md border border-line">{hero ? <HeroPreview plan={plan} id={plan.hero} /> : <SectionPreview id={s.id} {...pv} className="aspect-[16/10]" />}</LazyMount>
+        <LazyMount className="pointer-events-none aspect-[16/10] w-36 shrink-0 overflow-hidden rounded-md border border-line">{hero ? <HeroPreview plan={plan} id={heroOf(plan, s)} /> : <SectionPreview id={s.id} {...pv} {...rhythmOf(page.id, i)} className="aspect-[16/10]" />}</LazyMount>
         <div className="min-w-0 flex-1">
-          <button type="button" aria-pressed={on} onClick={() => setSelKey(on ? undefined : s.key)} className="block w-full text-left after:absolute after:inset-0">
+          <button type="button" aria-pressed={on} onClick={() => pick(on ? undefined : s.key)} className="block w-full text-left after:absolute after:inset-0">
             <span className="block text-sm font-medium">{title}</span>
-            <span className="block truncate text-xs text-muted">{hero ? heroName(plan.hero) : cap(lookOfSection(s.id))}{isPhotoSection(s.id) ? ` · photos as ${imagePresentations[sectionPhotos(plan, s).id].name.toLowerCase()}` : ''}</span>
+            <span className="block truncate text-xs text-muted">{hero ? heroName(heroOf(plan, s)) : cap(lookOfSection(s.id))}{designOf(page.id, i) ? ` · ${designOf(page.id, i)!.toLowerCase()}` : ''}{isPhotoSection(s.id) ? ` · photos as ${imagePresentations[sectionPhotos(plan, s).id].name.toLowerCase()}` : ''}</span>
           </button>
-          {(s.pieces.length > 0 || (hero && lead)) && (
+          {(s.pieces.length > 0 || (hero && lead) || piecesFor(s).length > 0) && (
             <span className="relative mt-1.5 flex flex-wrap gap-1">
               {s.pieces.map((id) => (
                 <span key={id} className="inline-flex items-center gap-1 rounded-full bg-pencil-soft py-0.5 pl-2 pr-1 text-[11px] text-pencil">
@@ -169,6 +190,7 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
                   <button type="button" aria-label={`Remove ${pieces[id].name}`} className="rounded-full p-0.5 hover:bg-white" onClick={() => change(`${pieces[id].name} removed from ${title.toLowerCase()}`, (p) => togglePiece(p, page.id, s.key, id))}><X size={10} /></button>
                 </span>
               ))}
+              {piecesFor(s).length > 0 && <button type="button" onClick={() => pick(s.key, 'effects')} className="inline-flex items-center gap-1 rounded-full border border-dashed border-pencil/50 px-2 py-0.5 text-[11px] text-pencil hover:bg-pencil-soft"><Plus size={10} aria-hidden />Effect</button>}
               {hero && lead && <button type="button" onClick={() => setView('files')} className="inline-flex items-center gap-1 rounded-full border border-pencil/40 px-2 py-0.5 text-[11px] text-pencil hover:bg-pencil-soft"><ImageUp size={10} aria-hidden />Add your {lead.asset === '3d' ? '3D scene' : 'video'}</button>}
             </span>
           )}
@@ -176,7 +198,7 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
         <span className={`flex shrink-0 items-center ${on ? '' : 'lg:opacity-0 lg:group-focus-within:opacity-100 lg:group-hover:opacity-100'}`}>
           {iconBtn(`Move ${title} up`, () => move(s.key, i - 1), <ArrowUp size={15} />, i === 0)}
           {iconBtn(`Move ${title} down`, () => move(s.key, i + 2), <ArrowDown size={15} />, i === page.sections.length - 1)}
-          {iconBtn(`Remove ${title}`, () => { change(`${cap(lookOfSection(s.id))} removed`, (p) => removeSection(p, page.id, s.key)); if (on) setSelKey(undefined) }, <X size={15} />)}
+          {iconBtn(`Remove ${title}`, () => { change(`${cap(lookOfSection(s.id))} removed`, (p) => removeSection(p, page.id, s.key)); if (on) pick(undefined) }, <X size={15} />)}
         </span>
       </li>
     )
@@ -185,9 +207,16 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
   // ─── right panel: every option is a large, real preview — small thumbnails don't say enough ───
   // Section previews render at a narrower virtual width than the page, so they read larger in the panel.
   const PANEL_W = 1100
-  const sectionShot = (id: SectionId) => <LazyMount className="aspect-[16/10]"><SectionPreview id={id} {...pv} width={PANEL_W} className="aspect-[16/10]" /></LazyMount>
+  const sectionShot = (id: SectionId, x: ReturnType<typeof rhythmOf> = { tone: undefined, media: undefined, variant: undefined }) => <LazyMount className="aspect-[16/10]"><SectionPreview id={id} {...pv} {...x} width={PANEL_W} className="aspect-[16/10]" /></LazyMount>
   const heroShot = (id: KitPlan['hero']) => <LazyMount className="aspect-[16/10]"><HeroPreview plan={plan} id={id} /></LazyMount>
   const effectShot = (id: PieceId) => <LazyMount className="aspect-video"><ScaledFrame width={420} className="aspect-video"><PieceDemo id={id} colors={look.colors} fonts={look.fonts} chapters={look.chapters} /></ScaledFrame></LazyMount>
+  // Every option shows two things when a real site has it: that site, and the same thing drawn in your style (DualShot).
+  // Menus are drawn only (MenuDemo: real words, a pointer that uses them) — a menu is too small in a recording.
+  const sectionOption = (id: SectionId) => <DualShot real={anySection(spec, id)} drawn={sectionShot(id)} />
+  const heroOption = (id: KitPlan['hero']) => <DualShot real={(id && heroSite(spec, id)) || undefined} drawn={heroShot(id)} />
+  const effectOption = (id: PieceId) => <DualShot real={closestPiece(spec, id)} drawn={effectShot(id)} className="aspect-video" />
+  const footerOption = (style: string) => <DualShot real={closestChrome({ ...spec, footer: style as never }, 'footer')}
+    drawn={<LazyMount className="aspect-[16/10] overflow-hidden"><SectionPreview id="footer" footer={style as never} {...pv} width={PANEL_W} auto /></LazyMount>} />
   const photoShot = (id: ImagePresentationId) => <LazyMount className="overflow-hidden"><OptionDemo id={`photo:${id}`} colors={look.colors} type={look.type} shape={look.shape} /></LazyMount>
   const card = (key: string, current: boolean, onPick: () => void, shot: ReactNode, title: string, line?: string) => (
     <li key={key} className={`relative overflow-hidden rounded-lg border bg-white ${current ? 'border-ink shadow-[0_0_0_1px_var(--color-ink)]' : 'border-line hover:border-ink'}`}>
@@ -199,25 +228,33 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
     </li>
   )
 
-  // Nothing picked: the parts you can add, two to a row, each a real preview.
+  // Adding: every card adds itself (click, Enter, or drag it to a spot). The panel stays here so more can follow; the
+  // page scrolls to the new part and it glows.
+  const selTitle = sel ? (sel.id === 'hero' ? heroTitle(page, sel) : jobOf(sel.id)) : undefined
   const library = (
     <>
       <p className="font-medium">Add to {page.label}</p>
-      <p className="mb-4 mt-0.5 text-xs text-muted">What a {pageTypes[page.type].name} page usually has comes first. Drag a part into the page — a line shows where it lands. Or tap +.</p>
+      <p className="mb-4 mt-0.5 text-xs text-muted">Click a card to add it {selTitle ? <>after <span className="text-ink">{selTitle}</span></> : 'before the closing parts'} — or drag it to the exact spot. What a {pageTypes[page.type].name} page usually has comes first.</p>
       <div className="space-y-5">
         {libraryFor(page.type).map((g) => (
           <section key={g.name} aria-label={g.job}>
             <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wider text-muted">{g.job}</p>
             <ul className="grid grid-cols-2 gap-2">
               {g.ids.map((id) => {
-                const onPage = page.sections.some((s) => s.id === id)
+                const onPage = page.sections.some((s) => s.id === id), added = justAdded === id
                 return (
                   <li key={id} draggable onDragStart={(e) => { e.dataTransfer.effectAllowed = 'copy'; e.dataTransfer.setData('text/plain', id); setDrag({ kind: 'new', id }) }} onDragEnd={endDrag}
                     title={id === 'hero' ? 'Full width — at the top, or anywhere lower down' : sectionGuide[id] ? `Best when ${sectionGuide[id]!.bestWhen}` : sections[id].purpose}
-                    className="group relative cursor-grab overflow-hidden rounded-lg border border-line bg-white hover:border-ink active:cursor-grabbing">
-                    <div className="pointer-events-none border-b border-line">{id === 'hero' ? heroShot(plan.hero) : sectionShot(id)}</div>
-                    <p className="px-2 py-1.5 text-[12px] font-medium leading-tight">{cap(lookOfSection(id))}{onPage ? <span className="block text-[10px] font-normal text-muted">On this page</span> : g.usual.includes(id) && <span className="block text-[10px] font-normal text-pencil">Usual on {pageTypes[page.type].name}</span>}</p>
-                    <button type="button" aria-label={`Add ${lookOfSection(id)} to ${page.label}`} onClick={() => addPart(id)} className="absolute right-1.5 top-1.5 rounded-full border border-line bg-white p-1 text-ink-2 shadow-sm hover:border-ink hover:text-ink"><Plus size={13} /></button>
+                    className={`group relative overflow-hidden rounded-lg border bg-white transition-colors ${added ? 'border-pencil' : 'border-line hover:border-ink'}`}>
+                    <div className="pointer-events-none border-b border-line">{id === 'hero' ? heroOption(plan.hero) : sectionOption(id)}</div>
+                    <button type="button" onClick={() => addPart(id)} aria-label={`Add ${lookOfSection(id)} to ${page.label}`}
+                      className="block w-full px-2 py-1.5 text-left text-[12px] font-medium leading-tight after:absolute after:inset-0">
+                      {cap(lookOfSection(id))}
+                      {onPage ? <span className="block text-[10px] font-normal text-muted">On this page</span> : g.usual.includes(id) && <span className="block text-[10px] font-normal text-pencil">Usual on {pageTypes[page.type].name}</span>}
+                    </button>
+                    <span className={`pointer-events-none absolute right-1.5 top-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium shadow-sm transition-opacity ${added ? 'bg-pencil text-white opacity-100' : 'bg-white text-ink opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'}`}>
+                      {added ? <><Check size={11} aria-hidden />Added</> : <><Plus size={11} aria-hidden />Add</>}
+                    </span>
                   </li>
                 )
               })}
@@ -228,21 +265,12 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
     </>
   )
 
-  const group = (value: string, name: string, now: string, body: ReactNode) => (
-    <AccordionItem value={value} className="rounded-md border border-line bg-white not-last:border-b">
-      <AccordionTrigger className="px-3 py-2.5 hover:no-underline"><span className="flex min-w-0 flex-1 items-baseline justify-between gap-3 pr-2"><span>{name}</span><span className="truncate text-xs font-normal text-muted">{now}</span></span></AccordionTrigger>
-      <AccordionContent className="px-2">{body}</AccordionContent>
-    </AccordionItem>
-  )
-  const back = <button type="button" className="mb-3 inline-flex items-center gap-1 text-xs text-muted hover:text-ink" onClick={() => setSelKey(undefined)}><ArrowLeft size={12} aria-hidden />Add parts</button>
-
   // The menu or the footer: on this page or not, and its look (the same on every page).
   const chromeInspector = (c: ChromeId) => {
     const hidden = !!page.hide?.includes(c), name = c === 'navbar' ? 'Menu' : 'Footer'
     const real = closestChrome(spec, c)
     return (
       <>
-        {back}
         <p className="font-medium">{name}</p>
         {real && <div className="mt-3"><RealSiteClip match={real} label={`This ${name.toLowerCase()} on a real site`} /></div>}
         <label className="mt-3 flex items-center gap-2 rounded-md border border-line bg-white px-3 py-2.5 text-sm">
@@ -253,14 +281,14 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
         <ul className="space-y-2">
           {c === 'navbar'
             ? Object.values(navStyles).map((x) => card(x.id, navId === x.id, () => change(`Menu: ${x.name}`, (p) => setStyle(p, 'nav', x.id)), <OptionDemo id={`nav:${x.id}`} colors={look.colors} type={look.type} shape={look.shape} />, x.name, x.line))
-            : Object.values(footerStyles).map((x) => card(x.id, footerId === x.id, () => change(`Footer: ${x.name}`, (p) => setStyle(p, 'footer', x.id)), <LazyMount className="min-h-16"><SectionPreview id="footer" footer={x.id} {...pv} width={PANEL_W} auto /></LazyMount>, x.name, x.line))}
+            : Object.values(footerStyles).map((x) => card(x.id, footerId === x.id, () => change(`Footer: ${x.name}`, (p) => setStyle(p, 'footer', x.id)), footerOption(x.id), x.name, x.line))}
         </ul>
       </>
     )
   }
 
-  // A part picked: first the part as it is now — its look with its photo layout and effects together — then one
-  // question per heading (each showing its current answer), every answer a large preview.
+  // A part picked: the part as it is now (real site ↔ your style), then one question at a time in tabs — effects first,
+  // since nowhere else offers them.
   const inspector = sel && (() => {
     const hero = sel.id === 'hero'
     const i = page.sections.indexOf(sel)
@@ -268,58 +296,71 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
     const moments = piecesFor(sel)
     const looks = hero ? [] : [sel.id, ...swapOptions(page, sel.id).job]
     const ph = !hero && isPhotoSection(sel.id) ? sectionPhotos(plan, sel) : undefined
+    const rhythm = rhythmOf(page.id, i)
+    const designs = hero ? undefined : sectionVariants[sel.id]
     const real = hero ? closestSite(spec) : closestSection(spec, sel.id)
+    // The site's first film/image part is its first screen; any other one shows a pick of its own.
+    const lead = hero && plan.pages.flatMap((p) => p.sections).find((x) => x.id === 'hero')?.key === sel.key
     const bestWhen = (id: SectionId) => (sectionGuide[id] ? `Best when ${sectionGuide[id]!.bestWhen}` : sections[id].purpose)
-    const extras: [string, ReactNode, string][] = [
-      ...(ph ? [[`photos-${ph.id}`, photoShot(ph.id), `Photos: ${imagePresentations[ph.id].name}`] as [string, ReactNode, string]] : []),
-      ...sel.pieces.map((id) => [id, effectShot(id), pieces[id].name] as [string, ReactNode, string]),
-    ]
+    const tabs = ([
+      moments.length > 0 && ['effects', `Effects${sel.pieces.length ? ` · ${sel.pieces.length}` : ''}`],
+      (hero || looks.length > 1 || designs) && ['design', hero ? 'What it shows' : 'Other designs'],
+      ph && ['photos', 'Photos'],
+    ].filter(Boolean)) as ['effects' | 'design' | 'photos', string][]
+    const t = tabs.find(([k]) => k === editTab)?.[0] ?? tabs[0]?.[0]
+    const changed = (m: string, f: (p: KitPlan) => KitPlan) => { change(m, f); land(sel.key) }
     return (
       <>
-        {back}
         <p className="text-xs text-muted">Part {i + 1} of {page.label}</p>
         <p className="font-medium">{title}</p>
-
         <figure className="mt-3 overflow-hidden rounded-lg border border-line bg-white">
-          <div className="pointer-events-none">{hero ? heroShot(plan.hero) : sectionShot(sel.id)}</div>
-          <figcaption className="px-3 py-2 text-xs text-muted">{hero ? heroName(plan.hero) : cap(lookOfSection(sel.id))}{extras.length ? ', with:' : ' — no extras'}</figcaption>
-          {extras.length > 0 && (
-            <ul className="grid grid-cols-2 gap-2 px-2 pb-2">
-              {extras.map(([k, shot, label]) => <li key={k} className="overflow-hidden rounded-md border border-line"><div className="pointer-events-none">{shot}</div><p className="truncate px-2 py-1 text-[11px]">{label}</p></li>)}
-            </ul>
-          )}
+          <DualShot real={real} drawn={<div className="pointer-events-none">{hero ? heroShot(heroOf(plan, sel)) : sectionShot(sel.id, rhythmOf(page.id, i))}</div>} />
+          <figcaption className="px-3 py-2 text-xs text-muted">{hero ? heroName(heroOf(plan, sel)) : cap(lookOfSection(sel.id))}{ph ? ` · photos as ${imagePresentations[ph.id].name.toLowerCase()}` : ''}{sel.pieces.length ? ` · ${sel.pieces.map((id) => pieces[id].name).join(', ')}` : ''}</figcaption>
         </figure>
-        {real && <div className="mt-3"><RealSiteClip match={real} label={hero ? 'A first screen like this' : 'This part on a real site'} /></div>}
 
-        <Accordion type="single" collapsible key={sel.key} className="mt-3 gap-2">
-          {(hero || looks.length > 1) && group('look', hero ? 'Change what it shows' : 'Change its look', hero ? heroName(plan.hero) : cap(lookOfSection(sel.id)), hero ? <>
-            <p className="mb-2 text-xs text-muted">{i === 0 ? 'What visitors see first on this page.' : 'A full-width band at this spot of the page.'} The same wherever you put it; it sets the media you need.</p>
-            <ul className="space-y-2">{[undefined, ...EFFECTS.map((e) => e.hero)].map((id) => card(id ?? 'look', plan.hero === id, () => {
-              if (plan.hero === id) return
-              const was = planToSpec(plan).motion
-              change(`${title}: ${heroName(id)}`, (p) => setHero(p, id))
-              const now = planToSpec(readPlan()).motion
-              if (now !== was) toast(`Movement is now ${motionLevels[now].name} — this film or image works at that level.`)
-            }, heroShot(id), heroName(id), id ? EFFECTS.find((e) => e.hero === id)!.line : `${look.d.name}’s own`))}</ul>
-          </> : <>
-            <p className="mb-2 text-xs text-muted">Same job, different design. Your content and effects carry over when they fit.</p>
-            <ul className="space-y-2">{looks.map((id) => card(id, id === sel.id, () => { if (id !== sel.id) change(`${cap(lookOfSection(sel.id))} → ${lookOfSection(id)}`, (p) => replaceSection(p, page.id, sel.key, id)) }, sectionShot(id), cap(lookOfSection(id)), bestWhen(id)))}</ul>
-          </>)}
-
-          {ph && group('photos', 'Change how photos show', imagePresentations[ph.id].name, <>
-            <p className="mb-2 text-xs text-muted">Here only.{ph.chosen && <> <button type="button" className="link" onClick={() => change('Photo layout back to the recommendation', (p) => setSectionPhotos(p, page.id, sel.key, undefined))}>Use the recommendation</button></>}</p>
-            <ul className="grid grid-cols-2 gap-2">{Object.values(imagePresentations).map((x) => card(x.id, ph.id === x.id, () => change(`${title}: photos as ${x.name}`, (p) => setSectionPhotos(p, page.id, sel.key, x.id)),
-              photoShot(x.id), x.name, x.id === ph.recommended ? 'Recommended' : x.piece ? 'Ready code' : x.ideal))}</ul>
-          </>)}
-
-          {moments.length > 0 && group('effects', 'Add an effect', sel.pieces.length ? `${sel.pieces.length} on` : 'Optional', <>
-            <p className="mb-2 text-xs text-muted">On this part only. Tap to add or remove; one of each kind.</p>
+        {tabs.length > 0 && (
+          <div role="tablist" aria-label={`Change ${title}`} className="mt-4 flex gap-1 border-b border-line">
+            {tabs.map(([k, label]) => (
+              <button key={k} type="button" role="tab" aria-selected={t === k} onClick={() => setEditTab(k)}
+                className={`-mb-px border-b-2 px-2.5 py-2 text-sm ${t === k ? 'border-ink font-medium text-ink' : 'border-transparent text-muted hover:text-ink'}`}>{label}</button>
+            ))}
+          </div>
+        )}
+        <div role="tabpanel" className="pt-3">
+          {t === 'effects' && <>
+            <p className="mb-2 text-xs text-muted">Something that moves on this part only — the same part elsewhere keeps its own. Add as many as you like; two that move the same thing (say, two headline effects) can’t share it, so the new one takes over and says so.</p>
             <ul className="space-y-2">{moments.map((id) => {
               const on = sel.pieces.includes(id)
-              return card(id, on, () => change(`${pieces[id].name} ${on ? 'removed from' : 'added to'} ${title.toLowerCase()}`, (p) => togglePiece(p, page.id, sel.key, id)), effectShot(id), pieces[id].name, pieces[id].line)
+              // Pieces sharing a slot animate the same element: picking one swaps out the other, never silently.
+              const clash = on ? undefined : sel.pieces.find((x) => pieces[x].slot === pieces[id].slot)
+              return card(id, on, () => changed(on ? `${pieces[id].name} removed from ${title.toLowerCase()}` : `${pieces[id].name} added to ${title.toLowerCase()}${clash ? ` — instead of ${pieces[clash].name}` : ''}`, (p) => togglePiece(p, page.id, sel.key, id)),
+                effectOption(id), pieces[id].name, clash ? `Takes the place of ${pieces[clash].name} — both move the same thing.` : pieces[id].line)
             })}</ul>
+          </>}
+          {t === 'design' && (hero ? <>
+            <p className="mb-2 text-xs text-muted">{lead ? <>{i === 0 ? 'What visitors see first on this page' : 'A full-width band at this spot'} — your site’s first screen: it sets the media you need.</> : <>This one only — your other film or image parts keep theirs. It needs its own media.</>}</p>
+            <ul className="space-y-2">{[...(lead ? [undefined] : []), ...EFFECTS.map((e) => e.hero)].map((id) => card(id ?? 'look', heroOf(plan, sel) === id, () => {
+              if (heroOf(plan, sel) === id) return
+              const was = planToSpec(plan).motion
+              changed(`${title}: ${heroName(id)}`, (p) => setPartHero(p, page.id, sel.key, id))
+              const now = planToSpec(readPlan()).motion
+              if (now !== was) toast(`Movement is now ${motionLevels[now].name} — this film or image works at that level.`)
+            }, heroOption(id), heroName(id), id ? EFFECTS.find((e) => e.hero === id)!.line : `${look.d.name}’s own`))}</ul>
+          </> : <>
+            {designs && <>
+              <p className="mb-2 text-xs text-muted">This part, laid out another way — same content.{sel.variant && <> <button type="button" className="link" onClick={() => changed(`${title}: back to ${look.d.name}’s own design`, (p) => setSectionVariant(p, page.id, sel.key, undefined))}>Use the recommendation</button></>}</p>
+              <ul className="mb-5 grid grid-cols-2 gap-2">{designs.options.map((o) => card(o.id, rhythm.variant === o.id, () => changed(`${title}: ${o.name.toLowerCase()}`, (p) => setSectionVariant(p, page.id, sel.key, o.id)),
+                sectionShot(sel.id, { ...rhythm, variant: o.id }), o.name, o.line))}</ul>
+            </>}
+            {looks.length > 1 && <p className="mb-2 text-xs text-muted">The same job, as another part. Your content and effects carry over when they fit.</p>}
+            <ul className="space-y-2">{looks.length > 1 && looks.map((id) => card(id, id === sel.id, () => { if (id !== sel.id) changed(`${cap(lookOfSection(sel.id))} → ${lookOfSection(id)}`, (p) => replaceSection(p, page.id, sel.key, id)) }, sectionOption(id), cap(lookOfSection(id)), bestWhen(id)))}</ul>
           </>)}
-        </Accordion>
+          {t === 'photos' && ph && <>
+            <p className="mb-2 text-xs text-muted">How the photos sit in this part only.{ph.chosen && <> <button type="button" className="link" onClick={() => changed('Photo layout back to the recommendation', (p) => setSectionPhotos(p, page.id, sel.key, undefined))}>Use the recommendation</button></>}</p>
+            <ul className="grid grid-cols-2 gap-2">{Object.values(imagePresentations).map((x) => card(x.id, ph.id === x.id, () => changed(`${title}: photos as ${x.name}`, (p) => setSectionPhotos(p, page.id, sel.key, x.id)),
+              photoShot(x.id), x.name, x.id === ph.recommended ? 'Recommended' : x.piece ? 'Ready code' : x.ideal))}</ul>
+          </>}
+        </div>
       </>
     )
   })()
@@ -420,12 +461,20 @@ export function PagesStep({ plan, initialFocus }: { plan: KitPlan; initialFocus?
             {page.sections.length > 0 && line(page.sections.length)}
             {chromeRow('footer')}
           </ol>
-          <p className="mt-2 text-xs text-muted">Drag a part to move it. Click it to change its look, photos or effects.</p>
+          <p className="mt-2 text-xs text-muted">Drag a part to move it. Click it to give it effects, another design or other photos.</p>
         </section>
 
         {/* Right: one job at a time */}
-        <aside aria-label={sel || chromeSel ? 'This part' : 'Add to page'} className="min-w-0 rounded-xl border border-line bg-white/60 p-4 [scrollbar-color:var(--color-line)_transparent] [scrollbar-width:thin] lg:sticky lg:top-40 lg:max-h-[calc(100svh-11rem)] lg:overflow-y-auto">
-          {chromeSel ? chromeInspector(chromeSel) : sel ? inspector : library}
+        <aside ref={panel} aria-label={tab === 'edit' ? 'This part' : 'Add to page'} className="min-w-0 rounded-xl border border-line bg-white/60 p-4 [scrollbar-color:var(--color-line)_transparent] [scrollbar-width:thin] lg:sticky lg:top-40 lg:max-h-[calc(100svh-11rem)] lg:overflow-y-auto">
+          <div role="tablist" aria-label="What this column does" className="mb-4 grid grid-cols-2 gap-1 rounded-lg bg-secondary p-1 text-sm">
+            <button type="button" role="tab" aria-selected={tab === 'add'} onClick={() => setTab('add')}
+              className={`inline-flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 ${tab === 'add' ? 'bg-white font-medium shadow-sm' : 'text-ink-2 hover:text-ink'}`}><Plus size={14} aria-hidden />Add a part</button>
+            <button type="button" role="tab" aria-selected={tab === 'edit'} disabled={!sel && !chromeSel} onClick={() => setTab('edit')} title={sel || chromeSel ? undefined : 'Click a part in the page to edit it'}
+              className={`inline-flex min-w-0 items-center justify-center gap-1.5 rounded-md px-2 py-1.5 disabled:opacity-45 ${tab === 'edit' ? 'bg-white font-medium shadow-sm' : 'text-ink-2 hover:text-ink'}`}>
+              <Pencil size={13} aria-hidden /><span className="truncate">{chromeSel ? `Edit ${chromeSel === 'navbar' ? 'menu' : 'footer'}` : sel ? `Edit ${(sel.id === 'hero' ? heroTitle(page, sel) : jobOf(sel.id)).toLowerCase()}` : 'Edit a part'}</span>
+            </button>
+          </div>
+          {tab === 'edit' && chromeSel ? chromeInspector(chromeSel) : tab === 'edit' && sel ? inspector : library}
         </aside>
       </>}
     </div>

@@ -1,0 +1,3 @@
+:HL["/live/night-shift/_next/static/chunks/3804d077c4xl6.css","style"]
+:HL["/live/night-shift/_next/static/chunks/0w2u1kjg89brh.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"H3JOsVIp2aKty21h-_jwn"}

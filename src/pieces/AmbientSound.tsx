@@ -41,6 +41,8 @@ export function AmbientSound({ src, label = 'Sound', volume = 0.4, placement = '
     let saved = false
     try { saved = localStorage.getItem(KEY) === 'on' } catch { /* private mode */ }
     if (!saved) return
+    // A saved choice can only be read after hydration (the server has no localStorage), so it is restored here.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOn(true)
     wanted.current = true
     // Browsers block sound until a gesture; a press on the switch itself is handled by its own click.

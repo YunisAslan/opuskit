@@ -1,0 +1,81 @@
+{
+  "recipe": "neo-brutalist-commerce",
+  "title": "Kür Delta Watch — Neo-Brutalist Foundation",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon — src/components/Logo.tsx (currentColor, so it works dark and light) and src/app/icon.svg",
+      "specs": "SVG; dark and light versions; square symbol for favicon",
+      "note": "A simple placeholder mark made for launch (a channel splitting into three); replace with a designed logo when there is one."
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "find",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Big Shoulders, Hanken Grotesk (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "note": "Written for the site; names, figures, quotes and journal posts are invented placeholders — replace with the real ones before launch."
+    },
+    "finalHeadlineCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Hero and section statements",
+      "specs": "Short: 3–8 words each; written before layout"
+    },
+    "punctuationImages": {
+      "required": false,
+      "level": "optional",
+      "status": "have",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Between type sections",
+      "specs": "High contrast, simple subjects",
+      "note": "The user's 19 photos in public/media/, keyed in src/config/assets.ts (sources: media-src/SOURCES.md)."
+    },
+    "filmForTheBand": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Pexels Videos / Coverr",
+      "replaceWith": "user-owned-video",
+      "usage": "The ambient video hero band mid-page — its own film, not the first screen's media",
+      "specs": "1920×1080 min, 8–15 s, one slow continuous shot, no text burned in; run it through scripts/prepare-video.sh",
+      "files": [
+        "public/media/heroVideo.mp4",
+        "public/media/mobileVideoEncode.mp4"
+      ],
+      "note": "Prepared with scripts/prepare-video.sh."
+    },
+    "bandPoster": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Shown before the band’s film loads and on reduced motion",
+      "specs": "First frame of the film, same crop",
+      "files": [
+        "public/media/posterImage.jpg",
+        "public/media/posterMobile.jpg"
+      ]
+    }
+  }
+}

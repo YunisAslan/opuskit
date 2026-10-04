@@ -126,7 +126,7 @@ export const recipeSeeds: RecipeSeed[] = [
   {
     slug: 'organic-modern', number: '06', title: 'Organic Modern', image: 'ceramics',
     summary: 'A tactile brand site with a natural palette, material photography, soft geometry, editorial sections and gentle motion.',
-    spec: { purpose: 'ecommerce', direction: 'organic-modern', characters: ['warm', 'elegant'], lead: 'photography', motion: 'subtle', layout: 'balanced', palette: 'celery-room', typography: 'corner-bakery' },
+    spec: { purpose: 'ecommerce', direction: 'organic-modern', characters: ['warm', 'elegant'], lead: 'photography', motion: 'subtle', layout: 'balanced', palette: 'yerba-leaf', typography: 'corner-bakery' },
     mood: ['Warm', 'Tactile', 'Grounded'],
     personality: 'A maker who explains how things are made, with care.',
     principles: ['Materials over graphics', 'Soft geometry — arches and gentle radii, never bubbly', 'Calm, editorial pacing between product moments', 'Colors taken from the products themselves'],
@@ -171,7 +171,7 @@ export const recipeSeeds: RecipeSeed[] = [
   {
     slug: 'art-direction-studio', number: '08', title: 'Art Direction Studio', image: 'studio',
     summary: 'A studio site with unusual layouts, experimental media, asymmetric composition, art-directed typography and expressive transitions.',
-    spec: { purpose: 'studio', direction: 'art-direction', characters: ['playful', 'sophisticated'], lead: 'photography', motion: 'dynamic', layout: 'experimental', palette: 'rose-leaf', typography: 'stretch-test' },
+    spec: { purpose: 'studio', direction: 'art-direction', characters: ['playful', 'sophisticated'], lead: 'photography', motion: 'dynamic', layout: 'experimental', palette: 'bubblegum', typography: 'stretch-test' },
     mood: ['Expressive', 'Unexpected', 'Crafted'],
     personality: 'A creative director who breaks rules knowingly.',
     principles: ['Every section is composed, never templated', 'Break the grid on purpose, keep one anchor per section', 'Transitions are part of the concept', 'One surprising interaction per page, not ten'],

@@ -1,10 +1,10 @@
 // OpusKit section — Menu: real HTML (readable, searchable, translatable) in two columns, prices aligned.
 export type MenuGroup = { name: string; items: { name: string; description?: string; price: string }[] }
 
-export function MenuSection({ title, groups, note }: { title: string; groups: MenuGroup[]; note?: string }) {
+export function MenuSection({ tone, title, groups, note }: { tone?: 'ground' | 'surface' | 'inverse' | 'chapter'; title: string; groups: MenuGroup[]; note?: string }) {
   return (
-    <section className="px-5 py-24 md:px-10 md:py-32">
-      <div className="mx-auto max-w-[1440px]">
+    <section data-tone={tone === 'ground' ? undefined : tone} className="px-(--gutter) py-(--section-y)">
+      <div className="mx-auto max-w-(--container)">
         <h2 className="type-heading">{title}</h2>
         <div className="mt-12 grid gap-x-16 gap-y-12 md:grid-cols-2">
           {groups.map((g) => (

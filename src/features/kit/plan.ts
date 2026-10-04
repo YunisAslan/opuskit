@@ -5,12 +5,13 @@
 // Behaviours (how headlines, links and buttons act; whole-site extras) are site-wide; moments sit on one section and stay there.
 // Pure (no storage, no React), so check.ts tests it and the builder recomposes the recipe on every change.
 
+import { sectionVariants } from '@/data/section-variants'
 import { blockFor } from '@/data/blocks'
 import { accentSets, palettes, typography } from '@/data/ingredients'
 import { EFFECTS, concepts, footerStyles, heroes, imagePresentations, navStyles, pageTypes, sections, shapeStyles } from '@/data/patterns'
 import { behaviourOf, behaviours, isMoment, pieces } from '@/data/pieces'
 import { directions, goals, motionLevels, purposes } from '@/data/taxonomy'
-import { PHOTO_SECTIONS, defaultPagesFor, isValidSpec, normalizeSpec, recommendSectionPhotos } from '@/features/recipes/engine'
+import { PHOTO_SECTIONS, defaultPagesFor, isValidSpec, normalizeSpec, recommendSectionPhotos, resolveHero, recommendPalette } from '@/features/recipes/engine'
 import type { BehaviourId, ChromeId, DirectionId, ImagePresentationId, KitPlan, MediaPlan, MotionLevel, PageSpec, PageTypeId, PieceId, PlanPage, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
 
 export const EMPTY_PLAN: KitPlan = { pages: [] }
@@ -25,23 +26,23 @@ const inst = (id: SectionId): PlanSection => ({ key: key(), id, pieces: [] })
 
 /** Content sections you can place on a page (navbar, hero and footer are the page frame, set elsewhere). */
 export const sectionGroups: { name: string; job: string; line: string; ids: SectionId[] }[] = [
-  { name: 'Say who you are', job: 'Introduce yourself', line: 'Statements and story', ids: ['intro', 'manifesto', 'about', 'editorial-story', 'team'] },
-  { name: 'Show the work', job: 'Show your work', line: 'Projects and atmosphere', ids: ['featured-work', 'case-study', 'gallery'] },
+  { name: 'Say who you are', job: 'Introduce yourself', line: 'Statements and story', ids: ['intro', 'manifesto', 'about', 'editorial-story', 'timeline', 'team'] },
+  { name: 'Show the work', job: 'Show your work', line: 'Projects and atmosphere', ids: ['featured-work', 'case-study', 'gallery', 'listen', 'specs'] },
   { name: 'Proof', job: 'Build trust', line: 'Who vouches for you', ids: ['testimonials', 'clients', 'stats', 'press', 'trust'] },
-  { name: 'Explain the offer', job: 'Explain what you offer', line: 'What you do and how', ids: ['chapters', 'services', 'process', 'how-it-works', 'feature-grid', 'feature-rows', 'integrations', 'pricing'] },
-  { name: 'Sell', job: 'Show your products', line: 'Products and collections', ids: ['collection', 'lookbook', 'product-grid', 'product-highlight', 'categories'] },
+  { name: 'Explain the offer', job: 'Explain what you offer', line: 'What you do and how', ids: ['chapters', 'services', 'curriculum', 'process', 'how-it-works', 'feature-grid', 'feature-rows', 'integrations', 'pricing'] },
+  { name: 'Sell', job: 'Show your products', line: 'Products and collections', ids: ['product-buy', 'collection', 'lookbook', 'product-grid', 'product-highlight', 'categories'] },
   { name: 'Bring people in', job: 'Help people visit', line: 'Food, bookings, places, programmes', ids: ['menu', 'reservation', 'location', 'schedule'] },
   // Three different jobs, not three looks of one: each ends a page in its own way (the CTA band asks mid-page).
-  { name: 'Next step', job: 'Ask for the next step', line: 'One clear action, mid-page or at the end', ids: ['contact-cta', 'cta-band'] },
+  { name: 'Next step', job: 'Ask for the next step', line: 'One clear action, mid-page or at the end', ids: ['contact-cta', 'cta-band', 'donate'] },
   { name: 'Questions', job: 'Answer questions', line: 'What people ask before they decide', ids: ['faq'] },
-  { name: 'News', job: 'Share news', line: 'Posts, updates, what’s new', ids: ['journal', 'newsletter'] },
+  { name: 'News', job: 'Share news', line: 'Posts, updates, what’s new', ids: ['article', 'journal', 'newsletter'] },
 ]
 
 /** A section's job on the page, in plain words ("Show your work"); sections doing the same job can replace each other. */
 export const jobOf = (id: SectionId) => sectionGroups.find((g) => g.ids.includes(id))?.job ?? sections[id].name
 
 export const pageGroups: { name: string; ids: PageTypeId[] }[] = [
-  { name: 'Main pages', ids: ['home', 'about', 'work', 'services', 'contact', 'journal', 'gallery', 'team', 'testimonials', 'press', 'careers'] },
+  { name: 'Main pages', ids: ['home', 'about', 'work', 'project', 'services', 'contact', 'journal', 'article', 'gallery', 'team', 'testimonials', 'press', 'careers', 'donate', 'listen'] },
   { name: 'Selling', ids: ['shop', 'collections', 'product-detail', 'cart', 'checkout', 'account', 'pricing', 'features', 'comparison', 'size-guide', 'shipping-returns', 'gift-cards', 'wholesale'] },
   { name: 'Hospitality & events', ids: ['menu', 'reservations', 'order-online', 'catering', 'locations'] },
   { name: 'Help & legal', ids: ['faq', 'newsletter', 'sign-in', 'sign-up', 'privacy-policy', 'terms-of-service', 'cookie-policy', 'accessibility', 'not-found'] },
@@ -51,18 +52,22 @@ export const pageGroups: { name: string; ids: PageTypeId[] }[] = [
  *  Pages with none (sign-in, legal, 404…) are standard pages written for you; they need no sections. */
 export const pageSuggestions: Partial<Record<PageTypeId, SectionId[]>> = {
   home: ['intro', 'featured-work', 'feature-rows', 'categories', 'clients', 'press', 'manifesto', 'product-highlight', 'how-it-works', 'schedule', 'gallery', 'trust', 'cta-band', 'faq', 'newsletter', 'contact-cta'],
-  work: ['featured-work', 'case-study', 'clients', 'contact-cta'],
-  about: ['about', 'editorial-story', 'process', 'clients', 'press', 'contact-cta'],
+  work: ['featured-work', 'case-study', 'listen', 'clients', 'contact-cta'],
+  about: ['about', 'editorial-story', 'timeline', 'process', 'clients', 'press', 'contact-cta'],
   contact: ['contact-cta', 'location', 'faq'],
   services: ['services', 'process', 'feature-rows', 'pricing', 'trust', 'clients', 'cta-band', 'faq', 'contact-cta'],
   collections: ['collection', 'lookbook', 'editorial-story', 'categories'],
   shop: ['categories', 'product-grid', 'product-highlight', 'collection', 'trust', 'faq', 'newsletter'],
-  'product-detail': ['product-highlight', 'gallery', 'feature-rows', 'trust', 'faq', 'product-grid'],
+  'product-detail': ['product-buy', 'product-highlight', 'specs', 'gallery', 'testimonials', 'feature-rows', 'trust', 'faq', 'product-grid'],
+  project: ['case-study', 'gallery', 'specs', 'editorial-story', 'testimonials', 'featured-work'],
+  article: ['article', 'journal', 'newsletter'],
   cart: ['product-grid'],
-  features: ['feature-grid', 'feature-rows', 'how-it-works', 'integrations', 'product-highlight', 'pricing', 'cta-band', 'faq', 'contact-cta'],
+  features: ['curriculum', 'specs', 'feature-grid', 'feature-rows', 'how-it-works', 'integrations', 'product-highlight', 'pricing', 'cta-band', 'faq', 'contact-cta'],
   pricing: ['pricing', 'trust', 'faq', 'clients', 'contact-cta'],
+  donate: ['donate', 'trust', 'stats', 'testimonials', 'faq'],
+  listen: ['listen', 'intro', 'featured-work', 'newsletter', 'contact-cta'],
   faq: ['faq', 'contact-cta'],
-  journal: ['journal', 'categories', 'manifesto', 'newsletter'],
+  journal: ['journal', 'categories', 'article', 'newsletter'],
   experiment: ['gallery', 'editorial-story', 'manifesto'],
   menu: ['menu', 'gallery', 'reservation'],
   gallery: ['gallery', 'lookbook'],
@@ -122,7 +127,10 @@ export function missingPages(plan: KitPlan): { type: PageTypeId; label: string; 
 }
 
 /** Kinds of site to start from — each brings its usual pages and sections. */
-export const starters = (Object.values(purposes)).filter((p) => p.id !== 'other').map((p) => ({ id: p.id, name: p.name, pages: defaultPagesFor(p.id).map((x) => x.label) }))
+export const starters = (Object.values(purposes)).filter((p) => p.id !== 'other').flatMap((p) => [
+  { id: p.id, starter: undefined as string | undefined, name: p.name, pages: defaultPagesFor(p.id).map((x) => x.label) },
+  ...(p.starters ?? []).map((s) => ({ id: p.id, starter: s.id as string | undefined, name: s.name, pages: defaultPagesFor(p.id, s.id).map((x) => x.label) })),
+])
 
 /** Pieces that belong on this section: made for it, and no second piece for a job the section already has. */
 export function piecesFor(section: PlanSection): PieceId[] {
@@ -141,6 +149,9 @@ export function sectionPhotos(plan: KitPlan, s: PlanSection): { id: ImagePresent
 /** Picks how one photo section shows its photos (undefined = back to the recommendation). */
 export const setSectionPhotos = (plan: KitPlan, pageId: string, k: string, id: ImagePresentationId | undefined) =>
   mapPage(plan, pageId, (p) => ({ ...p, sections: p.sections.map((s) => { if (s.key !== k) return s; const n = { ...s, photos: id }; if (!id) delete n.photos; return n }) }))
+/** Picks the design of one multi-design section (undefined = back to the look's own). */
+export const setSectionVariant = (plan: KitPlan, pageId: string, k: string, id: string | undefined) =>
+  mapPage(plan, pageId, (p) => ({ ...p, sections: p.sections.map((s) => { if (s.key !== k) return s; const n = { ...s, variant: id }; if (!id) delete n.variant; return n }) }))
 
 // ─── Behaviour, site-wide ───────────────────────────────────────────────────
 
@@ -162,10 +173,10 @@ const newPage = (type: PageTypeId, label = pageTypes[type].name): PlanPage => {
 }
 
 /** A starter replaces the pages (the style stays); `null` = start blank with just a Home page. */
-export function start(plan: KitPlan, purpose: PurposeId | null): KitPlan {
+export function start(plan: KitPlan, purpose: PurposeId | null, starter?: string): KitPlan {
   if (!purpose) return { ...plan, purpose: undefined, pages: [newPage('home')] }
   // Every page arrives filled: one with nothing listed gets what that kind of page usually starts with.
-  return { ...plan, purpose, pages: defaultPagesFor(purpose).map((p) => ({ id: key(), type: p.type, label: p.label, purpose: p.purpose, sections: (p.sections.length ? p.sections : newPage(p.type).sections.map((s) => s.id)).map(inst) })) }
+  return { ...plan, purpose, pages: defaultPagesFor(purpose, starter).map((p) => ({ id: key(), type: p.type, label: p.label, purpose: p.purpose, sections: (p.sections.length ? p.sections : newPage(p.type).sections.map((s) => s.id)).map(inst) })) }
 }
 
 export type StyleKey = 'direction' | 'palette' | 'typography' | 'shape' | 'nav' | 'footer' | 'rotation' | 'motion' | 'concept'
@@ -243,6 +254,21 @@ export function setHero(plan: KitPlan, hero: KitPlan['hero']): KitPlan {
   if (hero && first && !next.pages.some((p) => p.sections.some((s) => s.id === 'hero'))) next.pages = [{ ...first, sections: [inst('hero'), ...first.sections] }, ...next.pages.slice(1)]
   return next
 }
+/** What one film/image part shows: its own pick, else the site's first screen. */
+export const heroOf = (plan: KitPlan, s: PlanSection): KitPlan['hero'] => s.hero ?? plan.hero
+
+/** Picks what one film/image part shows, and only that one. The site's first film/image part is its first screen —
+ *  it sets the media and movement (`setHero`); every other part then keeps what it showed before. */
+export function setPartHero(plan: KitPlan, pageId: string, k: string, hero: KitPlan['hero']): KitPlan {
+  const all = plan.pages.flatMap((p) => p.sections.filter((s) => s.id === 'hero'))
+  const map = (f: (s: PlanSection) => PlanSection): KitPlan => ({ ...plan, pages: plan.pages.map((p) => ({ ...p, sections: p.sections.map((s) => (s.id === 'hero' ? f(s) : s)) })) })
+  if (all[0]?.key === k) {
+    const was = plan.hero ?? resolveHero(planToSpec(plan)).id
+    return setHero(map((s) => (s.key === k ? (({ hero: _, ...rest }) => rest)(s) : { ...s, hero: s.hero ?? was })), hero)
+  }
+  return map((s) => (s.key === k ? { ...s, hero: hero ?? plan.hero ?? resolveHero(planToSpec(plan)).id } : s))
+}
+
 /** The big film/image part's name where it sits: at the top it is the page's first screen, lower down a band. */
 export const heroTitle = (p: PlanPage, s: PlanSection) => (p.sections[0]?.key === s.key ? 'First screen' : 'Film or image')
 
@@ -327,7 +353,7 @@ export function planToSpec(plan: KitPlan): RecipeSpec {
   let motion = LEVEL[Math.max(...need.map((m) => LEVEL.indexOf(m)))]
   if (plan.hero && !heroes[plan.hero].motion.includes(motion)) motion = heroes[plan.hero].motion.at(-1)!
   const lead = effect?.lead ?? same?.lead ?? dir.defaults.lead
-  const palette = plan.palette ?? dir.defaults.palette
+  const palette = plan.palette ?? recommendPalette({ direction: dir.id, purpose, lead })
   return normalizeSpec({
     base: same?.base ?? dir.baseRecipe, brief: { ...from?.brief, name: plan.name, offer: plan.about, goal: plan.goal, photos: plan.photoNote }, purpose, direction: dir.id, characters: same?.characters ?? (dir.voice ? [dir.voice] : []),
     lead, motion, hero: plan.hero ?? (lead === same?.lead ? same.hero : undefined), layout: same?.layout ?? dir.defaults.layout,
@@ -336,6 +362,8 @@ export function planToSpec(plan: KitPlan): RecipeSpec {
     mediaPlan: plan.mediaPlan ?? from?.mediaPlan ?? (lead === 'video' || lead === '3d' ? 'temporary' : 'have'),
     nav: plan.nav, footer: plan.footer, shape: plan.shape, rotation: plan.rotation, concept: plan.concept,
     sectionPhotos: plan.pages.flatMap((p) => p.sections.flatMap((s, index) => (s.photos ? [{ page: p.id, index, presentation: s.photos }] : []))),
+    sectionVariants: plan.pages.flatMap((p) => p.sections.flatMap((s, index) => (s.variant ? [{ page: p.id, index, variant: s.variant }] : []))),
+    heroBands: plan.pages.flatMap((p) => p.sections.flatMap((s, index) => (s.id === 'hero' && s.hero && s.hero !== plan.hero ? [{ page: p.id, index, hero: s.hero }] : []))),
     signatures: same?.signatures ?? [], // what you see is what you get: no touches the user did not place
     pieces: [...new Set(placements.map((x) => x.piece))], piecePlacements: placements,
     pages, target: plan.target ?? 'not-sure',
@@ -367,6 +395,8 @@ export function cleanPlan(x: unknown): KitPlan {
         const n: PlanSection = { key: typeof s.key === 'string' ? s.key : key(), id: s.id, pieces: Array.isArray(s.pieces) ? [...new Set(s.pieces.filter((id) => Object.hasOwn(pieces, id)))] : [] }
         const ph = s.photos ?? (isPhotoSection(s.id) ? known<ImagePresentationId>(p.imagePresentation, imagePresentations) : undefined) // older plans: one photo layout for the whole site
         if (ph && isPhotoSection(s.id) && Object.hasOwn(imagePresentations, ph)) n.photos = ph
+        if (s.id === 'hero' && s.hero && Object.hasOwn(heroes, s.hero)) n.hero = s.hero
+        if (typeof s.variant === 'string' && sectionVariants[s.id]?.options.some((o) => o.id === s.variant)) n.variant = s.variant
         return n
       }),
     ...(Array.isArray(pg.hide) && pg.hide.some((c) => c === 'navbar' || c === 'footer') ? { hide: [...new Set(pg.hide.filter((c) => c === 'navbar' || c === 'footer'))] } : {}),
@@ -393,7 +423,7 @@ export function specToPlan(spec: RecipeSpec, fromId?: string): KitPlan {
   // A placement pointing at a page or section that isn't there counts as unplaced, so the piece still finds a home.
   const placed = (spec.piecePlacements ?? []).filter((x) => x.page === '*' || spec.pages.find((p) => p.id === x.page)?.sections[x.index])
   const pages: PlanPage[] = spec.pages.map((p) => ({ id: p.id, type: p.type, label: p.label, purpose: p.purpose, hide: p.hide,
-    sections: p.sections.map((id, i) => ({ key: key(), id, pieces: placed.filter((x) => x.page === p.id && x.index === i).map((x) => x.piece), photos: spec.sectionPhotos?.find((x) => x.page === p.id && x.index === i)?.presentation })) }))
+    sections: p.sections.map((id, i) => ({ key: key(), id, pieces: placed.filter((x) => x.page === p.id && x.index === i).map((x) => x.piece), photos: spec.sectionPhotos?.find((x) => x.page === p.id && x.index === i)?.presentation, hero: spec.heroBands?.find((x) => x.page === p.id && x.index === i)?.hero, variant: spec.sectionVariants?.find((x) => x.page === p.id && x.index === i)?.variant })) }))
   const sitePieces = placed.filter((x) => x.page === '*').map((x) => x.piece)
   for (const id of spec.pieces ?? []) {
     if (placed.some((x) => x.piece === id)) continue

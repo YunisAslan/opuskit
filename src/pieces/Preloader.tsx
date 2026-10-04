@@ -16,6 +16,7 @@ export function Preloader({ brand, maxMs = 2500 }: { brand: string; maxMs?: numb
   const shown = phase !== 'off'
 
   useLayoutEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- on purpose, before paint: a repeat visit must never see the panel
     try { if (sessionStorage.getItem(KEY)) { setPhase('off'); return } } catch { /* storage blocked: once per mount */ }
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches
     let fonts = 0, loaded = document.readyState === 'complete' ? 1 : 0, value = 0, raf = 0

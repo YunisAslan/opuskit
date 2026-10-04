@@ -1,0 +1,86 @@
+{
+  "recipe": "typography-first",
+  "title": "Sela Mor — Monochrome Minimal Personal Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon",
+      "note": "Made for the site: src/components/Logo.tsx (mark + wordmark, works on black and white) and src/app/icon.svg (favicon)"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Mona Sans, Martian Mono (Google Fonts)",
+      "note": "Mona Sans and Martian Mono via next/font/google (src/app/layout.tsx)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "note": "Written in the recipe voice: src/content/site.ts and the pages in src/app/"
+    },
+    "finalHeadlineCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Hero and section statements",
+      "specs": "Short: 3–8 words each; written before layout",
+      "note": "Chapter words and statements in src/app/ and src/content/site.ts"
+    },
+    "punctuationImages": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Between type sections",
+      "specs": "High contrast, simple subjects",
+      "note": "Not used: the photos are the works themselves (public/media/work-*.jpg, gallery-*.jpg, portrait.jpg, field-recording.jpg, stage.jpg)"
+    },
+    "filmForTheBand": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Pexels Videos / Coverr",
+      "replaceWith": "user-owned-video",
+      "usage": "The scroll-controlled video band mid-page — its own film, not the first screen's media",
+      "specs": "1920×1080 min, 15–30 s, one continuous shot with no cuts and a slow steady camera move (it plays as visitors scroll); scripts/prepare-video.sh makes the scrub-ready encode",
+      "note": "public/media/scrubReadyEncode.mp4 (desktop scrub), mobileVideoEncode.mp4 (phones), heroVideo.mp4; prepared with scripts/prepare-video.sh. The source is 10 s, shorter than the 15–30 s asked for"
+    },
+    "bandPoster": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Shown before the band’s film loads and on reduced motion",
+      "specs": "First frame of the film, same crop",
+      "note": "public/media/posterImage.jpg and posterMobile.jpg"
+    },
+    "ambientSound": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Pixabay Music / Freesound (check each file’s licence)",
+      "replaceWith": "user-owned-audio",
+      "usage": "The sound switch (AmbientSound) — off until the visitor turns it on",
+      "specs": "One calm, seamless loop of 30–90 s; MP3 128 kbps, ≤ 1.5 MB; no voice or lyrics; quiet (about −18 LUFS)",
+      "note": "public/media/ambientSound.mp3, a 40 s seamless loop"
+    }
+  }
+}

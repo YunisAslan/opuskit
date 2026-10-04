@@ -1,0 +1,5 @@
+:HL["/live/sela-mor/_next/static/chunks/1m5uwqf8kvowq.css","style"]
+:HL["/live/sela-mor/_next/static/media/7a642828b0ad1018-s.p.0z0hpjmp_9hhf.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/live/sela-mor/_next/static/media/9721f9d4df761ffd-s.p.1dxjg4ufbxory.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/live/sela-mor/_next/static/media/c89730c3ffa99552-s.p.1zjat_zsa1d11.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}},"staleTime":300,"buildId":"fEiVdeEn0BMisfxPzAbAI"}

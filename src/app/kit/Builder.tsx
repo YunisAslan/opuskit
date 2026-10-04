@@ -84,7 +84,7 @@ export function Builder() {
   useGoogleFonts(look.type.googleFamilies)
 
   if (!ready) return null
-  if (!plan.pages.length) return <Start onStart={(p) => { updatePlan((x) => start(x, p)); go('style') }} />
+  if (!plan.pages.length) return <Start onStart={(p, s) => { updatePlan((x) => start(x, p, s)); go('style') }} />
 
 
   return (
@@ -110,7 +110,7 @@ const CARD: Partial<Record<PurposeId, [DirectionId, string]>> = {
 }
 
 /** First visit: pick the kind of site (it brings its usual pages) or start from a blank Home page — or from a real site. */
-function Start({ onStart }: { onStart: (p: PurposeId | null) => void }) {
+function Start({ onStart }: { onStart: (p: PurposeId | null, starter?: string) => void }) {
   return (
     <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-12 md:px-8">
       <p className="text-sm text-muted">Kit · build a site in three steps: design, pages, recipe</p>
@@ -123,11 +123,11 @@ function Start({ onStart }: { onStart: (p: PurposeId | null) => void }) {
         {starters.map((s) => {
           const card = CARD[s.id]
           return (
-            <li key={s.id}>
-              <button type="button" onClick={() => onStart(s.id)} className="choice block h-full w-full overflow-hidden text-left">
+            <li key={s.id + (s.starter ?? '')}>
+              <button type="button" onClick={() => onStart(s.id, s.starter)} className="choice block h-full w-full overflow-hidden text-left">
                 {card && <LazyMount className="pointer-events-none overflow-hidden border-b border-line"><SitePreview {...previewFromDirection(card[0], { title: card[1] })} /></LazyMount>}
                 <span className="block p-4">
-                  <span className="block font-medium">{purposes[s.id].name}</span>
+                  <span className="block font-medium">{s.name}</span>
                   <span className="mt-1 block text-sm text-muted">{s.pages.join(' · ')}</span>
                 </span>
               </button>

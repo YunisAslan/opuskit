@@ -1,0 +1,91 @@
+{
+  "recipe": "swiss-modern",
+  "title": "Aster House — Architectural Minimal Property Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon",
+      "note": "Made for the build: src/components/Logo.tsx (mark + wordmark, currentColor) and src/app/icon.svg (favicon)."
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Literata, Host Grotesk (Google Fonts)",
+      "note": "Literata and Host Grotesk via next/font (self-hosted at build)."
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "note": "Written for the build; house figures, prices, the architect, the sales office and contact details are invented."
+    },
+    "heroVideo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Owner-chosen film (Pexels 7578547), prepared with scripts/prepare-video.sh",
+      "replaceWith": "user-owned-video",
+      "usage": "Hero (loop or scroll-controlled)",
+      "specs": "1920×1080 min, 5–15s, slow continuous motion, no text burned in"
+    },
+    "posterImage": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Owner-chosen film (Pexels 7578547), prepared with scripts/prepare-video.sh",
+      "replaceWith": "user-owned-images",
+      "usage": "Shown before video loads and on reduced motion",
+      "specs": "First frame of the video, same crop"
+    },
+    "mobileVideoEncode": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "Owner-chosen film (Pexels 7578547), prepared with scripts/prepare-video.sh",
+      "replaceWith": "user-owned-video",
+      "usage": "Hero on small screens",
+      "specs": "1080×1920 (9:16) or 1080×1350 (4:5), ≤ 3MB"
+    },
+    "supportingImages": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Pexels stand-ins, see media-src/SOURCES.md",
+      "replaceWith": "user-owned-images",
+      "usage": "Sections between video moments",
+      "specs": "Graded to match the video",
+      "note": "15 photos in public/media/ (cliff, hours, rooms, terraces, architect): stand-ins for the real house; keys in src/config/assets.ts."
+    },
+    "secondaryVideo": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Pexels Videos / Coverr",
+      "replaceWith": "user-owned-video",
+      "usage": "Chapter transitions",
+      "specs": "Same grade as the hero"
+    },
+    "scrubReadyEncode": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Owner-chosen film (Pexels 7578547), prepared with scripts/prepare-video.sh",
+      "replaceWith": "user-owned-video",
+      "usage": "Scroll-controlled hero",
+      "specs": "Made by scripts/prepare-video.sh from the ORIGINAL file: CRF 20, keyframe every 6 frames, ≤ 1920 px"
+    }
+  }
+}

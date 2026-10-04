@@ -1,0 +1,140 @@
+{
+  "opuskit": 1,
+  "recipe": "typography-first",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "typography-first",
+    "brief": {
+      "name": "Sela Mor",
+      "offer": "Sound artist and composer from Baku: field recordings of wind, water and machines, turned into music for rooms, films and long nights.",
+      "goal": "contact"
+    },
+    "purpose": "personal-brand",
+    "direction": "monochrome-minimal",
+    "characters": [],
+    "lead": "typography",
+    "motion": "immersive",
+    "hero": "kinetic-type",
+    "layout": "editorial",
+    "palette": "black-box",
+    "typography": "data-sheet",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "have",
+    "nav": "split-pill",
+    "footer": "signature",
+    "concept": "giant-chapters",
+    "heroBands": [
+      {
+        "page": "bc946phc",
+        "index": 2,
+        "hero": "scroll-video"
+      }
+    ],
+    "signatures": [],
+    "pieces": [
+      "image-trail",
+      "text-roll",
+      "magnetic",
+      "fade-transition",
+      "ambient-sound"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "image-trail",
+        "page": "bc946phc",
+        "index": 1
+      },
+      {
+        "piece": "text-roll",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "magnetic",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "fade-transition",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "ambient-sound",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "bc946phc",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "featured-work",
+          "hero",
+          "about",
+          "schedule",
+          "clients",
+          "newsletter"
+        ]
+      },
+      {
+        "id": "5nhxpi50",
+        "type": "work",
+        "label": "Works",
+        "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+        "sections": [
+          "featured-work",
+          "case-study",
+          "gallery",
+          "clients"
+        ]
+      },
+      {
+        "id": "rk5hnztz",
+        "type": "custom",
+        "label": "Listen",
+        "purpose": "Let people hear the work: six tracks from her records and installations, each with a player, its length, where it was recorded and what it was made for; one plays at a time.",
+        "sections": [
+          "intro",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "4u9hsdi3",
+        "type": "custom",
+        "label": "Live",
+        "purpose": "Where to hear her next: upcoming performances and installations with dates, places and tickets, then the last season’s shows.",
+        "sections": [
+          "schedule",
+          "newsletter"
+        ]
+      },
+      {
+        "id": "jjyn3acv",
+        "type": "about",
+        "label": "About",
+        "purpose": "Put a human face and point of view on the work; build trust.",
+        "sections": [
+          "about",
+          "press",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "nl0gqrvm",
+        "type": "contact",
+        "label": "Contact",
+        "purpose": "Give one clear, low-friction way to get in touch.",
+        "sections": [
+          "contact-cta"
+        ]
+      }
+    ],
+    "target": "not-sure"
+  }
+}

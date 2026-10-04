@@ -1,0 +1,114 @@
+{
+  "opuskit": 1,
+  "recipe": "digital-futurism",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "digital-futurism",
+    "brief": {
+      "name": "Night Shift",
+      "offer": "An eight-week online course in film colour grading, taught live by a working colourist: from flat log footage to a finished grade, one real shot at a time.",
+      "goal": "signup"
+    },
+    "purpose": "course",
+    "direction": "technical-minimal",
+    "characters": [],
+    "lead": "3d",
+    "motion": "immersive",
+    "hero": "webgl-scene",
+    "layout": "grid",
+    "palette": "grading-suite",
+    "typography": "control-room",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "temporary",
+    "nav": "bottom-dock",
+    "footer": "contact",
+    "concept": "live-console",
+    "signatures": [],
+    "pieces": [
+      "image-comparison",
+      "text-scramble"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "image-comparison",
+        "page": "9yknp0mj",
+        "index": 2
+      },
+      {
+        "piece": "image-comparison",
+        "page": "wkdaoal1",
+        "index": 2
+      },
+      {
+        "piece": "text-scramble",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "9yknp0mj",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "intro",
+          "case-study",
+          "process",
+          "about",
+          "testimonials",
+          "pricing",
+          "faq",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "wkdaoal1",
+        "type": "features",
+        "label": "Curriculum",
+        "purpose": "Show the eight weeks: what each module covers, the lessons in it, the real shot students grade that week, and what they hand in.",
+        "sections": [
+          "feature-grid",
+          "process",
+          "case-study",
+          "faq"
+        ]
+      },
+      {
+        "id": "q3aaicnw",
+        "type": "pricing",
+        "label": "Enrol",
+        "purpose": "Remove the final uncertainty before signing up.",
+        "sections": [
+          "pricing",
+          "faq",
+          "testimonials"
+        ]
+      },
+      {
+        "id": "0ksn5vkp",
+        "type": "about",
+        "label": "Instructor",
+        "purpose": "Put a human face and point of view on the work; build trust.",
+        "sections": [
+          "about",
+          "stats",
+          "testimonials"
+        ]
+      },
+      {
+        "id": "6fzi74vo",
+        "type": "faq",
+        "label": "FAQ",
+        "purpose": "Answer the questions that would otherwise stall a decision.",
+        "sections": [
+          "faq",
+          "contact-cta"
+        ]
+      }
+    ],
+    "target": "not-sure"
+  }
+}

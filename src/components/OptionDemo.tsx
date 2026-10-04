@@ -4,7 +4,8 @@
 
 import type { CSSProperties, ReactNode } from 'react'
 import { img, type ImageKey } from '@/data/images'
-import type { PaletteColors, ShapeStyle, TypographyPairing } from '@/types/domain'
+import type { NavStyleId, PaletteColors, ShapeStyle, TypographyPairing } from '@/types/domain'
+import { MenuDemo } from './MenuDemo'
 
 type Props = { id: string; colors: PaletteColors; type: TypographyPairing; shape?: ShapeStyle; className?: string }
 
@@ -17,7 +18,7 @@ export function OptionDemo({ id, colors: c, type, shape, className = '' }: Props
   return (
     <div aria-hidden className={`od @container relative isolate overflow-hidden select-none ${className}`}
       style={{ background: c.background, color: c.text, containerType: 'inline-size', aspectRatio: '16 / 10' }}>
-      {render(id, ctx)}
+      {id.startsWith("nav:") ? <MenuDemo id={id.slice(4) as NavStyleId} colors={c} type={type} shape={shape} /> : render(id, ctx)}
     </div>
   )
 }
@@ -63,72 +64,6 @@ function render(id: string, { c, display, r, shape }: Ctx): ReactNode {
   const card: CSSProperties = { background: c.surface, borderRadius: r.card, border: `${shape?.border ?? '1px'} solid ${shape?.id === 'brutal' ? c.text : c.border}`, boxShadow: shape?.shadow === 'none' ? undefined : shape?.shadow?.replace('var(--color-text)', c.text) }
   const media: CSSProperties = { borderRadius: r.media, width: '100%', height: '100%', position: 'relative' }
   switch (id) {
-    // ── menu styles ──
-    case 'nav:classic-bar': return <>
-      <Box x={0} y={0} w={100} h={13} style={{ background: c.surface, borderBottom: `1px solid ${c.border}` }} />
-      <TopBar c={c} /><Box x={86} y={3.6} w={10} h={4.4} style={{ background: c.primary, borderRadius: r.button }} />
-      <Copy x={6} y={26} c={c} display={display} word="Welcome" />
-      <Box x={58} y={22} w={36} h={34} style={{ borderRadius: r.media }}><Photo k="interior" className="inset-0 h-full w-full" /></Box>
-    </>
-    case 'nav:split-pill': return <>
-      <span className="absolute" style={{ ...display, left: '5cqw', top: '4cqw', fontSize: '4cqw', fontStyle: 'italic', color: c.accent }}>Studio</span>
-      <Box x={36} y={4} w={28} h={6} style={{ background: c.surface, borderRadius: r.button, border: `1px solid ${c.border}` }} />
-      {[39, 48, 56].map((x, i) => <Bar key={x} x={x} y={6.4} w={i === 2 ? 6 : 6} h={1.2} color={c.text} />)}
-      <svg viewBox="0 0 100 12" className="absolute od-draw" style={{ left: '55cqw', top: '8.6cqw', width: '8cqw', height: '1.6cqw' }}><path d="M2 7 C 12 3, 22 10, 34 6 S 58 2, 70 6 S 92 11, 98 5" fill="none" stroke={c.accent} strokeWidth="6" /></svg>
-      <Box x={82} y={4} w={13} h={6} style={{ background: c.surface, border: `1px solid ${c.border}` }}><Bar x={1.5} y={2.3} w={1.4} h={1.4} color={c.accent} /><Bar x={4} y={2.4} w={7} h={1.2} color={c.text} /></Box>
-      <Copy x={6} y={30} c={c} display={display} word="Everything moves" size={6} />
-    </>
-    case 'nav:floating-pill': return <>
-      <Photo k="landscape" className="inset-0 h-full w-full" />
-      <div className="od-pill absolute z-10 flex items-center justify-between" style={{ left: '20cqw', top: '4cqw', width: '60cqw', height: '7cqw', borderRadius: '99cqw', background: `${c.surface}d9`, backdropFilter: 'blur(4px)', padding: '0 3cqw' }}>
-        <span className="rounded-full" style={{ width: '7cqw', height: '1.6cqw', background: c.text }} />
-        <span className="flex" style={{ gap: '2cqw' }}>{[0, 1, 2].map((i) => <span key={i} className="rounded-full" style={{ width: '6cqw', height: '1.2cqw', background: c.muted }} />)}</span>
-      </div>
-      <span className="od-scroll absolute right-[3cqw] top-[20cqw] rounded-full" style={{ width: '1cqw', height: '10cqw', background: '#fff', opacity: 0.7 }} />
-    </>
-    case 'nav:fullscreen-menu': return <>
-      <TopBar c={c} /><span className="absolute" style={{ right: '5cqw', top: '4cqw', fontSize: '2.2cqw', color: c.text }}>Menu</span>
-      <Copy x={6} y={24} c={c} display={display} word="Studio" />
-      <div className="od-menu absolute inset-0 z-10" style={{ background: c.text, padding: '9cqw 7cqw' }}>
-        {['Work', 'About', 'Contact'].map((w, i) => <div key={w} className="od-stagger" style={{ ...display, color: c.background, fontSize: '8.5cqw', animationDelay: `${i * 0.12}s` }}>{w}</div>)}
-      </div>
-    </>
-    case 'nav:centered-logo': return <>
-      <Box x={0} y={0} w={100} h={14} style={{ borderBottom: `1px solid ${c.border}` }} />
-      {[6, 16].map((x) => <Bar key={x} x={x} y={6} w={7} h={1.3} color={c.muted} />)}
-      <span className="absolute" style={{ ...display, left: '50%', top: '3.4cqw', transform: 'translateX(-50%)', fontSize: '4.4cqw' }}>Maison</span>
-      {[76, 86].map((x) => <Bar key={x} x={x} y={6} w={7} h={1.3} color={c.muted} />)}
-      <Box x={6} y={20} w={42} h={36} style={{ borderRadius: r.media }}><Photo k="fashion" className="inset-0 h-full w-full" /></Box>
-      <Box x={52} y={20} w={42} h={36} style={{ borderRadius: r.media }}><Photo k="portrait" className="inset-0 h-full w-full" /></Box>
-    </>
-    case 'nav:card-menu': return <>
-      <div className="absolute flex items-center justify-between" style={{ left: '6cqw', top: '4cqw', width: '88cqw', height: '8cqw', background: c.surface, borderRadius: r.card, padding: '0 3cqw', border: `1px solid ${c.border}` }}>
-        <span className="rounded-full" style={{ width: '9cqw', height: '1.8cqw', background: c.text }} />
-        <span className="flex flex-col" style={{ gap: '.8cqw' }}><span style={{ width: '4cqw', height: '.5cqw', background: c.text }} /><span style={{ width: '4cqw', height: '.5cqw', background: c.text }} /></span>
-      </div>
-      {(['studio', 'ceramics', 'food'] as ImageKey[]).map((k, i) => (
-        <div key={k} className="od-drop absolute overflow-hidden" style={{ left: `${6 + i * 30}cqw`, top: '15cqw', width: '28cqw', height: '40cqw', background: c.surface, borderRadius: r.card, border: `1px solid ${c.border}`, animationDelay: `${i * 0.15}s` }}>
-          <Photo k={k} className="inset-x-0 top-0 h-[60%] w-full" />
-          <Bar x={2.5} y={27} w={14} color={c.text} /><Bar x={2.5} y={31} w={10} h={1.1} color={c.muted} />
-        </div>
-      ))}
-    </>
-    case 'nav:bottom-dock': return <>
-      <Bar x={5} y={5} w={9} h={1.8} color={c.text} />
-      <Copy x={6} y={16} c={c} display={display} word="Hi, I’m Sam" size={6.5} />
-      <div className="absolute flex items-end" style={{ left: '50%', bottom: '4cqw', transform: 'translateX(-50%)', gap: '1.6cqw', padding: '1.4cqw 2cqw', background: c.surface, borderRadius: '3cqw', border: `1px solid ${c.border}` }}>
-        {[0, 1, 2, 3, 4].map((i) => <span key={i} className="od-dock block" style={{ width: '5cqw', height: '5cqw', borderRadius: '1.4cqw', background: i === 4 ? c.accent : c.secondary, animationDelay: `${i * 0.35}s` }} />)}
-      </div>
-    </>
-    case 'nav:side-index': return <>
-      <Box x={0} y={0} w={24} h={100} style={{ borderRight: `1px solid ${c.border}` }} />
-      <Bar x={4} y={5} w={10} h={1.8} color={c.text} />
-      {[0, 1, 2, 3, 4].map((i) => <Bar key={i} x={4} y={16 + i * 5} w={12} h={1.2} color={c.muted} />)}
-      <span className="od-spy absolute rounded-full" style={{ left: '2cqw', top: '16cqw', width: '1.2cqw', height: '1.2cqw', background: c.accent }} />
-      <Box x={29} y={6} w={65} h={30} style={{ borderRadius: r.media }}><Photo k="architecture" className="inset-0 h-full w-full" /></Box>
-      <Bar x={29} y={41} w={40} h={2.4} color={c.text} /><Bar x={29} y={46} w={55} color={c.muted} o={0.6} /><Bar x={29} y={50} w={48} color={c.muted} o={0.6} />
-    </>
-
     // ── shapes ──
     case 'shape:sharp': case 'shape:soft': case 'shape:round': case 'shape:pill': case 'shape:brutal': case 'shape:outline':
     case 'shape:glass': case 'shape:relief': case 'shape:clay': {

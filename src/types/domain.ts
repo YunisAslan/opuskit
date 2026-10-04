@@ -31,12 +31,12 @@ export type LayoutId = 'balanced' | 'editorial' | 'asymmetric' | 'grid' | 'full-
 
 export type PaletteId =
   | 'apricot-hall' | 'yerba-leaf' | 'console-lilac' | 'limestone' | 'graphite-sand' | 'olive-grove' | 'lido-blue' | 'bubblegum' | 'mulberry' | 'mustard' | 'midnight-chapters'
-  | 'signal-white' | 'wet-concrete' | 'legal-pad' | 'pink-plaster' | 'klein-field' | 'pool-tile'
-  | 'hazard-yellow' | 'celery-room' | 'bottle-green' | 'night-ink' | 'plum-velvet' | 'oxblood-room'
-  | 'wet-slate' | 'black-box' | 'rose-leaf' | 'airmail-blue'
-  | 'espresso' | 'lavender-haze' | 'cherry-red' | 'mint-fresh' | 'chrome-silver' | 'electric-lime'
-  | 'peach-fuzz' | 'deep-teal' | 'butter-cup' | 'cobalt-sky' | 'studio-aqua'
+  | 'signal-white' | 'wet-concrete' | 'legal-pad' | 'pink-plaster' | 'klein-field'
+  | 'hazard-yellow' | 'bottle-green' | 'night-ink' | 'plum-velvet' | 'oxblood-room' | 'black-box'
+  | 'grading-suite' | 'espresso' | 'lavender-haze' | 'cherry-red' | 'mint-fresh' | 'chrome-silver' | 'electric-lime'
+  | 'butter-cup' | 'cobalt-sky' | 'studio-aqua'
   | 'neon-sunset' | 'night-market' | 'arcade'
+  | 'grape-soda' | 'signal-orange' | 'paper-cobalt' | 'gallery-grey' | 'sage-white' | 'charcoal-signal' | 'warm-black'
 
 export type TypographyId =
   | 'gallery-hours' | 'two-scripts' | 'funnel' | 'wide-spec' | 'diner-serif' | 'private-collection' | 'kalnia-couture' | 'poster-caps' | 'campus' | 'stack'
@@ -46,6 +46,7 @@ export type TypographyId =
   | 'soft-seventies' | 'round-future' | 'letterpress-modern' | 'new-gothic' | 'friendly-app' | 'newsroom'
   | 'moonlit-italic' | 'swiss-italic' | 'bubble-pop' | 'poster-warp' | 'two-voice'
   | 'neon-drive' | 'terminal-city' | 'eight-bit' | 'sketchbook' | 'parlour' | 'dreamlight' | 'wanderer' | 'cut-and-paste' | 'dream-logic' | 'loud-mix'
+  | 'plain-giant' | 'cut-glass' | 'real-ink' | 'tall-order' | 'signature' | 'horizon' | 'soft-wedge' | 'projection' | 'kind-words' | 'dial' | 'fat-chance'
 
 export type HeroId =
   | 'editorial-image' | 'parallax-photo' | 'ambient-video' | 'scroll-video' | 'scroll-video-page' | 'type-statement'
@@ -86,13 +87,13 @@ export type SectionId =
   | 'gallery' | 'editorial-story' | 'manifesto' | 'clients' | 'menu' | 'reservation' | 'location'
   | 'collection' | 'lookbook' | 'product-grid' | 'product-highlight' | 'feature-grid' | 'how-it-works'
   | 'pricing' | 'faq' | 'journal' | 'contact-cta' | 'footer' | 'chapters' | 'testimonials' | 'team' | 'stats'
-  | 'feature-rows' | 'newsletter' | 'categories' | 'press' | 'cta-band' | 'trust' | 'schedule' | 'integrations'
+  | 'feature-rows' | 'newsletter' | 'categories' | 'press' | 'cta-band' | 'trust' | 'schedule' | 'integrations' | 'timeline' | 'donate' | 'listen' | 'curriculum' | 'product-buy' | 'specs' | 'article'
 
 export type PageTypeId =
   | 'home' | 'work' | 'about' | 'contact' | 'services' | 'collections' | 'shop' | 'product-detail'
   | 'cart' | 'checkout' | 'account' | 'features' | 'pricing' | 'faq' | 'journal' | 'experiment'
   | 'menu' | 'gallery' | 'reservations' | 'sign-in' | 'sign-up' | 'privacy-policy' | 'terms-of-service'
-  | 'cookie-policy' | 'not-found' | 'accessibility' | 'custom'
+  | 'cookie-policy' | 'not-found' | 'accessibility' | 'custom' | 'donate' | 'listen' | 'project' | 'article'
   | 'team' | 'careers' | 'testimonials' | 'press' | 'integrations' | 'changelog' | 'security' | 'comparison'
   | 'partners' | 'shipping-returns' | 'size-guide' | 'gift-cards' | 'locations' | 'catering' | 'order-online'
   | 'newsletter' | 'wholesale'
@@ -123,6 +124,8 @@ export type Purpose = {
   pages: PurposePage[]
   components: ComponentId[]
   ctaPattern: string
+  /** Other ways to start this kind of site (a development, not an agency; a festival, not a wedding). */
+  starters?: { id: string; name: string; hint: string; pages: PurposePage[] }[]
 }
 
 /** What a visitor should do. `page` = the page this goal needs; `cta` = button wording, best first. */
@@ -218,6 +221,11 @@ export type TypographyPairing = Compat & {
   sample: string
 }
 
+/** Where a section sits: the page ground, the surface, the inverse (text colour as ground) or a chapter colour. */
+export type SectionTone = 'ground' | 'surface' | 'inverse' | 'chapter'
+/** How an image + text section places its media: beside the text, full width above it, or with the text over it. */
+export type MediaPlacement = 'side' | 'full' | 'over'
+
 export type LayoutPattern = Compat & {
   id: LayoutId
   name: string
@@ -295,10 +303,10 @@ export type PieceId =
   | 'grid-pattern' | 'grain' | 'magnet-lines' | 'video-dialog'
   | 'media-between-text' | 'parallax-floating' | 'cut-reveal' | 'underline-fill' | 'drag-photos' | 'text-along-path' | 'shader-grain' | 'shader-dither'
   | 'duo-headline' | 'scribble-link' | 'wavy-link' | 'swap-button' | 'stickers' | 'blob-transition' | 'brand-cursor' | 'cookie-note'
-  | 'curtain-transition' | 'preloader' | 'smooth-scroll' | 'ambient-sound'
+  | 'curtain-transition' | 'preloader' | 'smooth-scroll' | 'ambient-sound' | 'fade-transition' | 'entry-gate' | 'chapter-colours' | 'lightbox' | 'pinned-stage'
 /** Where a piece lives on the page. A kit holds at most one piece per slot, so the site keeps one voice. */
 /** 'site' pieces work across the whole site (page transition, cursor, cookie notice) and are chosen in the Design step. */
-export type PieceSlot = 'headline' | 'label' | 'statement' | 'numbers' | 'photos' | 'scroll' | 'pointer' | 'background' | 'video' | 'button' | 'decor' | 'site'
+export type PieceSlot = 'headline' | 'label' | 'statement' | 'numbers' | 'photos' | 'scroll' | 'pointer' | 'background' | 'video' | 'button' | 'decor' | 'open' | 'site'
 export type Piece = {
   id: PieceId; name: string; line: string; slot: PieceSlot
   /** Library it was adapted from (MIT) or uses as a dependency (Apache-2.0) — both allow shipping inside every Build Package. */
@@ -348,7 +356,8 @@ export type KitPlan = {
 /** A page in the plan. Each section is an instance with its own key, so the pieces attached to it move with it. */
 export type PlanPage = { id: string; type: PageTypeId; label: string; purpose: string; sections: PlanSection[]; hide?: ChromeId[] }
 /** A section on a plan page: its moments (ready pieces on this section only) and, for a photo section, how its photos are shown. */
-export type PlanSection = { key: string; id: SectionId; pieces: PieceId[]; photos?: ImagePresentationId }
+/** `hero`: what this film/image part shows when it isn't the site's first screen (that one is the plan's `hero`). */
+export type PlanSection = { key: string; id: SectionId; pieces: PieceId[]; photos?: ImagePresentationId; hero?: HeroId; /** The owner's design for a multi-design section (section-variants.ts). */ variant?: string }
 /** Where the user attached a ready piece: page id + section index on that page, or page '*' for the whole site. */
 export type PiecePlacement = { piece: PieceId; page: string; index: number }
 
@@ -369,11 +378,13 @@ export type SignaturePattern = {
   mobile: string
   reducedMotion: string
   components?: LibraryComponent[]
+  /** The ready kit piece that does this moment; it ships wherever the moment lands. */
+  piece?: PieceId
 }
 
-export type NavStyleId = 'classic-bar' | 'floating-pill' | 'fullscreen-menu' | 'centered-logo' | 'card-menu' | 'bottom-dock' | 'side-index' | 'split-pill'
+export type NavStyleId = 'classic-bar' | 'floating-pill' | 'fullscreen-menu' | 'centered-logo' | 'card-menu' | 'bottom-dock' | 'side-index' | 'split-pill' | 'status-bar'
 /** Footer styles — the page's ending, chosen with the menu in Design (same on every page that shows it). */
-export type FooterStyleId = 'signature' | 'wordmark' | 'contact' | 'line'
+export type FooterStyleId = 'signature' | 'wordmark' | 'contact' | 'line' | 'index'
 export type FooterStyle = { id: FooterStyleId; name: string; line: string; composition: string; behavior: string; responsive: string }
 /** The frame every page shares; a page can leave either out (`hide`). */
 export type ChromeId = 'navbar' | 'footer'
@@ -505,6 +516,10 @@ export type RecipeSpec = {
   piecePlacements?: PiecePlacement[]
   /** How each photo section shows its photos (page id + section index). Photo sections without one get the recommendation. */
   sectionPhotos?: { page: string; index: number; presentation: ImagePresentationId }[]
+  /** The design each multi-design section uses (page id + section index; `sectionVariants` in section-variants.ts). */
+  sectionVariants?: { page: string; index: number; variant: string }[]
+  /** Film/image parts other than the first screen that show something of their own (page id + section index). */
+  heroBands?: { page: string; index: number; hero: HeroId }[]
   pages: PageSpec[]
   target: BuildTargetId
 }
@@ -546,7 +561,7 @@ export type VisualSystem = {
 export type LayoutSystem = Omit<LayoutPattern, 'tags' | 'compatibleWith' | 'incompatibleWith' | 'line'>
 
 /** code: the ready component for this section, shipped at `path` in every Build Package. */
-export type PageSection = SectionPattern & { note?: string; code?: { path: string; exportName: string; usage: string }; photos?: ImagePresentation & { chosen: boolean } }
+export type PageSection = SectionPattern & { tone?: SectionTone; media?: MediaPlacement; variant?: { id: string; name: string; line: string; chosen: boolean }; note?: string; code?: { path: string; exportName: string; usage: string }; photos?: ImagePresentation & { chosen: boolean } }
 /** Site-wide behaviours: how headlines arrive, links react, buttons respond, plus whole-site pieces. The same on every page. */
 export type BehaviourId = 'headlines' | 'links' | 'buttons' | 'transitions' | 'site'
 

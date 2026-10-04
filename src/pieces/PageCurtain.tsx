@@ -35,7 +35,9 @@ export function PageCurtain({ color = 'var(--color-text)' }: { color?: string })
     document.addEventListener('click', onClick, true)
     return () => document.removeEventListener('click', onClick, true)
   }, [reduce])
-  useEffect(() => { setPhase((p) => (p === 'cover' ? 'reveal' : p)) }, [path])
+  // The new page arrived: lift the curtain (state adjusted while rendering, not in an effect).
+  const [seenPath, setSeenPath] = useState(path)
+  if (seenPath !== path) { setSeenPath(path); if (phase === 'cover') setPhase('reveal') }
   if (phase === 'idle') return null
   return (
     <motion.div aria-hidden className="pointer-events-none fixed inset-0 z-[100] grid place-items-center px-6" style={{ background: color }}

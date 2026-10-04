@@ -5,7 +5,7 @@
 // public/live/{slug}/ is a real static export of the site's code only (no media in it — its <img>/
 // <video> tags are patched to point back at the symlinked path above), so visiting it is the actual site.
 
-import type { SectionId } from '@/types/domain'
+import type { PieceId, SectionId } from '@/types/domain'
 
 export type ExampleHero =
   | { kind: 'video'; src: string; poster: string }
@@ -28,6 +28,10 @@ export type ExampleProject = {
   clip?: string
   /** A few seconds of each of its sections arriving on screen — the kit shows one next to that part (plan §8). */
   sectionClips?: Partial<Record<SectionId, string>>
+  /** A few seconds of each kit piece it uses (a behaviour or a moment) doing its thing — the kit shows one next to that piece. */
+  pieceClips?: Partial<Record<PieceId, string>>
+  /** The same for its big idea's signature moments (`signaturePatterns` ids). */
+  signatureClips?: Record<string, string>
   /** One of the old examples (docs/plan-for-fit.md §9): stays on /examples until replaced, never offered in the kit as "a site like this". */
   legacy?: true
   /** Exactly what was picked to make it — recovered from the recipe files the site shipped with. */
@@ -40,13 +44,159 @@ export type ExampleProject = {
 
 export const examples: ExampleProject[] = [
   {
+    slug: 'aster-house',
+    title: 'Aster House, twelve houses above the Caspian',
+    summary: 'Twelve houses cut into the cliff above the Caspian at Shikhov, each built around the light of one hour of the day. One release, spring 2027.',
+    mood: ['Calm', 'Precise', 'Warm'],
+    // Its first screen is a scroll-scrubbed walk through the show house: the still is that film's own poster.
+    hero: { kind: 'video', src: '/examples/aster-house/media/heroVideo.mp4', poster: '/examples/aster-house/media/posterImage.jpg' },
+    livePath: '/live/aster-house',
+    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'Real estate' },
+      { label: 'Name', value: 'Aster House' },
+      { label: 'Visitors should', value: 'Book or reserve' },
+      { label: 'Style', value: 'Architectural Minimal' },
+      { label: 'First screen', value: 'Scroll-controlled video' },
+      { label: 'Movement', value: 'Immersive' },
+      { label: 'Colors', value: 'Limestone' },
+      { label: 'Lettering', value: 'Quiet Page' },
+      { label: 'Layout', value: 'Full-bleed' },
+      { label: 'Shape', value: 'Hairline' },
+      { label: 'Menu', value: 'Classic bar' },
+      { label: 'Big idea', value: 'One thing guides the scroll' },
+      { label: 'Pages', value: 'Home, Residences, A house, Book a viewing' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Photos are from Pexels (credits in media-src/SOURCES.md); the walk-through film was picked by the user; Claude Code drew the logo during the build; the houses, prices, architect and contact details are made up.',
+  },
+  {
+    slug: 'night-shift',
+    title: 'Night Shift: learn film colour grading, live, in eight weeks',
+    summary: 'An eight-week online course in film colour grading, taught live by a working colourist: from flat log footage to a finished grade, one real shot at a time.',
+    mood: ['Precise', 'Technical', 'Calm'],
+    // Its first screen is a 3D grading console built in code: the hero still is the poster rendered from that scene.
+    hero: { kind: 'image', src: '/examples/night-shift/media/console-poster.jpg' },
+    livePath: '/live/night-shift',
+    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'Course / education' },
+      { label: 'Name', value: 'Night Shift' },
+      { label: 'Visitors should', value: 'Sign up' },
+      { label: 'Style', value: 'Technical Minimal' },
+      { label: 'First screen', value: '3D / WebGL scene' },
+      { label: 'Movement', value: 'Immersive' },
+      { label: 'Colors', value: 'Grading Suite' },
+      { label: 'Lettering', value: 'Control Room' },
+      { label: 'Layout', value: 'Grid-driven' },
+      { label: 'Shape', value: 'Hairline' },
+      { label: 'Menu', value: 'Floating dock' },
+      { label: 'Big idea', value: 'A live console' },
+      { label: 'Pages', value: 'Home, Curriculum, Enrol, Instructor, FAQ' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Photos are from Unsplash (credits in media-src/SOURCES.md); the film clips were picked by the user, their log versions made by Claude; Claude Code built the 3D console and drew the logo during the build; the instructor, credits, students and prices are made up.',
+  },
+  {
+    slug: 'sela-mor',
+    title: 'Sela Mor, sound artist and composer from Baku',
+    summary: 'Sela Mor records wind, water and machines on the Absheron coast and turns them into music for rooms, films and long nights. Works, tracks, live dates and contact.',
+    mood: ['Clear', 'Stark', 'Confident'],
+    // Its first screen is her name in type; the film is a scroll band mid-page — the still is the site's own poster of it.
+    hero: { kind: 'image', src: '/examples/sela-mor/media/posterImage.jpg' },
+    livePath: '/live/sela-mor',
+    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'Personal Brand' },
+      { label: 'Name', value: 'Sela Mor' },
+      { label: 'Visitors should', value: 'Get in touch' },
+      { label: 'Style', value: 'Monochrome Minimal' },
+      { label: 'First screen', value: 'Words in motion' },
+      { label: 'Movement', value: 'Immersive' },
+      { label: 'Colors', value: 'Black Box' },
+      { label: 'Lettering', value: 'Data Sheet' },
+      { label: 'Layout', value: 'Editorial' },
+      { label: 'Shape', value: 'Hairline' },
+      { label: 'Menu', value: 'Split pill' },
+      { label: 'Big idea', value: 'Chapters in giant words' },
+      { label: 'Pages', value: 'Home, Works, Listen, Live, About, Contact' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Photos are from Pexels (credits in media-src/SOURCES.md); the film was picked by the user and made black and white; the sound and the six Listen tracks are Pixabay excerpts; Claude Code drew the logo during the build; works, venues, press and contact details are made up.',
+  },
+  {
+    slug: 'kur-delta-watch',
+    title: 'Kür Delta Watch — 2,140 tonnes out of the river so far',
+    summary: 'A volunteer river watch in Neftchala, where the Kür meets the Caspian: we pull rubbish out of the river, test the water every month and publish what we find.',
+    mood: ['Loud', 'Honest', 'Energetic'],
+    // Its first screen is type; the river film is a band mid-page, not the hero — the still is the site's own poster of it.
+    hero: { kind: 'image', src: '/examples/kur-delta-watch/media/posterImage.jpg' },
+    livePath: '/live/kur-delta-watch',
+    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'Nonprofit / cause' },
+      { label: 'Name', value: 'Kür Delta Watch' },
+      { label: 'Visitors should', value: 'Donate or support' },
+      { label: 'Style', value: 'Neo-Brutalist' },
+      { label: 'First screen', value: 'Words in motion' },
+      { label: 'Movement', value: 'Dynamic' },
+      { label: 'Colors', value: 'Hazard Yellow' },
+      { label: 'Lettering', value: 'Workshop Manual' },
+      { label: 'Layout', value: 'Grid-driven' },
+      { label: 'Shape', value: 'Bold outline' },
+      { label: 'Menu', value: 'Menu with cards' },
+      { label: 'Big idea', value: 'Loud covers, quiet reading' },
+      { label: 'Pages', value: 'Home, The river, What we do, Field notes, Donate, Contact' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Photos are from Pexels (credits in media-src/SOURCES.md); the river film was picked by the user; Claude Code drew the logo during the build; the people, figures, quotes and contact details are made up.',
+  },
+  {
+    slug: 'inkwell-moth',
+    title: 'Inkwell & Moth — picture books by Nell Arden',
+    summary: 'The picture-book studio of illustrator Nell Arden: ink, watercolour and small night creatures, drawn by hand in an old bakery in Sheki.',
+    mood: ['Personal', 'Warm', 'Handmade'],
+    // Its first screen is a drawing made in code: the hero still is the site's own first screen, after the tracing paper.
+    hero: { kind: 'image', src: '/examples/inkwell-moth/media/poster.jpg' },
+    livePath: '/live/inkwell-moth',
+    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'Portfolio' },
+      { label: 'Name', value: 'Inkwell & Moth' },
+      { label: 'Visitors should', value: 'Get in touch' },
+      { label: 'Style', value: 'Scrapbook' },
+      { label: 'First screen', value: 'Illustrated hero' },
+      { label: 'Movement', value: 'Dynamic' },
+      { label: 'Colors', value: 'Legal Pad' },
+      { label: 'Lettering', value: 'Cut and Paste' },
+      { label: 'Layout', value: 'Experimental' },
+      { label: 'Shape', value: 'Sharp' },
+      { label: 'Menu', value: 'Side index' },
+      { label: 'Big idea', value: 'A playful way in' },
+      { label: 'Pages', value: 'Home, Books, About, Commissions' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Photos are from Pexels (credits in media-src/SOURCES.md); the inkwell drawing, the spot drawings and the logo were drawn in code by Claude Code during the build; the publishers, quotes, fees and contact details are made up.',
+  },
+  {
     slug: 'lowfield-nights',
     title: 'Lowfield Nights — Silent films, live scores, 12–14 June',
     summary: 'Three nights of silent films with live scores in a disused hangar on the Absheron coast, 12–14 June 2027. Entry free with an RSVP.',
     mood: ['Cinematic', 'Nocturnal', 'Warm'],
     hero: { kind: 'video', src: '/examples/lowfield-nights/media/heroVideo.mp4', poster: '/examples/lowfield-nights/media/posterImage.jpg' },
     livePath: '/live/lowfield-nights',
-    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    // The recording shows Venue & travel only: no site clip (it would stand in for the scroll-film first screen).
+    sectionClips: {
+      'faq': '/examples/lowfield-nights/media/clips/faq.mp4',
+      'navbar': '/examples/lowfield-nights/media/clips/navbar.mp4',
+      'footer': '/examples/lowfield-nights/media/clips/footer.mp4',
+    },
+    pieceClips: {
+      'text-effect': '/examples/lowfield-nights/media/clips/piece-text-effect.mp4',
+    },
+    signatureClips: {
+      'guided-stops': '/examples/lowfield-nights/media/clips/sig-guided-stops.mp4',
+    },
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Event / wedding' },
@@ -73,7 +223,24 @@ export const examples: ExampleProject[] = [
     mood: ['Dreamy', 'Soft', 'Still'],
     hero: { kind: 'video', src: '/examples/velmira/media/heroVideo.mp4', poster: '/examples/velmira/media/posterImage.jpg' },
     livePath: '/live/velmira',
-    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    // The recording starts below the film first screen: no site clip until one shows it.
+    sectionClips: {
+      'intro': '/examples/velmira/media/clips/intro.mp4',
+      'collection': '/examples/velmira/media/clips/collection.mp4',
+      'feature-rows': '/examples/velmira/media/clips/feature-rows.mp4',
+      'journal': '/examples/velmira/media/clips/journal.mp4',
+      'reservation': '/examples/velmira/media/clips/reservation.mp4',
+      'lookbook': '/examples/velmira/media/clips/lookbook.mp4',
+      'gallery': '/examples/velmira/media/clips/gallery.mp4',
+      'location': '/examples/velmira/media/clips/location.mp4',
+      'faq': '/examples/velmira/media/clips/faq.mp4',
+      'navbar': '/examples/velmira/media/clips/navbar.mp4',
+      'footer': '/examples/velmira/media/clips/footer.mp4',
+    },
+    signatureClips: {
+      'travelling-motif': '/examples/velmira/media/clips/sig-travelling-motif.mp4',
+      'footer-moment': '/examples/velmira/media/clips/sig-footer-moment.mp4',
+    },
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Hotel & travel' },
@@ -100,7 +267,29 @@ export const examples: ExampleProject[] = [
     mood: ['Dark', 'Sharp', 'Crafted'],
     hero: { kind: 'video', src: '/examples/saint-ashe/media/heroVideo.mp4', poster: '/examples/saint-ashe/media/posterImage.jpg' },
     livePath: '/live/saint-ashe',
-    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    clip: '/examples/saint-ashe/media/clip.mp4',
+    sectionClips: {
+      'collection': '/examples/saint-ashe/media/clips/collection.mp4',
+      'product-grid': '/examples/saint-ashe/media/clips/product-grid.mp4',
+      'journal': '/examples/saint-ashe/media/clips/journal.mp4',
+      'newsletter': '/examples/saint-ashe/media/clips/newsletter.mp4',
+      'lookbook': '/examples/saint-ashe/media/clips/lookbook.mp4',
+      'about': '/examples/saint-ashe/media/clips/about.mp4',
+      'editorial-story': '/examples/saint-ashe/media/clips/editorial-story.mp4',
+      'team': '/examples/saint-ashe/media/clips/team.mp4',
+      'contact-cta': '/examples/saint-ashe/media/clips/contact-cta.mp4',
+      'location': '/examples/saint-ashe/media/clips/location.mp4',
+      'faq': '/examples/saint-ashe/media/clips/faq.mp4',
+      'navbar': '/examples/saint-ashe/media/clips/navbar.mp4',
+      'footer': '/examples/saint-ashe/media/clips/footer.mp4',
+    },
+    pieceClips: {
+      'text-roll': '/examples/saint-ashe/media/clips/piece-text-roll.mp4',
+    },
+    signatureClips: {
+      'giant-word-chapters': '/examples/saint-ashe/media/clips/sig-giant-word-chapters.mp4',
+      'curtain-reveal': '/examples/saint-ashe/media/clips/sig-curtain-reveal.mp4',
+    },
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Fashion' },
@@ -128,7 +317,25 @@ export const examples: ExampleProject[] = [
     // Its first screen is one tall photo that drifts; the hero still is that photo.
     hero: { kind: 'image', src: '/examples/fennwood/media/hero.jpg' },
     livePath: '/live/fennwood',
-    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    clip: '/examples/fennwood/media/clip.mp4',
+    sectionClips: {
+      'intro': '/examples/fennwood/media/clips/intro.mp4',
+      'menu': '/examples/fennwood/media/clips/menu.mp4',
+      'gallery': '/examples/fennwood/media/clips/gallery.mp4',
+      'reservation': '/examples/fennwood/media/clips/reservation.mp4',
+      'location': '/examples/fennwood/media/clips/location.mp4',
+      'faq': '/examples/fennwood/media/clips/faq.mp4',
+      'navbar': '/examples/fennwood/media/clips/navbar.mp4',
+      'footer': '/examples/fennwood/media/clips/footer.mp4',
+    },
+    pieceClips: {
+      'cut-reveal': '/examples/fennwood/media/clips/piece-cut-reveal.mp4',
+      'scribble-link': '/examples/fennwood/media/clips/piece-scribble-link.mp4',
+    },
+    signatureClips: {
+      'travelling-motif': '/examples/fennwood/media/clips/sig-travelling-motif.mp4',
+      'footer-moment': '/examples/fennwood/media/clips/sig-footer-moment.mp4',
+    },
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Restaurant' },
@@ -156,7 +363,27 @@ export const examples: ExampleProject[] = [
     // Its first screen is one photo; the hero still is that photo.
     hero: { kind: 'image', src: '/examples/hane/media/hero.jpg' },
     livePath: '/live/hane',
-    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    clip: '/examples/hane/media/clip.mp4',
+    sectionClips: {
+      'services': '/examples/hane/media/clips/services.mp4',
+      'how-it-works': '/examples/hane/media/clips/how-it-works.mp4',
+      'team': '/examples/hane/media/clips/team.mp4',
+      'testimonials': '/examples/hane/media/clips/testimonials.mp4',
+      'pricing': '/examples/hane/media/clips/pricing.mp4',
+      'location': '/examples/hane/media/clips/location.mp4',
+      'reservation': '/examples/hane/media/clips/reservation.mp4',
+      'faq': '/examples/hane/media/clips/faq.mp4',
+      'contact-cta': '/examples/hane/media/clips/contact-cta.mp4',
+      'navbar': '/examples/hane/media/clips/navbar.mp4',
+      'footer': '/examples/hane/media/clips/footer.mp4',
+    },
+    pieceClips: {
+      'underline-fill': '/examples/hane/media/clips/piece-underline-fill.mp4',
+    },
+    signatureClips: {
+      'guided-stops': '/examples/hane/media/clips/sig-guided-stops.mp4',
+      'live-status': '/examples/hane/media/clips/sig-live-status.mp4',
+    },
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Health & wellness' },
@@ -184,7 +411,29 @@ export const examples: ExampleProject[] = [
     // Its first screen is a product photo; the hero still is that photo.
     hero: { kind: 'image', src: '/examples/halvik/media/hero.jpg' },
     livePath: '/live/halvik',
-    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    clip: '/examples/halvik/media/clip.mp4',
+    sectionClips: {
+      'product-highlight': '/examples/halvik/media/clips/product-highlight.mp4',
+      'feature-rows': '/examples/halvik/media/clips/feature-rows.mp4',
+      'press': '/examples/halvik/media/clips/press.mp4',
+      'testimonials': '/examples/halvik/media/clips/testimonials.mp4',
+      'pricing': '/examples/halvik/media/clips/pricing.mp4',
+      'trust': '/examples/halvik/media/clips/trust.mp4',
+      'contact-cta': '/examples/halvik/media/clips/contact-cta.mp4',
+      'feature-grid': '/examples/halvik/media/clips/feature-grid.mp4',
+      'how-it-works': '/examples/halvik/media/clips/how-it-works.mp4',
+      'faq': '/examples/halvik/media/clips/faq.mp4',
+      'navbar': '/examples/halvik/media/clips/navbar.mp4',
+      'footer': '/examples/halvik/media/clips/footer.mp4',
+    },
+    pieceClips: {
+      'text-effect': '/examples/halvik/media/clips/piece-text-effect.mp4',
+      'underline-fill': '/examples/halvik/media/clips/piece-underline-fill.mp4',
+    },
+    signatureClips: {
+      'travelling-motif': '/examples/halvik/media/clips/sig-travelling-motif.mp4',
+      'footer-moment': '/examples/halvik/media/clips/sig-footer-moment.mp4',
+    },
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Product' },
@@ -212,7 +461,25 @@ export const examples: ExampleProject[] = [
     // Its first screen is stickers drawn in code: the hero still is the site's own first screen.
     hero: { kind: 'image', src: '/examples/sticky-weather/media/poster.jpg' },
     livePath: '/live/sticky-weather',
-    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    clip: '/examples/sticky-weather/media/clip.mp4',
+    sectionClips: {
+      'featured-work': '/examples/sticky-weather/media/clips/featured-work.mp4',
+      'manifesto': '/examples/sticky-weather/media/clips/manifesto.mp4',
+      'journal': '/examples/sticky-weather/media/clips/journal.mp4',
+      'contact-cta': '/examples/sticky-weather/media/clips/contact-cta.mp4',
+      'about': '/examples/sticky-weather/media/clips/about.mp4',
+      'navbar': '/examples/sticky-weather/media/clips/navbar.mp4',
+      'footer': '/examples/sticky-weather/media/clips/footer.mp4',
+    },
+    pieceClips: {
+      'text-effect': '/examples/sticky-weather/media/clips/piece-text-effect.mp4',
+      'wavy-link': '/examples/sticky-weather/media/clips/piece-wavy-link.mp4',
+      'brand-cursor': '/examples/sticky-weather/media/clips/piece-brand-cursor.mp4',
+    },
+    signatureClips: {
+      'entry-gate': '/examples/sticky-weather/media/clips/sig-entry-gate.mp4',
+      'theme-per-variant': '/examples/sticky-weather/media/clips/sig-theme-per-variant.mp4',
+    },
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Studio' },
@@ -240,7 +507,25 @@ export const examples: ExampleProject[] = [
     // Its first screen is a 3D scene built in code; the hero still is the poster rendered from that scene.
     hero: { kind: 'image', src: '/examples/hexmint/media/hero-poster.jpg' },
     livePath: '/live/hexmint',
-    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    clip: '/examples/hexmint/media/clip.mp4',
+    sectionClips: {
+      'navbar': '/examples/hexmint/media/clips/navbar.mp4',
+      'clients': '/examples/hexmint/media/clips/clients.mp4',
+      'feature-rows': '/examples/hexmint/media/clips/feature-rows.mp4',
+      'feature-grid': '/examples/hexmint/media/clips/feature-grid.mp4',
+      'integrations': '/examples/hexmint/media/clips/integrations.mp4',
+      'testimonials': '/examples/hexmint/media/clips/testimonials.mp4',
+      'contact-cta': '/examples/hexmint/media/clips/contact-cta.mp4',
+      'product-highlight': '/examples/hexmint/media/clips/product-highlight.mp4',
+      'how-it-works': '/examples/hexmint/media/clips/how-it-works.mp4',
+      'faq': '/examples/hexmint/media/clips/faq.mp4',
+      'footer': '/examples/hexmint/media/clips/footer.mp4',
+    },
+    pieceClips: {
+      'text-scramble': '/examples/hexmint/media/clips/piece-text-scramble.mp4',
+      'text-effect': '/examples/hexmint/media/clips/piece-text-effect.mp4',
+      'curtain-transition': '/examples/hexmint/media/clips/piece-curtain-transition.mp4',
+    },
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'SaaS' },
@@ -268,7 +553,27 @@ export const examples: ExampleProject[] = [
     // Its first screen is type, not media: the hero still is the site's own first screen.
     hero: { kind: 'image', src: '/examples/brasshand/media/poster.jpg' },
     livePath: '/live/brasshand',
-    // Clips are recorded by the user from the live export; until then the kit offers no clip of it.
+    clip: '/examples/brasshand/media/clip.mp4',
+    sectionClips: {
+      'navbar': '/examples/brasshand/media/clips/navbar.mp4',
+      'manifesto': '/examples/brasshand/media/clips/manifesto.mp4',
+      'featured-work': '/examples/brasshand/media/clips/featured-work.mp4',
+      'services': '/examples/brasshand/media/clips/services.mp4',
+      'clients': '/examples/brasshand/media/clips/clients.mp4',
+      'journal': '/examples/brasshand/media/clips/journal.mp4',
+      'contact-cta': '/examples/brasshand/media/clips/contact-cta.mp4',
+      'case-study': '/examples/brasshand/media/clips/case-study.mp4',
+      'footer': '/examples/brasshand/media/clips/footer.mp4',
+    },
+    pieceClips: {
+      'text-roll': '/examples/brasshand/media/clips/piece-text-roll.mp4',
+      'curtain-transition': '/examples/brasshand/media/clips/piece-curtain-transition.mp4',
+      'cut-reveal': '/examples/brasshand/media/clips/piece-cut-reveal.mp4',
+    },
+    signatureClips: {
+      'giant-word-chapters': '/examples/brasshand/media/clips/sig-giant-word-chapters.mp4',
+      'pinned-proof': '/examples/brasshand/media/clips/sig-pinned-proof.mp4',
+    },
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Agency' },
@@ -296,8 +601,21 @@ export const examples: ExampleProject[] = [
     // Its first screen is type, not media: the hero still is the site's own first screen.
     hero: { kind: 'image', src: '/examples/slow-atlas/media/poster.jpg' },
     livePath: '/live/slow-atlas',
-    // Rebuilt 2026-10-01 (plan-vibe C): clips are re-recorded by the user from the new live export — until then the kit
-    // offers no clip of it. Add `clip` and `sectionClips` (public/media/clips/{sectionId}.mp4) when they land.
+    clip: '/examples/slow-atlas/media/clip.mp4',
+    sectionClips: {
+      'editorial-story': '/examples/slow-atlas/media/clips/editorial-story.mp4',
+      'journal': '/examples/slow-atlas/media/clips/journal.mp4',
+      'categories': '/examples/slow-atlas/media/clips/categories.mp4',
+      'newsletter': '/examples/slow-atlas/media/clips/newsletter.mp4',
+      'navbar': '/examples/slow-atlas/media/clips/navbar.mp4',
+    },
+    pieceClips: {
+      'preloader': '/examples/slow-atlas/media/clips/piece-preloader.mp4',
+    },
+    signatureClips: {
+      'curtain-reveal': '/examples/slow-atlas/media/clips/sig-curtain-reveal.mp4',
+      'giant-word-chapters': '/examples/slow-atlas/media/clips/sig-giant-word-chapters.mp4',
+    },
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Blog / magazine' },

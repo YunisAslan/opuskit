@@ -6,11 +6,11 @@
 // Run: npm run examples
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { examples } from '../src/data/examples'
-import { layouts } from '../src/data/ingredients'
-import { heroes, navStyles, pageTypes, sections, shapeStyles } from '../src/data/patterns'
+import { layouts, palettes } from '../src/data/ingredients'
+import { footerStyles, heroes, navStyles, pageTypes, sections, shapeStyles } from '../src/data/patterns'
 import { specFromChoices } from '../src/features/kit/plan'
 import { isValidSpec, normalizeSpec } from '../src/features/recipes/engine'
-import type { PageSpec, RecipeSpec, SectionId } from '../src/types/domain'
+import type { PageSpec, PaletteColors, RecipeSpec, SectionId } from '../src/types/domain'
 
 const find = <T extends { name: string }>(kb: Record<string, T>, name?: string) =>
   name ? Object.keys(kb).find((k) => kb[k].name.toLowerCase() === name.trim().toLowerCase()) : undefined
@@ -40,6 +40,14 @@ for (const e of examples) {
   const base = specFromChoices(e.choices)
   const spec = isValidSpec(shipped) ? shipped : base && existsSync(`${root}/recipe/layout.md`) ? specFromLayout(base, readFileSync(`${root}/recipe/layout.md`, 'utf8')) : base
   if (!spec) throw new Error(`${e.slug}: no recipe could be recovered — add opuskit.json or fix its choices`)
+  // The footer it was built with: a recommended one moves with the engine, the built site does not.
+  const layoutMd = existsSync(`${root}/recipe/layout.md`) ? readFileSync(`${root}/recipe/layout.md`, 'utf8') : ''
+  spec.footer ??= find(footerStyles, layoutMd.match(/^### \d+ Footer — (.+)$/m)?.[1]) as RecipeSpec['footer']
+  // The colours it was built with: a palette tuned later (2026-10-04 colour round) must not repaint a built site.
+  const tokens = existsSync(`${root}/src/styles/tokens.css`) ? readFileSync(`${root}/src/styles/tokens.css`, 'utf8') : ''
+  const built = Object.fromEntries(Object.keys(palettes[spec.palette].colors).map((k) => [k, tokens.match(new RegExp(`--color-${k}:\\s*(#[0-9A-Fa-f]{6})`))?.[1]?.toUpperCase()]))
+  if (!spec.customPalette && Object.values(built).every(Boolean) && Object.entries(built).some(([k, v]) => v !== palettes[spec.palette].colors[k as keyof PaletteColors].toUpperCase()))
+    spec.customPalette = built as RecipeSpec['customPalette']
   // Stable ids, no browser-only file handles: the file is committed.
   // (effect placements point at page ids, so they move with the rename).
   const ids = Object.fromEntries(spec.pages.map((p, i) => [p.id, `p${i + 1}`]))

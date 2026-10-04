@@ -91,20 +91,12 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 /* ─── Option demos (components/OptionDemo.tsx): looping schematics of design choices ─── */
 @property --od-x { syntax: '<percentage>'; initial-value: 30%; inherits: false; }
 .od { --od-t: 4s; }
-.od-pill { animation: od-pill var(--od-t) ease-in-out infinite; }
-@keyframes od-pill { 0%, 25% { transform: none; } 35%, 65% { transform: translateY(-160%); } 75%, 100% { transform: none; } }
 .od-scroll { animation: od-scroll var(--od-t) ease-in-out infinite; }
 @keyframes od-scroll { 0%, 25% { transform: none; } 35%, 65% { transform: translateY(40%); } 75%, 100% { transform: none; } }
-.od-menu { animation: od-menu var(--od-t) cubic-bezier(.65,0,.35,1) infinite; }
-@keyframes od-menu { 0%, 20% { clip-path: inset(0 0 100% 0); } 35%, 80% { clip-path: inset(0); } 95%, 100% { clip-path: inset(0 0 100% 0); } }
 .od-stagger { animation: od-stagger var(--od-t) ease-out infinite; }
 @keyframes od-stagger { 0%, 30% { opacity: 0; transform: translateY(40%); } 42%, 80% { opacity: 1; transform: none; } 95%, 100% { opacity: 0; } }
 .od-drop { animation: od-drop var(--od-t) ease-out infinite; }
 @keyframes od-drop { 0%, 15% { opacity: 0; transform: translateY(-12%); } 30%, 80% { opacity: 1; transform: none; } 95%, 100% { opacity: 0; } }
-.od-dock { animation: od-dock 1.75s ease-in-out infinite; transform-origin: bottom; }
-@keyframes od-dock { 0%, 60%, 100% { transform: none; } 20% { transform: scale(1.5) translateY(-10%); } }
-.od-spy { animation: od-spy var(--od-t) steps(1) infinite; }
-@keyframes od-spy { 0% { transform: none; } 25% { transform: translateY(5cqw); } 50% { transform: translateY(10cqw); } 75% { transform: translateY(15cqw); } }
 .od-press { animation: od-press 2s ease-in-out infinite; }
 @keyframes od-press { 0%, 70%, 100% { transform: none; } 80% { transform: scale(.94); } }
 .od-follow { animation: od-follow var(--od-t) ease-in-out infinite; }
@@ -249,3 +241,11 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
   * { @apply border-border outline-ring/50; }
   button:not(:disabled), [role="button"]:not(:disabled) { cursor: pointer; }
 }
+/* Kit: a part just added or changed glows for a moment, so the change is seen even below the fold. */
+@keyframes kit-flash { 0%, 25% { box-shadow: 0 0 0 3px var(--color-pencil); background-color: var(--color-pencil-soft); } 100% { box-shadow: 0 0 0 0 transparent; } }
+
+/* Section tones (src/lib/frame.ts TONE_CSS — kept identical, checked by check.ts) */
+[data-tone="surface"]{background:var(--color-surface)}
+[data-tone="inverse"]{--color-background:var(--inv-bg);--color-text:var(--inv-text);--color-primary:var(--inv-text);--color-accent:var(--inv-accent)}
+[data-tone="chapter"]{--color-background:var(--chap-bg);--color-text:var(--chap-text);--color-primary:var(--chap-text);--color-accent:var(--chap-text)}
+[data-tone="inverse"],[data-tone="chapter"]{--color-muted:color-mix(in oklab,var(--color-text) 72%,var(--color-background));--color-surface:color-mix(in oklab,var(--color-text) 7%,var(--color-background));--color-secondary:color-mix(in oklab,var(--color-text) 14%,var(--color-background));--color-border:color-mix(in oklab,var(--color-text) 24%,var(--color-background));background:var(--color-background);color:var(--color-text)}

@@ -1,0 +1,58 @@
+{
+  "recipe": "art-direction-studio",
+  "title": "Inkwell & Moth — Scrapbook Portfolio",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Drawn in code: LogoMark in src/components/Drawings.tsx, Logo.tsx, favicon src/app/icon.svg",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts via next/font (self-hosted at build)",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Permanent Marker, Courier Prime (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written in the pages (src/app/*/page.tsx) and src/content/books.ts; publishers, years and quotes are invented placeholders to confirm",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "heroIllustration": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Drawn in code: HeroBack, HeroInkwell, HeroMothsLeft/Right in src/components/Drawings.tsx (layered SVG)",
+      "replaceWith": "user-owned-illustrations",
+      "usage": "Hero key visual",
+      "specs": "Layered SVG (3 depth layers if animated)"
+    },
+    "spotIllustrations": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Drawn in code: Spot (moth, nib, drop) in src/components/Drawings.tsx",
+      "replaceWith": "user-owned-illustrations",
+      "usage": "Section accents",
+      "specs": "Same style and palette"
+    },
+    "photos": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Owner's photos in public/media/ (sources in media-src/SOURCES.md)",
+      "usage": "Books, desk, spreads, process, portrait, studio, Sheki — keyed in src/config/assets.ts"
+    }
+  }
+}

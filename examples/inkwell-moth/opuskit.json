@@ -1,0 +1,102 @@
+{
+  "opuskit": 1,
+  "recipe": "art-direction-studio",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "art-direction-studio",
+    "brief": {
+      "name": "Inkwell & Moth",
+      "offer": "The picture-book studio of illustrator Nell Arden: ink, watercolour and small night creatures, drawn by hand in an old bakery in Sheki.",
+      "goal": "contact"
+    },
+    "purpose": "portfolio",
+    "direction": "scrapbook",
+    "characters": [],
+    "lead": "illustration",
+    "motion": "dynamic",
+    "hero": "illustrated",
+    "layout": "experimental",
+    "palette": "legal-pad",
+    "typography": "cut-and-paste",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "have",
+    "nav": "side-index",
+    "footer": "line",
+    "concept": "playful-way-in",
+    "signatures": [],
+    "pieces": [
+      "drag-photos",
+      "tilted-grid",
+      "scribble-link"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "drag-photos",
+        "page": "yoqd7i4h",
+        "index": 2
+      },
+      {
+        "piece": "tilted-grid",
+        "page": "uk26u1os",
+        "index": 2
+      },
+      {
+        "piece": "scribble-link",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "yoqd7i4h",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "featured-work",
+          "gallery",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "uk26u1os",
+        "type": "work",
+        "label": "Books",
+        "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+        "sections": [
+          "featured-work",
+          "case-study",
+          "gallery",
+          "clients",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "bhttkccf",
+        "type": "about",
+        "label": "About",
+        "purpose": "Put a human face and point of view on the work; build trust.",
+        "sections": [
+          "about",
+          "process",
+          "stats",
+          "testimonials",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "ub47y2bl",
+        "type": "contact",
+        "label": "Commissions",
+        "purpose": "Tell publishers and authors how to commission a book or a cover: what Nell takes on, lead times, rough fees, and a short enquiry form.",
+        "sections": [
+          "contact-cta",
+          "faq"
+        ]
+      }
+    ],
+    "target": "not-sure"
+  }
+}

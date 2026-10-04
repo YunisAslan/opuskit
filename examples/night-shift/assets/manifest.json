@@ -1,0 +1,60 @@
+{
+  "recipe": "digital-futurism",
+  "title": "Night Shift — Technical Minimal Course Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Made for Night Shift: src/components/chrome/Logo.tsx (mark + wordmark), src/app/icon.svg (favicon)",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts via next/font (src/app/layout.tsx)",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Science Gothic, Atkinson Hyperlegible Next (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written for the site: src/content/site.ts (names, credits, dates and quotes are invented)",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "3dModelOrScene": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Built in code: src/components/scene/ConsoleScene.tsx (React Three Fiber), no model file",
+      "replaceWith": "user-owned-3d",
+      "usage": "Hero scene: grading console with the monitor video, lift/gamma/gain wheels and live scopes",
+      "specs": "GLB < 3MB, < 100k triangles, or a Spline scene"
+    },
+    "preRenderedPoster": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Rendered from the scene: public/media/console-poster.jpg (1920x1080) and console-poster-mobile.jpg (1080x1350), see media-src/SOURCES.md",
+      "replaceWith": "user-owned-images",
+      "usage": "Loading state, mobile & reduced motion fallback",
+      "specs": "Rendered from the hero camera angle"
+    },
+    "supportingRenders": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "The user’s photos and film stills in public/media/ (media-src/SOURCES.md)",
+      "replaceWith": "user-owned-images",
+      "usage": "Intro, Curriculum modules, before/after pairs",
+      "specs": "Same lighting setup"
+    }
+  }
+}

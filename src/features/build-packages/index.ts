@@ -38,7 +38,7 @@ export function kitFiles(r: UniversalRecipe): BuildFile[] {
   const libs = [...new Map(r.pieces.map((p) => [p.source.library, p.source])).values()]
   return [
     ...sectionFiles,
-    ...r.pieces.map((p) => ({ path: p.path, content: pieceSource[p.id] })),
+    ...r.pieces.filter((p, i) => r.pieces.findIndex((q) => q.path === p.path) === i).map((p) => ({ path: p.path, content: pieceSource[p.id] })), // two kit entries can share one file (DrawnLink, TextEffect)
     { path: 'THIRD-PARTY-NOTICES.md', content: `# Third-party notices\n\nThe components in src/components/pieces/ were adapted by OpusKit from these libraries (MIT), or use them as an npm dependency (Apache-2.0).\n\n${libs.map((l) => l.license === 'MIT'
       ? `## ${l.library} — ${l.url}\n\nMIT License\n\n${l.copyright}\n\n${MIT}`
       : `## ${l.library} — ${l.url}\n\nUsed as an npm dependency. ${l.copyright}. Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.`).join('\n\n')}\n` },

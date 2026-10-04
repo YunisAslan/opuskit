@@ -34,6 +34,17 @@ Instead:
   session started from Claude's side was blocked by its safety check. Claude writes each prompt into `BUILD-LOG.md`
   first; the user pastes it.
 
+- **2026-10-03:** **The user picks every video** for new sites (films, loops, scroll footage) — Claude's picks for the
+  first ten were not liked. Claude still finds the photos (they were fine), writes the shot list for the films, and
+  waits for the user's files before building. Photos: Unsplash connector (needs re-authorising in claude.ai connector
+  settings when it drops) or Pexels.
+- **2026-10-03:** Section clips show the section **standing still**, framed on it (never the page scrolling past);
+  small effects (link hovers, menus, status lines) are cut zoomed in; menus and link behaviours are shown in the kit as
+  drawn demos (`MenuDemo`, `LinkDemo` on the real Footer), not recordings. Never paste or patch a frame — a clip is
+  real footage or a real held frame.
+- **2026-10-03:** The kit is the foundation of a site, not every detail of it (user): add to the library only what a
+  user would look for and not find. Added then: the Timeline section and the Soft fade page transition.
+
 ## 3. Core rule: no fake examples
 
 Every example comes about the way a normal user would make it: **kit → Build Package → Claude Code**.
@@ -127,7 +138,7 @@ user still approves the recipe at step 1. "—" = the look's own.
 | 3 | User | Finds the media and drops it into `examples/{slug}/media-src/`, with each file's source link in `media-src/SOURCES.md`. |
 | 4 | Claude | Exports the Build Package. **Before any `npm install`/build**, adds `turbopack: { root: new URL('.', import.meta.url).pathname }` to `next.config.ts` (otherwise OpusKit's own `node_modules` is at risk). Video goes through `bash scripts/prepare-video.sh`. Builds with Claude Code; every prompt goes into `BUILD-LOG.md`. |
 | 5 | Together | Review: Claude checks the build (production build, 1440 px + 390 px in a real browser, overflow, console errors, failed requests) and writes fix prompts; 1–2 rounds, only through prompts. |
-| 6 | Claude | Capture: 1440×900 screenshot (after the video has real frames), poster, a **10–15 s clip** (first screen + some scroll, so the movement shows), and a **4–5 s clip per section** (`public/media/clips/{sectionId}.mp4`: the part scrolling into view, so its reveal shows). **The user screen-records** the live export (no dev overlay), moving around and using it; Claude cuts the clips with ffmpeg. Browser-automation video dropped frames (~17 fps) and missed things (decided 2026-10-01); automation is used only for the poster and card stills. |
+| 6 | Claude | Capture: 1440×900 screenshot (after the video has real frames), poster, a **10–15 s clip** (first screen + some scroll, so the movement shows), and a **3–5 s clip per section** (`public/media/clips/{sectionId}.mp4`: the part **standing still**, framed on it — never the page scrolling past it; the user, 2026-10-03: "a footer clip shows the footer, it doesn't come in from above"). Only the site clip and scroll-driven effects may scroll. Where a recording never stops on a section, its sharpest full frame is held instead, and the user re-records it standing still. **The user screen-records** the live export (no dev overlay), moving around and using it; Claude cuts the clips with ffmpeg. Browser-automation video dropped frames (~17 fps) and missed things (decided 2026-10-01); automation is used only for the poster and card stills. |
 | 7 | Claude | Registration: `src/data/examples.ts` (with tags, `choices` using exact option names), `public/examples/{slug}` symlink, `npm run examples`, live export (AGENTS.md → "Showing one on the site"), `npm run check`. The old example it replaces is removed in the same step (§9). |
 | 8 | Claude | Kit connection (§8): the site's tags, and its clip shown in the kit where it matches. Built with the first site; each later site only adds its tags and clip. |
 
@@ -397,6 +408,95 @@ can, else the user downloads it).
 - Film: "Silhouette Walking Through Tunnel to Light" by Dominik Zítka, Pexels (found and downloaded by Claude). Photos:
   9 from Pexels (4 performers, 4 venue/atmosphere, the hangar), `media-src/SOURCES.md`.
 
+**11. Portfolio — Inkwell & Moth.** Recipe approved 2026-10-03 (`examples/inkwell-moth/`, BUILD-LOG §1). The picture-book
+studio of illustrator Nell Arden in an old bakery in Sheki (made-up).
+- Look: Scrapbook · colours Legal Pad · lettering Cut and Paste · first screen: Illustrated hero · movement: Dynamic ·
+  big idea: A playful way in (entry gate on the hero = the tracing-paper sheet visitors lift away; each book brings its
+  own colours) · menu: Side index · footer: One quiet line · links: Hand-drawn underline
+- Pages: Home (hero → featured work → gallery + Prints on a desk → closing CTA), Books (featured work → case study →
+  gallery + Tilted scroll grid → clients → closing CTA), About (about → process → stats → testimonials → closing CTA),
+  Commissions (closing CTA → FAQ)
+- Media: no film (the user did not ask for the optional time-lapse); the hero illustration, spot drawings and logo are
+  drawn by Claude Code. 25 photos from Pexels picked by Claude (4 books, 1 reference plate, 5 desk sketches, 8 spreads,
+  4 process steps, portrait, studio, Sheki street), `media-src/SOURCES.md`.
+
+**12. Nonprofit — Kür Delta Watch.** Recipe approved 2026-10-03 (`examples/kur-delta-watch/`). A volunteer river watch on
+the lower Kür (made-up): rubbish out of the river, monthly water tests, published results.
+- Look: Neo-Brutalist · colours Hazard Yellow · lettering Workshop Manual · shape Bold outline (the look's own) · first
+  screen: Words in motion (kinetic-type) + Departure board (split-flap) · movement: Dynamic · big idea: Loud covers, quiet
+  reading (giant word on Home's manifesto; Field notes' gallery opens like a curtain) · menu: Menu with cards · footer:
+  Big name · links: Filling underline
+- Pages: Home (hero → stats → film band (ambient video) → manifesto → timeline → services → CTA band → journal →
+  newsletter), The river (about → editorial story → team), What we do (services → process → closing CTA), Field notes
+  (testimonials → editorial story → gallery → closing CTA), Donate (custom: pricing → trust → FAQ), Contact (closing CTA →
+  location)
+- Photos: 19 from Pexels picked by Claude (`media-src/SOURCES.md`). **Film: the user picks it** — one file:
+
+| File | Site | Search term | Filter | Minimum | Should show |
+|---|---|---|---|---|---|
+| `media-src/river.mp4` | Pexels / Coverr / Mixkit | `river reeds calm` (or `wetland morning mist`, `delta water slow aerial`) | Landscape | 1920 px wide (4K better), 8–15 s usable | One continuous, slow shot of a calm lower river or delta wetland: still or gently drifting water, reeds, soft morning or evening light (mist is good); tripod-still or a very slow glide; natural greens and silver water; the subject in the middle 60 % so the phone's 9:16 crop works; ideally the same first and last frame for a seamless loop. **Avoid:** people, boats with names or flags, rubbish (the numbers above it carry that), fast drone moves or hyperlapse, cuts, shaky handheld, heavy orange "sunset" grades, text or watermarks. |
+
+It plays muted and looping as a quiet full-width band between Home's loud numbers and the manifesto — the "quiet" half
+of loud-and-quiet. No sound needed.
+
+**15. Personal brand — Sela Mor.** Recipe approved 2026-10-04 (`examples/sela-mor/`). A sound artist and composer from Baku
+(made-up): field recordings of wind, water and machines, turned into music for rooms, films and long nights.
+- Look: Monochrome Minimal · colours Black Box · lettering Data Sheet (Mona Sans) · shape Hairline (the look's own) ·
+  first screen: Words in motion (her name breathing with the sound) · movement: Immersive · big idea: Chapters in giant
+  words (Home's works list held still, one work at a time; Listen opens on a giant word) · menu: Split pill · footer:
+  Signature columns · links: Rolling links · main button: Magnetic · between pages: Soft fade · whole site: Sound, with a
+  mute
+- Pages: Home (hero → works + Photos follow the cursor → **scroll-scrubbed film band** (the user asked for scroll, not a
+  loop) → about → schedule → clients → newsletter), Works (featured work → case study → gallery (Gallery wall + Lightbox)
+  → clients), Listen (custom: intro → closing CTA; six tracks with players), Live (custom: schedule → newsletter), About
+  (about → press → closing CTA), Contact
+- Photos: 16 from Pexels picked by Claude (`media-src/SOURCES.md`; one headphone mark retouched). **The film and the
+  sound are the user's picks** — two files:
+
+| File | Site | Search term | Filter | Minimum | Should show |
+|---|---|---|---|---|---|
+| `media-src/film.mp4` | Pexels / Coverr / Mixkit | `musician dark stage smoke` (or `sound artist performance`, `hands mixer dark`) | Landscape | 1920 px wide (4K better), **15–30 s, one continuous shot, no cuts** | A live sound performance in the dark: hands on knobs and cables, or a lone performer on a smoky stage, lit by hard white or neutral light; the camera moves **slowly and steadily** (a push-in or a slow slide) the whole time, because scrolling plays it forwards and back; works in black and white (or desaturates well); the subject in the middle 60 % for the phone's 9:16 crop. **Avoid:** readable brand names or logos on gear, famous faces, cuts, handheld shake, fast moves, coloured disco light, a crowd as the subject, text or watermarks. |
+| `media-src/sound.mp3` | Pixabay (music or sound effects) | `ambient drone field recording` (or `dark ambient texture`, `wind drone`) | — | 30–90 s, MP3 or WAV | One calm, seamless loop that sounds like her work: wind, water or a low machine hum turned into a slow drone; no vocals, no beat, no sudden peaks; the end flows back into the start. It is off until a visitor turns it on (the mute switch is always in view). |
+
+**13. Course — Night Shift.** Recipe approved 2026-10-04 (`examples/night-shift/`). An eight-week online course in film
+colour grading, taught live by a working colourist (made-up).
+- Look: Technical Minimal · colours Wet Slate (a neutral grading-room grey, so the film is the only colour) · lettering
+  Control Room · shape Hairline · first screen: 3D / WebGL scene (a live grading console built in code: colour wheel and
+  scopes that move with the pointer and scroll, a graded shot on its monitor) · movement: Immersive · big idea: A live
+  console (decoding // labels on Curriculum, a live status line in the menu: next cohort, seats left) · menu: Floating
+  dock · footer: Say hello · links: Scrambled labels
+- Pages: Home (hero → intro → case study + Before / after (log ↔ graded) → process → about → testimonials → pricing →
+  FAQ → closing CTA), Curriculum (feature grid → process → case study + Before / after → FAQ), Enrol (pricing → FAQ →
+  testimonials), Instructor (about → stats → testimonials), FAQ (FAQ → closing CTA)
+- Photos: 8 from Unsplash picked by Claude (`media-src/SOURCES.md`; one bezel logo retouched). **The film clips are the
+  user's picks** — three files; Claude makes the graded stills from them and flattens the same frames into "log":
+
+| File | Site | Search term | Filter | Minimum | Should show |
+|---|---|---|---|---|---|
+| `media-src/clip-1.mp4` | Pexels / Coverr / Mixkit | `night street neon cinematic` | Landscape | 1920 px wide, 8–20 s, one shot | A night street with strong mixed light (sodium orange and cool teal), a person walking or a car passing slowly; graded, contrasty, cinematic. Also plays on the console's monitor in the first screen, so it should loop calmly. |
+| `media-src/clip-2.mp4` | same | `golden hour portrait cinematic` | Landscape | 1920 px wide, 5–15 s, one shot | A close portrait in warm low sun: skin tones, soft backlight, a shallow background — the shot that shows how a grade handles skin. |
+| `media-src/clip-3.mp4` | same | `moody interior tungsten window light` | Landscape | 1920 px wide, 5–15 s, one shot | An interior at dusk or night: warm tungsten lamps against blue window light, one person or an empty room — the mixed-colour shot. |
+
+**Avoid in all three:** readable shop signs, brand names or logos (cars, clothes, screens), famous faces, text or
+subtitles burned in, cuts, black-and-white or flat ungraded footage (Claude makes the flat version).
+
+**14. Real estate — Aster House.** Recipe approved 2026-10-04 (`examples/aster-house/`). Twelve houses cut into the cliff
+above the Caspian at Shikhov (made-up), each built around the light of one hour; one release, spring 2027.
+- Look: Architectural Minimal · colours **Limestone** (chosen by fit: the warm stone of the Absheron cliffs, under a
+  dawn-to-dusk film; compared with Signal White, Wet Concrete and Black Box in the kit preview) · lettering Quiet Page ·
+  shape Hairline · layout Full-bleed · first screen: Scroll-controlled video · movement: Immersive · big idea: One thing
+  guides the scroll (a line of light from Home's intro; the footer name) · menu: Classic bar · footer: Signature columns ·
+  links: Filling underline · between pages: Soft fade
+- Pages: Home (hero → intro → feature rows (the hours) → product grid (the houses) → gallery → location → closing CTA),
+  Residences (product grid → feature grid → FAQ; brief: all twelve houses with hour, area, bedrooms, terrace, price,
+  free/reserved/sold), A house (product highlight → gallery → feature rows → closing CTA), Book a viewing (closing CTA →
+  location)
+- Photos: 15 from Pexels picked by Claude (`media-src/SOURCES.md`). **The film is the user's pick** — one file:
+
+| File | Site | Search term | Filter | Minimum | Should show |
+|---|---|---|---|---|---|
+| `media-src/film.mp4` | Pexels / Coverr / Mixkit | `modern house interior walkthrough` (or `minimalist villa tour`, `architecture interior gimbal`) | Landscape | 1920 px wide (4K better), **15–30 s, one continuous shot, no cuts** | A slow, steady walk (gimbal or dolly) through a calm modern house: stone, plaster, concrete or wood, big windows, ideally out to sea or open landscape; warm natural light, best if it moves from bright to golden; few objects, no people or one at a distance. Scroll plays it forwards and back, so the move must be smooth and in one direction. **Avoid:** cuts, drone exteriors only, fast moves or whip pans, shaky handheld, people facing the camera, TV screens or branded products, text or watermarks, heavy teal-orange grades. |
+
 ## 8. Connecting to the kit (built with the first site, grows with each)
 
 Changed 2026-10-01: this no longer waits for 3–4 sites. It is built as soon as one site is ready to test end to end;
@@ -458,20 +558,104 @@ Removing one example = `examples/{slug}/`, the `public/examples/{slug}` symlink 
 `public/downloads/{slug}.zip`, its entry in `src/data/examples.ts`, then `npm run examples` and `npm run check`.
 Before removing, grep for `/examples/{slug}`: no references must remain.
 
+### Effects, menus and big ideas (added 2026-10-03)
+
+Beyond `clip` and `sectionClips`, an example carries `pieceClips` (a kit piece doing its thing) and `signatureClips`
+(a big-idea moment). The kit shows them where that thing is picked: the Design step's right column follows the open tab
+(Look → a site in that look; Big idea → that idea; Menu & footer → that menu and that footer style; Behaviour → each
+picked behaviour), Pages shows a part's moments under its clip, and `/examples/{slug}` lists them under "Effects".
+Not only on the right (user, 2026-10-03): every option tile with a real site plays that site as its picture
+(`TileClip`, no label; a corner button opens it large) — Design's looks, movement, big ideas, menus, footers and behaviours, and in Pages the
+parts to add, first screens, other looks, effects, menus and footers (`anySection`/`heroSite`: any site with that very
+thing). The part as it is now and the page rows stay drawn in the user's own colours. Small effects (link hovers,
+menus, status lines, travelling marks) are cut zoomed in: a still 16:9 crop of the recording around the effect, 2–4×. `npm run check` asserts each clip exists and that the site really
+uses that piece or moment. A clip is left out when it would mislead: a site clip that isn't the home first screen,
+smooth scroll (looks like any scroll), sound (silent), a footer still showing the old wavy hover.
+
+**Kit coverage (2026-10-03)** — what no real site shows yet, so the next sites can be picked to fill it:
+looks 8/41 · first screens 8/11 (missing scroll-video, scroll-video-page as a site clip, illustrated) · menus 5/8 (card-menu,
+bottom-dock, side-index) · footers 3/4 (line) · big ideas 3/6 (live-console, playful-way-in, loud-and-quiet) · pieces 10/45
+· signature moments 9/33 · sections 32/37 (process, stats, chapters, cta-band, schedule). Re-recordings that would fill
+gaps cheaply: Lowfield and Velmira home first screens (site clips, schedule), Brasshand About/Services (process, stats),
+any curtain/blob page change, a magnetic button hover, a swap-button hover.
+
+## 11. Next sites (#11–#15, redesigned 2026-10-03)
+
+The user (2026-10-03): the new sites must be **more realistic and more striking** — they are filmed for the kit, so each
+needs a moment worth watching. And every good thing a build makes by hand feeds the kit back, so the engine grows.
+
+**Bar for every site:** a believable made-up brand with real copy (no lorem, no "Your headline"), real photos, the user's
+own films, one **showcase moment** that is visible in the first 10 seconds of a recording, and nothing that looks like a
+template. Each still covers kit options no real site shows yet (§8 "Kit coverage").
+
+| # | Site | Kind · Look (family) · Movement | First screen | Menu · Footer | Big idea | Showcase moment |
+|---|---|---|---|---|---|---|
+| 11 | **Inkwell & Moth** — a picture-book illustrator | portfolio · scrapbook (raw) · dynamic | illustrated | side-index · line | playful-way-in | The site opens under a sheet of tracing paper you lift away; sketches lie on a desk and can be dragged (drag photos), spreads tilt as you scroll |
+| 12 | **Kür Delta Watch** — a river restoration charity | nonprofit · neo-brutalist (bold) · dynamic | kinetic-type | card-menu · wordmark | loud-and-quiet | Giant ticking numbers on flat colour ("2,140 tonnes out of the river") cut hard to quiet full-bleed river film; the new Timeline tells the river's story |
+| 13 | **Night Shift** — an online course in film colour grading | course · technical-minimal (futuristic) · immersive | webgl-scene | bottom-dock · contact | live-console | A live grading console: scopes and a colour wheel that move, and a before/after slider over the user's log vs graded film stills |
+| 14 | **Aster House** — twelve homes on a cliff, one launch | real-estate · architectural-minimal (minimal) · immersive | scroll-video (the user's film) | classic-bar · signature | one-guide (the light) | Scroll drives a dawn-to-dusk walk through the house; pages soften into each other (Soft fade); residences list with what is still free |
+| 15 | **Sela Mor** — a sound artist and composer | personal-brand · monochrome-minimal (minimal) · dynamic | kinetic-type | split-pill · signature | giant-chapters | Her name breathes with the sound; works list trails photos under the pointer; ambient sound of her own track, with a mute |
+
+**Media.** Claude finds the photos (Unsplash connector or Pexels). **The user picks every video** and the audio:
+#11 an optional ink-drawing time-lapse; #12 a river or wetland film for the quiet band; #13 a few film shots in log and
+graded (stills come from them); #14 the walk-through film for the scroll (one continuous shot, dawn to dusk if possible);
+#15 a short performance loop and a track for the ambient sound. Claude writes each film's shot list and waits.
+
+**Kit growth (the loop).** After each build, list what Claude Code had to build by hand that a user would want too, and
+ask the user before adding it to the kit (section or piece, the full AGENTS.md wiring, `npm run pieces`, `npm run check`).
+Likely candidates: #11 a page-turn transition and torn-paper edges; #12 a Donate section (amount, monthly/once);
+#13 a Curriculum section (modules and lessons) and a two-film compare; #14 an Availability list (residences, size,
+status) ; #15 a Listen section (tracks with a waveform). Not every candidate goes in — the kit is the foundation (§2).
+**Added from #11 (2026-10-03, the user picked 3 of 4):** `EntryGate`, `ChapterColours`, `Lightbox` pieces — the first
+two also ship whenever their big-idea moment lands (`SignaturePattern.piece`); not added: the cut-out footer wordmark.
+**Added from #12 (2026-10-04, the user's OK):** the Donate section (gifts that say what they pay for, the project's own
+pledge form as a slot, where the money goes) and a Donate page type; nonprofits now start with a Donate page.
+**Added from #15 (2026-10-04, the user's OK):** the Listen section (tracks with one shared player; starting one turns the
+site's sound off) and a Listen page type. The user, 2026-10-04: Sela Mor is the bar — "the kit must make sites like this".
+**Added from #13 (2026-10-04, the user's OK):** the Curriculum section (modules with their lessons and outcome; course
+sites' Curriculum page now starts with it) and the Grading Suite palette (grading-room black, warm white, skin-tone
+peach) — the user disliked Night Shift's Wet Slate; palettes are now picked by fit and previewed on a real page.
+
+**Order:** 11 (photos only) → 12 → 15 → 13 → 14 (the heaviest film last). Any row can be swapped by the user.
+
+## Re-recordings wanted (2026-10-03)
+
+The section clips below are a held still frame, because the recording never stopped on them. A re-recording that rests
+~4 s on each (page still, no scrolling; hover inside the part is good) turns them into live clips. Drop new recordings
+in `examples/{slug}/media-src/recording/`.
+
+| Site | Sections |
+|---|---|
+| Fennwood | intro, menu, gallery, reservation, location, faq, footer |
+| Sticky Weather | featured-work, manifesto, journal, contact-cta, about |
+| Hexmint | clients, feature-rows, feature-grid, integrations, testimonials, contact-cta, how-it-works (let the text scramble finish) |
+| Lowfield Nights | the home first screen (for its site clip), intro, schedule, team, location, reservation, menu, faq, footer |
+| Velmira | the home first screen (for its site clip), intro, feature-rows, journal, reservation, lookbook, gallery, location, faq, footer (no footer hovers) |
+| Slow Atlas | editorial-story, journal, categories |
+| Halvik | product-highlight, feature-rows, press, testimonials, pricing, trust, contact-cta, footer (no hovers), feature-grid, how-it-works |
+| Hane | services, how-it-works, testimonials, pricing, reservation |
+| Brasshand | manifesto, case-study, clients, services, journal |
+| Saint Ashe | journal, newsletter, lookbook, editorial-story, team, product-grid, contact-cta, footer, about (faq, collection, location: longer still moments) |
+
 ## 10. Progress
 
 | # | Site | Recipe | Media brief | Media | Build | Capture | Registered | Kit (§8) |
 |---|---|---|---|---|---|---|---|---|
 | 1 | Blog — Slow Atlas | ✓ (`examples/slow-atlas/opuskit.json`) | ✓ (§7) | ✓ 10/10 (`media-src/SOURCES.md`) | ✓ Prompt 1 + Prompt 2 (fix round 1, run by a subagent); `next build` passes, all routes static | ✓ poster + 13 s clip (from the live export, hero reveal included) | ✓ 2026-10-01: `examples.ts`, symlink, zip, live at `/live/slow-atlas` (click-through checked), `npm run check` ✓; `ulooklonely` removed | ✓ 2026-10-01: site clip + 6 section clips; shown in Design, Pages and `/examples/slow-atlas` |
-| 2 | Agency — Brasshand | ✓ (`examples/brasshand/opuskit.json`, approved) | ✓ (§7) | ✓ 10/10 (`media-src/SOURCES.md`, Unsplash connector; work-4 replaced after the build — real label logo) | ✓ Prompt 1 + Prompt 2 (fix round 1), both by a subagent; 17 static routes | poster + card ✓; clips: waiting for the user's recordings | ✓ 2026-10-01: `examples.ts`, symlink, zip, live at `/live/brasshand` (click-through checked), `npm run check` ✓; cheeky911 not yet removed (needs the user's OK) | – (no clips yet) |
-| 3 | SaaS — Hexmint | ✓ (`examples/hexmint/opuskit.json`, approved) | ✓ (§7: no files) | ✓ none needed | ✓ Prompt 1 (subagent; resumed once after an API limit); no fix round | card ✓ (poster rendered from the scene); clips: waiting for the user's recordings | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/hexmint` (click-through checked), `npm run check` ✓ | – (no clips yet) |
-| 4 | Studio — Sticky Weather | ✓ (`examples/sticky-weather/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 14/14 (`media-src/SOURCES.md`, Unsplash connector) | ✓ Prompt 1 (subagent, resumed once after an interrupted session) + Prompt 2 (fix round 1: mobile stickers over the hero text); all routes static | poster + card ✓; clips: waiting for the user's recordings | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/sticky-weather` (click-through checked), `npm run check` ✓; cheeky911 not yet removed (needs the user's OK) | – (no clips yet) |
-| 5 | Product — Halvik | ✓ (`examples/halvik/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 6/6 (`media-src/SOURCES.md`, Unsplash connector; fox keycap mark retouched in 4) | ✓ Prompt 1 (subagent, resumed twice) + Prompt 2 (fix round 1: hero crop, buy bar off Contact) + Prompt 3 (fix round 2: framed hero beside the headline on desktop); all routes static; reviewed 1440 + 390 | card ✓ (from the live export); clips: waiting for the user's recordings | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/halvik` (click-through checked), `npm run check` ✓; `keepers` removed, kit product world → Halvik | – (no clips yet) |
-| 6 | Clinic — Hane | ✓ (`examples/hane/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 8/8 (`media-src/SOURCES.md`, Unsplash connector) | ✓ Prompt 1 (subagent); no fix round; all routes static; reviewed 1440 + 390 | card ✓ (from the live export); clips: waiting for the user's recordings | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/hane` (click-through checked), `npm run check` ✓ | – (no clips yet) |
-| 7 | Restaurant — Fennwood | ✓ (`examples/fennwood/opuskit.json`, approved 2026-10-03) | ✓ (§7) | ✓ 8/8 (`media-src/SOURCES.md`, Unsplash connector; 3 cropped) | ✓ Prompt 1 + Prompt 2 (fix round 1: travelling mark kept in the margin, phone bar off the footer); all routes static; reviewed 1440 + 390 | card ✓ (from the live export); clips: waiting for the user's recordings | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/fennwood` (click-through checked), `npm run check` ✓; `kofii` removed, kit food world → Fennwood | – (no clips yet) |
-| 8 | Fashion shop — Saint Ashe | ✓ (`examples/saint-ashe/opuskit.json`, approved 2026-10-03) | ✓ (§7) | ✓ video (Pexels, found and downloaded by Claude) + 17 photos (`media-src/SOURCES.md`, Unsplash connector; 7 cropped) | ✓ Prompt 1 + Prompt 2 (fix round 1: giant words whole, phone collection layout); video re-encoded within budget; all routes static; reviewed 1440 + 390 | card ✓ (from the live export, video frames); clips: waiting for the user's recordings | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/saint-ashe` (click-through checked), `npm run check` ✓; `buytolose` removed, kit shop world → Saint Ashe | – (no clips yet) |
-| 9 | Hotel / spa — Velmira | ✓ (`examples/velmira/opuskit.json`, approved 2026-10-03) | ✓ (§7) | ✓ film (Pexels) + sound (Pixabay) + 11 photos (Pexels, `media-src/SOURCES.md`; 2 graded) | ✓ Prompt 1 + Prompt 2 (fix round 1: sound switch into the menu bar); all routes static; reviewed 1440 + 390 | card ✓ (from the live export, film frames); clips: waiting for the user's recordings | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/velmira` (click-through checked), `npm run check` ✓ | – (no clips yet) |
-| 10 | Event — Lowfield Nights | ✓ (`examples/lowfield-nights/opuskit.json`, 2026-10-03) | ✓ (§7) | ✓ film + 9 photos (Pexels, `media-src/SOURCES.md`; 4 cropped/graded) | ✓ Prompt 1 (resumed once after an API limit) + Prompt 2 (fix round 1: footer name fits, phone stop label clears controls); scrub film re-encoded within budget; all routes static; reviewed 1440 + 390 | card ✓ (from the live export, film frames); clips: waiting for the user's recordings | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/lowfield-nights` (click-through checked), `npm run check` ✓; `swiss-modern-event-site-claude-code` removed, kit event world → Lowfield | – (no clips yet) |
+| 2 | Agency — Brasshand | ✓ (`examples/brasshand/opuskit.json`, approved) | ✓ (§7) | ✓ 10/10 (`media-src/SOURCES.md`, Unsplash connector; work-4 replaced after the build — real label logo) | ✓ Prompt 1 + Prompt 2 (fix round 1), both by a subagent; 17 static routes | poster + card ✓; clips ✓ 2026-10-03 (cut from the user's recording) | ✓ 2026-10-01: `examples.ts`, symlink, zip, live at `/live/brasshand` (click-through checked), `npm run check` ✓; cheeky911 not yet removed (needs the user's OK) | ✓ 2026-10-03: site, section, effect and big-idea clips |
+| 3 | SaaS — Hexmint | ✓ (`examples/hexmint/opuskit.json`, approved) | ✓ (§7: no files) | ✓ none needed | ✓ Prompt 1 (subagent; resumed once after an API limit); no fix round | card ✓ (poster rendered from the scene); clips ✓ 2026-10-03 (cut from the user's recording) | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/hexmint` (click-through checked), `npm run check` ✓ | ✓ 2026-10-03: site, section, effect and big-idea clips |
+| 4 | Studio — Sticky Weather | ✓ (`examples/sticky-weather/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 14/14 (`media-src/SOURCES.md`, Unsplash connector) | ✓ Prompt 1 (subagent, resumed once after an interrupted session) + Prompt 2 (fix round 1: mobile stickers over the hero text); all routes static | poster + card ✓; clips ✓ 2026-10-03 (cut from the user's recording) | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/sticky-weather` (click-through checked), `npm run check` ✓; cheeky911 not yet removed (needs the user's OK) | ✓ 2026-10-03: site, section, effect and big-idea clips |
+| 5 | Product — Halvik | ✓ (`examples/halvik/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 6/6 (`media-src/SOURCES.md`, Unsplash connector; fox keycap mark retouched in 4) | ✓ Prompt 1 (subagent, resumed twice) + Prompt 2 (fix round 1: hero crop, buy bar off Contact) + Prompt 3 (fix round 2: framed hero beside the headline on desktop); all routes static; reviewed 1440 + 390 | card ✓ (from the live export); clips ✓ 2026-10-03 (cut from the user's recording) | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/halvik` (click-through checked), `npm run check` ✓; `keepers` removed, kit product world → Halvik | ✓ 2026-10-03: site, section, effect and big-idea clips |
+| 6 | Clinic — Hane | ✓ (`examples/hane/opuskit.json`, approved 2026-10-02) | ✓ (§7) | ✓ 8/8 (`media-src/SOURCES.md`, Unsplash connector) | ✓ Prompt 1 (subagent); no fix round; all routes static; reviewed 1440 + 390 | card ✓ (from the live export); clips ✓ 2026-10-03 (cut from the user's recording) | ✓ 2026-10-02: `examples.ts`, symlink, zip, live at `/live/hane` (click-through checked), `npm run check` ✓ | ✓ 2026-10-03: site, section, effect and big-idea clips |
+| 7 | Restaurant — Fennwood | ✓ (`examples/fennwood/opuskit.json`, approved 2026-10-03) | ✓ (§7) | ✓ 8/8 (`media-src/SOURCES.md`, Unsplash connector; 3 cropped) | ✓ Prompt 1 + Prompt 2 (fix round 1: travelling mark kept in the margin, phone bar off the footer); all routes static; reviewed 1440 + 390 | card ✓ (from the live export); clips ✓ 2026-10-03 (cut from the user's recording) | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/fennwood` (click-through checked), `npm run check` ✓; `kofii` removed, kit food world → Fennwood | ✓ 2026-10-03: site, section, effect and big-idea clips |
+| 8 | Fashion shop — Saint Ashe | ✓ (`examples/saint-ashe/opuskit.json`, approved 2026-10-03) | ✓ (§7) | ✓ video (Pexels, found and downloaded by Claude) + 17 photos (`media-src/SOURCES.md`, Unsplash connector; 7 cropped) | ✓ Prompt 1 + Prompt 2 (fix round 1: giant words whole, phone collection layout); video re-encoded within budget; all routes static; reviewed 1440 + 390 | card ✓ (from the live export, video frames); clips ✓ 2026-10-03 (cut from the user's recording) | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/saint-ashe` (click-through checked), `npm run check` ✓; `buytolose` removed, kit shop world → Saint Ashe | ✓ 2026-10-03: site, section, effect and big-idea clips |
+| 9 | Hotel / spa — Velmira | ✓ (`examples/velmira/opuskit.json`, approved 2026-10-03) | ✓ (§7) | ✓ film (Pexels) + sound (Pixabay) + 11 photos (Pexels, `media-src/SOURCES.md`; 2 graded) | ✓ Prompt 1 + Prompt 2 (fix round 1: sound switch into the menu bar); all routes static; reviewed 1440 + 390 | card ✓ (from the live export, film frames); clips ✓ 2026-10-03 (cut from the user's recording) | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/velmira` (click-through checked), `npm run check` ✓ | ✓ 2026-10-03: section, effect and big-idea clips; **no site clip** — the recording misses the film first screen |
+| 10 | Event — Lowfield Nights | ✓ (`examples/lowfield-nights/opuskit.json`, 2026-10-03) | ✓ (§7) | ✓ film + 9 photos (Pexels, `media-src/SOURCES.md`; 4 cropped/graded) | ✓ Prompt 1 (resumed once after an API limit) + Prompt 2 (fix round 1: footer name fits, phone stop label clears controls); scrub film re-encoded within budget; all routes static; reviewed 1440 + 390 | card ✓ (from the live export, film frames); clips ✓ 2026-10-03 (cut from the user's recording) | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/lowfield-nights` (click-through checked), `npm run check` ✓; `swiss-modern-event-site-claude-code` removed, kit event world → Lowfield | ✓ 2026-10-03: section, effect and big-idea clips; **no site clip** — the recording misses the film first screen |
+| 11 | Portfolio — Inkwell & Moth | ✓ (`examples/inkwell-moth/opuskit.json`, approved 2026-10-03) | ✓ (§7) | ✓ 25 photos (Pexels, `media-src/SOURCES.md`; 1 cropped) | ✓ Prompt 1 (subagent, resumed once after an API limit); all routes static; reviewed 1440 + 390 | card + poster ✓ (from the live export, after the gate); clips: waiting for the user's recording | ✓ 2026-10-03: `examples.ts`, symlink, zip, live at `/live/inkwell-moth` (click-through checked), `npm run check` ✓ | clips open |
+| 12 | Nonprofit — Kür Delta Watch | ✓ (`examples/kur-delta-watch/opuskit.json`, approved 2026-10-03) | ✓ (§7) | ✓ film (the user's pick) + 19 photos (Pexels, `media-src/SOURCES.md`; 1 cropped) | ✓ Prompt 1 (subagent); all routes static; reviewed 1440 + 390; no fix round | card ✓ (from the live export); clips: waiting for the user's recording | ✓ 2026-10-04: `examples.ts`, symlink, zip, live at `/live/kur-delta-watch` (click-through checked), `npm run check` ✓ | clips open |
+| 13 | Course — Night Shift | ✓ (`examples/night-shift/opuskit.json`, approved 2026-10-04) | ✓ (§7) | ✓ 3 clips (the user's; clip-1 used only as one cropped still — brand signs) → 3 log/graded pairs + monitor loop; 8 photos (Unsplash; 1 retouched), `media-src/SOURCES.md` | ✓ Prompt 1 (subagent; stopped once on a permission check, once on an API limit, resumed each time); all routes static; reviewed 1440 + 390; no fix round | card ✓ (from the live export); clips: waiting for the user's recording | ✓ 2026-10-04: `examples.ts`, symlink, zip, live at `/live/night-shift` (click-through checked), `npm run check` ✓ | clips open |
+| 14 | Real estate — Aster House | ✓ (`examples/aster-house/opuskit.json`, approved 2026-10-04) | ✓ (§7) | ✓ film (the user's pick, Pexels 7578547) + 15 photos (Pexels), `media-src/SOURCES.md` | ✓ Prompt 1 (subagent); 19 static routes; reviewed 1440 + 390; no fix round | card ✓ (from the live export, film frames); clips: waiting for the user's recording | ✓ 2026-10-04: `examples.ts`, symlink, zip, live at `/live/aster-house` (click-through checked), `npm run check` ✓ | clips open |
+| 15 | Personal brand — Sela Mor | ✓ (`examples/sela-mor/opuskit.json`, approved 2026-10-04) | ✓ (§7) | ✓ film (the user's pick, made black and white) + sound and 6 Listen tracks (Pixabay, picked by Claude at the user's request) + 16 photos (Pexels; 1 retouched), `media-src/SOURCES.md` | ✓ Prompt 1 (subagent); all routes static; reviewed 1440 + 390; no fix round | card ✓ (from the live export); clips: waiting for the user's recording | ✓ 2026-10-04: `examples.ts`, symlink, zip, live at `/live/sela-mor` (click-through checked), `npm run check` ✓ | clips open |
 
 **Rebuild of #1 (2026-10-01, after plan-vibe C):** new recipe approved (Big idea "Loud covers, quiet reading", new blog
 defaults, curtain transition, preloader, smooth scroll); built beside the first build, then swapped into `examples/slow-atlas/`

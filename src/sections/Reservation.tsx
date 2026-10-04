@@ -4,10 +4,10 @@
 // only lays it out, so no plain browser date, time or number input ships.
 import type { ReactNode } from 'react'
 
-export function ReservationSection({ title, text, hours, phone, form }: { title: string; text: string; hours: string[]; phone: string; form: ReactNode }) {
+export function ReservationSection({ tone, title, text, hours, phone, form }: { tone?: 'ground' | 'surface' | 'inverse' | 'chapter'; title: string; text: string; hours: string[]; phone: string; form: ReactNode }) {
   return (
-    <section className="px-5 py-24 md:px-10 md:py-32">
-      <div className="mx-auto grid max-w-[1440px] gap-12 md:grid-cols-12">
+    <section data-tone={tone === 'ground' ? undefined : tone} className="px-(--gutter) py-(--section-y)">
+      <div className="mx-auto grid max-w-(--container) gap-12 md:grid-cols-12">
         <div className="md:col-span-5">
           <h2 className="type-heading">{title}</h2>
           <p className="type-body mt-4 text-(--color-muted)">{text}</p>

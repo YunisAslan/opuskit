@@ -4,9 +4,10 @@
 // travelling mark coming to rest beside it — the journey visibly ends.
 import { motion, useReducedMotion } from 'motion/react'
 import { usePathname } from 'next/navigation'
-import { useSyncExternalStore } from 'react'
+import { useSyncExternalStore, type ReactNode } from 'react'
 import { FooterSection } from '@/components/sections/Footer'
-import { SiteLink } from '@/components/SiteLink'
+import { MotionSiteLink } from '@/components/SiteLink'
+import { UnderlineFill } from '@/components/pieces/UnderlineFill'
 import { MotifSlot } from '@/components/Motif'
 import { email } from '@/config/product'
 
@@ -31,13 +32,19 @@ function Wordmark() {
   )
 }
 
+// The site's Links behaviour (UnderlineFill) on the dark footer: the piece paints with --color-text / --color-background,
+// so they are swapped back to the footer's own ink (--ink) and ground (--paper), set on the wrapper below.
+function FooterLink({ href, children }: { href: string; children?: ReactNode }) {
+  return <span className="[--color-text:var(--ink)] [--color-background:var(--paper)]"><UnderlineFill href={href} link={MotionSiteLink}>{children}</UnderlineFill></span>
+}
+
 export function SiteFooter() {
   const path = usePathname()
   const cur = (href: string) => href === path
   const col = (title: string, links: { label: string; href: string }[]) => ({ title, links: links.map((l) => ({ ...l, current: cur(l.href) })) })
   return (
-    <div className="pb-24 md:pb-0 bg-(--color-text)">
-      <FooterSection link={SiteLink} variant="signature"
+    <div className="pb-24 md:pb-0 bg-(--color-text) [--ink:var(--color-background)] [--paper:var(--color-text)]">
+      <FooterSection link={FooterLink} variant="signature"
         logo={<div><Wordmark /><p className="type-body mt-6 max-w-[34ch] opacity-80">Small keyboards in powder-coated aluminium, made to stay on your desk.</p></div>}
         columns={[
           col('Shop', [{ label: 'Halvik 65', href: '#buy?build=complete' }, { label: 'Halvik 65 Barebones', href: '#buy?build=barebones' }, { label: 'Halvik Dial', href: '#buy?build=dial' }, { label: 'Pricing', href: '/#pricing' }]),

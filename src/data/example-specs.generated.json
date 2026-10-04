@@ -1,4 +1,578 @@
 {
+ "aster-house": {
+  "base": "swiss-modern",
+  "brief": {
+   "name": "Aster House",
+   "offer": "Twelve houses cut into the cliff above the Caspian at Shikhov, each built around the light of one hour of the day. One release, spring 2027.",
+   "goal": "book"
+  },
+  "purpose": "real-estate",
+  "direction": "architectural-minimal",
+  "characters": [],
+  "lead": "video",
+  "motion": "immersive",
+  "hero": "scroll-video",
+  "layout": "full-bleed",
+  "palette": "limestone",
+  "typography": "quiet-page",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "temporary",
+  "nav": "classic-bar",
+  "footer": "signature",
+  "concept": "one-guide",
+  "signatures": [],
+  "pieces": [
+   "fade-transition",
+   "underline-fill"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "fade-transition",
+    "page": "*",
+    "index": -1
+   },
+   {
+    "piece": "underline-fill",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "intro",
+     "feature-rows",
+     "product-grid",
+     "gallery",
+     "location",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "shop",
+    "label": "Residences",
+    "purpose": "All twelve houses in one list: the hour each is built around, floor area, bedrooms, terrace, price, and whether it is still free, reserved or sold.",
+    "sections": [
+     "product-grid",
+     "feature-grid",
+     "faq"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "product-detail",
+    "label": "A house",
+    "purpose": "Show one product in full: gallery, price, variants, add-to-cart, and related items.",
+    "sections": [
+     "product-highlight",
+     "gallery",
+     "feature-rows",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "contact",
+    "label": "Book a viewing",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "contact-cta",
+     "location"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "customPalette": {
+   "background": "#CDB58F",
+   "surface": "#DCC8A6",
+   "text": "#1E1A14",
+   "muted": "#4A3F2E",
+   "primary": "#1E1A14",
+   "secondary": "#C0A57A",
+   "accent": "#1E3A8A",
+   "border": "#B39A70"
+  }
+ },
+ "night-shift": {
+  "base": "digital-futurism",
+  "brief": {
+   "name": "Night Shift",
+   "offer": "An eight-week online course in film colour grading, taught live by a working colourist: from flat log footage to a finished grade, one real shot at a time.",
+   "goal": "signup"
+  },
+  "purpose": "course",
+  "direction": "technical-minimal",
+  "characters": [],
+  "lead": "3d",
+  "motion": "immersive",
+  "hero": "webgl-scene",
+  "layout": "grid",
+  "palette": "grading-suite",
+  "typography": "control-room",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "temporary",
+  "nav": "bottom-dock",
+  "footer": "contact",
+  "concept": "live-console",
+  "signatures": [],
+  "pieces": [
+   "image-comparison",
+   "text-scramble"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "image-comparison",
+    "page": "p1",
+    "index": 2
+   },
+   {
+    "piece": "image-comparison",
+    "page": "p2",
+    "index": 2
+   },
+   {
+    "piece": "text-scramble",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "intro",
+     "case-study",
+     "process",
+     "about",
+     "testimonials",
+     "pricing",
+     "faq",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "features",
+    "label": "Curriculum",
+    "purpose": "Show the eight weeks: what each module covers, the lessons in it, the real shot students grade that week, and what they hand in.",
+    "sections": [
+     "feature-grid",
+     "process",
+     "case-study",
+     "faq"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "pricing",
+    "label": "Enrol",
+    "purpose": "Remove the final uncertainty before signing up.",
+    "sections": [
+     "pricing",
+     "faq",
+     "testimonials"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "about",
+    "label": "Instructor",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "stats",
+     "testimonials"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "faq",
+    "label": "FAQ",
+    "purpose": "Answer the questions that would otherwise stall a decision.",
+    "sections": [
+     "faq",
+     "contact-cta"
+    ]
+   }
+  ],
+  "target": "not-sure"
+ },
+ "sela-mor": {
+  "base": "typography-first",
+  "brief": {
+   "name": "Sela Mor",
+   "offer": "Sound artist and composer from Baku: field recordings of wind, water and machines, turned into music for rooms, films and long nights.",
+   "goal": "contact"
+  },
+  "purpose": "personal-brand",
+  "direction": "monochrome-minimal",
+  "characters": [],
+  "lead": "typography",
+  "motion": "immersive",
+  "hero": "kinetic-type",
+  "layout": "editorial",
+  "palette": "black-box",
+  "typography": "data-sheet",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "nav": "split-pill",
+  "footer": "signature",
+  "concept": "giant-chapters",
+  "heroBands": [
+   {
+    "page": "bc946phc",
+    "index": 2,
+    "hero": "scroll-video"
+   }
+  ],
+  "signatures": [],
+  "pieces": [
+   "image-trail",
+   "text-roll",
+   "magnetic",
+   "fade-transition",
+   "ambient-sound"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "image-trail",
+    "page": "p1",
+    "index": 1
+   },
+   {
+    "piece": "text-roll",
+    "page": "*",
+    "index": -1
+   },
+   {
+    "piece": "magnetic",
+    "page": "*",
+    "index": -1
+   },
+   {
+    "piece": "fade-transition",
+    "page": "*",
+    "index": -1
+   },
+   {
+    "piece": "ambient-sound",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "featured-work",
+     "hero",
+     "about",
+     "schedule",
+     "clients",
+     "newsletter"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "work",
+    "label": "Works",
+    "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+    "sections": [
+     "featured-work",
+     "case-study",
+     "gallery",
+     "clients"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "custom",
+    "label": "Listen",
+    "purpose": "Let people hear the work: six tracks from her records and installations, each with a player, its length, where it was recorded and what it was made for; one plays at a time.",
+    "sections": [
+     "intro",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "custom",
+    "label": "Live",
+    "purpose": "Where to hear her next: upcoming performances and installations with dates, places and tickets, then the last season’s shows.",
+    "sections": [
+     "schedule",
+     "newsletter"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "press",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p6",
+    "type": "contact",
+    "label": "Contact",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "contact-cta"
+    ]
+   }
+  ],
+  "target": "not-sure"
+ },
+ "kur-delta-watch": {
+  "base": "neo-brutalist-commerce",
+  "brief": {
+   "name": "Kür Delta Watch",
+   "offer": "A volunteer river watch on the lower Kür: we pull rubbish out of the river, test the water every month and publish what we find.",
+   "goal": "donate"
+  },
+  "purpose": "nonprofit",
+  "direction": "neo-brutalist",
+  "characters": [],
+  "lead": "typography",
+  "motion": "dynamic",
+  "hero": "kinetic-type",
+  "layout": "grid",
+  "palette": "hazard-yellow",
+  "typography": "workshop-manual",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "nav": "card-menu",
+  "footer": "wordmark",
+  "concept": "loud-and-quiet",
+  "heroBands": [
+   {
+    "page": "0cj2582y",
+    "index": 2,
+    "hero": "ambient-video"
+   }
+  ],
+  "signatures": [],
+  "pieces": [
+   "split-flap",
+   "underline-fill"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "split-flap",
+    "page": "p1",
+    "index": 0
+   },
+   {
+    "piece": "underline-fill",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "stats",
+     "hero",
+     "manifesto",
+     "timeline",
+     "services",
+     "cta-band",
+     "journal",
+     "newsletter"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "about",
+    "label": "The river",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "editorial-story",
+     "team"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "services",
+    "label": "What we do",
+    "purpose": "Make the offer and the way of working clear enough to remove hesitation.",
+    "sections": [
+     "services",
+     "process",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "testimonials",
+    "label": "Field notes",
+    "purpose": "Let real clients or customers make the case, in their own words.",
+    "sections": [
+     "testimonials",
+     "editorial-story",
+     "gallery",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "custom",
+    "label": "Donate",
+    "purpose": "Turn a visitor into a donor: give once or monthly, preset amounts that each say what they pay for (a sack of rubbish out, a month of water tests, a boat day), how the money is spent, and a short donation form.",
+    "sections": [
+     "pricing",
+     "trust",
+     "faq"
+    ]
+   },
+   {
+    "id": "p6",
+    "type": "contact",
+    "label": "Contact",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "contact-cta",
+     "location"
+    ]
+   }
+  ],
+  "target": "not-sure"
+ },
+ "inkwell-moth": {
+  "base": "art-direction-studio",
+  "brief": {
+   "name": "Inkwell & Moth",
+   "offer": "The picture-book studio of illustrator Nell Arden: ink, watercolour and small night creatures, drawn by hand in an old bakery in Sheki.",
+   "goal": "contact"
+  },
+  "purpose": "portfolio",
+  "direction": "scrapbook",
+  "characters": [],
+  "lead": "illustration",
+  "motion": "dynamic",
+  "hero": "illustrated",
+  "layout": "experimental",
+  "palette": "legal-pad",
+  "typography": "cut-and-paste",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "nav": "side-index",
+  "footer": "line",
+  "concept": "playful-way-in",
+  "signatures": [],
+  "pieces": [
+   "drag-photos",
+   "tilted-grid",
+   "scribble-link"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "drag-photos",
+    "page": "p1",
+    "index": 2
+   },
+   {
+    "piece": "tilted-grid",
+    "page": "p2",
+    "index": 2
+   },
+   {
+    "piece": "scribble-link",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "featured-work",
+     "gallery",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "work",
+    "label": "Books",
+    "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+    "sections": [
+     "featured-work",
+     "case-study",
+     "gallery",
+     "clients",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "process",
+     "stats",
+     "testimonials",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "contact",
+    "label": "Commissions",
+    "purpose": "Tell publishers and authors how to commission a book or a cover: what Nell takes on, lead times, rough fees, and a short enquiry form.",
+    "sections": [
+     "contact-cta",
+     "faq"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "customPalette": {
+   "background": "#F7EEC0",
+   "surface": "#FBF6DB",
+   "text": "#16204A",
+   "muted": "#5A5A52",
+   "primary": "#2336A8",
+   "secondary": "#EADFAA",
+   "accent": "#C8323C",
+   "border": "#E4D9A0"
+  }
+ },
  "lowfield-nights": {
   "base": "cinematic-editorial",
   "brief": {
@@ -175,7 +749,8 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "footer": "signature"
  },
  "saint-ashe": {
   "base": "cinematic-editorial",
@@ -261,7 +836,8 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "footer": "signature"
  },
  "fennwood": {
   "base": "organic-modern",
@@ -336,7 +912,18 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "footer": "signature",
+  "customPalette": {
+   "background": "#FECD8C",
+   "surface": "#FFE0B5",
+   "text": "#001317",
+   "muted": "#4A3A22",
+   "primary": "#001317",
+   "secondary": "#F5BC6E",
+   "accent": "#4F5E12",
+   "border": "#E5B06A"
+  }
  },
  "hane": {
   "base": "japanese-quiet-minimal",
@@ -431,7 +1018,17 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "customPalette": {
+   "background": "#EACDC3",
+   "surface": "#F4DFD8",
+   "text": "#1D2B4F",
+   "muted": "#5A4A55",
+   "primary": "#1D2B4F",
+   "secondary": "#E5BDAF",
+   "accent": "#A3123A",
+   "border": "#D8B5A8"
+  }
  },
  "halvik": {
   "base": "swiss-modern",
@@ -522,7 +1119,18 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "footer": "signature",
+  "customPalette": {
+   "background": "#9D91E3",
+   "surface": "#B2A8EA",
+   "text": "#000000",
+   "muted": "#1E1640",
+   "primary": "#000000",
+   "secondary": "#8A7DD8",
+   "accent": "#000000",
+   "border": "#7D70CC"
+  }
  },
  "sticky-weather": {
   "base": "typography-first",
@@ -641,7 +1249,8 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "footer": "signature"
  },
  "hexmint": {
   "base": "digital-futurism",
@@ -748,7 +1357,8 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "footer": "signature"
  },
  "brasshand": {
   "base": "typography-first",
@@ -982,6 +1592,7 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "footer": "signature"
  }
 }

@@ -1,12 +1,12 @@
 // Runnable check: every seed composes into a complete recipe, remix updates dependents,
 // and every adapter produces a valid, tool-specific package.  Run: npm run check
 import assert from 'node:assert/strict'
-import type { RecipeSpec, SectionId } from '../src/types/domain'
+import type { DirectionId, PieceId, RecipeSpec, SectionId } from '../src/types/domain'
 import { spawnSync } from 'node:child_process'
 import { palettes, typography } from '../src/data/ingredients'
 import { contrast, deltaE, oklab } from '../src/lib/color'
 import { recipeSeeds } from '../src/data/recipes'
-import { concepts, imagePresentations, signaturePatterns } from '../src/data/patterns'
+import { concepts, heroes, imagePresentations, signaturePatterns } from '../src/data/patterns'
 import { behaviours, isMoment, pieces } from '../src/data/pieces'
 import { blockSource, pieceSource } from '../src/data/pieces-source.generated'
 import { blockFor } from '../src/data/blocks'
@@ -14,19 +14,19 @@ import { sections } from '../src/data/patterns'
 import { TYPE_UTILITIES } from '../src/lib/type-tokens'
 import { GENERATED, piecesSource } from './pieces-source'
 import { existsSync, readFileSync } from 'node:fs'
-import { heroTitle, libraryFor, removeSection, toggleChrome, behaviourPick, isPhotoSection, sectionPhotos, setBehaviour, setSectionPhotos, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, effectOn, effectWhere, starters, setHero, setStyle, start, togglePiece } from '../src/features/kit/plan'
+import { heroTitle, libraryFor, removeSection, toggleChrome, behaviourPick, isPhotoSection, sectionPhotos, setBehaviour, setSectionPhotos, setSectionVariant, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, effectOn, effectWhere, starters, setHero, setPartHero, heroOf, setStyle, start, togglePiece } from '../src/features/kit/plan'
 import { resources } from '../src/data/resources'
-import { directions, families, goals } from '../src/data/taxonomy'
+import { directions, families, goals, purposes } from '../src/data/taxonomy'
 import { adapters } from '../src/features/build-packages'
 import { visualQa } from '../src/features/build-packages/shared'
 import { pageTypes } from '../src/data/patterns'
 import { examples } from '../src/data/examples'
 import { sectionGuide } from '../src/data/section-guide'
 import exampleSpecs from '../src/data/example-specs.generated.json'
-import { closestChrome, closestSection, closestSite } from '../src/features/kit/closest'
+import { closestChrome, closestPiece, closestSection, closestSite } from '../src/features/kit/closest'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
-import { cleanPieces, pieceIssues, composeRecipe, isValidSpec, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
+import { cleanPieces, defaultPagesFor, pieceIssues, composeRecipe, isValidSpec, rankPalettes, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
 assert.equal(recipeSeeds.length, 10, 'exactly 10 seed recipes')
 assert.equal(new Set(recipeSeeds.map((s) => s.slug)).size, 10, 'unique slugs')
@@ -36,6 +36,15 @@ for (const d of Object.values(directions)) {
   assert.ok(d.palettes.includes(d.defaults.palette) && d.typography.includes(d.defaults.typography), `${d.id} defaults are in its lists`)
 }
 
+// Palette by fit: only the look's palettes, and photo-led sites get a calm ground while type-led ones may carry colour.
+for (const d of Object.values(directions)) for (const lead of ['photography', 'typography'] as const) {
+  const r = rankPalettes({ direction: d.id, purpose: 'studio', lead })
+  assert.ok(r.length === d.palettes.length && r.every((id) => d.palettes.includes(id)), `${d.id}: ranks only its own palettes`)
+}
+{ const ground = (id: string) => oklab(palettes[id as keyof typeof palettes].colors.background).C
+  assert.ok(ground(rankPalettes({ direction: 'organic-modern', purpose: 'restaurant', lead: 'photography' })[0]) < 0.03, 'a photo-led restaurant gets a neutral ground')
+  assert.ok(ground(rankPalettes({ direction: 'organic-modern', purpose: 'restaurant', lead: 'illustration' })[0]) >= 0.05, 'an illustrated one may carry colour') }
+
 // ─── Distinctiveness: stop the library collapsing back into one look ─────────
 const pal = Object.values(palettes)
 for (const p of pal) {
@@ -43,10 +52,19 @@ for (const p of pal) {
   assert.ok(contrast(p.colors.muted, p.colors.background) >= 4.5, `${p.id}: muted/bg ≥ 4.5:1`)
   assert.ok(contrast(p.colors.accent, p.colors.background) >= 3, `${p.id}: accent/bg ≥ 3:1`)
 }
+// Identity is ground + accent (award sites differ by accent, type and media, rarely by ground): two palettes collide
+// only when both are close. Grounds-only spacing pushed the library into the greyed middle (docs/research/2026-10-04-colour.md §6).
 for (let i = 0; i < pal.length; i++) for (let j = i + 1; j < pal.length; j++) {
-  const d = deltaE(pal[i].colors.background, pal[j].colors.background)
-  assert.ok(d >= 0.06, `grounds too similar: ${pal[i].id} ~ ${pal[j].id} (ΔE_OK ${d.toFixed(3)})`)
+  const a = pal[i], b = pal[j], d = deltaE(a.colors.background, b.colors.background)
+  if (d >= 0.06) continue
+  assert.ok(d >= 0.02 && a.dark === b.dark && deltaE(a.colors.accent, b.colors.accent) >= 0.12, `palettes too similar: ${a.id} ~ ${b.id} (ground ΔE_OK ${d.toFixed(3)})`)
 }
+// The dusty middle: greyed mid-tone grounds read as dated. Commit (C ≥ 0.12), go pale (L ≥ 0.86, C ≥ 0.05) or go deep.
+const dusty = pal.filter((p) => { const o = oklab(p.colors.background); return o.L >= 0.36 && o.L < 0.89 && o.C >= 0.02 && o.C < 0.12 && !(o.L >= 0.86 && o.C >= 0.05) })
+assert.deepEqual(dusty.map((p) => p.id), [], 'muddy mid-tone grounds')
+// Ink is ink: text near-neutral or tinted toward the ground's own hue — never navy on pink or maroon on blue.
+for (const p of pal) { const t = oklab(p.colors.text), g = oklab(p.colors.background), dh = Math.abs(((t.H - g.H + 540) % 360) - 180)
+  assert.ok(t.C <= 0.05 || dh <= 40 || ['legal-pad', 'lido-blue', 'bubblegum'].includes(p.id), `${p.id}: text tinted toward another hue`) }
 // The "cream" band: pale, near-neutral, warm-yellow grounds. At most one.
 const cream = pal.filter((p) => { const o = oklab(p.colors.background); return o.L > 0.9 && o.C > 0.004 && o.C < 0.03 && o.H > 60 && o.H < 110 })
 assert.ok(cream.length <= 1, `more than one cream-band ground: ${cream.map((p) => p.id).join(', ')}`)
@@ -87,6 +105,12 @@ const main = async () => {
   }
 
   assert.ok(composeRecipe({ ...specFromSeed(recipeSeeds[0]), motion: 'dynamic', pieces: ['smooth-scroll'] }).implementation.stack.includes('Lenis'), 'Lenis in the stack when the SmoothScroll piece ships')
+  // Asset keys become identifiers in src/config/assets.ts: never one that starts with a digit (a 3D hero's "3D model…").
+  for (const r of [composeRecipe({ ...specFromSeed(recipeSeeds[0]), lead: '3d', hero: 'webgl-scene', motion: 'immersive' }), ...recipeSeeds.map((sd) => composeRecipe(specFromSeed(sd)))]) for (const a of r.assetRequirements) assert.match(a.key, /^[A-Za-z_$][\w$]*$/, `asset key ${a.key} is a valid identifier`)
+  for (const seed of recipeSeeds) { // a seed's voice is written for its own kind of site (a shop's "SKU, price, stock" never reaches a charity)
+    const other = seed.spec.purpose === 'nonprofit' ? 'portfolio' : 'nonprofit'
+    assert.deepEqual(composeRecipe({ ...specFromSeed(seed), purpose: other }).creativeDirection.visualPrinciples, directions[seed.spec.direction].principles, `${seed.slug}: its own voice stays with its own kind of site`)
+  }
   assert.ok(!/\b(\w+) \1\b/.test(composeRecipe({ ...specFromSeed(recipeSeeds[0]), direction: 'sticker-studio', purpose: 'studio' }).title), 'no doubled word in a composed title')
 
   // Claude Code only ships relevant skills.
@@ -192,6 +216,18 @@ const main = async () => {
   assert.notEqual(after.media.hero.id, 'scroll-video')
   assert.ok(!after.motion.patterns.some((p) => p.id === 'video-scrub'), 'video motion removed')
   assert.equal(after.visualSystem.palette.id, before.visualSystem.palette.id, 'palette untouched by media remix')
+  // Pages end on their own last word: the contact block closes only Home, Contact and a listing's own page.
+  for (const pu of Object.values(purposes)) for (const pg of pu.pages) assert.ok(pg.sections?.at(-1) !== 'contact-cta' || ['home', 'contact', 'product-detail'].includes(pg.type), `${pu.id} ${pg.label}: ends on its own part, not contact-cta`)
+  // Phase G: a product page sells (buy box first); other ways to start a kind of site compose whole sites.
+  for (const pu of Object.values(purposes)) for (const pg of pu.pages) if (pg.type === 'product-detail' && pu.id !== 'real-estate') assert.equal(pg.sections?.[0], 'product-buy', `${pu.id}: its product page starts with the buy box`)
+  for (const pu of Object.values(purposes)) for (const st of pu.starters ?? []) {
+    const r = composeRecipe({ ...specFromSeed(recipeSeeds[0]), purpose: pu.id, pages: defaultPagesFor(pu.id, st.id) })
+    assert.ok(r.pages.length === st.pages.filter((x) => x.tier === 'recommended').length && r.pages.every((x) => x.sections.length), `${pu.id}/${st.id}: starter composes every page`)
+  }
+  // Section entrances speak the look's family; a headline behaviour replaces the generic line reveal.
+  const entrance = (direction: DirectionId, pieces: PieceId[] = []) => composeRecipe({ ...specFromSeed(recipeSeeds[0]), direction, motion: 'dynamic', pieces }).motion.patterns
+  assert.notEqual(entrance('japanese-minimal').find((p) => p.id === 'fade-rise')?.name, entrance('swiss-modern').find((p) => p.id === 'fade-rise')?.name, 'quiet and bold looks enter differently')
+  assert.ok(!entrance('swiss-modern', ['cut-reveal']).some((p) => p.id === 'line-reveal'), 'headline piece replaces line reveal')
 
   // Missing video + image-to-video plan → creation path with a prompt.
   const planned = composeRecipe({ ...cinematic, mediaPlan: 'image-to-video', assets: ['images'] })
@@ -254,7 +290,7 @@ const main = async () => {
   }
   assert.deepEqual(cleanPieces(['text-effect', 'text-loop', 'marquee', 'nope']), ['text-loop', 'marquee'], 'one piece per slot, later pick wins, unknown dropped')
   const kitted = composeRecipe({ ...vspec, pieces: ['text-effect', 'number-ticker', 'ring-carousel', 'image-field' as never] })
-  assert.equal(kitted.pieces.length, 3, 'photo slot keeps one piece')
+  assert.equal(kitted.pieces.filter((p) => ['text-effect', 'number-ticker', 'ring-carousel', 'image-field'].includes(p.id)).length, 3, 'photo slot keeps one piece') // a big-idea moment may add its own piece
   const kitPkg = await adapters['claude-code'].generate(kitted)
   for (const p of kitted.pieces) assert.ok(kitPkg.files.some((f) => f.path === p.path && f.content === pieceSource[p.id]), `${p.id}: shipped verbatim`)
   assert.ok(kitPkg.files.some((f) => f.path === 'THIRD-PARTY-NOTICES.md' && /Motion Primitives[\s\S]*Permission is hereby granted/.test(f.content)), 'MIT notices ship with the kit')
@@ -280,6 +316,30 @@ const main = async () => {
   assert.match(recipeToMarkdown(composeRecipe(specFromSeed(recipeSeeds[0]))), /Ready code:\*\* `src\/components\/sections\//, 'ready code reaches the recipe')
   const tokens = secPkg.files.find((f) => f.path.endsWith('tokens.css'))!.content
   assert.ok(tokens.includes(TYPE_UTILITIES) && readFileSync(new URL('../src/app/globals.css', import.meta.url), 'utf8').includes(TYPE_UTILITIES), 'type utilities identical in packages and OpusKit previews')
+
+  {
+    // Two film/image parts: each shows its own pick, and the first one stays the site's first screen.
+    let two = setHero(start(EMPTY_PLAN, 'studio'), 'editorial-image')
+    const pg = two.pages[0].id
+    two = addSection(two, pg, 'hero', 2)
+    const [a, b] = two.pages[0].sections.filter((x) => x.id === 'hero')
+    const part = (k: string) => two.pages[0].sections.find((x) => x.key === k)!
+    two = setPartHero(two, pg, b.key, 'orbit-stickers')
+    assert.equal(heroOf(two, part(a.key)), 'editorial-image', 'picking for a second film/image part leaves the first screen alone')
+    two = setPartHero(two, pg, a.key, 'kinetic-type')
+    assert.equal(heroOf(two, part(b.key)), 'orbit-stickers', 'changing the first screen leaves the other part alone')
+    assert.equal(two.hero, 'kinetic-type', 'the first film/image part is the first screen')
+    const spec2 = planToSpec(two), r2 = composeRecipe(spec2)
+    assert.deepEqual(spec2.heroBands?.map((x) => x.hero), ['orbit-stickers'], 'a part’s own pick reaches the recipe')
+    assert.ok(r2.pages[0].sections.some((x) => x.name.includes(heroes['orbit-stickers'].name) && x.composition.includes('its own')), 'the builder is told that part shows something else and needs its own media')
+    assert.equal(heroOf(specToPlan(spec2), specToPlan(spec2).pages[0].sections.filter((x) => x.id === 'hero')[1]), 'orbit-stickers', 'and it survives a round trip through the recipe')
+    // A film band on a site whose first screen has no film still plans its film and ships the video script.
+    const filmBand = composeRecipe(planToSpec(setPartHero(two, pg, b.key, 'ambient-video')))
+    assert.ok(filmBand.assetRequirements.some((x) => x.asset === 'video' && x.level === 'required' && x.usage.includes('band')), 'a film band asks for its own film')
+    assert.ok((await adapters['claude-code'].generate(filmBand)).files.some((f) => f.path === 'scripts/prepare-video.sh'), 'a film band ships prepare-video.sh')
+    const scrubBand = composeRecipe({ ...planToSpec(setPartHero(two, pg, b.key, 'scroll-video')), motion: 'immersive' })
+    assert.match((await adapters['claude-code'].generate(scrubBand)).files.find((f) => f.path === 'scripts/prepare-video.sh')!.content, /scrubReadyEncode/, 'a scroll-scrubbed film band gets the scrub-ready encode')
+  }
 
   // Showcase plan: style for every page, then page by page with pieces attached to exact sections.
   let plan = start(EMPTY_PLAN, 'event')
@@ -536,7 +596,15 @@ const main = async () => {
   // The kit's "a site like this" clips (plan §8): every clip exists, sits on a part the site has, and only fair matches show.
   for (const e of examples) {
     const spec = (exampleSpecs as Record<string, RecipeSpec>)[e.slug]
-    for (const src of [e.clip, ...Object.values(e.sectionClips ?? {})].filter(Boolean)) assert.ok(existsSync(`public${src}`), `${e.slug}: clip ${src} is on disk`)
+    for (const src of [e.clip, ...Object.values(e.sectionClips ?? {}), ...Object.values(e.pieceClips ?? {}), ...Object.values(e.signatureClips ?? {})].filter(Boolean)) assert.ok(existsSync(`public${src}`), `${e.slug}: clip ${src} is on disk`)
+    for (const id of Object.keys(e.pieceClips ?? {}) as PieceId[]) {
+      assert.ok(spec.pieces?.includes(id), `${e.slug}: uses the ${id} it shows a clip of`)
+      assert.ok(closestPiece(spec, id), `${e.slug}: its ${id} clip is offered`)
+    }
+    const sigs = composeRecipe(spec).signatures.map((x) => x.id)
+    // The moment is in its recipe today, or was in the recipe it was built from (defaults move, built sites do not).
+    const built = existsSync(`examples/${e.slug}/recipe/motion.md`) ? readFileSync(`examples/${e.slug}/recipe/motion.md`, 'utf8') : ''
+    for (const id of Object.keys(e.signatureClips ?? {})) assert.ok(sigs.includes(id) || built.includes(`### ${signaturePatterns.find((p) => p.id === id)?.name} — `), `${e.slug}: has the ${id} moment it shows a clip of`)
     const chrome = (id: SectionId): id is 'navbar' | 'footer' => id === 'navbar' || id === 'footer'
     for (const id of Object.keys(e.sectionClips ?? {}) as SectionId[]) assert.ok(chrome(id) || spec.pages.some((p) => p.sections.includes(id)), `${e.slug}: has the ${id} it shows a clip of`)
     if (e.legacy || !e.clip) continue // a site waiting for its clip is simply not offered yet
@@ -545,10 +613,10 @@ const main = async () => {
   }
   {
     const atlas = (exampleSpecs as Record<string, RecipeSpec>)['slow-atlas']
-    assert.ok(!closestSite({ ...atlas, lead: 'video', motion: 'immersive', hero: 'scroll-video' }), 'a film first screen gets no clip of a typographic site — and never an old example')
-    assert.ok(!closestSite({ ...atlas, motion: 'dynamic', hero: 'kinetic-type' }), 'same first screen but livelier movement is not "a site like this"')
-    assert.ok(!closestSection({ ...atlas, motion: 'immersive' }, 'journal'), 'a section clip needs the same kind of movement')
-    assert.ok(!closestSection(atlas, 'pricing'), 'no clip for a part no real site has yet')
+    assert.notEqual(closestSite({ ...atlas, lead: 'video', motion: 'immersive', hero: 'scroll-video' })?.example.slug, 'slow-atlas', 'a film first screen gets no clip of a typographic site')
+    assert.notEqual(closestSite({ ...atlas, motion: 'dynamic', hero: 'kinetic-type' })?.example.slug, 'slow-atlas', 'same first screen but livelier movement is not "a site like this"')
+    assert.notEqual(closestSection({ ...atlas, motion: 'immersive' }, 'journal')?.example.slug, 'slow-atlas', 'a section clip needs the same kind of movement')
+    assert.ok(!closestSection(atlas, 'process'), 'no clip for a part no real site shows yet')
     assert.ok(!closestChrome({ ...atlas, nav: 'bottom-dock' }, 'navbar'), 'a different menu style gets no menu clip')
   }
   const legacy = cleanPlan({ pages: [{ id: 'x', type: 'home', label: 'Home', purpose: '', sections: ['intro', 'bogus'] }], direction: 'nope', pieces: ['grain'] })
@@ -559,10 +627,49 @@ const main = async () => {
   // Pages speaks plain words: every part has a job, a look and a 'best when'.
   for (const g of sectionGroups) { assert.ok(g.job, `${g.name} has a job`); for (const id of g.ids) assert.ok(sectionGuide[id]?.look && sectionGuide[id]?.bestWhen, `${id} has a plain look and best-when`) }
 
+  // The frame (plan-variety A): sections use the layout tokens, take a tone, and the recipe gives each page a rhythm.
+  {
+    const { TONE_CSS, FRAMES } = await import('../src/lib/frame')
+    assert.ok(readFileSync(new URL('../src/app/globals.css', import.meta.url), 'utf8').includes(TONE_CSS), 'globals.css carries TONE_CSS exactly (src/lib/frame.ts)')
+    for (const [id, src] of Object.entries(blockSource)) {
+      assert.ok(!/max-w-\[1440px\]|px-5 py-2[048] md:px-10|md:py-32/.test(src!), `${id}: hardcoded frame — use --container / --gutter / --section-y`)
+      if (id !== 'footer' && id !== 'chapters') assert.match(src!, /data-tone=/, `${id}: takes a tone`) // chapters are colour fields by nature
+    }
+    for (const lay of Object.keys(FRAMES) as (keyof typeof FRAMES)[]) {
+      const r = composeRecipe({ ...specFromSeed(recipeSeeds[0]), layout: lay })
+      const css = (await adapters['claude-code'].generate(r)).files.find((f) => f.path.endsWith('tokens.css'))!.content
+      assert.ok(css.includes(`--container: ${FRAMES[lay].container};`) && css.includes(TONE_CSS), `${lay}: tokens.css carries the frame and the tones`)
+    }
+    for (const seed of recipeSeeds) for (const p of composeRecipe(specFromSeed(seed)).pages) {
+      p.sections.forEach((x, i) => assert.ok(!x.tone || x.tone !== p.sections[i - 1]?.tone, `${seed.slug} ${p.label}: two neighbours share tone ${x.tone}`))
+      const media = p.sections.filter((x) => x.media).map((x) => x.media)
+      media.forEach((m, i) => assert.ok(i === 0 || m !== media[i - 1] || new Set(media).size === 1, `${seed.slug} ${p.label}: media placement repeats`))
+    }
+  }
+
+  // Section designs (plan-variety C): every design is a real variant of the shipped code, looks pick different ones,
+  // the recipe tells the builder which, and an owner's pick survives the kit round trip.
+  {
+    const { sectionVariants } = await import('../src/data/section-variants')
+    for (const [id, d] of Object.entries(sectionVariants)) for (const o of d!.options) assert.ok(blockSource[id as SectionId]?.includes(`'${o.id}'`), `${id}: design ${o.id} exists in its ready code`)
+    const designs = (direction: DirectionId) => composeRecipe({ ...specFromSeed(recipeSeeds[0]), direction }).pages.flatMap((p) => p.sections.map((x) => x.variant?.id ?? '')).join()
+    assert.notEqual(designs('japanese-minimal'), designs('neo-brutalist'), 'a quiet and a raw look lay the same parts out differently')
+    const base = specFromSeed(recipeSeeds[0]), at = base.pages[0].sections.findIndex((x) => sectionVariants[x])
+    if (at >= 0) {
+      const want = sectionVariants[base.pages[0].sections[at]]!.options.at(-1)!.id
+      const r = composeRecipe({ ...base, sectionVariants: [{ page: base.pages[0].id, index: at, variant: want }] })
+      assert.equal(r.pages[0].sections[at].variant?.id, want, 'an owner-picked design is used')
+      assert.ok(r.pages[0].sections[at].variant?.chosen, 'and marked as chosen')
+    }
+    const kp = start(EMPTY_PLAN, 'agency'), kpg = kp.pages[0], ks = kpg.sections.find((x) => sectionVariants[x.id])!
+    const kspec = planToSpec(setSectionVariant(kp, kpg.id, ks.key, sectionVariants[ks.id]!.options[1].id))
+    assert.equal(specToPlan(kspec).pages[0].sections.find((x) => x.id === ks.id)?.variant, sectionVariants[ks.id]!.options[1].id, 'a picked design survives plan → spec → plan')
+  }
+
   // In-site links in ready code go through the \`link\` component the site passes (next/link), never a bare <a> —
   // a bare one reloads the page and ignores basePath. Only mailto:, tel: and outside links stay <a>.
   for (const [name, src] of [...Object.entries(blockSource), ...Object.entries(pieceSource)] as [string, string][]) {
-    for (const m of src.matchAll(/<a href=\{([^}]*)\}/g)) assert.ok(/mailto|tel:|mapUrl/.test(m[1]), `${name}: in-site link <a href={${m[1]}}> should use the link prop`)
+    for (const m of src.matchAll(/<(?:motion\.)?a href=\{([^}]*)\}/g)) assert.ok(/mailto|tel:|mapUrl/.test(m[1]), `${name}: in-site link <a href={${m[1]}}> should use the link prop`)
   }
 
   // Sticker Studio (extrafazant-style): two voices, colour chapters, orbit hero, whole-site pieces, brand stickers.
@@ -577,7 +684,14 @@ const main = async () => {
   assert.ok(sr.contentDirection.voice.includes('small joke'), 'the look brings its cheeky voice')
   assert.ok(sr.assetRequirements.some((a) => a.asset === 'stickers' && a.level === 'required'), 'the orbit hero asks for brand stickers')
   assert.ok(sr.pieces.filter((p) => p.slot === 'site').every((p) => p.where.startsWith('Whole site')), 'site pieces go in the root layout')
+  for (const m of sr.signatures) { const id = signaturePatterns.find((p) => p.id === m.id)?.piece; if (id) assert.ok(sr.pieces.some((p) => p.id === id), `the ${m.id} moment ships its ready ${id} piece`) }
+  assert.ok(sr.pieces.some((p) => p.id === 'entry-gate'), 'a playful way in ships the EntryGate piece')
   const sp = await adapters['claude-code'].generate(sr)
+  // Pinned moments build on the one PinnedStage piece; two kit entries sharing a file ship it once.
+  { const pr = composeRecipe({ ...specFromSeed(recipeSeeds[3]), concept: 'giant-chapters', motion: 'dynamic' })
+    if (pr.signatures.some((m) => m.id === 'pinned-proof')) assert.ok(pr.pieces.some((p) => p.id === 'pinned-stage'), 'proof one at a time ships PinnedStage')
+    const files = (await adapters['claude-code'].generate(composeRecipe({ ...specFromSeed(recipeSeeds[3]), motion: 'dynamic', pieces: ['scribble-link', 'wavy-link'] }))).files.map((f) => f.path)
+    assert.ok(files.filter((f) => f.endsWith('/DrawnLink.tsx')).length <= 1, 'DrawnLink ships once') }
   for (const f of ['src/components/sections/OrbitHero.tsx', 'src/components/sections/ColourChapters.tsx', 'src/components/sections/Footer.tsx', 'src/components/pieces/BlobTransition.tsx', 'src/components/pieces/BrandCursor.tsx', 'src/components/pieces/CookieNote.tsx']) assert.ok(sp.files.some((x) => x.path === f && x.content.length > 200), `ships ${f}`)
   assert.match(sp.files.find((x) => x.path.endsWith('tokens.css'))!.content, /--color-chapter-1: #0038FF/, 'chapter colours reach tokens.css')
   assert.equal(composeRecipe(planToSpec(setStyle(st, 'rotation', 'off'))).visualSystem.rotation, undefined, 'colour chapters can be switched off')

@@ -1,0 +1,84 @@
+@import "../styles/tokens.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* shadcn/ui theme — the recipe's hex values (recipe/ui.md). Only the names that don't collide with the recipe's own
+   --color-* tokens are exposed to Tailwind: muted and accent keep the recipe's meaning (muted = secondary text,
+   accent = the ultramarine signal), so the ui files use the recipe tokens directly. */
+:root {
+  --background: #F5C518; --foreground: #000000;
+  --card: #FFD84D; --card-foreground: #000000; --popover: #FFD84D; --popover-foreground: #000000;
+  --primary: #000000; --primary-foreground: #F5C518; --secondary: #E0AE00; --secondary-foreground: #000000;
+  --muted: #FFD84D; --muted-foreground: #4A3B00; --accent: #E0AE00; --accent-foreground: #000000;
+  --border: #000000; --input: #4A3B00; --ring: #000000; --radius: 0px;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-curtain: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html { -webkit-text-size-adjust: 100%; scroll-padding-top: 5rem; }
+  body { -webkit-font-smoothing: antialiased; overflow-x: clip; }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+  :focus-visible { outline: none; }
+  a:focus-visible { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .tabular { font-variant-numeric: tabular-nums; }
+}
+
+/* Footer “Big name”: the wordmark sized to span the container on one line (text width ≈ 6.3 × font size). */
+footer { --wordmark-size: calc((100vw - 2.5rem) / 6.5); }
+@media (min-width: 768px) { footer { --wordmark-size: min(calc((100vw - 5rem) / 6.5), 221px); } }
+
+/* ---- Fade & rise reveal: Reveals.tsx adds .is-in once a [data-reveal] wrapper is 20% in view. The hidden states
+   sit under @media (scripting: enabled), so without JavaScript nothing is ever hidden. ---- */
+[data-reveal] > * { transition: opacity 600ms var(--ease-out-soft), transform 600ms var(--ease-out-soft); }
+[data-reveal] > :nth-child(2) { transition-delay: 60ms; }
+[data-reveal] > :nth-child(3) { transition-delay: 120ms; }
+[data-reveal] > :nth-child(4) { transition-delay: 180ms; }
+[data-reveal] > :nth-child(n+5) { transition-delay: 240ms; }
+@media (scripting: enabled) { [data-reveal]:not(.is-in) > * { opacity: 0; transform: translateY(16px); } }
+
+/* ---- Line-by-line headline reveal: each line masked, rising from 100%, 80ms apart ---- */
+[data-lines] .line-mask { display: block; overflow: hidden; padding-bottom: 0.04em; margin-bottom: -0.04em; }
+[data-lines] .line { display: block; transition: transform 700ms var(--ease-out-soft); }
+[data-lines] .line-mask:nth-child(2) .line { transition-delay: 80ms; }
+[data-lines] .line-mask:nth-child(3) .line { transition-delay: 160ms; }
+[data-lines] .line-mask:nth-child(4) .line { transition-delay: 240ms; }
+[data-lines] .line-mask:nth-child(5) .line { transition-delay: 320ms; }
+[data-lines] .line-mask:nth-child(n+6) .line { transition-delay: 400ms; }
+@media (scripting: enabled) { [data-lines]:not(.is-in) .line { transform: translateY(102%); } }
+
+/* ---- Signature: photos revealed like a curtain — a thin line opens to the full frame, the photo settles from 1.15.
+   The clip sits on the child: an element clipped to nothing never counts as intersecting. ---- */
+[data-curtain] > * { clip-path: inset(0 0 0 0); transition: clip-path 1000ms var(--ease-curtain); }
+[data-curtain] img { transition: transform 1100ms var(--ease-curtain); }
+@media (scripting: enabled) { [data-curtain]:not(.is-in) > * { clip-path: inset(100% 0 0 0); } }
+@media (scripting: enabled) { [data-curtain]:not(.is-in) img { transform: scale(1.15); } }
+@media (max-width: 639px) {
+  [data-curtain] > * { transition-duration: 700ms; }
+  [data-curtain] img { transition-duration: 750ms; }
+}
+
+/* ---- Page transition: the old page fades out, the new one in (React <ViewTransition>) ---- */
+::view-transition-old(.page) { animation: 220ms var(--ease-curtain) both vt-out; }
+::view-transition-new(.page) { animation: 380ms var(--ease-curtain) 120ms both vt-in; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] > * { transition: opacity 200ms linear; transition-delay: 0ms !important; }
+  [data-reveal]:not(.is-in) > * { transform: none; }
+  [data-lines] .line { transition: none; }
+  [data-lines]:not(.is-in) .line { transform: none; }
+  [data-curtain] > *, [data-curtain] img { transition: none; }
+  [data-curtain]:not(.is-in) > * { clip-path: inset(0 0 0 0); }
+  [data-curtain]:not(.is-in) img { transform: none; }
+  ::view-transition-old(.page), ::view-transition-new(.page) { animation: none; }
+}

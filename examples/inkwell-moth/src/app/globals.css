@@ -1,0 +1,134 @@
+@import "../styles/tokens.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* shadcn/ui reads its own variables. Background, border, primary and secondary are the same names and values as the
+   recipe tokens; muted and accent are NOT mapped — in this recipe --color-muted is caption text and --color-accent is the
+   red margin line (the ui files use bg-secondary where shadcn wrote bg-muted / bg-accent). */
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+}
+
+:root {
+  --background: #F7EEC0; --foreground: #16204A;
+  --card: #FBF6DB; --card-foreground: #16204A; --popover: #FBF6DB; --popover-foreground: #16204A;
+  --primary: #2336A8; --primary-foreground: #F7EEC0; --secondary: #EADFAA; --secondary-foreground: #16204A;
+  --muted: #FBF6DB; --muted-foreground: #5A5A52; --accent: #EADFAA; --accent-foreground: #16204A;
+  --border: #E4D9A0; --input: #5A5A52; --ring: #16204A; --radius: 0px;
+  --destructive: #C8323C;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-curtain: cubic-bezier(0.65, 0, 0.35, 1);
+  --rail: 220px;
+}
+
+@layer base {
+  * { @apply border-(--color-border); }
+  html { scroll-behavior: smooth; }
+  /* Legal-pad paper: faint blue rules on the yellow ground. Text sits on top, never collage. */
+  body {
+    background-color: var(--color-background);
+    background-image: repeating-linear-gradient(to bottom, transparent 0 31px, color-mix(in srgb, var(--color-primary) 8%, transparent) 31px 32px);
+    color: var(--color-text);
+    font-family: var(--font-body), monospace;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+  /* Focus without rings: links and buttons get a background change and an underline. Fields darken their border. */
+  :focus-visible { outline: none; }
+  a:focus-visible, button:focus-visible, [role="button"]:focus-visible, summary:focus-visible {
+    background-color: var(--color-secondary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  input:focus-visible, textarea:focus-visible, [data-slot="select-trigger"]:focus-visible { border-color: var(--color-text); background-color: transparent; text-decoration: none; }
+}
+
+/* A strip of tape over a print. (In a layer, so utilities like md:absolute still win.) */
+@layer components {
+.taped { position: relative; }
+.taped::before {
+  content: ""; position: absolute; z-index: 2; top: -12px; left: 50%; width: 96px; height: 24px;
+  translate: -50% 0; rotate: -3deg;
+  background: color-mix(in srgb, var(--tape, var(--color-secondary)) 80%, transparent);
+  border-left: 1px dashed color-mix(in srgb, var(--color-muted) 30%, transparent);
+  border-right: 1px dashed color-mix(in srgb, var(--color-muted) 30%, transparent);
+}
+.taped.tape-right::before { left: auto; right: -20px; top: 12px; translate: 0 0; rotate: 38deg; }
+}
+
+/* ---------- Motion. Hidden states only apply once JS has marked the page (html.js), so nothing is lost without it. ---------- */
+
+/* Fade & rise — children staggered 60ms. */
+html.js .rise > * { opacity: 0; translate: 0 16px; transition: opacity 600ms var(--ease-out-soft), translate 600ms var(--ease-out-soft); }
+html.js .rise.is-in > * { opacity: 1; translate: 0 0; }
+.rise > *:nth-child(2) { transition-delay: 60ms; }
+.rise > *:nth-child(3) { transition-delay: 120ms; }
+.rise > *:nth-child(4) { transition-delay: 180ms; }
+.rise > *:nth-child(5) { transition-delay: 240ms; }
+.rise > *:nth-child(n + 6) { transition-delay: 300ms; }
+
+/* Image clip reveal — the print opens like a curtain (a paper cover lifts from the bottom up, the same reveal as
+   clip-path inset(100% 0 0 0) → inset(0), but as a transform, and the picture stays visible to lazy loading), while the
+   picture settles from 1.15. */
+.clip { position: relative; overflow: hidden; }
+html.js .clip::after { content: ""; position: absolute; inset: 0; background: var(--color-surface); transform-origin: top; transition: transform 1000ms var(--ease-curtain); }
+html.js .clip.is-in::after { transform: scaleY(0); }
+html.js .clip img { scale: 1.15; transition: scale 1100ms var(--ease-curtain); }
+html.js .clip.is-in img { scale: 1; }
+
+/* Line-by-line headline reveal — each line masked, 80ms stagger. */
+.line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.line > span { display: block; }
+html.js .lines .line > span { translate: 0 105%; transition: translate 700ms var(--ease-out-soft); transition-delay: calc(var(--i, 0) * 80ms); }
+html.js .lines.is-in .line > span { translate: 0 0; }
+
+/* Parallax drift — the picture moves at ~0.25x inside its frame (CSS scroll-driven; static where unsupported). */
+@supports (animation-timeline: view()) {
+  .drift { overflow: hidden; }
+  .drift img, html.js .clip.is-in .drift img { scale: 1.12; animation: drift linear both; animation-timeline: view(); }
+  @keyframes drift { from { translate: 0 -5%; } to { translate: 0 5%; } }
+}
+
+/* Page transition — the old page leaves fast, the new one arrives gently. */
+::view-transition-old(.page) { animation: 180ms var(--ease-curtain) both page-out; }
+::view-transition-new(.page) { animation: 480ms var(--ease-curtain) 120ms both page-in; }
+@keyframes page-out { to { opacity: 0; translate: 0 -12px; } }
+@keyframes page-in { from { opacity: 0; translate: 0 16px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  html.js .rise > * { translate: 0 0; transition: opacity 200ms linear; transition-delay: 0ms; }
+  html.js .clip::after { transform: none; transition: opacity 200ms linear; }
+  html.js .clip.is-in::after { transform: none; opacity: 0; }
+  html.js .clip img { scale: 1; transition: none; }
+  html.js .lines .line > span { translate: 0 0; transition: none; }
+  .drift img { animation: none !important; scale: 1; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* Moths flutter; they rest when the hero is off-screen, and spot moths flap only when you reach for them. */
+.wings { transform-box: fill-box; transform-origin: center; animation: flap 1.6s ease-in-out infinite; }
+@keyframes flap { 50% { transform: scaleX(0.72); } }
+[data-still] .wings { animation-play-state: paused; }
+.spot .wings { animation: none; }
+.spot:hover .wings, :hover > .spot .wings { animation: flap 0.45s ease-in-out 3; }
+@media (prefers-reduced-motion: reduce) { .wings { animation: none !important; } }
+html[data-sheet="lifted"] .sheet { display: none; }

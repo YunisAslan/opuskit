@@ -1,0 +1,127 @@
+{
+  "opuskit": 1,
+  "recipe": "neo-brutalist-commerce",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "neo-brutalist-commerce",
+    "brief": {
+      "name": "Kür Delta Watch",
+      "offer": "A volunteer river watch on the lower Kür: we pull rubbish out of the river, test the water every month and publish what we find.",
+      "goal": "donate"
+    },
+    "purpose": "nonprofit",
+    "direction": "neo-brutalist",
+    "characters": [],
+    "lead": "typography",
+    "motion": "dynamic",
+    "hero": "kinetic-type",
+    "layout": "grid",
+    "palette": "hazard-yellow",
+    "typography": "workshop-manual",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "have",
+    "nav": "card-menu",
+    "footer": "wordmark",
+    "concept": "loud-and-quiet",
+    "heroBands": [
+      {
+        "page": "0cj2582y",
+        "index": 2,
+        "hero": "ambient-video"
+      }
+    ],
+    "signatures": [],
+    "pieces": [
+      "split-flap",
+      "underline-fill"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "split-flap",
+        "page": "0cj2582y",
+        "index": 0
+      },
+      {
+        "piece": "underline-fill",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "0cj2582y",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "stats",
+          "hero",
+          "manifesto",
+          "timeline",
+          "services",
+          "cta-band",
+          "journal",
+          "newsletter"
+        ]
+      },
+      {
+        "id": "t40zg7lq",
+        "type": "about",
+        "label": "The river",
+        "purpose": "Put a human face and point of view on the work; build trust.",
+        "sections": [
+          "about",
+          "editorial-story",
+          "team"
+        ]
+      },
+      {
+        "id": "r1foinoy",
+        "type": "services",
+        "label": "What we do",
+        "purpose": "Make the offer and the way of working clear enough to remove hesitation.",
+        "sections": [
+          "services",
+          "process",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "nism86kw",
+        "type": "testimonials",
+        "label": "Field notes",
+        "purpose": "Let real clients or customers make the case, in their own words.",
+        "sections": [
+          "testimonials",
+          "editorial-story",
+          "gallery",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "jwhgjjm6",
+        "type": "custom",
+        "label": "Donate",
+        "purpose": "Turn a visitor into a donor: give once or monthly, preset amounts that each say what they pay for (a sack of rubbish out, a month of water tests, a boat day), how the money is spent, and a short donation form.",
+        "sections": [
+          "pricing",
+          "trust",
+          "faq"
+        ]
+      },
+      {
+        "id": "ebryykau",
+        "type": "contact",
+        "label": "Contact",
+        "purpose": "Give one clear, low-friction way to get in touch.",
+        "sections": [
+          "contact-cta",
+          "location"
+        ]
+      }
+    ],
+    "target": "not-sure"
+  }
+}

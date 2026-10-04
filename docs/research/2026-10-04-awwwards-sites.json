@@ -1,0 +1,6471 @@
+[
+ {
+  "name": "Lando Norris",
+  "url": "https://landonorris.com/",
+  "awwwards": "https://www.awwwards.com/sites/lando-norris",
+  "award": "Site of the Day - Nov 17, 2025",
+  "collections": [
+   "Sites of the Year"
+  ],
+  "kind": "personal brand / sports",
+  "hero": "number-mask loader → full-bleed portrait photo",
+  "sections": [
+   "loader",
+   "hero photo",
+   "on track",
+   "off track",
+   "helmets (3D)",
+   "hall of fame",
+   "store",
+   "footer"
+  ],
+  "nav": "logo left + store pill + menu button; full-screen menu",
+  "footer": "dark rounded card with helmet image, link columns, sponsor logo row",
+  "type": "Mona Sans variable caps + Brier signature script overlay",
+  "colour": "acid lime #D2FF00 + near-black",
+  "signature": "his race number as the loader mask; signature script scribbled over headlines; 3D helmet viewer",
+  "palette": [
+   "#D2FF00",
+   "#111112"
+  ],
+  "tags": [
+   "Promotional",
+   "Sports",
+   "Web & Interactive",
+   "Colorful",
+   "3D",
+   "Gestures / Interaction",
+   "WebGL",
+   "GSAP",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Mona Sans Variable",
+   "Brier"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Messenger",
+  "url": "https://messenger.abeto.co",
+  "awwwards": "https://www.awwwards.com/sites/messenger",
+  "award": "Site of the Day - Nov 10, 2025",
+  "collections": [
+   "Sites of the Year"
+  ],
+  "kind": "game / experiment",
+  "hero": "3D tiny planet with blocky title letters + BEGIN button",
+  "sections": [
+   "gate",
+   "game world"
+  ],
+  "nav": "none (in-game HUD)",
+  "footer": "none",
+  "type": "blocky custom display",
+  "colour": "teal #81BFBC + sage",
+  "signature": "multiplayer letter-delivery game on a planet",
+  "palette": [
+   "#81BFBC",
+   "#C9D5C3"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Games & Entertainment",
+   "Web & Interactive",
+   "Colorful",
+   "Storytelling",
+   "3D",
+   "WebGL",
+   "WebSockets",
+   "Three.js"
+  ],
+  "fonts_seen": [],
+  "visited_live": true
+ },
+ {
+  "name": "Igloo Inc",
+  "url": "https://www.igloo.inc/",
+  "awwwards": "https://www.awwwards.com/sites/igloo-inc",
+  "award": "Site of the Day - Jul 23, 2024",
+  "collections": [
+   "WebGL Animations",
+   "Sites of the Year"
+  ],
+  "kind": "web3 company / experiment",
+  "hero": "WebGL fog scene: ice igloo",
+  "sections": [
+   "loader",
+   "igloo",
+   "rock",
+   "crystal",
+   "scroll to explore"
+  ],
+  "nav": "logo only + HUD mono labels",
+  "footer": "none",
+  "type": "mono HUD labels",
+  "colour": "cold greys #b6bac5/#383e4e",
+  "signature": "scroll moves a camera through 3 sculpted objects; HUD coordinates/dates",
+  "palette": [
+   "#b6bac5",
+   "#383e4e"
+  ],
+  "tags": [
+   "Web & Interactive",
+   "Animation",
+   "Infinite Scroll",
+   "Transitions",
+   "3D"
+  ],
+  "fonts_seen": [],
+  "visited_live": true
+ },
+ {
+  "name": "Don't Board Me",
+  "url": "https://dontboardme.com",
+  "awwwards": "https://www.awwwards.com/sites/dont-board-me",
+  "award": "Site of the Day - Mar 11, 2024",
+  "collections": [
+   "Sites of the Year"
+  ],
+  "kind": "local service (pet care)",
+  "hero": "playful gate: bounce a ball to enter",
+  "sections": [
+   "gate",
+   "hero claim",
+   "services",
+   "care promise",
+   "FAQ",
+   "footer"
+  ],
+  "nav": "caps text links + BOOK NOW",
+  "footer": "area + email + link rows + legal",
+  "type": "Bayon condensed caps + Neue Montreal",
+  "colour": "red #E33529 on pink + sky blue",
+  "signature": "mini-game entry gate; Lottie illustrations",
+  "palette": [
+   "#E33529",
+   "#AFD8FB"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Events",
+   "Other",
+   "Colorful",
+   "Graphic design",
+   "Scrolling",
+   "Storytelling",
+   "UI design",
+   "404 pages"
+  ],
+  "fonts_seen": [
+   "Times",
+   "Neue Montreal",
+   "Bayon",
+   "Arial"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Opal Tadpole",
+  "url": "https://www.opalcamera.com/opal-tadpole",
+  "awwwards": "https://www.awwwards.com/sites/opal-tadpole",
+  "award": "Site of the Day - Jan 11, 2024",
+  "collections": [
+   "Sites of the Year"
+  ],
+  "kind": "product launch (hardware)",
+  "hero": "top-down photo of a table of objects with a letter",
+  "sections": [
+   "letter \"the table\"",
+   "product story",
+   "footer"
+  ],
+  "nav": "minimal",
+  "footer": "giant outlined repeating \"opal\" wordmark pattern + small link row",
+  "type": "Die Grotesk",
+  "colour": "black + yellow #FFDB01",
+  "signature": "founder letter over a table photo; footer wordmark pattern",
+  "palette": [
+   "#FFDB01",
+   "#ffffff"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Technology",
+   "Startups",
+   "Animation",
+   "Photographic",
+   "Single page",
+   "3D",
+   "Interaction Design",
+   "Microinteractions"
+  ],
+  "fonts_seen": [
+   "Die Grotesk C"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Lusion v3",
+  "url": "https://lusion.co/",
+  "awwwards": "https://www.awwwards.com/sites/lusion-v3",
+  "award": "Site of the Day - Oct 2, 2023",
+  "collections": [
+   "Agency Portfolios",
+   "WebGL Animations",
+   "Sites of the Year"
+  ],
+  "kind": "agency (3D)",
+  "hero": "interactive 3D pieces react to pointer",
+  "sections": [
+   "counter loader",
+   "hero 3D",
+   "statement \"Bold Ideas, Brought to Life\"",
+   "reel portal",
+   "featured work",
+   "newsletter"
+  ],
+  "nav": "logo + LET'S TALK pill + MENU pill",
+  "footer": "newsletter + links",
+  "type": "Aeonik",
+  "colour": "lavender-white #f0f1fa + electric blue #1a2ffb",
+  "signature": "showreel inside a WebGL portal; counter 0→100 preloader",
+  "palette": [
+   "#1a2ffb",
+   "#f0f1fa"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Promotional",
+   "Web & Interactive",
+   "Animation",
+   "Clean",
+   "3D",
+   "About Page"
+  ],
+  "fonts_seen": [
+   "Aeonik"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Noomo Agency",
+  "url": "https://noomoagency.com",
+  "awwwards": "https://www.awwwards.com/sites/noomo-agency",
+  "award": "Site of the Day - Sep 21, 2023",
+  "collections": [
+   "Agency Portfolios",
+   "Sites of the Year"
+  ],
+  "kind": "agency (3D storytelling)",
+  "hero": "3D storytelling scene (plane, jellyfish)",
+  "sections": [
+   "loader",
+   "3D story chapters",
+   "awards",
+   "work",
+   "contact form in footer"
+  ],
+  "nav": "text links",
+  "footer": "contact form (email, project, budget pills) + link columns",
+  "type": "NeueMachina + Source Sans",
+  "colour": "pastel blue-lavender gradient",
+  "signature": "footer IS the brief form with budget chips",
+  "palette": [
+   "#DEE7F1"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Promotional",
+   "Web & Interactive",
+   "Animation",
+   "Scrolling",
+   "Storytelling",
+   "3D",
+   "Interaction Design",
+   "UI design"
+  ],
+  "fonts_seen": [
+   "Source Sans Pro",
+   "NeueRoman",
+   "NeueMachina"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Mana Yerba Mate",
+  "url": "https://en.manayerbamate.com/",
+  "awwwards": "https://www.awwwards.com/sites/mana-yerba-mate",
+  "award": "Site of the Day - Mar 13, 2023",
+  "collections": [
+   "Sites of the Year"
+  ],
+  "kind": "e-commerce food & drink",
+  "hero": "3D can flying through flat illustration",
+  "sections": [
+   "hero can",
+   "what is mate",
+   "flavours carousel",
+   "products",
+   "social feed",
+   "footer"
+  ],
+  "nav": "Shop / Learn / Subscription + free-shipping bar",
+  "footer": "small legal row",
+  "type": "Neue Montreal",
+  "colour": "green + coral #F15B40 + yellow #FFD372 illustration",
+  "signature": "can travels and rotates down the page (one guide); flavour carousel with own colours",
+  "palette": [
+   "#FFD372",
+   "#F15B40"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Food & Drink",
+   "Promotional",
+   "Animation",
+   "Colorful",
+   "Illustration",
+   "3D",
+   "Footer Design",
+   "404 pages",
+   "Shopify"
+  ],
+  "fonts_seen": [
+   "Neue Montreal 2020"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Locomotive®",
+  "url": "https://locomotive.ca",
+  "awwwards": "https://www.awwwards.com/sites/locomotive-r",
+  "award": "Site of the Day - Mar 30, 2023",
+  "collections": [
+   "Agency Portfolios",
+   "Sites of the Month"
+  ],
+  "kind": "agency",
+  "hero": "blue-tinted photo + giant arrow mark",
+  "sections": [
+   "hero",
+   "featured work",
+   "extras/articles",
+   "store",
+   "footer"
+  ],
+  "nav": "Work, Agency, Careers, Store + Let's talk",
+  "footer": "huge serif address with inline pictogram glyphs + menu/social/external columns",
+  "type": "LocomotiveNew + Helvetica Now",
+  "colour": "black/white + accent photo",
+  "signature": "typographic address footer with icons inside the line",
+  "palette": [
+   "#000",
+   "#FFF"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Design Agencies",
+   "Web & Interactive",
+   "Portfolio",
+   "Photo & Video",
+   "About Page",
+   "Microinteractions"
+  ],
+  "fonts_seen": [
+   "HelveticaNowDisplay",
+   "LocomotiveNew"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Unseen Studio",
+  "url": "https://unseen.co/",
+  "awwwards": "https://www.awwwards.com/sites/unseen-studio",
+  "award": "Site of the Day - Feb 6, 2023",
+  "collections": [
+   "Agency Portfolios",
+   "Sites of the Month"
+  ],
+  "kind": "agency",
+  "hero": "gate: googly-eyes logo + Enter",
+  "sections": [
+   "gate",
+   "WebGL world",
+   "projects",
+   "contact"
+  ],
+  "nav": "Index / Projects / Contact",
+  "footer": "©",
+  "type": "Neue Montreal + Saol Display",
+  "colour": "pink #EDC1CB + black",
+  "signature": "cartoon eyes follow cursor on the gate",
+  "palette": [
+   "#EDC1CB",
+   "#000000"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Web & Interactive",
+   "Experimental",
+   "Animation",
+   "Transitions",
+   "Sound-Audio",
+   "Storytelling",
+   "3D",
+   "Interaction Design"
+  ],
+  "fonts_seen": [
+   "Neue Montreal",
+   "Saol Display"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Immersive Garden website",
+  "url": "https://immersive-g.com/",
+  "awwwards": "https://www.awwwards.com/sites/immersive-garden-website",
+  "award": "Site of the Day - Jan 7, 2025",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "agency",
+  "hero": "small serif line on grey paper",
+  "sections": [
+   "loader",
+   "statement",
+   "project stage (one 3D object per project)",
+   "footer"
+  ],
+  "nav": "Menu",
+  "footer": "n/a",
+  "type": "PSTimes small serif",
+  "colour": "paper grey #e8e8e8",
+  "signature": "each project is one sculpted 3D object beside a quiet serif caption",
+  "palette": [
+   "#000000",
+   "#c2c2c2"
+  ],
+  "tags": [
+   "Web & Interactive",
+   "Experimental",
+   "Animation",
+   "3D",
+   "Gestures / Interaction",
+   "UI design",
+   "Project Page",
+   "Contentful"
+  ],
+  "fonts_seen": [
+   "PSTimes",
+   "HelveticaNeueRegular",
+   "sans-serif"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Exo Ape",
+  "url": "https://www.exoape.com",
+  "awwwards": "https://www.awwwards.com/sites/exo-ape",
+  "award": "Site of the Day - May 23, 2022",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "agency",
+  "hero": "full-bleed city photo + giant light headline",
+  "sections": [
+   "hero",
+   "featured projects collage",
+   "work",
+   "work in motion",
+   "reel",
+   "press",
+   "story"
+  ],
+  "nav": "Work Studio News Contact",
+  "footer": "dark \"Our Story\" + glowing object + address",
+  "type": "Lausanne 250px light",
+  "colour": "white + black",
+  "signature": "giant light-weight headline over photo",
+  "palette": [
+   "#ffffff",
+   "#14181A"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Web & Interactive",
+   "Big Background Images",
+   "Clean",
+   "Portfolio",
+   "Project Page",
+   "GSAP",
+   "Nuxt.js",
+   "Vercel",
+   "After Effects",
+   "Figma",
+   "Adobe Photoshop"
+  ],
+  "fonts_seen": [
+   "Times",
+   "Lausanne-300",
+   "Lausanne-400"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Lama Lama",
+  "url": "https://lamalama.com/",
+  "awwwards": "https://www.awwwards.com/sites/lama-lama-2",
+  "award": "Site of the Day - Jul 20, 2026",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "agency",
+  "hero": "pixel-mosaic preloader → dark hero caps",
+  "sections": [
+   "loader",
+   "hero claim",
+   "intro",
+   "what we do",
+   "work",
+   "brief us"
+  ],
+  "nav": "links + quirky \"PRESS THIS, CHANGE YOUR YEAR\" button",
+  "footer": "\"BRIEF US SOMETHING.\" giant + phone + [GET IN TOUCH] bracket buttons",
+  "type": "Suisse + Sometype mono",
+  "colour": "near-black #1A1C1C + cream",
+  "signature": "pixel canvas drawing toy; bracket buttons",
+  "palette": [
+   "#F9F4EB",
+   "#1A1C1C"
+  ],
+  "tags": [
+   "Design Agencies",
+   "E-Commerce",
+   "Web & Interactive",
+   "Animation",
+   "Graphic design",
+   "WebGL",
+   "GSAP",
+   "Javascript"
+  ],
+  "fonts_seen": [
+   "Sometype",
+   "SuisseBPIntl"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Akaru",
+  "url": "https://akaru.fr/",
+  "awwwards": "https://www.awwwards.com/sites/akaru-2",
+  "award": "Site of the Day - Apr 1, 2024",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "agency",
+  "hero": "giant ultra-condensed name + photo strip",
+  "sections": [
+   "hero",
+   "projects",
+   "prices",
+   "expertise",
+   "agency"
+  ],
+  "nav": "Projects Expertise Agency Contact",
+  "footer": "black, full-width ultra-condensed wordmark cropped at bottom",
+  "type": "Alliance Neue/Platt",
+  "colour": "cream #F1EFEB + black",
+  "signature": "wordmark footer cropped at the edge",
+  "palette": [
+   "#F1EFEB",
+   "#0E0E0E"
+  ],
+  "tags": [
+   "Design Agencies",
+   "E-Commerce",
+   "Web & Interactive",
+   "Animation",
+   "Colorful",
+   "Unusual Navigation",
+   "Filters and Effects",
+   "UI design",
+   "About Page"
+  ],
+  "fonts_seen": [
+   "Alliance Neue",
+   "Alliance Platt",
+   "Alliance Text"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Watson",
+  "url": "https://watson.la/",
+  "awwwards": "https://www.awwwards.com/sites/watson",
+  "award": "Site of the Day - Sep 12, 2024",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "agency (entertainment)",
+  "hero": "giant condensed name + paragraph with image chips",
+  "sections": [
+   "hero",
+   "about paragraph",
+   "recent",
+   "contact"
+  ],
+  "nav": "footnoted list \"(1) Partnerships, (2) Capabilities, (3) Conversations\"",
+  "footer": "recent campaign + contact columns",
+  "type": "condensed grotesk + serif paragraph",
+  "colour": "black/white + photo chips",
+  "signature": "paragraph with small images between words and footnote numbers",
+  "palette": [
+   "#000000",
+   "#FFFFFF"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Design Agencies",
+   "Web & Interactive",
+   "Responsive Design",
+   "Content architecture",
+   "Interaction Design",
+   "UI design",
+   "Project Page"
+  ],
+  "fonts_seen": [
+   "ba",
+   "ca",
+   "bu"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Inkfish",
+  "url": "https://inkfishnyc.com/",
+  "awwwards": "https://www.awwwards.com/sites/inkfish",
+  "award": "Site of the Day - May 23, 2024",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "production company",
+  "hero": "mono index of work [17]",
+  "sections": [
+   "work index",
+   "agency",
+   "services",
+   "clients",
+   "awards",
+   "contact"
+  ],
+  "nav": "HOME ABOUT WORK[17] CONTACT + slogan",
+  "footer": "\"ONLY THE STRONG EVOLVE\", live clock, address, BOOK A CALL",
+  "type": "Martian Mono + NT Dapper",
+  "colour": "black/white",
+  "signature": "mono table index with hover image; live clock",
+  "palette": [
+   "#000000",
+   "#FFFFFF"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Film & TV",
+   "Web & Interactive",
+   "Fullscreen",
+   "Parallax",
+   "Typography",
+   "Transitions",
+   "UI design",
+   "Microinteractions"
+  ],
+  "fonts_seen": [
+   "NT Dapper",
+   "Martian Mono"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Boc.Studio",
+  "url": "https://boc.studio/",
+  "awwwards": "https://www.awwwards.com/sites/boc-studio",
+  "award": "Site of the Day - Sep 19, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "neon tube lines spelling letters",
+  "sections": [
+   "hero",
+   "work grid (filter)"
+  ],
+  "nav": "INFO + live time \"10:50 CET ONLINE\"",
+  "footer": "n/a",
+  "type": "PP Mori",
+  "colour": "dark #18181d + orange #FF4421",
+  "signature": "live local time + online status in nav",
+  "palette": [
+   "#FF4421",
+   "#0D0E0E"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Technology",
+   "Web & Interactive",
+   "Big Background Images",
+   "Clean",
+   "Graphic design",
+   "Typography",
+   "Microinteractions",
+   "404 pages",
+   "Vercel",
+   "Sanity",
+   "Framer"
+  ],
+  "fonts_seen": [
+   "ppMori"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Pensatori Irrazionali",
+  "url": "https://pensatori-irrazionali.com/",
+  "awwwards": "https://www.awwwards.com/sites/pensatori-irrazionali",
+  "award": "Site of the Day - Sep 20, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "console globe with status rows",
+  "sections": [
+   "console hero",
+   "client ribbons 3D",
+   "universe",
+   "BUILD",
+   "footer"
+  ],
+  "nav": "news ticker + Menu",
+  "footer": "menu/contact columns + giant word",
+  "type": "Helvetica Now + PP Editorial + script",
+  "colour": "black + green status dots / white",
+  "signature": "live console with green status dots; client logos on flying 3D ribbons",
+  "palette": [
+   "#4c4c4c",
+   "#f5f5f5"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Technology",
+   "Web & Interactive",
+   "Navigation Menu",
+   "Portfolio",
+   "Photo & Video",
+   "Contact Page",
+   "Microinteractions",
+   "404 pages",
+   "WebGL",
+   "GSAP",
+   "Three.js"
+  ],
+  "fonts_seen": [
+   "helveticaNow",
+   "ppEditorial",
+   "ballet"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Oimachi",
+  "url": "https://www.oimachi.co",
+  "awwwards": "https://www.awwwards.com/sites/oimachi",
+  "award": "Site of the Day - Aug 21, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "headline with italic word + bento of projects",
+  "sections": [
+   "hero",
+   "industries",
+   "work",
+   "team",
+   "services",
+   "products",
+   "posts"
+  ],
+  "nav": "Work Services Posts Products About Contact",
+  "footer": "4-column full index (every item listed) + round CTA",
+  "type": "Aeonik + Feature Deck",
+  "colour": "light grey + orange tile",
+  "signature": "footer as complete index of the site",
+  "palette": [
+   "#FFFFFF",
+   "#000000"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Technology",
+   "Web & Interactive",
+   "Clean",
+   "Portfolio",
+   "Typography",
+   "GSAP",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Aeonik",
+   "Feature Deck"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "MONOLOG",
+  "url": "https://bymonolog.com/",
+  "awwwards": "https://www.awwwards.com/sites/monolog",
+  "award": "Site of the Day - Jul 6, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "giant 140px statement",
+  "sections": [
+   "hero",
+   "case stories",
+   "services list",
+   "clients",
+   "awards",
+   "process",
+   "footer"
+  ],
+  "nav": "About→ Work→ Process→ Services→ Contact→",
+  "footer": "dark: big nav, live time, \"Booking projects for Q4\", liquid B/W shader band",
+  "type": "Khteka + Suisse Mono",
+  "colour": "warm grey #E8E8E3 + black + purple",
+  "signature": "availability line + liquid shader footer",
+  "palette": [
+   "#080807",
+   "#DDDDD5"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Clean",
+   "Flat Design",
+   "Typography",
+   "GSAP",
+   "Three.js",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Khteka",
+   "Suisse Mono",
+   "Animo"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Glitch&Grit",
+  "url": "https://glitchandgrit.com/",
+  "awwwards": "https://www.awwwards.com/sites/glitch-grit",
+  "award": "Site of the Day - Jul 19, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency (film)",
+  "hero": "chaotic collage of stills with neon two-word titles",
+  "sections": [
+   "collage reel",
+   "projects",
+   "contact"
+  ],
+  "nav": "WORK INFO CONTACT",
+  "footer": "CONTACT US",
+  "type": "Elza",
+  "colour": "black + neon green/pink/blue",
+  "signature": "scrapbook collage with overlapping project titles",
+  "palette": [
+   "#FFFBF7",
+   "#000000"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Film & TV",
+   "Portfolio",
+   "Typography",
+   "Video",
+   "Transitions",
+   "Photo & Video",
+   "Footer Design",
+   "Webflow",
+   "Figma"
+  ],
+  "fonts_seen": [
+   "elza"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Warm & Fuzzy",
+  "url": "https://www.warmnfuzzy.tv/",
+  "awwwards": "https://www.awwwards.com/sites/warm-fuzzy",
+  "award": "Site of the Day - Sep 12, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "3D sneakers video on dark",
+  "sections": [
+   "hero",
+   "work",
+   "about band",
+   "services",
+   "footer"
+  ],
+  "nav": "Latest work ticker + WORK INFO CONTACT",
+  "footer": "blue: giant wordmark + 3D sticker cube + marquee + click-to-copy email",
+  "type": "Suisse Intl caps",
+  "colour": "dark + blue #190BB6 + yellow #E5CF4F",
+  "signature": "click-to-copy email; marquee footer",
+  "palette": [
+   "#190BB6",
+   "#E5CF4F"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Animation",
+   "Colorful",
+   "Portfolio",
+   "Transitions",
+   "3D",
+   "Photo & Video",
+   "Motion",
+   "Figma",
+   "Next.js"
+  ],
+  "fonts_seen": [
+   "SuisseIntl"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Partizan",
+  "url": "https://partizan.com/",
+  "awwwards": "https://www.awwwards.com/sites/partizan",
+  "award": "Site of the Day - Jul 26, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "production company",
+  "hero": "living video wall of director clips",
+  "sections": [
+   "video wall",
+   "directors",
+   "about"
+  ],
+  "nav": "WORK DIRECTORS ABOUT CONTACT + regions",
+  "footer": "n/a",
+  "type": "GT America + Teodor",
+  "colour": "white frame + full colour video",
+  "signature": "mosaic of autoplaying clips that keep reshuffling",
+  "palette": [
+   "#FFF",
+   "#000"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Film & TV",
+   "Portfolio",
+   "Transitions",
+   "Filters and Effects",
+   "404 pages",
+   "WebGL",
+   "GSAP",
+   "Three.js"
+  ],
+  "fonts_seen": [
+   "GT America Standard",
+   "Teodor",
+   "sans-serif",
+   "GTAmericaMono"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Siena Film Foundation",
+  "url": "https://siena.film",
+  "awwwards": "https://www.awwwards.com/sites/siena-film-foundation",
+  "award": "Site of the Day - Mar 18, 2025",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "film production",
+  "hero": "gate: art-deco wordmark + enter",
+  "sections": [
+   "gate",
+   "infinite film grid",
+   "project"
+  ],
+  "nav": "film title + meta",
+  "footer": "n/a",
+  "type": "Neue Brucke + NB International",
+  "colour": "black + cream #FAF7EF",
+  "signature": "procedural slider that re-arranges posters into a grid",
+  "palette": [
+   "#000000",
+   "#FAF7EF"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Film & TV",
+   "Institutions",
+   "Infinite Scroll",
+   "Navigation Menu",
+   "Transitions",
+   "Filters and Effects",
+   "Copy design",
+   "Microinteractions"
+  ],
+  "fonts_seen": [
+   "NB International",
+   "Neue Brucke",
+   "P22 Parrish Roman",
+   "-apple-system"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Bennett & Clive",
+  "url": "https://bennettandclive.com",
+  "awwwards": "https://www.awwwards.com/sites/bennett-clive",
+  "award": "Site of the Day - Mar 12, 2024",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "production company",
+  "hero": "photo with giant stacked client names",
+  "sections": [
+   "hero",
+   "claim",
+   "clients list",
+   "contact"
+  ],
+  "nav": "HOME WORK ABOUT CONTACT",
+  "footer": "city clocks + full-width wordmark",
+  "type": "Inter 150px",
+  "colour": "white/black",
+  "signature": "client-name stack over the hero photo; city clocks",
+  "palette": [
+   "#000000",
+   "#ffffff"
+  ],
+  "tags": [
+   "Fashion",
+   "Film & TV",
+   "Photography",
+   "Flat Design",
+   "Minimal",
+   "Typography",
+   "Photo & Video",
+   "About Page",
+   "Footer Design"
+  ],
+  "fonts_seen": [
+   "InterWeb",
+   "Arial"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Depo Luxe",
+  "url": "https://depoluxe.xyz/",
+  "awwwards": "https://www.awwwards.com/sites/depo-luxe",
+  "award": "Site of the Day - Jul 7, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "creative agency (luxury)",
+  "hero": "full-screen film with italic serif title in quotes",
+  "sections": [
+   "project slideshow",
+   "archive",
+   "talent",
+   "approach",
+   "contact"
+  ],
+  "nav": "Featured Archive Talent Approach Contact",
+  "footer": "socials + legal",
+  "type": "EB Garamond small",
+  "colour": "black",
+  "signature": "cinematic one-project-per-screen slideshow",
+  "palette": [
+   "#fff",
+   "#000"
+  ],
+  "tags": [
+   "Film & TV",
+   "Luxury",
+   "Animation",
+   "Clean",
+   "Navigation Menu",
+   "Photo & Video",
+   "Microinteractions",
+   "11ty"
+  ],
+  "fonts_seen": [
+   "EB Garamond",
+   "Times"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Milledollars",
+  "url": "https://milledollars.fr/",
+  "awwwards": "https://www.awwwards.com/sites/milledollars",
+  "award": "Site of the Day - Oct 2, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "video production",
+  "hero": "stack of rounded video cards",
+  "sections": [
+   "card stack",
+   "fullscreen film per project"
+  ],
+  "nav": "HOME WORKS INFO CONTACT + tagline",
+  "footer": "n/a",
+  "type": "ABC Diatype + Migra",
+  "colour": "pale lilac #E0DEE1",
+  "signature": "cards that open into full-screen films",
+  "palette": [
+   "#E0DEE1"
+  ],
+  "tags": [
+   "Film & TV",
+   "Animation",
+   "UI design",
+   "Contentful",
+   "GSAP",
+   "Vue.js"
+  ],
+  "fonts_seen": [
+   "ABCDiatype",
+   "Migra"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Cipher",
+  "url": "https://cipher.tv/",
+  "awwwards": "https://www.awwwards.com/sites/cipher",
+  "award": "Site of the Day - Aug 20, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "production / portfolio",
+  "hero": "3D ring of project images around a \"C\"",
+  "sections": [
+   "ring gallery"
+  ],
+  "nav": "WORKS TALENTS CONTACT ABOUT",
+  "footer": "n/a",
+  "type": "Favorit",
+  "colour": "black",
+  "signature": "drag-to-spin 3D image ring",
+  "palette": [
+   "#060403"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Web & Interactive",
+   "Experimental",
+   "Portfolio",
+   "Gestures / Interaction",
+   "Interaction Design",
+   "GSAP",
+   "Nuxt.js"
+  ],
+  "fonts_seen": [
+   "Favorit"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Studio K95",
+  "url": "https://k95.it",
+  "awwwards": "https://www.awwwards.com/sites/studio-k95-3",
+  "award": "Site of the Day - Aug 11, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "floating 3D cards of work in blue space",
+  "sections": [
+   "3D space gallery",
+   "work list"
+  ],
+  "nav": "doubled-letter links",
+  "footer": "counter \"12 / 20 lavori\" + ©",
+  "type": "adaptive",
+  "colour": "electric blue #1500E1",
+  "signature": "work floats as cards in a navigable 3D space",
+  "palette": [
+   "#1500E1"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Animation",
+   "Portfolio",
+   "Responsive Design",
+   "Web Fonts",
+   "3D",
+   "404 pages",
+   "GSAP",
+   "Three.js",
+   "Nuxt.js"
+  ],
+  "fonts_seen": [
+   "adaptive",
+   "Arial"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "TRIONN",
+  "url": "https://trionn.com",
+  "awwwards": "https://www.awwwards.com/sites/trionn-2",
+  "award": "Site of the Day - Jul 27, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "dark statement \"Designed to mean depth.\"",
+  "sections": [
+   "hero",
+   "about",
+   "key facts",
+   "selected work",
+   "services",
+   "footer"
+  ],
+  "nav": "Work + LET'S TALK + MENU",
+  "footer": "\"Ready to build something bold?\" + giant outline wordmark + local time + sound on hover",
+  "type": "Familjen + Neue Haas",
+  "colour": "near-black",
+  "signature": "sound on hover lines",
+  "palette": [
+   "#0A0A0A",
+   "#FFFFFF"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Technology",
+   "Web & Interactive",
+   "Animation",
+   "Portfolio",
+   "3D",
+   "Interaction Design",
+   "Microinteractions",
+   "404 pages",
+   "GSAP",
+   "Three.js",
+   "Next.js"
+  ],
+  "fonts_seen": [
+   "familjen",
+   "neueHaas"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "2xA Studio",
+  "url": "https://2xa.studio/",
+  "awwwards": "https://www.awwwards.com/sites/2xa-studio",
+  "award": "Site of the Day - Jul 31, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "line with tiny image chips between words",
+  "sections": [
+   "intro line",
+   "projects",
+   "footer"
+  ],
+  "nav": "ABOUT PROJECTS CONTACT + two city times",
+  "footer": "giant dot-matrix wordmark marquee",
+  "type": "Helvetica + custom mono VF",
+  "colour": "near-black + white",
+  "signature": "pixel dot-matrix wordmark; two city clocks",
+  "palette": [
+   "#0F0F0F",
+   "#FDFDFD"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Animation",
+   "Graphic design",
+   "Typography",
+   "Responsive",
+   "CSS",
+   "HTML5",
+   "Javascript"
+  ],
+  "fonts_seen": [
+   "2XAMONOVF",
+   "HelveticaProRoman"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "NOTHIN'",
+  "url": "https://www.noth.in",
+  "awwwards": "https://www.awwwards.com/sites/nothin",
+  "award": "Site of the Day - Aug 10, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency (fashion/luxury)",
+  "hero": "giant black wordmark on white",
+  "sections": [
+   "loader 3D crystal",
+   "hero wordmark",
+   "work",
+   "footer"
+  ],
+  "nav": "MENU",
+  "footer": "dark \"Let's start from nothin'\" + full-width wordmark",
+  "type": "PP Neue Montreal",
+  "colour": "white/black + blue crystal",
+  "signature": "brand pun carried hero to footer",
+  "palette": [
+   "#FFFFFF",
+   "#000000"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Web & Interactive",
+   "Experimental",
+   "Parallax",
+   "Portfolio",
+   "Scrolling",
+   "3D",
+   "Photo & Video",
+   "Microinteractions",
+   "WebGL",
+   "GSAP",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Ppneuemontreal",
+   "IBM Plex Mono",
+   "Ppneuemontreal Book"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Jesper Landberg",
+  "url": "http://jesperlandberg.com",
+  "awwwards": "https://www.awwwards.com/sites/jesper-landberg-4",
+  "award": "Site of the Day - Sep 29, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "freelance portfolio",
+  "hero": "3D curved carousel of project screens",
+  "sections": [
+   "loader",
+   "carousel",
+   "testimonials card",
+   "about crawl"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "sans",
+  "colour": "black + yellow text",
+  "signature": "curved cylinder carousel; star-wars text crawl",
+  "palette": [
+   "#000000",
+   "#fff"
+  ],
+  "tags": [
+   "Web & Interactive",
+   "Animation",
+   "Infinite Scroll",
+   "GSAP",
+   "Three.js",
+   "Nuxt.js"
+  ],
+  "fonts_seen": [
+   "sans"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Gil Huybrecht",
+  "url": "https://gilhuybrecht.com/",
+  "awwwards": "https://www.awwwards.com/sites/gil-huybrecht",
+  "award": "Site of the Day - Sep 21, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "freelance portfolio",
+  "hero": "infinite draggable canvas of numbered thumbnails",
+  "sections": [
+   "canvas"
+  ],
+  "nav": "minimal",
+  "footer": "socials row",
+  "type": "sans",
+  "colour": "black",
+  "signature": "infinite drag canvas",
+  "palette": [
+   "#0D0D0F",
+   "#FFFFFF"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Promotional",
+   "Web & Interactive",
+   "Clean",
+   "Infinite Scroll",
+   "Portfolio",
+   "Typography",
+   "Gallery",
+   "Microinteractions",
+   "WebGL",
+   "Next.js",
+   "DatoCMS"
+  ],
+  "fonts_seen": [
+   "sans"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Léo Parpeix - Portfolio 2026",
+  "url": "https://leoparpeix.com/",
+  "awwwards": "https://www.awwwards.com/sites/leo-parpeix-portfolio-2026",
+  "award": "Site of the Day - Sep 14, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "freelance portfolio",
+  "hero": "condensed caps title + flying bee cursor",
+  "sections": [
+   "hero",
+   "work",
+   "news",
+   "playground",
+   "footer"
+  ],
+  "nav": "Work News Playground",
+  "footer": "\"LET'S CREATE A REMARKABLE JOURNEY\" + links",
+  "type": "condensed caps",
+  "colour": "off-white + dark green",
+  "signature": "3D mascot that follows the cursor",
+  "palette": [],
+  "tags": [
+   "Promotional",
+   "Web & Interactive",
+   "Experimental",
+   "Animation",
+   "Portfolio",
+   "Typography",
+   "Transitions",
+   "3D",
+   "Microinteractions",
+   "WebGL",
+   "After Effects",
+   "Blender"
+  ],
+  "fonts_seen": [
+   "text",
+   "sans-serif",
+   "title"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Gionatan Nese '26",
+  "url": "https://www.gionatannese.com/",
+  "awwwards": "https://www.awwwards.com/sites/gionatan-nese-26",
+  "award": "Site of the Day - Sep 5, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "freelance portfolio",
+  "hero": "ring of tiny images like a clock",
+  "sections": [
+   "ring",
+   "projects"
+  ],
+  "nav": "minimal + sound",
+  "footer": "n/a",
+  "type": "LayGrotesk + Teodor",
+  "colour": "white",
+  "signature": "circular project clock; sound",
+  "palette": [
+   "#000000",
+   "#FFFFFF"
+  ],
+  "tags": [
+   "Web & Interactive",
+   "Infinite Scroll",
+   "Minimal",
+   "Portfolio",
+   "Typography",
+   "Sound-Audio",
+   "3D",
+   "WebGL",
+   "GSAP",
+   "Three.js"
+  ],
+  "fonts_seen": [
+   "LayGrotesk",
+   "Teodor"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Hiroto Sato",
+  "url": "https://www.hirotos.com",
+  "awwwards": "https://www.awwwards.com/sites/hiroto-sato",
+  "award": "Site of the Day - Jul 17, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "freelance portfolio",
+  "hero": "3D street pole with signs as navigation",
+  "sections": [
+   "street pole",
+   "projects archive",
+   "contact"
+  ],
+  "nav": "the street signs ARE the menu",
+  "footer": "n/a",
+  "type": "Helvetica Neue",
+  "colour": "white + yellow + blue sign",
+  "signature": "real-world object as navigation",
+  "palette": [
+   "#FFFFFF",
+   "#0B0B0A"
+  ],
+  "tags": [
+   "Web & Interactive",
+   "Portfolio",
+   "3D",
+   "WebGL",
+   "GSAP",
+   "Blender"
+  ],
+  "fonts_seen": [
+   "helvetica-neue-lt-pro"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Julien Calot",
+  "url": "https://www.juliencalot.com",
+  "awwwards": "https://www.awwwards.com/sites/julien-calot",
+  "award": "Site of the Day - Jul 8, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "artist portfolio",
+  "hero": "signature loader → full-bleed painting",
+  "sections": [
+   "loader",
+   "one artwork per screen"
+  ],
+  "nav": "name + small labels",
+  "footer": "n/a",
+  "type": "DIN + Doner",
+  "colour": "white + painting colours",
+  "signature": "infinite artwork scroll",
+  "palette": [
+   "#ffffff",
+   "#000000"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Luxury",
+   "Animation",
+   "Big Background Images",
+   "Infinite Scroll",
+   "Portfolio",
+   "Gallery",
+   "404 pages",
+   "WebGL",
+   "Webflow",
+   "Figma"
+  ],
+  "fonts_seen": [
+   "Doner",
+   "FFDINProRegular"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Miranda – Paper Portfolio",
+  "url": "https://niccolomiranda.com",
+  "awwwards": "https://www.awwwards.com/sites/miranda-paper-portfolio",
+  "award": "Site of the Day - Nov 18, 2021",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "freelance portfolio",
+  "hero": "newspaper front page",
+  "sections": [
+   "masthead",
+   "all work",
+   "about",
+   "contact marquee"
+  ],
+  "nav": "newspaper header line",
+  "footer": "marquee \"create something together [EMAIL ME]\"",
+  "type": "Canopee + Editorial New + Domaine",
+  "colour": "newsprint beige",
+  "signature": "portfolio as a printed newspaper",
+  "palette": [
+   "#000",
+   "#987654"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Web & Interactive",
+   "Navigation Menu",
+   "Portfolio",
+   "Typography",
+   "Illustration",
+   "Copy design",
+   "Project Page",
+   "WebGL",
+   "GSAP",
+   "Three.js",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Editorial New",
+   "Canopee",
+   "Domaine Display"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Michael Gatt",
+  "url": "https://michaelgatt.com/",
+  "awwwards": "https://www.awwwards.com/sites/michael-gatt",
+  "award": "Site of the Day - Aug 18, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "composer portfolio",
+  "hero": "dark scattered labels (immersive)",
+  "sections": [
+   "universe",
+   "projects"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "Zapf Humanist",
+  "colour": "black",
+  "signature": "sound-led universe",
+  "palette": [
+   "#0F0F0F",
+   "#CFCFCF"
+  ],
+  "tags": [
+   "Film & TV",
+   "Music & Sound",
+   "Promotional",
+   "Portfolio",
+   "Storytelling",
+   "Interaction Design",
+   "Microinteractions",
+   "Project Page",
+   "404 pages",
+   "WebGL",
+   "Vue.js",
+   "Nuxt.js"
+  ],
+  "fonts_seen": [
+   "Zapf-Humanist-Demi"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Artem Shcherbakov",
+  "url": "https://artemartemartem.com/",
+  "awwwards": "https://www.awwwards.com/sites/artem-shcherbakov",
+  "award": "Site of the Day - Jul 25, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "director portfolio",
+  "hero": "\"Hey I'm Artem\" with green doodles",
+  "sections": [
+   "hero",
+   "showreel",
+   "projects",
+   "represented by"
+  ],
+  "nav": "works / contact",
+  "footer": "dark with neon hand-drawn doodle icons",
+  "type": "EaseDouble + Great Rebellion",
+  "colour": "white/black + neon green",
+  "signature": "hand-drawn doodles around type",
+  "palette": [
+   "#0E0E0E",
+   "#FFFFFF"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Film & TV",
+   "Animation",
+   "Portfolio",
+   "Photo & Video",
+   "About Page",
+   "Project Page",
+   "404 pages",
+   "GSAP",
+   "Three.js",
+   "Next.js"
+  ],
+  "fonts_seen": [
+   "Arial Narrow",
+   "SF Pro Display",
+   "EaseDouble",
+   "Great Rebellion"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Serotoninn",
+  "url": "https://serotoninn.com/",
+  "awwwards": "https://www.awwwards.com/sites/serotoninn",
+  "award": "Site of the Day - Aug 4, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "e-commerce fashion",
+  "hero": "models cut out on white with condensed category labels",
+  "sections": [
+   "hero",
+   "categories",
+   "torn-paper editorial",
+   "subscribe"
+  ],
+  "nav": "category links + bag",
+  "footer": "grey giant wordmark + SUBSCRIBE (LATEST NEWS)",
+  "type": "Thunder condensed + PP Fraktion Mono",
+  "colour": "white + grunge photo + red #ED3833",
+  "signature": "torn-paper edge between clean shop and grungy editorial",
+  "palette": [
+   "#ED3833",
+   "#000000"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Fashion",
+   "Luxury",
+   "Clean",
+   "Navigation Menu",
+   "Gallery",
+   "Footer Design",
+   "404 pages",
+   "Wordpress",
+   "GSAP",
+   "Swiper.js"
+  ],
+  "fonts_seen": [
+   "Thunder",
+   "PP Fraktion Mono",
+   "Inter"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Decathlon Yestalgia",
+  "url": "https://decathlonyestalgia.com/",
+  "awwwards": "https://www.awwwards.com/sites/decathlon-yestalgia",
+  "award": "Site of the Day - Aug 28, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "e-commerce capsule (retro)",
+  "hero": "Memphis shapes + photo card",
+  "sections": [
+   "hero",
+   "persona editorial cards",
+   "collection",
+   "logo"
+  ],
+  "nav": "MENU + shop",
+  "footer": "logo + credits",
+  "type": "Roboto Flex condensed caps + retro script logo",
+  "colour": "pink #F3AFCC + Memphis pastels",
+  "signature": "90s Memphis kit: squiggles, grid floor, bolts",
+  "palette": [
+   "#000",
+   "#F3AFCC"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Animation",
+   "Colorful",
+   "Typography",
+   "HTML5",
+   "GSAP",
+   "Javascript"
+  ],
+  "fonts_seen": [
+   "Roboto Flex"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Aardvark Book Club",
+  "url": "https://aardvarkbookclub.com",
+  "awwwards": "https://www.awwwards.com/sites/aardvark-book-club",
+  "award": "Site of the Day - Aug 30, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "e-commerce subscription",
+  "hero": "blob waves + 3D book + giant rounded headline",
+  "sections": [
+   "hero",
+   "genres list",
+   "how it works",
+   "reviews",
+   "mailing list"
+  ],
+  "nav": "pill links + login",
+  "footer": "purple: app badges + mailing list + 3D book",
+  "type": "Champ + Degular + handwriting",
+  "colour": "yellow #FAED8F + magenta + purple",
+  "signature": "candy-flat colour blocks per section",
+  "palette": [
+   "#FFFFFF",
+   "#FAED8F"
+  ],
+  "tags": [
+   "Culture & Education",
+   "E-Commerce",
+   "Animation",
+   "Colorful",
+   "Typography",
+   "Transitions",
+   "3D",
+   "Gestures / Interaction",
+   "GSAP",
+   "BARBA.js",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Degular",
+   "Champ",
+   "Hello Organichand Webfont"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Vero New-York",
+  "url": "https://verostudio.com/",
+  "awwwards": "https://www.awwwards.com/sites/vero-new-york",
+  "award": "Site of the Day - Aug 8, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "luxury e-commerce / atelier",
+  "hero": "full-bleed warm photo + thin serif name",
+  "sections": [
+   "hero",
+   "statement italic+caps",
+   "archive grid",
+   "process",
+   "footer"
+  ],
+  "nav": "MENU + commission pill",
+  "footer": "full-width serif wordmark + menu + newsletter",
+  "type": "Louize Display + Beausite",
+  "colour": "cream #F3F0ED + warm brown",
+  "signature": "italic lower + roman caps mixed statement",
+  "palette": [
+   "#F3F0ED",
+   "#181615"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Web & Interactive",
+   "Luxury",
+   "Animation",
+   "Big Background Images",
+   "Fullscreen",
+   "Parallax",
+   "Typography",
+   "WebGL",
+   "Next.js",
+   "Sanity"
+  ],
+  "fonts_seen": [
+   "Beausite Classic",
+   "Louize Display"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Brunello Cucinelli - AI E-com",
+  "url": "https://shop.brunellocucinelli.com/en-gb/ai",
+  "awwwards": "https://www.awwwards.com/sites/brunello-cucinelli-ai-e-com",
+  "award": "Site of the Day - Jul 9, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "luxury e-commerce (AI)",
+  "hero": "conversational shopping (geo-blocked at visit)",
+  "sections": [
+   "chat-led pageless shop"
+  ],
+  "nav": "n/a",
+  "footer": "n/a",
+  "type": "serif",
+  "colour": "cream #F1EDE7",
+  "signature": "intent-led AI shopping instead of pages",
+  "palette": [
+   "#F1EDE7",
+   "#282828"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Fashion",
+   "Luxury",
+   "Clean",
+   "Unusual Navigation",
+   "Interaction Design",
+   "HTML5"
+  ],
+  "fonts_seen": [
+   "Times"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Radian",
+  "url": "https://www.rideradian.com/",
+  "awwwards": "https://www.awwwards.com/sites/radian",
+  "award": "Site of the Day - Jul 4, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "product launch (e-moto)",
+  "hero": "product front view on grey",
+  "sections": [
+   "hero",
+   "film strips",
+   "specs",
+   "pre-order",
+   "footer"
+  ],
+  "nav": "Discover / Support / Pre-order pill",
+  "footer": "dark \"Explore beyond limits.\" + pre-order",
+  "type": "Instrument Sans",
+  "colour": "grey/black + yellow #FDEB07",
+  "signature": "classic product launch",
+  "palette": [
+   "#FDEB07",
+   "#121714"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Sports",
+   "Startups",
+   "Animation",
+   "Scrolling",
+   "Video",
+   "Interaction Design",
+   "Header Design",
+   "Project Page",
+   "GSAP",
+   "BARBA.js",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Instrumentsans"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "CIAO ENERGY - LAUNCH WEBSITE",
+  "url": "https://www.ciaoenergy.com/",
+  "awwwards": "https://www.awwwards.com/sites/ciao-energy-launch-website",
+  "award": "Site of the Day - Jul 30, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "product launch (drink)",
+  "hero": "dark stage, 3D can",
+  "sections": [
+   "loader",
+   "flavour switcher",
+   "line-up",
+   "ingredients"
+  ],
+  "nav": "side dot nav + menu",
+  "footer": "n/a",
+  "type": "Franklin Gothic + Geist",
+  "colour": "black + per-flavour colour",
+  "signature": "flavour switcher on a lit pedestal",
+  "palette": [
+   "#EEEEEE",
+   "#191917"
+  ],
+  "tags": [
+   "Food & Drink",
+   "Promotional",
+   "Experimental",
+   "Animation",
+   "Clean",
+   "Infinite Scroll",
+   "Sound-Audio",
+   "3D",
+   "Three.js",
+   "Webflow",
+   "Blender"
+  ],
+  "fonts_seen": [
+   "Geist",
+   "Franklin Gothic Atf",
+   "Helvetica",
+   "Roboto"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "/zeroz Brand Site",
+  "url": "https://otsuka-air.jp/",
+  "awwwards": "https://www.awwwards.com/sites/zeroz-brand-site",
+  "award": "Site of the Day - Aug 24, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "product brand (food tech)",
+  "hero": "giant slash wordmark",
+  "sections": [
+   "loader",
+   "product glow",
+   "\"Awaken Energy ( /zeroz ) Drive Everything\"",
+   "science",
+   "footer"
+  ],
+  "nav": "small links + online store",
+  "footer": "green #00AA54 with giant wordmark",
+  "type": "Helvetica Now + Japanese gothic",
+  "colour": "dark + green",
+  "signature": "parentheses around the product as a typographic device",
+  "palette": [
+   "#00AA54"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Food & Drink",
+   "Technology",
+   "Scrolling",
+   "Typography",
+   "Storytelling",
+   "3D",
+   "Header Design",
+   "Microinteractions",
+   "WebGL",
+   "Three.js",
+   "Blender"
+  ],
+  "fonts_seen": [
+   "ui-sans-serif",
+   "HelveticaNowDisplay-Regular",
+   "TazuganeGothicStdN-Medium",
+   "TazuganeGothicStdN-Regular",
+   "TazuganeGothicStdN-Bold"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Noho",
+  "url": "https://noho.ink",
+  "awwwards": "https://www.awwwards.com/sites/noho",
+  "award": "Site of the Day - Sep 18, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "furniture brand (concept)",
+  "hero": "headline + checkerboard of coloured product tiles",
+  "sections": [
+   "hero",
+   "stories",
+   "newsletter",
+   "footer"
+  ],
+  "nav": "logo + menu",
+  "footer": "newsletter bar + giant multicolour \"happy modern\"",
+  "type": "Switzer",
+  "colour": "beige #F1EEE9 + pastel tiles",
+  "signature": "checkerboard of people-on-chairs tiles",
+  "palette": [
+   "#F1EEE9",
+   "#E7E2DA"
+  ],
+  "tags": [
+   "Web & Interactive",
+   "Social responsibility",
+   "Animation",
+   "Clean",
+   "Single page",
+   "3D",
+   "UI design",
+   "WebGL",
+   "GSAP",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Arial",
+   "Switzer"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Floema",
+  "url": "https://www.floema.com/en",
+  "awwwards": "https://www.awwwards.com/sites/floema",
+  "award": "Site of the Day - May 13, 2026",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "urban furniture (B2B)",
+  "hero": "lime ground + giant logo mark",
+  "sections": [
+   "hero",
+   "products in nature",
+   "about",
+   "catalogue"
+  ],
+  "nav": "PRODUCTS ABOUT SUSTAINABILITY JOURNAL",
+  "footer": "lime: offices + partner logos",
+  "type": "Zimula",
+  "colour": "lime #E9E778 + black",
+  "signature": "logo mark as the hero object",
+  "palette": [
+   "#E9E778",
+   "#241F21"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "E-Commerce",
+   "Promotional",
+   "Photographic",
+   "Storytelling",
+   "3D",
+   "Header Design",
+   "WebGL",
+   "GSAP",
+   "Nuxt.js"
+  ],
+  "fonts_seen": [
+   "sans-serif",
+   "Zimula"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Pasqua Wines",
+  "url": "https://pasqua.it/",
+  "awwwards": "https://www.awwwards.com/sites/pasqua-wines",
+  "award": "Site of the Day - Jun 8, 2023",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "wine brand",
+  "hero": "oil-painting vineyard gate",
+  "sections": [
+   "gate",
+   "3D house of wine"
+  ],
+  "nav": "n/a",
+  "footer": "n/a",
+  "type": "Acid Grotesk + Wulkan Display",
+  "colour": "painting earth tones",
+  "signature": "painted landscape as the entry",
+  "palette": [
+   "#6E6548",
+   "#C1380F"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Food & Drink",
+   "Promotional",
+   "Animation",
+   "Fullscreen",
+   "Storytelling",
+   "3D"
+  ],
+  "fonts_seen": [
+   "Acid Grotesk",
+   "Wulkan Display",
+   "Roboto Mono"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "MIU MIU A House that we shaped",
+  "url": "https://immersivebags.miumiu.com/",
+  "awwwards": "https://www.awwwards.com/sites/miu-miu-a-house-that-we-shaped",
+  "award": "Site of the Day - Aug 25, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "luxury fashion campaign",
+  "hero": "spaced caps title + turn sound on + Enter",
+  "sections": [
+   "gate",
+   "3D house of objects"
+  ],
+  "nav": "n/a",
+  "footer": "n/a",
+  "type": "Work Sans spaced caps",
+  "colour": "navy #0C0F60",
+  "signature": "explore a house to find the bags",
+  "palette": [
+   "#0C0F60",
+   "#265ADF"
+  ],
+  "tags": [
+   "Fashion",
+   "Promotional",
+   "Luxury",
+   "Colorful",
+   "Fullscreen",
+   "Storytelling",
+   "WebGL",
+   "Three.js"
+  ],
+  "fonts_seen": [
+   "WorkSans"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Tengile Malamala Collection",
+  "url": "https://tengilemalamala.com/",
+  "awwwards": "https://www.awwwards.com/sites/tengile-malamala-collection",
+  "award": "Site of the Day - Oct 3, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "luxury hospitality (safari)",
+  "hero": "full-bleed wildlife photo + thin serif two-line title",
+  "sections": [
+   "hero",
+   "wildlife",
+   "lodges",
+   "story",
+   "plan your stay",
+   "footer"
+  ],
+  "nav": "logo + MENU",
+  "footer": "olive #5C6E21: columns + subscribe",
+  "type": "PP Fragment + Inter",
+  "colour": "cream #FBF8F6 + olive",
+  "signature": "staggered thin serif over photo",
+  "palette": [
+   "#FBF8F6",
+   "#5C6E21"
+  ],
+  "tags": [
+   "Hotel / Restaurant",
+   "Social responsibility",
+   "Luxury",
+   "Big Background Images",
+   "Menu - Horizontal",
+   "Storytelling",
+   "Photo & Video",
+   "UI design",
+   "Microinteractions",
+   "React",
+   "Sanity",
+   "AWS"
+  ],
+  "fonts_seen": [
+   "Inter",
+   "PP Fragment"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "White Desert",
+  "url": "https://white-desert.com/",
+  "awwwards": "https://www.awwwards.com/sites/white-desert",
+  "award": "Site of the Day - Sep 11, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "luxury travel",
+  "hero": "ice texture + glass card",
+  "sections": [
+   "hero",
+   "journeys",
+   "gallery",
+   "enquire"
+  ],
+  "nav": "logo + Dates & Rates + Enquire",
+  "footer": "light grey: giant condensed navy name + offices + partner badges",
+  "type": "Oswald + Cardinal Classic",
+  "colour": "navy #1F2A44 + ice white",
+  "signature": "glass card over texture; condensed wordmark footer",
+  "palette": [
+   "#1F2A44",
+   "#E9E7E1"
+  ],
+  "tags": [
+   "Hotel / Restaurant",
+   "Luxury",
+   "Gallery",
+   "Photo & Video",
+   "Contentful",
+   "GSAP",
+   "Vercel",
+   "Next.js"
+  ],
+  "fonts_seen": [
+   "Inter Tight",
+   "Arial",
+   "Cardinal Classic Long",
+   "Oswald"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Son Daven",
+  "url": "https://sondaven.com/en",
+  "awwwards": "https://www.awwwards.com/sites/son-daven",
+  "award": "Site of the Day - Jun 5, 2026",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "hotel / investment",
+  "hero": "resort photo + yield stats + round CTA",
+  "sections": [
+   "hero",
+   "concept",
+   "construction timeline",
+   "investment",
+   "footer"
+  ],
+  "nav": "MENU + architecture + consultation pill",
+  "footer": "engraved folk illustration (stacked sheep) + phone + email caps",
+  "type": "KTF Metro wide caps",
+  "colour": "sand #A89474 + brown #2C2824",
+  "signature": "engraving illustration footer; investment stats in hero",
+  "palette": [
+   "#A89474",
+   "#2C2824"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Food & Drink",
+   "Hotel / Restaurant",
+   "Animation",
+   "Scrolling",
+   "Storytelling",
+   "UI design",
+   "Microinteractions",
+   "WebGL",
+   "GSAP",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "KTF Metro Blueline",
+   "KTF Metro Roman"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "ERA Residence",
+  "url": "https://www.era-residence.com/",
+  "awwwards": "https://www.awwwards.com/sites/era-residence",
+  "award": "Site of the Day - Aug 31, 2026",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "real estate (luxury)",
+  "hero": "wine-red intro with condensed serif + script",
+  "sections": [
+   "intro",
+   "hero villa",
+   "licence news",
+   "apartments",
+   "contact"
+  ],
+  "nav": "select apartment + book a call",
+  "footer": "giant phone number on wine",
+  "type": "Ambroise + Sloop script + Maison Neue Extended",
+  "colour": "wine #4A0F2A-ish + sky + pink",
+  "signature": "script + condensed serif pairing; phone number as display type",
+  "palette": [
+   "#B5CEDB",
+   "#F8BBCB"
+  ],
+  "tags": [
+   "Architecture",
+   "Real Estate",
+   "Luxury",
+   "Parallax",
+   "Storytelling",
+   "Photo & Video",
+   "GSAP",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "ambroise-francois-std",
+   "sloop-script-three",
+   "Maison Neue Extended"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Sobha Privy Collection",
+  "url": "https://sobha-privy-collection.com/",
+  "awwwards": "https://www.awwwards.com/sites/sobha-privy-collection",
+  "award": "Site of the Day - Sep 23, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "real estate (ultra luxury)",
+  "hero": "black → white italic serif statement",
+  "sections": [
+   "intro",
+   "statement",
+   "interior collage",
+   "homes"
+  ],
+  "nav": "Menu",
+  "footer": "n/a",
+  "type": "TT Ramillas + Altesse script",
+  "colour": "white + black",
+  "signature": "staggered interior photos converging",
+  "palette": [
+   "#FFFFFF",
+   "#000000"
+  ],
+  "tags": [
+   "Architecture",
+   "Real Estate",
+   "Luxury",
+   "Animation",
+   "Parallax",
+   "3D",
+   "WebGL",
+   "Three.js"
+  ],
+  "fonts_seen": [
+   "TT Commons Pro",
+   "TT Ramillas",
+   "altesse-std-64pt"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "LIKOVA",
+  "url": "https://likova.space",
+  "awwwards": "https://www.awwwards.com/sites/likova",
+  "award": "Site of the Day - Aug 19, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "real estate (business centre)",
+  "hero": "logo panel cut into 3D building render",
+  "sections": [
+   "hero",
+   "building camera orbit",
+   "floors",
+   "contact"
+  ],
+  "nav": "select office + contact",
+  "footer": "n/a",
+  "type": "TT Norms spaced caps",
+  "colour": "navy #070B20 + white",
+  "signature": "scroll-driven camera around 3D building",
+  "palette": [
+   "#070B20",
+   "#E3E6EB"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Real Estate",
+   "Luxury",
+   "Responsive Design",
+   "3D",
+   "WebGL",
+   "Three.js"
+  ],
+  "fonts_seen": [
+   "TT Norms Pro"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Kononenko Architectural Bureau",
+  "url": "https://kononenkogroup.com",
+  "awwwards": "https://www.awwwards.com/sites/kononenko-architectural-bureau",
+  "award": "Site of the Day - Aug 23, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "architecture",
+  "hero": "full-bleed building photo",
+  "sections": [
+   "hero",
+   "projects",
+   "footer"
+  ],
+  "nav": "small",
+  "footer": "black with giant repeated KNKO",
+  "type": "custom sans",
+  "colour": "white/black",
+  "signature": "repeating wordmark footer",
+  "palette": [
+   "#FFFFFF",
+   "#000000"
+  ],
+  "tags": [
+   "Architecture",
+   "Business & Corporate",
+   "Real Estate",
+   "Animation",
+   "Clean",
+   "Minimal",
+   "Content architecture",
+   "Interaction Design",
+   "About Page",
+   "Figma"
+  ],
+  "fonts_seen": [
+   "n",
+   "h"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "NORMAL IS BORING",
+  "url": "https://normalisboring.es/",
+  "awwwards": "https://www.awwwards.com/sites/normal-is-boring",
+  "award": "Site of the Day - Jul 23, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "real estate brand",
+  "hero": "scrambled letters assemble a word",
+  "sections": [
+   "intro",
+   "statement",
+   "projects with giant Didone letters"
+  ],
+  "nav": "side red tab + rotated \"is BORING\"",
+  "footer": "n/a",
+  "type": "Juana + Editorial New + Izmir",
+  "colour": "beige + black + red",
+  "signature": "cropped giant Didone letters behind project cards",
+  "palette": [
+   "#000000",
+   "#FFFFFF"
+  ],
+  "tags": [
+   "Architecture",
+   "Photography",
+   "Luxury",
+   "Animation",
+   "Clean",
+   "Graphic design",
+   "Typography",
+   "Transitions",
+   "UI design",
+   "Wordpress",
+   "CSS",
+   "GSAP"
+  ],
+  "fonts_seen": [
+   "Juana-Regular",
+   "Juana-Medium",
+   "Izmir-Regular",
+   "Editorialnew-UltralightItalic",
+   "Editorialnew-Ultralight"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Realevate",
+  "url": "https://realevate.agency/",
+  "awwwards": "https://www.awwwards.com/sites/realevate",
+  "award": "Site of the Day - Sep 27, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "real estate agency",
+  "hero": "giant headline with image inside the letters gap",
+  "sections": [
+   "hero",
+   "collections (4 tall colour cards)",
+   "listings"
+  ],
+  "nav": "About / Contact",
+  "footer": "n/a",
+  "type": "Google Sans + Monument Extended + Roslindale",
+  "colour": "white + navy #1F2B5E + deep greens",
+  "signature": "collections as tall coloured accordion cards with vertical titles",
+  "palette": [
+   "#1F2B5E",
+   "#FFFFFF"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Real Estate",
+   "Animation",
+   "Fullscreen",
+   "Menu - Horizontal",
+   "Microinteractions",
+   "Node.js",
+   "GSAP",
+   "Javascript"
+  ],
+  "fonts_seen": [
+   "Google Sans",
+   "Arial",
+   "Monument Extended",
+   "Roslindale Display"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Cerebrium",
+  "url": "https://cerebrium.ai/",
+  "awwwards": "https://www.awwwards.com/sites/cerebrium",
+  "award": "",
+  "collections": [],
+  "kind": "SaaS (AI infra)",
+  "hero": "dark hero with pink keyword + 3D globe",
+  "sections": [
+   "hero",
+   "logos",
+   "features",
+   "globe",
+   "customers",
+   "CTA"
+  ],
+  "nav": "Use cases Pricing Docs Blog + Sign up",
+  "footer": "pink ribbon shader + CTA + columns",
+  "type": "Suisse Intl + mono",
+  "colour": "navy #172B76 + magenta #902177",
+  "signature": "wireframe globe; ribbon shader footer",
+  "palette": [
+   "#172B76",
+   "#902177"
+  ],
+  "tags": [
+   "Technology",
+   "Web & Interactive",
+   "Startups",
+   "App Style",
+   "Data Visualization",
+   "Storytelling",
+   "3D",
+   "UI design",
+   "Microinteractions",
+   "GSAP",
+   "Three.js",
+   "Cinema 4D"
+  ],
+  "fonts_seen": [
+   "Suisse Intl",
+   "Suisse Intl Mono",
+   "ABC Favorit Trial"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Butter",
+  "url": "https://www.butter.video/",
+  "awwwards": "https://www.awwwards.com/sites/butter",
+  "award": "Site of the Day - Sep 28, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "SaaS (video tool)",
+  "hero": "3D hanging tools over light ground",
+  "sections": [
+   "hero",
+   "product UI",
+   "templates",
+   "pricing",
+   "footer"
+  ],
+  "nav": "Product Blocks Templates Pricing Blog",
+  "footer": "giant chrome/iridescent 3D script logo",
+  "type": "Die Grotesk + Diatype",
+  "colour": "light #F7F7F7 + iridescent",
+  "signature": "iridescent logo footer",
+  "palette": [
+   "#1E1E1E",
+   "#F7F7F7"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Mobile & Apps",
+   "Web & Interactive",
+   "App Style",
+   "3D",
+   "Filters and Effects",
+   "WebGL",
+   "React",
+   "P5.js"
+  ],
+  "fonts_seen": [
+   "DieGrotesk",
+   "ABCDiatype"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "USAvionix",
+  "url": "https://www.usavionix.com/",
+  "awwwards": "https://www.awwwards.com/sites/usavionix",
+  "award": "Site of the Day - Sep 9, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "deep tech (defence drones)",
+  "hero": "dark 3D drone",
+  "sections": [
+   "hero",
+   "fleet over mountains",
+   "capabilities",
+   "contact"
+  ],
+  "nav": "Contact + menu",
+  "footer": "outlined giant wordmark behind drone + \"Ready to talk to us?\"",
+  "type": "Geist + Geist Mono",
+  "colour": "black",
+  "signature": "outlined wordmark behind the product",
+  "palette": [
+   "#000",
+   "#fff"
+  ],
+  "tags": [
+   "Technology",
+   "Startups",
+   "Storytelling",
+   "3D",
+   "WebGL",
+   "Next.js"
+  ],
+  "fonts_seen": [
+   "Geist",
+   "Geist Mono"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Seasats",
+  "url": "https://www.seasats.com/",
+  "awwwards": "https://www.awwwards.com/sites/seasats",
+  "award": "Site of the Day - Sep 8, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "deep tech (marine robotics)",
+  "hero": "sea photo with thin sans claim",
+  "sections": [
+   "hero",
+   "products tabs",
+   "specs",
+   "footer"
+  ],
+  "nav": "right-side vertical stacked product tabs",
+  "footer": "orange desert gradient + giant extended wordmark + live stats",
+  "type": "Season Sans/Mix + Supply Mono",
+  "colour": "sea teal #619785 + orange #BF5114",
+  "signature": "vertical tab menu; live telemetry numbers in footer",
+  "palette": [
+   "#619785",
+   "#BF5114"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Institutions",
+   "Startups",
+   "Clean",
+   "Infinite Scroll",
+   "Unusual Navigation",
+   "Menu - Vertical",
+   "3D",
+   "Footer Design",
+   "Javascript",
+   "Cinema 4D"
+  ],
+  "fonts_seen": [
+   "seasonSans",
+   "supplyMono",
+   "seasonMix"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Vectr",
+  "url": "https://vectrfl.com/",
+  "awwwards": "https://www.awwwards.com/sites/vectr",
+  "award": "Site of the Day - Jul 11, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "SaaS (staffing AI)",
+  "hero": "pale isometric 3D city",
+  "sections": [
+   "hero",
+   "process steps",
+   "industries",
+   "footer"
+  ],
+  "nav": "Apply + Request crews",
+  "footer": "navy: three nav cards + giant wordmark",
+  "type": "Roboto",
+  "colour": "ice blue + navy #050419 + blue #3932DC",
+  "signature": "isometric city with airflow",
+  "palette": [
+   "#3932DC",
+   "#050419"
+  ],
+  "tags": [
+   "Technology",
+   "Startups",
+   "Animation",
+   "Transitions",
+   "Storytelling",
+   "3D",
+   "WebGL",
+   "Three.js",
+   "Astro"
+  ],
+  "fonts_seen": [
+   "Roboto"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Illoca",
+  "url": "https://illoca.unseen.co/",
+  "awwwards": "https://www.awwwards.com/sites/illoca",
+  "award": "Site of the Day - Sep 4, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "SaaS (AI for architects)",
+  "hero": "two-colour flat illustration of architect at desk",
+  "sections": [
+   "hero",
+   "zoom into plan",
+   "3D massing",
+   "features"
+  ],
+  "nav": "pill nav + blue CTA",
+  "footer": "n/a",
+  "type": "F37 Analog + Graphik + Geist Mono",
+  "colour": "beige #FDF2DE + cobalt #3B60C5",
+  "signature": "scroll zooms from drawing into 3D building",
+  "palette": [
+   "#3B60C5",
+   "#FDF2DE"
+  ],
+  "tags": [
+   "Architecture",
+   "Culture & Education",
+   "Startups",
+   "Animation",
+   "Colorful",
+   "Scrolling",
+   "3D",
+   "Microinteractions",
+   "WebGL"
+  ],
+  "fonts_seen": [
+   "ui-sans-serif",
+   "Geist Mono",
+   "Graphik Web",
+   "Architect Pro",
+   "F37 Analog"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Terminal Industries",
+  "url": "https://terminal-industries.com",
+  "awwwards": "https://www.awwwards.com/sites/terminal-industries",
+  "award": "Site of the Day - Sep 3, 2025",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "logistics tech",
+  "hero": "truck silhouette at dusk",
+  "sections": [
+   "hero",
+   "claims split",
+   "system",
+   "footer"
+  ],
+  "nav": "System Markets Features Resources About + green CTA",
+  "footer": "dark green + Gartner badge + hairline grid",
+  "type": "Suisse Intl + Geist Mono",
+  "colour": "dusk + dark green",
+  "signature": "hairline grid chrome",
+  "palette": [],
+  "tags": [
+   "Business & Corporate",
+   "Technology",
+   "Startups",
+   "Animation",
+   "Scrolling",
+   "Storytelling",
+   "Interaction Design",
+   "CSS",
+   "Vue.js",
+   "Vercel"
+  ],
+  "fonts_seen": [
+   "SuisseIntl",
+   "Geist Mono"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Kriss.ai",
+  "url": "https://kriss.ai/",
+  "awwwards": "https://www.awwwards.com/sites/kriss-ai",
+  "award": "Site of the Day - Oct 24, 2024",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "SaaS (health AI)",
+  "hero": "lavender sky, typewriter rotating role, 3D cutaway house",
+  "sections": [
+   "hero",
+   "setup",
+   "plans",
+   "FAQ"
+  ],
+  "nav": "Home Setup Plans About FAQ + Book Demo",
+  "footer": "n/a",
+  "type": "custom",
+  "colour": "lavender/pink sky",
+  "signature": "rotating role in headline over dollhouse cutaway",
+  "palette": [
+   "#D1CACC",
+   "#0F0F0F"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Technology",
+   "Startups",
+   "Illustration",
+   "Transitions",
+   "Storytelling",
+   "3D",
+   "Interaction Design"
+  ],
+  "fonts_seen": [
+   "Krissai"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Moto Finance",
+  "url": "https://www.moto-card.com/",
+  "awwwards": "https://www.awwwards.com/sites/moto-finance",
+  "award": "Site of the Day - Sep 24, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "fintech (card)",
+  "hero": "card on plinth in dark gallery",
+  "sections": [
+   "hero",
+   "interiors",
+   "benefits",
+   "footer"
+  ],
+  "nav": "logo + Apply for access",
+  "footer": "\"A QUIETER WAY TO MOVE THROUGH THE WORLD\" + columns + app badges",
+  "type": "Neue Montreal caps",
+  "colour": "black + concrete",
+  "signature": "product treated like a sculpture in a gallery",
+  "palette": [
+   "#0B0C07",
+   "#E1E5E5"
+  ],
+  "tags": [
+   "Technology",
+   "Startups",
+   "Luxury",
+   "Big Background Images",
+   "Parallax",
+   "Scrolling",
+   "Single page",
+   "3D",
+   "GSAP",
+   "Three.js",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Neuemontreal"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Sharplink",
+  "url": "https://www.sharplink.com/",
+  "awwwards": "https://www.awwwards.com/sites/sharplink",
+  "award": "Site of the Day - Aug 27, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "finance (Ethereum treasury)",
+  "hero": "chrome 3D Ethereum diamond on blue",
+  "sections": [
+   "hero",
+   "statement read-highlight",
+   "dashboard",
+   "investors",
+   "footer"
+  ],
+  "nav": "About Investors Opportunity News ETH dashboard",
+  "footer": "gradient: newsletter + giant metallic wordmark cut at bottom",
+  "type": "Archivo / Archivo Narrow",
+  "colour": "blue #0E76FF gradient + navy",
+  "signature": "words light up as you read",
+  "palette": [
+   "#0E76FF",
+   "#F3F3F3"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Institutions",
+   "Animation",
+   "3D",
+   "Footer Design",
+   "GSAP",
+   "Three.js",
+   "Vue.js"
+  ],
+  "fonts_seen": [
+   "Archivo Narrow",
+   "Archivo"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Dragonfly Redux",
+  "url": "https://dragonfly2.studiofreight.dev/",
+  "awwwards": "https://www.awwwards.com/sites/dragonfly-redux",
+  "award": "Site of the Day - Jul 22, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "VC fund (crypto)",
+  "hero": "black with orange DRAGONFLY and corner letters",
+  "sections": [
+   "hero",
+   "numbered chapters (04 PORTFOLIO)",
+   "spotlight",
+   "footer"
+  ],
+  "nav": "transport-like controls + section counter",
+  "footer": "black: links + logo glyph",
+  "type": "FK Roman + NON Natural Grotesk/Mono",
+  "colour": "black + orange #FA4C14",
+  "signature": "letters pinned to the 4 viewport corners",
+  "palette": [
+   "#FA4C14",
+   "#000000"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Other",
+   "Technology",
+   "Scrolling",
+   "Menu - Vertical",
+   "3D",
+   "Filters and Effects",
+   "WebGL",
+   "GSAP",
+   "Vue.js"
+  ],
+  "fonts_seen": [
+   "FK Roman Standard",
+   "NON Natural Mono",
+   "Times",
+   "NON Natural Grotesk"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Aspen Search",
+  "url": "https://www.aspensearch.com/",
+  "awwwards": "https://www.awwwards.com/sites/aspen-search",
+  "award": "Site of the Day - Sep 15, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "B2B services (exec search)",
+  "hero": "Swiss hairline grid with halftone photo",
+  "sections": [
+   "hero",
+   "hires",
+   "clients",
+   "testimonials",
+   "team",
+   "footer"
+  ],
+  "nav": "About Clients Testimonials Team + live clock + Contact",
+  "footer": "bento: black logo block + mint \"Let's start a conversation\" block",
+  "type": "Suisse Intl + Mono",
+  "colour": "white + mint + black",
+  "signature": "halftone/dither photos inside a hairline grid",
+  "palette": [
+   "#ffffff",
+   "#232323"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Technology",
+   "Web & Interactive",
+   "Minimal",
+   "Single page",
+   "Typography",
+   "Three.js",
+   "Next.js",
+   "Sanity"
+  ],
+  "fonts_seen": [
+   "suisseIntl",
+   "suisseIntlMono"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Montfort",
+  "url": "https://mont-fort.com/",
+  "awwwards": "https://www.awwwards.com/sites/montfort",
+  "award": "Site of the Day - Jun 23, 2025",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "corporate (commodities)",
+  "hero": "cloud photo with spaced thin caps statement",
+  "sections": [
+   "hero",
+   "statement",
+   "offices"
+  ],
+  "nav": "minimal",
+  "footer": "office columns over forest image",
+  "type": "Century Gothic / Josefin spaced caps",
+  "colour": "pale blue #f4f6f8 + steel #29648e",
+  "signature": "extreme restraint",
+  "palette": [
+   "#29648e",
+   "#f4f6f8"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Web & Interactive",
+   "Scrolling",
+   "Responsive",
+   "3D",
+   "Gestures / Interaction",
+   "UI design"
+  ],
+  "fonts_seen": [
+   "Century Gothic",
+   "Josefin Sans"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "CoffeeTech®",
+  "url": "https://coffee-tech.com/",
+  "awwwards": "https://www.awwwards.com/sites/coffeetech-r",
+  "award": "Site of the Day - Jul 16, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "industrial manufacturer",
+  "hero": "giant headline on dark",
+  "sections": [
+   "hero",
+   "founder + signature",
+   "products",
+   "blog",
+   "contact"
+  ],
+  "nav": "About Technology Efficiency Sustainability + Products",
+  "footer": "\"Get in touch\" + orange logo mark + columns",
+  "type": "Inter",
+  "colour": "dark #0D0E13 + rust #C8603D",
+  "signature": "founder note with signature",
+  "palette": [
+   "#C8603D",
+   "#0D0E13"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Technology",
+   "Clean",
+   "Minimal",
+   "Transitions",
+   "360",
+   "3D",
+   "GSAP",
+   "Webflow",
+   "Javascript"
+  ],
+  "fonts_seen": [
+   "Inter"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "SSTR - Friction Reduction",
+  "url": "https://sstr.tech/en/",
+  "awwwards": "https://www.awwwards.com/sites/sstr-friction-reduction",
+  "award": "Site of the Day - Aug 16, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "industrial (oil drilling)",
+  "hero": "\"■ READY\" preloader on grid, drill bit on sand",
+  "sections": [
+   "loader",
+   "hero product",
+   "cases",
+   "engineering",
+   "footer"
+  ],
+  "nav": "Cases About Products Engineering",
+  "footer": "bracket labels [ Pages ] [ Contact ] [ Subscribe ]",
+  "type": "ABC Monument Grotesk",
+  "colour": "dark #18191B + orange #FE5B2A",
+  "signature": "line-drawn pipe that draws itself",
+  "palette": [
+   "#FE5B2A",
+   "#18191B"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Technology",
+   "Web & Interactive",
+   "Animation",
+   "Clean",
+   "Minimal",
+   "Typography",
+   "Data Visualization",
+   "Interaction Design",
+   "GSAP",
+   "BARBA.js",
+   "Astro"
+  ],
+  "fonts_seen": [
+   "ABC Monument Grotesk",
+   "Arial",
+   "Abc Monument Grotesk",
+   "-apple-system",
+   "ABC Monument Grotesk Cyrillic Mono Variable"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Alethia",
+  "url": "https://www.alethia.earth/",
+  "awwwards": "https://www.awwwards.com/sites/alethia",
+  "award": "Site of the Day - Aug 5, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "climate data",
+  "hero": "floating 3D mossy rocks on dark green",
+  "sections": [
+   "hero",
+   "insight",
+   "how",
+   "footer"
+  ],
+  "nav": "Solutions Our tech Company Resources + LET'S TALK",
+  "footer": "giant lime lowercase wordmark over moss photo + addresses",
+  "type": "Geist",
+  "colour": "forest #0F1F10 + lime #C6F19D",
+  "signature": "natural 3D objects floating",
+  "palette": [
+   "#0F1F10",
+   "#C6F19D"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Other",
+   "Animation",
+   "Scrolling",
+   "Storytelling",
+   "Interaction Design",
+   "UI design",
+   "Figma",
+   "Framer"
+  ],
+  "fonts_seen": [
+   "sans-serif",
+   "Geist Mono",
+   "Geist Medium",
+   "Geist Regular",
+   "Geist"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Anime.js",
+  "url": "https://animejs.com",
+  "awwwards": "https://www.awwwards.com/sites/anime-js",
+  "award": "Site of the Day - May 6, 2025",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "developer tool",
+  "hero": "ring gauge of animated dots",
+  "sections": [
+   "hero",
+   "toolbox (technical line drawing)",
+   "API",
+   "footer"
+  ],
+  "nav": "docs links",
+  "footer": "dense link grid with coloured bullets + newsletter",
+  "type": "DIN + mono",
+  "colour": "charcoal #252423 + sand #DAD5D0",
+  "signature": "exploded technical line drawings",
+  "palette": [
+   "#252423",
+   "#DAD5D0"
+  ],
+  "tags": [
+   "Technology",
+   "Web & Interactive",
+   "Animation",
+   "Scrolling",
+   "3D"
+  ],
+  "fonts_seen": [
+   "DIN",
+   "Mono",
+   "monospace"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Made With Gsap",
+  "url": "https://madewithgsap.com/",
+  "awwwards": "https://www.awwwards.com/sites/made-with-gsap-1",
+  "award": "Site of the Day - Jul 29, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "developer resource",
+  "hero": "headline split by a media card",
+  "sections": [
+   "hero",
+   "effects grid",
+   "pricing",
+   "footer"
+  ],
+  "nav": "Collection Pricing FAQ + lime CTA",
+  "footer": "\"Get ready to animate\" + lime pill + newsletter",
+  "type": "LayGrotesk + mono",
+  "colour": "white + lime #C9FE6E",
+  "signature": "centre card between two halves of the headline",
+  "palette": [
+   "#C9FE6E",
+   "#0A0A0B"
+  ],
+  "tags": [
+   "Culture & Education",
+   "Technology",
+   "Web & Interactive",
+   "Animation",
+   "Clean",
+   "Scrolling",
+   "Gestures / Interaction",
+   "GSAP",
+   "Vanilla JS"
+  ],
+  "fonts_seen": [
+   "LayGrotesk",
+   "PPNeueMontrealMono"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Navigate",
+  "url": "https://nvg8.io/",
+  "awwwards": "https://www.awwwards.com/sites/navigate",
+  "award": "Site of the Day - Apr 16, 2025",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "web3 data platform",
+  "hero": "colourful illustration (SSL error at visit)",
+  "sections": [
+   "n/a"
+  ],
+  "nav": "n/a",
+  "footer": "n/a",
+  "type": "n/a",
+  "colour": "orange #FF6D38 + violet #8584FF",
+  "signature": "gamified data world",
+  "palette": [
+   "#FF6D38",
+   "#8584FF"
+  ],
+  "tags": [
+   "Games & Entertainment",
+   "Technology",
+   "Startups",
+   "Animation",
+   "Colorful",
+   "Scrolling",
+   "Illustration",
+   "Data Visualization",
+   "Storytelling"
+  ],
+  "fonts_seen": [
+   "system-ui"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Zentry",
+  "url": "https://zentry.com/",
+  "awwwards": "https://www.awwwards.com/sites/zentry",
+  "award": "Site of the Day - Aug 28, 2024",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "gaming / web3",
+  "hero": "video inside clip-path polygon",
+  "sections": [
+   "hero",
+   "about",
+   "features tilt cards",
+   "story",
+   "contact"
+  ],
+  "nav": "links + audio toggle",
+  "footer": "violet columns",
+  "type": "Zentry Screamer + Roboto Mono",
+  "colour": "violet #5724ff + black",
+  "signature": "polygon clip-path reveal of video",
+  "palette": [
+   "#000000"
+  ],
+  "tags": [
+   "Games & Entertainment",
+   "Web & Interactive",
+   "Startups",
+   "Colorful",
+   "Scrolling",
+   "Responsive",
+   "Sound-Audio",
+   "Storytelling",
+   "UI design"
+  ],
+  "fonts_seen": [
+   "Roboto Mono",
+   "ZentryScreamer"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Colonia Zacamil",
+  "url": "https://coloniazacamil.com/",
+  "awwwards": "https://www.awwwards.com/sites/colonia-zacamil",
+  "award": "Site of the Day - Oct 1, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "community / culture",
+  "hero": "\"FLY TO [aerial strip] ZACAMIL\"",
+  "sections": [
+   "hero",
+   "flight over community",
+   "stories"
+  ],
+  "nav": "minimal + audio",
+  "footer": "n/a",
+  "type": "Heathergreen condensed + Reckless Neue + Roboto Mono",
+  "colour": "cream #CDC3B7 + black",
+  "signature": "image strip set between giant words",
+  "palette": [
+   "#CDC3B7",
+   "#000000"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Institutions",
+   "Social responsibility",
+   "3D",
+   "WebGL",
+   "Three.js",
+   "Vue.js"
+  ],
+  "fonts_seen": [
+   "Roboto Mono",
+   "Heathergreen",
+   "Reckless Neue"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Tracing Art",
+  "url": "https://www.getty.edu/tracingart/",
+  "awwwards": "https://www.awwwards.com/sites/tracing-art",
+  "award": "Site of the Day - Jul 22, 2025",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "museum research (Getty)",
+  "hero": "centred serif statement with floating artworks",
+  "sections": [
+   "intro",
+   "names network",
+   "stories",
+   "data"
+  ],
+  "nav": "Getty + info",
+  "footer": "n/a",
+  "type": "Bradford + Graphik",
+  "colour": "white + pale blue",
+  "signature": "rotating word inside the statement; giant names over paintings",
+  "palette": [
+   "#FFFFFF",
+   "#DAE2E8"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Culture & Education",
+   "Institutions",
+   "Big Background Images",
+   "Clean",
+   "Colorful",
+   "Scrolling",
+   "Data Visualization",
+   "Content architecture"
+  ],
+  "fonts_seen": [
+   "sans-serif",
+   "Graphik",
+   "Bardford"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Sculpting Harmony",
+  "url": "https://gehry.getty.edu/",
+  "awwwards": "https://www.awwwards.com/sites/sculpting-harmony",
+  "award": "Site of the Day - Nov 17, 2023",
+  "collections": [
+   "WebGL Animations",
+   "Sites of the Month"
+  ],
+  "kind": "digital exhibition (Getty)",
+  "hero": "orange ground, Gehry sketch draws itself",
+  "sections": [
+   "intro",
+   "sketch",
+   "chapters",
+   "credits"
+  ],
+  "nav": "sound on + index",
+  "footer": "credits list",
+  "type": "Reckless + condensed + Roboto Mono",
+  "colour": "orange #FEA341 + black",
+  "signature": "pencil sketch lines draw on scroll; sound",
+  "palette": [
+   "#FEA341",
+   "#16A147"
+  ],
+  "tags": [
+   "Architecture",
+   "Culture & Education",
+   "Music & Sound",
+   "Big Background Images",
+   "Typography",
+   "Video",
+   "Sound-Audio",
+   "Storytelling",
+   "Interaction Design"
+  ],
+  "fonts_seen": [
+   "Roboto Mono",
+   "Reckless",
+   "sans-serif"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Why Zero",
+  "url": "https://why.zero.university/",
+  "awwwards": "https://www.awwwards.com/sites/why-zero",
+  "award": "Site of the Day - Sep 7, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "education (immersive)",
+  "hero": "counter loader → aerial teal world with progress ring",
+  "sections": [
+   "loader",
+   "story chapters"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "Supply Sans + PP Supply Mono",
+  "colour": "teal + green #01C654",
+  "signature": "circular progress ring; sound",
+  "palette": [
+   "#ffffff",
+   "#01C654"
+  ],
+  "tags": [
+   "Culture & Education",
+   "Technology",
+   "Startups",
+   "Single page",
+   "Sound-Audio",
+   "Storytelling",
+   "3D",
+   "Gestures / Interaction",
+   "Filters and Effects",
+   "GSAP",
+   "Three.js",
+   "Blender"
+  ],
+  "fonts_seen": [
+   "Supply Sans",
+   "Google Sans Flex",
+   "PP Supply Mono",
+   "Arial",
+   "Times"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "21 Hrs On The Moon",
+  "url": "https://www.21hrs.space/",
+  "awwwards": "https://www.awwwards.com/sites/21-hrs-on-the-moon",
+  "award": "Site of the Day - Jul 10, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "exhibition / culture",
+  "hero": "chrome MOON over lunar curve \"SCROLL TO LAND\"",
+  "sections": [
+   "intro",
+   "lunar map with HUD hotspots",
+   "photos"
+  ],
+  "nav": "HUD corners",
+  "footer": "n/a",
+  "type": "Akkurat Mono",
+  "colour": "black + moon grey",
+  "signature": "scroll-to-land then explore a map with hotspots",
+  "palette": [
+   "#060B0B",
+   "#FFF3EA"
+  ],
+  "tags": [
+   "Culture & Education",
+   "Photography",
+   "Experimental",
+   "Photographic",
+   "Sound-Audio",
+   "Storytelling",
+   "3D",
+   "WebGL",
+   "Figma"
+  ],
+  "fonts_seen": [
+   "Arial",
+   "AkkuratMonoLL"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "No Art",
+  "url": "https://www.noartmusic.com/",
+  "awwwards": "https://www.awwwards.com/sites/no-art",
+  "award": "Site of the Day - Aug 6, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "music/art collective + shop",
+  "hero": "small photo with handwritten logo",
+  "sections": [
+   "hero",
+   "merch grid",
+   "events"
+  ],
+  "nav": "SHOP GALLERY TICKETS",
+  "footer": "mono bracket columns",
+  "type": "Neue Haas + Chivo Mono",
+  "colour": "white",
+  "signature": "merch shown on real people",
+  "palette": [
+   "#ffffff"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Events",
+   "Animation",
+   "Sound-Audio",
+   "3D",
+   "UI design",
+   "Microinteractions",
+   "GSAP",
+   "Shopify",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Chivomono",
+   "Nue Haas Grotesk Text Pro"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Ai in Design Report 2026",
+  "url": "https://stateofaidesign.com/",
+  "awwwards": "https://www.awwwards.com/sites/ai-in-design-report-2026",
+  "award": "Site of the Day - Aug 26, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "report / editorial",
+  "hero": "glitchy pastel collage + big title",
+  "sections": [
+   "hero",
+   "intro",
+   "case study videos",
+   "chapters",
+   "footer stats"
+  ],
+  "nav": "Read the Report + About + Case Studies",
+  "footer": "black giant title + stats (survey responses, interviews)",
+  "type": "Beausite Classic",
+  "colour": "white + pastel gradients + black",
+  "signature": "report numbers as the footer",
+  "palette": [],
+  "tags": [
+   "Magazine / Newspaper / Blog",
+   "Business & Corporate",
+   "Design Agencies",
+   "Animation",
+   "Colorful",
+   "Responsive Design",
+   "Data Visualization",
+   "Storytelling",
+   "UI design",
+   "Figma",
+   "Framer"
+  ],
+  "fonts_seen": [
+   "sans-serif",
+   "Beausite Classic Medium",
+   "Beausite Classic Regular",
+   "Geist Mono",
+   "Inter"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Hearst Exhibit 2026",
+  "url": "https://www.hollywoodexhibit2026.com",
+  "awwwards": "https://www.awwwards.com/sites/hearst-exhibit-2026",
+  "award": "Site of the Day - Aug 2, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "exhibition (photography)",
+  "hero": "serif logotype on black",
+  "sections": [
+   "intro",
+   "choose a gallery (two covers)",
+   "gallery"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "ABC Arizona",
+  "colour": "black",
+  "signature": "two magazine covers as doors",
+  "palette": [
+   "#252525",
+   "#E3E3E3"
+  ],
+  "tags": [
+   "Magazine / Newspaper / Blog",
+   "Web & Interactive",
+   "Photography",
+   "Clean",
+   "Photographic",
+   "Scrolling",
+   "Typography",
+   "Gallery",
+   "Microinteractions",
+   "WebGL",
+   "GSAP",
+   "Vercel"
+  ],
+  "fonts_seen": [
+   "ui-sans-serif",
+   "abcArizona",
+   "Instrument Sans"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "20 Years Inspired by People",
+  "url": "https://inspiring.nk.studio/es",
+  "awwwards": "https://www.awwwards.com/sites/20-years-inspired-by-people",
+  "award": "Site of the Day - Aug 7, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency anniversary archive",
+  "hero": "serif statement on dark teal blur",
+  "sections": [
+   "intro",
+   "archive of stories"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "Instrument Serif + DM Sans",
+  "colour": "teal #142929 + mint #20E5B5",
+  "signature": "archive of people",
+  "palette": [
+   "#20E5B5",
+   "#142929"
+  ],
+  "tags": [
+   "Other",
+   "Promotional",
+   "Web & Interactive",
+   "Animation",
+   "Typography",
+   "Storytelling",
+   "GSAP",
+   "Next.js",
+   "Tailwind"
+  ],
+  "fonts_seen": [
+   "Instrument Serif",
+   "DM Sans"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "MindMarket",
+  "url": "https://mindmarket.com/",
+  "awwwards": "https://www.awwwards.com/sites/mindmarket",
+  "award": "Site of the Day - Dec 29, 2025",
+  "collections": [
+   "Pastel colors",
+   "Sites of the Month"
+  ],
+  "kind": "research agency",
+  "hero": "rounded headline + flat characters",
+  "sections": [
+   "hero",
+   "trust",
+   "services",
+   "sectors",
+   "footer"
+  ],
+  "nav": "Services Methodology Sectors Strategy Pricing + Get a quote",
+  "footer": "yellow: \"Let's Connect\" with squiggle + offices",
+  "type": "Inter rounded",
+  "colour": "green #8ED462 + yellow #F5E211",
+  "signature": "candy-flat colour per section",
+  "palette": [
+   "#8ED462",
+   "#F5E211"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Culture & Education",
+   "Promotional",
+   "Animation",
+   "Colorful",
+   "Flat Design",
+   "Scrolling",
+   "Illustration",
+   "Storytelling",
+   "GSAP",
+   "Figma",
+   "DatoCMS"
+  ],
+  "fonts_seen": [
+   "Inter"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "David Whyte Experience",
+  "url": "https://davidwhyte.com/experience/",
+  "awwwards": "https://www.awwwards.com/sites/david-whyte-experience",
+  "award": "Site of the Day - Dec 31, 2024",
+  "collections": [
+   "WebGL Animations",
+   "Sites of the Month"
+  ],
+  "kind": "poet / subscription",
+  "hero": "watercolour landscapes",
+  "sections": [
+   "loader",
+   "landscapes",
+   "subscription",
+   "FAQ"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "Canela Text + Roobert",
+  "colour": "grey + watercolour",
+  "signature": "long-press to paint the landscape in",
+  "palette": [
+   "#E1E1E1",
+   "#000000"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Culture & Education",
+   "Experimental",
+   "Animation",
+   "Colorful",
+   "Scrolling",
+   "Storytelling",
+   "Gestures / Interaction",
+   "WooCommerce"
+  ],
+  "fonts_seen": [
+   "Roobert",
+   "Canela Text",
+   "Arial",
+   "Times",
+   "Canela Text Italic"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Squarespace Foundations",
+  "url": "https://brand.squarespace.com/",
+  "awwwards": "https://www.awwwards.com/sites/squarespace-foundations",
+  "award": "Site of the Day - Sep 1, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "brand guidelines",
+  "hero": "numbered full-screen chapters",
+  "sections": [
+   "01..06 chapters: typography, colour, photography, motion"
+  ],
+  "nav": "Index",
+  "footer": "n/a",
+  "type": "Clarkson",
+  "colour": "per chapter",
+  "signature": "presentation-style chapter slides with ← →",
+  "palette": [
+   "#FFFFFF",
+   "#292929"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Promotional",
+   "Web & Interactive",
+   "Graphic design",
+   "Scrolling",
+   "Transitions",
+   "Storytelling",
+   "Interaction Design",
+   "UI design",
+   "HTML5",
+   "GSAP",
+   "Javascript"
+  ],
+  "fonts_seen": [
+   "Clarkson"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Dropbox Brand",
+  "url": "https://brand.dropbox.com/",
+  "awwwards": "https://www.awwwards.com/sites/dropbox-brand",
+  "award": "Site of the Day - Feb 12, 2025",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "brand guidelines",
+  "hero": "bento of colourful tiles",
+  "sections": [
+   "intro",
+   "bento index",
+   "chapters"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "Sharp Grotesk",
+  "colour": "Dropbox blue #0061FE + 8 brights",
+  "signature": "bento tiles that open into chapters",
+  "palette": [
+   "#0061FE",
+   "#1A1918"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Animation",
+   "Colorful",
+   "Navigation Menu",
+   "Scrolling",
+   "Storytelling",
+   "Microinteractions"
+  ],
+  "fonts_seen": [
+   "Dbsharpgroteskvariable Vf",
+   "Atlasgrotesk Web"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "PP Neue Montreal",
+  "url": "https://neuemontreal.com/",
+  "awwwards": "https://www.awwwards.com/sites/pp-neue-montreal",
+  "award": "Site of the Day - Jul 13, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "type foundry specimen",
+  "hero": "red ground giant name + rotating badge",
+  "sections": [
+   "hero",
+   "story",
+   "weights",
+   "glyphs",
+   "footer"
+  ],
+  "nav": "Story In-use Weights Ligatures Languages",
+  "footer": "red full-width name + columns",
+  "type": "PP Neue Montreal",
+  "colour": "red #D82F2F + beige + black",
+  "signature": "type specimen as a travel guide",
+  "palette": [
+   "#D82F2F",
+   "#1A1A1A"
+  ],
+  "tags": [
+   "Promotional",
+   "Web & Interactive",
+   "Experimental",
+   "Animation",
+   "Clean",
+   "Colorful",
+   "Fullscreen",
+   "Graphic design",
+   "Footer Design",
+   "Motion",
+   "Figma",
+   "Framer"
+  ],
+  "fonts_seen": [
+   "PP Neue Montreal Bold",
+   "PP Neue Montreal Text Regular",
+   "PP Neue Montreal Regular",
+   "PP Neue Montreal Text Medium"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Pangram Pangram Foundry",
+  "url": "https://pangrampangram.com/",
+  "awwwards": "https://www.awwwards.com/sites/pangram-pangram-foundry",
+  "award": "Site of the Day - Nov 11, 2021",
+  "collections": [
+   "CSS Animations",
+   "Sites of the Year"
+  ],
+  "kind": "type foundry shop",
+  "hero": "rounded cards with names set in the font",
+  "sections": [
+   "fonts",
+   "Aa grid",
+   "academy",
+   "footer"
+  ],
+  "nav": "All fonts / Font starter pack / Academy / Support",
+  "footer": "huge multi-column index",
+  "type": "own fonts",
+  "colour": "white + photo cards",
+  "signature": "each card shows its own font",
+  "palette": [
+   "#000",
+   "#9C9C9C",
+   "#ffffff"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "E-Commerce",
+   "Promotional",
+   "Clean",
+   "Parallax",
+   "Typography",
+   "Content architecture",
+   "UI design",
+   "CSS",
+   "HTML5",
+   "Shopify",
+   "Javascript",
+   "Locomotive Scroll"
+  ],
+  "fonts_seen": [
+   "Neue Montreal",
+   "neue-gstaad-normal-normal-semibold",
+   "palma-fizzy-heavy",
+   "altera-carve-semibold",
+   "neue-gstaad-normal-bold"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "C2 Montréal",
+  "url": "https://c2mtl.koki-kiko.com/",
+  "awwwards": "https://www.awwwards.com/sites/c2-montreal",
+  "award": "Site of the Day - May 18, 2023",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "event (conference)",
+  "hero": "overlapping colourful circles + black boxes with dates",
+  "sections": [
+   "hero",
+   "edition",
+   "dates",
+   "speakers",
+   "passes"
+  ],
+  "nav": "right vertical bar with rotated labels",
+  "footer": "n/a",
+  "type": "Neue Montreal",
+  "colour": "pink #FF5BC6 + blue #177AEE + lime",
+  "signature": "vertical side nav; dates as giant type",
+  "palette": [
+   "#FF5BC6",
+   "#177AEE"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Events",
+   "Promotional",
+   "Animation",
+   "Colorful",
+   "Navigation Menu",
+   "Parallax",
+   "Transitions",
+   "Menu - Vertical"
+  ],
+  "fonts_seen": [
+   "NeueMontrealWeb"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Ponpon Mania",
+  "url": "https://ponpon-mania.com/",
+  "awwwards": "https://www.awwwards.com/sites/ponpon-mania",
+  "award": "Site of the Day - Oct 22, 2025",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "interactive comic",
+  "hero": "maximal candy illustration + read now",
+  "sections": [
+   "loader",
+   "comic"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "Libre Franklin",
+  "colour": "purple #7E7EFF + pink #F894C0 + orange",
+  "signature": "scroll-read comic",
+  "palette": [
+   "#7E7EFF",
+   "#F894C0"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Games & Entertainment",
+   "Web & Interactive",
+   "Parallax",
+   "Unusual Navigation",
+   "Illustration",
+   "Storytelling",
+   "3D",
+   "Microinteractions",
+   "WebGL",
+   "GSAP",
+   "Nuxt.js"
+  ],
+  "fonts_seen": [
+   "Libre Franklin",
+   "Arial"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Lacoste — Polo Factory",
+  "url": "https://members-play.lacoste.com/polo-factory-experience",
+  "awwwards": "https://www.awwwards.com/sites/lacoste-polo-factory",
+  "award": "Site of the Day - Jul 21, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "brand experience / game",
+  "hero": "polo badge loader → floating polos",
+  "sections": [
+   "gate",
+   "factory tour",
+   "customiser"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "Lacoste",
+  "colour": "pale green + polo colours",
+  "signature": "customise a polo in a 3D factory",
+  "palette": [
+   "#A4E7FE",
+   "#F7ECE8"
+  ],
+  "tags": [
+   "Architecture",
+   "Fashion",
+   "Games & Entertainment",
+   "Colorful",
+   "Fullscreen",
+   "3D",
+   "WebGL",
+   "Three.js"
+  ],
+  "fonts_seen": [
+   "system-ui",
+   "Lacoste"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "The Tie-break",
+  "url": "https://thetiebreak.merci-michel.com/",
+  "awwwards": "https://www.awwwards.com/sites/the-tie-break",
+  "award": "Site of the Day - Sep 25, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "brand experience / game",
+  "hero": "blurred swirl + italic serif title",
+  "sections": [
+   "gate",
+   "game"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "Instrument",
+  "colour": "grey",
+  "signature": "tennis mini-game",
+  "palette": [
+   "#FFFFFF",
+   "#FFF"
+  ],
+  "tags": [
+   "Fashion",
+   "Games & Entertainment",
+   "Experimental",
+   "Colorful",
+   "Fullscreen",
+   "Photo & Video",
+   "WebGL",
+   "Three.js"
+  ],
+  "fonts_seen": [
+   "Instrument",
+   "WorkSans"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "EDOLUS",
+  "url": "https://edolus.com/",
+  "awwwards": "https://www.awwwards.com/sites/edolus",
+  "award": "Site of the Day - Oct 4, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "deep tech (AI)",
+  "hero": "Earth from space + thin caps + Initiate system",
+  "sections": [
+   "loader",
+   "planet",
+   "chapters"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "General Sans + JetBrains Mono",
+  "colour": "black",
+  "signature": "headphones prompt; cinematic sound",
+  "palette": [
+   "#000000"
+  ],
+  "tags": [
+   "Music & Sound",
+   "Technology",
+   "Experimental",
+   "Animation",
+   "Storytelling",
+   "3D",
+   "Interaction Design",
+   "WebGL",
+   "GSAP",
+   "GLSL"
+  ],
+  "fonts_seen": [
+   "JetBrains Mono",
+   "General Sans"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "House of Honey",
+  "url": "https://www.houseofhoney.com/",
+  "awwwards": "https://www.awwwards.com/sites/house-of-honey-1",
+  "award": "Site of the Day - Jul 14, 2026",
+  "collections": [
+   "Pastel colors",
+   "Sites of the Day"
+  ],
+  "kind": "interior design studio",
+  "hero": "giant slab serif with italic script \"of\"",
+  "sections": [
+   "hero",
+   "projects",
+   "press",
+   "footer"
+  ],
+  "nav": "Studio Spaces The Buzz Dear Home Press Room + Get in Touch",
+  "footer": "brown with giant pink arches + address columns",
+  "type": "Noe Text + Canora + Neue Haas",
+  "colour": "blush #EDCCBE + chocolate #331917",
+  "signature": "giant arch shapes in footer",
+  "palette": [
+   "#331917",
+   "#EDCCBE"
+  ],
+  "tags": [
+   "Architecture",
+   "Culture & Education",
+   "Luxury",
+   "Minimal",
+   "Portfolio",
+   "Typography",
+   "Copy design",
+   "Interaction Design",
+   "Microinteractions",
+   "Motion",
+   "Next.js",
+   "Sanity"
+  ],
+  "fonts_seen": [
+   "neueHaasGrotesk",
+   "noeText",
+   "canora"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "CoMinVi",
+  "url": "https://www.cominvi.com.mx/",
+  "awwwards": "https://www.awwwards.com/sites/cominvi",
+  "award": "Site of the Day - Sep 30, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "industrial (mining)",
+  "hero": "dark 3D vehicle in cave",
+  "sections": [
+   "hero",
+   "services cards",
+   "safety",
+   "machines",
+   "clients"
+  ],
+  "nav": "Menu",
+  "footer": "n/a",
+  "type": "Helvetica Now + PP Supply Mono",
+  "colour": "black + orange #FF7511",
+  "signature": "line-icon service grid",
+  "palette": [
+   "#151515",
+   "#FF7511"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Other",
+   "Technology",
+   "Animation",
+   "Graphic design",
+   "Content architecture",
+   "Webflow",
+   "Javascript",
+   "Figma"
+  ],
+  "fonts_seen": [
+   "Helvetica Now Display",
+   "PP Supply Mono"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "United Carriers",
+  "url": "https://unitedcarriers.com/",
+  "awwwards": "https://www.awwwards.com/sites/united-carriers",
+  "award": "Site of the Day - Sep 6, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "logistics",
+  "hero": "glowing planet arc + condensed caps",
+  "sections": [
+   "hero",
+   "reliability",
+   "network",
+   "industries marquee",
+   "footer"
+  ],
+  "nav": "links + Talk with us",
+  "footer": "light: world map dots + giant outlined name",
+  "type": "BT Steinhart",
+  "colour": "black + blue #0016CB",
+  "signature": "industries marquee",
+  "palette": [
+   "#0016CB"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Web & Interactive",
+   "Icons",
+   "Transitions",
+   "Responsive",
+   "Storytelling",
+   "3D",
+   "Microinteractions",
+   "GSAP",
+   "Three.js",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Helvetica Neue",
+   "BT Steinhart Mono",
+   "BT Steinhart"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "HOBRO DIGITAL",
+  "url": "https://hobro.digital",
+  "awwwards": "https://www.awwwards.com/sites/hobro-digital",
+  "award": "Site of the Day - Aug 29, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "\"Got Project? ( T A )\"",
+  "sections": [
+   "loader",
+   "hero",
+   "projects",
+   "footer"
+  ],
+  "nav": "Projects Services Agency Contact",
+  "footer": "mono address + year range",
+  "type": "PP Neue Montreal + Akkurat Mono + Freight italic",
+  "colour": "white/black",
+  "signature": "letters in parentheses that animate",
+  "palette": [
+   "#000000",
+   "#ffffff"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Design Agencies",
+   "Technology",
+   "Animation",
+   "Clean",
+   "Colorful",
+   "3D",
+   "UI design",
+   "Node.js",
+   "GSAP",
+   "Figma"
+  ],
+  "fonts_seen": [
+   "AkkuratMonoLLWeb",
+   "PPNeueMontreal",
+   "Arial",
+   "FreigBigProLigIta",
+   "Kamerik205"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "MEER MOHSIN",
+  "url": "https://www.meermohsin.me/",
+  "awwwards": "https://www.awwwards.com/sites/meer-mohsin",
+  "award": "Site of the Day - Sep 26, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "freelance portfolio",
+  "hero": "red ground giant script numerals",
+  "sections": [
+   "loader",
+   "projects",
+   "emblem"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "script + sans",
+  "colour": "red #990000 + black",
+  "signature": "gothic 3D emblem with script marquee",
+  "palette": [
+   "#990000",
+   "#090909"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Design Agencies",
+   "Web & Interactive",
+   "Animation",
+   "Storytelling",
+   "3D",
+   "HTML5",
+   "GSAP",
+   "Three.js"
+  ],
+  "fonts_seen": [
+   "regular-font",
+   "ruthie",
+   "light-font"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "bleibtgleich'26",
+  "url": "https://bleibtgleich.dev",
+  "awwwards": "https://www.awwwards.com/sites/bleibtgleich26",
+  "award": "Site of the Day - Sep 22, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "freelance portfolio",
+  "hero": "Swiss white with split edge wordmark",
+  "sections": [
+   "hero",
+   "work 24-26",
+   "awards",
+   "footer"
+  ],
+  "nav": "Menu",
+  "footer": "\"nothing more than a sentence.\" + wordmark",
+  "type": "Akzidenz Grotesk",
+  "colour": "white/black",
+  "signature": "wordmark split to the two edges",
+  "palette": [
+   "#FFFFFF",
+   "#000000"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Promotional",
+   "Experimental",
+   "Portfolio",
+   "Filters and Effects",
+   "GSAP",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Akzidenz Grotesk Pro"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Oryzo AI",
+  "url": "https://oryzo.ai",
+  "awwwards": "https://www.awwwards.com/sites/oryzo-ai",
+  "award": "Site of the Day - Apr 13, 2026",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "product launch parody",
+  "hero": "cork coaster rotating in 3D",
+  "sections": [
+   "loader",
+   "product",
+   "features",
+   "contact"
+  ],
+  "nav": "Story Features Product Contact",
+  "footer": "n/a",
+  "type": "Halyard + Literata",
+  "colour": "brown #100904 + orange #FF8539",
+  "signature": "luxury launch for a coaster (humour)",
+  "palette": [
+   "#100904",
+   "#FF8539"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Design Agencies",
+   "Web & Interactive",
+   "Transitions",
+   "Storytelling",
+   "3D",
+   "Filters and Effects",
+   "WebGL",
+   "GSAP",
+   "Three.js"
+  ],
+  "fonts_seen": [
+   "halyard-display-variable",
+   "Arial",
+   "Literata"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Synchrodogs Portfolio",
+  "url": "https://synchrodogs.com/",
+  "awwwards": "https://www.awwwards.com/sites/synchrodogs-portfolio",
+  "award": "Site of the Day - Aug 30, 2023",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "photographers",
+  "hero": "giant wordmark + kaleidoscope landscape",
+  "sections": [
+   "hero",
+   "projects as giant titles",
+   "about"
+  ],
+  "nav": "small",
+  "footer": "n/a",
+  "type": "Garnett + GT America",
+  "colour": "saturated orange #FAAD17",
+  "signature": "mirrored photo; projects titled huge",
+  "palette": [
+   "#FAAD17",
+   "#471E10"
+  ],
+  "tags": [
+   "Fashion",
+   "Web & Interactive",
+   "Photography",
+   "Animation",
+   "Photography",
+   "Portfolio",
+   "Transitions",
+   "Interaction Design",
+   "Microinteractions"
+  ],
+  "fonts_seen": [
+   "Times",
+   "Arial",
+   "GT America",
+   "Garnett"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "AIM — AI Modernism of Kharkiv",
+  "url": "https://aim.obys.agency/",
+  "awwwards": "https://www.awwwards.com/sites/aim-ai-modernism-of-kharkiv",
+  "award": "Site of the Day - Jan 29, 2024",
+  "collections": [
+   "CSS Animations",
+   "Sites of the Month"
+  ],
+  "kind": "culture / experiment",
+  "hero": "huge geometric logo",
+  "sections": [
+   "hero",
+   "index",
+   "experiment",
+   "gallery"
+  ],
+  "nav": "Index Experiment About",
+  "footer": "logo",
+  "type": "Khteka",
+  "colour": "warm grey #F5F2EE + black",
+  "signature": "Swiss hairline grid",
+  "palette": [
+   "#141414",
+   "#F5F2EE"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Culture & Education",
+   "Fashion",
+   "Animation",
+   "Big Background Images",
+   "Clean",
+   "Typography",
+   "Storytelling",
+   "Interaction Design"
+  ],
+  "fonts_seen": [
+   "Khtekatrial"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "The Renaissance Edition",
+  "url": "https://www.shopify.com/editions/winter2026",
+  "awwwards": "https://www.awwwards.com/sites/the-renaissance-edition",
+  "award": "Site of the Day - Feb 9, 2026",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "product release notes (Shopify)",
+  "hero": "black → generative painting collage",
+  "sections": [
+   "intro",
+   "categories",
+   "feature catalogue"
+  ],
+  "nav": "left index of categories",
+  "footer": "n/a",
+  "type": "Inter + Neue Montreal",
+  "colour": "black + paper",
+  "signature": "torn-paper painting collages",
+  "palette": [
+   "#F7F7EE",
+   "#292919"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Technology",
+   "Web & Interactive",
+   "Animation",
+   "Parallax",
+   "Transitions",
+   "3D",
+   "Gestures / Interaction",
+   "Interaction Design",
+   "WebGL",
+   "Shopify",
+   "Blender"
+  ],
+  "fonts_seen": [
+   "ui-sans-serif",
+   "Inter-Variable",
+   "PP Neue Montreal",
+   "NeueMontreal",
+   "HWCigars"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "The Line Studio",
+  "url": "https://thelinestudio.com/",
+  "awwwards": "https://www.awwwards.com/sites/thelinestudio-com",
+  "award": "Site of the Day - Nov 5, 2024",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "animation studio",
+  "hero": "red illustration + distorted wordmark",
+  "sections": [
+   "hero",
+   "studio",
+   "work index",
+   "footer"
+  ],
+  "nav": "slash-separated links",
+  "footer": "red: character + giant wordmark",
+  "type": "Denim",
+  "colour": "red #FF391E + black",
+  "signature": "stretched wordmark",
+  "palette": [
+   "#FF391E",
+   "#F8F8F8"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Games & Entertainment",
+   "Startups",
+   "Animation",
+   "Graphic design",
+   "Typography"
+  ],
+  "fonts_seen": [
+   "DenimWeb"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Bruno's Portfolio",
+  "url": "https://bruno-simon.com",
+  "awwwards": "https://www.awwwards.com/sites/brunos-portfolio",
+  "award": "Site of the Day - Jan 21, 2026",
+  "collections": [
+   "Sites of the Month"
+  ],
+  "kind": "freelance portfolio (game)",
+  "hero": "isometric playground car",
+  "sections": [
+   "game world"
+  ],
+  "nav": "none",
+  "footer": "none",
+  "type": "Amatic SC",
+  "colour": "dark + orange",
+  "signature": "drive a car to explore",
+  "palette": [],
+  "tags": [
+   "Games & Entertainment",
+   "Web & Interactive",
+   "3D",
+   "WebGL",
+   "GSAP",
+   "Three.js"
+  ],
+  "fonts_seen": [
+   "Amatic SC",
+   "Nunito"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Mosby's Files",
+  "url": "https://www.mosbyfiles.com/",
+  "awwwards": "https://www.awwwards.com/sites/mosbys-files",
+  "award": "Site of the Day - Aug 13, 2026",
+  "collections": [
+   "Sites of the Day"
+  ],
+  "kind": "archive / culture",
+  "hero": "coloured folder tabs of architect names",
+  "sections": [
+   "intro",
+   "file cabinet"
+  ],
+  "nav": "About",
+  "footer": "icon row",
+  "type": "Founders Grotesk + Signifier + Plex Mono",
+  "colour": "black + red/blue/green/yellow tabs",
+  "signature": "CSS-only file cabinet tabs",
+  "palette": [
+   "#D71E1E",
+   "#1E4BD7"
+  ],
+  "tags": [
+   "Architecture",
+   "Technology",
+   "Experimental",
+   "Animation",
+   "Navigation Menu",
+   "Unusual Navigation",
+   "Transitions",
+   "Interaction Design",
+   "Footer Design",
+   "GSAP",
+   "Vue.js"
+  ],
+  "fonts_seen": [
+   "Signifier",
+   "IBM Plex Mono",
+   "Founders Grotesk"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "cobloc",
+  "url": "https://www.cobloc.archi/",
+  "awwwards": "https://www.awwwards.com/sites/cobloc",
+  "award": "",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "architecture",
+  "hero": "blur-in letters + floating materials",
+  "sections": [
+   "intro",
+   "materials",
+   "3D carousel",
+   "about"
+  ],
+  "nav": "small",
+  "footer": "n/a",
+  "type": "Funnel Sans + DM Mono",
+  "colour": "pastel warm #E9E9E9 + peach",
+  "signature": "material shapes float; infinite scroll",
+  "palette": [],
+  "tags": [],
+  "fonts_seen": [
+   "Funnel Sans",
+   "DM Mono"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "RadiatingHope®",
+  "url": "https://radiatinghope.org/",
+  "awwwards": "https://www.awwwards.com/sites/radiatinghope-r",
+  "award": "Honorable Mention - Mar 6, 2025",
+  "collections": [
+   "NonProfit Websites"
+  ],
+  "kind": "nonprofit (health)",
+  "hero": "full-bleed smiling portrait + 2 pills",
+  "sections": [
+   "hero",
+   "programmes cards",
+   "upcoming events",
+   "membership band",
+   "footer"
+  ],
+  "nav": "About Events Get involved + Contact us",
+  "footer": "4-col link footer + legal",
+  "type": "Lausanne",
+  "colour": "white + photo",
+  "signature": "events list with price + save my spot",
+  "palette": [
+   "#000000",
+   "#ffffff"
+  ],
+  "tags": [
+   "Events",
+   "Institutions",
+   "Social responsibility",
+   "Animation",
+   "Clean",
+   "Minimal"
+  ],
+  "fonts_seen": [
+   "Lausanne"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "14islands V4",
+  "url": "https://www.14islands.com/",
+  "awwwards": "https://www.awwwards.com/sites/14islands-v4",
+  "award": "Site of the Day - Dec 31, 2023",
+  "collections": [
+   "Agency Portfolios",
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "staggered \"Design & Technology\"",
+  "sections": [
+   "hero",
+   "case grid",
+   "culture",
+   "footer"
+  ],
+  "nav": "Work Services Culture Journal + Contact",
+  "footer": "\"Let's make something great together\" + big email",
+  "type": "BentonSans + Aften",
+  "colour": "off-white + black",
+  "signature": "big ampersand composition",
+  "palette": [
+   "#F2F2F2",
+   "#070707"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Technology",
+   "Web & Interactive",
+   "Clean",
+   "Colorful",
+   "Transitions",
+   "Header Design",
+   "Footer Design",
+   "Project Page"
+  ],
+  "fonts_seen": [
+   "BentonSans",
+   "AftenScreen"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Ask Phill",
+  "url": "https://askphill.com",
+  "awwwards": "https://www.awwwards.com/sites/ask-phill-2",
+  "award": "Site of the Day - May 7, 2024",
+  "collections": [
+   "Agency Portfolios",
+   "Sites of the Day"
+  ],
+  "kind": "agency (Shopify)",
+  "hero": "centred headline with fanned cards",
+  "sections": [
+   "hero",
+   "services",
+   "proof card",
+   "FAQ",
+   "newsletter",
+   "footer"
+  ],
+  "nav": "red Menu + Contact pills",
+  "footer": "dark columns + Amsterdam time",
+  "type": "Inter oversized",
+  "colour": "black + red #DE0015 + cream",
+  "signature": "oversized UI",
+  "palette": [
+   "#DE0015",
+   "#000000"
+  ],
+  "tags": [
+   "Design Agencies",
+   "E-Commerce",
+   "Web & Interactive",
+   "UI design",
+   "About Page",
+   "Contact Page",
+   "Project Page",
+   "404 pages",
+   "Shopify"
+  ],
+  "fonts_seen": [
+   "Inter"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "MAKHNO",
+  "url": "https://makhnostudio.com/",
+  "awwwards": "https://www.awwwards.com/sites/makhno",
+  "award": "Site of the Day - Jul 25, 2023",
+  "collections": [
+   "Agency Portfolios",
+   "Sites of the Day"
+  ],
+  "kind": "architecture / hospitality",
+  "hero": "3D render of stone house with fire",
+  "sections": [
+   "hero",
+   "projects"
+  ],
+  "nav": "small labels",
+  "footer": "n/a",
+  "type": "Inter",
+  "colour": "grey #D9D9D9 + charcoal",
+  "signature": "cinematic render",
+  "palette": [
+   "#D9D9D9",
+   "#353535"
+  ],
+  "tags": [
+   "Architecture",
+   "E-Commerce",
+   "Hotel / Restaurant",
+   "Animation",
+   "Minimal",
+   "Photographic",
+   "Portfolio",
+   "Typography",
+   "Photo & Video",
+   "WooCommerce"
+  ],
+  "fonts_seen": [
+   "Inter"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Yambo Studio",
+  "url": "https://www.yambo-studio.com/",
+  "awwwards": "https://www.awwwards.com/sites/yambo-studio-2",
+  "award": "Honorable Mention - Mar 13, 2024",
+  "collections": [
+   "Agency Portfolios"
+  ],
+  "kind": "CGI studio",
+  "hero": "serif client list with full stops",
+  "sections": [
+   "client list",
+   "work index",
+   "footer"
+  ],
+  "nav": "WORK OBJECTS ART ABOUT",
+  "footer": "black big stacked links",
+  "type": "Kalice + Basis Grotesque",
+  "colour": "white/black",
+  "signature": "client names as the hero",
+  "palette": [
+   "#070707",
+   "#F8F8F8"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Design Agencies",
+   "Animation",
+   "Clean"
+  ],
+  "fonts_seen": [
+   "Basis Grotesque Pro",
+   "Kalice",
+   "Helvetica Neue"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Hero Collective",
+  "url": "https://www.herocollective.co/",
+  "awwwards": "https://www.awwwards.com/sites/hero-collective",
+  "award": "Site of the Day - Mar 4, 2024",
+  "collections": [
+   "Agency Portfolios",
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "\"WE (TURN) BRANDS INTO HEROES\"",
+  "sections": [
+   "hero",
+   "cases as giant names over photo",
+   "news"
+  ],
+  "nav": "logo + menu",
+  "footer": "n/a",
+  "type": "Anton + Staff",
+  "colour": "black + red #F51C20 + cream",
+  "signature": "hand-drawn circle on a word",
+  "palette": [
+   "#0A1616",
+   "#F51C20"
+  ],
+  "tags": [
+   "Culture & Education",
+   "Design Agencies",
+   "Film & TV",
+   "Animation",
+   "Portfolio",
+   "Typography",
+   "Transitions",
+   "Gallery",
+   "Microinteractions"
+  ],
+  "fonts_seen": [
+   "Staff-Regular",
+   "Anton"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Palazzo Sogni",
+  "url": "https://www.palazzosogni.com",
+  "awwwards": "https://www.awwwards.com/sites/palazzo-sogni",
+  "award": "Honorable Mention - Jun 27, 2026",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "hotel",
+  "hero": "fresco ceiling photo",
+  "sections": [
+   "hero",
+   "rooms",
+   "dining",
+   "spa",
+   "facade illustration",
+   "newsletter"
+  ],
+  "nav": "THE PALACE ROOMS DINING SPA + BOOK NOW pill",
+  "footer": "powder blue facade illustration + subscribe",
+  "type": "Sogo + Montserrat",
+  "colour": "powder blue #7593A9 + cream",
+  "signature": "facade illustration as footer",
+  "palette": [
+   "#7593A9"
+  ],
+  "tags": [
+   "Hotel / Restaurant",
+   "Colorful",
+   "Scrolling"
+  ],
+  "fonts_seen": [
+   "Montserrat",
+   "Times",
+   "Sogo",
+   "Arial"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Slow Down Creative",
+  "url": "http://www.slowdowncreative.com",
+  "awwwards": "https://www.awwwards.com/sites/slow-down-creative",
+  "award": "Honorable Mention - Jun 1, 2026",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "branding studio",
+  "hero": "serif statement with italic words",
+  "sections": [
+   "hero",
+   "work",
+   "services accordion",
+   "testimonial",
+   "footer"
+  ],
+  "nav": "Home About Process Blog + Work with us",
+  "footer": "orange gradient + giant art-nouveau wordmark",
+  "type": "Larken + Matter",
+  "colour": "cream #FDFFF7 + orange #FF6102",
+  "signature": "italic-word statement",
+  "palette": [
+   "#FDFFF7",
+   "#FF6102"
+  ],
+  "tags": [
+   "Art & Illustration",
+   "Design Agencies",
+   "Social responsibility",
+   "Animation",
+   "Clean",
+   "Graphic design",
+   "Icons",
+   "About Page",
+   "Footer Design",
+   "Webflow",
+   "Figma",
+   "Adobe Illustrator"
+  ],
+  "fonts_seen": [
+   "Matter",
+   "larken"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "L'OISEAU DÉ",
+  "url": "https://loiseau.framer.website/",
+  "awwwards": "https://www.awwwards.com/sites/loiseau-de",
+  "award": "Honorable Mention - May 15, 2026",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "beauty e-commerce",
+  "hero": "portrait + giant white name",
+  "sections": [
+   "hero",
+   "categories tiles",
+   "featured products",
+   "footer"
+  ],
+  "nav": "logo + menu",
+  "footer": "dark: claim + address + wordmark over photo",
+  "type": "Clash Display + Inter",
+  "colour": "lime #C3E794 + green #486E46",
+  "signature": "photo + flat colour tile grid",
+  "palette": [
+   "#C3E794",
+   "#486E46"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Fashion",
+   "Luxury",
+   "Animation",
+   "Big Background Images",
+   "Clean",
+   "Colorful",
+   "Fullscreen",
+   "Minimal",
+   "Framer"
+  ],
+  "fonts_seen": [
+   "Clash Display",
+   "Inter",
+   "sans-serif"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "QUIN: Queer Info Network",
+  "url": "https://www.quin.org.au/",
+  "awwwards": "https://www.awwwards.com/sites/quin-queer-info-network",
+  "award": "Honorable Mention - Apr 8, 2026",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "nonprofit (health)",
+  "hero": "halftone protest photo + acknowledgement gate",
+  "sections": [
+   "gate",
+   "info hub"
+  ],
+  "nav": "n/a",
+  "footer": "n/a",
+  "type": "Host Grotesk + Instrument Serif + mono",
+  "colour": "black + cream #F0F0E9",
+  "signature": "vintage zine halftone",
+  "palette": [
+   "#131217",
+   "#F0F0E9"
+  ],
+  "tags": [
+   "Culture & Education",
+   "Social responsibility",
+   "Big Background Images",
+   "Colorful",
+   "Graphic design",
+   "Navigation Menu",
+   "UI design",
+   "HTML5",
+   "Javascript",
+   "Next.js"
+  ],
+  "fonts_seen": [
+   "Host Grotesk",
+   "Instrument Serif",
+   "nectoMono"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Nory.ai",
+  "url": "https://www.nory.ai/",
+  "awwwards": "https://www.awwwards.com/sites/nory-ai",
+  "award": "Honorable Mention - Mar 10, 2026",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "SaaS (restaurant AI)",
+  "hero": "dark purple hero + rating badge",
+  "sections": [
+   "hero",
+   "feature columns with 3D food",
+   "results",
+   "news",
+   "footer"
+  ],
+  "nav": "Platform Solutions About Stories Resources + Book a chat",
+  "footer": "dense purple columns",
+  "type": "Sharp Grotesk + Graphik",
+  "colour": "purple #B0B1FE + cream + lime",
+  "signature": "3D food icons",
+  "palette": [
+   "#B0B1FE",
+   "#F3F0E8"
+  ],
+  "tags": [
+   "Hotel / Restaurant",
+   "Technology",
+   "Startups",
+   "Animation",
+   "Clean",
+   "Colorful",
+   "Minimal"
+  ],
+  "fonts_seen": [
+   "Arial",
+   "Graphik",
+   "Sharp Grotesk 20",
+   "Phosphor"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Thessaloniki Sto Piato",
+  "url": "https://thessalonikistopiato.gr",
+  "awwwards": "https://www.awwwards.com/sites/thessaloniki-sto-piato",
+  "award": "Honorable Mention - Mar 10, 2026",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "food festival",
+  "hero": "pixel block letters over city aerial + big dates",
+  "sections": [
+   "hero",
+   "recipes",
+   "programme",
+   "footer"
+  ],
+  "nav": "Menu",
+  "footer": "brown: pixel wordmark + partners",
+  "type": "TT Commons",
+  "colour": "terracotta + brown #2D1711",
+  "signature": "pixel pattern built from Greek letters",
+  "palette": [
+   "#2D1711",
+   "#E5E1DC"
+  ],
+  "tags": [
+   "Events",
+   "Food & Drink",
+   "Animation",
+   "Colorful",
+   "Graphic design",
+   "Icons",
+   "Wordpress",
+   "GSAP",
+   "Sass"
+  ],
+  "fonts_seen": [
+   "tt-commons-pro",
+   "Arial"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Festivent",
+  "url": "https://festivent.ca/",
+  "awwwards": "https://www.awwwards.com/sites/festivent",
+  "award": "Honorable Mention - Mar 3, 2026",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "festival",
+  "hero": "coral gradient + hand-lettered name + balloon",
+  "sections": [
+   "hero",
+   "line-up marquee",
+   "programme",
+   "partners",
+   "footer"
+  ],
+  "nav": "PROGRAMMATION / VISIT / TICKETS pills",
+  "footer": "cream columns + socials",
+  "type": "Metro Sans + Futura condensed",
+  "colour": "coral #f15c56 + cream #fef7de + blue",
+  "signature": "line-up marquee",
+  "palette": [
+   "#f15c56",
+   "#fef7de"
+  ],
+  "tags": [
+   "Culture & Education",
+   "E-Commerce",
+   "Events",
+   "Animation",
+   "Colorful",
+   "Navigation Menu",
+   "Parallax",
+   "404 pages",
+   "Contentful",
+   "Wordpress",
+   "Timber",
+   "Vite"
+  ],
+  "fonts_seen": [
+   "Metro Sans",
+   "futura-pt-condensed"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Greenly",
+  "url": "https://greenly.earth/",
+  "awwwards": "https://www.awwwards.com/sites/greenly",
+  "award": "Nominee - Feb 15, 2026",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "SaaS (climate)",
+  "hero": "cookie-blocked",
+  "sections": [],
+  "nav": "n/a",
+  "footer": "n/a",
+  "type": "Pangea + Inter",
+  "colour": "white + green",
+  "signature": "n/a",
+  "palette": [],
+  "tags": [],
+  "fonts_seen": [
+   "Poppins",
+   "InterRegular",
+   "ui-sans-serif",
+   "InterMedium",
+   "InterSemiBold"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Tibico Health",
+  "url": "https://www.tibicohealth.com/",
+  "awwwards": "https://www.awwwards.com/sites/tibico-health",
+  "award": "Nominee - Feb 9, 2026",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "e-commerce wellness",
+  "hero": "lavender split + photo",
+  "sections": [
+   "hero",
+   "product",
+   "benefits icons",
+   "popup"
+  ],
+  "nav": "Shop FAQs Blogs Loyalty",
+  "footer": "n/a",
+  "type": "Neulis Neue",
+  "colour": "lavender + orange",
+  "signature": "subscription-first",
+  "palette": [],
+  "tags": [],
+  "fonts_seen": [
+   "neulis-neue",
+   "Arial",
+   "Jost",
+   "Tahoma",
+   "Helvetica"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "AMPLIFY Australia",
+  "url": "https://www.amplifyaus.org/",
+  "awwwards": "https://www.awwwards.com/sites/amplify-australia",
+  "award": "Honorable Mention - Jan 22, 2026",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "nonprofit / campaign",
+  "hero": "dusk city photo \"Fighting for a better future\"",
+  "sections": [
+   "hero",
+   "mission",
+   "news",
+   "campaigns",
+   "footer"
+  ],
+  "nav": "About Campaigns Media Get involved Donate",
+  "footer": "dark + acknowledgement",
+  "type": "Cairo + Roboto Condensed",
+  "colour": "purple #831672 + aqua #00FFE6",
+  "signature": "campaign cards",
+  "palette": [
+   "#831672",
+   "#00FFE6"
+  ],
+  "tags": [
+   "Culture & Education",
+   "Institutions",
+   "Social responsibility",
+   "Colorful",
+   "Flat Design",
+   "Transitions",
+   "Interaction Design",
+   "Microinteractions",
+   "Footer Design",
+   "GSAP",
+   "Webflow",
+   "Figma"
+  ],
+  "fonts_seen": [
+   "Cairo",
+   "Roboto Condensed"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Yucca Packaging",
+  "url": "https://yucca.co.za/",
+  "awwwards": "https://www.awwwards.com/sites/yucca-packaging",
+  "award": "Site of the Day - Jan 31, 2026",
+  "collections": [
+   "Pastel colors",
+   "Sites of the Day"
+  ],
+  "kind": "B2B packaging",
+  "hero": "cup pour photo + claim + 3 industry tabs",
+  "sections": [
+   "hero",
+   "vision",
+   "new products",
+   "custom",
+   "footer"
+  ],
+  "nav": "Packaging Industries Company Resources Contact",
+  "footer": "giant geometric mark + 3 industry cards",
+  "type": "Magnetik",
+  "colour": "cream #BFC0AC + forest #12271D",
+  "signature": "industry cards in footer",
+  "palette": [
+   "#12271D",
+   "#BFC0AC"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Food & Drink",
+   "Web & Interactive",
+   "Clean",
+   "Scrolling",
+   "Typography",
+   "UI design",
+   "Contact Page",
+   "Footer Design",
+   "Wordpress",
+   "WooCommerce",
+   "Figma"
+  ],
+  "fonts_seen": [
+   "Magnetik"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Paris by Emily",
+  "url": "https://www.parisbyemily.com/",
+  "awwwards": "https://www.awwwards.com/sites/paris-by-emily",
+  "award": "Site of the Day - Dec 26, 2025",
+  "collections": [
+   "Pastel colors",
+   "Sites of the Day"
+  ],
+  "kind": "travel / TV tie-in",
+  "hero": "two tilted city video cards",
+  "sections": [
+   "choose a city",
+   "places"
+  ],
+  "nav": "minimal",
+  "footer": "n/a",
+  "type": "Roslindale condensed + Mango Grotesque",
+  "colour": "black + photo",
+  "signature": "choose-your-path cards",
+  "palette": [],
+  "tags": [
+   "Film & TV",
+   "Hotel / Restaurant",
+   "Luxury",
+   "Colorful",
+   "Parallax",
+   "Single page",
+   "Webflow"
+  ],
+  "fonts_seen": [
+   "Ppneuemontreal",
+   "Mangogrotesque",
+   "Roslindaledisplaycondensed"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Petralithe",
+  "url": "https://www.petralithe.com/",
+  "awwwards": "https://www.awwwards.com/sites/petralithe",
+  "award": "Honorable Mention - Nov 18, 2025",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "building materials",
+  "hero": "mountain cut-out + serif logo",
+  "sections": [
+   "hero",
+   "product spec",
+   "textures",
+   "footer"
+  ],
+  "nav": "collections + boutique + store",
+  "footer": "sage: \"INSPIRED [stone] NATURE\"",
+  "type": "Reimbrandt + Geologica",
+  "colour": "sage #d4dcdb + sand #baab99",
+  "signature": "product spec sheet",
+  "palette": [
+   "#d4dcdb",
+   "#baab99"
+  ],
+  "tags": [
+   "Architecture",
+   "E-Commerce",
+   "Animation",
+   "Scrolling",
+   "3D",
+   "GSAP",
+   "Three.js",
+   "Python"
+  ],
+  "fonts_seen": [
+   "font",
+   "Reimbrandt",
+   "Geologica",
+   "reimbrandt"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Chalet Matthe",
+  "url": "https://www.chaletmatthe.sk/",
+  "awwwards": "https://www.awwwards.com/sites/chalet-matthe",
+  "award": "Nominee - Oct 24, 2025",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "holiday rental",
+  "hero": "interior photo + serif title",
+  "sections": [
+   "hero",
+   "gallery",
+   "testimonials",
+   "footer"
+  ],
+  "nav": "links + Reservation",
+  "footer": "dark with faded script name",
+  "type": "Marlide Display + Matter",
+  "colour": "cream + wood",
+  "signature": "n/a",
+  "palette": [],
+  "tags": [],
+  "fonts_seen": [
+   "Matter SQ",
+   "MarlideDisplay"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Body of Water",
+  "url": "https://www.bodyofwateranthology.com",
+  "awwwards": "https://www.awwwards.com/sites/body-of-water",
+  "award": "Honorable Mention - Nov 5, 2025",
+  "collections": [
+   "Pastel colors"
+  ],
+  "kind": "photo anthology",
+  "hero": "contact-sheet grid of film photos",
+  "sections": [
+   "grid",
+   "horizontal photo story",
+   "book"
+  ],
+  "nav": "About / Menu",
+  "footer": "n/a",
+  "type": "Neue Haas Grotesk",
+  "colour": "cream #F5F3EE + colour blocks",
+  "signature": "horizontal photo story with colour blocks",
+  "palette": [
+   "#2F2E2E",
+   "#F5F3EE"
+  ],
+  "tags": [
+   "Magazine / Newspaper / Blog",
+   "Photography",
+   "Experimental",
+   "Big Background Images",
+   "Horizontal Layout",
+   "Minimal",
+   "Portfolio",
+   "Gallery",
+   "Responsive",
+   "Wix Studio"
+  ],
+  "fonts_seen": [
+   "Arial",
+   "Helvetica",
+   "neue-haas-grotesk-display-pro",
+   "wfont_0784b1_cd02e47513a34a968dec5b5d0da88a91"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Microsoft AI",
+  "url": "https://microsoft.ai/",
+  "awwwards": "https://www.awwwards.com/sites/microsoft-ai",
+  "award": "Site of the Day - Nov 30, 2025",
+  "collections": [
+   "Pastel colors",
+   "Sites of the Day"
+  ],
+  "kind": "corporate AI lab",
+  "hero": "warm blurred light + italic serif",
+  "sections": [
+   "hero",
+   "mission",
+   "values",
+   "place illustration",
+   "letter"
+  ],
+  "nav": "Models Blog Careers Code of Conduct",
+  "footer": "mono columns",
+  "type": "Bradford serif",
+  "colour": "peach/cream #FEF9ED",
+  "signature": "watercolour illustration + signed letter",
+  "palette": [
+   "#FEF9ED",
+   "#5D524B"
+  ],
+  "tags": [
+   "Business & Corporate",
+   "Technology",
+   "Clean",
+   "Colorful",
+   "Gestures / Interaction",
+   "Filters and Effects",
+   "Wordpress",
+   "WebGL",
+   "Figma"
+  ],
+  "fonts_seen": [
+   "Times",
+   "Segoe UI",
+   "Arial",
+   "Bradford LL",
+   "Red Hat Mono"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Diana Toloza - Portfolio 2024",
+  "url": "https://dianatoloza.co",
+  "awwwards": "https://www.awwwards.com/sites/diana-toloza-portfolio-2024",
+  "award": "Honorable Mention - Oct 9, 2024",
+  "collections": [
+   "Freelance Portfolios"
+  ],
+  "kind": "photographer",
+  "hero": "serif name + portrait crop",
+  "sections": [
+   "hero",
+   "scattered photo grid"
+  ],
+  "nav": "small",
+  "footer": "small",
+  "type": "Gupter serif",
+  "colour": "white",
+  "signature": "loose scattered grid",
+  "palette": [
+   "#FFFFFF",
+   "#000000"
+  ],
+  "tags": [
+   "Fashion",
+   "Promotional",
+   "Photography",
+   "Animation",
+   "Minimal",
+   "Portfolio"
+  ],
+  "fonts_seen": [
+   "Gupter"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Cris.Araújo",
+  "url": "https://cristianaaraujo.com/",
+  "awwwards": "https://www.awwwards.com/sites/cris-araujo",
+  "award": "Honorable Mention - Feb 20, 2024",
+  "collections": [
+   "Freelance Portfolios"
+  ],
+  "kind": "product designer",
+  "hero": "phone UI mockups on dark",
+  "sections": [
+   "hero",
+   "work",
+   "footer"
+  ],
+  "nav": "Work About Archive Wall of love + Let's talk",
+  "footer": "white: claim + Get a quote + links",
+  "type": "PP Neue Montreal",
+  "colour": "black + green UI",
+  "signature": "n/a",
+  "palette": [
+   "#090909"
+  ],
+  "tags": [
+   "Mobile & Apps",
+   "Web & Interactive",
+   "Photography",
+   "Animation",
+   "Portfolio",
+   "Responsive",
+   "Microinteractions",
+   "404 pages"
+  ],
+  "fonts_seen": [
+   "PPNeueMontreal"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Pontus Rudolfson",
+  "url": "https://www.pontusrudolfson.com",
+  "awwwards": "https://www.awwwards.com/sites/pontus-rudolfson-1",
+  "award": "Honorable Mention - May 9, 2024",
+  "collections": [
+   "Freelance Portfolios"
+  ],
+  "kind": "photographer",
+  "hero": "huge red serif name",
+  "sections": [
+   "hero",
+   "infinite masonry with filter"
+  ],
+  "nav": "small + Filter pill",
+  "footer": "n/a",
+  "type": "custom serif",
+  "colour": "cream + red #FA4411",
+  "signature": "floating filter pill",
+  "palette": [
+   "#FA4411"
+  ],
+  "tags": [
+   "Photography",
+   "Infinite Scroll",
+   "Photographic",
+   "Portfolio",
+   "Scrolling",
+   "Gallery",
+   "Photo & Video"
+  ],
+  "fonts_seen": [
+   "__acma_ceda24",
+   "ui-sans-serif"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Bienal Arquitectura Urbanismo",
+  "url": "https://xv.labienal.es/",
+  "awwwards": "https://www.awwwards.com/sites/bienal-arquitectura-urbanismo",
+  "award": "Honorable Mention - Dec 12, 2024",
+  "collections": [
+   "Grid Layout "
+  ],
+  "kind": "architecture biennial",
+  "hero": "compass-drawn letters BEAU",
+  "sections": [
+   "hero",
+   "questions",
+   "cities",
+   "partners"
+  ],
+  "nav": "small",
+  "footer": "partner logo grid",
+  "type": "Gellix + outline serif",
+  "colour": "white + hairline",
+  "signature": "construction-line letters",
+  "palette": [
+   "#000000",
+   "#ffffff"
+  ],
+  "tags": [
+   "Architecture",
+   "Events",
+   "Photography",
+   "Navigation Menu"
+  ],
+  "fonts_seen": [
+   "Gellix"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Annie Downing Interiors",
+  "url": "https://anniedowning.com/",
+  "awwwards": "https://www.awwwards.com/sites/annie-downing-interiors",
+  "award": "Honorable Mention - Dec 23, 2024",
+  "collections": [
+   "Grid Layout "
+  ],
+  "kind": "interior design",
+  "hero": "light serif on dusty pink",
+  "sections": [
+   "hero",
+   "projects",
+   "contact"
+  ],
+  "nav": "small",
+  "footer": "line-drawing illustration",
+  "type": "Petit Serif + Rector",
+  "colour": "dusty pink",
+  "signature": "n/a",
+  "palette": [],
+  "tags": [
+   "Architecture",
+   "Design Agencies",
+   "E-Commerce",
+   "Clean",
+   "Colorful",
+   "Graphic design",
+   "Portfolio",
+   "Gallery",
+   "Copy design"
+  ],
+  "fonts_seen": [
+   "Petit Serif",
+   "-apple-system",
+   "Rector Light",
+   "Rector Regular",
+   "Helvetica"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Cay Skin",
+  "url": "https://cayskin.com/",
+  "awwwards": "https://www.awwwards.com/sites/cay-skin",
+  "award": "Honorable Mention - Aug 4, 2023",
+  "collections": [
+   "E-Commerce"
+  ],
+  "kind": "beauty e-commerce",
+  "hero": "beach photo + serif claim",
+  "sections": [
+   "hero",
+   "press marquee",
+   "products"
+  ],
+  "nav": "shop links",
+  "footer": "n/a",
+  "type": "Univers + Sprat",
+  "colour": "sand #EDDECD + orange #E14B25",
+  "signature": "press logo marquee",
+  "palette": [
+   "#E14B25",
+   "#EDDECD"
+  ],
+  "tags": [
+   "Design Agencies",
+   "E-Commerce",
+   "Big Background Images",
+   "Colorful",
+   "Icons",
+   "Responsive Design",
+   "Content architecture",
+   "UI design",
+   "Shopify"
+  ],
+  "fonts_seen": [
+   "Univers",
+   "Helvetica",
+   "LTUniversTypewriterBold",
+   "SpratCondensedRegular",
+   "UniversNW01-630TwBold"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Mate Libre",
+  "url": "https://matelibre.com",
+  "awwwards": "https://www.awwwards.com/sites/mate-libre",
+  "award": "Site of the Day - Oct 3, 2023",
+  "collections": [
+   "E-Commerce",
+   "Sites of the Day"
+  ],
+  "kind": "drink e-commerce",
+  "hero": "still-life photo + lowercase headline",
+  "sections": [
+   "hero",
+   "products",
+   "footer"
+  ],
+  "nav": "products explore community",
+  "footer": "newsletter pill card + big lowercase links",
+  "type": "Studio Pro",
+  "colour": "orange + white",
+  "signature": "n/a",
+  "palette": [
+   "#FFFFFF",
+   "#000000"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Food & Drink",
+   "Promotional",
+   "Animation",
+   "Transitions",
+   "Interaction Design",
+   "Microinteractions",
+   "Shopify"
+  ],
+  "fonts_seen": [
+   "StudioProRegular",
+   "StudioProBold"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Cob",
+  "url": "https://cobfoods.com",
+  "awwwards": "https://www.awwwards.com/sites/cob",
+  "award": "Honorable Mention - Jun 14, 2024",
+  "collections": [
+   "E-Commerce"
+  ],
+  "kind": "snack e-commerce",
+  "hero": "candy packaging split",
+  "sections": [
+   "hero",
+   "products",
+   "athlete",
+   "popup"
+  ],
+  "nav": "MENU badge",
+  "footer": "n/a",
+  "type": "Obviously + Subtil Grotesk",
+  "colour": "orange + pink + plum #3B0017",
+  "signature": "flower badge popup",
+  "palette": [
+   "#3B0017",
+   "#FCFBE4"
+  ],
+  "tags": [
+   "E-Commerce",
+   "Food & Drink",
+   "Animation",
+   "Colorful",
+   "Shopify"
+  ],
+  "fonts_seen": [
+   "Subtil Grotesk",
+   "Obviously"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Garden Party",
+  "url": "https://www.shopgardenparty.com/",
+  "awwwards": "https://www.awwwards.com/sites/garden-party",
+  "award": "Honorable Mention - Apr 16, 2024",
+  "collections": [
+   "E-Commerce"
+  ],
+  "kind": "cannabis e-commerce",
+  "hero": "checkerboard pattern + age gate",
+  "sections": [
+   "age gate",
+   "shop"
+  ],
+  "nav": "n/a",
+  "footer": "n/a",
+  "type": "custom",
+  "colour": "ochre #EBDFAF + green #459043",
+  "signature": "patterned age gate",
+  "palette": [
+   "#EBDFAF",
+   "#459043"
+  ],
+  "tags": [
+   "Culture & Education",
+   "E-Commerce",
+   "Colorful",
+   "Retro"
+  ],
+  "fonts_seen": [
+   "body",
+   "heading",
+   "sub",
+   "super"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Energym - Shopify Ecommerce",
+  "url": "https://energym.io/",
+  "awwwards": "https://www.awwwards.com/sites/energym-shopify-ecommerce",
+  "award": "Nominee - Jul 10, 2024",
+  "collections": [
+   "E-Commerce"
+  ],
+  "kind": "fitness hardware shop",
+  "hero": "italic condensed claim over bike silhouette",
+  "sections": [
+   "hero",
+   "pre-order",
+   "news",
+   "newsletter",
+   "footer"
+  ],
+  "nav": "shop menus",
+  "footer": "dark columns",
+  "type": "Eng Gothic italic",
+  "colour": "black + green",
+  "signature": "n/a",
+  "palette": [],
+  "tags": [],
+  "fonts_seen": [
+   "Roboto",
+   "Eng Gothic",
+   "Arial",
+   "Abel"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Rebel Rabbit Seltzer",
+  "url": "https://drinkrebelrabbit.com/",
+  "awwwards": "https://www.awwwards.com/sites/rebel-rabbit-seltzer",
+  "award": "Honorable Mention - Jul 20, 2023",
+  "collections": [
+   "E-Commerce"
+  ],
+  "kind": "drink e-commerce",
+  "hero": "dark product carousel",
+  "sections": [
+   "hero",
+   "products",
+   "popup"
+  ],
+  "nav": "SHOP OUR STORY FAQ SUBSCRIBE",
+  "footer": "n/a",
+  "type": "Trade Gothic condensed",
+  "colour": "dark + red",
+  "signature": "n/a",
+  "palette": [
+   "#E5DEBA",
+   "#231F21"
+  ],
+  "tags": [
+   "Design Agencies",
+   "E-Commerce",
+   "Food & Drink",
+   "Animation",
+   "Clean",
+   "Colorful",
+   "Graphic design",
+   "Illustration",
+   "UI design",
+   "Shopify"
+  ],
+  "fonts_seen": [
+   "TradeGothicLTStd-BdCn20",
+   "Helvetica",
+   "Arial",
+   "Trade Gothic"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Inkwell",
+  "url": "https://inkwell.tech/",
+  "awwwards": "https://www.awwwards.com/sites/inkwell",
+  "award": "Site of the Day - May 26, 2025",
+  "collections": [
+   "CSS Animations",
+   "Sites of the Day"
+  ],
+  "kind": "SaaS (AI)",
+  "hero": "thumbnail strip line on white",
+  "sections": [
+   "hero",
+   "tilted card",
+   "sky with avatars",
+   "network",
+   "footer"
+  ],
+  "nav": "minimal",
+  "footer": "giant wordmark",
+  "type": "sans",
+  "colour": "white → peach sky → navy",
+  "signature": "scroll changes the sky/world",
+  "palette": [
+   "#F6F8FA",
+   "#1C272D"
+  ],
+  "tags": [
+   "Technology",
+   "Web & Interactive",
+   "Startups",
+   "Animation",
+   "Scrolling",
+   "Transitions",
+   "Storytelling",
+   "3D",
+   "Microinteractions"
+  ],
+  "fonts_seen": [
+   "FK Grotesk Mono",
+   "FK Grotesk"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Design Office",
+  "url": "http://designoffice.nz",
+  "awwwards": "https://www.awwwards.com/sites/design-office",
+  "award": "Honorable Mention - Jun 4, 2024",
+  "collections": [
+   "Agency Portfolios"
+  ],
+  "kind": "agency side project",
+  "hero": "B/W office photo + lime name",
+  "sections": [
+   "single screen"
+  ],
+  "nav": "small",
+  "footer": "n/a",
+  "type": "grotesk",
+  "colour": "B/W + lime #b0fb90",
+  "signature": "\"Make the logo bigger\" button joke",
+  "palette": [
+   "#ffffff",
+   "#b0fb90"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Promotional",
+   "Graphic design",
+   "Single page"
+  ],
+  "fonts_seen": [
+   "Neue Haas Grotesk Medium",
+   "Neue Haas Grotesk Text"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Studio Size",
+  "url": "https://studio-size.com/",
+  "awwwards": "https://www.awwwards.com/sites/studio-size-1",
+  "award": "Site of the Day - Jul 19, 2024",
+  "collections": [
+   "Agency Portfolios",
+   "Sites of the Day"
+  ],
+  "kind": "branding studio",
+  "hero": "dark claim + product photo",
+  "sections": [
+   "hero",
+   "about",
+   "services list",
+   "footer"
+  ],
+  "nav": "Portfolio About Labs Assets + Get in touch",
+  "footer": "giant word \"Footer®\" + socials",
+  "type": "grotesk",
+  "colour": "black + white",
+  "signature": "self-aware footer word",
+  "palette": [
+   "#ffffff",
+   "#000000"
+  ],
+  "tags": [
+   "Design Agencies",
+   "Web & Interactive",
+   "Clean",
+   "Typography",
+   "Video",
+   "Photo & Video",
+   "UI design",
+   "Footer Design"
+  ],
+  "fonts_seen": [
+   "neue-haas-grotesk-text",
+   "neue-haas-grotesk-display",
+   "Arial"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Analogue Agency",
+  "url": "https://analogueagency.com",
+  "awwwards": "https://www.awwwards.com/sites/analogue-agency-2",
+  "award": "Site of the Day - May 22, 2024",
+  "collections": [
+   "Agency Portfolios",
+   "Sites of the Day"
+  ],
+  "kind": "agency",
+  "hero": "light-speed lines + one line",
+  "sections": [
+   "hero",
+   "3D headset",
+   "newsletter",
+   "footer"
+  ],
+  "nav": "pill",
+  "footer": "\"Ready when you are / Book call\"",
+  "type": "grotesk",
+  "colour": "dark + blue newsletter card",
+  "signature": "n/a",
+  "palette": [],
+  "tags": [
+   "Design Agencies",
+   "Web & Interactive",
+   "Experimental",
+   "Big Background Images",
+   "Minimal",
+   "Navigation Menu",
+   "Scrolling",
+   "Unusual Navigation",
+   "About Page",
+   "Framer"
+  ],
+  "fonts_seen": [
+   "LCDDot TR Regular",
+   "sans-serif",
+   "Graphik Semibold",
+   "Graphik Medium"
+  ],
+  "visited_live": true
+ },
+ {
+  "name": "Lyon Béton",
+  "url": "https://lyon-beton.com/",
+  "awwwards": "https://www.awwwards.com/sites/lyon-beton",
+  "award": "Site of the Day - May 8, 2024",
+  "collections": [
+   "Agency Portfolios",
+   "Sites of the Day"
+  ],
+  "kind": "furniture e-commerce",
+  "hero": "giant name over photo",
+  "sections": [
+   "hero",
+   "collections word index",
+   "SHOP NOW split",
+   "statement"
+  ],
+  "nav": "boxed bar with search/bag",
+  "footer": "n/a",
+  "type": "grotesk",
+  "colour": "concrete grey #EBEBEB + black",
+  "signature": "collections as a centred word index",
+  "palette": [
+   "#231F20",
+   "#EBEBEB"
+  ],
+  "tags": [
+   "Architecture",
+   "Design Agencies",
+   "E-Commerce",
+   "Animation",
+   "Clean",
+   "Fullscreen",
+   "Graphic design",
+   "Gallery",
+   "Gestures / Interaction",
+   "WooCommerce"
+  ],
+  "fonts_seen": [
+   "Inter",
+   "Arial",
+   "sk-modernist",
+   "neue-montreal"
+  ],
+  "visited_live": true
+ }
+]

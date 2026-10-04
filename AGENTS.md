@@ -4,7 +4,7 @@ Next.js 16 (App Router) + TypeScript + Tailwind v4. Version-matched Next.js docs
 
 **Start here: `docs/HANDOFF.md`** — where the work stands, what's next, and the user's working agreements.
 
-Ongoing work: `docs/plan-vibe.md` (page anatomy, fresh style, award vibe, WebGL — comes first), then `docs/plan-for-fit.md` — new example sites and kit clips that show "what kind of site you'll get". Read it before touching examples; keep its Progress table current.
+Current: `docs/plan-variety.md` (variety and beauty, from the 2026-10-04 research). Earlier: `docs/plan-vibe.md` (page anatomy, fresh style, award vibe, WebGL — comes first), then `docs/plan-for-fit.md` — new example sites and kit clips that show "what kind of site you'll get". Read it before touching examples; keep its Progress table current.
 
 - Domain types: `src/types/domain.ts`. Knowledge base (curated ingredients): `src/data/`.
 - Recipe engine (deterministic composition): `src/features/recipes/engine.ts`.
@@ -26,14 +26,18 @@ Ongoing work: `docs/plan-vibe.md` (page anatomy, fresh style, award vibe, WebGL 
   `toggleChrome`, `PageSpec.hide`, written into the recipe and QA), its parts in between, each titled by its job
   (`sectionGroups[].job`, `jobOf`) with its look (`src/data/section-guide.ts`) and chips for its effects; drag, up/down or
   remove on the row itself;
-  right one job at a time — "Add to page" (every part, grouped by job; drag one into the page or tap +, which adds after
-  the picked part, else before the closing parts) or, with a row picked, that row — one accordion, each heading showing its
-  current value: Look (sections doing the same job,
-  `swapOptions`, `replaceSection`; for the first screen, the first screens — `setHero`, which moves Movement into a
-  level it supports and says so), Photos (photo sections) and Effects (moments); the menu/footer row shows
-  "Show on this page" and its site-wide look. The film/image part (`hero`) is free like any
+  right one job at a time, named by a switch at its top ("Add a part" | "Edit …") — Add: every part, grouped by job;
+  clicking a card adds it (after the picked part, else before the closing parts) or drag it to a spot, and the panel stays
+  on Add; Edit (a row clicked, or its "+ Effect" chip): the part as it is, then tabs — Effects (moments) first, Other
+  designs (same job, `swapOptions`, `replaceSection`; for the first screen, the first screens — `setHero`, which moves
+  Movement into a level it supports and says so), Photos (photo sections); the menu/footer row shows "Show on this page"
+  and its site-wide look. Every change scrolls the page to that part and makes it glow (`land`). Options show a real
+  site and the same thing drawn in your style, side by side (`DualShot`); menus are drawn (`MenuDemo`) and link
+  behaviours play on a drawn footer (`LinkDemo`), since both are too small in a recording. The film/image part (`hero`) is free like any
   part: dragged anywhere, mid-page, onto any page, or removed; the engine then writes it as a full-width band at that spot
-  (`midPageHero`, QA checks it stays there), and only `setHero` on a site with none adds one (top of the first page). Structure and effects never share a list. Pages
+  (`midPageHero`, QA checks it stays there), and only `setHero` on a site with none adds one (top of the first page). Each film/image part
+  shows its own pick (`setPartHero`, `heroOf`; the recipe's `heroBands`): the site's first one is its first screen (`plan.hero`,
+  sets media and movement), and changing one never changes another. Structure and effects never share a list. Pages
   never links back to Design. Pieces come in two kinds (`behaviours` in pieces.ts): behaviours — how
   headlines arrive, what links and the main button do, whole-site extras — are site-wide, one per kind, set in Design
   (`setBehaviour`); moments are picked on one part in Pages (`piecesFor`, `togglePiece`) and stay on it — a swap keeps
@@ -47,6 +51,9 @@ Ongoing work: `docs/plan-vibe.md` (page anatomy, fresh style, award vibe, WebGL 
   (`--color-*`, `--radius-*`, `type-display|heading|body|utility` from `src/lib/type-tokens.ts`), content through props,
   no import beyond `react`. The kit renders them for real with sample content (`SectionPreview`), dressed as one of six
   worlds (studio, food, shop, product, software, event — `worldFor(purpose)`) so a café sees cups and a shop sees products.
+  Many come in several designs (a `variant` prop; `src/data/section-variants.ts` — the engine picks one per look family,
+  the owner can pick another in Pages → Other designs; check.ts asserts each design exists in the code). Two section ids
+  may share one component (Steps, NameWall, Statement) with different default designs.
   A new section also needs: its `SectionId`, a `sections` entry in patterns.ts, a `blocks.ts` entry, a sample per world,
   a plain look + best-when in `section-guide.ts`, a job group in `sectionGroups` — then `npm run pieces`.
 - Ready pieces (backgrounds + components) ship as code in every Build Package's `src/components/pieces/`.
@@ -56,7 +63,7 @@ Ongoing work: `docs/plan-vibe.md` (page anatomy, fresh style, award vibe, WebGL 
   components), and nothing that needs GSAP (its free licence excludes Webflow-competing tools). Tokens only
   (`--color-*`, `--font-*`), a reduced-motion version, no import beyond `react`/`motion`/`@paper-design/shaders-react`
   (plus `lenis`, MIT, in a piece that lists it in `deps` — SmoothScroll).
-- `npm run check` composes every seed recipe and every adapter and asserts completeness — and distinctiveness: palette grounds ≥ 0.06 ΔE_OK apart, no cream-band or clay-accent clusters, no AI-default fonts, each family in ≤ 2 pairings, no two seeds sharing a palette or pairing. Add to the library only what passes.
+- `npm run check` composes every seed recipe and every adapter and asserts completeness — and distinctiveness: two palettes ≥ 0.06 ΔE_OK apart in ground (or, if closer, clearly different accents), no greyed mid-tone ground, neutral ink, no cream-band or clay-accent clusters, no AI-default fonts, each family in ≤ 2 pairings, no two seeds sharing a palette or pairing. Add to the library only what passes.
 
 ## Example projects
 
@@ -72,6 +79,8 @@ Not committed: `node_modules/`, `.next/`, `tsconfig.tsbuildinfo`, `.DS_Store` �
 two with `npm install` / `npm run build` (the root `.gitignore`'s bare `node_modules`/`.next` patterns
 already cover any depth, including here). Any `media-src/`-style pre-processing source (raw footage
 before ffmpeg, etc.) is reference-only — keep it out unless it's small and its license is clear.
+`media-src/recording/` holds the user's full screen recordings of the live site, kept on purpose: the kit's clips
+(`clip`, `sectionClips`, `pieceClips`, `signatureClips`) are cut from them with ffmpeg, and can be re-cut later.
 
 Before the very first `npm install`/build ever runs inside a freshly dropped-in example, check its
 `next.config.ts` already has the `turbopack.root` pin from the next section — a fresh Claude-Code-built
@@ -90,7 +99,8 @@ Record `choices` with the exact option names.
 
 Each example is registered in `src/data/examples.ts` (title/summary — copy from its own real
 `<title>`/meta description, not the abstract recipe doc, since a build often renames the brand).
-Its clips: `clip` (10–15 s, first screen + scroll) and `sectionClips` (4–5 s per section, `examples/{slug}/public/media/clips/{sectionId}.mp4`)
+Its clips: `clip` (10–15 s, first screen + scroll) and `sectionClips` (3–5 s per section, the section standing still and framed
+on it — never the page scrolling past; `examples/{slug}/public/media/clips/{sectionId}.mp4`)
 feed the kit's "a site like this" (`src/features/kit/closest.ts`, plan §8); an old example carries `legacy: true` and is never offered there.
 Its card on `/examples` shows `public/examples/{slug}.jpg` — a 1440×900 JPEG screenshot of its live homepage, taken
 once the hero video has real frames (a black first frame makes a blank card). After replacing one, clear
@@ -115,7 +125,7 @@ To (re)generate `public/live/{slug}/` from `examples/{slug}/`:
 2. Temporarily add `output: 'export'`, `basePath: '/live/{slug}'`, `images: { unoptimized: true }`,
    `npm install && npx next build`, then restore the real config. If Turbopack fails on
    `next/font/google` ("queries have exactly one entry"), build with `npx next build --webpack`.
-3. In `out/`, grep every `.html`/`.txt`/`.js`/`.css` for `"/media/`, `` `/media/ `` (template literals) and `url(/media/`,
+3. In `out/`, grep every `.html`/`.txt`/`.js`/`.css` for `"/media/`, `` `/media/ `` (template literals), `, /media/` (later `srcset` entries) and `url(/media/`,
    and point each at `/examples/{slug}/media/`. Copy everything **except** `out/media/` into `public/live/{slug}/`.
 4. Inner links (`/live/{slug}/about`) resolve via the `fallback` rewrites in `next.config.ts` (→ `about.html`).
    The site's own home is `/live/{slug}` (no trailing slash; the same rewrite maps it to `index.html`) — that is the
