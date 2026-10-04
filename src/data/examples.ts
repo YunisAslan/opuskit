@@ -26,13 +26,13 @@ export type ExampleProject = {
   livePath: string
   /** A short, light loop from the same site for small previews (the hero file can be a heavy scrub encode). */
   clip?: string
-  /** A few seconds of each of its sections arriving on screen — the kit shows one next to that part (plan §8). */
+  /** A few seconds of each of its sections arriving on screen — the kit shows one next to that part (docs/plan-examples.md §3 step 8). */
   sectionClips?: Partial<Record<SectionId, string>>
   /** A few seconds of each kit piece it uses (a behaviour or a moment) doing its thing — the kit shows one next to that piece. */
   pieceClips?: Partial<Record<PieceId, string>>
   /** The same for its big idea's signature moments (`signaturePatterns` ids). */
   signatureClips?: Record<string, string>
-  /** One of the old examples (docs/plan-for-fit.md §9): stays on /examples until replaced, never offered in the kit as "a site like this". */
+  /** One of the old examples: stays on /examples until replaced, never offered in the kit as "a site like this". */
   legacy?: true
   /** Exactly what was picked to make it — recovered from the recipe files the site shipped with. */
   choices: RecipeChoice[]
@@ -43,6 +43,34 @@ export type ExampleProject = {
 }
 
 export const examples: ExampleProject[] = [
+  {
+    slug: 'qum',
+    title: 'QUM, skincare from the Caspian salt pans',
+    summary: 'Six products made in small batches on the Absheron coast, with Caspian salt and saffron grown a few kilometres inland. One ritual.',
+    mood: ['Calm', 'Warm', 'Natural'],
+    // Its first screen is an editorial photo: the still is that photo itself.
+    hero: { kind: 'image', src: '/examples/qum/media/hero.jpg' },
+    livePath: '/live/qum',
+    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'E-commerce' },
+      { label: 'Name', value: 'QUM' },
+      { label: 'Visitors should', value: 'Buy something' },
+      { label: 'Style', value: 'Scandinavian Minimal' },
+      { label: 'First screen', value: 'Editorial image hero' },
+      { label: 'Movement', value: 'Subtle' },
+      { label: 'Colors', value: 'Sage White' },
+      { label: 'Lettering', value: 'Soft Wedge' },
+      { label: 'Layout', value: 'Balanced' },
+      { label: 'Shape', value: 'Soft' },
+      { label: 'Menu', value: 'Centered logo' },
+      { label: 'Footer', value: 'Everything, listed' },
+      { label: 'Big idea', value: 'A walk through named stops' },
+      { label: 'Pages', value: 'Home, Shop, Product, Cart, Checkout, The salt, Journal, Article, Help' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Photos are from Pexels (credits in media-src/SOURCES.md; every product photo has a blank label or none); Claude Code set the wordmark during the build; the brand, people, prices, press and lab details are made up, and orders are not taken.',
+  },
   {
     slug: 'aster-house',
     title: 'Aster House, twelve houses above the Caspian',

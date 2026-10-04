@@ -1,0 +1,11 @@
+:HL["/live/qum/_next/static/chunks/1q2aupk9_ofbb.css","style"]
+:HL["/live/qum/_next/static/chunks/1zt15z_g1zgtc.css","style"]
+:HL["/live/qum/_next/static/media/2aeed2bd2aff4ccd-s.p.3aibo0fea9uod.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/live/qum/_next/static/media/9254db10a3b4f046-s.p.1s8vjit5iynwh.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/live/qum/_next/static/media/ba97317155a52f38-s.p.3pu26u5ltfkgr.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/live/qum/_next/static/media/c5babb2fd44e97de-s.p.1wv8usxfsmpnc.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/live/qum/_next/static/media/fa0520225c6f3d07-s.p.33u8lzvd44aqk.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/live/qum/_next/static/media/fc2699ecc8323b38-s.p.1gwygi6ipeo67.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/examples/qum/media/saffron-field.jpg","image"]
+:HL["/examples/qum/media/founder-3.jpg","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"journal","param":null,"prefetchHints":4160,"slots":{"children":{"name":"slug","param":{"type":"d","key":"three-weeks-in-october","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"Te5YEffbOdAU74WSDAFgP"}

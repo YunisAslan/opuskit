@@ -2,18 +2,20 @@
 // OpusKit section — Product buy box: everything needed to buy one product on its own page — the pictures, the name and
 // price, one choice (colour or size) as buttons, how many, the button, and the details people check before paying, each
 // opening in place. Two designs:
-//   sticky — the pictures stacked down the left; the buy column stays in view beside them as you scroll.
+//   sticky — the pictures stacked down the left (a swipeable row on phones); the buy column stays in view beside them.
 //   mosaic — the pictures as a mosaic (the first one large); the buy column beside it.
-import { useState, type ElementType } from 'react'
+import { useState, type ElementType, type ReactNode } from 'react'
 
 type Img = { src: string; alt: string }
 export type BuyDetail = { title: string; text: string }
 
-export function ProductBuySection({ tone, variant = 'sticky', link: L = 'a', name, price, line, images, option, details = [], action, note }: {
+export function ProductBuySection({ tone, variant = 'sticky', link: L = 'a', name, price, line, images, option, details = [], action, onAction, note }: {
   tone?: 'ground' | 'surface' | 'inverse' | 'chapter'; variant?: 'sticky' | 'mosaic'; link?: ElementType
-  name: string; price: string; line?: string; images: Img[]
+  name: ReactNode; price: string; line?: string; images: Img[]
   /** One choice, e.g. { label: 'Colour', values: ['Oat', 'Ink'] }. */ option?: { label: string; values: string[] }
   details?: BuyDetail[]; action: { label: string; href: string }; note?: string
+  /** When given, the action is a button that hands over the chosen quantity and option (e.g. add to a client-side bag). */
+  onAction?: (qty: number, option?: string) => void
 }) {
   const [pick, setPick] = useState(0)
   const [qty, setQty] = useState(1)
@@ -23,8 +25,8 @@ export function ProductBuySection({ tone, variant = 'sticky', link: L = 'a', nam
       {images.map((m, i) => <img key={m.src + i} src={m.src} alt={m.alt} loading={i ? 'lazy' : undefined} className={`w-full rounded-(--radius-media) object-cover ${i === 0 ? 'col-span-2 aspect-(--ratio-media)' : 'aspect-(--ratio-card)'}`} />)}
     </div>
   ) : (
-    <div className="space-y-3 md:col-span-7">
-      {images.map((m, i) => <img key={m.src + i} src={m.src} alt={m.alt} loading={i ? 'lazy' : undefined} className="aspect-(--ratio-card) w-full rounded-(--radius-media) object-cover" />)}
+    <div className="-mx-(--gutter) flex snap-x snap-mandatory gap-3 overflow-x-auto px-(--gutter) md:col-span-7 md:mx-0 md:block md:space-y-3 md:overflow-visible md:px-0">
+      {images.map((m, i) => <img key={m.src + i} src={m.src} alt={m.alt} loading={i ? 'lazy' : undefined} className={`aspect-(--ratio-card) shrink-0 snap-center rounded-(--radius-media) object-cover md:w-full ${images.length > 1 ? 'w-[85%]' : 'w-full'}`} />)}
     </div>
   )
   return (
@@ -52,7 +54,9 @@ export function ProductBuySection({ tone, variant = 'sticky', link: L = 'a', nam
               <span aria-live="polite" className="w-8 text-center tabular-nums">{qty}</span>
               <button type="button" aria-label="One more" onClick={() => setQty((q) => q + 1)} className="px-4 py-3">+</button>
             </div>
-            <L href={action.href} className="type-body flex-1 rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-center text-(--color-background)">{action.label}</L>
+            {onAction
+              ? <button type="button" onClick={() => onAction(qty, option?.values[pick])} className="type-body flex-1 rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-center text-(--color-background)">{action.label}</button>
+              : <L href={action.href} className="type-body flex-1 rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-center text-(--color-background)">{action.label}</L>}
           </div>
           {note && <p className="type-utility mt-3 text-(--color-muted)">{note}</p>}
           {details.length > 0 && (

@@ -1,5 +1,5 @@
 'use client'
-// A few seconds of a real site built with OpusKit, next to the live preview (docs/plan-for-fit.md §1, §8).
+// A few seconds of a real site built with OpusKit, next to the live preview (docs/plan-examples.md §1).
 // Muted, looping; with reduced motion it waits for a tap.
 import { Maximize2 } from 'lucide-react'
 import Link from 'next/link'

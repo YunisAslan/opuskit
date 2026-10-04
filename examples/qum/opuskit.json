@@ -1,0 +1,155 @@
+{
+  "opuskit": 1,
+  "recipe": "organic-modern",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "organic-modern",
+    "brief": {
+      "name": "QUM",
+      "offer": "Skincare made in small batches on the Absheron coast, with Caspian salt and saffron grown a few kilometres inland. Six products, one ritual.",
+      "goal": "buy"
+    },
+    "purpose": "ecommerce",
+    "direction": "scandinavian-minimal",
+    "characters": [
+      "warm"
+    ],
+    "lead": "photography",
+    "motion": "subtle",
+    "layout": "balanced",
+    "palette": "sage-white",
+    "typography": "soft-wedge",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "have",
+    "nav": "centered-logo",
+    "footer": "index",
+    "concept": "guided-walk",
+    "signatures": [],
+    "pieces": [
+      "text-effect",
+      "underline-fill",
+      "fade-transition"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "text-effect",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "underline-fill",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "fade-transition",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "0eg7m8in",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "intro",
+          "product-grid",
+          "editorial-story",
+          "process",
+          "testimonials",
+          "press",
+          "journal",
+          "newsletter"
+        ]
+      },
+      {
+        "id": "2wcm154f",
+        "type": "shop",
+        "label": "Shop",
+        "purpose": "Let visitors browse and choose confidently.",
+        "sections": [
+          "categories",
+          "product-grid",
+          "trust"
+        ]
+      },
+      {
+        "id": "i4fcux7p",
+        "type": "product-detail",
+        "label": "Product",
+        "purpose": "Show one product in full: gallery, price, variants, add-to-cart, and related items.",
+        "sections": [
+          "product-buy",
+          "specs",
+          "process",
+          "testimonials",
+          "faq",
+          "product-grid"
+        ]
+      },
+      {
+        "id": "qp2055i1",
+        "type": "cart",
+        "label": "Cart",
+        "purpose": "Let visitors review and adjust their selection before checkout.",
+        "sections": [
+          "product-grid"
+        ]
+      },
+      {
+        "id": "2x3ze8yp",
+        "type": "checkout",
+        "label": "Checkout",
+        "purpose": "Collect payment and shipping with as little friction as possible.",
+        "sections": []
+      },
+      {
+        "id": "vlkqvqox",
+        "type": "about",
+        "label": "The salt",
+        "purpose": "Where QUM comes from: the salt pans at Masazir, the saffron fields at Bilgah, the small lab in Mardakan, and the three people who make every batch.",
+        "sections": [
+          "about",
+          "editorial-story",
+          "timeline",
+          "location"
+        ]
+      },
+      {
+        "id": "yz4wrf61",
+        "type": "journal",
+        "label": "Journal",
+        "purpose": "Show ongoing thinking, in your own voice, over time.",
+        "sections": [
+          "journal",
+          "newsletter"
+        ]
+      },
+      {
+        "id": "su0b7wcu",
+        "type": "article",
+        "label": "Article",
+        "purpose": "Let people read one story well: title, summary, author and date, a calm reading column with pull quotes and pictures, then what to read next.",
+        "sections": [
+          "article",
+          "journal",
+          "newsletter"
+        ]
+      },
+      {
+        "id": "pidsgic5",
+        "type": "faq",
+        "label": "Help",
+        "purpose": "Answer the questions that would otherwise stall a decision.",
+        "sections": [
+          "faq"
+        ]
+      }
+    ],
+    "target": "not-sure"
+  }
+}

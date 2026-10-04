@@ -1,0 +1,54 @@
+{
+  "recipe": "organic-modern",
+  "title": "QUM — Warm Scandinavian Minimal Store",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon",
+      "note": "Wordmark: QUM set in Petrona (src/components/site/Logo.tsx); favicon src/app/icon.svg"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "find",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Petrona, Public Sans (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "create",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "photographySet": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Hero, section media, gallery",
+      "specs": "Min 2400px long edge, consistent grade, mix of wide (3:2) and portrait (4:5)",
+      "note": "23 owner photos in public/media/, listed in src/config/assets.ts"
+    },
+    "mobileHeroCrop": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Hero on small screens",
+      "specs": "4:5 or 9:16 crop with focal point centred",
+      "note": "hero.jpg cropped to 4:5 with object-cover; focal point is centred"
+    }
+  }
+}

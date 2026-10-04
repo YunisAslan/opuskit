@@ -1,5 +1,5 @@
 // Writes a recipe's Claude Code Build Package into a folder — the same files the result page's Download zips (no uploads).
-// For example sites (docs/plan-for-fit.md §6 step 4): npx tsx scripts/build-package.ts path/to/spec.json examples/{slug}
+// For example sites (docs/plan-examples.md §3 step 4): npx tsx scripts/build-package.ts path/to/spec.json examples/{slug}
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { adapters } from '../src/features/build-packages'

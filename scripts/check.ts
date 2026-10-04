@@ -383,7 +383,7 @@ const main = async () => {
     for (const line of [...recipeSeeds.flatMap((x) => [...x.do, ...x.principles, ...x.avoid]), ...Object.values(directions).flatMap((d) => [...d.do, ...d.principles, ...d.avoid])]) assert.ok(!/#[0-9a-f]{6}\b/i.test(line) && !fams.some((f) => line.includes(f)), `a rule names a font or a hex — use a role: ${line}`)
   }
   for (const seed of recipeSeeds) for (const line of [...seed.do, ...seed.principles, ...Object.values(seed.sectionNotes)] as string[]) assert.ok(!/\b(blue|pink|red|violet|rose|leaf green|powder)\b/i.test(line), `${seed.slug}: a rule names a hue of its own palette — use a colour role: ${line}`)
-  // Award vibe (docs/plan-vibe.md C): every seed has a big idea that its pages can carry, and the package says how.
+  // Award vibe: every seed has a big idea that its pages can carry, and the package says how.
   for (const seed of recipeSeeds) { const r = composeRecipe(specFromSeed(seed)); assert.ok(r.concept && r.signatures.some((x) => concepts[r.concept!.id].signatures.includes(x.id)), `${seed.slug}: has a big idea with a moment on its pages`) }
   {
     const r = composeRecipe(planToSpec(toggleSitePiece(toggleSitePiece(setStyle(plan, 'concept', 'giant-chapters'), 'smooth-scroll'), 'ambient-sound'))) // shader-grain is on its first screen
@@ -593,7 +593,7 @@ const main = async () => {
     if (!existsSync(`examples/${e.slug}/opuskit.json`)) assert.ok(!spec.pages.some((p) => p.type === 'custom'), `${e.slug}: every page is a known page type`)
   }
   for (const e of examples) assert.ok(/^\/live\/[a-z0-9-]+$/.test(e.livePath) && existsSync(`public${e.livePath}/index.html`), `${e.slug}: livePath is /live/{slug} (never index.html) and its export exists`)
-  // The kit's "a site like this" clips (plan §8): every clip exists, sits on a part the site has, and only fair matches show.
+  // The kit's "a site like this" clips (docs/plan-examples.md): every clip exists, sits on a part the site has, and only fair matches show.
   for (const e of examples) {
     const spec = (exampleSpecs as Record<string, RecipeSpec>)[e.slug]
     for (const src of [e.clip, ...Object.values(e.sectionClips ?? {}), ...Object.values(e.pieceClips ?? {}), ...Object.values(e.signatureClips ?? {})].filter(Boolean)) assert.ok(existsSync(`public${src}`), `${e.slug}: clip ${src} is on disk`)
@@ -627,7 +627,7 @@ const main = async () => {
   // Pages speaks plain words: every part has a job, a look and a 'best when'.
   for (const g of sectionGroups) { assert.ok(g.job, `${g.name} has a job`); for (const id of g.ids) assert.ok(sectionGuide[id]?.look && sectionGuide[id]?.bestWhen, `${id} has a plain look and best-when`) }
 
-  // The frame (plan-variety A): sections use the layout tokens, take a tone, and the recipe gives each page a rhythm.
+  // The frame: sections use the layout tokens, take a tone, and the recipe gives each page a rhythm.
   {
     const { TONE_CSS, FRAMES } = await import('../src/lib/frame')
     assert.ok(readFileSync(new URL('../src/app/globals.css', import.meta.url), 'utf8').includes(TONE_CSS), 'globals.css carries TONE_CSS exactly (src/lib/frame.ts)')
@@ -647,7 +647,7 @@ const main = async () => {
     }
   }
 
-  // Section designs (plan-variety C): every design is a real variant of the shipped code, looks pick different ones,
+  // Section designs: every design is a real variant of the shipped code, looks pick different ones,
   // the recipe tells the builder which, and an owner's pick survives the kit round trip.
   {
     const { sectionVariants } = await import('../src/data/section-variants')

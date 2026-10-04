@@ -4,7 +4,7 @@ Next.js 16 (App Router) + TypeScript + Tailwind v4. Version-matched Next.js docs
 
 **Start here: `docs/HANDOFF.md`** — where the work stands, what's next, and the user's working agreements.
 
-Current: `docs/plan-variety.md` (variety and beauty, from the 2026-10-04 research). Earlier: `docs/plan-vibe.md` (page anatomy, fresh style, award vibe, WebGL — comes first), then `docs/plan-for-fit.md` — new example sites and kit clips that show "what kind of site you'll get". Read it before touching examples; keep its Progress table current.
+Current: `docs/plan-examples.md` — the example sites (how each is made, what is open, the next five) and the kit clips that show "what kind of site you'll get". Read it before touching examples; keep its Progress table current. Research behind the library: `docs/research/`.
 
 - Domain types: `src/types/domain.ts`. Knowledge base (curated ingredients): `src/data/`.
 - Recipe engine (deterministic composition): `src/features/recipes/engine.ts`.
@@ -101,7 +101,7 @@ Each example is registered in `src/data/examples.ts` (title/summary — copy fro
 `<title>`/meta description, not the abstract recipe doc, since a build often renames the brand).
 Its clips: `clip` (10–15 s, first screen + scroll) and `sectionClips` (3–5 s per section, the section standing still and framed
 on it — never the page scrolling past; `examples/{slug}/public/media/clips/{sectionId}.mp4`)
-feed the kit's "a site like this" (`src/features/kit/closest.ts`, plan §8); an old example carries `legacy: true` and is never offered there.
+feed the kit's "a site like this" (`src/features/kit/closest.ts`); an old example carries `legacy: true` and is never offered there.
 Its card on `/examples` shows `public/examples/{slug}.jpg` — a 1440×900 JPEG screenshot of its live homepage, taken
 once the hero video has real frames (a black first frame makes a blank card). After replacing one, clear
 `.next/dev/cache/images` or the dev server keeps serving the old one.

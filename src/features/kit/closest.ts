@@ -1,5 +1,5 @@
 // The real site closest to what the kit has picked, so a few seconds of it can show "a site like this"
-// (docs/plan-for-fit.md §4, §8). Pure: the kit and scripts/check.ts both call it.
+// (docs/plan-examples.md §1). Pure: the kit and scripts/check.ts both call it.
 import exampleSpecs from '@/data/example-specs.generated.json'
 import { examples, type ExampleProject } from '@/data/examples'
 import { directions } from '@/data/taxonomy'
