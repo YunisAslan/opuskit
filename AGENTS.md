@@ -11,7 +11,8 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
 - Build Package adapters: `src/features/build-packages/`.
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
 - The Library flow is the way to make a site (`docs/plan-library.md`): `/library` (Discover) → `/studio/pages` → `/studio/style` →
-  recipe; the Collection is a header sheet (`CollectionSheet`). Logic `src/features/library/collection.ts`, storage `src/lib/collection.ts`; plans made there
+  recipe; every step opens with one sticky steps bar (`FlowBar`: steps, the Collection sheet, Next) in
+  `src/app/library/parts.tsx`. Logic `src/features/library/collection.ts`, storage `src/lib/collection.ts`; plans made there
   carry `via: 'studio'`. The kit below still opens examples and saved recipes until it is retired.
 - The kit (`/kit`) is the only way to make or change a recipe (the questionnaire was retired 2026-09-30; `/create`
   redirects here). A builder in three steps, always visible in its

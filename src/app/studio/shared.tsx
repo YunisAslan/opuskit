@@ -7,7 +7,7 @@ import { useGoogleFonts } from '@/components/FontLoader'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { HeroPreview } from '@/app/kit/HeroPreview'
 import { lookOf } from '@/app/kit/ProductVisual'
-import { FlowLine } from '@/app/library/parts'
+import { FlowBar } from '@/app/library/parts'
 import { heroOf, inferPurpose, planToSpec } from '@/features/kit/plan'
 import { composeRecipe, isValidSpec } from '@/features/recipes/engine'
 import { saveGeneration, type Generation } from '@/features/recipes/library'
@@ -51,20 +51,14 @@ export function useToRecipe() {
   }
 }
 
-/** A step's frame: where you are and its title on top; the way back and on in one bar at the bottom, always in reach. */
-export function StepFrame({ at, title, back, next, children }: { at: 'Pages' | 'Style'; title: ReactNode; back: [string, string]; next: ReactNode; children: ReactNode }) {
+/** A step's frame: the steps bar on top (back is a step link, Next on the right), then the title and the step. */
+export function StepFrame({ at, title, next, children }: { at: 'Pages' | 'Style'; title: ReactNode; next: ReactNode; children: ReactNode }) {
   return (
     <>
-      <div className="mx-auto max-w-[1440px] px-5 pb-28 pt-10 md:px-8 md:pt-12">
-        <FlowLine at={at} />
-        <div className="mt-4">{title}</div>
+      <FlowBar at={at} next={next} />
+      <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-10 md:px-8 md:pt-12">
+        {title}
         {children}
-      </div>
-      <div className="sticky bottom-0 z-20 border-t border-line bg-paper/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 px-5 py-3 md:px-8">
-          <Link href={back[0]} className="text-sm text-muted hover:text-ink">← {back[1]}</Link>
-          {next}
-        </div>
       </div>
     </>
   )

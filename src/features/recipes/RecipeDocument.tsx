@@ -86,7 +86,7 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, 
         <p className="prose-serif mt-4 line-clamp-2 max-w-2xl text-ink-2">{r.summary}</p>
       </header>
 
-      <div role="tablist" aria-label="Recipe" className="sticky top-16 z-20 -mx-5 mt-8 flex gap-1 overflow-x-auto overflow-y-hidden bg-paper/95 px-5 shadow-[inset_0_-1px_0_var(--color-line)] backdrop-blur-sm [scrollbar-width:none] md:-mx-8 md:px-8"
+      <div role="tablist" aria-label="Recipe" className={`sticky ${studio ? 'top-[7.5rem]' : 'top-16'} z-20 -mx-5 mt-8 flex gap-1 overflow-x-auto overflow-y-hidden bg-paper/95 px-5 shadow-[inset_0_-1px_0_var(--color-line)] backdrop-blur-sm [scrollbar-width:none] md:-mx-8 md:px-8`}
         onKeyDown={(e) => {
           const i = TABS.findIndex((t) => t.id === tab)
           const n = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : -1
@@ -102,7 +102,7 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, 
 
       <section id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="pt-10">
         {isLocked(tab) ? <Locked onUnlock={() => setCheckout(true)} what={tab === 'build' ? 'Build Packages' : 'The motion system'} />
-          : tab === 'overview' ? <Overview r={r} look={look} editHref={editHref} />
+          : tab === 'overview' ? <Overview r={r} look={look} editHref={editHref} studio={studio} />
           : tab === 'design' ? <Design r={r} look={look} colors={colors} editHref={editHref} />
           : tab === 'pages' ? <Pages r={r} editHref={editHref} />
           : tab === 'media' ? <Media r={r} spec={spec} update={update} editHref={editHref} />
@@ -162,7 +162,7 @@ const Heading = ({ title, children }: { title: string; children?: ReactNode }) =
 
 // ─── Overview: the site at a glance, every decision as a picture ─────────────
 
-function Overview({ r, look, editHref }: { r: UniversalRecipe; look: Look; editHref: Edit }) {
+function Overview({ r, look, editHref, studio }: { r: UniversalRecipe; look: Look; editHref: Edit; studio?: boolean }) {
   const spec = r.metadata.spec
   const name = spec.brief?.name?.trim()
   const c = look.colors
@@ -192,7 +192,7 @@ function Overview({ r, look, editHref }: { r: UniversalRecipe; look: Look; editH
     <div className="space-y-12">
       <SitePreview {...previewFromRecipe(r, name ? { title: name, brand: name } : {})} className="rounded-xl border border-line" />
       <div>
-        <Heading title="Your choices"><ChangeLink href={editHref()} label="Customise in kit" /></Heading>
+        <Heading title="Your choices"><ChangeLink href={editHref()} label={studio ? 'Change' : 'Customise in kit'} /></Heading>
         <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {tiles.map((x) => (
             <li key={x.label} className="choice group relative overflow-hidden">

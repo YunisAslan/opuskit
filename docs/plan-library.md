@@ -99,7 +99,7 @@ longer on the way (still at `/kit`).
   Effects. "What are you making?" chips, search, one filter per shelf. Cards are samples in fixed looks (a part as on the
   first real site that has it, else one neutral look) — they never take the visitor's choices. Name + one fact; clicking
   a section's or effect's picture collects it. `/library/sites/{example|seed}/{slug}`: a site's parts, each with +.
-- Header: the Collection icon with its count (bumps when something goes in) opens the sheet: items grouped, quiet notes,
+- The Collection chip in the steps bar opens the sheet: items grouped, quiet notes,
   remove with undo, **Build my site** (`planFromStudio`: rebuilt only when the Collection changed; `KitPlan.via =
   'studio'`). Toasts only when a rule speaks. `/studio` redirects to Pages.
 - `/studio/pages` — Pages: the site's name and one sentence as the page title (typed in place); "What are you making?"
@@ -110,6 +110,11 @@ longer on the way (still at `/kit`).
   marked first, beside the home page drawn in them.
 - Recipe (`/result/{id}`): the flow line on top; every Change leads to Pages or Style; its Your files tab takes logo,
   photos and video.
+- **One road, one bar** (2026-10-05, after "I have to press the Collection icon to go on"): every step opens with the
+  same sticky bar under the site header (`FlowBar`) — left the four numbered steps (done ones are links back), right
+  the Collection chip (its last items, count, bump; opens the sheet) and **Next: …**. It is the first thing seen on
+  arrival and never scrolls away. The Collection lives only there; the header's button reads **Continue · n** once
+  something is collected. Discover's Next is on once something is collected or the kind of site is picked.
 - Logic: `src/features/library/collection.ts` (pure, tested in check.ts); storage: `src/lib/collection.ts`.
 
 Not yet: Recipe's "you picked / we added"; shape, menu/footer look, movement, big idea and behaviours are not editable
@@ -132,9 +137,9 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
    was tried the same day and simplified after the user used it.)
 2. Three shelves (Sites, Sections, Effects) that lead into each other. Shelves are samples: they never take the
    visitor's colours or type. Little text, concrete: a name and one fact per card.
-3. The cart is called **Collection**: free, rules suggest quietly and never block. It is not a step — it opens from the
-   header icon (a count that bumps), with **Build my site**. The separate Studio page was dropped ("it is not clear what
-   it is for").
+3. The cart is called **Collection**: free, rules suggest quietly and never block. It is not a step — a chip in the steps
+   bar (its last items and a count that bumps) opens it as a side sheet. The separate Studio page was dropped ("it is
+   not clear what it is for").
 4. Name and one sentence are the title of Pages; the kind of site is asked only when nothing says it; "Start from" only
    with several sites.
 5. Pages: pages from the start site or the kind of site, with suggestions and your own page. Parts: move or remove only.
@@ -143,7 +148,11 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
 8. No Build step: the recipe page downloads the Build Package (zip first; plugin/MCP/registry later).
 9. Controls go where they are needed, not everywhere: row controls on hover, back/next in one bottom bar, the picture of
    a card collects it.
-10. New example sites (#17–#20) are on hold (`docs/plan-examples.md` §5).
+10. **One road, one bar**: the four steps are visible from the first second in Discover, in one sticky bar under the site
+    header on every step — steps on the left (done ones link back), Collection and **Next: …** on the right. No second
+    way in (the header's Collection icon was removed; its button reads "Continue · n" once something is collected).
+    Next sits in the same place on every step.
+11. New example sites (#17–#20) are on hold (`docs/plan-examples.md` §5).
 
 ## 5. Open
 

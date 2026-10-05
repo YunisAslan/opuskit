@@ -61,9 +61,9 @@ export function Pages() {
   )
 
   return (
-    <StepFrame at="Pages" title={title} back={['/library', 'Library']} next={<Link href="/studio/style" className="btn btn-ink btn-sm">Style<ArrowRight size={14} aria-hidden /></Link>}>
+    <StepFrame at="Pages" title={title} next={<Link href="/studio/style" className="btn btn-ink btn-sm"><span>Next<span className="hidden sm:inline">: Style</span></span><ArrowRight size={14} aria-hidden /></Link>}>
       <div className="mt-10 grid gap-8 lg:grid-cols-[18rem_1fr] lg:items-start">
-        <div className="space-y-6 lg:sticky lg:top-24">
+        <div className="space-y-6 lg:sticky lg:top-36">
           <ol className="space-y-1" aria-label="Your pages">
             {plan.pages.map((p, i) => (
               <li key={p.id} className={`group flex items-center gap-1 rounded-lg pr-1 ${p.id === page.id ? 'bg-ink text-paper' : 'hover:bg-paper-2'}`}>

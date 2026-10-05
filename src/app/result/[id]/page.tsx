@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { use, useMemo } from 'react'
 import { StepBar } from '@/app/kit/StepBar'
-import { FlowLine } from '@/app/library/parts'
+import { FlowBar } from '@/app/library/parts'
 import { specToPlan } from '@/features/kit/plan'
 import { updatePlan, usePlan } from '@/lib/kit'
 import { composeRecipe, isValidSpec } from '@/features/recipes/engine'
@@ -33,7 +33,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
   return (
     <>
       {own && kit.via === 'studio'
-        ? <div className="mx-auto max-w-[1440px] px-5 pt-8 md:px-8"><FlowLine at="Recipe" /></div>
+        ? <FlowBar at="Recipe" />
         : <StepBar plan={plan} step="recipe" sticky={false} onGo={(s) => s !== 'recipe' && router.push(`/kit?step=${s}${own ? '' : `&from=gen:${id}`}`)} onSite={() => router.push(`/kit?step=style&cat=site${own ? '' : `&from=gen:${id}`}`)} />}
       <RecipeDocument recipe={recipe} recipeRef={`gen:${id}`} onChange={(spec) => {
         saveGeneration(spec, id)

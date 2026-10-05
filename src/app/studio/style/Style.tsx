@@ -43,8 +43,8 @@ export function Style() {
   const tag = (made: boolean, best: boolean) => (best ? 'Fits your site' : made ? 'Made for this look' : undefined)
 
   return (
-    <StepFrame at="Style" title={<h1 className="display text-[clamp(2.2rem,5vw,4rem)]">Style</h1>} back={['/studio/pages', 'Pages']}
-      next={<button type="button" onClick={toRecipe} className="btn btn-ink btn-sm">Recipe<ArrowRight size={14} aria-hidden /></button>}>
+    <StepFrame at="Style" title={<h1 className="display text-[clamp(2.2rem,5vw,4rem)]">Style</h1>}
+      next={<button type="button" onClick={toRecipe} className="btn btn-ink btn-sm"><span>Next<span className="hidden sm:inline">: Recipe</span></span><ArrowRight size={14} aria-hidden /></button>}>
       <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
         <div className="space-y-12">
           <Group title={`Colours · ${ALL_COLOURS.length}`} filters={(['all', 'light', 'dark'] as const).map((t) => <Chip key={t} active={tone === t} onClick={() => setTone(t)}>{t === 'all' ? 'All' : t === 'light' ? 'Light' : 'Dark'}</Chip>)}>
@@ -70,7 +70,7 @@ export function Style() {
           </Group>
         </div>
 
-        {home && <div className="max-h-[calc(100vh-11rem)] overflow-y-auto rounded-lg scrollbar-thin lg:sticky lg:top-24"><PagePreview plan={plan} pageId={home.id} /></div>}
+        {home && <div className="max-h-[calc(100vh-10rem)] overflow-y-auto rounded-lg scrollbar-thin lg:sticky lg:top-36"><PagePreview plan={plan} pageId={home.id} /></div>}
       </div>
     </StepFrame>
   )

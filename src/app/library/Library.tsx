@@ -20,7 +20,7 @@ import { allSites, siteName, siteSpec, sitesWith, type CollectionItem, type Site
 import { updateCollection, useCollection } from '@/lib/collection'
 import { useHydrated } from '@/lib/store'
 import type { FamilyId, PieceId, PieceSlot, PurposeId, SectionId } from '@/types/domain'
-import { CollectButton, ItemPreview, SiteThumb, sampleLook, useCollect, type Look } from './parts'
+import { CollectButton, DiscoverBar, ItemPreview, SiteThumb, sampleLook, useCollect, type Look } from './parts'
 
 const SHELVES = [['sites', 'Sites'], ['sections', 'Sections'], ['effects', 'Effects']] as const
 type Shelf = (typeof SHELVES)[number][0]
@@ -71,7 +71,9 @@ export function Library() {
   const counts: Record<Shelf, number> = { sites: SITES.length, sections: SECTION_ENTRIES.length, effects: EFFECT_ENTRIES.length }
 
   return (
-    <div className="mx-auto max-w-[1440px] px-5 pb-32 pt-10 md:px-8 md:pt-14">
+    <>
+    <DiscoverBar />
+    <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-10 md:px-8 md:pt-14">
       <h1 className="display max-w-4xl text-[clamp(2.4rem,5.5vw,4.8rem)]">Find what you like. Collect it.</h1>
 
       <div className="mt-8">
@@ -82,7 +84,7 @@ export function Library() {
         </div>
       </div>
 
-      <div className="sticky top-16 z-20 -mx-5 mt-8 flex flex-wrap items-center justify-between gap-3 border-b border-line bg-paper/95 px-5 py-3 backdrop-blur-sm md:-mx-8 md:px-8">
+      <div className="sticky top-[7.5rem] z-20 -mx-5 mt-8 flex flex-wrap items-center justify-between gap-3 border-b border-line bg-paper/95 px-5 py-3 backdrop-blur-sm md:-mx-8 md:px-8">
         <div className="flex gap-1" role="tablist" aria-label="Shelves">
           {SHELVES.map(([id, label]) => (
             <button key={id} role="tab" aria-selected={shelf === id} onClick={() => go(id)} className="rounded-full px-4 py-2 text-sm aria-selected:bg-ink aria-selected:text-paper hover:bg-paper-2">
@@ -102,6 +104,7 @@ export function Library() {
         {ready && shelf === 'effects' && <Shelf entries={EFFECT_ENTRIES} groups={EFFECT_GROUPS} group={group} setGroup={setGroup} q={q} kind={kind} />}
       </div>
     </div>
+    </>
   )
 }
 

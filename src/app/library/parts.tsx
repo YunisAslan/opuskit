@@ -4,7 +4,7 @@ import { ArrowRight, Check, Layers, Plus, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { toast } from 'sonner'
 import { useGoogleFonts } from '@/components/FontLoader'
 import { LinkDemo, type LinkPiece } from '@/components/LinkDemo'
@@ -22,6 +22,7 @@ import { behaviours, pieces } from '@/data/pieces'
 import { specToPlan } from '@/features/kit/plan'
 import { composeRecipe } from '@/features/recipes/engine'
 import { planFromStudio, readCollection, updateCollection, useCollection } from '@/lib/collection'
+import { useHydrated } from '@/lib/store'
 import type { KitPlan, LayoutId, MediaPlacement, PurposeId, SectionTone } from '@/types/domain'
 
 export type Look = ReturnType<typeof lookOf> & { plan: KitPlan; world: ReturnType<typeof worldFor>; brand?: string; layout?: LayoutId }
@@ -107,6 +108,17 @@ export function CollectButton({ item, label, className = '' }: { item: Collectio
   )
 }
 
+/** Discover → Pages: the plan is built from the Collection (rebuilt only when it changed) and Pages opens. */
+export function useToPages() {
+  const router = useRouter()
+  return () => {
+    const r = planFromStudio()
+    if (r.unplaced.length) toast(`${r.unplaced.map((id) => pieces[id].name).join(', ')} needs a part that can carry it.`)
+    else if (r.rebuilt && r.undo) toast('Pages rebuilt from your Collection.', { action: { label: 'Undo', onClick: r.undo } })
+    router.push('/studio/pages')
+  }
+}
+
 const OPEN = 'opuskit:open-collection'
 export const openCollection = () => window.dispatchEvent(new Event(OPEN))
 
@@ -116,11 +128,10 @@ const GROUPS: [string, (i: CollectionItem) => boolean][] = [
   ['Effects', (i) => i.kind === 'effect'],
 ]
 
-/** The Collection, from the header: its count (a small bump when something goes in) and, opened, what is in it and the
- *  way on to your pages. Not a step of its own — it is always one click away. */
+/** The Collection, in the steps bar: the last things collected and their count (a small bump when something goes in);
+ *  opened, everything in it, the quiet notes, and the way on to your pages. */
 export function CollectionSheet() {
   const c = useCollection()
-  const router = useRouter()
   const n = c.items.length
   const [open, setOpen] = useState(false)
   const prev = useRef(n)
@@ -129,18 +140,19 @@ export function CollectionSheet() {
   useEffect(() => { const f = () => setOpen(true); window.addEventListener(OPEN, f); return () => window.removeEventListener(OPEN, f) }, [])
   const all = notes(c)
   const remove = (i: CollectionItem) => { const before = readCollection(); updateCollection((x) => removeItem(x, itemKey(i))); toast(`Removed: ${itemName(i)}`, { action: { label: 'Undo', onClick: () => updateCollection(() => before) } }) }
-  const build = () => {
-    const r = planFromStudio()
-    if (r.unplaced.length) toast(`${r.unplaced.map((id) => pieces[id].name).join(', ')} needs a part that can carry it.`)
-    else if (r.rebuilt && r.undo) toast('Pages rebuilt from your Collection.', { action: { label: 'Undo', onClick: r.undo } })
-    setOpen(false)
-    router.push('/studio/pages')
-  }
+  const toPages = useToPages()
+  const build = () => { setOpen(false); toPages() }
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger className="relative grid size-10 place-items-center rounded-full text-ink-2 hover:bg-paper-2 hover:text-ink" aria-label={`Your Collection, ${n} ${n === 1 ? 'thing' : 'things'}`}>
-        <Layers size={20} aria-hidden />
-        {n > 0 && <span key={bump} className={`absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-pencil px-1 text-[11px] font-medium tabular-nums text-white ${bump ? 'bump' : ''}`}>{n}</span>}
+      <SheetTrigger className="flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-line bg-white pl-1 pr-2 text-sm hover:border-ink sm:gap-2 sm:pl-1.5 sm:pr-3" aria-label={`Your Collection, ${n} ${n === 1 ? 'thing' : 'things'}`}>
+        {n ? (
+          <span className="hidden -space-x-2.5 sm:flex" aria-hidden>
+            {c.items.slice(-3).map((i) => <span key={itemKey(i)} className="block w-9 overflow-hidden rounded-[5px] border-2 border-white bg-paper-2"><span className="pointer-events-none block aspect-[16/10] overflow-hidden">{i.kind === 'site' ? <SiteThumb site={i.site} /> : <ItemPreview item={i} look={sampleLook(i, c.purpose)} />}</span></span>)}
+          </span>
+        ) : null}
+        <Layers size={16} className={`ml-1.5 text-muted ${n ? 'sm:hidden' : ''}`} aria-hidden />
+        <span className="hidden font-medium sm:inline">Collection</span>
+        <span key={bump} className={`grid h-5 min-w-5 place-items-center rounded-full px-1 text-[11px] font-medium tabular-nums ${n ? 'bg-pencil text-white' : 'bg-paper-2 text-muted'} ${bump ? 'bump' : ''}`}>{n}</span>
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col gap-0 bg-paper p-0 sm:max-w-md">
         <SheetHeader className="border-b border-line px-5 py-4"><SheetTitle className="text-xl">Your Collection</SheetTitle></SheetHeader>
@@ -168,25 +180,53 @@ export function CollectionSheet() {
             })}
           </div>
         )}
-        {n > 0 && <div className="border-t border-line p-5"><button type="button" onClick={build} className="btn btn-ink w-full">Build my site<ArrowRight size={16} aria-hidden /></button></div>}
+        {n > 0 && <div className="border-t border-line p-5"><button type="button" onClick={build} className="btn btn-ink w-full">Next: Pages<ArrowRight size={16} aria-hidden /></button></div>}
       </SheetContent>
     </Sheet>
   )
 }
 
-/** The road from browsing to a site, so every page says where you are; the steps before this one are links back. */
-const FLOW = [['Discover', '/library'], ['Pages', '/studio/pages'], ['Style', '/studio/style'], ['Recipe', '']] as const
-export function FlowLine({ at }: { at: (typeof FLOW)[number][0] }) {
-  const n = FLOW.findIndex(([s]) => s === at)
+/** The four steps from browsing to a site — numbered, the ones behind you are links back. */
+const STEPS = [['Discover', '/library'], ['Pages', '/studio/pages'], ['Style', '/studio/style'], ['Recipe', '']] as const
+export type Step = (typeof STEPS)[number][0]
+export function Steps({ at }: { at: Step }) {
+  const n = STEPS.findIndex(([s]) => s === at)
   return (
-    <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted" aria-label="From browsing to a site">
-      {FLOW.map(([s, href], i) => (
-        <li key={s} className="flex items-center gap-2">
-          {i > 0 && <span aria-hidden>→</span>}
-          {i < n && href ? <Link href={href} className="hover:text-ink hover:underline">{s}</Link>
-            : <span aria-current={i === n ? 'step' : undefined} className="aria-[current=step]:font-medium aria-[current=step]:text-ink">{s}</span>}
-        </li>
-      ))}
+    <ol className="flex min-w-0 items-center gap-1 text-sm sm:gap-1.5" aria-label="Steps">
+      {STEPS.map(([s, href], i) => {
+        const dot = <span className={`grid size-6 shrink-0 place-items-center rounded-full text-xs tabular-nums ${i === n ? 'bg-ink text-paper' : i < n ? 'bg-ink/10 text-ink' : 'border border-line text-muted'}`}>{i + 1}</span>
+        return (
+          <li key={s} className="flex items-center gap-1.5">
+            {i > 0 && <span className={`hidden h-px w-3 sm:block md:w-6 ${i <= n ? 'bg-ink/40' : 'bg-line'}`} aria-hidden />}
+            {i < n && href
+              ? <Link href={href} className="flex items-center gap-1.5 text-ink-2 hover:text-ink">{dot}<span className="hidden sm:inline">{s}</span></Link>
+              : <span aria-current={i === n ? 'step' : undefined} className={`flex items-center gap-1.5 ${i === n ? 'font-medium text-ink' : 'text-muted'}`}>{dot}<span className={i === n ? '' : 'hidden sm:inline'}>{s}</span></span>}
+          </li>
+        )
+      })}
     </ol>
   )
+}
+
+/** One bar under the site's header on every step: the steps (where you are, the way back), your Collection, and Next.
+ *  The first thing seen on arrival, and it stays while you scroll — the road is never hidden behind an icon. */
+export const FLOW_BAR = 'h-14' // 56px: sticky things below it sit at top-[7.5rem] (header 64 + bar 56)
+export function FlowBar({ at, next }: { at: Step; next?: ReactNode }) {
+  return (
+    <div className={`sticky top-16 z-30 border-b border-line bg-paper/95 backdrop-blur-sm ${FLOW_BAR}`}>
+      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-3 px-5 md:px-8">
+        <Steps at={at} />
+        <div className="flex items-center gap-2"><CollectionSheet />{next}</div>
+      </div>
+    </div>
+  )
+}
+
+/** Discover's bar (the shelves and a site's page): Next is on once something is collected or the kind of site is picked. */
+export function DiscoverBar() {
+  const c = useCollection()
+  const toPages = useToPages()
+  const ready = useHydrated()
+  const can = ready && (c.items.length > 0 || !!c.purpose)
+  return <FlowBar at="Discover" next={<button type="button" onClick={toPages} disabled={!can} title={can ? undefined : 'Collect something, or pick what you’re making'} className="btn btn-ink btn-sm disabled:cursor-not-allowed disabled:opacity-40"><span>Next<span className="hidden sm:inline">: Pages</span></span><ArrowRight size={14} aria-hidden /></button>} />
 }
