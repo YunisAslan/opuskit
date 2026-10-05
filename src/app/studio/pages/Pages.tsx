@@ -15,12 +15,15 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { HeroPreview, heroName } from '@/app/kit/HeroPreview'
 import { pageTypes, sections } from '@/data/patterns'
 import { addPage, heroOf, isStandardPage, jobOf, missingPages, movePage, moveSection, pageGroups, removePage, removeSection } from '@/features/kit/plan'
-import { lookChoices, siteName, startSite } from '@/features/library/collection'
+import { itemKey, itemName, lookChoices, placement, siteName, startSite, type CollectionItem } from '@/features/library/collection'
 import { planFromStudio, updateCollection, useCollection } from '@/lib/collection'
 import { readPlan, updatePlan, usePlan, writePlan } from '@/lib/kit'
 import { useHydrated } from '@/lib/store'
 import type { KitPlan, PageTypeId, PurposeId } from '@/types/domain'
 import { NeedsStudio, StepFrame, usePlanLook } from '../shared'
+
+/** Why a collected thing is not on the pages. */
+const WHY: Record<CollectionItem['kind'], string> = { site: 'not the start', section: 'removed', hero: 'another first screen is used', menu: 'another menu is used', footer: 'another footer is used', effect: 'no part here can carry it' }
 
 export function Pages() {
   const ready = useHydrated()
@@ -40,6 +43,7 @@ export function Pages() {
   const add = (type: PageTypeId, label?: string) => { let id = ''; updatePlan((p) => { const r = addPage(p, type, label); id = r.id; return r.plan }); setPageId(id) }
   const suggested = missingPages(plan).slice(0, 4)
   const sites = lookChoices(c), start = startSite(c)
+  const where = placement(plan, c)
   // Name and sentence live on the plan and on the Collection, so a rebuild keeps them.
   const say = (k: 'name' | 'about', v: string) => { updatePlan((p) => ({ ...p, [k]: v || undefined })); updateCollection((x) => ({ ...x, [k]: v })) }
   // Kind of site or start site changed: the pages are rebuilt from the Collection.
@@ -50,6 +54,12 @@ export function Pages() {
         className="display w-full border-b border-transparent bg-transparent text-[clamp(2.2rem,5vw,4rem)] outline-none placeholder:text-ink/25 focus:border-ink/20 focus-visible:outline-none" />
       <input value={plan.about ?? ''} maxLength={160} onChange={(e) => say('about', e.target.value)} placeholder="In one sentence: what you do, and for whom" aria-label="What the site is, in one sentence"
         className="mt-1 w-full border-b border-transparent bg-transparent text-lg text-ink-2 outline-none placeholder:text-muted/60 focus:border-ink/20 focus-visible:outline-none" />
+      {!!c.items.length && (
+        <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
+          <span>From your Collection: <span className="text-ink">{where.placed.length} of {c.items.length}</span> on your pages.</span>
+          {where.waiting.map((i) => <span key={itemKey(i)} className="rounded-full bg-paper-2 px-2.5 py-0.5 text-xs text-ink-2">{itemName(i)} — {WHY[i.kind]}</span>)}
+        </p>
+      )}
       {(!plan.purpose || sites.length > 1) && (
         <div className="mt-5 flex flex-wrap items-center gap-1.5">
           {!plan.purpose

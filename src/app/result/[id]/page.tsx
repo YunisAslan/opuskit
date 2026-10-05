@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { use, useMemo } from 'react'
 import { StepBar } from '@/app/kit/StepBar'
-import { FlowBar } from '@/app/library/parts'
 import { specToPlan } from '@/features/kit/plan'
 import { updatePlan, usePlan } from '@/lib/kit'
 import { composeRecipe, isValidSpec } from '@/features/recipes/engine'
@@ -32,9 +31,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
   }
   return (
     <>
-      {own && kit.via === 'studio'
-        ? <FlowBar at="Recipe" />
-        : <StepBar plan={plan} step="recipe" sticky={false} onGo={(s) => s !== 'recipe' && router.push(`/kit?step=${s}${own ? '' : `&from=gen:${id}`}`)} onSite={() => router.push(`/kit?step=style&cat=site${own ? '' : `&from=gen:${id}`}`)} />}
+      {!(own && kit.via === 'studio') && <StepBar plan={plan} step="recipe" sticky={false} onGo={(s) => s !== 'recipe' && router.push(`/kit?step=${s}${own ? '' : `&from=gen:${id}`}`)} onSite={() => router.push(`/kit?step=style&cat=site${own ? '' : `&from=gen:${id}`}`)} />}
       <RecipeDocument recipe={recipe} recipeRef={`gen:${id}`} onChange={(spec) => {
         saveGeneration(spec, id)
         // Files added here are the kit's files too, so the next update from the kit keeps them.

@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <main id="main">{children}</main>
           <Footer />
-          <Toaster position="bottom-center" />
+          <Toaster position="top-center" offset={76} />
         </TooltipProvider>
       </body>
     </html>

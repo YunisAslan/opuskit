@@ -9,8 +9,8 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 
 - **New direction: OpusKit Library** (`docs/plan-library.md`). Instead of the kit's form-first road, a place full of
   sites, sections and effects; the person collects what they like into a **Collection** and builds from it.
-  Built (`docs/plan-library.md` §2a): Discover (`/library`) → Pages → Style → Recipe (it downloads), one sticky steps bar
-  on every step (steps, Collection, Next); the kit is off the way.
+  Built (`docs/plan-library.md` §2a): browse Discover (`/library`), collect into the Collection (a cart in the header),
+  then **Build my site** → Pages → Style → Recipe (it downloads), with a steps bar; the kit is off the way.
 - **Sixteen example sites** are built, registered and live (`/examples`, `/live/{slug}`); clips for #11–#16 wait for the
   user's screen recordings, and ten older sites have section clips to re-record (`docs/plan-examples.md` §4). New
   examples are on hold.

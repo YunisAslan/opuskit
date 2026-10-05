@@ -15,7 +15,7 @@ import { jobOf, specToPlan } from '@/features/kit/plan'
 import { itemKey, siteName, siteSpec, type CollectionItem, type SiteRef } from '@/features/library/collection'
 import { composeRecipe } from '@/features/recipes/engine'
 import type { MediaPlacement, SectionTone } from '@/types/domain'
-import { CollectButton, DiscoverBar, ItemPreview, SiteThumb, exampleOf, siteLook } from '../../../parts'
+import { CollectButton, ItemPreview, SiteThumb, exampleOf, siteLook } from '../../../parts'
 
 type Part = { item: CollectionItem; title: string; sub: string; where: string; clip?: string; rhythm?: { tone?: SectionTone; media?: MediaPlacement } }
 
@@ -49,7 +49,6 @@ export function SiteDetail({ site }: { site: SiteRef }) {
 
   return (
     <>
-    <DiscoverBar />
     <article className="mx-auto max-w-[1440px] px-5 pb-24 pt-8 md:px-8">
       <Link href="/library" className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink"><ArrowLeft size={14} aria-hidden />Library</Link>
       <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:items-end">

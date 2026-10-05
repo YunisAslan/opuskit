@@ -26,7 +26,7 @@ import exampleSpecs from '../src/data/example-specs.generated.json'
 import { closestChrome, closestPiece, closestSection, closestSite } from '../src/features/kit/closest'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
-import { allSites, cleanCollection, collectionToPlan, lookFor, notes, siteSpec, startSite, type Collection } from '../src/features/library/collection'
+import { allSites, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection } from '../src/features/library/collection'
 import { cleanPieces, defaultPagesFor, pieceIssues, composeRecipe, isValidSpec, rankPalettes, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
 assert.equal(recipeSeeds.length, 10, 'exactly 10 seed recipes')
@@ -724,6 +724,12 @@ const main = async () => {
     const two: Collection = { items: [{ kind: 'site', site: 'example:qum' }, { kind: 'site', site: 'example:hane' }], look: 'example:hane' }
     assert.equal(startSite(two), 'example:hane', 'with two sites, the picked look is the start')
     assert.ok(notes(two).length > 0, 'two sites get a quiet note')
+    { const col: Collection = { items: [{ kind: 'site', site: 'example:qum' }, { kind: 'section', id: 'faq' }, { kind: 'effect', id: 'cut-reveal' }, { kind: 'site', site: 'example:hane' }] }
+      const pl = collectionToPlan(col).plan, where = placement(pl, col)
+      assert.deepEqual(where.waiting, [{ kind: 'site', site: 'example:hane' }], 'only the second site waits; parts and effects are on the pages')
+      const noFaq = pl.pages.reduce((x, p) => p.sections.filter((s) => s.id === 'faq').reduce((y, s) => removeSection(y, p.id, s.key), x), pl)
+      const gone = placement(noFaq, col)
+      assert.ok(gone.waiting.some((i) => i.kind === 'section' && i.id === 'faq'), 'a collected part the owner removed is reported as waiting') }
     const dirty = cleanCollection({ items: [{ kind: 'site', site: 'example:nope' }, { kind: 'section', id: 'hero' }, { kind: 'effect', id: 'grain' }, { kind: 'effect', id: 'grain' }, null], purpose: 'other', look: 'seed:nope' })
     assert.deepEqual(dirty, { items: [{ kind: 'effect', id: 'grain' }], purpose: undefined, name: undefined, about: undefined, look: undefined }, 'unknown ids are dropped, duplicates once')
   }

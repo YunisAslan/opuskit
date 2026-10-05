@@ -28,6 +28,7 @@ import { MediaSlots, SLOTS } from '@/components/MediaSlots'
 import type { AssetId, BuildTarget, PageSection, PaletteColors, RecipeSpec, UniversalRecipe, UploadedAsset } from '@/types/domain'
 import { chromeNote, normalizeSpec } from './engine'
 import { markRecent, toggleSaved, useSaved } from './library'
+import { FlowBar } from '@/app/library/parts'
 import { recipeToMarkdown } from './markdown'
 
 const TABS = [
@@ -78,8 +79,37 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, 
 
   const update = (patch: Partial<RecipeSpec>) => onChange(normalizeSpec({ ...spec, ...patch }))
 
+  const actions = (
+    <>
+          <button type="button" className="btn btn-sm inline-flex items-center gap-1.5 text-ink-2 hover:text-ink" aria-pressed={saved} onClick={() => { toggleSaved(recipeRef); toast(saved ? 'Removed from saved' : 'Saved — find it under Saved') }}>
+        {saved ? <BookmarkCheck size={16} aria-hidden /> : <Bookmark size={16} aria-hidden />}<span className={studio ? 'max-sm:sr-only' : ''}>{saved ? 'Saved' : 'Save'}</span>
+      </button>
+      <div className="ml-auto flex flex-wrap items-center gap-2">
+        {unlocked ? (
+          <>
+            <CopyButton text={() => recipeToMarkdown(r)} label="Copy recipe" className={studio ? 'max-lg:hidden' : ''} />
+            <Select value={target ?? undefined} onValueChange={(v) => setTarget(v as BuildTarget)}>
+              <SelectTrigger aria-label="Build with" className={`rounded-full ${studio ? 'min-w-36 max-sm:hidden' : 'min-w-44'}`}><SelectValue placeholder="Choose your tool" /></SelectTrigger>
+              <SelectContent side={studio ? 'bottom' : 'top'} align="end" sideOffset={8}>
+                {Object.values(adapters).map((a) => (
+                  <SelectItem key={a.id} value={a.id}><ToolIcon id={a.id} className="size-4" />{a.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <button type="button" disabled={!pkg || zipping} className={`btn btn-ink inline-flex items-center gap-2 disabled:opacity-50 ${studio ? 'btn-sm' : ''}`}
+              onClick={async () => { if (!pkg) return; setZipping(true); try { await downloadPackage(pkg, r) } finally { setZipping(false) } }}>
+              <Download size={16} aria-hidden />{zipping ? 'Preparing…' : 'Download build kit'}
+            </button>
+          </>
+        ) : <button type="button" className={`btn btn-ink whitespace-nowrap ${studio ? 'btn-sm' : ''}`} onClick={() => setCheckout(true)}>{studio ? <><span className="sm:hidden">Unlock</span><span className="max-sm:hidden">Unlock full recipe</span></> : 'Unlock full recipe'}</button>}
+      </div>
+    </>
+  )
+
   return (
-    <article className="mx-auto max-w-[1440px] px-5 pb-40 md:px-8">
+    <>
+    {studio && <FlowBar at="Recipe" next={<div className="flex items-center gap-2 [&_.ml-auto]:ml-0">{actions}</div>} />}
+    <article className={`mx-auto max-w-[1440px] px-5 md:px-8 ${studio ? 'pb-24' : 'pb-40'}`}>
       <header className="pt-10 lg:pt-14">
         <p className="text-sm text-muted">{purposes[spec.purpose].name} · {directions[spec.direction].name} · {r.metadata.complexity} build</p>
         <h1 className="display mt-3 max-w-4xl text-[clamp(2.2rem,4.6vw,4.2rem)]">{r.title}</h1>
@@ -110,37 +140,19 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, 
           : <BuildTab recipe={r} target={target} onTarget={setTarget} pkg={pkg} error={error} />}
       </section>
 
-      {/* One fixed action bar: everything the user can do with this recipe, always in reach. */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-2 px-5 py-3 md:px-8">
-          {!inKit && <Link href={editHref()} className="btn btn-line btn-sm inline-flex items-center gap-1.5"><SlidersHorizontal size={15} aria-hidden />Customise in kit</Link>}
-          <button type="button" className="btn btn-sm inline-flex items-center gap-1.5 text-ink-2 hover:text-ink" aria-pressed={saved} onClick={() => { toggleSaved(recipeRef); toast(saved ? 'Removed from saved' : 'Saved — find it under Saved') }}>
-            {saved ? <BookmarkCheck size={16} aria-hidden /> : <Bookmark size={16} aria-hidden />}{saved ? 'Saved' : 'Save'}
-          </button>
-          <div className="ml-auto flex flex-wrap items-center gap-2">
-            {unlocked ? (
-              <>
-                <CopyButton text={() => recipeToMarkdown(r)} label="Copy recipe" />
-                <Select value={target ?? undefined} onValueChange={(v) => setTarget(v as BuildTarget)}>
-                  <SelectTrigger aria-label="Build with" className="min-w-44 rounded-full"><SelectValue placeholder="Choose your tool" /></SelectTrigger>
-                  <SelectContent side="top" align="end" sideOffset={8}>
-                    {Object.values(adapters).map((a) => (
-                      <SelectItem key={a.id} value={a.id}><ToolIcon id={a.id} className="size-4" />{a.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <button type="button" disabled={!pkg || zipping} className="btn btn-ink inline-flex items-center gap-2 disabled:opacity-50"
-                  onClick={async () => { if (!pkg) return; setZipping(true); try { await downloadPackage(pkg, r) } finally { setZipping(false) } }}>
-                  <Download size={16} aria-hidden />{zipping ? 'Preparing…' : 'Download build kit'}
-                </button>
-              </>
-            ) : <button type="button" className="btn btn-ink" onClick={() => setCheckout(true)}>Unlock full recipe</button>}
+      {/* One action bar, always in reach: in the Studio it is the steps bar on top, elsewhere fixed at the bottom. */}
+      {!studio && (
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper/95 backdrop-blur-sm">
+          <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-2 px-5 py-3 md:px-8">
+            {!inKit && <Link href={editHref()} className="btn btn-line btn-sm inline-flex items-center gap-1.5"><SlidersHorizontal size={15} aria-hidden />Customise in kit</Link>}
+            {actions}
           </div>
         </div>
-      </div>
+      )}
 
       <CheckoutDialog open={checkout} onClose={() => setCheckout(false)} recipeRef={recipeRef} recipeTitle={r.title} />
     </article>
+    </>
   )
 }
 

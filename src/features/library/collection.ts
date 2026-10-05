@@ -10,7 +10,7 @@ import { MAX_HEAVY_PIECES, behaviourOf, behaviours, pieces } from '@/data/pieces
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { sectionVariants } from '@/data/section-variants'
 import { purposes } from '@/data/taxonomy'
-import { EMPTY_PLAN, addSuggested, onChrome, pageSuggestions, piecesFor, replaceSection, sectionGroups, setBehaviour, setHero, setSectionVariant, setStyle, specToPlan, start, toggleSitePiece, togglePiece } from '@/features/kit/plan'
+import { EMPTY_PLAN, addSuggested, effectOn, onChrome, pageSuggestions, piecesFor, replaceSection, sectionGroups, setBehaviour, setHero, setSectionVariant, setStyle, specToPlan, start, toggleSitePiece, togglePiece } from '@/features/kit/plan'
 import { isValidSpec, specFromSeed } from '@/features/recipes/engine'
 import type { DirectionId, FooterStyleId, HeroId, KitPlan, NavStyleId, PieceId, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
 
@@ -45,7 +45,7 @@ export function siteSpec(ref: SiteRef): RecipeSpec | undefined {
 }
 export function siteName(ref: SiteRef): string {
   const [kind, slug] = ref.split(':')
-  return (kind === 'example' ? examples.find((e) => e.slug === slug)?.title.split(',')[0] : seedBySlug[slug]?.title) ?? slug
+  return (kind === 'example' ? examples.find((e) => e.slug === slug)?.title.split(/ [—|:] |, |: /)[0] : seedBySlug[slug]?.title) ?? slug
 }
 /** Every site on the shelf: the built ones first (proof), then the recipes. */
 export const allSites: SiteRef[] = [
@@ -76,7 +76,7 @@ export function notes(c: Collection): Note[] {
   const out: Note[] = []
   const of = <K extends CollectionItem['kind']>(k: K) => c.items.filter((i): i is Extract<CollectionItem, { kind: K }> => i.kind === k)
   const sites = of('site')
-  if (sites.length > 1) out.push({ keys: sites.map(itemKey), text: `${sites.length} sites: one is the start, chosen below. From the others, take single parts with + on their page.` })
+  if (sites.length > 1) out.push({ keys: sites.map(itemKey), text: `${sites.length} sites: one is the start — you pick it on Pages. From the others, take single parts with + on their page.` })
   for (const k of ['hero', 'menu', 'footer'] as const) {
     const xs = of(k)
     if (xs.length > 1) out.push({ keys: xs.map(itemKey), text: `${xs.length} ${k === 'hero' ? 'first screens' : `${k}s`}: a site has one — the first is used, the others stay here.` })
@@ -182,6 +182,23 @@ export function collectionToPlan(c: Collection): Composed {
     if (!host.x.pieces.includes(id)) plan = togglePiece(plan, host.p.id, host.x.key, id)
   }
   return { plan, picked, unplaced }
+}
+
+/** Where the Collection went: what is on the pages, and what waits (a second site, a moment no part can carry, a part
+ *  the owner removed). Pages says so, so nothing collected disappears without a word. */
+export function placement(plan: KitPlan, c: Collection): { placed: CollectionItem[]; waiting: CollectionItem[] } {
+  const start = startSite(c), parts = plan.pages.flatMap((p) => p.sections)
+  const on = (i: CollectionItem) => {
+    switch (i.kind) {
+      case 'site': return i.site === start
+      case 'section': return parts.some((x) => x.id === i.id && (!i.variant || x.variant === i.variant))
+      case 'hero': return plan.hero === i.id || parts.some((x) => x.hero === i.id)
+      case 'menu': return plan.nav === i.id
+      case 'footer': return plan.footer === i.id
+      case 'effect': return effectOn(plan, i.id)
+    }
+  }
+  return { placed: c.items.filter(on), waiting: c.items.filter((i) => !on(i)) }
 }
 
 /** Trust boundary: the Collection comes back from localStorage. Unknown ids are dropped, never guessed. */

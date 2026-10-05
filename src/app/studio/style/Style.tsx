@@ -1,20 +1,27 @@
 'use client'
-// Style (docs/plan-library.md): your colours and your lettering — what fits your site first, then every one we have —
-// beside your home page drawn in them. Until something is picked, the start site's look (or the kind of site's) is used.
+// Style (docs/plan-library.md): your colours, then your lettering — eight of each first (what fits your site leads), more
+// on request, so the lettering below is never buried. Beside them, a style tile: the picks at full size with your name
+// and words, a real photo, the palette with its contrast — and OpusKit's built sites that use them. Until something is picked, the start site's look (or the kind of site's) is used.
 // Your files (logo, photos, video) are asked for on the recipe, where it says what the site needs.
 import { ArrowRight, Check } from 'lucide-react'
 import { useState } from 'react'
 import { useGoogleFonts } from '@/components/FontLoader'
 import { Chip } from '@/components/ui'
 import { palettes, typography } from '@/data/ingredients'
-import { isStandardPage, setStyle } from '@/features/kit/plan'
+import { setStyle } from '@/features/kit/plan'
 import { rankPalettes } from '@/features/recipes/engine'
 import { luminance } from '@/lib/color'
 import { updatePlan, usePlan } from '@/lib/kit'
 import { useHydrated } from '@/lib/store'
 import type { PaletteId, TypographyId } from '@/types/domain'
-import { NeedsStudio, PagePreview, StepFrame, usePlanLook, useToRecipe } from '../shared'
+import { NeedsStudio, StepFrame, usePlanLook, useToRecipe } from '../shared'
+import { UsedOn } from './UsedOn'
+import { exampleOf } from '@/app/library/parts'
+import { images } from '@/data/images'
+import { startSite } from '@/features/library/collection'
+import { useCollection } from '@/lib/collection'
 
+const FIRST = 8, MORE = 12
 const ALL_TYPE = Object.keys(typography) as TypographyId[]
 const ALL_COLOURS = Object.keys(palettes) as PaletteId[]
 const isDark = (id: PaletteId) => luminance(palettes[id].colors.background) < 0.2
@@ -27,19 +34,24 @@ const typeKind = (id: TypographyId) => { const f = typography[id].display.family
 export function Style() {
   const ready = useHydrated()
   const plan = usePlan()
+  const c = useCollection()
   const { look, spec } = usePlanLook(plan)
   const toRecipe = useToRecipe()
   const [tone, setTone] = useState<'all' | 'light' | 'dark'>('all')
   const [kind, setKind] = useState<'all' | (typeof KINDS)[number]>('all')
+  const [nColours, setNColours] = useState(FIRST)
+  const [nType, setNType] = useState(FIRST)
   const fonts = [...look.d.typography, ...ALL_TYPE.filter((t) => !look.d.typography.includes(t))].filter((t) => kind === 'all' || typeKind(t) === kind)
-  useGoogleFonts(fonts.flatMap((t) => typography[t].googleFamilies))
+  useGoogleFonts(fonts.slice(0, nType).flatMap((t) => typography[t].googleFamilies))
   if (!ready) return null
   if (plan.via !== 'studio' || !plan.pages.length) return <NeedsStudio />
 
   const ranked = rankPalettes(spec)
+  // A real photo for the tile: the start site's own first picture, else the look's curated one.
+  const start = startSite(c), e = start && exampleOf(start)
+  const photo = e ? (e.hero.kind === 'video' ? e.hero.poster : e.hero.src) : images[look.d.image].src
   const fits = ranked.slice(0, 6)
   const colours = [...new Set([...fits, ...look.d.palettes, ...ALL_COLOURS])].filter((id) => tone === 'all' || isDark(id) === (tone === 'dark'))
-  const home = plan.pages.find((p) => p.sections.length || !isStandardPage(p.type))
   const tag = (made: boolean, best: boolean) => (best ? 'Fits your site' : made ? 'Made for this look' : undefined)
 
   return (
@@ -47,8 +59,8 @@ export function Style() {
       next={<button type="button" onClick={toRecipe} className="btn btn-ink btn-sm"><span>Next<span className="hidden sm:inline">: Recipe</span></span><ArrowRight size={14} aria-hidden /></button>}>
       <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
         <div className="space-y-12">
-          <Group title={`Colours · ${ALL_COLOURS.length}`} filters={(['all', 'light', 'dark'] as const).map((t) => <Chip key={t} active={tone === t} onClick={() => setTone(t)}>{t === 'all' ? 'All' : t === 'light' ? 'Light' : 'Dark'}</Chip>)}>
-            {colours.map((id) => {
+          <Group title="Colours" shown={Math.min(nColours, colours.length)} total={colours.length} onMore={() => setNColours((n) => n + MORE)} filters={(['all', 'light', 'dark'] as const).map((t) => <Chip key={t} active={tone === t} onClick={() => { setTone(t); setNColours(FIRST) }}>{t === 'all' ? 'All' : t === 'light' ? 'Light' : 'Dark'}</Chip>)}>
+            {colours.slice(0, nColours).map((id) => {
               const p = palettes[id], c = p.colors
               return (
                 <Tile key={id} on={spec.palette === id} onPick={() => updatePlan((x) => setStyle(x, 'palette', id))} label={p.name} sub={tag(look.d.palettes.includes(id), fits.includes(id))}>
@@ -58,8 +70,8 @@ export function Style() {
             })}
           </Group>
 
-          <Group title={`Lettering · ${ALL_TYPE.length}`} filters={(['all', ...KINDS] as const).map((k) => <Chip key={k} active={kind === k} onClick={() => setKind(k)}>{k === 'all' ? 'All' : k}</Chip>)}>
-            {fonts.map((id) => {
+          <Group title="Lettering" shown={Math.min(nType, fonts.length)} total={fonts.length} onMore={() => setNType((n) => n + MORE)} filters={(['all', ...KINDS] as const).map((k) => <Chip key={k} active={kind === k} onClick={() => { setKind(k); setNType(FIRST) }}>{k === 'all' ? 'All' : k}</Chip>)}>
+            {fonts.slice(0, nType).map((id) => {
               const t = typography[id]
               return (
                 <Tile key={id} on={look.type.id === id} onPick={() => updatePlan((x) => setStyle(x, 'typography', id))} label={t.name} sub={tag(look.d.typography.includes(id), id === look.d.defaults.typography)}>
@@ -70,13 +82,13 @@ export function Style() {
           </Group>
         </div>
 
-        {home && <div className="max-h-[calc(100vh-10rem)] overflow-y-auto rounded-lg scrollbar-thin lg:sticky lg:top-36"><PagePreview plan={plan} pageId={home.id} /></div>}
+        <div className="lg:sticky lg:top-36 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto lg:scrollbar-thin"><UsedOn plan={plan} palette={spec.palette} type={look.type} shape={look.shape} photo={photo} /></div>
       </div>
     </StepFrame>
   )
 }
 
-function Group({ title, filters, children }: { title: string; filters: React.ReactNode; children: React.ReactNode }) {
+function Group({ title, filters, shown, total, onMore, children }: { title: string; filters: React.ReactNode; shown: number; total: number; onMore: () => void; children: React.ReactNode }) {
   return (
     <section aria-label={title}>
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-ink pt-3">
@@ -84,6 +96,7 @@ function Group({ title, filters, children }: { title: string; filters: React.Rea
         <div className="flex gap-1">{filters}</div>
       </div>
       <div role="radiogroup" aria-label={title} className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-[repeat(auto-fill,minmax(10rem,1fr))]">{children}</div>
+      {shown < total && <button type="button" onClick={onMore} className="mt-3 w-full rounded-md border border-dashed border-line py-2.5 text-sm text-ink-2 hover:border-ink hover:text-ink">Show more · {total - shown} left</button>}
     </section>
   )
 }

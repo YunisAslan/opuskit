@@ -92,24 +92,29 @@ DISCOVER → COLLECT → BRAND → COMPOSE → RECIPE → BUILD (zip)   [REVIEW 
 
 ## 2a. Built (2026-10-05)
 
-Flow: **Discover → Pages → Style → Recipe**. The Collection is not a step: it opens from the header (a side sheet). The
+Flow: browse **Discover**, then build **Pages → Style → Recipe** (decision 13). The Collection is not a step: it opens from the header (a side sheet). The
 recipe page is the end — it downloads the Build Package and takes your files — so there is no Build step. The kit is no
 longer on the way (still at `/kit`).
 - `/library` — Discover: Sites (16 built + 10 recipes), Sections (first screens, menus, every section design, footers),
   Effects. "What are you making?" chips, search, one filter per shelf. Cards are samples in fixed looks (a part as on the
   first real site that has it, else one neutral look) — they never take the visitor's choices. Name + one fact; clicking
   a section's or effect's picture collects it. `/library/sites/{example|seed}/{slug}`: a site's parts, each with +.
-- The Collection chip in the steps bar opens the sheet: items grouped, quiet notes,
-  remove with undo, **Build my site** (`planFromStudio`: rebuilt only when the Collection changed; `KitPlan.via =
+- The Collection chip in Discover's steps bar opens the sheet (look and remove only): items grouped, quiet notes,
+  remove with undo. Discover's **Next** builds the pages (`planFromStudio`: rebuilt only when the Collection changed; `KitPlan.via =
   'studio'`). Toasts only when a rule speaks. `/studio` redirects to Pages.
 - `/studio/pages` — Pages: the site's name and one sentence as the page title (typed in place); "What are you making?"
   only when nothing says it; "Start from" when several sites were collected. A start site's pages, else the kind of
   site's; "Usually also there", Add a page, Your own page. Each page's parts, placed by the engine: move or remove only
   (decided 2026-10-05), controls on hover; "From your Collection" marked. Back / next in one bar at the bottom.
-- `/studio/style` — Style: all 42 palettes (Light / Dark) and all 58 letterings (Serif / Sans / Expressive), what fits
-  marked first, beside the home page drawn in them.
-- Recipe (`/result/{id}`): the flow line on top; every Change leads to Pages or Style; its Your files tab takes logo,
-  photos and video.
+- `/studio/style` — Style: colours first, then lettering — eight of each (what fits leads, "Fits your site" / "Made for
+  this look"), **Show more** adds twelve, so the lettering below is never buried (Light/Dark, Serif/Sans/Expressive
+  filters). Beside them (`UsedOn`) a **style tile** at full size — not a page shrunk to a thumbnail, and no outside sites
+  (decided 2026-10-05): your name and sentence as headline and paragraph in your faces, the main button and a link, a
+  card on the surface, a real photo (the start site's own first picture, else the look's curated one), an inverse band,
+  the palette with hex and contrast; under it OpusKit's built sites with the same colours or lettering.
+- Recipe (`/result/{id}`): its actions (Save, Unlock, or tool + Download) sit in the steps bar on top, like Next on
+  the other steps — no bottom bar; every Change leads to Pages or Style; its Your files tab takes logo, photos and
+  video.
 - **One road, one bar** (2026-10-05, after "I have to press the Collection icon to go on"): every step opens with the
   same sticky bar under the site header (`FlowBar`) — left the four numbered steps (done ones are links back), right
   the Collection chip (its last items, count, bump; opens the sheet) and **Next: …**. It is the first thing seen on
@@ -152,7 +157,31 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     header on every step — steps on the left (done ones link back), Collection and **Next: …** on the right. No second
     way in (the header's Collection icon was removed; its button reads "Continue · n" once something is collected).
     Next sits in the same place on every step.
-11. New example sites (#17–#20) are on hold (`docs/plan-examples.md` §5).
+11. **One job, one place**: collecting happens only in Discover — the Collection chip is only in Discover's bar, and its
+    sheet is for looking and removing (no Next inside). The one way on is the bar's Next. Pages says where the
+    Collection went ("From your Collection: 5 of 6 on your pages", and what waits and why — `placement`).
+12. **Discover browses with a sidebar on wide screens** (2026-10-05): the three shelves,
+    and under the open shelf its groups with counts — a group works like a category: a click shows just that group from
+    the top ("All" shows every one); no scroll-spy or jumping, which felt jerky. Sites: the feels and "Built and live
+    only". Phones keep the same as chips and tabs across the top. Cards collect with a click on the picture.
+    It reads like a documentation sidebar (the user's reference: the Next.js docs): one type size (14px), weight and
+    colour for rank; shelves as plain rows with a chevron, each opening and closing on its own (not an accordion — all
+    start open); their groups indented on a thin guide line, the picked one in the accent with its stretch of the line
+    lit, sliding to the next pick, also across shelves (a group in another shelf opens that shelf on it); the cards fade in when what is shown changes; reduced motion
+    turns it off. Its scroll is quiet (thin, no track, the list kept clear of it). The kind of site is never asked in
+    Discover: it is an optional "For …" filter of chips above the cards (it puts that kind's sites first and marks the
+    sections it usually has); Pages asks only if nothing says it. Names in sentence case ("Testimonials — one leads"), site names without their tagline.
+13. **Browse, then build** (2026-10-05): Discover is not a step — no steps bar, nothing to finish; you browse and
+    collect. The Collection is the cart, in the site's header on every page (one button: last items, count, bump; the
+    first thing collected says once "Keep browsing. Build your site from the Collection when you're ready"). Its sheet
+    ends in **Build my site**, the one way from browsing to building. Building is three steps — **Pages → Style →
+    Recipe** — with the steps bar ("← Library", the steps, Next). The header's "Start a site" shows only while the
+    Collection is empty. This replaces decisions 10 and 11 where they differ.
+    The sheet is wide (38rem) and made to lead on to building: your start site large, then parts and effects as
+    pictures in two columns (remove on hover), the quiet notes, **Clear all** (with Undo); at the bottom one line of what
+    Build will make ("9 pages in Scandinavian Minimal · 3 parts · 2 effects"), a big **Build my site**, and the three
+    steps it leads to. Toasts come from the top, under the header.
+14. New example sites (#17–#20) are on hold (`docs/plan-examples.md` §5).
 
 ## 5. Open
 

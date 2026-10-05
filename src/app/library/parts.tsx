@@ -1,6 +1,6 @@
 'use client'
 // Shared by the Library's shelves, a site's page and the Collection: how any item is drawn, and the button that collects it.
-import { ArrowRight, Check, Layers, Plus, X } from 'lucide-react'
+import { ArrowRight, Check, Layers, Plus, Trash2, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -14,15 +14,15 @@ import { ScaledFrame } from '@/components/ScaledFrame'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { examples } from '@/data/examples'
+import { directions, purposes } from '@/data/taxonomy'
 import { HeroPreview } from '@/app/kit/HeroPreview'
 import { lookOf } from '@/app/kit/ProductVisual'
-import { hasItem, itemKey, itemName, notes, removeItem, siteSpec, sitesWith, toggleItem, type CollectionItem, type SiteRef } from '@/features/library/collection'
+import { hasItem, itemKey, itemName, notes, removeItem, siteName, siteSpec, sitesWith, startSite, toggleItem, type CollectionItem, type SiteRef } from '@/features/library/collection'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { behaviours, pieces } from '@/data/pieces'
 import { specToPlan } from '@/features/kit/plan'
 import { composeRecipe } from '@/features/recipes/engine'
 import { planFromStudio, readCollection, updateCollection, useCollection } from '@/lib/collection'
-import { useHydrated } from '@/lib/store'
 import type { KitPlan, LayoutId, MediaPlacement, PurposeId, SectionTone } from '@/types/domain'
 
 export type Look = ReturnType<typeof lookOf> & { plan: KitPlan; world: ReturnType<typeof worldFor>; brand?: string; layout?: LayoutId }
@@ -93,6 +93,8 @@ export function useCollect(item: CollectionItem) {
     const had = new Set(notes(before).map((n) => n.text))
     const note = notes(after).find((n) => !had.has(n.text) && n.keys.includes(itemKey(item)))
     if (note) toast(note.text, { action: { label: 'Open', onClick: openCollection } })
+    // The first thing in an empty Collection: say once where it went and what comes next.
+    else if (!before.items.length) toast('Added to your Collection', { description: 'Keep browsing. Build your site from the Collection when you’re ready.', action: { label: 'Open', onClick: openCollection } })
   }
   return { on, flip }
 }
@@ -112,6 +114,7 @@ export function CollectButton({ item, label, className = '' }: { item: Collectio
 export function useToPages() {
   const router = useRouter()
   return () => {
+    toast.dismiss() // browsing's notes stay behind with browsing
     const r = planFromStudio()
     if (r.unplaced.length) toast(`${r.unplaced.map((id) => pieces[id].name).join(', ')} needs a part that can carry it.`)
     else if (r.rebuilt && r.undo) toast('Pages rebuilt from your Collection.', { action: { label: 'Undo', onClick: r.undo } })
@@ -128,10 +131,12 @@ const GROUPS: [string, (i: CollectionItem) => boolean][] = [
   ['Effects', (i) => i.kind === 'effect'],
 ]
 
-/** The Collection, in the steps bar: the last things collected and their count (a small bump when something goes in);
- *  opened, everything in it, the quiet notes, and the way on to your pages. */
+/** The Collection — the cart (2026-10-05): in the site's header on every page, the last things collected and their
+ *  count (a small bump when something goes in). Opened: everything in it, the quiet notes, remove — and the one way
+ *  from browsing to building, **Build my site**, which starts Pages → Style → Recipe. */
 export function CollectionSheet() {
   const c = useCollection()
+  const toPages = useToPages()
   const n = c.items.length
   const [open, setOpen] = useState(false)
   const prev = useRef(n)
@@ -140,8 +145,15 @@ export function CollectionSheet() {
   useEffect(() => { const f = () => setOpen(true); window.addEventListener(OPEN, f); return () => window.removeEventListener(OPEN, f) }, [])
   const all = notes(c)
   const remove = (i: CollectionItem) => { const before = readCollection(); updateCollection((x) => removeItem(x, itemKey(i))); toast(`Removed: ${itemName(i)}`, { action: { label: 'Undo', onClick: () => updateCollection(() => before) } }) }
-  const toPages = useToPages()
-  const build = () => { setOpen(false); toPages() }
+  const clear = () => { const before = readCollection(); updateCollection((x) => ({ ...x, items: [] })); toast('Collection cleared', { action: { label: 'Undo', onClick: () => updateCollection(() => before) } }) }
+  // What Build will make, in one line: the start's pages (or the kind of site's) and look, and how much rides along.
+  const start = startSite(c), startSpec = start ? siteSpec(start) : undefined
+  const parts = c.items.filter((i) => i.kind !== 'site' && i.kind !== 'effect').length, fx = c.items.filter((i) => i.kind === 'effect').length
+  const kindPages = c.purpose ? purposes[c.purpose].pages.filter((p) => p.tier === 'recommended').length : 0
+  const summary = [
+    startSpec ? `${startSpec.pages.length} pages in ${directions[startSpec.direction].name}` : c.purpose ? `A ${purposes[c.purpose].name.toLowerCase()}, ${kindPages} pages` : 'Pages for your kind of site',
+    parts && `${parts} ${parts === 1 ? 'part' : 'parts'}`, fx && `${fx} ${fx === 1 ? 'effect' : 'effects'}`,
+  ].filter(Boolean).join(' · ')
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger className="flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-line bg-white pl-1 pr-2 text-sm hover:border-ink sm:gap-2 sm:pl-1.5 sm:pr-3" aria-label={`Your Collection, ${n} ${n === 1 ? 'thing' : 'things'}`}>
@@ -154,40 +166,71 @@ export function CollectionSheet() {
         <span className="hidden font-medium sm:inline">Collection</span>
         <span key={bump} className={`grid h-5 min-w-5 place-items-center rounded-full px-1 text-[11px] font-medium tabular-nums ${n ? 'bg-pencil text-white' : 'bg-paper-2 text-muted'} ${bump ? 'bump' : ''}`}>{n}</span>
       </SheetTrigger>
-      <SheetContent className="flex w-full flex-col gap-0 bg-paper p-0 sm:max-w-md">
-        <SheetHeader className="border-b border-line px-5 py-4"><SheetTitle className="text-xl">Your Collection</SheetTitle></SheetHeader>
-        {!n ? <p className="px-5 py-8 text-ink-2">Empty. Tap + on anything you like.</p> : (
-          <div className="flex-1 space-y-6 overflow-y-auto px-5 py-5">
+      {/* Wide enough to look at what you picked (the sheet's own default is 24rem). */}
+      <SheetContent className="flex w-full flex-col gap-0 bg-paper p-0 data-[side=right]:sm:max-w-[38rem]">
+        <SheetHeader className="flex-row items-baseline gap-3 border-b border-line px-6 py-5 pr-14">
+          <SheetTitle className="text-2xl font-medium tracking-tight">Your Collection</SheetTitle>
+          <span className="text-sm text-muted">{n ? `${n} ${n === 1 ? 'thing' : 'things'}` : 'empty'}</span>
+          {n > 0 && <button type="button" onClick={clear} className="ml-auto inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink"><Trash2 size={14} aria-hidden />Clear all</button>}
+        </SheetHeader>
+        {!n ? (
+          <div className="grid flex-1 place-content-center px-8 text-center">
+            <Layers size={28} className="mx-auto text-muted" aria-hidden />
+            <p className="mt-4 text-lg">Nothing collected yet.</p>
+            <p className="mt-1 text-sm text-muted">Tap + on a site, a section or an effect you like.</p>
+          </div>
+        ) : (
+          <div className="flex-1 space-y-8 overflow-y-auto px-6 py-6">
+            {start && (
+              <section aria-label="Your start">
+                <p className="text-sm text-muted">Your start</p>
+                <div className="relative mt-2 overflow-hidden rounded-xl border border-line">
+                  <SiteThumb site={start} />
+                  <button type="button" onClick={() => remove({ kind: 'site', site: start })} className="absolute right-2.5 top-2.5 grid size-8 place-items-center rounded-full bg-white/90 text-ink shadow-sm hover:bg-white"><X size={15} aria-hidden /><span className="sr-only">Remove {siteName(start)}</span></button>
+                </div>
+                <p className="mt-2.5 font-medium">{siteName(start)}</p>
+                <p className="text-sm text-muted">Its {startSpec!.pages.length} pages and its look — you change both next.</p>
+              </section>
+            )}
             {GROUPS.map(([name, test]) => {
-              const items = c.items.filter(test)
+              const items = c.items.filter((i) => test(i) && !(i.kind === 'site' && i.site === start))
               if (!items.length) return null
               const keys = new Set(items.map(itemKey))
               return (
                 <section key={name} aria-label={name}>
-                  <h3 className="text-sm text-muted">{name}</h3>
+                  <p className="flex items-baseline justify-between text-sm text-muted">{name === 'Sites' ? 'Other sites' : name}<span className="tabular-nums">{items.length}</span></p>
                   {all.filter((x) => x.keys.some((k) => keys.has(k))).map((x) => <p key={x.text} className="mt-2 rounded-md bg-paper-2 px-3 py-2 text-xs text-ink-2">{x.text}</p>)}
-                  <ul className="mt-2 space-y-2">
+                  <ul className="mt-2 grid grid-cols-2 gap-3">
                     {items.map((i) => (
-                      <li key={itemKey(i)} className="group flex items-center gap-3">
-                        <div className="w-24 shrink-0 overflow-hidden rounded-md border border-line bg-white"><div className="pointer-events-none aspect-[16/10] overflow-hidden">{i.kind === 'site' ? <SiteThumb site={i.site} /> : <ItemPreview item={i} look={sampleLook(i, c.purpose)} />}</div></div>
-                        <p className="min-w-0 flex-1 text-sm font-medium leading-snug">{itemName(i)}</p>
-                        <button type="button" onClick={() => remove(i)} className="grid size-8 shrink-0 place-items-center rounded-full text-muted hover:bg-paper-2 hover:text-ink"><X size={15} aria-hidden /><span className="sr-only">Remove {itemName(i)}</span></button>
+                      <li key={itemKey(i)} className="group relative">
+                        <div className="overflow-hidden rounded-lg border border-line bg-white"><div className="pointer-events-none aspect-[16/10] overflow-hidden">{i.kind === 'site' ? <SiteThumb site={i.site} /> : <ItemPreview item={i} look={sampleLook(i, c.purpose)} />}</div></div>
+                        <p className="mt-1.5 truncate text-sm font-medium">{itemName(i)}</p>
+                        <button type="button" onClick={() => remove(i)} className="absolute right-1.5 top-1.5 grid size-7 place-items-center rounded-full bg-white/90 text-ink opacity-100 shadow-sm transition-opacity hover:bg-white md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"><X size={14} aria-hidden /><span className="sr-only">Remove {itemName(i)}</span></button>
                       </li>
                     ))}
                   </ul>
                 </section>
               )
             })}
+            {all.filter((x) => !x.keys.length).map((x) => <p key={x.text} className="rounded-md bg-paper-2 px-3 py-2 text-xs text-ink-2">{x.text}</p>)}
           </div>
         )}
-        {n > 0 && <div className="border-t border-line p-5"><button type="button" onClick={build} className="btn btn-ink w-full">Next: Pages<ArrowRight size={16} aria-hidden /></button></div>}
+        {n > 0 && (
+          <div className="border-t border-line bg-white px-6 py-5">
+            <p className="text-sm text-ink-2">{summary}</p>
+            <button type="button" onClick={() => { setOpen(false); toPages() }} className="btn btn-ink mt-3 h-14 w-full text-base">Build my site<ArrowRight size={18} aria-hidden /></button>
+            <ol className="mt-3 flex justify-center gap-4 text-xs text-muted" aria-label="What comes next">
+              {['Pages', 'Style', 'Recipe'].map((x, k) => <li key={x} className="flex items-center gap-1.5"><span className="grid size-4 place-items-center rounded-full border border-line text-[10px] tabular-nums">{k + 1}</span>{x}</li>)}
+            </ol>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   )
 }
 
-/** The four steps from browsing to a site — numbered, the ones behind you are links back. */
-const STEPS = [['Discover', '/library'], ['Pages', '/studio/pages'], ['Style', '/studio/style'], ['Recipe', '']] as const
+/** Building, in three steps — numbered, the ones behind you are links back. Browsing (Discover) is not a step. */
+const STEPS = [['Pages', '/studio/pages'], ['Style', '/studio/style'], ['Recipe', '']] as const
 export type Step = (typeof STEPS)[number][0]
 export function Steps({ at }: { at: Step }) {
   const n = STEPS.findIndex(([s]) => s === at)
@@ -208,25 +251,19 @@ export function Steps({ at }: { at: Step }) {
   )
 }
 
-/** One bar under the site's header on every step: the steps (where you are, the way back), your Collection, and Next.
- *  The first thing seen on arrival, and it stays while you scroll — the road is never hidden behind an icon. */
+/** The bar under the site's header while building: back to the Library, the steps, and Next. */
 export const FLOW_BAR = 'h-14' // 56px: sticky things below it sit at top-[7.5rem] (header 64 + bar 56)
 export function FlowBar({ at, next }: { at: Step; next?: ReactNode }) {
   return (
     <div className={`sticky top-16 z-30 border-b border-line bg-paper/95 backdrop-blur-sm ${FLOW_BAR}`}>
       <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-3 px-5 md:px-8">
-        <Steps at={at} />
-        <div className="flex items-center gap-2"><CollectionSheet />{next}</div>
+        <div className="flex min-w-0 items-center gap-4">
+          <Link href="/library" className="hidden shrink-0 text-sm text-muted hover:text-ink sm:inline">← Library</Link>
+          <span className="hidden h-5 w-px bg-line sm:block" aria-hidden />
+          <Steps at={at} />
+        </div>
+        <div className="flex shrink-0 items-center gap-2">{next}</div>
       </div>
     </div>
   )
-}
-
-/** Discover's bar (the shelves and a site's page): Next is on once something is collected or the kind of site is picked. */
-export function DiscoverBar() {
-  const c = useCollection()
-  const toPages = useToPages()
-  const ready = useHydrated()
-  const can = ready && (c.items.length > 0 || !!c.purpose)
-  return <FlowBar at="Discover" next={<button type="button" onClick={toPages} disabled={!can} title={can ? undefined : 'Collect something, or pick what you’re making'} className="btn btn-ink btn-sm disabled:cursor-not-allowed disabled:opacity-40"><span>Next<span className="hidden sm:inline">: Pages</span></span><ArrowRight size={14} aria-hidden /></button>} />
 }
