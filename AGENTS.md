@@ -4,12 +4,15 @@ Next.js 16 (App Router) + TypeScript + Tailwind v4. Version-matched Next.js docs
 
 **Start here: `docs/HANDOFF.md`** — where the work stands, what's next, and the user's working agreements.
 
-Current: `docs/plan-examples.md` — the example sites (how each is made, what is open, the next five) and the kit clips that show "what kind of site you'll get". Read it before touching examples; keep its Progress table current. Research behind the library: `docs/research/`.
+Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discover → Collect → Brand → Compose → Recipe → Build). Examples: `docs/plan-examples.md` — how each is made and what is open; read it before touching examples and keep its Progress table current. Research: `docs/research/`.
 
 - Domain types: `src/types/domain.ts`. Knowledge base (curated ingredients): `src/data/`.
 - Recipe engine (deterministic composition): `src/features/recipes/engine.ts`.
 - Build Package adapters: `src/features/build-packages/`.
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
+- The Library flow is the way to make a site (`docs/plan-library.md`): `/library` (Discover) → `/studio/pages` → `/studio/style` →
+  recipe; the Collection is a header sheet (`CollectionSheet`). Logic `src/features/library/collection.ts`, storage `src/lib/collection.ts`; plans made there
+  carry `via: 'studio'`. The kit below still opens examples and saved recipes until it is retired.
 - The kit (`/kit`) is the only way to make or change a recipe (the questionnaire was retired 2026-09-30; `/create`
   redirects here). A builder in three steps, always visible in its
   step bar: 1 Design (same on every page: "About your site" first in the list — name, what it is, kind of site, what visitors

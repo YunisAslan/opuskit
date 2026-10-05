@@ -352,6 +352,8 @@ export type KitPlan = {
   from?: RecipeSpec
   /** The saved recipe it was opened from: Create updates that one instead of making a copy. */
   fromId?: string
+  /** Made in the Library's Studio (Pages → Style), not in the kit: the recipe page leads back there. */
+  via?: 'studio'
 }
 /** A page in the plan. Each section is an instance with its own key, so the pieces attached to it move with it. */
 export type PlanPage = { id: string; type: PageTypeId; label: string; purpose: string; sections: PlanSection[]; hide?: ChromeId[] }

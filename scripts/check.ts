@@ -26,6 +26,7 @@ import exampleSpecs from '../src/data/example-specs.generated.json'
 import { closestChrome, closestPiece, closestSection, closestSite } from '../src/features/kit/closest'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
+import { allSites, cleanCollection, collectionToPlan, lookFor, notes, siteSpec, startSite, type Collection } from '../src/features/library/collection'
 import { cleanPieces, defaultPagesFor, pieceIssues, composeRecipe, isValidSpec, rankPalettes, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
 assert.equal(recipeSeeds.length, 10, 'exactly 10 seed recipes')
@@ -696,6 +697,36 @@ const main = async () => {
   assert.match(sp.files.find((x) => x.path.endsWith('tokens.css'))!.content, /--color-chapter-1: #0038FF/, 'chapter colours reach tokens.css')
   assert.equal(composeRecipe(planToSpec(setStyle(st, 'rotation', 'off'))).visualSystem.rotation, undefined, 'colour chapters can be switched off')
   assert.ok(composeRecipe(specFromSeed(recipeSeeds[0])).chrome.footer.code, 'every recipe ships the footer code')
+
+  // The Library's Collection (docs/plan-library.md): free to fill, quiet notes, a plan where everything lands where it fits.
+  {
+    for (const r of allSites) assert.deepEqual(validateRecipe(composeRecipe(planToSpec(collectionToPlan({ items: [{ kind: 'site', site: r }] }).plan))), [], `${r} starts a complete plan`)
+    for (const p of Object.keys(purposes) as (keyof typeof purposes)[]) { const d = lookFor(p); if (d) assert.ok(d in directions, `${p}'s starting look exists`) }
+    const blank = collectionToPlan({ items: [], purpose: 'portfolio', name: 'Ada' }).plan
+    assert.equal(blank.direction, lookFor('portfolio'), 'no site: the kind of site brings its look')
+    assert.equal(planToSpec(blank).brief?.name, 'Ada', 'the name from About you reaches the brief')
+    const qum: Collection = { items: [{ kind: 'site', site: 'example:qum' }, { kind: 'effect', id: 'text-effect' }, { kind: 'effect', id: 'cut-reveal' }, { kind: 'section', id: 'faq' }], name: 'Mira' }
+    const q = collectionToPlan(qum).plan, qs = siteSpec('example:qum')!
+    assert.equal(q.direction, qs.direction, 'a site in the Collection is the start: its look')
+    assert.deepEqual(q.pages.map((p) => p.label), qs.pages.map((p) => p.label), 'and its pages')
+    assert.equal(planToSpec(q).brief?.name, 'Mira', 'the site’s own name never comes along')
+    assert.equal(q.fromId, undefined, 'a new recipe, not an update of the example')
+    assert.ok((q.sitePieces ?? []).includes('cut-reveal') && !(q.sitePieces ?? []).includes('text-effect'), 'one headline behaviour: the last one added')
+    assert.ok(notes(qum).some((n) => n.keys.length === 2 && n.text.includes('same job')), 'two headline behaviours get a quiet note')
+    const shop = collectionToPlan({ items: [{ kind: 'section', id: 'lookbook' }, { kind: 'section', id: 'categories' }, { kind: 'section', id: 'product-buy', variant: undefined }], purpose: 'ecommerce' }).plan
+    const home = shop.pages[0].sections.map((x) => x.id)
+    assert.ok(home.includes('lookbook') && home.includes('categories'), 'a part replaces the default doing its job; the next one of that job joins the page')
+    assert.equal(shop.pages.filter((p) => p.sections.some((x) => x.id === 'product-buy')).length, 1, 'a part already on a page is not added twice')
+    const v = collectionToPlan({ items: [{ kind: 'section', id: 'intro', variant: 'giant' }], purpose: 'portfolio' }).plan
+    assert.equal(v.pages.flatMap((p) => p.sections).find((x) => x.id === 'intro')?.variant, 'giant', 'a collected design stays the design')
+    const m = collectionToPlan({ items: [{ kind: 'effect', id: 'number-ticker' }], purpose: 'portfolio' })
+    assert.ok(m.unplaced.includes('number-ticker') || m.plan.pages.some((p) => p.sections.some((x) => x.pieces.includes('number-ticker'))), 'a moment lands on a part that carries it, or is reported')
+    const two: Collection = { items: [{ kind: 'site', site: 'example:qum' }, { kind: 'site', site: 'example:hane' }], look: 'example:hane' }
+    assert.equal(startSite(two), 'example:hane', 'with two sites, the picked look is the start')
+    assert.ok(notes(two).length > 0, 'two sites get a quiet note')
+    const dirty = cleanCollection({ items: [{ kind: 'site', site: 'example:nope' }, { kind: 'section', id: 'hero' }, { kind: 'effect', id: 'grain' }, { kind: 'effect', id: 'grain' }, null], purpose: 'other', look: 'seed:nope' })
+    assert.deepEqual(dirty, { items: [{ kind: 'effect', id: 'grain' }], purpose: undefined, name: undefined, about: undefined, look: undefined }, 'unknown ids are dropped, duplicates once')
+  }
 
   console.log(`✓ ${recipeSeeds.length} recipes × ${Object.keys(adapters).length} adapters, remix and asset logic OK`)
 }

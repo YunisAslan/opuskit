@@ -1,7 +1,8 @@
 # Plan — example sites
 
-A shared, living plan for the example sites: how each one is made, what is open on the fifteen already built, and the
-next five. Replaces `plan-for-fit.md`, `plan-vibe.md` and `plan-variety.md` (finished; in git history up to commit
+A shared, living plan for the example sites: how each one is made, what is open on the sixteen already built, and the
+next ones (on hold). In the Library (`docs/plan-library.md`) the examples are the **Sites** shelf and the shop window for
+sections. Replaces `plan-for-fit.md`, `plan-vibe.md` and `plan-variety.md` (finished; in git history up to commit
 `8d63496`). Older build logs cite their sections — read those files from git history if needed.
 Before working on an example, read this file and keep the **Progress** table current.
 
@@ -44,10 +45,10 @@ Removing an example: `examples/{slug}/`, the symlink + `{slug}.jpg`, `public/liv
 its `examples.ts` entry; grep for `/examples/{slug}` (kit sample photos use some sites' media); `npm run examples`,
 `npm run check`.
 
-## 4. The fifteen built sites — what is open
+## 4. The built sites — what is open
 
-All fifteen are built, registered and live. Open:
-- **Clips for #11–#15** (Inkwell & Moth, Kür Delta Watch, Night Shift, Aster House, Sela Mor): waiting for the user's
+All sixteen are built, registered and live. Open:
+- **Clips for #11–#16** (Inkwell & Moth, Kür Delta Watch, Night Shift, Aster House, Sela Mor, QUM): waiting for the user's
   screen recordings.
 - **Re-recordings** (section clips that are a held still frame because the recording never stopped on them; ~4 s
   standing still on each fixes it):
@@ -65,43 +66,10 @@ All fifteen are built, registered and live. Open:
 | Brasshand | manifesto, case-study, clients, services, journal |
 | Saint Ashe | journal, newsletter, lookbook, editorial-story, team, product-grid, contact-cta, footer, about |
 
-## 5. Next five sites (#16–#20, revised 2026-10-04)
+## 5. Next sites — on hold
 
-The user (2026-10-04): we need **premium websites — realistic and modern**. Every new site is the kind of business that
-really commissions an award-level site, made with today's award look (neutral grounds and one accent, media-led, huge
-light type, calm motion with one big moment). Khazri stays from the first proposal ("Khazri xoşuma gəldi").
-
-| # | Site | Kind · Look (family) · Movement | First screen | Colours · Lettering | Shows first on a real site |
-|---|---|---|---|---|---|
-| 16 | **QUM** — skincare made with Caspian salt and Absheron saffron | ecommerce · scandinavian-minimal (quiet) · subtle | editorial-image | Sage White · Soft Wedge | ecommerce; product page with the buy box + specs (ingredients, size); journal article page; index footer |
-| 17 | **Volna** — an electric day boat for the Caspian, taking reservations | product · technical-minimal (futuristic) · immersive | scroll-video (the user's film) | Paper Cobalt · Horizon | Horizon's wide light type; reserve-with-deposit buy box; specs grid; proof held in place (PinnedStage) |
-| 18 | **Khazri** — a type experiment: the north wind bends the letters | experiment · art-direction (experimental) · dynamic | kinetic-type | Grape Soda · Dial | experiment; status-bar menu (live wind and time); Dial's width axis; colour chapters |
-| 19 | **Long Shadow** — a weekend of short films in an old cinema | event (festival starter) · dark-cinematic (cinematic) · dynamic | ambient-video (the user's film) | Charcoal Signal · Projection | the festival starter (lineup, tickets, sponsors); Projection; Charcoal Signal |
-| 20 | **Kərpic** — an architecture studio restoring old brick houses | studio · modern-heritage (editorial) · dynamic | parallax-photo | Warm Black · Real Ink | project pages with specs; the work index; Real Ink; Warm Black |
-
-What makes each premium and real (the references are the kind of site, never copied):
-- **#16 QUM** — like the skincare houses that sell on calm, near-white pages with photography doing all the work: one
-  product per screen, ingredients as facts, a ritual told in three steps, a journal. Showcase: the product photo lifts
-  into the buy box as you scroll; the saffron accent appears only on "Add to bag".
-- **#17 Volna** — like the electric-boat and e-mobility launches: the film of the boat on the water drives the scroll,
-  the numbers (range, top speed, charge time) arrive held in place one by one, then reserve with a deposit. Showcase: the
-  boat cuts across the screen as you scroll.
-- **#18 Khazri** — the wordmark stretches and leans with a live wind reading; each chapter brings its own colour field;
-  the status bar ticks "Baku 14:32, wind NNW 11 m/s".
-- **#19 Long Shadow** — like the film-festival sites: a dark room, the festival film behind huge hairline titles, the
-  lineup as a name wall, tickets as a table, sponsors by tier.
-- **#20 Kərpic** — like the architecture studios' sites: each project opens on a full photo that drifts, its facts
-  (place, year, area, team) in a specs grid, one project leads to the next.
-
-**Media.** Photos: Claude (all five; product shots for QUM must show unbranded bottles and jars). Films: the user —
-#17 a 15–30 s single continuous shot of a small modern boat (or the water from the bow) moving across calm water, no
-logos or people's faces; #19 a 10–15 s loop of an empty old cinema or a projector beam, no people or brands. #16, #18 and
-#20 need no film. Claude writes each shot list at step 2.
-
-Names with Azerbaijani letters (ə) are checked against the display face at step 1 (Bayon lacked them on Brasshand); if
-the face has no glyph, the brand is spelled Kerpic.
-
-**Order:** 18 (no media) → 16 → 20 → 17 → 19 (the user's films last). The user can swap any row or change any pick.
+On hold since 2026-10-04 while the Library is planned (`docs/plan-library.md`). The proposal for #17–#20 (Volna,
+Khazri — kept by the user —, Long Shadow, Kərpic) is in git history (`docs/plan-examples.md` at commit `064ccfb`).
 
 ## 6. Progress
 
@@ -114,7 +82,4 @@ the face has no glyph, the brand is spelled Kerpic.
 | 14 | Aster House | ✓ | ✓ | ✓ | ✓ live | waiting for recording |
 | 15 | Sela Mor | ✓ | ✓ | ✓ | ✓ live | waiting for recording |
 | 16 | QUM | ✓ (`examples/qum/opuskit.json`, approved 2026-10-04) | ✓ 23 photos (Pexels, `media-src/SOURCES.md`) | ✓ Prompt 1 (subagent); no fix round; 20 static files; reviewed 1440 + 390 | ✓ live at `/live/qum` (click-through checked), `npm run check` ✓ | waiting for recording |
-| 17 | Volna | proposed | | | | |
-| 18 | Khazri | approved (idea) | | | | |
-| 19 | Long Shadow | proposed | | | | |
-| 20 | Kərpic | proposed | | | | |
+| 17–20 | on hold (§5) | | | | | |

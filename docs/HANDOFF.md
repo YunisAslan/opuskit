@@ -1,43 +1,29 @@
 # Handoff — where the work is and how to continue
 
-Last updated 2026-10-04. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-examples.md`.
+Last updated 2026-10-05. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
 Keep this file current: update "Now" and "Next" whenever a step finishes.
 
 Talk to the user in Azerbaijani; code, docs and commits in English.
 
-## Now (2026-10-04)
+## Now (2026-10-05)
 
-- **Fifteen example sites** are built, registered and live (`/examples`, `/live/{slug}`); clips for #11–#15 wait for the
-  user's screen recordings, and ten older sites have section clips to re-record (`docs/plan-examples.md` §4).
-- **The variety round is done** (phases A–G, from five research reports in `docs/research/2026-10-04-*.md`):
-  - A. Page frame tokens per layout (`src/lib/frame.ts`), a tone per section (ground / surface / inverse / chapter), media
-    placement (side / full / over) — the engine gives every page a rhythm (`pageRhythm`).
-  - B. A voice per look; footer by family and big idea; a section entrance per family (`ENTRANCE` in engine.ts); each big
-    idea its own ending; pages end on their own part (contact only on Home / Contact / a listing).
-  - C. Merged components (Steps, NameWall, Statement) and section designs (`variant`, `src/data/section-variants.ts`),
-    picked per family, pickable in Pages → Other designs.
-  - D. Palettes: 7 dusty ones retired (`LEGACY_PALETTE`), 11 tuned, 7 added; `rankPalettes` picks by fit; check.ts rejects
-    greyed mid-tone grounds and tinted ink. Built examples keep their colours (`customPalette` pinned by `npm run examples`).
-  - E. Type: 11 new pairings (incl. Plain Giant, the light huge grotesk), 4 replaced, 4 tuned.
-  - F. Pieces: `DrawnLink`, `TextEffect preset="cut"`, `PinnedStage` (pinned moments build on it).
-  - G. Sections `product-buy`, `specs`, `article`; pages `project`, `article`; starters "New development" and "Festival or
-    conference" (`Purpose.starters`); `status-bar` menu; `index` footer.
-- A Brasshand v2 (same recipe, today's engine) showed the difference and was deleted at the user's word.
-- Everything up to here is committed and pushed (`8d63496`, 2026-10-04).
-
-## Strategy (2026-10-04)
-
-After #16 QUM the user paused to ask where OpusKit is going. The discussion and four research reports are in
-`docs/strategy-2026-10-04.md` (who the user is, OpusKit as an engine for developers and platforms, "procedural oatmeal"
-and how to stay unique, the store/library idea). The user leans towards **OpusKit Library**: designs with interesting
-layouts and good filters, taken by copying one by one or through a cart. Three questions there are open; when answered,
-write `docs/plan-library.md`. Examples #17–#20 are on hold until then.
+- **New direction: OpusKit Library** (`docs/plan-library.md`). Instead of the kit's form-first road, a place full of
+  sites, sections and effects; the person collects what they like into a **Collection** and builds from it.
+  Built (`docs/plan-library.md` §2a): Discover (`/library`) → Pages → Style → Recipe (it downloads), with the Collection in
+  a header sheet; the kit is off the way.
+- **Sixteen example sites** are built, registered and live (`/examples`, `/live/{slug}`); clips for #11–#16 wait for the
+  user's screen recordings, and ten older sites have section clips to re-record (`docs/plan-examples.md` §4). New
+  examples are on hold.
+- The variety round (phases A–G) is done and committed (`8d63496`); QUM (#16) in `064ccfb`.
+- Removed 2026-10-05 as out of date (in git history): `docs/opuskit-master-prompt.md` (the original questionnaire-era
+  spec) and `docs/strategy-2026-10-04.md` (the discussion that led to the Library; its conclusions are in
+  `docs/plan-library.md` §1).
 
 ## Next
 
-1. **Five new example sites #16–#20** — revised in `docs/plan-examples.md` §5 for premium, realistic, modern sites (QUM,
-   Volna, Khazri — kept by the user —, Long Shadow, Kərpic), waiting for the user's OK; then one by one through the loop in §3.
-2. Clips for #11–#15 when the user's recordings arrive; re-recordings (§4).
+1. The open points in `docs/plan-library.md` §5 — first retiring the kit (two questions there wait for the user).
+2. Persona files and test tasks for the agent tests (§3).
+3. Clips for #11–#16 when the user's recordings arrive; re-recordings (`docs/plan-examples.md` §4).
 
 ## Working agreements (from the user)
 

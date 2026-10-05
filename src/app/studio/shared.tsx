@@ -1,0 +1,82 @@
+'use client'
+// Shared by the Studio's Pages and Style steps: the plan's look, a page drawn top to bottom, and the way on to the recipe.
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import type { ReactNode } from 'react'
+import { useGoogleFonts } from '@/components/FontLoader'
+import { SectionPreview, worldFor } from '@/components/SectionPreview'
+import { HeroPreview } from '@/app/kit/HeroPreview'
+import { lookOf } from '@/app/kit/ProductVisual'
+import { FlowLine } from '@/app/library/parts'
+import { heroOf, inferPurpose, planToSpec } from '@/features/kit/plan'
+import { composeRecipe, isValidSpec } from '@/features/recipes/engine'
+import { saveGeneration, type Generation } from '@/features/recipes/library'
+import { readPlan, updatePlan } from '@/lib/kit'
+import { KEYS, get } from '@/lib/store'
+import type { KitPlan } from '@/types/domain'
+
+/** Everything a preview of this plan is drawn with. */
+export function usePlanLook(plan: KitPlan) {
+  const look = lookOf(plan)
+  useGoogleFonts(look.type.googleFamilies)
+  const spec = planToSpec(plan), recipe = composeRecipe(spec)
+  const pv = { colors: look.colors, type: look.type, shape: look.shape, chapters: look.chapters, world: worldFor(inferPurpose(plan)), brand: plan.name || undefined, layout: spec.layout }
+  return { look, spec, recipe, pv }
+}
+
+/** One page as the recipe will build it, top to bottom, in the plan's own colours and type. */
+export function PagePreview({ plan, pageId }: { plan: KitPlan; pageId: string }) {
+  const { recipe, pv } = usePlanLook(plan)
+  const page = plan.pages.find((p) => p.id === pageId), built = recipe.pages.find((p) => p.id === pageId)
+  if (!page) return null
+  return (
+    <div className="overflow-hidden rounded-lg border border-line" style={{ background: pv.colors.background }}>
+      {page.sections.map((s, i) => s.id === 'hero'
+        ? <div key={s.key} className="aspect-[16/10] overflow-hidden"><HeroPreview plan={plan} id={heroOf(plan, s)} /></div>
+        : <SectionPreview key={s.key} id={s.id} {...pv} tone={built?.sections[i]?.tone} media={built?.sections[i]?.media} variant={built?.sections[i]?.variant?.id} auto />)}
+      {!page.hide?.includes('footer') && <SectionPreview id="footer" footer={recipe.chrome.footerStyle.id} {...pv} auto />}
+    </div>
+  )
+}
+
+/** Saves the plan as a recipe (or updates the one it made before) and opens it — the same as the kit's step 3. */
+export function useToRecipe() {
+  const router = useRouter()
+  return () => {
+    const p = readPlan(), latest = p.fromId ? get<Record<string, Generation>>(KEYS.generations, {})[p.fromId]?.spec : undefined
+    const spec = planToSpec(isValidSpec(latest) ? { ...p, from: latest } : p)
+    const id = saveGeneration(spec, p.fromId)
+    updatePlan((x) => ({ ...x, fromId: id, from: spec }))
+    router.push(`/result/${id}`)
+  }
+}
+
+/** A step's frame: where you are and its title on top; the way back and on in one bar at the bottom, always in reach. */
+export function StepFrame({ at, title, back, next, children }: { at: 'Pages' | 'Style'; title: ReactNode; back: [string, string]; next: ReactNode; children: ReactNode }) {
+  return (
+    <>
+      <div className="mx-auto max-w-[1440px] px-5 pb-28 pt-10 md:px-8 md:pt-12">
+        <FlowLine at={at} />
+        <div className="mt-4">{title}</div>
+        {children}
+      </div>
+      <div className="sticky bottom-0 z-20 border-t border-line bg-paper/95 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 px-5 py-3 md:px-8">
+          <Link href={back[0]} className="text-sm text-muted hover:text-ink">← {back[1]}</Link>
+          {next}
+        </div>
+      </div>
+    </>
+  )
+}
+
+/** Pages and Style need a plan built from the Collection; without one, the way is the Library. */
+export function NeedsStudio() {
+  return (
+    <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-14 md:px-8">
+      <h1 className="display text-[clamp(2.2rem,5vw,4rem)]">Collect something first.</h1>
+      <p className="mt-4 text-lg text-ink-2">Tap + on what you like in the Library, then Build my site.</p>
+      <Link href="/library" className="btn btn-ink mt-8">Open the Library</Link>
+    </div>
+  )
+}

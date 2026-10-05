@@ -4,9 +4,10 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useUser } from '@/features/auth'
 import { Logo, Symbol } from './Logo'
+import { CollectionSheet } from '@/app/library/parts'
 
 const NAV = [
-  { href: '/explore', label: 'Explore' },
+  { href: '/library', label: 'Library' },
   { href: '/examples', label: 'Examples' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/saved', label: 'Saved' },
@@ -26,9 +27,11 @@ export function Header() {
             <Link key={n.href} href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined} className="text-ink-2 hover:text-ink aria-[current=page]:text-ink aria-[current=page]:underline underline-offset-8">{n.label}</Link>
           ))}
           <Link href={user ? '/account' : '/login'} className="text-ink-2 hover:text-ink">{user ? user.name : 'Log in'}</Link>
-          <Link href="/kit" className="btn btn-ink btn-sm">Start a site</Link>
+          <CollectionSheet />
+          <Link href="/library" className="btn btn-ink btn-sm">Start a site</Link>
         </nav>
         <div className="flex items-center gap-1 md:hidden">
+        <CollectionSheet />
         <button className="-mr-2 p-2" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(!open)}>
           <span className="sr-only">Menu</span>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">{open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M3 8h18M3 16h18" />}</svg>
@@ -39,7 +42,7 @@ export function Header() {
           {[...NAV, { href: user ? '/account' : '/login', label: user ? 'Account' : 'Log in' }].map((n) => (
             <Link key={n.href} href={n.href} onClick={() => setOpen(false)} className="block border-b border-line py-4 text-2xl font-medium tracking-tight">{n.label}</Link>
           ))}
-          <Link href="/kit" onClick={() => setOpen(false)} className="btn btn-ink mt-6 w-full">Start a site</Link>
+          <Link href="/library" onClick={() => setOpen(false)} className="btn btn-ink mt-6 w-full">Start a site</Link>
         </nav>
       )}
     </header>
@@ -55,7 +58,7 @@ export function Footer() {
           <Symbol className="h-10 w-auto" />
           <p className="mt-5 max-w-xs text-muted">From inspiration to implementation. Design recipes you can build with any AI tool.</p>
         </div>
-        <FooterCol title="Product" links={[['/explore', 'Explore recipes'], ['/examples', 'Examples'], ['/kit', 'Kit'], ['/pricing', 'Pricing']]} />
+        <FooterCol title="Product" links={[['/library', 'Library'], ['/examples', 'Examples'], ['/kit', 'Kit'], ['/pricing', 'Pricing']]} />
         <FooterCol title="Library" links={[['/resources', 'Resources'], ['/explore?tab=references', 'References'], ['/explore?tab=styles', 'Styles']]} />
         <FooterCol title="You" links={[['/saved', 'Saved recipes'], ['/account', 'Account']]} />
       </div>

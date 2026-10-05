@@ -49,7 +49,8 @@ const STATUS: Record<string, { label: string; mark: typeof Check; cls: string }>
 }
 
 /** `inKit`: shown as step 3 of the kit (its step bar is above), so the bar's own way back replaces "Customise in kit". */
-export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false }: { recipe: UniversalRecipe; recipeRef: string; onChange: (spec: RecipeSpec) => void; inKit?: boolean }) {
+/** `studio`: made in the Library's Studio — every Change leads back to its Pages or Style step, not to the kit. */
+export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, studio = false }: { recipe: UniversalRecipe; recipeRef: string; onChange: (spec: RecipeSpec) => void; inKit?: boolean; studio?: boolean }) {
   const { unlocked } = useAccess(recipeRef)
   const saved = useSaved().some((s) => s.ref === recipeRef)
   const [checkout, setCheckout] = useState(false)
@@ -64,6 +65,7 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false }
   const [kind, key] = recipeRef.split(':')
   // Every change happens in the kit (the one editor), opened on this recipe at the matching spot.
   const editHref = (step?: string) => {
+    if (studio) return step === 'pages' || step === 'kit' || step === 'photos' ? '/studio/pages' : '/studio/style'
     const [at, spot] = KIT_SPOT[step ?? ''] ?? ['style']
     return `/kit?from=${kind}:${key}&step=${at}${spot ? `&${at === 'style' ? 'cat' : 'shelf'}=${spot}` : ''}`
   }

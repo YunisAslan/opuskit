@@ -35,7 +35,7 @@ export function HomeHero() {
         <h1 className="display text-[clamp(3.2rem,7.4vw,7.2rem)]">Build websites worth remembering.</h1>
         <p className="mt-7 max-w-md text-lg text-ink-2">Start from a real site or from scratch, pick how it looks and what’s on it. We turn it into a buildable design recipe — for your AI tool or your own code.</p>
         <div className="mt-9 flex flex-wrap gap-3">
-          <Link href="/kit" className="btn btn-ink">Start a site</Link>
+          <Link href="/library" className="btn btn-ink">Start a site</Link>
           <Link href="/examples" className="btn btn-line">See real sites</Link>
         </div>
       </div>
