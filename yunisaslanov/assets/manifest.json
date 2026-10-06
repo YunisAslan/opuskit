@@ -1,0 +1,75 @@
+{
+  "recipe": "f24e26e9",
+  "title": "yunisaslanov — Warm Scrapbook Portfolio",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Placeholder Y mark: src/components/Logo.tsx, src/app/icon.svg",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "find",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Hubot Sans, IBM Plex Sans (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Draft copy in src/config/site.ts and page files",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "yourPhotos": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "user-provided: meee.JPG.jpeg (for About · Introduce yourself)",
+      "replaceWith": "—",
+      "usage": "Full-bleed moments — each photo gets a whole section to itself, edge to edge.",
+      "specs": "Min 2400px long edge, one consistent grade; keep each photo’s original shape unless the layout says otherwise",
+      "providedFiles": [
+        {
+          "fileId": "7c30f233-6c3",
+          "name": "meee.JPG.jpeg"
+        }
+      ]
+    },
+    "finalHeadlineCopy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Draft copy in src/config/site.ts and page files",
+      "replaceWith": "user-owned-copy",
+      "usage": "Hero and section statements",
+      "specs": "Short: 3–8 words each; written before layout"
+    },
+    "punctuationImages": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Between type sections",
+      "specs": "High contrast, simple subjects"
+    },
+    "projectPhotos": {
+      "required": false,
+      "level": "recommended",
+      "status": "temporary",
+      "source": "Picsum (Unsplash licence), graded to one look",
+      "replaceWith": "user-owned-photos",
+      "usage": "Project covers and galleries: public/media/{quiet-hours,northbound,paper-weather,high-ground}-{cover,1..6}.jpg",
+      "specs": "Covers 3:2, gallery 3:2 or 4:5, min 2400px long edge; edit alt text in src/config/assets.ts"
+    }
+  }
+}
