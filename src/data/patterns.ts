@@ -533,6 +533,8 @@ export const GENERIC_TELLS = [
   'Meta strings joined with middle dots or spaced em dashes, and "→" appended to links',
   'One italic or coloured accent word inside an otherwise plain headline',
   'Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe\'s fonts',
+  'Text in mix-blend-difference (or any blend mode) over a photo — its colours turn random; text on a picture sits on a scrim or a solid block',
+  'Effects nobody picked: no text effect, hover, cursor or scroll trick beyond the recipe\'s motion system and Your Kit',
 ]
 
 // Signature moments: small, specific interactions that make a site memorable. Each lives on one section;

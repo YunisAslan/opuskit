@@ -20,10 +20,10 @@ export function CopyButton({ text, label = 'Copy', className = '' }: { text: str
   )
 }
 
-export function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
+export function Chip({ active, onClick, small, children }: { active: boolean; onClick: () => void; small?: boolean; children: ReactNode }) {
   return (
     <button type="button" aria-pressed={active} onClick={onClick}
-      className="rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper">
+      className={`rounded-full border border-line ${small ? 'px-2.5 py-1 text-[13px]' : 'px-3 py-1.5 text-sm'} transition-colors hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper`}>
       {children}
     </button>
   )

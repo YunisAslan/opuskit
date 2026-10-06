@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
-import { Suspense } from 'react'
 import { Library } from './Library'
 
-export const metadata: Metadata = { title: 'Library', description: 'Sites, sections and effects, each drawn the way you would get it. Collect what you like; OpusKit makes it one site.' }
+export const metadata: Metadata = { title: 'Library', description: 'Sites built with OpusKit, each the way you would get it. Collect the ones you like; OpusKit makes them one site.' }
 
 export default function LibraryPage() {
-  return <Suspense><Library /></Suspense>
+  return <Library />
 }

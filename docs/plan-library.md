@@ -33,13 +33,13 @@ Package. The core is the long-term investment. A door is an experiment: built ch
 
 ```
 DISCOVER → COLLECT → BRAND → COMPOSE → RECIPE → BUILD (zip)   [REVIEW later]
-(as built 2026-10-05: Discover → Pages → Style → Recipe; Collect is the header sheet, Brand is the name on Pages, Build is the recipe page — §2a)
+(as built 2026-10-06: browse Discover, then build Brand → Pages → Recipe; Collect is the header sheet, Build is the recipe page — §2a, §4)
 ```
 
 ### DISCOVER
 - **The person:** browses, filters, searches. Optionally picks the kind of site first (Portfolio), or filters by it later.
-- **Three shelves:** Sites, Sections, Effects. Every card is rendered live; once a kind of site is picked, everything is
-  shown in that kind's world.
+- **Sites only** (decision 20, 2026-10-06; it was three shelves — Sites, Sections, Effects). Parts are taken on a
+  site's own page; effects are picked on a part in Pages; whatever no site has is in Pages → All parts.
 - **Shelves lead into each other:** on a site's page every section has a "+" ("take this site's footer"); a section's
   card shows which sites use it. Real sites become the shop window for sections, so every built site works twice.
 - **Exists:** `SectionPreview` (six worlds, `worldFor`), section designs (`section-variants.ts`), `PieceDemo`,
@@ -92,13 +92,12 @@ DISCOVER → COLLECT → BRAND → COMPOSE → RECIPE → BUILD (zip)   [REVIEW 
 
 ## 2a. Built (2026-10-05)
 
-Flow: browse **Discover**, then build **Pages → Style → Recipe** (decision 13). The Collection is not a step: it opens from the header (a side sheet). The
+Flow: browse **Discover**, then build **Brand → Pages → Recipe** (decisions 13, 17). The Collection is not a step: it opens from the header (a side sheet). The
 recipe page is the end — it downloads the Build Package and takes your files — so there is no Build step. The kit is no
 longer on the way (still at `/kit`).
-- `/library` — Discover: Sites (16 built + 10 recipes), Sections (first screens, menus, every section design, footers),
-  Effects. "What are you making?" chips, search, one filter per shelf. Cards are samples in fixed looks (a part as on the
-  first real site that has it, else one neutral look) — they never take the visitor's choices. Name + one fact; clicking
-  a section's or effect's picture collects it. `/library/sites/{example|seed}/{slug}`: a site's parts, each with +.
+- `/library` — Discover: the built sites only (decision 20). No sidebar: above the cards two filters alike, each a heading
+  with its chips under it — Kind of site, Feel — several can be on at once; no search (16 sites); four cards a row on wide screens. Name + one fact per card; + collects, the picture opens the site's page.
+  `/library/sites/{example|seed}/{slug}`: a site's parts in its own look, each with +.
 - The Collection chip in Discover's steps bar opens the sheet (look and remove only): items grouped, quiet notes,
   remove with undo. Discover's **Next** builds the pages (`planFromStudio`: rebuilt only when the Collection changed; `KitPlan.via =
   'studio'`). Toasts only when a rule speaks. `/studio` redirects to Pages.
@@ -106,7 +105,7 @@ longer on the way (still at `/kit`).
   only when nothing says it; "Start from" when several sites were collected. A start site's pages, else the kind of
   site's; "Usually also there", Add a page, Your own page. Each page's parts, placed by the engine: move or remove only
   (decided 2026-10-05), controls on hover; "From your Collection" marked. Back / next in one bar at the bottom.
-- `/studio/style` — Style: colours first, then lettering — eight of each (what fits leads, "Fits your site" / "Made for
+- `/studio/brand` — Brand (was Style; now the first step, decision 16): colours first, then lettering — eight of each (what fits leads, "Fits your site" / "Made for
   this look"), **Show more** adds twelve, so the lettering below is never buried (Light/Dark, Serif/Sans/Expressive
   filters). Beside them (`UsedOn`) a **style tile** at full size — not a page shrunk to a thumbnail, and no outside sites
   (decided 2026-10-05): your name and sentence as headline and paragraph in your faces, the main button and a link, a
@@ -160,7 +159,7 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
 11. **One job, one place**: collecting happens only in Discover — the Collection chip is only in Discover's bar, and its
     sheet is for looking and removing (no Next inside). The one way on is the bar's Next. Pages says where the
     Collection went ("From your Collection: 5 of 6 on your pages", and what waits and why — `placement`).
-12. **Discover browses with a sidebar on wide screens** (2026-10-05): the three shelves,
+12. (Replaced by 20.) **Discover browses with a sidebar on wide screens** (2026-10-05): the three shelves,
     and under the open shelf its groups with counts — a group works like a category: a click shows just that group from
     the top ("All" shows every one); no scroll-spy or jumping, which felt jerky. Sites: the feels and "Built and live
     only". Phones keep the same as chips and tabs across the top. Cards collect with a click on the picture.
@@ -181,7 +180,97 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     pictures in two columns (remove on hover), the quiet notes, **Clear all** (with Undo); at the bottom one line of what
     Build will make ("9 pages in Scandinavian Minimal · 3 parts · 2 effects"), a big **Build my site**, and the three
     steps it leads to. Toasts come from the top, under the header.
-14. New example sites (#17–#20) are on hold (`docs/plan-examples.md` §5).
+14. **Many sites, one site** (2026-10-06): sites are collected like anything else ("Collect", not "Start from this");
+    Pages starts from one of them ("Start from" chips) and a third column, **Your Collection**, lists the parts of the
+    other collected sites (in their own look and design) and the collected parts not placed yet — each added to the open
+    page with +. Every part row carries what belongs on it: **Add an effect** — a large picker that shows each effect
+    moving (a real site's recording where there is one, else drawn in your look), grouped by what it does, one per group
+    (picking another swaps it), collected ones first — **Your photos** (photo and media parts, an image first screen) and **Your film** (a film first screen);
+    uploads remember their part (`UploadedAsset.place`, written next to the file in the build's asset list).
+15. **Style in three columns**: 1 your site (name, one sentence — moved here from Pages), 2 colours then lettering, 3 the
+    example in your picks, marked "Example · how your site will look", with little text.
+16. **Brand first** (2026-10-06): building is **Brand → Pages → Recipe**. Brand (was Style) comes first so Pages
+    already shows your colours, type and name; it is the quick, rewarding step, and Pages — the longest — leads straight
+    to the recipe. Brand is three columns side by side (from 1024px): 1 your site — name, one sentence (what
+    visitors should do is never asked: it is read in the background from the parts and pages, `inferGoal` — a buy box
+    means buy, a booking part means book, a donate part means donate, else the kind of site — and becomes the example's
+    main button); 2 colours, then lettering; 3 the example, marked as one.
+    Build my site opens Brand; `/studio/style` became `/studio/brand`.
+17. **Sites are inspiration, not a base** (2026-10-06, replaces "Start from"): one collected site gives its own pages;
+    several are **mixed** — the kind of site gives the pages, and each part is taken, in its design, from a collected
+    site whose page of that kind has a part doing the same job, spread so every site gives something (`blendPage`); a
+    part no site has stays the engine's. On Pages each page says **Made from: All your sites · Sela Mor · …** — picking
+    a site makes that page follow it (`pageLike`, remembered as `Collection.like`); every part says "From Sela Mor"
+    (`PlanSection.from`). The Collection panel lists every collected site's parts to add by hand. The look until Brand
+    comes from the first site.
+18. On Pages each page opens with the **Menu** and ends with the **Footer**: locked in place (🔒, the same on every page,
+    their style named), never moved or removed; **Shown / Hidden** leaves either out of one page (`toggleChrome`,
+    written into the recipe and QA). Either row is picked like a part (a click on it): the right column then offers
+    Other menus / Other footers, tap to swap — for every page at once.
+18c. **Brand scrolls without losing anything** (2026-10-06): Show all opens a whole list at once; each list's heading
+    and filters stick under the steps bar while it scrolls by; the example never scrolls on its own — on short screens
+    its card row steps aside so it always fits beside the lists. Column one is only your name and one sentence (no logo,
+    no summary of picks, no built-site strip: holding the example in place was enough).
+    A picked colour or lettering stays where it was clicked: each list's order is set once, when Brand opens (the
+    pick then, what fits, the rest), never re-sorted by a new pick.
+18d. **Pages is built to be played with** (2026-10-06): what is collected later **joins** the pages as arranged
+    (`applyItems`, adding, never replacing; a new site's parts wait in the panel); pages are rebuilt only when the kind
+    of site changes. Parts are dragged to reorder (or arrows), removed, and **picked**: the right column then offers
+    the picked part's other designs and the other parts doing its job — for the first screen, the other first screens
+    (how a film start becomes a photo start) — tap to swap in place. Below, everything collected: parts, first screens,
+    effects, menu and footer, each site's parts — dragged onto the page (a part to a spot, an effect onto a part, a
+    first screen onto the first screen) or added with +; whatever lands scrolls into view and glows. Suggested pages
+    lead the searchable Add a page list. A part is titled by its name everywhere on Pages — on the page and in every
+    panel list — with its job (and design) under it ("Testimonials / Build trust · One leads"); All parts is grouped
+    by job. Thumbnails everywhere keep their own colours; only Brand's example takes
+    yours. Brand starts on the first site's colours and lettering, marked "From QUM", and says so.
+18e. (Replaced by 20.) Discover: a picture opens a closer look (large, its designs to flip through, the real sites that have it, an
+    effect moving on a real site); + collects.
+18f. **Browse like a shop, build with one button** (2026-10-06): no steps or numbers in the Library (they clashed with
+    the building steps). Under the title one line says the rule: "Take a few sites and any parts you like — several
+    sites are mixed into one site." Once something is collected, the header shows the Collection and, beside it, the
+    one way on — **Build my site** (later **Continue building**, back to the step last open, with what was newly
+    collected already on the pages) — like a cart and its checkout. The Sites shelf shows built sites only (the drawn
+    recipes are gone). On Pages: the page's name is typed in place; one line says thumbnails keep their source site's
+    colours and the site takes the Brand colours; each collected site's parts are folded per site, its page of this
+    kind first ("From QUM · its home page"), the rest under "More from QUM".
+20. **Discover shows sites only** (2026-10-06). Three shelves side by side (Sites, Sections, Effects) gave three sizes of
+    thing the same weight — a newcomer has no idea yet what a "part" or an "effect" is — with three filters at once
+    (feel in the sidebar, kind as chips, search) and a 30-row sidebar. A part out of any site looked generic; an effect
+    collected without a part had nowhere to go. Now there is no sidebar (for 16 sites it was more rows than cards): above the cards two rows of chips, both alike (the
+    user's call: chips laid out flat, not a select) — **Kind of site** and **Feel**, each a heading with its chips under it,
+    related options side by side (no separators, no search — the user's calls), only options some site has. The top is kept light: the title "Collect. Customize. Build." — the three things the person does, in order — with one line under it
+    ("Pick the sites you like — we merge them into one. Make it yours, then build it." — about sites, since Discover
+    collects sites; short, no list of what changes), small chips, no divider, so the first sites show
+    without scrolling. Each card plays its site's recording while on screen (no hover needed; still with reduced
+    motion; a site not recorded yet shows its screenshot). Over the picture, top right, two small round buttons: expand
+    (the recording large with controls — or, for a site not recorded yet, the live site in a frame — with "See its
+    parts" and Collect) and + (collect; a tick once collected). Several of
+    each can be on at once (a site shows if it matches any picked kind and any picked feel). Exactly one kind picked is
+    kept by the Collection as the kind of pages built; none or several leave it to the sites collected. A site's parts are taken on its own page, in
+    its own look; effects are picked on a part in Pages (one place); Pages' right column ends in **All parts**
+    (searchable: first screens, menus, every section, footers — one design each, the others a pick away under Other
+    designs) for anything no collected site has. The closer-look dialog (18e) went with the shelves.
+18b. (Replaced by 20.) Discover's "For" filter: every kind as a chip, wrapping onto the next line (no sideways-scrolling row, no "More").
+19. New example sites (#17–#20) are on hold (`docs/plan-examples.md` §5).
+21. **What you see is what you get** (2026-10-06, from the first real site built through the Library — `yunisaslanov/`,
+    started from Inkwell & Moth). Its build carried things the owner never saw: the start site's link hover (Hand-drawn
+    underline), a big idea the engine picked ("Loud covers, quiet reading") with its signature moment, a second typeface
+    (IBM Plex Sans, the pairing's text face) and a Testimonials design other than the one Pages showed. Now:
+    - Pages ends with **On every page** — Headlines, Links, Main button, Between pages, Whole site — each row saying what
+      it is now (the start site's picks show here), × to take it off, a click to see the options moving in the right
+      column (`behaviours`, `setBehaviour`, `toggleSitePiece`).
+    - A Library-built plan gets **no big idea it did not pick** (`planToSpec`: `concept` is 'off' for `via: 'studio'`
+      unless set), so no unseen signature moments or cover rules reach the build.
+    - Pages draws every part in the design the engine will build (`variantFor` by the look's family when none is
+      picked), and names it ("Build trust · One big quote").
+    - Brand's lettering tiles show both faces of a pairing: the headings and "Text in IBM Plex Sans".
+    - The recipe speaks to the builder only: pieces' rules no longer carry "suits these directions" lines (the Dithered
+      pattern's now says it is the section's background, edge to edge — never a small card or tilted print); every
+      recipe's Avoid list bans text in blend modes over photos and effects nobody picked.
+    - Sections: Testimonials redesigned (label column, a big accent quotation mark, an accent rule before each name, the
+      rest as cards under the quote); Trust strip fuller (ruled columns, heading and text sizes); Name wall's split
+      design lost its initial-letter tiles (letters standing in for logos).
 
 ## 5. Open
 

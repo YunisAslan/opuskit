@@ -14,7 +14,7 @@ import { sections } from '../src/data/patterns'
 import { TYPE_UTILITIES } from '../src/lib/type-tokens'
 import { GENERATED, piecesSource } from './pieces-source'
 import { existsSync, readFileSync } from 'node:fs'
-import { heroTitle, libraryFor, removeSection, toggleChrome, behaviourPick, isPhotoSection, sectionPhotos, setBehaviour, setSectionPhotos, setSectionVariant, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, effectOn, effectWhere, starters, setHero, setPartHero, heroOf, setStyle, start, togglePiece } from '../src/features/kit/plan'
+import { inferGoal, heroTitle, libraryFor, removeSection, toggleChrome, behaviourPick, isPhotoSection, sectionPhotos, setBehaviour, setSectionPhotos, setSectionVariant, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, effectOn, effectWhere, starters, setHero, setPartHero, heroOf, setStyle, start, togglePiece } from '../src/features/kit/plan'
 import { resources } from '../src/data/resources'
 import { directions, families, goals, purposes } from '../src/data/taxonomy'
 import { adapters } from '../src/features/build-packages'
@@ -26,7 +26,7 @@ import exampleSpecs from '../src/data/example-specs.generated.json'
 import { closestChrome, closestPiece, closestSection, closestSite } from '../src/features/kit/closest'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
-import { allSites, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection } from '../src/features/library/collection'
+import { allSites, applyItems, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection } from '../src/features/library/collection'
 import { cleanPieces, defaultPagesFor, pieceIssues, composeRecipe, isValidSpec, rankPalettes, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
 assert.equal(recipeSeeds.length, 10, 'exactly 10 seed recipes')
@@ -726,12 +726,41 @@ const main = async () => {
     assert.ok(notes(two).length > 0, 'two sites get a quiet note')
     { const col: Collection = { items: [{ kind: 'site', site: 'example:qum' }, { kind: 'section', id: 'faq' }, { kind: 'effect', id: 'cut-reveal' }, { kind: 'site', site: 'example:hane' }] }
       const pl = collectionToPlan(col).plan, where = placement(pl, col)
-      assert.deepEqual(where.waiting, [{ kind: 'site', site: 'example:hane' }], 'only the second site waits; parts and effects are on the pages')
+      assert.ok(!where.waiting.some((i) => i.kind !== 'site'), 'parts and effects are on the pages')
       const noFaq = pl.pages.reduce((x, p) => p.sections.filter((s) => s.id === 'faq').reduce((y, s) => removeSection(y, p.id, s.key), x), pl)
       const gone = placement(noFaq, col)
       assert.ok(gone.waiting.some((i) => i.kind === 'section' && i.id === 'faq'), 'a collected part the owner removed is reported as waiting') }
+    { const shopPlan = collectionToPlan({ items: [], purpose: 'portfolio' }).plan
+      assert.equal(inferGoal(shopPlan), 'contact', 'a portfolio asks visitors to get in touch')
+      assert.equal(inferGoal(addSection(shopPlan, shopPlan.pages[0].id, 'product-buy', 1)), 'buy', 'a buy box makes the goal buy, whatever the kind')
+      assert.equal(inferGoal(addSection(shopPlan, shopPlan.pages[0].id, 'donate', 1)), 'donate', 'a donate part makes the goal donate')
+      // What you see is what you get: a Library-built site carries no big idea it did not pick (decision 21).
+      const studio = { ...shopPlan, via: 'studio' as const }
+      assert.equal(planToSpec(studio).concept, 'off', 'a studio plan gets no unseen big idea')
+      assert.equal(composeRecipe(planToSpec(studio)).concept, undefined, 'so its recipe has none')
+      assert.equal(planToSpec({ ...studio, concept: 'one-guide' }).concept, 'one-guide', 'a picked one stays')
+      assert.equal(planToSpec(shopPlan).brief?.goal, 'contact', 'the read goal reaches the brief') }
+    { // Many sites: the kind's pages, each part taken from a site doing the same job, every site giving something.
+      const mix: Collection = { items: [{ kind: 'site', site: 'example:sela-mor' }, { kind: 'site', site: 'example:inkwell-moth' }, { kind: 'site', site: 'example:brasshand' }], purpose: 'portfolio' }
+      const m = collectionToPlan(mix).plan, from = new Set(m.pages.flatMap((p) => p.sections.map((x) => x.from)).filter(Boolean))
+      assert.deepEqual(m.pages.map((p) => p.type), defaultPagesFor('portfolio').map((p) => p.type), 'several sites: the kind of site gives the pages')
+      assert.ok(from.size >= 2, `several sites: parts come from more than one of them (${[...from].join(', ')})`)
+      assert.ok(placement(m, mix).waiting.filter((i) => i.kind === 'site').length <= 1, 'a site that gave a part counts as placed')
+      const home = m.pages[0], liked = collectionToPlan({ ...mix, like: { home: 'example:brasshand' } }).plan.pages[0]
+      assert.ok(liked.sections.every((x) => x.from === 'example:brasshand'), 'Home like Brasshand: every part of Home is Brasshand’s')
+      assert.notDeepEqual(liked.sections.map((x) => x.id), [], 'the liked page is not empty')
+      assert.ok(home.sections.length > 0, 'a blended page keeps its parts')
+      assert.deepEqual(validateRecipe(composeRecipe(planToSpec(m))), [], 'a blend of three sites is a complete recipe') }
+    { // Adding later joins the pages as arranged: nothing moves, nothing is replaced.
+      const base = collectionToPlan({ items: [], purpose: 'portfolio' }).plan
+      const moved = moveSection(base, base.pages[0].id, base.pages[0].sections[1].key, -1)
+      const r = applyItems(moved, [{ kind: 'section', id: 'testimonials' }, { kind: 'section', id: 'featured-work', variant: 'grid' }], false)
+      const before = moved.pages[0].sections.map((x) => x.key), after = r.plan.pages.flatMap((p) => p.sections.map((x) => x.key))
+      assert.ok(before.every((k) => after.includes(k)), 'adding later keeps every part already there')
+      assert.deepEqual(r.plan.pages[0].sections.slice(0, 2).map((x) => x.key), moved.pages[0].sections.slice(0, 2).map((x) => x.key), 'and keeps their order')
+      assert.equal(r.added.length, 2, 'both new parts were added') }
     const dirty = cleanCollection({ items: [{ kind: 'site', site: 'example:nope' }, { kind: 'section', id: 'hero' }, { kind: 'effect', id: 'grain' }, { kind: 'effect', id: 'grain' }, null], purpose: 'other', look: 'seed:nope' })
-    assert.deepEqual(dirty, { items: [{ kind: 'effect', id: 'grain' }], purpose: undefined, name: undefined, about: undefined, look: undefined }, 'unknown ids are dropped, duplicates once')
+    assert.deepEqual(dirty, { items: [{ kind: 'effect', id: 'grain' }], purpose: undefined, name: undefined, about: undefined, look: undefined, like: undefined }, 'unknown ids are dropped, duplicates once')
   }
 
   console.log(`✓ ${recipeSeeds.length} recipes × ${Object.keys(adapters).length} adapters, remix and asset logic OK`)

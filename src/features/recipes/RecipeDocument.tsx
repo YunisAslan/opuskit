@@ -66,7 +66,7 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, 
   const [kind, key] = recipeRef.split(':')
   // Every change happens in the kit (the one editor), opened on this recipe at the matching spot.
   const editHref = (step?: string) => {
-    if (studio) return step === 'pages' || step === 'kit' || step === 'photos' ? '/studio/pages' : '/studio/style'
+    if (studio) return step === 'pages' || step === 'kit' || step === 'photos' ? '/studio/pages' : '/studio/brand'
     const [at, spot] = KIT_SPOT[step ?? ''] ?? ['style']
     return `/kit?from=${kind}:${key}&step=${at}${spot ? `&${at === 'style' ? 'cat' : 'shelf'}=${spot}` : ''}`
   }

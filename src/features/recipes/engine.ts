@@ -370,7 +370,7 @@ function buildAssets(spec: RecipeSpec, hero: HeroPattern): AssetRequirement[] {
     const sibling = !files.length && !!spec.uploads?.some((u) => u.asset === a.asset && u.fileId)
     const status = a.label === 'Widescreen version' ? 'create' : files.length ? 'have' : sibling && a.level === 'optional' ? 'optional' : assetStatus(spec, a)
     const providedFiles = files.length ? files.map((u) => ({ fileId: u.fileId!, name: u.name })) : undefined
-    const providedNote = providedFiles ? `user-provided: ${providedFiles.map((f) => f.name).join(', ')}` : sibling ? 'made from your uploaded file' : 'marked as available — no file attached yet'
+    const providedNote = providedFiles ? `user-provided: ${files.map((u) => (u.place ? `${u.name} (for ${u.place})` : u.name)).join(', ')}` : sibling ? 'made from your uploaded file' : 'marked as available — no file attached yet'
     return {
       // A key is a JS identifier in src/config/assets.ts: one that would start with a digit ("3D model…") gets a word first.
       ...a, key: ((k) => (/^\d/.test(k) ? `asset${k[0]}${k.slice(1)}` : k))(camel(a.label)), status, providedFiles,

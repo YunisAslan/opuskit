@@ -10,11 +10,12 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
 - Recipe engine (deterministic composition): `src/features/recipes/engine.ts`.
 - Build Package adapters: `src/features/build-packages/`.
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
-- The Library flow is the way to make a site (`docs/plan-library.md`): `/library` (Discover) → `/studio/pages` → `/studio/style` →
+- The Library flow is the way to make a site (`docs/plan-library.md`): `/library` (Discover) → `/studio/brand` → `/studio/pages` →
   recipe. Discover is browsing (no steps); the Collection is a cart in the site header (`CollectionSheet`, its
-  Build my site starts building); Pages, Style and the recipe share one steps bar (`FlowBar`) — both in
+  Build my site starts building); Brand, Pages and the recipe share one steps bar (`FlowBar`) — both in
   `src/app/library/parts.tsx`. Logic `src/features/library/collection.ts`, storage `src/lib/collection.ts`; plans made there
-  carry `via: 'studio'`. The kit below still opens examples and saved recipes until it is retired.
+  carry `via: 'studio'`. Pages shows everything the build will get: each part in the design the engine picks, and the
+  site-wide behaviours under "On every page"; such plans get no big idea unless one is picked (decision 21). The kit below still opens examples and saved recipes until it is retired.
 - The kit (`/kit`) is the only way to make or change a recipe (the questionnaire was retired 2026-09-30; `/create`
   redirects here). A builder in three steps, always visible in its
   step bar: 1 Design (same on every page: "About your site" first in the list — name, what it is, kind of site, what visitors

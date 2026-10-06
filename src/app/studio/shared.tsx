@@ -2,7 +2,7 @@
 // Shared by the Studio's Pages and Style steps: the plan's look, a page drawn top to bottom, and the way on to the recipe.
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { useGoogleFonts } from '@/components/FontLoader'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { HeroPreview } from '@/app/kit/HeroPreview'
@@ -12,7 +12,7 @@ import { heroOf, inferPurpose, planToSpec } from '@/features/kit/plan'
 import { composeRecipe, isValidSpec } from '@/features/recipes/engine'
 import { saveGeneration, type Generation } from '@/features/recipes/library'
 import { readPlan, updatePlan } from '@/lib/kit'
-import { KEYS, get } from '@/lib/store'
+import { KEYS, get, write } from '@/lib/store'
 import type { KitPlan } from '@/types/domain'
 
 /** Everything a preview of this plan is drawn with. */
@@ -52,7 +52,9 @@ export function useToRecipe() {
 }
 
 /** A step's frame: the steps bar on top (back is a step link, Next on the right), then the title and the step. */
-export function StepFrame({ at, title, next, children }: { at: 'Pages' | 'Style'; title: ReactNode; next: ReactNode; children: ReactNode }) {
+export function StepFrame({ at, title, next, children }: { at: 'Brand' | 'Pages'; title: ReactNode; next: ReactNode; children: ReactNode }) {
+  // Remembered, so "Continue building" from the Collection comes back to this step.
+  useEffect(() => { write(KEYS.step, at === 'Brand' ? '/studio/brand' : '/studio/pages') }, [at])
   return (
     <>
       <FlowBar at={at} next={next} />

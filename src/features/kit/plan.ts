@@ -12,7 +12,7 @@ import { EFFECTS, concepts, footerStyles, heroes, imagePresentations, navStyles,
 import { behaviourOf, behaviours, isMoment, pieces } from '@/data/pieces'
 import { directions, goals, motionLevels, purposes } from '@/data/taxonomy'
 import { PHOTO_SECTIONS, defaultPagesFor, isValidSpec, normalizeSpec, recommendSectionPhotos, resolveHero, recommendPalette } from '@/features/recipes/engine'
-import type { BehaviourId, ChromeId, DirectionId, ImagePresentationId, KitPlan, MediaPlan, MotionLevel, PageSpec, PageTypeId, PieceId, PlanPage, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
+import type { BehaviourId, ChromeId, GoalId, DirectionId, ImagePresentationId, KitPlan, MediaPlan, MotionLevel, PageSpec, PageTypeId, PieceId, PlanPage, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
 
 export const EMPTY_PLAN: KitPlan = { pages: [] }
 export const DEFAULT_LOOK: DirectionId = 'swiss-editorial'
@@ -338,6 +338,26 @@ export function inferPurpose(plan: KitPlan): PurposeId {
   return BY_PAGE.find(([, ts]) => ts.some((t) => types.has(t)))?.[0] ?? 'other'
 }
 
+const GOAL_OF: Partial<Record<PurposeId, GoalId>> = {
+  portfolio: 'contact', agency: 'contact', studio: 'contact', 'personal-brand': 'contact', 'real-estate': 'contact', experiment: 'explore',
+  ecommerce: 'buy', fashion: 'buy', product: 'buy', restaurant: 'book', hotel: 'book', clinic: 'book', event: 'book',
+  saas: 'signup', blog: 'subscribe', nonprofit: 'donate', course: 'apply',
+}
+/** What visitors should do, read from what the site has (the owner never has to say): its parts and pages first —
+ *  a donate part means donate, a buy box or a cart means buy, a booking part means book — then its kind. */
+export function inferGoal(plan: KitPlan): GoalId {
+  const parts = new Set(plan.pages.flatMap((p) => p.sections.map((s) => s.id))), pages = new Set(plan.pages.map((p) => p.type))
+  const has = (...xs: string[]) => xs.some((x) => parts.has(x as SectionId) || pages.has(x as PageTypeId))
+  const purpose = inferPurpose(plan)
+  if (has('donate')) return 'donate'
+  if (has('product-buy', 'product-grid', 'cart', 'checkout', 'shop')) return 'buy'
+  if (has('reservation', 'reservations')) return 'book'
+  if (has('sign-up') || (has('pricing') && purpose === 'saas')) return 'signup'
+  if (has('curriculum', 'careers')) return 'apply'
+  if (has('location') && (purpose === 'restaurant' || purpose === 'hotel')) return 'visit'
+  return GOAL_OF[purpose] ?? (has('contact-cta', 'contact') ? 'contact' : 'explore')
+}
+
 export function planToSpec(plan: KitPlan): RecipeSpec {
   const dir = directions[plan.direction ?? DEFAULT_LOOK]
   // Opened from a recipe: keep what the kit can't edit. Voice, layout, lead and touches only while its look is unchanged.
@@ -355,12 +375,15 @@ export function planToSpec(plan: KitPlan): RecipeSpec {
   const lead = effect?.lead ?? same?.lead ?? dir.defaults.lead
   const palette = plan.palette ?? recommendPalette({ direction: dir.id, purpose, lead })
   return normalizeSpec({
-    base: same?.base ?? dir.baseRecipe, brief: { ...from?.brief, name: plan.name, offer: plan.about, goal: plan.goal, photos: plan.photoNote }, purpose, direction: dir.id, characters: same?.characters ?? (dir.voice ? [dir.voice] : []),
+    base: same?.base ?? dir.baseRecipe, brief: { ...from?.brief, name: plan.name, offer: plan.about, goal: plan.goal ?? inferGoal(plan), photos: plan.photoNote }, purpose, direction: dir.id, characters: same?.characters ?? (dir.voice ? [dir.voice] : []),
     lead, motion, hero: plan.hero ?? (lead === same?.lead ? same.hero : undefined), layout: same?.layout ?? dir.defaults.layout,
     palette, customPalette: from?.palette === palette ? from.customPalette : undefined, typography: plan.typography ?? dir.defaults.typography,
     assets: plan.assets ?? from?.assets ?? [], uploads: plan.uploads ?? from?.uploads ?? [], videoFrame: from?.videoFrame,
     mediaPlan: plan.mediaPlan ?? from?.mediaPlan ?? (lead === 'video' || lead === '3d' ? 'temporary' : 'have'),
-    nav: plan.nav, footer: plan.footer, shape: plan.shape, rotation: plan.rotation, concept: plan.concept,
+    nav: plan.nav, footer: plan.footer, shape: plan.shape, rotation: plan.rotation,
+    // A Library-built site gets no big idea it did not pick: the concept brings signature moments and cover rules the
+    // owner never saw in Pages (what you see is what you get).
+    concept: plan.concept ?? (plan.via === 'studio' ? 'off' : undefined),
     sectionPhotos: plan.pages.flatMap((p) => p.sections.flatMap((s, index) => (s.photos ? [{ page: p.id, index, presentation: s.photos }] : []))),
     sectionVariants: plan.pages.flatMap((p) => p.sections.flatMap((s, index) => (s.variant ? [{ page: p.id, index, variant: s.variant }] : []))),
     heroBands: plan.pages.flatMap((p) => p.sections.flatMap((s, index) => (s.id === 'hero' && s.hero && s.hero !== plan.hero ? [{ page: p.id, index, hero: s.hero }] : []))),
@@ -397,6 +420,7 @@ export function cleanPlan(x: unknown): KitPlan {
         if (ph && isPhotoSection(s.id) && Object.hasOwn(imagePresentations, ph)) n.photos = ph
         if (s.id === 'hero' && s.hero && Object.hasOwn(heroes, s.hero)) n.hero = s.hero
         if (typeof s.variant === 'string' && sectionVariants[s.id]?.options.some((o) => o.id === s.variant)) n.variant = s.variant
+        if (typeof s.from === 'string' && /^(example|seed):[a-z0-9-]{1,60}$/.test(s.from)) n.from = s.from
         return n
       }),
     ...(Array.isArray(pg.hide) && pg.hide.some((c) => c === 'navbar' || c === 'footer') ? { hide: [...new Set(pg.hide.filter((c) => c === 'navbar' || c === 'footer'))] } : {}),

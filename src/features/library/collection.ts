@@ -5,14 +5,14 @@
 
 import exampleSpecs from '@/data/example-specs.generated.json'
 import { examples } from '@/data/examples'
-import { EFFECTS, footerStyles, navStyles, sections } from '@/data/patterns'
+import { EFFECTS, footerStyles, navStyles, pageTypes, sections } from '@/data/patterns'
 import { MAX_HEAVY_PIECES, behaviourOf, behaviours, pieces } from '@/data/pieces'
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { sectionVariants } from '@/data/section-variants'
 import { purposes } from '@/data/taxonomy'
 import { EMPTY_PLAN, addSuggested, effectOn, onChrome, pageSuggestions, piecesFor, replaceSection, sectionGroups, setBehaviour, setHero, setSectionVariant, setStyle, specToPlan, start, toggleSitePiece, togglePiece } from '@/features/kit/plan'
-import { isValidSpec, specFromSeed } from '@/features/recipes/engine'
-import type { DirectionId, FooterStyleId, HeroId, KitPlan, NavStyleId, PieceId, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
+import { composeRecipe, isValidSpec, specFromSeed } from '@/features/recipes/engine'
+import type { DirectionId, FooterStyleId, HeroId, KitPlan, NavStyleId, PageTypeId, PieceId, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
 
 /** A site is `example:{slug}` (built, real) or `seed:{slug}` (a recipe drawn by the engine) — the kit's own `from` ids. */
 export type SiteRef = `example:${string}` | `seed:${string}`
@@ -24,7 +24,9 @@ export type CollectionItem =
   | { kind: 'footer'; id: FooterStyleId; from?: SiteRef }
   | { kind: 'effect'; id: PieceId; from?: SiteRef }
 
-export type Collection = { items: CollectionItem[]; purpose?: PurposeId; name?: string; about?: string; look?: SiteRef }
+export type Collection = { items: CollectionItem[]; purpose?: PurposeId; name?: string; about?: string; look?: SiteRef
+  /** "Home like Sela Mor": a page kind that follows one collected site instead of the blend. */
+  like?: Partial<Record<PageTypeId, SiteRef>> }
 export const EMPTY_COLLECTION: Collection = { items: [] }
 
 /** Two items are the same thing when they would add the same thing (where it was seen doesn't matter). */
@@ -52,6 +54,8 @@ export const allSites: SiteRef[] = [
   ...examples.filter((e) => !e.legacy && isValidSpec(specs[e.slug])).map((e) => `example:${e.slug}` as const),
   ...recipeSeeds.map((s) => `seed:${s.slug}` as const),
 ]
+/** The Sites shelf: built, real sites only (drawn recipes stay valid in a Collection, but are not offered). */
+export const shelfSites: SiteRef[] = allSites.filter((r) => r.startsWith('example:'))
 /** Real sites that use a ready section — so a part's card can say where it lives. */
 export const sitesWith = (id: SectionId): SiteRef[] => allSites.filter((r) => r.startsWith('example:') && siteSpec(r)?.pages.some((p) => p.sections.includes(id)))
 
@@ -132,21 +136,92 @@ const jobIds = (id: SectionId) => sectionGroups.find((g) => g.ids.includes(id))?
 
 export type Composed = { plan: KitPlan; picked: number; unplaced: PieceId[] }
 
-/** Builds the kit plan: the start site (or the kind of site's usual pages), then every part and effect where it fits.
- *  A part replaces the same job's default part on its page (never one the person collected), else joins the page. */
-export function collectionToPlan(c: Collection): Composed {
-  const s = startSite(c), spec = s && siteSpec(s)
-  const purpose = c.purpose ?? spec?.purpose
-  let plan: KitPlan = spec ? { ...specToPlan(spec), fromId: undefined } : start(lookFor(purpose) ? setStyle(EMPTY_PLAN, 'direction', lookFor(purpose)) : EMPTY_PLAN, purpose ?? null)
-  plan = { ...plan, purpose: purpose ?? plan.purpose, name: c.name?.trim() || undefined, about: c.about?.trim() || undefined }
-  const collected = new Set<string>() // section instance keys that came from the Collection
-  let picked = 0
-  const unplaced: PieceId[] = []
+// ─── Many sites, one site: blend them, or let one page follow one site ─────
 
-  const once = new Set<string>() // a site has one first screen, menu and footer: the first collected is used
-  for (const i of c.items) {
+type SitePart = { id: SectionId; variant?: string }
+const pagesOf = new Map<SiteRef, { type: PageTypeId; parts: SitePart[] }[]>()
+/** A site's pages and their parts as its recipe builds them (each part in its own design). */
+function sitePages(ref: SiteRef) {
+  if (!pagesOf.has(ref)) {
+    const spec = siteSpec(ref), r = spec && composeRecipe(spec)
+    pagesOf.set(ref, r ? r.pages.map((p) => ({ type: p.type, parts: p.sections.filter((x) => x.id !== 'navbar' && x.id !== 'footer').map((x) => ({ id: x.id, ...(x.variant ? { variant: x.variant.id } : {}) })) })) : [])
+  }
+  return pagesOf.get(ref)!
+}
+/** The site's page of this kind (its first page stands in for a home page). */
+const pageLikeOf = (ref: SiteRef, type: PageTypeId) => { const ps = sitePages(ref); return ps.find((p) => p.type === type) ?? (type === 'home' ? ps[0] : undefined) }
+/** The parts of a site's page of this kind, in its designs (for "From QUM · Home" on Pages). */
+export const sitePageParts = (ref: SiteRef, type: PageTypeId) => (pageLikeOf(ref, type)?.parts ?? []).filter((x) => x.id !== 'hero')
+/** Which collected sites have a page like this one — for the "Like" switch on Pages. */
+export const sitesWithPage = (c: Collection, type: PageTypeId) => lookChoices(c).filter((r) => !!pageLikeOf(r, type))
+
+const newKey = () => Math.random().toString(36).slice(2, 10)
+const sameJob = (a: SectionId, b: SectionId) => a === b || (!NOT_SWAPPED.has(a) && !NOT_SWAPPED.has(b) && jobIds(a).includes(b))
+
+/** One page follows one site: its parts become that site's page's parts, in their designs. */
+export function pageLike(plan: KitPlan, pageId: string, ref: SiteRef): KitPlan {
+  const page = plan.pages.find((p) => p.id === pageId), sp = page && pageLikeOf(ref, page.type)
+  if (!sp) return plan
+  return { ...plan, pages: plan.pages.map((p) => (p.id !== pageId ? p : { ...p, sections: sp.parts.map((x) => ({ key: newKey(), id: x.id, pieces: [], ...(x.variant ? { variant: x.variant } : {}), from: ref })) })) }
+}
+
+/** A page made of all the collected sites: each of its parts is taken, in its design, from a site whose page of this
+ *  kind has a part doing the same job — spread so every site gives something (the one that has given least goes first,
+ *  then the order they were collected in). A part no site has stays the engine's. */
+export function blendPage(plan: KitPlan, pageId: string, sites: SiteRef[]): KitPlan {
+  const page = plan.pages.find((p) => p.id === pageId)
+  if (!page || !sites.length) return plan
+  const given = new Map<SiteRef, number>(sites.map((r) => [r, 0]))
+  const used = new Map<SiteRef, Set<number>>(sites.map((r) => [r, new Set<number>()]))
+  const parts = page.sections.map((x) => {
+    if (x.id === 'hero') return x
+    const offers = sites.flatMap((r) => {
+      const sp = pageLikeOf(r, page.type)
+      const i = sp ? sp.parts.findIndex((y, n) => !used.get(r)!.has(n) && y.id !== 'hero' && sameJob(x.id, y.id)) : -1
+      return sp && i >= 0 ? [{ r, i, y: sp.parts[i] }] : []
+    }).sort((a, b) => given.get(a.r)! - given.get(b.r)! || sites.indexOf(a.r) - sites.indexOf(b.r))
+    const o = offers[0]
+    if (!o) return x
+    used.get(o.r)!.add(o.i); given.set(o.r, given.get(o.r)! + 1)
+    const n: PlanSection = { key: x.key, id: o.y.id, pieces: x.pieces.filter((id) => pieces[id].sections.includes(o.y.id)), from: o.r }
+    if (o.y.variant) n.variant = o.y.variant
+    return n
+  })
+  return { ...plan, pages: plan.pages.map((p) => (p.id === pageId ? { ...p, sections: parts } : p)) }
+}
+
+/** Builds the kit plan from the Collection. One site: its own pages. Several: the kind of site's pages, each a blend of
+ *  them — or, where the person said "Home like Sela Mor", that site's page. The look (until Brand) comes from the first
+ *  site. Then every collected part and effect where it fits; a part replaces the same job's part on its page (never one
+ *  the person collected), else joins the page. The goal is never asked: it is read from the parts (`inferGoal`). */
+export function collectionToPlan(c: Collection): Composed {
+  const sites = lookChoices(c), first = startSite(c), firstSpec = first && siteSpec(first)
+  const kinds = sites.map((r) => siteSpec(r)!.purpose)
+  const purpose = c.purpose ?? [...kinds].sort((a, b) => kinds.filter((k) => k === b).length - kinds.filter((k) => k === a).length)[0]
+  let plan: KitPlan = firstSpec ? { ...specToPlan(firstSpec), fromId: undefined } : lookFor(purpose) ? setStyle(EMPTY_PLAN, 'direction', lookFor(purpose)) : EMPTY_PLAN
+  const own = sites.length === 1 && firstSpec?.purpose === purpose
+  if (own) plan = { ...plan, pages: plan.pages.map((p) => ({ ...p, sections: p.sections.map((x) => ({ ...x, from: first })) })) }
+  else plan = start(plan, purpose ?? null)
+  plan = { ...plan, purpose: purpose ?? plan.purpose, name: c.name?.trim() || undefined, about: c.about?.trim() || undefined, goal: undefined }
+  if (!own) for (const pg of plan.pages) {
+    const like = c.like?.[pg.type]
+    plan = like && sites.includes(like) ? pageLike(plan, pg.id, like) : blendPage(plan, pg.id, sites)
+  }
+  const r = applyItems(plan, c.items, true)
+  return { plan: r.plan, picked: c.items.filter((i) => i.kind !== 'site').length, unplaced: r.unplaced }
+}
+
+/** Puts collected things into a plan. `replace`: a part takes the place of the default part doing its job (building
+ *  from scratch); otherwise it joins its page (adding to pages the person has already worked on — nothing they
+ *  arranged is touched). A first screen, menu or footer: the first one collected is used. A moment goes on the first
+ *  part that can carry it; the ones no part can carry come back as `unplaced`. Sites are skipped: their parts wait in
+ *  the Collection panel on Pages. */
+export function applyItems(plan: KitPlan, items: CollectionItem[], replace: boolean): { plan: KitPlan; unplaced: PieceId[]; added: string[] } {
+  const collected = new Set<string>() // section instance keys that came from the Collection
+  const unplaced: PieceId[] = [], added: string[] = []
+  const once = new Set<string>()
+  for (const i of items) {
     if (i.kind === 'site') continue
-    picked++
     if (i.kind === 'hero' || i.kind === 'menu' || i.kind === 'footer') {
       if (once.has(i.kind)) continue
       once.add(i.kind)
@@ -160,8 +235,8 @@ export function collectionToPlan(c: Collection): Composed {
         ?? (NOT_SWAPPED.has(i.id) ? undefined : plan.pages.find((p) => p.sections.some((x) => job.includes(x.id))))
         ?? plan.pages.find((p) => pageSuggestions[p.type]?.includes(i.id)) ?? plan.pages[0]
       if (!page) continue
-      let k = page.sections.find((x) => x.id === i.id && !collected.has(x.key))?.key
-      if (!k && !NOT_SWAPPED.has(i.id)) {
+      let k = replace ? page.sections.find((x) => x.id === i.id && !collected.has(x.key))?.key : undefined
+      if (!k && replace && !NOT_SWAPPED.has(i.id)) {
         const same = page.sections.find((x) => job.includes(x.id) && !NOT_SWAPPED.has(x.id) && !collected.has(x.key))
         if (same) { plan = replaceSection(plan, page.id, same.key, i.id); k = same.key }
       }
@@ -170,7 +245,7 @@ export function collectionToPlan(c: Collection): Composed {
         plan = addSuggested(plan, page.id, i.id)
         k = plan.pages.find((p) => p.id === page.id)!.sections.find((x) => !before.has(x.key))?.key
       }
-      if (k) { collected.add(k); if (i.variant) plan = setSectionVariant(plan, page.id, k, i.variant) }
+      if (k) { collected.add(k); added.push(k); if (i.variant) plan = setSectionVariant(plan, page.id, k, i.variant) }
       continue
     }
     // Effects: a behaviour or a whole-site extra is site-wide; a moment goes on the first part that can carry it.
@@ -181,7 +256,7 @@ export function collectionToPlan(c: Collection): Composed {
     if (!host) { unplaced.push(id); continue }
     if (!host.x.pieces.includes(id)) plan = togglePiece(plan, host.p.id, host.x.key, id)
   }
-  return { plan, picked, unplaced }
+  return { plan, unplaced, added }
 }
 
 /** Where the Collection went: what is on the pages, and what waits (a second site, a moment no part can carry, a part
@@ -190,7 +265,7 @@ export function placement(plan: KitPlan, c: Collection): { placed: CollectionIte
   const start = startSite(c), parts = plan.pages.flatMap((p) => p.sections)
   const on = (i: CollectionItem) => {
     switch (i.kind) {
-      case 'site': return i.site === start
+      case 'site': return i.site === start || parts.some((x) => x.from === i.site)
       case 'section': return parts.some((x) => x.id === i.id && (!i.variant || x.variant === i.variant))
       case 'hero': return plan.hero === i.id || parts.some((x) => x.hero === i.id)
       case 'menu': return plan.nav === i.id
@@ -228,5 +303,6 @@ export function cleanCollection(x: unknown): Collection {
     name: typeof c.name === 'string' ? c.name.slice(0, 60) : undefined,
     about: typeof c.about === 'string' ? c.about.slice(0, 160) : undefined,
     look: site(c.look) ? c.look : undefined,
+    like: c.like && typeof c.like === 'object' ? Object.fromEntries(Object.entries(c.like).filter(([k, v]) => Object.hasOwn(pageTypes, k) && site(v))) as Collection['like'] : undefined,
   }
 }

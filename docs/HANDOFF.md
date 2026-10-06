@@ -1,6 +1,6 @@
 # Handoff — where the work is and how to continue
 
-Last updated 2026-10-05. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
+Last updated 2026-10-06. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
 Keep this file current: update "Now" and "Next" whenever a step finishes.
 
 Talk to the user in Azerbaijani; code, docs and commits in English.
@@ -8,9 +8,12 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 ## Now (2026-10-05)
 
 - **New direction: OpusKit Library** (`docs/plan-library.md`). Instead of the kit's form-first road, a place full of
-  sites, sections and effects; the person collects what they like into a **Collection** and builds from it.
+  built sites; the person collects the sites (or a site's parts) they like into a **Collection** and builds from it.
+  Discover shows sites only (decision 20); effects are picked in Pages, and Pages → All parts has everything else.
   Built (`docs/plan-library.md` §2a): browse Discover (`/library`), collect into the Collection (a cart in the header),
-  then **Build my site** → Pages → Style → Recipe (it downloads), with a steps bar; the kit is off the way.
+  then **Build my site** → Brand → Pages → Recipe (it downloads), with a steps bar; the kit is off the way.
+- **First real site through the Library** (2026-10-06): `yunisaslanov/` (local, not committed). What went wrong and
+  what changed is in `docs/review-yunisaslanov.md` (decision 21: what you see in Pages is what the build gets).
 - **Sixteen example sites** are built, registered and live (`/examples`, `/live/{slug}`); clips for #11–#16 wait for the
   user's screen recordings, and ten older sites have section clips to re-record (`docs/plan-examples.md` §4). New
   examples are on hold.

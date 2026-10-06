@@ -53,4 +53,5 @@ export const KEYS = {
   plan: 'opuskit:plan',
   collection: 'opuskit:collection',
   composed: 'opuskit:composed', // the Collection the Studio's plan was last built from
+  step: 'opuskit:step', // the building step last open (Brand or Pages), where Continue building returns
 } as const

@@ -58,7 +58,7 @@ export function SiteDetail({ site }: { site: SiteRef }) {
           {summary && <p className="prose-serif mt-4 max-w-xl text-ink-2">{summary}</p>}
           <p className="mt-4 text-sm text-muted">{directions[spec.direction].name} · {recipe.visualSystem.palette.name} · {look.type.name} · {motionLevels[spec.motion].name} motion</p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <CollectButton item={{ kind: 'site', site }} label="Start from this site" className="h-12 px-5" />
+            <CollectButton item={{ kind: 'site', site }} label="Collect this site" className="h-12 px-5" />
             {e && <a href={e.livePath} target="_blank" rel="noreferrer" className="btn btn-line btn-sm inline-flex items-center gap-1.5"><ExternalLink size={14} aria-hidden />Visit the live site</a>}
           </div>
         </div>

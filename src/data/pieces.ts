@@ -64,7 +64,7 @@ export const pieces: Record<PieceId, Piece> = {
     id: 'text-scramble', name: 'Scrambled labels', line: 'Short labels resolve out of random letters, and again on hover.', slot: 'label', source: MP,
     file: 'TextScramble.tsx', exportName: 'TextScramble', deps: M, levels: MOVING, sections: ['navbar', 'featured-work', 'footer'],
     usage: '<TextScramble className="font-(family-name:--font-utility)">Selected work</TextScramble>',
-    rules: ['Labels of 1–3 words. Never on body copy or headlines.', 'Suits technical, futuristic and editorial directions; skip it for warm, organic ones.'],
+    rules: ['Labels of 1–3 words. Never on body copy or headlines.'],
   },
   'text-roll': {
     id: 'text-roll', name: 'Rolling links', line: 'On hover, each letter of a link rolls over to a fresh copy.', slot: 'label', source: MP,
@@ -172,13 +172,13 @@ export const pieces: Record<PieceId, Piece> = {
     id: 'grid-pattern', name: 'Hairline grid', line: 'A fine grid behind a section, drawn in the border colour.', slot: 'background', source: MU,
     file: 'GridPattern.tsx', exportName: 'GridPattern', deps: [], levels: ALL, sections: ['hero', 'feature-grid', 'pricing', 'how-it-works'],
     usage: '<section className="relative"><GridPattern size={48} />…</section>',
-    rules: ['Swiss, technical and architectural directions; one or two sections.', 'Filled cells only where they mean something (a seat, a slot).'],
+    rules: ['One or two sections.', 'Filled cells only where they mean something (a seat, a slot).'],
   },
   grain: {
     id: 'grain', name: 'Film grain', line: 'A faint grain over the page, drawn in code — no image file.', slot: 'background', source: MU,
     file: 'Grain.tsx', exportName: 'Grain', deps: [], levels: ALL, sections: ['hero'],
     usage: '<Grain fixed opacity={0.05} />  {/* once, in the root layout */}',
-    rules: ['4–8% opacity — felt, not seen.', 'Film, editorial and organic directions.'],
+    rules: ['4–8% opacity — felt, not seen.'],
   },
   'magnet-lines': {
     id: 'magnet-lines', name: 'Lines that follow', line: 'A field of short lines that all turn toward the cursor.', slot: 'background', source: CY,
@@ -238,7 +238,7 @@ export const pieces: Record<PieceId, Piece> = {
     id: 'shader-dither', name: 'Dithered pattern', line: 'A two-colour dithered pattern, like a risograph or an old screen.', slot: 'background', source: PS,
     file: 'ShaderDither.tsx', exportName: 'ShaderDither', deps: ['@paper-design/shaders-react', 'motion'], levels: MOVING, heavy: true, sections: ['hero', 'contact-cta', 'footer'],
     usage: '<section className="relative"><ShaderDither shape="warp" size={3} /><div className="relative">…</div></section>',
-    rules: ['Brutal, technical and futuristic directions.', 'One section; keep text on a solid block over it.'],
+    rules: ['It is the section’s background: it fills the whole section edge to edge, behind everything (absolute inset-0) — never a small card, frame or tilted print inside it.', 'One section only; text sits on a solid block of the ground colour over it, so it always reads.'],
   },
   'duo-headline': {
     id: 'duo-headline', name: 'Two-voice headline', line: 'One word loud in the grotesk, the rest quiet in the serif — letters rise into place.', slot: 'headline', source: OK,

@@ -359,7 +359,7 @@ export type KitPlan = {
 export type PlanPage = { id: string; type: PageTypeId; label: string; purpose: string; sections: PlanSection[]; hide?: ChromeId[] }
 /** A section on a plan page: its moments (ready pieces on this section only) and, for a photo section, how its photos are shown. */
 /** `hero`: what this film/image part shows when it isn't the site's first screen (that one is the plan's `hero`). */
-export type PlanSection = { key: string; id: SectionId; pieces: PieceId[]; photos?: ImagePresentationId; hero?: HeroId; /** The owner's design for a multi-design section (section-variants.ts). */ variant?: string }
+export type PlanSection = { key: string; id: SectionId; pieces: PieceId[]; photos?: ImagePresentationId; hero?: HeroId; /** The owner's design for a multi-design section (section-variants.ts). */ variant?: string; /** The collected site it was taken from (`example:…` / `seed:…`), for "from Sela Mor". */ from?: string }
 /** Where the user attached a ready piece: page id + section index on that page, or page '*' for the whole site. */
 export type PiecePlacement = { piece: PieceId; page: string; index: number }
 
@@ -474,6 +474,8 @@ export type UploadedAsset = {
   duration?: number
   /** Id of the actual bytes in the browser's IndexedDB (see lib/files.ts). Absent when the user only marked the asset as "available". */
   fileId?: string
+  /** The part it was added on, in words ("Home · Show your work") — the build puts it there. */
+  place?: string
 }
 
 /** One page as the user has configured it in the kit. */

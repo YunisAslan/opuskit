@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useUser } from '@/features/auth'
 import { Logo, Symbol } from './Logo'
 import { useCollection } from '@/lib/collection'
-import { CollectionSheet } from '@/app/library/parts'
+import { BuildButton, CollectionSheet } from '@/app/library/parts'
 
 const NAV = [
   { href: '/library', label: 'Library' },
@@ -34,7 +34,8 @@ export function Header() {
           </nav>
           {/* One Collection for every screen size (two would open two sheets). */}
           <CollectionSheet />
-          {!n && <span className="hidden md:block"><Link href="/library" className="btn btn-ink btn-sm">Start a site</Link></span>}
+          {/* The cart and its checkout: once something is collected, the one way on sits next to it. */}
+          {n ? <BuildButton /> : <span className="hidden md:block"><Link href="/library" className="btn btn-ink btn-sm">Start a site</Link></span>}
           <button className="-mr-2 p-2 md:hidden" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(!open)}>
             <span className="sr-only">Menu</span>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">{open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M3 8h18M3 16h18" />}</svg>

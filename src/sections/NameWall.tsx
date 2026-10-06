@@ -2,7 +2,7 @@
 // Three designs:
 //   grid   — names in ruled cells, a quiet wall of proof.
 //   inline — the names run as one big paragraph, the way a credits list reads.
-//   split  — a title and a line on the left, the names in cells on the right, each with its initial (tools, partners).
+//   split  — a title and a line on the left, the names in cells on the right (tools, partners) — names only, never letters standing in for logos.
 export function NameWallSection({ tone, variant = 'grid', title, text, names }: { tone?: 'ground' | 'surface' | 'inverse' | 'chapter'; variant?: 'grid' | 'inline' | 'split'; title: string; text?: string; names: string[] }) {
   const t = tone === 'ground' ? undefined : tone
   if (variant === 'split') return (
@@ -14,9 +14,7 @@ export function NameWallSection({ tone, variant = 'grid', title, text, names }: 
         </div>
         <ul className="grid grid-cols-2 self-start border-l border-t border-(--color-border) sm:grid-cols-3 md:col-span-8">
           {names.map((n) => (
-            <li key={n} className="type-body flex items-center gap-3 border-b border-r border-(--color-border) px-4 py-5 md:px-5 md:py-6">
-              <span aria-hidden className="type-utility grid size-9 shrink-0 place-items-center rounded-(--radius-button) bg-(--color-surface)">{n[0]}</span>{n}
-            </li>
+            <li key={n} className="type-body border-b border-r border-(--color-border) px-4 py-5 md:px-5 md:py-6">{n}</li>
           ))}
         </ul>
       </div>
