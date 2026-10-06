@@ -775,7 +775,7 @@ export const signaturePatterns: SignaturePattern[] = [
   {
     id: 'live-status', viaConcept: true, name: 'A live status line', sections: ['navbar', 'footer', 'location', 'reservation', 'hero', 'schedule'],
     levels: ['still', 'subtle', 'dynamic', 'immersive'], fits: ['restaurant', 'hotel', 'event', 'clinic', 'saas', 'studio', 'technical', 'futuristic', 'digital'],
-    experience: 'A small line tells what is true right now — “Open now · closes 23:00”, “Baku 18:42”, “Next session in 3 days” — so the site feels alive, not printed.',
+    experience: 'A small line tells what is true right now — “Open now · closes 23:00”, “Lisbon 18:42”, “Next session in 3 days” — so the site feels alive, not printed.',
     implementation: 'A client component in the utility face that computes its text from real data in the recipe (opening hours, time zone, next event date) with Intl.DateTimeFormat, re-rendered every 30–60 s; a 6px status dot (accent when open, muted when closed). The server renders a neutral fallback (“Open daily 12:00–23:00”) so nothing jumps.',
     mobile: 'Same line, one row; wraps under the logo if needed.', reducedMotion: 'Unchanged (the dot does not pulse).',
   },

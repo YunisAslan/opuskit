@@ -2,10 +2,11 @@
 // Pages (docs/plan-library.md): which pages the site has — one collected site's own, else the kind of site's — plus
 // suggestions (in Add a page) and your own. Each page is a blend of the collected sites, or follows one ("Made from").
 // In the middle, the picked page between its locked menu and footer: drag parts to reorder (or the arrows), remove,
-// and on each part what belongs to it — an effect, your photos, your film. Pick a part and the right column offers its
-// other designs. Below that, everything collected — parts, first screens, effects, menus and footers, each site's parts
-// — and last All parts, for anything no collected site has — dragged onto the page or added with +; whatever lands scrolls into view and glows. Thumbnails keep their own
-// colours (only Brand's example takes yours).
+// and on each part what belongs to it — another design, an effect, your photos, your film. Whatever is clicked on the
+// page (a part, the menu, the footer, a row of On every page) opens its own choices, large, in one chooser (`Chooser`).
+// Left, the toolbox — Parts (everything collected, each site's parts, then All parts) and Effects (On every page, then
+// the effects that go on one part) — dragged onto the page or added with +; whatever lands scrolls into view and
+// glows. Right, the site's pages. Thumbnails keep their own colours (only Brand's example takes yours).
 import { ArrowDown, ArrowLeftRight, ArrowRight, ArrowUp, Check, ChevronRight, Eye, EyeOff, Film, GripVertical, ImagePlus, Info, Lock, Plus, Search, Sparkles, X } from 'lucide-react'
 import Link from 'next/link'
 import { Fragment, useEffect, useMemo, useRef, useState, type DragEvent } from 'react'
@@ -15,6 +16,7 @@ import { Chip } from '@/components/ui'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { LinkDemo } from '@/components/LinkDemo'
 import { TileClip } from '@/components/RealSiteClip'
 import { closestPiece } from '@/features/kit/closest'
 import { heroName } from '@/app/kit/HeroPreview'
@@ -22,6 +24,7 @@ import { ItemPreview, exampleOf, sampleLook, siteLook, type Look } from '@/app/l
 import { EFFECTS, footerStyles, navStyles, pageTypes, sections } from '@/data/patterns'
 import { sectionVariants, variantFor } from '@/data/section-variants'
 import { behaviours, isMoment, pieceSlots, pieces } from '@/data/pieces'
+import { sectionGuide } from '@/data/section-guide'
 import { directions, purposes } from '@/data/taxonomy'
 import { addPage, addSection, addSuggested, behaviourPick, effectOn, heroOf, isStandardPage, jobOf, missingPages, movePage, moveSection, pageGroups, piecesFor, placeSection, planToSpec, removePage, removeSection, renamePage, replaceSection, sectionGroups, setBehaviour, setPartHero, setSectionVariant, setStyle, specToPlan, toggleChrome, togglePiece, toggleSitePiece } from '@/features/kit/plan'
 import { blendPage, itemKey, itemName, lookChoices, pageLike, placement, siteName, sitePageParts, siteSpec, sitesWithPage, startSite, type Collection, type CollectionItem, type SiteRef } from '@/features/library/collection'
@@ -34,6 +37,8 @@ import type { BehaviourId, ChromeId, FooterStyleId, HeroId, KitPlan, NavStyleId,
 import { NeedsStudio, StepFrame, usePlanLook, useToRecipe } from '../shared'
 
 const FILM = new Set(EFFECTS.filter((e) => e.lead === 'video').map((e) => e.hero))
+// First screens made of words or a 3D object take no photos of the owner's.
+const NO_PHOTOS = new Set(EFFECTS.filter((e) => e.lead === 'typography' || e.lead === '3d').map((e) => e.hero))
 
 // Every change says what happened and can be undone.
 const change = (message: string, f: (p: KitPlan) => KitPlan) => { const before = readPlan(); writePlan(f(before)); toast(message, { action: { label: 'Undo', onClick: () => writePlan(before) } }) }
@@ -53,6 +58,9 @@ function ghost(e: DragEvent) {
 type Drag = { t: 'move'; key: string } | { t: 'part'; id: SectionId; variant?: string; from?: SiteRef } | { t: 'hero'; id: HeroId } | { t: 'effect'; id: PieceId }
 const DRAG = 'application/x-opuskit'
 
+/** What the chooser is open on: a part, the menu or footer, or one row of On every page. */
+type Choose = { t: 'part'; key: string } | { t: 'chrome'; c: 'nav' | 'footer' } | { t: 'site'; b: BehaviourId }
+
 // Thumbnails keep their own colours (only Brand's example takes yours): a part from a site in that site's look.
 const siteLooks = new Map<SiteRef, Look>()
 const lookOfSite = (r: SiteRef) => { if (!siteLooks.has(r)) siteLooks.set(r, siteLook(r, specToPlan(siteSpec(r)!))); return siteLooks.get(r)! }
@@ -62,8 +70,7 @@ export function Pages() {
   const plan = usePlan()
   const c = useCollection()
   const [pageId, setPageId] = useState<string>()
-  const [own, setOwn] = useState('')
-  const [selKey, setSelKey] = useState<string>()
+  const [choose, setChoose] = useState<Choose>()
   const [drag, setDrag] = useState<Drag | null>(null)
   const [dropAt, setDropAt] = useState<number | null>(null)
   const [fxOver, setFxOver] = useState<string>()
@@ -85,13 +92,7 @@ export function Pages() {
   if (plan.via !== 'studio' || !plan.pages.length) return <NeedsStudio />
 
   const page = plan.pages.find((p) => p.id === pageId) ?? plan.pages[0]
-  const sel = page.sections.find((x) => x.key === selKey)
-  // The menu or the footer picked (their rows are picked like parts; the panel then offers the other designs).
-  const chromeSel = selKey === 'chrome:nav' ? 'nav' : selKey === 'chrome:footer' ? 'footer' : undefined
-  const pickChrome = (k: 'nav' | 'footer') => setSelKey(selKey === `chrome:${k}` ? undefined : `chrome:${k}`)
-  // A site-wide behaviour picked (links, headlines…): the panel then offers its options, each moving.
-  const siteSel = selKey?.startsWith('site:') ? (selKey.slice(5) as BehaviourId) : undefined
-  const sites = lookChoices(c), first = startSite(c)
+  const sites = lookChoices(c), first = plan.blank ? undefined : startSite(c)
   const base = first ? lookOfSite(first) : sampleLook({ kind: 'menu', id: recipe.chrome.nav.id }, plan.purpose)
   const partLook = (s: PlanSection): Look => (s.from ? lookOfSite(s.from as SiteRef) : s.id === 'hero' ? base : sampleLook({ kind: 'section', id: s.id }, plan.purpose))
   const collected = new Set(c.items.flatMap((i) => (i.kind === 'section' ? [i.id] : i.kind === 'hero' ? ['hero'] : [])))
@@ -104,10 +105,10 @@ export function Pages() {
     change(r ? `${page.label} now follows ${siteName(r)}` : `${page.label} is a mix again`, (p) => (r ? pageLike(p, page.id, r) : blendPage(p, page.id, sites)))
   }
 
-  // ─── putting things on the page: by drop (at a spot) or by + (after the picked part, else before the closing parts) ───
+  // ─── putting things on the page: by drop (at a spot) or by + (before the closing parts) ───
   const keysOf = (p: KitPlan) => new Set(p.pages.find((x) => x.id === page.id)!.sections.map((s) => s.key))
   const placeNew = (d: Exclude<Drag, { t: 'move' } | { t: 'effect' }>, at?: number) => {
-    const pos = at ?? (sel ? page.sections.indexOf(sel) + 1 : undefined)
+    const pos = at
     let k: string | undefined
     const name = d.t === 'hero' ? `First screen — ${heroName(d.id)}` : sections[d.id].name
     change(`${name} added to ${page.label}`, (p) => {
@@ -123,21 +124,48 @@ export function Pages() {
     if (k) setFlash(k)
   }
   const putEffect = (id: PieceId, onKey?: string) => {
-    const target = page.sections.find((s) => s.key === onKey) ?? (sel && pieces[id].sections.includes(sel.id) ? sel : page.sections.find((s) => pieces[id].sections.includes(s.id)))
+    const target = page.sections.find((s) => s.key === onKey) ?? page.sections.find((s) => pieces[id].sections.includes(s.id))
     if (!target || !pieces[id].sections.includes(target.id)) return toast(`${pieces[id].name} doesn’t fit ${target ? jobOf(target.id).toLowerCase() : 'any part on this page'}`, { description: `It goes on: ${[...new Set(pieces[id].sections.map((x) => (x === 'hero' ? 'the first screen' : jobOf(x).toLowerCase())))].slice(0, 4).join(', ')}.` })
     if (target.pieces.includes(id)) return setFlash(target.key)
     const swap = target.pieces.find((x) => pieces[x].slot === pieces[id].slot)
     change(`${pieces[id].name} on ${target.id === 'hero' ? 'the first screen' : jobOf(target.id).toLowerCase()}`, (p) => togglePiece(swap ? togglePiece(p, page.id, target.key, swap) : p, page.id, target.key, id))
     setFlash(target.key)
   }
-  const swapTo = (id: SectionId, variant?: string) => {
-    if (!sel) return
-    change(`${jobOf(sel.id)} now ${variant ? sectionVariants[id]?.options.find((o) => o.id === variant)?.name.toLowerCase() : sections[id].name}`, (p) => {
-      const n = replaceSection(p, page.id, sel.key, id)
-      return setSectionVariant(n, page.id, sel.key, variant)
-    })
-    setFlash(sel.key)
+
+  // ─── the chooser: what the clicked thing can be instead, every option drawn large ───
+  const chooser = (x?: Choose): ChooserProps | undefined => {
+    if (!x) return
+    if (x.t === 'chrome') {
+      const nav = x.c === 'nav'
+      return { title: nav ? 'Menu' : 'Footer', line: 'The same on every page — pick one.', groups: [{ title: nav ? 'Menus' : 'Footers', options: nav
+        ? Object.values(navStyles).map((n) => ({ key: n.id, label: n.name, sub: n.line, on: recipe.chrome.nav.id === n.id, preview: <ItemPreview item={{ kind: 'menu', id: n.id }} look={base} />, pick: () => change(`Menu — ${n.name}`, (p) => setStyle(p, 'nav', n.id)) }))
+        : Object.values(footerStyles).map((f) => ({ key: f.id, label: f.name, sub: f.line, on: recipe.chrome.footerStyle.id === f.id, preview: <ItemPreview item={{ kind: 'footer', id: f.id }} look={base} />, pick: () => change(`Footer — ${f.name}`, (p) => setStyle(p, 'footer', f.id)) })) }] }
+    }
+    if (x.t === 'site') {
+      const g = behaviours[x.b], now = picksOf(plan, x.b)
+      const pick = (id?: PieceId) => change(id ? `${g.name} — ${pieces[id].name}` : `${g.name} — none`, (p) => (g.many ? (id ? toggleSitePiece(p, id) : { ...p, sitePieces: (p.sitePieces ?? []).filter((y) => !g.ids.includes(y)) }) : setBehaviour(p, x.b, id)))
+      return { title: g.name, line: `${g.line} — on every page${g.many ? '; pick any' : ''}.`, many: g.many, groups: [{ title: g.many ? 'Extras' : 'Options', options: [
+        { key: 'none', label: g.many ? 'No extras' : 'None', sub: g.none, on: !now.length, preview: <Plain b={x.b} look={base} />, pick: () => pick() },
+        ...g.ids.map((id) => ({ key: id, label: pieces[id].name, sub: pieces[id].line, on: now.includes(id), preview: <ItemPreview item={{ kind: 'effect', id }} look={base} />, pick: () => pick(id) })),
+      ] }] }
+    }
+    const s = page.sections.find((y) => y.key === x.key)
+    if (!s) return
+    const look = partLook(s), where = `${page.label} · ${s.id === 'hero' ? 'First screen' : jobOf(s.id)}`
+    const flashing = (f: () => void) => () => { f(); setFlash(s.key) }
+    if (s.id === 'hero') return { title: heroName(heroOf(plan, s)), line: `${where} — pick another first screen; it changes this one only.`, groups: [{ title: 'First screens', options: EFFECTS.map((e) => ({
+      key: e.hero, label: e.name, sub: e.line, badge: e.lead === 'video' ? 'Needs a film' : undefined, on: heroOf(plan, s) === e.hero,
+      preview: <ItemPreview item={{ kind: 'hero', id: e.hero }} look={look} />, pick: flashing(() => change(`First screen — ${heroName(e.hero)}`, (p) => setPartHero(p, page.id, s.key, e.hero))) })) }] }
+    const name = sections[s.id].name, cur = designOf(s), vs = sectionVariants[s.id]?.options
+    const others = (sectionGroups.find((g) => g.ids.includes(s.id))?.ids ?? []).filter((y) => y !== s.id)
+    return { title: name, line: `${where} — pick a design, or another part that does the same job.`, groups: [
+      { title: vs ? `Designs of ${name}` : name, options: (vs ?? [undefined]).map((o) => ({ key: o?.id ?? s.id, label: o?.name ?? name, sub: o?.line ?? sectionGuide[s.id]?.look, on: !o || o.id === cur,
+        preview: <ItemPreview item={{ kind: 'section', id: s.id, ...(o ? { variant: o.id } : {}) }} look={look} />, pick: flashing(() => { if (o && o.id !== cur) change(`${name} — ${o.name}`, (p) => setSectionVariant(p, page.id, s.key, o.id)) }) })) },
+      { title: `Other parts · ${jobOf(s.id)}`, options: others.map((y) => { const v = variantFor(y, fam); return { key: y, label: sections[y].name, sub: sectionGuide[y] && `Best when ${sectionGuide[y].bestWhen}`, on: false,
+        preview: <ItemPreview item={{ kind: 'section', id: y, ...(v ? { variant: v } : {}) }} look={look} />, pick: flashing(() => change(`${jobOf(s.id)} — ${sections[y].name}`, (p) => setSectionVariant(replaceSection(p, page.id, s.key, y), page.id, s.key, undefined))) } }) },
+    ] }
   }
+  const open = chooser(choose)
 
   // ─── drag and drop ───
   const start = (e: DragEvent, d: Drag) => { e.dataTransfer.setData(DRAG, JSON.stringify(d)); e.dataTransfer.effectAllowed = d.t === 'move' ? 'move' : 'copy'; ghost(e); setDrag(d) }
@@ -175,30 +203,12 @@ export function Pages() {
 
   return (
     <StepFrame at="Pages" title={title} next={<button type="button" onClick={toRecipe} className="btn btn-ink btn-sm"><span>Next<span className="hidden sm:inline">: Recipe</span></span><ArrowRight size={14} aria-hidden /></button>}>
-      <div className="mt-8 grid gap-8 lg:grid-cols-[15rem_1fr] lg:items-start xl:grid-cols-[15rem_1fr_20rem]">
-        <div className="space-y-4 lg:sticky lg:top-36">
-          <ol className="space-y-1" aria-label="Your pages">
-            {plan.pages.map((p, i) => (
-              <li key={p.id} className={`group relative flex items-center rounded-lg ${p.id === page.id ? 'bg-ink text-paper' : 'hover:bg-paper-2'}`}>
-                <button type="button" onClick={() => { setPageId(p.id); setSelKey(undefined) }} aria-current={p.id === page.id ? 'page' : undefined} className="flex min-w-0 flex-1 items-center justify-between gap-2 px-3 py-2.5 text-left">
-                  <span className="truncate font-medium">{p.label}</span>
-                  <span className="shrink-0 text-xs tabular-nums opacity-60 md:group-hover:opacity-0 md:group-focus-within:opacity-0" title={`${p.sections.length} parts`}>{p.sections.length || ''}</span>
-                </button>
-                {/* The page's controls only on hover, over the row's end (where the count of its parts sits otherwise). */}
-                <span className={`flex shrink-0 pr-1 md:absolute md:inset-y-0 md:right-0 md:items-center md:rounded-r-lg md:pl-6 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 ${p.id === page.id ? 'md:bg-gradient-to-l md:from-ink md:from-60%' : 'md:bg-gradient-to-l md:from-paper-2 md:from-60%'}`}>
-                  <Icon label={`Move ${p.label} up`} disabled={i === 0} onClick={() => updatePlan((x) => movePage(x, p.id, -1))}><ArrowUp size={14} /></Icon>
-                  <Icon label={`Move ${p.label} down`} disabled={i === plan.pages.length - 1} onClick={() => updatePlan((x) => movePage(x, p.id, 1))}><ArrowDown size={14} /></Icon>
-                  <Icon label={`Remove ${p.label}`} disabled={plan.pages.length === 1} onClick={() => change(`Removed: ${p.label}`, (x) => removePage(x, p.id))}><X size={14} /></Icon>
-                </span>
-              </li>
-            ))}
-          </ol>
-          <PagePicker onPick={add} suggested={missingPages(plan)} />
-          <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); if (own.trim()) { add('custom', own.trim().slice(0, 60)); setOwn('') } }}>
-            <Input value={own} onChange={(e) => setOwn(e.target.value)} placeholder="Your own page" aria-label="Name of your own page" className="h-10 bg-white" />
-            <button type="submit" disabled={!own.trim()} className="btn btn-line btn-sm shrink-0 disabled:opacity-40">Add</button>
-          </form>
-        </div>
+      <div className="mt-8 grid gap-8 lg:grid-cols-[17rem_1fr_11rem] lg:items-start xl:grid-cols-[20rem_1fr_13rem]">
+        <Panel plan={plan} page={page} look={base} c={c} sites={sites} placed={where.placed.length} onSite={(b) => setChoose({ t: 'site', b })}
+          onDrag={start} onDragEnd={end} onAdd={placeNew} onEffect={(id) => putEffect(id)}
+          onHero={(id) => { const h = page.sections.find((s) => s.id === 'hero'); if (h) { change(`First screen — ${heroName(id)}`, (p) => setPartHero(p, page.id, h.key, id)); setFlash(h.key) } else placeNew({ t: 'hero', id }, 0) }}
+          onChrome={(k, id) => change(`${k === 'nav' ? 'Menu' : 'Footer'} — ${k === 'nav' ? navStyles[id as NavStyleId].name : footerStyles[id as FooterStyleId].name}`, (p) => setStyle(p, k, id))}
+          navId={recipe.chrome.nav.id} footerId={recipe.chrome.footerStyle.id} />
 
         <section aria-labelledby="page-title" className="min-w-0">
           <div className="flex flex-wrap items-end justify-between gap-3">
@@ -218,7 +228,7 @@ export function Pages() {
             )}
           </div>
           <p className="mt-2 flex items-center gap-1.5 text-xs text-muted"><Info size={13} aria-hidden />Each part is shown in its source site’s colours — on your site they all take your Brand colours.</p>
-          <div className="mt-3"><ChromeRow c="navbar" page={page} picked={chromeSel === 'nav'} onPick={() => pickChrome('nav')} styleName={recipe.chrome.nav.name} preview={<ItemPreview item={{ kind: 'menu', id: recipe.chrome.nav.id }} look={base} />} /></div>
+          <div className="mt-3"><ChromeRow c="navbar" page={page} onPick={() => setChoose({ t: 'chrome', c: 'nav' })} styleName={recipe.chrome.nav.name} preview={<ItemPreview item={{ kind: 'menu', id: recipe.chrome.nav.id }} look={base} />} /></div>
           {isStandardPage(page.type) && !page.sections.length && !drag
             ? <p className="mt-2 rounded-lg bg-paper-2 px-4 py-3 text-ink-2">Written for you — a {pageTypes[page.type].name.toLowerCase()} page needs no parts.</p>
             : (
@@ -227,11 +237,11 @@ export function Pages() {
                   <Fragment key={s.key}>
                     {dropAt === i && drag?.t !== 'effect' && line}
                     <li data-part={s.key} draggable onDragStart={(e) => start(e, { t: 'move', key: s.key })} onDragEnd={end} onDragOver={(e) => over(e, i, s.key)} onDrop={(e) => { e.stopPropagation(); drop(e, s.key) }}
-                      className={`group rounded-lg border bg-white p-2 pr-3 transition-[box-shadow,border-color,opacity] duration-300 ${flash === s.key ? 'border-pencil shadow-[0_0_0_4px_var(--color-pencil-soft)]' : selKey === s.key ? 'border-ink shadow-[0_0_0_1px_var(--color-ink)]' : fxOver === s.key ? 'border-pencil' : 'border-line'} ${drag?.t === 'move' && drag.key === s.key ? 'opacity-40' : ''}`}>
+                      className={`group rounded-lg border bg-white p-2 pr-3 transition-[box-shadow,border-color,opacity] duration-300 ${flash === s.key ? 'border-pencil shadow-[0_0_0_4px_var(--color-pencil-soft)]' : fxOver === s.key ? 'border-pencil' : 'border-line'} ${drag?.t === 'move' && drag.key === s.key ? 'opacity-40' : ''}`}>
                       <div className="flex items-center gap-3">
                         <GripVertical size={16} className="shrink-0 cursor-grab text-muted/60 active:cursor-grabbing" aria-hidden />
                         <div className="relative flex min-w-0 flex-1 items-center gap-4 text-left">
-                          <button type="button" onClick={() => setSelKey(selKey === s.key ? undefined : s.key)} aria-pressed={selKey === s.key} aria-label={`Pick ${s.id === 'hero' ? 'the first screen' : jobOf(s.id).toLowerCase()} to see other designs`} className="absolute inset-0 z-10" />
+                          <button type="button" onClick={() => setChoose({ t: 'part', key: s.key })} aria-label={`Change ${s.id === 'hero' ? 'the first screen' : sections[s.id].name}`} className="absolute inset-0 z-10 cursor-pointer" />
                           <LazyMount className="pointer-events-none aspect-[16/10] w-36 shrink-0 overflow-hidden rounded-md border border-line sm:w-44">
                             {s.id === 'hero' ? <ItemPreview item={{ kind: 'hero', id: heroOf(plan, s)! }} look={partLook(s)} /> : <ItemPreview item={{ kind: 'section', id: s.id, ...(designOf(s) ? { variant: designOf(s) } : {}) }} look={partLook(s)} />}
                           </LazyMount>
@@ -244,10 +254,10 @@ export function Pages() {
                         <span className="flex shrink-0 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
                           <Icon label="Move up" disabled={i === 0} onClick={() => { updatePlan((x) => moveSection(x, page.id, s.key, -1)); setFlash(s.key) }}><ArrowUp size={16} /></Icon>
                           <Icon label="Move down" disabled={i === page.sections.length - 1} onClick={() => { updatePlan((x) => moveSection(x, page.id, s.key, 1)); setFlash(s.key) }}><ArrowDown size={16} /></Icon>
-                          <Icon label="Remove" onClick={() => { if (selKey === s.key) setSelKey(undefined); change(`Removed from ${page.label}`, (x) => removeSection(x, page.id, s.key)) }}><X size={16} /></Icon>
+                          <Icon label="Remove" onClick={() => { change(`Removed from ${page.label}`, (x) => removeSection(x, page.id, s.key)) }}><X size={16} /></Icon>
                         </span>
                       </div>
-                      <PartExtras plan={plan} page={page} part={s} collectedFx={c.items.flatMap((x) => (x.kind === 'effect' ? [x.id] : []))} />
+                      <PartExtras plan={plan} page={page} part={s} onChange={() => setChoose({ t: 'part', key: s.key })} collectedFx={c.items.flatMap((x) => (x.kind === 'effect' ? [x.id] : []))} />
                     </li>
                   </Fragment>
                 ))}
@@ -255,17 +265,32 @@ export function Pages() {
                 {!page.sections.length && drag && <li className="rounded-lg border border-dashed border-pencil px-4 py-6 text-center text-sm text-pencil">Drop it here</li>}
               </ol>
             )}
-          <div className="mt-2"><ChromeRow c="footer" page={page} picked={chromeSel === 'footer'} onPick={() => pickChrome('footer')} styleName={recipe.chrome.footerStyle.name} preview={<ItemPreview item={{ kind: 'footer', id: recipe.chrome.footerStyle.id }} look={base} />} /></div>
-          <SiteWide plan={plan} picked={siteSel} onPick={(b) => setSelKey(selKey === `site:${b}` ? undefined : `site:${b}`)} />
-          <Link href="/library" className="mt-4 inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink"><Plus size={14} aria-hidden />Collect more sites in the Library</Link>
+          <div className="mt-2"><ChromeRow c="footer" page={page} onPick={() => setChoose({ t: 'chrome', c: 'footer' })} styleName={recipe.chrome.footerStyle.name} preview={<ItemPreview item={{ kind: 'footer', id: recipe.chrome.footerStyle.id }} look={base} />} /></div>
         </section>
 
-        <Panel plan={plan} page={page} sel={sel} selDesign={sel && designOf(sel)} chromeSel={chromeSel} siteSel={siteSel} look={base} c={c} sites={sites} placed={where.placed.length}
-          onDrag={start} onDragEnd={end} onAdd={placeNew} onEffect={(id) => putEffect(id)} onSwap={swapTo}
-          onHero={(id) => { const h = sel?.id === 'hero' ? sel : page.sections.find((s) => s.id === 'hero'); if (h) { change(`First screen — ${heroName(id)}`, (p) => setPartHero(p, page.id, h.key, id)); setFlash(h.key) } else placeNew({ t: 'hero', id }, 0) }}
-          onChrome={(k, id) => change(`${k === 'nav' ? 'Menu' : 'Footer'} — ${k === 'nav' ? navStyles[id as NavStyleId].name : footerStyles[id as FooterStyleId].name}`, (p) => setStyle(p, k, id))}
-          navId={recipe.chrome.nav.id} footerId={recipe.chrome.footerStyle.id} />
+        <nav aria-label="Your pages" className="order-first lg:sticky lg:top-36 lg:order-none">
+          <p className="px-2.5 text-sm text-muted">Pages · {plan.pages.length}</p>
+          <ol className="mt-2 space-y-0.5">
+            {plan.pages.map((p, i) => (
+              <li key={p.id} className={`group relative flex items-center rounded-md ${p.id === page.id ? 'bg-ink text-paper' : 'hover:bg-paper-2'}`}>
+                <button type="button" onClick={() => setPageId(p.id)} aria-current={p.id === page.id ? 'page' : undefined} className="flex min-w-0 flex-1 items-center justify-between gap-2 px-2.5 py-2 text-left text-sm">
+                  <span className="truncate font-medium">{p.label}</span>
+                  <span className="shrink-0 text-xs tabular-nums opacity-50 md:group-hover:opacity-0 md:group-focus-within:opacity-0" title={`${p.sections.length} parts`}>{p.sections.length || ''}</span>
+                </button>
+                {/* The page's controls only on hover, over the row's end (where the count of its parts sits otherwise); only the
+                    buttons take clicks, so the rest of the row still opens the page. */}
+                <span className={`flex shrink-0 pr-0.5 md:pointer-events-none md:absolute md:inset-y-0 md:right-0 md:items-center md:rounded-r-md md:pl-5 md:opacity-0 md:[&>button]:pointer-events-auto md:group-hover:opacity-100 md:group-focus-within:opacity-100 ${p.id === page.id ? 'md:bg-gradient-to-l md:from-ink md:from-60%' : 'md:bg-gradient-to-l md:from-paper-2 md:from-60%'}`}>
+                  <Icon small label={`Move ${p.label} up`} disabled={i === 0} onClick={() => updatePlan((x) => movePage(x, p.id, -1))}><ArrowUp size={13} /></Icon>
+                  <Icon small label={`Move ${p.label} down`} disabled={i === plan.pages.length - 1} onClick={() => updatePlan((x) => movePage(x, p.id, 1))}><ArrowDown size={13} /></Icon>
+                  <Icon small label={`Remove ${p.label}`} disabled={plan.pages.length === 1} onClick={() => change(`Removed: ${p.label}`, (x) => removePage(x, p.id))}><X size={13} /></Icon>
+                </span>
+              </li>
+            ))}
+          </ol>
+          <PagePicker onPick={add} suggested={missingPages(plan)} />
+        </nav>
       </div>
+      {open && <Chooser {...open} onClose={() => setChoose(undefined)} />}
     </StepFrame>
   )
 }
@@ -274,110 +299,137 @@ export function Pages() {
 const partSub = (id: SectionId, variant?: string) => { const v = variant && sectionVariants[id]?.options.find((o) => o.id === variant); return v ? `${jobOf(id)} · ${v.name}` : jobOf(id) }
 const designsOf = (id: SectionId) => { const n = sectionVariants[id]?.options.length ?? 0; return n > 1 ? `${n} designs` : '' }
 
-// ─── The right column: what you can put on this page ────────────────────────
+// ─── The toolbox (left): what you can put on this page ─────────────────────
 
-/** With a part picked: its other designs and the other parts doing its job (for a first screen, the other first
- *  screens) — tap to swap it in place. Below, everything in your Collection: parts, first screens, effects, menus and
- *  footers, and each collected site's parts. Each can be dragged onto the page (a part to a spot, an effect onto a
- *  part) or added with +, and the page shows where it landed. */
-function Panel({ plan, page, sel, selDesign, chromeSel, siteSel, look, c, sites, placed, onDrag, onDragEnd, onAdd, onEffect, onSwap, onHero, onChrome, navId, footerId }: {
-  plan: KitPlan; page: PlanPage; sel?: PlanSection; selDesign?: string; chromeSel?: 'nav' | 'footer'; siteSel?: BehaviourId; look: Look; c: Collection; sites: SiteRef[]; placed: number
+/** Only adds, never changes what is on the page (that opens from the page itself, in the chooser). Two tabs and one
+ *  search. Parts: your Collection — parts, first screens, menus and footers, each collected site's parts — then All
+ *  parts. Effects: On every page (what links, headlines, the main button… do — each opens the chooser), then every
+ *  effect that goes on one part, grouped by what it does, collected ones first. Everything is a picture, two across:
+ *  dragged onto the page (a part to a spot, an effect onto a part) or added with +. */
+function Panel({ plan, page, look, c, sites, placed, onSite, onDrag, onDragEnd, onAdd, onEffect, onHero, onChrome, navId, footerId }: {
+  plan: KitPlan; page: PlanPage; look: Look; c: Collection; sites: SiteRef[]; placed: number; onSite: (b: BehaviourId) => void
   onDrag: (e: DragEvent, d: Drag) => void; onDragEnd: () => void; onAdd: (d: Exclude<Drag, { t: 'move' } | { t: 'effect' }>) => void; onEffect: (id: PieceId) => void
-  onSwap: (id: SectionId, variant?: string) => void; onHero: (id: HeroId) => void; onChrome: (k: 'nav' | 'footer', id: string) => void; navId: string; footerId: string
+  onHero: (id: HeroId) => void; onChrome: (k: 'nav' | 'footer', id: string) => void; navId: string; footerId: string
 }) {
+  const [tab, setTab] = useState<'parts' | 'effects'>('parts')
+  const [q, setQ] = useState('')
   const parts = useMemo(() => sites.map((r) => {
     const recipe = composeRecipe(siteSpec(r)!), seen = new Set<string>()
     return { site: r, list: recipe.pages.flatMap((p) => p.sections).filter((s) => s.id !== 'hero' && s.id !== 'navbar' && s.id !== 'footer').filter((s) => { const k = `${s.id}:${s.variant?.id ?? ''}`; if (seen.has(k)) return false; seen.add(k); return true }) }
   }), [sites.join('|')]) // eslint-disable-line react-hooks/exhaustive-deps
   const of = <K extends CollectionItem['kind']>(k: K) => c.items.filter((i): i is Extract<CollectionItem, { kind: K }> => i.kind === k)
   const on = (id: SectionId, variant?: string) => page.sections.some((s) => s.id === id && (!variant || s.variant === variant))
-  const card = (key: string, item: CollectionItem, look: Look, label: string, sub: string, d: Drag | undefined, act: () => void, done: boolean, verb = 'Add') => (
-    <li key={key} draggable={!!d} onDragStart={d ? (e) => onDrag(e, d) : undefined} onDragEnd={onDragEnd} className={`group flex items-center gap-3 rounded-lg p-1 ${d ? 'cursor-grab active:cursor-grabbing hover:bg-paper-2' : ''}`}>
-      <div className="w-24 shrink-0 overflow-hidden rounded-md border border-line bg-white"><div className="pointer-events-none aspect-[16/10] overflow-hidden"><ItemPreview item={item} look={look} /></div></div>
-      <p className="min-w-0 flex-1 text-sm leading-snug">{label}<span className="block truncate text-xs text-muted">{sub}</span></p>
-      <button type="button" disabled={done} onClick={act} aria-label={done ? `${label}: already here` : `${verb} ${label}`}
-        className="grid size-8 shrink-0 place-items-center rounded-full border border-line bg-white hover:border-ink disabled:border-transparent disabled:bg-transparent disabled:text-pencil">
-        {done ? <Check size={14} aria-hidden /> : verb === 'Use' ? <ArrowLeftRight size={13} aria-hidden /> : <Plus size={14} aria-hidden />}
+  const hit = (...t: string[]) => !q || t.join(' ').toLowerCase().includes(q.trim().toLowerCase())
+  const sample = (i: CollectionItem) => sampleLook(i, plan.purpose)
+  // One tile: the picture, its name under it, and + (or ⇄ for what replaces) over its corner; a tick once it is here.
+  const tile = (key: string, item: CollectionItem, lk: Look, label: string, sub: string, d: Drag | undefined, act: () => void, done: boolean, verb = 'Add', badge?: string) => (
+    <li key={key} draggable={!!d} onDragStart={d ? (e) => onDrag(e, d) : undefined} onDragEnd={onDragEnd} className={`group relative min-w-0 ${d ? 'cursor-grab active:cursor-grabbing' : ''}`}>
+      <div className={`overflow-hidden rounded-md border bg-white transition-colors ${done ? 'border-pencil/40' : 'border-line group-hover:border-ink'}`}>
+        <LazyMount className="pointer-events-none aspect-[16/10] overflow-hidden"><ItemPreview item={item} look={lk} /></LazyMount>
+      </div>
+      <p className="mt-1.5 line-clamp-2 text-[13px] font-medium leading-tight">{label}{badge && <span className="ml-1 align-middle rounded-full bg-pencil/10 px-1.5 py-px text-[10px] font-medium text-pencil">{badge}</span>}</p>
+      {sub && <p className="mt-0.5 truncate text-[11px] text-muted" title={sub}>{sub}</p>}
+      <button type="button" disabled={done} onClick={act} aria-label={done ? `${label}: already here` : `${verb} ${label}`} title={done ? 'Already on this page' : verb === 'Use' ? 'Use this one' : `Add to ${page.label}`}
+        className={`absolute right-1.5 top-1.5 grid size-7 place-items-center rounded-full shadow-sm transition ${done ? 'bg-pencil text-white' : 'bg-white text-ink hover:bg-ink hover:text-paper md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100'}`}>
+        {done ? <Check size={14} aria-hidden /> : verb === 'Use' ? <ArrowLeftRight size={13} aria-hidden /> : <Plus size={15} aria-hidden />}
       </button>
     </li>
   )
+  const grid = (list: React.ReactNode[]) => <ul className="grid grid-cols-2 gap-x-3 gap-y-4">{list}</ul>
   const group = (title: string, list: React.ReactNode[], note?: string) => !list.length ? null : (
-    <section key={title} aria-label={title}><p className="text-sm text-muted">{title}</p>{note && <p className="text-xs text-muted">{note}</p>}<ul className="mt-1.5 space-y-0.5">{list}</ul></section>
+    <section key={title} aria-label={title}><p className="mb-2 text-xs font-medium text-muted">{title}{note && <span className="font-normal"> · {note}</span>}</p>{grid(list)}</section>
   )
-  const sample = (i: CollectionItem) => sampleLook(i, plan.purpose)
-  // Whatever gets picked opens at the top of this column: bring the top into view.
-  const aside = useRef<HTMLElement>(null)
-  useEffect(() => { aside.current?.scrollTo({ top: 0, behavior: 'smooth' }) }, [sel?.key, chromeSel, siteSel])
-  // Every part OpusKit has (one design each; its others are a pick away), for what no collected site has.
-  const [q, setQ] = useState('')
-  const hit = (...t: string[]) => !q || t.join(' ').toLowerCase().includes(q.toLowerCase())
-  const all = [
-    group('First screens', EFFECTS.filter((e) => hit(e.name, e.line, 'first screen')).map((e) => card(`a:h:${e.hero}`, { kind: 'hero', id: e.hero }, sample({ kind: 'hero', id: e.hero }), e.name, e.lead === 'video' ? 'Needs a film' : 'First screen', { t: 'hero', id: e.hero }, () => onHero(e.hero), page.sections.some((s) => s.id === 'hero' && heroOf(plan, s) === e.hero), 'Use'))),
-    group('Menu', Object.values(navStyles).filter((n) => hit(n.name, n.line, 'menu')).map((n) => card(`a:m:${n.id}`, { kind: 'menu', id: n.id }, sample({ kind: 'menu', id: n.id }), n.name, 'Every page', undefined, () => onChrome('nav', n.id), navId === n.id, 'Use'))),
-    ...sectionGroups.map((g) => group(g.job, g.ids.filter((id) => hit(sections[id].name, g.name, g.job)).map((id) => card(`a:s:${id}`, { kind: 'section', id }, sample({ kind: 'section', id }), sections[id].name, designsOf(id), { t: 'part', id }, () => onAdd({ t: 'part', id }), on(id))))),
-    group('Footer', Object.values(footerStyles).filter((f) => hit(f.name, f.line, 'footer')).map((f) => card(`a:f:${f.id}`, { kind: 'footer', id: f.id }, sample({ kind: 'footer', id: f.id }), f.name, 'Every page', undefined, () => onChrome('footer', f.id), footerId === f.id, 'Use'))),
-  ].filter(Boolean)
-  // Other designs for the picked part: its own designs, then other parts doing its job.
-  const designs = sel && sel.id !== 'hero' ? [
-    ...(sectionVariants[sel.id]?.options ?? []).filter((o) => o.id !== selDesign).map((o) => ({ id: sel.id, variant: o.id, label: o.name, sub: sections[sel.id].name })),
-    ...(sectionGroups.find((g) => g.ids.includes(sel.id))?.ids ?? []).filter((x) => x !== sel.id).map((x) => ({ id: x, variant: undefined as string | undefined, label: sections[x].name, sub: jobOf(x) })),
-  ] : []
-  return (
-    <aside ref={aside} className="space-y-6 lg:col-span-2 xl:sticky xl:top-36 xl:col-span-1 xl:max-h-[calc(100vh-10rem)] xl:overflow-y-auto xl:pr-1 xl:[scrollbar-color:var(--color-line)_transparent] xl:[scrollbar-width:thin]" aria-label="Add to this page">
-      {siteSel && <SiteWideOptions plan={plan} b={siteSel} look={look} />}
-      {chromeSel && (
-        <section aria-label={chromeSel === 'nav' ? 'Other menus' : 'Other footers'} className="rounded-lg border border-ink/15 bg-white p-3">
-          <p className="text-sm font-medium">{chromeSel === 'nav' ? 'Other menus' : 'Other footers'}</p>
-          <p className="text-xs text-muted">Tap to swap — the same on every page.</p>
-          <ul className="mt-2 space-y-0.5">
-            {chromeSel === 'nav'
-              ? Object.values(navStyles).map((n) => card(`o:m:${n.id}`, { kind: 'menu', id: n.id }, sample({ kind: 'menu', id: n.id }), n.name, n.line.split(' — ')[0], undefined, () => onChrome('nav', n.id), navId === n.id, 'Use'))
-              : Object.values(footerStyles).map((f) => card(`o:f:${f.id}`, { kind: 'footer', id: f.id }, sample({ kind: 'footer', id: f.id }), f.name, f.line.split(' — ')[0], undefined, () => onChrome('footer', f.id), footerId === f.id, 'Use'))}
-          </ul>
-        </section>
-      )}
-      {sel && (
-        <section aria-label="Other designs" className="rounded-lg border border-ink/15 bg-white p-3">
-          <p className="text-sm font-medium">{sel.id === 'hero' ? 'Other first screens' : `Other designs · ${jobOf(sel.id).toLowerCase()}`}</p>
-          <p className="text-xs text-muted">Tap to swap the picked part.</p>
-          <ul className="mt-2 space-y-0.5">
-            {sel.id === 'hero'
-              ? EFFECTS.filter((e) => e.hero !== heroOf(plan, sel)).map((e) => card(`h:${e.hero}`, { kind: 'hero', id: e.hero }, sample({ kind: 'hero', id: e.hero }), e.name, e.lead === 'video' ? 'Needs a film' : e.line.split('.')[0], undefined, () => onHero(e.hero), false, 'Use'))
-              : designs.map((d) => card(`d:${d.id}:${d.variant ?? ''}`, { kind: 'section', id: d.id, ...(d.variant ? { variant: d.variant } : {}) }, sample({ kind: 'section', id: d.id }), d.label, d.sub, undefined, () => onSwap(d.id, d.variant), false, 'Use'))}
-          </ul>
-        </section>
-      )}
-      <div>
-        <h2 className="text-sm font-medium">Your Collection</h2>
-        <p className="text-sm text-muted">{placed} of {c.items.length} on your pages. Drag onto {page.label}, or +.</p>
-      </div>
-      {group('Parts', of('section').map((i) => card(itemKey(i), i, sample(i), sections[i.id].name, partSub(i.id, i.variant), { t: 'part', id: i.id, variant: i.variant }, () => onAdd({ t: 'part', id: i.id, variant: i.variant }), on(i.id, i.variant))))}
-      {group('First screens', of('hero').map((i) => card(itemKey(i), i, sample(i), itemName(i), page.sections.some((s) => s.id === 'hero') ? 'Replaces this page’s first screen' : 'Adds a first screen', { t: 'hero', id: i.id }, () => onHero(i.id), page.sections.some((s) => s.id === 'hero' && heroOf(plan, s) === i.id), 'Use')))}
-      {group('Effects', of('effect').map((i) => card(itemKey(i), i, sample(i), pieces[i.id].name, effectOn(plan, i.id) ? 'On your site' : 'Drop it on a part', { t: 'effect', id: i.id }, () => onEffect(i.id), page.sections.some((s) => s.pieces.includes(i.id)))))}
-      {group('Menu & footer', [...of('menu').map((i) => card(itemKey(i), i, sample(i), itemName(i), 'Every page', undefined, () => onChrome('nav', i.id), navId === i.id, 'Use')), ...of('footer').map((i) => card(itemKey(i), i, sample(i), itemName(i), 'Every page', undefined, () => onChrome('footer', i.id), footerId === i.id, 'Use'))])}
-      {parts.map(({ site, list }) => {
-        // This page's kind on that site first; everything else it has folded below.
-        const here = sitePageParts(site, page.type), isHere = (s: (typeof list)[number]) => here.some((h) => h.id === s.id && (h.variant ?? '') === (s.variant?.id ?? ''))
-        const row = (s: (typeof list)[number]) => card(`${site}:${s.id}:${s.variant?.id ?? ''}`, { kind: 'section', id: s.id, ...(s.variant ? { variant: s.variant.id } : {}) }, lookOfSite(site), sections[s.id].name, partSub(s.id, s.variant?.id), { t: 'part', id: s.id, variant: s.variant?.id, from: site }, () => onAdd({ t: 'part', id: s.id, variant: s.variant?.id, from: site }), on(s.id, s.variant?.id))
-        const top = list.filter(isHere), more = list.filter((s) => !isHere(s))
-        return (
-          <Fold key={site} title={`From ${siteName(site)}`} sub={top.length ? `its ${pageTypes[page.type].name.toLowerCase()} page · ${top.length}` : `${list.length} parts`} open={!!top.length}>
-            {!!top.length && <ul className="space-y-0.5">{top.map(row)}</ul>}
-            {!!more.length && (top.length
-              ? <Fold title={`More from ${siteName(site)}`} sub={`${more.length}`} small><ul className="space-y-0.5">{more.map(row)}</ul></Fold>
-              : <ul className="space-y-0.5">{more.map(row)}</ul>)}
-          </Fold>
-        )
-      })}
-      {!c.items.length && <p className="text-sm text-muted">Nothing collected yet — collect sites in the <Link href="/library" className="link">Library</Link>, or pick from All parts.</p>}
-      <div className="border-t border-line pt-4">
-        <Fold title="All parts" sub="anything OpusKit has" open={!c.items.length}>
-          <label className="relative mb-3 block"><span className="sr-only">Search all parts</span>
-            <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
-            <Input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search parts — reviews, prices, FAQ…" className="h-9 rounded-full bg-white pl-8 text-sm" /></label>
-          <div className="space-y-4">{all.length ? all : <p className="text-sm text-muted">Nothing matches “{q}”.</p>}</div>
+
+  // Parts: the Collection, each collected site's parts, then everything OpusKit has (one design each; the others are a pick away).
+  const site = (r: SiteRef, s: (typeof parts)[number]['list'][number]) => tile(`${r}:${s.id}:${s.variant?.id ?? ''}`, { kind: 'section', id: s.id, ...(s.variant ? { variant: s.variant.id } : {}) }, lookOfSite(r), sections[s.id].name, partSub(s.id, s.variant?.id), { t: 'part', id: s.id, variant: s.variant?.id, from: r }, () => onAdd({ t: 'part', id: s.id, variant: s.variant?.id, from: r }), on(s.id, s.variant?.id))
+  const mine = [
+    group('Parts', of('section').filter((i) => hit(sections[i.id].name, jobOf(i.id))).map((i) => tile(itemKey(i), i, sample(i), sections[i.id].name, partSub(i.id, i.variant), { t: 'part', id: i.id, variant: i.variant }, () => onAdd({ t: 'part', id: i.id, variant: i.variant }), on(i.id, i.variant)))),
+    group('First screens', of('hero').filter((i) => hit(itemName(i), 'first screen')).map((i) => tile(itemKey(i), i, sample(i), itemName(i), page.sections.some((s) => s.id === 'hero') ? 'Replaces the first screen' : 'Adds a first screen', { t: 'hero', id: i.id }, () => onHero(i.id), page.sections.some((s) => s.id === 'hero' && heroOf(plan, s) === i.id), 'Use'))),
+    group('Menu & footer', [...of('menu').filter((i) => hit(itemName(i), 'menu')).map((i) => tile(itemKey(i), i, sample(i), itemName(i), 'Every page', undefined, () => onChrome('nav', i.id), navId === i.id, 'Use')), ...of('footer').filter((i) => hit(itemName(i), 'footer')).map((i) => tile(itemKey(i), i, sample(i), itemName(i), 'Every page', undefined, () => onChrome('footer', i.id), footerId === i.id, 'Use'))]),
+    ...parts.map(({ site: r, list }) => {
+      // This page's kind on that site first; everything else it has folded below.
+      const here = sitePageParts(r, page.type), isHere = (s: (typeof list)[number]) => here.some((h) => h.id === s.id && (h.variant ?? '') === (s.variant?.id ?? ''))
+      const found = list.filter((s) => hit(sections[s.id].name, jobOf(s.id), siteName(r)))
+      const top = found.filter(isHere), more = found.filter((s) => !isHere(s))
+      if (!found.length) return null
+      return q ? group(`From ${siteName(r)}`, found.map((s) => site(r, s))) : (
+        <Fold key={r} title={`From ${siteName(r)}`} sub={top.length ? `its ${pageTypes[page.type].name.toLowerCase()} page · ${top.length}` : `${list.length} parts`} open={!!top.length}>
+          {!!top.length && grid(top.map((s) => site(r, s)))}
+          {!!more.length && (top.length ? <div className="mt-3"><Fold title={`More from ${siteName(r)}`} sub={`${more.length}`} small>{grid(more.map((s) => site(r, s)))}</Fold></div> : grid(more.map((s) => site(r, s))))}
         </Fold>
+      )
+    }),
+  ].filter(Boolean)
+  const all = [
+    group('First screens', EFFECTS.filter((e) => hit(e.name, e.line, 'first screen')).map((e) => tile(`a:h:${e.hero}`, { kind: 'hero', id: e.hero }, sample({ kind: 'hero', id: e.hero }), e.name, e.lead === 'video' ? 'Needs a film' : 'First screen', { t: 'hero', id: e.hero }, () => onHero(e.hero), page.sections.some((s) => s.id === 'hero' && heroOf(plan, s) === e.hero), 'Use'))),
+    group('Menu', Object.values(navStyles).filter((n) => hit(n.name, n.line, 'menu')).map((n) => tile(`a:m:${n.id}`, { kind: 'menu', id: n.id }, sample({ kind: 'menu', id: n.id }), n.name, 'Every page', undefined, () => onChrome('nav', n.id), navId === n.id, 'Use'))),
+    ...sectionGroups.map((g) => group(g.job, g.ids.filter((id) => hit(sections[id].name, g.name, g.job)).map((id) => tile(`a:s:${id}`, { kind: 'section', id }, sample({ kind: 'section', id }), sections[id].name, designsOf(id), { t: 'part', id }, () => onAdd({ t: 'part', id }), on(id))))),
+    group('Footer', Object.values(footerStyles).filter((f) => hit(f.name, f.line, 'footer')).map((f) => tile(`a:f:${f.id}`, { kind: 'footer', id: f.id }, sample({ kind: 'footer', id: f.id }), f.name, 'Every page', undefined, () => onChrome('footer', f.id), footerId === f.id, 'Use'))),
+  ].filter(Boolean)
+
+  // Effects: the site-wide ones (each opens the chooser), then those that go on one part — collected first.
+  const fx = of('effect').map((i) => i.id)
+  const moments = (Object.keys(pieces) as PieceId[]).filter((id) => isMoment(id) && hit(pieces[id].name, pieces[id].line, pieceSlots[pieces[id].slot].name))
+    .sort((a, b) => Number(fx.includes(b)) - Number(fx.includes(a)))
+  const site_wide = BEHAVIOURS.filter((b) => hit(behaviours[b].name, ...behaviours[b].ids.map((id) => pieces[id].name)))
+  const nEffects = Object.keys(pieces).length
+
+  return (
+    <aside className="order-last lg:sticky lg:top-36 lg:order-none lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto lg:pr-1 lg:[scrollbar-color:var(--color-line)_transparent] lg:[scrollbar-width:thin]" aria-label={`Add to ${page.label}`}>
+      <div className="sticky top-0 z-10 space-y-2 bg-paper pb-3">
+        <div role="tablist" aria-label="What to add" className="grid grid-cols-2 rounded-full bg-paper-2 p-1 text-sm">
+          {([['parts', 'Parts'], ['effects', 'Effects']] as const).map(([k, name]) => (
+            <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
+              className={`h-8 rounded-full font-medium transition-colors ${tab === k ? 'bg-white text-ink shadow-sm' : 'text-muted hover:text-ink'}`}>{name}</button>
+          ))}
+        </div>
+        <label className="relative block"><span className="sr-only">{tab === 'parts' ? 'Search parts' : 'Search effects'}</span>
+          <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
+          <Input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tab === 'parts' ? 'Search parts — reviews, prices, FAQ…' : `Search ${nEffects} effects`} className="h-9 rounded-full bg-white pl-8 text-sm" /></label>
+        <p className="px-1 text-xs text-muted">{tab === 'parts' ? `Drag onto ${page.label}, or +.` : 'Drag onto a part, or +.'}</p>
       </div>
+      {tab === 'parts' ? (
+        <div className="space-y-6">
+          {!!mine.length && <div className="space-y-5"><p className="text-sm font-medium">Your Collection <span className="font-normal text-muted">· {placed} of {c.items.length} on your pages</span></p>{mine}</div>}
+          {!c.items.length && !q && <p className="text-sm text-muted">Nothing collected yet — collect sites in the <Link href="/library" className="link">Library</Link>, or pick from all parts below.</p>}
+          <div className="space-y-5 border-t border-line pt-4">
+            {q ? <>{all.length ? all : !mine.length && <p className="text-sm text-muted">Nothing matches “{q}”.</p>}</> : (
+              <Fold title="All parts" sub="anything OpusKit has" open={!c.items.length}><div className="space-y-5">{all}</div></Fold>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {!!site_wide.length && (
+            <section aria-label="On every page">
+              <p className="text-sm font-medium">On every page</p>
+              <p className="text-xs text-muted">How the whole site moves.</p>
+              <ul className="mt-2 space-y-1.5">
+                {site_wide.map((b) => {
+                  const g = behaviours[b], now = picksOf(plan, b)
+                  return (
+                    <li key={b} className="group relative flex items-center gap-3 rounded-lg border border-line bg-white p-1.5 pr-2.5 transition-colors hover:border-ink">
+                      <div aria-hidden className="pointer-events-none w-20 shrink-0 overflow-hidden rounded border border-line">
+                        <LazyMount className="aspect-[16/10] overflow-hidden">{now[0] ? <ItemPreview item={{ kind: 'effect', id: now[0] }} look={look} /> : <Plain small b={b} look={look} />}</LazyMount>
+                      </div>
+                      <button type="button" onClick={() => onSite(b)} className="min-w-0 flex-1 text-left after:absolute after:inset-0 after:rounded-lg">
+                        <span className="flex items-center justify-between gap-2 text-xs text-muted">{g.name}<span className="inline-flex items-center gap-0.5 group-hover:text-ink">{g.ids.length}<ArrowRight size={11} aria-hidden /></span></span>
+                        <span className={`line-clamp-2 block text-[13px] font-medium leading-snug ${now.length ? '' : 'text-ink-2'}`}>{now.length ? now.map((id) => pieces[id].name).join(', ') : g.many ? 'No extras' : g.none}</span>
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+          )}
+          <section aria-label="On one part" className="space-y-5 border-t border-line pt-4">
+            <div><p className="text-sm font-medium">On one part</p><p className="text-xs text-muted">Each goes on the part you drop it on.</p></div>
+            {[...new Set(moments.map((id) => pieces[id].slot))].map((slot) => group(pieceSlots[slot].name, moments.filter((id) => pieces[id].slot === slot).map((id) =>
+              tile(`fx:${id}`, { kind: 'effect', id }, sample({ kind: 'effect', id }), pieces[id].name, pieces[id].line, { t: 'effect', id }, () => onEffect(id), page.sections.some((s) => s.pieces.includes(id)), 'Add', fx.includes(id) ? 'Collected' : undefined))))}
+            {!moments.length && !site_wide.length && <p className="text-sm text-muted">Nothing matches “{q}”.</p>}
+          </section>
+        </div>
+      )}
     </aside>
   )
 }
@@ -387,75 +439,21 @@ function Panel({ plan, page, sel, selDesign, chromeSel, siteSel, look, c, sites,
 const BEHAVIOURS = Object.keys(behaviours) as BehaviourId[]
 const picksOf = (plan: KitPlan, b: BehaviourId) => behaviours[b].many ? behaviours[b].ids.filter((id) => (plan.sitePieces ?? []).includes(id)) : [behaviourPick(plan, b)].filter((x): x is PieceId => !!x)
 
-/** The site-wide effects, one row each, under the footer (they belong to no part): each says what it is now; a click
- *  picks it and the right column shows the options moving; the × takes it off. Nothing here is ever hidden. */
-function SiteWide({ plan, picked, onPick }: { plan: KitPlan; picked?: BehaviourId; onPick: (b: BehaviourId) => void }) {
-  return (
-    <section aria-label="On every page" className="mt-6">
-      <h3 className="text-sm font-medium">On every page</h3>
-      <p className="text-xs text-muted">Effects that belong to the whole site, not to one part.</p>
-      <ul className="mt-2 divide-y divide-line overflow-hidden rounded-lg border border-line bg-white">
-        {BEHAVIOURS.map((b) => {
-          const g = behaviours[b], now = picksOf(plan, b), on = picked === b
-          return (
-            <li key={b} className={`relative flex items-center gap-3 px-3 py-2.5 transition-colors ${on ? 'bg-paper-2' : 'hover:bg-paper-2/60'}`}>
-              <button type="button" onClick={() => onPick(b)} aria-pressed={on} aria-label={`${g.name}: see the options`} className="absolute inset-0" />
-              <span className="w-28 shrink-0 text-sm font-medium">{g.name}</span>
-              <span className={`min-w-0 flex-1 truncate text-sm ${now.length ? 'text-ink' : 'text-muted'}`}>
-                {now.length ? now.map((id) => pieces[id].name).join(', ') : g.many ? 'None' : g.none}
-              </span>
-              {now.map((id) => (
-                <button key={id} type="button" aria-label={`Remove ${pieces[id].name}`} title={`Remove ${pieces[id].name}`}
-                  onClick={() => change(`${pieces[id].name} removed`, (p) => (g.many ? toggleSitePiece(p, id) : setBehaviour(p, b, undefined)))}
-                  className="relative z-10 grid size-7 shrink-0 place-items-center rounded-full text-muted hover:bg-black/5 hover:text-ink"><X size={14} aria-hidden /></button>
-              ))}
-              <ChevronRight size={15} className={`shrink-0 text-muted transition-transform ${on ? 'rotate-90' : ''}`} aria-hidden />
-            </li>
-          )
-        })}
-      </ul>
-    </section>
-  )
-}
-
-/** One site-wide behaviour's options, each shown moving (links on a drawn footer); tap to use, or None. */
-function SiteWideOptions({ plan, b, look }: { plan: KitPlan; b: BehaviourId; look: Look }) {
-  const g = behaviours[b], now = picksOf(plan, b)
-  const pick = (id?: PieceId) => change(id ? `${g.name} — ${pieces[id].name}` : `${g.name} — none`, (p) => (g.many ? (id ? toggleSitePiece(p, id) : { ...p, sitePieces: (p.sitePieces ?? []).filter((x) => !g.ids.includes(x)) }) : setBehaviour(p, b, id)))
-  const tile = (id: PieceId | undefined) => {
-    const on = id ? now.includes(id) : !now.length
-    return (
-      <li key={id ?? 'none'} className={`relative overflow-hidden rounded-md border bg-white ${on ? 'border-pencil ring-2 ring-pencil' : 'border-line hover:border-ink'}`}>
-        {id ? <LazyMount className="pointer-events-none aspect-[16/9] overflow-hidden"><ItemPreview item={{ kind: 'effect', id }} look={look} /></LazyMount>
-          : <span className="grid aspect-[16/9] place-items-center text-xs text-muted">{g.many ? 'No extras' : g.none}</span>}
-        <button type="button" role={g.many ? 'checkbox' : 'radio'} aria-checked={on} onClick={() => pick(id)}
-          className="flex w-full items-start justify-between gap-2 border-t border-line px-2.5 py-2 text-left after:absolute after:inset-0">
-          <span className="min-w-0"><span className="block text-[13px] font-medium">{id ? pieces[id].name : 'None'}</span>{id && <span className="block truncate text-[11px] text-muted">{pieces[id].line}</span>}</span>
-          {on && <Check size={14} className="mt-0.5 shrink-0 text-pencil" aria-hidden />}
-        </button>
-      </li>
-    )
-  }
-  return (
-    <section aria-label={g.name} className="rounded-lg border border-ink/15 bg-white p-3">
-      <p className="text-sm font-medium">{g.name}</p>
-      <p className="text-xs text-muted">{g.line}{g.many ? ' — pick any.' : '.'}</p>
-      <ul role={g.many ? 'group' : 'radiogroup'} aria-label={g.name} className="mt-2 grid grid-cols-2 gap-2">
-        {tile(undefined)}
-        {g.ids.map(tile)}
-      </ul>
-    </section>
-  )
+/** A behaviour left at its plain state, drawn where it can be (links: the plain underline), else said in a line. */
+function Plain({ b, look, small }: { b: BehaviourId; look: Look; small?: boolean }) {
+  if (b === 'links') return <LinkDemo colors={look.colors} type={look.type} shape={look.shape} brand={look.brand} />
+  const g = behaviours[b]
+  return <span className={`grid size-full place-items-center px-3 text-center ${small ? 'text-[11px]' : 'text-xs'}`} style={{ background: look.colors.background, color: look.colors.muted }}>{small ? 'Off' : g.many ? 'Nothing extra' : g.none}</span>
 }
 
 // ─── The menu and the footer: the frame every page shares ───────────────────
 
 /** Locked in place (top and bottom, the same on every page); a page can leave either out. */
-function ChromeRow({ c, page, picked, onPick, styleName, preview }: { c: ChromeId; page: PlanPage; picked: boolean; onPick: () => void; styleName: string; preview: React.ReactNode }) {
+function ChromeRow({ c, page, onPick, styleName, preview }: { c: ChromeId; page: PlanPage; onPick: () => void; styleName: string; preview: React.ReactNode }) {
   const hidden = !!page.hide?.includes(c), name = c === 'navbar' ? 'Menu' : 'Footer'
   return (
-    <div className={`relative flex items-center gap-4 rounded-lg border p-2 pr-3 transition-[box-shadow,border-color] ${picked ? 'border-ink bg-paper-2/60 shadow-[0_0_0_1px_var(--color-ink)]' : hidden ? 'border-dashed border-line bg-transparent hover:border-ink/40' : 'border-line bg-paper-2/60 hover:border-ink/40'}`}>
-      <button type="button" onClick={onPick} aria-pressed={picked} aria-label={`Pick the ${name.toLowerCase()} to see other designs`} className="absolute inset-0 rounded-lg" />
+    <div className={`relative flex items-center gap-4 rounded-lg border p-2 pr-3 transition-[box-shadow,border-color] ${hidden ? 'border-dashed border-line bg-transparent hover:border-ink/40' : 'border-line bg-paper-2/60 hover:border-ink/40'}`}>
+      <button type="button" onClick={onPick} aria-label={`Change the ${name.toLowerCase()}`} className="absolute inset-0 cursor-pointer rounded-lg" />
       <LazyMount className={`pointer-events-none aspect-[16/10] w-36 shrink-0 overflow-hidden rounded-md border border-line sm:w-44 ${hidden ? 'opacity-30' : ''}`}>{preview}</LazyMount>
       <div className="min-w-0 flex-1">
         <p className={`flex items-center gap-1.5 font-medium leading-snug ${hidden ? 'text-muted' : ''}`}><Lock size={13} className="text-muted" aria-hidden />{name}</p>
@@ -465,6 +463,7 @@ function ChromeRow({ c, page, picked, onPick, styleName, preview }: { c: ChromeI
         className="relative z-10 inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm text-ink-2 hover:bg-black/5 hover:text-ink" aria-pressed={!hidden}>
         {hidden ? <EyeOff size={15} aria-hidden /> : <Eye size={15} aria-hidden />}<span className="max-sm:sr-only">{hidden ? 'Hidden' : 'Shown'}</span>
       </button>
+      <button type="button" onClick={onPick} className="relative z-10 inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 text-sm text-ink-2 hover:border-ink hover:text-ink"><ArrowLeftRight size={14} aria-hidden />Change</button>
     </div>
   )
 }
@@ -473,11 +472,11 @@ function ChromeRow({ c, page, picked, onPick, styleName, preview }: { c: ChromeI
 
 const placeOf = (page: PlanPage, part: PlanSection) => `${page.label} · ${part.id === 'hero' ? 'First screen' : jobOf(part.id)}`
 
-function PartExtras({ plan, page, part, collectedFx }: { plan: KitPlan; page: PlanPage; part: PlanSection; collectedFx: PieceId[] }) {
+function PartExtras({ plan, page, part, collectedFx, onChange }: { plan: KitPlan; page: PlanPage; part: PlanSection; collectedFx: PieceId[]; onChange: () => void }) {
   const photoInput = useRef<HTMLInputElement>(null), filmInput = useRef<HTMLInputElement>(null)
   const fits = piecesFor(part).sort((a, b) => Number(collectedFx.includes(b)) - Number(collectedFx.includes(a)))
   const hero = part.id === 'hero' ? heroOf(plan, part) : undefined
-  const photos = PHOTO_SECTIONS.includes(part.id) || MEDIA_SECTIONS.includes(part.id) || (part.id === 'hero' && !FILM.has(hero!))
+  const photos = PHOTO_SECTIONS.includes(part.id) || MEDIA_SECTIONS.includes(part.id) || (part.id === 'hero' && !FILM.has(hero!) && !NO_PHOTOS.has(hero!))
   const film = part.id === 'hero' && FILM.has(hero!)
   const place = placeOf(page, part)
   const mine = (plan.uploads ?? []).filter((u) => u.place === place)
@@ -492,11 +491,11 @@ function PartExtras({ plan, page, part, collectedFx }: { plan: KitPlan; page: Pl
     await Promise.all(gone.filter((u) => u.fileId).map((u) => deleteFile(u.fileId!)))
     updatePlan((p) => ({ ...p, uploads: (p.uploads ?? []).filter((u) => !gone.includes(u)) }))
   }
-  if (!fits.length && !photos && !film) return null
   const nPhotos = mine.filter((u) => u.kind === 'image').length, hasFilm = mine.some((u) => u.kind === 'video')
   const chip = 'inline-flex h-7 items-center gap-1.5 rounded-full border px-2.5 text-xs transition-colors'
   return (
     <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-line pt-2">
+      <button type="button" onClick={onChange} className={`${chip} border-line text-ink-2 hover:border-ink hover:text-ink`}><ArrowLeftRight size={12} aria-hidden />{part.id === 'hero' ? 'Other first screens' : 'Other designs'}</button>
       {part.pieces.map((id) => (
         <span key={id} className={`${chip} border-pencil/30 bg-pencil/5 text-pencil`}><Sparkles size={12} aria-hidden />{pieces[id].name}
           <button type="button" aria-label={`Remove ${pieces[id].name}`} onClick={() => updatePlan((p) => togglePiece(p, page.id, part.key, id))} className="-mr-1 grid size-4 place-items-center rounded-full hover:bg-pencil/15"><X size={11} aria-hidden /></button></span>
@@ -514,8 +513,8 @@ function PartExtras({ plan, page, part, collectedFx }: { plan: KitPlan; page: Pl
   )
 }
 
-/** Effects for one part, shown — not listed: each one moving (a real site where there is one, else drawn in your look),
- *  grouped by what it does; one per group on a part, so picking another swaps it. Collected ones lead and say so. */
+/** Effects for one part, shown — not listed: each one moving (a real site where there is one, else drawn in its own
+ *  look), grouped by what it does; one per group on a part, so picking another swaps it. Collected ones lead and say so. */
 function EffectPicker({ plan, page, part, collectedFx }: { plan: KitPlan; page: PlanPage; part: PlanSection; collectedFx: PieceId[] }) {
   const [open, setOpen] = useState(false)
   const spec = planToSpec(plan)
@@ -531,39 +530,60 @@ function EffectPicker({ plan, page, part, collectedFx }: { plan: KitPlan; page: 
     return togglePiece(swap ? togglePiece(p, page.id, part.key, swap) : p, page.id, part.key, id)
   })
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <>
       <button type="button" onClick={() => setOpen(true)} className="inline-flex h-7 items-center gap-1.5 rounded-full border border-line px-2.5 text-xs text-ink-2 transition-colors hover:border-ink hover:text-ink"><Sparkles size={12} aria-hidden />{part.pieces.length ? 'Effects' : 'Add an effect'}</button>
-      <DialogContent className="flex max-h-[88vh] w-[min(94vw,64rem)] max-w-none flex-col gap-0 p-0 sm:max-w-none">
+      {open && <Chooser many onClose={() => setOpen(false)} title={`Effects for ${part.id === 'hero' ? 'the first screen' : jobOf(part.id).toLowerCase()}`} line={`${page.label} · one per group — tap again to take it off.`}
+        groups={slots.map((slot) => ({ title: pieceSlots[slot].name, sub: pieceSlots[slot].line, options: options.filter((id) => pieces[id].slot === slot).map((id) => {
+          const real = closestPiece(spec, id)
+          return { key: id, label: pieces[id].name, sub: pieces[id].line, badge: collectedFx.includes(id) ? 'Collected' : undefined, on: part.pieces.includes(id), pick: () => pick(id),
+            preview: real ? <TileClip match={real} className="aspect-[16/10]" /> : <ItemPreview item={{ kind: 'effect', id }} look={look} /> }
+        }) }))} />}
+    </>
+  )
+}
+
+// ─── The chooser: one place where anything on the page is changed ───────────
+
+type ChooserOption = { key: string; label: string; sub?: string; badge?: string; on: boolean; preview: React.ReactNode; pick: () => void }
+type ChooserProps = { title: string; line: string; many?: boolean; groups: { title: string; sub?: string; options: ChooserOption[] }[] }
+
+/** Opens from the thing clicked, never somewhere else on the screen: what it is now (marked "Now"), then every option
+ *  drawn large enough to read — its name and its whole line, never cut off. A tap swaps it at once (with Undo); the
+ *  chooser stays open so options can be compared, and Done closes it. */
+function Chooser({ title, line, many, groups, onClose }: ChooserProps & { onClose: () => void }) {
+  const now = groups.flatMap((g) => g.options).filter((o) => o.on).map((o) => o.label)
+  return (
+    <Dialog open onOpenChange={(o) => { if (!o) onClose() }}>
+      <DialogContent className="flex max-h-[88vh] w-[min(94vw,68rem)] max-w-none flex-col gap-0 p-0 sm:max-w-none">
         <div className="border-b border-line px-6 py-5">
-          <DialogTitle className="text-xl font-medium tracking-tight">Effects for {part.id === 'hero' ? 'the first screen' : jobOf(part.id).toLowerCase()}</DialogTitle>
-          <DialogDescription className="mt-1 text-sm text-muted">{page.label} · pick one per group — tap again to take it off.</DialogDescription>
+          <DialogTitle className="text-xl font-medium tracking-tight">{title}</DialogTitle>
+          <DialogDescription className="mt-1 text-sm text-muted">{line}</DialogDescription>
         </div>
         <div className="flex-1 space-y-8 overflow-y-auto px-6 py-6 [scrollbar-color:var(--color-line)_transparent] [scrollbar-width:thin]">
-          {slots.map((slot) => (
-            <section key={slot} aria-label={pieceSlots[slot].name}>
-              <p className="text-sm font-medium">{pieceSlots[slot].name} <span className="font-normal text-muted">· {pieceSlots[slot].line}</span></p>
-              <ul className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {options.filter((id) => pieces[id].slot === slot).map((id) => {
-                  const on = part.pieces.includes(id), real = closestPiece(spec, id)
-                  return (
-                    <li key={id}>
-                      <div onClick={() => pick(id)} className={`relative cursor-pointer overflow-hidden rounded-lg border bg-white transition-shadow ${on ? 'border-pencil ring-2 ring-pencil' : 'border-line hover:border-ink'}`}>
-                        {real ? <TileClip match={real} className="aspect-[16/10]" /> : <div className="pointer-events-none aspect-[16/10]"><ItemPreview item={{ kind: 'effect', id }} look={look} /></div>}
-                        {on && <span className="absolute left-2 top-2 grid size-6 place-items-center rounded-full bg-pencil text-white shadow-sm"><Check size={14} aria-hidden /></span>}
-                      </div>
-                      <button type="button" aria-pressed={on} onClick={() => pick(id)} className="mt-2 block w-full text-left">
-                        <span className="flex items-center gap-2 text-sm font-medium">{pieces[id].name}{collectedFx.includes(id) && <span className="rounded-full bg-pencil/10 px-1.5 py-0.5 text-[10px] font-medium text-pencil">Collected</span>}</span>
-                        <span className="mt-0.5 line-clamp-2 block text-xs text-muted">{pieces[id].line}</span>
-                      </button>
-                    </li>
-                  )
-                })}
+          {groups.filter((g) => g.options.length).map((g) => (
+            <section key={g.title} aria-label={g.title}>
+              <p className="text-sm font-medium">{g.title}{g.sub && <span className="font-normal text-muted"> · {g.sub}</span>}</p>
+              <ul role={many ? 'group' : 'radiogroup'} aria-label={g.title} className="mt-3 grid gap-x-4 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+                {g.options.map((o) => (
+                  <li key={o.key} className="group relative">
+                    {/* The preview is a real section (it has its own buttons), so it sits beside the button, not in it; the
+                        button's ::after covers the whole card. */}
+                    <div className={`relative overflow-hidden rounded-lg border bg-white transition-shadow ${o.on ? 'border-pencil ring-2 ring-pencil' : 'border-line group-hover:border-ink'}`}>
+                      <div aria-hidden><LazyMount className="pointer-events-none aspect-[16/10] overflow-hidden">{o.preview}</LazyMount></div>
+                      {o.on && <span className="absolute left-2 top-2 inline-flex h-6 items-center gap-1 rounded-full bg-pencil pl-1.5 pr-2 text-xs font-medium text-white shadow-sm"><Check size={13} aria-hidden />{many ? 'On' : 'Now'}</span>}
+                    </div>
+                    <button type="button" role={many ? 'checkbox' : 'radio'} aria-checked={o.on} onClick={o.pick} className="mt-2 block w-full text-left after:absolute after:inset-0 after:rounded-lg">
+                      <span className="flex items-center gap-2 text-sm font-medium">{o.label}{o.badge && <span className="rounded-full bg-pencil/10 px-1.5 py-0.5 text-[10px] font-medium text-pencil">{o.badge}</span>}</span>
+                      {o.sub && <span className="mt-0.5 block text-xs leading-relaxed text-muted">{o.sub}</span>}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </section>
           ))}
         </div>
         <div className="flex items-center justify-between gap-3 border-t border-line px-6 py-4">
-          <p className="text-sm text-muted">{part.pieces.length ? `On this part: ${part.pieces.map((x) => pieces[x].name).join(', ')}` : 'No effect on this part yet.'}</p>
+          <p className="min-w-0 truncate text-sm text-muted">{now.length ? `Now: ${now.join(', ')}` : 'Nothing picked yet.'}</p>
           <DialogClose className="btn btn-ink btn-sm">Done</DialogClose>
         </div>
       </DialogContent>
@@ -571,7 +591,8 @@ function EffectPicker({ plan, page, part, collectedFx }: { plan: KitPlan; page: 
   )
 }
 
-/** "Add a page", searchable: type to narrow the list; Enter adds the first match, arrows move through it. */
+/** "Add a page", one quiet button: type to narrow the list (suggested pages first); Enter adds the first match, arrows
+ *  move through it; a name that matches nothing is added as your own page. */
 function PagePicker({ onPick, suggested }: { onPick: (type: PageTypeId, label?: string) => void; suggested: { type: PageTypeId; label: string }[] }) {
   const [open, setOpen] = useState(false)
   const [q, setQ] = useState('')
@@ -580,6 +601,7 @@ function PagePicker({ onPick, suggested }: { onPick: (type: PageTypeId, label?: 
   const sug = suggested.filter((x) => match(x.label))
   const found = pageGroups.map((g) => ({ ...g, ids: g.ids.filter((id) => match(pageTypes[id].name) && !sug.some((x) => x.type === id)) })).filter((g) => g.ids.length)
   const pick = (id: PageTypeId, label?: string) => { onPick(id, label); setOpen(false); setQ('') }
+  const own = q.trim().slice(0, 60)
   const step = (e: React.KeyboardEvent, by: 1 | -1) => {
     const items = [...(list.current?.querySelectorAll<HTMLButtonElement>('button') ?? [])]
     const i = items.indexOf(document.activeElement as HTMLButtonElement)
@@ -587,12 +609,12 @@ function PagePicker({ onPick, suggested }: { onPick: (type: PageTypeId, label?: 
   }
   return (
     <Popover open={open} onOpenChange={(o) => { setOpen(o); if (!o) setQ('') }}>
-      <PopoverTrigger className="flex h-10 w-full items-center gap-1.5 rounded-md border border-input bg-white px-3 text-sm text-muted hover:border-ink"><Plus size={14} aria-hidden />Add a page</PopoverTrigger>
-      <PopoverContent align="start" className="w-(--radix-popover-trigger-width) min-w-64 p-0" onKeyDown={(e) => { if (e.key === 'ArrowDown') step(e, 1); if (e.key === 'ArrowUp') step(e, -1) }}>
+      <PopoverTrigger className="mt-1 flex h-9 w-full items-center gap-1.5 rounded-md px-2.5 text-sm text-muted hover:bg-paper-2 hover:text-ink"><Plus size={14} aria-hidden />Add a page</PopoverTrigger>
+      <PopoverContent align="end" className="w-72 p-0" onKeyDown={(e) => { if (e.key === 'ArrowDown') step(e, 1); if (e.key === 'ArrowUp') step(e, -1) }}>
         <div className="flex items-center gap-2 border-b border-line px-3">
           <Search size={14} className="shrink-0 text-muted" aria-hidden />
-          <input data-slot="search" autoFocus value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); if (sug[0]) pick(sug[0].type, sug[0].label); else if (found[0]) pick(found[0].ids[0]) } }}
-            placeholder="Search pages" aria-label="Search pages" className="h-10 w-full bg-transparent text-sm outline-none placeholder:text-muted focus-visible:outline-none" />
+          <input data-slot="search" autoFocus value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); if (sug[0]) pick(sug[0].type, sug[0].label); else if (found[0]) pick(found[0].ids[0]); else if (own) pick('custom', own) } }}
+            placeholder="Find a page, or name your own" aria-label="Search pages" className="h-10 w-full bg-transparent text-sm outline-none placeholder:text-muted focus-visible:outline-none" />
         </div>
         <div ref={list} className="max-h-72 overflow-y-auto p-1 [scrollbar-color:var(--color-line)_transparent] [scrollbar-width:thin]">
           {!!sug.length && (
@@ -607,7 +629,7 @@ function PagePicker({ onPick, suggested }: { onPick: (type: PageTypeId, label?: 
               {g.ids.map((id) => <button key={id} type="button" onClick={() => pick(id)} className="block w-full rounded-md px-2.5 py-1.5 text-left text-sm hover:bg-secondary focus:bg-secondary focus:outline-none">{pageTypes[id].name}</button>)}
             </div>
           ))}
-          {!found.length && !sug.length && <p className="px-2.5 py-3 text-sm text-muted">No page called that — add it as your own page below.</p>}
+          {own && <button type="button" onClick={() => pick('custom', own)} className="mt-1 flex w-full items-center gap-1.5 rounded-md border-t border-line px-2.5 py-2 text-left text-sm hover:bg-secondary focus:bg-secondary focus:outline-none"><Plus size={13} aria-hidden />Add “{own}” as your own page</button>}
         </div>
       </PopoverContent>
     </Popover>
@@ -648,6 +670,6 @@ function Fold({ title, sub, open: initial = true, small, children }: { title: st
   )
 }
 
-function Icon({ label, disabled, onClick, children }: { label: string; disabled?: boolean; onClick: () => void; children: React.ReactNode }) {
-  return <button type="button" aria-label={label} title={label} disabled={disabled} onClick={onClick} className="grid size-8 place-items-center rounded-full hover:bg-black/10 disabled:pointer-events-none disabled:opacity-25">{children}</button>
+function Icon({ label, disabled, small, onClick, children }: { label: string; disabled?: boolean; small?: boolean; onClick: () => void; children: React.ReactNode }) {
+  return <button type="button" aria-label={label} title={label} disabled={disabled} onClick={onClick} className={`grid ${small ? 'size-7' : 'size-8'} place-items-center rounded-full hover:bg-black/10 disabled:pointer-events-none disabled:opacity-25`}>{children}</button>
 }

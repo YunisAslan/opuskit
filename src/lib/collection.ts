@@ -2,7 +2,7 @@
 // The Library's Collection, kept in the browser like the kit's plan.
 import { useMemo } from 'react'
 import { EMPTY_COLLECTION, applyItems, cleanCollection, collectionToPlan, itemKey, type Collection } from '@/features/library/collection'
-import type { PieceId } from '@/types/domain'
+import type { PieceId, PurposeId } from '@/types/domain'
 import { readPlan, updatePlan, writePlan } from './kit'
 import { KEYS, get, useStored, write } from './store'
 
@@ -35,4 +35,15 @@ export function planFromStudio(opts: { rebuild?: boolean } = {}): { rebuilt: boo
   writePlan({ ...r.plan, via: 'studio', fromId: plan.via === 'studio' ? plan.fromId : undefined, uploads: plan.via === 'studio' ? plan.uploads : r.plan.uploads })
   write(KEYS.composed, { purpose: r.plan.purpose, keys })
   return { rebuilt: true, unplaced: r.unplaced, added: 0, undo: plan.pages.length ? () => writePlan(plan) : undefined }
+}
+
+/** A blank start: the kind of site's own pages, no collected site behind them (the Collection itself is left as it is;
+ *  what is in it now is not added, what is collected later joins as usual). A new recipe, not an update of the last. */
+export function startBlank(purpose: PurposeId): () => void {
+  const before = readPlan(), last = get<Composed | string | null>(KEYS.composed, null)
+  const r = collectionToPlan({ items: [], purpose })
+  writePlan({ ...r.plan, via: 'studio', blank: true })
+  write(KEYS.composed, { purpose, keys: readCollection().items.map(itemKey) })
+  write(KEYS.step, '/studio/brand')
+  return () => { writePlan(before); write(KEYS.composed, last) }
 }

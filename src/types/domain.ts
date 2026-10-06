@@ -354,6 +354,8 @@ export type KitPlan = {
   fromId?: string
   /** Made in the Library's Studio (Pages → Style), not in the kit: the recipe page leads back there. */
   via?: 'studio'
+  /** Started blank (the kind of site's own pages): no collected site is its start, for its look or its photo. */
+  blank?: true
 }
 /** A page in the plan. Each section is an instance with its own key, so the pieces attached to it move with it. */
 export type PlanPage = { id: string; type: PageTypeId; label: string; purpose: string; sections: PlanSection[]; hide?: ChromeId[] }
@@ -573,7 +575,10 @@ export type PageBlueprint = { id: string; type: PageTypeId; label: string; purpo
 
 /** `storytelling`: for scroll-controlled film heroes, how video and text become one scroll timeline. */
 /** `framing`: how the owner's own video is shaped per screen, when its shape isn't already 16:9. */
-export type MediaRecipe = MediaPattern & { hero: HeroPattern; storytelling?: string[]; imagery?: ImageryPlan; framing?: string }
+/** One line of the shot list: which part, what its picture or film shows, and its format. */
+export type Shot = { where: string; kind: 'photo' | 'film'; shows: string; format: string }
+
+export type MediaRecipe = MediaPattern & { hero: HeroPattern; storytelling?: string[]; imagery?: ImageryPlan; framing?: string; shots: Shot[] }
 
 export type MotionRecipe = { level: MotionLevelInfo; principle: string; patterns: MotionPattern[]; libraries: string[] }
 
@@ -587,6 +592,9 @@ export type ContentDirection = {
   ctaExamples: string[]
   wordsToAvoid: string[]
   density: string
+  /** The copy deck to write before any layout: what each part of each page says, from the owner's own words. */
+  source: string
+  copy: { page: string; brief: string; parts: { part: string; says: string }[] }[]
 }
 
 export type AssetStatus = 'have' | 'create' | 'find' | 'temporary' | 'optional'

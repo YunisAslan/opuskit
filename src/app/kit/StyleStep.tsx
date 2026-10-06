@@ -155,7 +155,7 @@ export function StyleStep({ plan, initialCat, initialFeel, onDone }: { plan: Kit
             </div>
             <div className="space-y-1.5">
               <p className="text-sm font-medium">What is it, in one sentence?</p>
-              <Textarea value={plan.about ?? ''} maxLength={160} rows={3} placeholder="e.g. A twelve-seat wood-fire counter in Baku." aria-label="What the site is about" onChange={(e) => updatePlan((p) => ({ ...p, about: e.target.value }))} className="bg-white text-sm" />
+              <Textarea value={plan.about ?? ''} maxLength={160} rows={3} placeholder="e.g. A twelve-seat wood-fire counter in Lisbon." aria-label="What the site is about" onChange={(e) => updatePlan((p) => ({ ...p, about: e.target.value }))} className="bg-white text-sm" />
               <p className="text-xs text-muted">The AI writes your headlines and copy from this. {(plan.about ?? '').length}/160</p>
             </div>
             <div className="space-y-1.5">

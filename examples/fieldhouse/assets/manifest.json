@@ -1,0 +1,51 @@
+{
+  "recipe": "luxury-fashion",
+  "title": "Fieldhouse — Refined Modern Heritage Studio Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "create",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "find",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Cormorant, Karla (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "create",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "photographySet": {
+      "required": true,
+      "level": "required",
+      "status": "find",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Hero, section media, gallery",
+      "specs": "Min 2400px long edge, consistent grade, mix of wide (3:2) and portrait (4:5)"
+    },
+    "mobileHeroCrop": {
+      "required": false,
+      "level": "recommended",
+      "status": "find",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Hero on small screens",
+      "specs": "4:5 or 9:16 crop with focal point centred"
+    }
+  }
+}

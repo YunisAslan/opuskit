@@ -7,7 +7,7 @@ import { useGoogleFonts } from '@/components/FontLoader'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { HeroPreview } from '@/app/kit/HeroPreview'
 import { lookOf } from '@/app/kit/ProductVisual'
-import { FlowBar } from '@/app/library/parts'
+import { FlowBar, StartBlank } from '@/app/library/parts'
 import { heroOf, inferPurpose, planToSpec } from '@/features/kit/plan'
 import { composeRecipe, isValidSpec } from '@/features/recipes/engine'
 import { saveGeneration, type Generation } from '@/features/recipes/library'
@@ -72,7 +72,7 @@ export function NeedsStudio() {
     <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-14 md:px-8">
       <h1 className="display text-[clamp(2.2rem,5vw,4rem)]">Collect something first.</h1>
       <p className="mt-4 text-lg text-ink-2">Tap + on what you like in the Library, then Build my site.</p>
-      <Link href="/library" className="btn btn-ink mt-8">Open the Library</Link>
+      <div className="mt-8 flex flex-wrap items-center gap-5"><Link href="/library" className="btn btn-ink">Open the Library</Link><StartBlank /></div>
     </div>
   )
 }

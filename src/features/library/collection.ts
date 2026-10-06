@@ -173,15 +173,20 @@ export function blendPage(plan: KitPlan, pageId: string, sites: SiteRef[]): KitP
   if (!page || !sites.length) return plan
   const given = new Map<SiteRef, number>(sites.map((r) => [r, 0]))
   const used = new Map<SiteRef, Set<number>>(sites.map((r) => [r, new Set<number>()]))
-  const parts = page.sections.map((x) => {
+  // A page never gets one part twice: two parts doing one job (a booking part and a closing call) must not both become
+  // the same booking part from two sites. An offer is skipped when its part is already placed or still to come.
+  const taken = new Set<SectionId>()
+  const parts = page.sections.map((x, k) => {
     if (x.id === 'hero') return x
+    const rest = new Set(page.sections.slice(k + 1).map((s) => s.id))
     const offers = sites.flatMap((r) => {
       const sp = pageLikeOf(r, page.type)
-      const i = sp ? sp.parts.findIndex((y, n) => !used.get(r)!.has(n) && y.id !== 'hero' && sameJob(x.id, y.id)) : -1
+      const i = sp ? sp.parts.findIndex((y, n) => !used.get(r)!.has(n) && y.id !== 'hero' && sameJob(x.id, y.id) && !taken.has(y.id) && (y.id === x.id || !rest.has(y.id))) : -1
       return sp && i >= 0 ? [{ r, i, y: sp.parts[i] }] : []
     }).sort((a, b) => given.get(a.r)! - given.get(b.r)! || sites.indexOf(a.r) - sites.indexOf(b.r))
     const o = offers[0]
-    if (!o) return x
+    if (!o) { taken.add(x.id); return x }
+    taken.add(o.y.id)
     used.get(o.r)!.add(o.i); given.set(o.r, given.get(o.r)! + 1)
     const n: PlanSection = { key: x.key, id: o.y.id, pieces: x.pieces.filter((id) => pieces[id].sections.includes(o.y.id)), from: o.r }
     if (o.y.variant) n.variant = o.y.variant

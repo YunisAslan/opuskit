@@ -16,7 +16,8 @@ should be as good as **Sela Mor** — that is the bar for every new example too.
 
 ## 2. Rules
 
-- **No fake examples.** Every site is made the way a user would make it: **kit → Build Package → Claude Code**.
+- **No fake examples.** Every site is made the way a user would make it: **Library → Brand → Pages → Recipe → Build
+  Package → Claude Code** (from #17, 2026-10-06; #1–#16 were made in the kit).
   Allowed: providing media, and asking for fixes in plain words. Not allowed: hand-written code, hiding a change that
   went outside the recipe. Every prompt goes into `examples/{slug}/BUILD-LOG.md`, word for word, in order.
 - No real brands, logos, famous people or film/TV footage. Brand names are made up; copy is real (no lorem).
@@ -32,7 +33,7 @@ should be as good as **Sela Mor** — that is the bar for every new example too.
 
 | Step | Who | What |
 |---|---|---|
-| 1 | Claude | Builds the recipe **in the kit** with the kit's own functions (`start`, `setStyle`, `setHero`, `setBehaviour`, `addSection`, …) and shows it. The user approves. |
+| 1 | Claude | Builds the recipe **through the Library flow** in a real browser, as a user would (collect sites or start blank, Brand, Pages, Next: Recipe), and shows it. The user approves. (#1–#16: in the kit.) |
 | 2 | Claude | Writes the media brief (§5): photos Claude will find, and the shot list for any film or sound the user picks. |
 | 3 | Claude + user | Claude downloads photos into `media-src/` (sources in `media-src/SOURCES.md`), resizes them (≤ 2400 px long side, JPEG q82) into `public/media/`. The user drops films/sound into the project root or `media-src/`. |
 | 4 | Claude | `create-next-app@16.3.8` (TypeScript, Tailwind, ESLint, App Router, src/, `--skip-install --disable-git`), **`turbopack.root` pin in `next.config.ts` before any install/build**, `scripts/build-package.ts spec.json examples/{slug}`, keep `build/` out of `.gitignore`, remove the placeholder SVGs, `npm install`, the package README's `npm i …`. Films through `bash scripts/prepare-video.sh`. |
@@ -66,10 +67,24 @@ All sixteen are built, registered and live. Open:
 | Brasshand | manifesto, case-study, clients, services, journal |
 | Saint Ashe | journal, newsletter, lookbook, editorial-story, team, product-grid, contact-cta, footer, about |
 
-## 5. Next sites — on hold
+## 5. Next sites (#17–#20, 2026-10-06)
 
-On hold since 2026-10-04 while the Library is planned (`docs/plan-library.md`). The proposal for #17–#20 (Volna,
-Khazri — kept by the user —, Long Shadow, Kərpic) is in git history (`docs/plan-examples.md` at commit `064ccfb`).
+The 2026-10-04 proposal (Volna, Khazri, Long Shadow, Kərpic — in git history at `064ccfb`) is dropped: sites Claude
+invents are not set in Azerbaijan (HANDOFF working agreements). Tramontane (a wind-driven type experiment) was dropped
+too — in Typography First with Lido Blue and a kinetic first screen it came out as Brasshand again. The user: we need
+**new looks**, made the **Library + Build** way. So every site below is in a look no example has yet, started in the
+Library (blank, or parts collected — any look can then be picked in Brand), then Pages, Recipe, Build Package, Claude
+Code.
+
+| # | Site | Kind | Look (new) | Media |
+|---|---|---|---|---|
+| 17 | **Fieldhouse** — an architecture studio that restores old barns into houses | Studio | Modern Heritage | photos (Claude) |
+| 18 | **Maison Vey** — a small perfume house, five scents | E-commerce | Luxury Editorial | photos (Claude); a film optional (the user) |
+| 19 | **Low Hum** — a listening bar: records, a big sound system, small plates | Restaurant | Retro Seventies | photos (Claude) |
+| 20 | **Halden** — a sauna and cold-sea bathhouse on a northern coast | Health & wellness | Dark Cinematic | a film (the user) |
+
+Order: 17 → 18 → 19 → 20 (the user's film last). Palettes and lettering by fit, previewed in Brand. Not used: Orrery (a
+watchmaker) — nearly every watch photo carries a real brand's logo.
 
 ## 6. Progress
 
@@ -82,4 +97,5 @@ Khazri — kept by the user —, Long Shadow, Kərpic) is in git history (`docs/
 | 14 | Aster House | ✓ | ✓ | ✓ | ✓ live | waiting for recording |
 | 15 | Sela Mor | ✓ | ✓ | ✓ | ✓ live | waiting for recording |
 | 16 | QUM | ✓ (`examples/qum/opuskit.json`, approved 2026-10-04) | ✓ 23 photos (Pexels, `media-src/SOURCES.md`) | ✓ Prompt 1 (subagent); no fix round; 20 static files; reviewed 1440 + 390 | ✓ live at `/live/qum` (click-through checked), `npm run check` ✓ | waiting for recording |
-| 17–20 | on hold (§5) | | | | | |
+| 17 | Fieldhouse | ✓ via the Library (blank → Studio; Modern Heritage · Warm Black · Moonlit Italic; Home: Photo with depth, Featured Work, Manifesto, Testimonials, Closing CTA · Work · Project · About · Contact) — approved | photos: Unsplash connector (to do) | started, stopped early (BUILD-LOG.md) | | |
+| 18–20 | §5 | | | | | |

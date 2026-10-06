@@ -11,6 +11,7 @@ import { sectionVariants, variantFor } from '@/data/section-variants'
 import { resources } from '@/data/resources'
 import { contrast, contrastLabel, isHex, oklab } from '@/lib/color'
 import type {
+  Shot,
   AssetCreationPath, AssetRequirement, ChromeId, ConceptId, RecipeConcept, FooterStyle, AssetSpec, BehaviourId, Brief, BuildTarget, DirectionId, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern, ImagePresentationId, ImageryPlan, PieceId, RecipePiece,
   FamilyId, GoalId, LeadId, LayoutId, MediaPlacement, MotionPattern, FooterStyleId, SectionTone, MotionLevel, NavStyleId, ShapeStyle, UiKit, SignaturePattern, PageBlueprint, PageSection, ShapeId, SignatureMoment, PageSpec, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
 } from '@/types/domain'
@@ -267,6 +268,8 @@ export function recommendSectionPhotos(spec: RecipeSpec, sid: SectionId): ImageP
     case 'lookbook': return 'lookbook-spreads'
     case 'collection': return moving ? 'horizontal-rail' : 'uniform-grid'
     case 'featured-work': return moving && ['agency', 'studio'].includes(spec.purpose) ? 'hover-reveal' : 'editorial-sequence'
+    // A gallery is there to show its photos: never a list of names that hides them (Fieldhouse, #17).
+    case 'gallery': { const r = recommendPresentation(spec).id; return r === 'hover-reveal' ? (moving ? 'horizontal-rail' : 'editorial-sequence') : r }
     default: return recommendPresentation(spec).id
   }
 }
@@ -735,6 +738,7 @@ function uiKit(pages: PageBlueprint[], colors: PaletteColors, shape: ShapeStyle,
       'Every interactive control — select, date picker, checkbox, radio, switch, tabs, accordion, dialog, menu, toast — comes from these components. Never ship an unstyled native <select>, <input type="date"> or a hand-rolled dropdown.',
       'Date fields are a Calendar inside a Popover (shadcn “Date Picker” pattern); times and party sizes are a Select. Forms use Form (react-hook-form + zod) with inline errors under each field.',
       'After `shadcn init`, replace the :root color values it writes with the theme block below — hex values, so shadcn components and the recipe tokens always match. Do not map them back to --color-* (that makes a loop).',
+      'Button text uses the recipe’s type roles, never shadcn’s own text-sm / font-medium; a button beside links (the menu’s action) is set exactly like them — same role, size and width — so the row reads as one.',
       `Restyle, don't ship the demo look: recipe fonts, ${shape.name.toLowerCase()} shape (buttons ${shape.button}, cards ${shape.card}), ${shape.border} borders.`,
       'No focus rings, glows or outlines on fields, selects, menus or their options — remove shadcn’s ring-* / outline classes. A focused field only darkens its border to the text color; a highlighted option only changes its background.',
       'Keep Radix accessibility intact: labels tied to fields, keyboard navigation, 44px touch targets, prefers-reduced-motion on every open/close animation.',
@@ -742,6 +746,35 @@ function uiKit(pages: PageBlueprint[], colors: PaletteColors, shape: ShapeStyle,
     ],
   }
 }
+
+// ─── Words and pictures for this site, not for the look it came from ─────────
+
+/** A look's own words (do / avoid / principles) are written for its own palettes, lettering and corners. When the owner
+ *  picked others, a line about type, colour or corners contradicts the recipe's own tokens ("pair a chunky serif with a
+ *  humanist sans" over a one-family sans) and the builder takes the weaker reading — so such a line is left out. */
+export const TYPE_WORDS = /\b(serifs?|sans|grotesk|fonts?|typefaces?|lettering|script|mono(space)?|italics?|display face)\b/i
+export const COLOUR_WORDS = /\b(colou?rs?|palettes?|accents?|black|white|cream|beige|neon|pastels?|monochrome)\b/i
+export const SHAPE_WORDS = /\b(rounded|round|corners?|radius|arch(ed|es)?|pills?|sharp edges?|square corners)\b/i
+export function fitPicks(lines: string[], keep: { type: boolean; colour: boolean; shape: boolean }): string[] {
+  return lines.filter((l) => (keep.type || !TYPE_WORDS.test(l)) && (keep.colour || !COLOUR_WORDS.test(l)) && (keep.shape || !SHAPE_WORDS.test(l)))
+}
+
+/** What each media part's picture shows — written for any business; the shot list adds whose. */
+const SHOTS: Partial<Record<SectionId, { shows: string; format: string }>> = {
+  gallery: { shows: 'the place and what it makes, as a set: wide views, close details, people at work — one light, one grade', format: '6–12 photos · 3:2 for places, 4:5 for people and things · min 2400px' },
+  'featured-work': { shows: 'one strong picture per project — the real work itself, never a mock-up', format: '3–6 photos · 3:2 or 4:5, all the same ratio · min 2400px' },
+  collection: { shows: 'one picture per range: its best piece, all styled and lit the same way', format: '3–6 photos · 4:5 · min 2400px' },
+  lookbook: { shows: 'people wearing or using it in a real setting, with room to breathe', format: '4–8 photos · 4:5 portrait · min 2400px' },
+  'product-grid': { shows: 'each product alone on the same ground, from the same angle, in the same light', format: 'one per product · 4:5 · min 2000px' },
+  about: { shows: 'a real portrait of the person or the team, in their own place', format: '1–2 photos · 4:5 portrait · min 2400px' },
+  team: { shows: 'one portrait per person, in the same light and framing, ideally where they work', format: 'one per person · 4:5 · min 2000px' },
+  location: { shows: 'the way in as visitors arrive — the door, the street — and one view inside', format: '2 photos · 3:2 · min 2400px' },
+  'product-highlight': { shows: 'the main product up close: in hand or in use, its material visible', format: '1–3 photos · 4:5 or 1:1 · min 2400px' },
+  'editorial-story': { shows: 'the pictures that carry the story between paragraphs: a detail, the place, the people', format: '2–4 photos · mixed 3:2 and 4:5 · min 2400px' },
+  'case-study': { shows: 'the project in use, then two or three moments of how it was made', format: '3–4 photos · 3:2 · min 2400px' },
+  'feature-rows': { shows: 'one picture per row, showing that feature at work', format: 'one per row · 4:3 · min 2000px' },
+}
+const FILM_FORMAT = '1920×1080 or larger, 15–30 s, one continuous shot with a slow, steady camera move, no cuts; plus a still for the poster'
 
 /** Headline and CTA examples per kind of site, used when the base recipe was written for a different kind
  * (a store must never get a portfolio's "Selected work, 2019—2026"). Examples of register, not copy to paste. */
@@ -798,7 +831,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const slug = unchanged ? seed.slug : camel(composedTitle).replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`).replace(/^-/, '')
 
   const baseSummary = unchanged && !brief.name ? seed.summary
-    : `${/^[aeiou]/i.test(purpose.noun) ? 'An' : 'A'} ${purpose.noun.toLowerCase()} with a ${direction.name.toLowerCase()} direction: ${type.name.toLowerCase()} typography, a ${palette.name.toLowerCase()} palette, ${leads[spec.lead].name.toLowerCase()} leading the experience and ${motion.name.toLowerCase()} motion.`
+    : `${/^[aeiou]/i.test(purpose.noun) ? 'An' : 'A'} ${purpose.noun.toLowerCase()} in the ${direction.name} look: the ${type.name} lettering (${uniq([type.display.family, type.body.family]).join(' with ')}), the ${palette.name} palette, ${leads[spec.lead].name.toLowerCase()} leading and ${motion.name.toLowerCase()} motion.`
   const summary = [
     brief.offer && `${brief.name ?? 'The project'}: ${brief.offer.replace(/\.$/, '')}.`,
     baseSummary,
@@ -852,6 +885,25 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     return o ? { ...s, variant: { ...o, chosen: !!picked && picked === id } } : s
   }) }))
   const signatures = pickSignatures(spec, hero, pages, concept?.id)
+  const who = brief.name ?? 'the business'
+  // The copy deck: what every part of every page says, written before any layout, from the owner's own words.
+  const copy = pages.map((p) => ({ page: p.label, brief: p.purpose, parts: p.sections.map((s) => ({ part: s.name.split(' — ')[0], says: `${s.purpose}. ${s.content}.`.replace(/\.\./g, '.') })) }))
+  // The shot list: which part needs which picture or film, and what it shows — so real media can be found or made.
+  const shots: Shot[] = spec.pages.flatMap((p) => p.sections.flatMap((sid, i): Shot[] => {
+    const label = spec.pages.length > 1 ? `${p.label} · ` : ''
+    if (sid === 'hero') {
+      const band = spec.heroBands?.find((x) => x.page === p.id && x.index === i)
+      const h = band ? heroes[band.hero] : i === 0 || p === spec.pages[0] ? hero : undefined
+      if (!h) return []
+      const film = band ? h.leads.includes('video') : spec.lead === 'video'
+      if (!film && !(band ? h.leads.includes('photography') : ['photography', 'product'].includes(spec.lead))) return []
+      return [{ where: `${label}${i === 0 ? 'First screen' : 'Film band'} — ${h.name}`, kind: film ? 'film' : 'photo',
+        shows: `The opening picture of ${who}: the place, the thing it makes or the person, at its best light, with calm space where the headline sits`,
+        format: film ? FILM_FORMAT : 'min 2800px · 16:9 for desktop and a 4:5 crop for phones' }]
+    }
+    const sh = SHOTS[sid]
+    return sh ? [{ where: `${label}${sections[sid].name}`, kind: 'photo', shows: sh.shows, format: sh.format }] : []
+  }))
   const kit = placePieces(spec, pages, signatures)
 
   // Menu, footer, first screen and closing CTA are defined by the chosen patterns (chrome, hero, ready sections) — listing
@@ -868,6 +920,10 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   if (techs.includes('three')) deps.push({ name: 'three', why: 'WebGL renderer' }, { name: '@react-three/fiber', why: 'Declarative Three.js in React' }, { name: '@react-three/drei', why: 'Loaders, controls and helpers (useGLTF, Environment)' })
 
   const heading = `${type.display.family} / ${type.body.family}`
+  const keep = seedVoice
+    ? { type: spec.typography === seed.spec.typography, colour: spec.palette === seed.spec.palette && !spec.customPalette, shape: !spec.shape || spec.shape === recommendedShape(seed.spec) }
+    : { type: direction.typography.includes(spec.typography), colour: direction.palettes.includes(spec.palette) && !spec.customPalette, shape: !spec.shape || spec.shape === recommendedShape(spec) }
+  const principles = fitPicks(seedVoice ? seed.principles : direction.principles, keep)
 
   return {
     id: id ?? seed.slug,
@@ -875,12 +931,12 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     creativeDirection: {
       mood: seedVoice ? seed.mood : uniq([...direction.mood, ...chars.map((c) => c.name)]),
       personality: seedVoice ? seed.personality : chars.map((c) => `${c.name} — ${c.line.toLowerCase()}`).join('; ') || direction.line,
-      visualPrinciples: seedVoice ? seed.principles : direction.principles,
-      do: seedVoice ? seed.do : direction.do,
-      avoid: seedVoice ? seed.avoid : direction.avoid,
+      visualPrinciples: principles,
+      do: fitPicks(seedVoice ? seed.do : direction.do, keep),
+      avoid: fitPicks(seedVoice ? seed.avoid : direction.avoid, keep),
       genericAvoid: GENERIC_TELLS,
     },
-    designPrinciples: uniq([...(seedVoice ? seed.principles : direction.principles), motion.principle]),
+    designPrinciples: uniq([...principles, motion.principle]),
     visualSystem: {
       palette: { id: palette.id, name: spec.customPalette ? `${palette.name} (customised)` : palette.name, custom: !!spec.customPalette, dark: palette.dark, tokens: paletteTokens(colors, palette.usage) },
       typography: type,
@@ -897,7 +953,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     chrome,
     pages,
     components: componentIds.map((c) => c === 'Hero' ? { ...components.Hero, anatomy: hero.composition, behavior: hero.behavior } : components[c]),
-    media: { ...lead, hero, storytelling: filmStory(spec, hero), imagery, framing: videoFraming(spec) },
+    media: { ...lead, hero, storytelling: filmStory(spec, hero), imagery, framing: videoFraming(spec), shots },
     motion: { level: motion, principle: motion.principle, patterns, libraries: techs.map((t) => TECH_LABEL[t]) },
     ...(concept ? { concept } : {}),
     signatures,
@@ -912,6 +968,10 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
       ctaExamples: (() => { const base = seed.spec.purpose === spec.purpose ? seed.content.ctaExamples : PURPOSE_COPY[spec.purpose].cta; return goal ? uniq([...goal.cta, ...base]).slice(0, 4) : base })(),
       wordsToAvoid: WORDS_TO_AVOID,
       density: seed.content.density,
+      source: brief.name || brief.offer
+        ? `Write from the owner's own words — ${[brief.name && `the name “${brief.name}”`, brief.offer && `“${brief.offer.replace(/\.$/, '')}.”`].filter(Boolean).join(' and ')} Every headline, line and claim grows from them: name what is really there — what is made, where, when, for whom. The headline and CTA examples are only the register, taken from another site: never reuse them. Anything you must invent (quotes, prices, names, numbers, dates) is marked in the copy deck as a placeholder for the owner to replace.`
+        : 'Nothing from the owner yet: write plain, specific copy for this kind of site, and mark every invented fact (quotes, prices, names, numbers, dates) in the copy deck as a placeholder for the owner to replace.',
+      copy,
     },
     assetRequirements,
     assetCreationPaths: buildCreationPaths(spec, assetRequirements),
@@ -932,8 +992,9 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
         'public/media/     — optimised images and videos',
       ].filter(Boolean).join('\n'),
       sequence: [
+        'Write the copy deck first (recipe/content.md → Copy deck): every headline, line and button of every part, from the owner’s own words, into src/content/ — no layout before the words exist.',
         'Set up tokens: palette as CSS variables, fonts with next/font, spacing scale in Tailwind theme.',
-        'Build the asset config layer (config/assets.ts) and <MediaAsset/> so every media reference is replaceable.',
+        'Build the asset config layer (config/assets.ts) and <MediaAsset/> so every media reference is replaceable; place media by the shot list (recipe/media.md) — a part still waiting for its media gets a temporary picture of the same subject and format, listed in your final reply.',
         `Build static layout for all ${pages.length} pages (${pages.flatMap((p) => p.sections).length} sections plus navbar and footer) with real copy — no motion yet.`,
         `Build the hero: ${hero.name}.`,
         ...(imagery ? [`Build the photo layout: ${imagery.presentation.name} (see Media → Photos).`] : []),

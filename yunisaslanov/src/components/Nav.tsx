@@ -38,7 +38,7 @@ export function Nav() {
         <div className="flex h-14 items-center justify-between gap-4 pl-5 pr-1.5">
           <Link href="/" aria-label="Yunis Aslanov, home" className="flex h-11 items-center"><Logo /></Link>
           <ul className="hidden items-center sm:flex">{links(false)}</ul>
-          <Button asChild className="hidden h-11 rounded-full px-5 sm:inline-flex"><Link href="/contact">Say hello</Link></Button>
+          <Button asChild className="type-utility text-(length:--type-utility-size) hidden h-11 rounded-full px-5 sm:inline-flex"><Link href="/contact">Say hello</Link></Button>
           <button type="button" aria-expanded={open} aria-controls="menu" onClick={() => setMenuAt(open ? null : path)} className="type-utility h-11 rounded-full px-5 sm:hidden">
             {open ? 'Close' : 'Menu'}
           </button>

@@ -440,6 +440,7 @@ export function cleanPlan(x: unknown): KitPlan {
     sitePieces: siteFrom(p.sitePieces, pages),
     from: isValidSpec(p.from) ? p.from : undefined, fromId: typeof p.fromId === 'string' ? p.fromId : undefined,
     ...(p.via === 'studio' ? { via: 'studio' as const } : {}),
+    ...(p.blank ? { blank: true as const } : {}),
   }
 }
 

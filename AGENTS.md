@@ -8,14 +8,17 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
 
 - Domain types: `src/types/domain.ts`. Knowledge base (curated ingredients): `src/data/`.
 - Recipe engine (deterministic composition): `src/features/recipes/engine.ts`.
-- Build Package adapters: `src/features/build-packages/`.
+- Build Package adapters: `src/features/build-packages/`. Every recipe carries a copy deck (what each part says, from the
+  owner's words), a shot list (what each media part shows) and rules fitted to the owner's picks (decision 26).
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
 - The Library flow is the way to make a site (`docs/plan-library.md`): `/library` (Discover) → `/studio/brand` → `/studio/pages` →
   recipe. Discover is browsing (no steps); the Collection is a cart in the site header (`CollectionSheet`, its
   Build my site starts building); Brand, Pages and the recipe share one steps bar (`FlowBar`) — both in
   `src/app/library/parts.tsx`. Logic `src/features/library/collection.ts`, storage `src/lib/collection.ts`; plans made there
-  carry `via: 'studio'`. Pages shows everything the build will get: each part in the design the engine picks, and the
-  site-wide behaviours under "On every page"; such plans get no big idea unless one is picked (decision 21). The kit below still opens examples and saved recipes until it is retired.
+  carry `via: 'studio'`. Brand picks the look (each drawn as your own site), colours and lettering. Pages shows everything the build will get: each part in the design the engine picks, and the
+  site-wide behaviours under "On every page"; such plans get no big idea (decision 21). Anything on Pages is changed in one chooser that
+  opens from what is clicked (`Chooser`, decision 23); the left column is the toolbox (Parts | Effects, with On every
+  page), the right one the pages (decision 24). The kit below still opens examples and saved recipes until it is retired.
 - The kit (`/kit`) is the only way to make or change a recipe (the questionnaire was retired 2026-09-30; `/create`
   redirects here). A builder in three steps, always visible in its
   step bar: 1 Design (same on every page: "About your site" first in the list — name, what it is, kind of site, what visitors
@@ -60,6 +63,8 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
   Many come in several designs (a `variant` prop; `src/data/section-variants.ts` — the engine picks one per look family,
   the owner can pick another in Pages → Other designs; check.ts asserts each design exists in the code). Two section ids
   may share one component (Steps, NameWall, Statement) with different default designs.
+  In a Build Package sections and pieces are references, not parts to paste: the builder keeps their design and
+  behaviour and fits them into one site (`ONE_SYSTEM` in `build-packages/shared.ts`, decision 22).
   A new section also needs: its `SectionId`, a `sections` entry in patterns.ts, a `blocks.ts` entry, a sample per world,
   a plain look + best-when in `section-guide.ts`, a job group in `sectionGroups` — then `npm run pieces`.
 - Ready pieces (backgrounds + components) ship as code in every Build Package's `src/components/pieces/`.

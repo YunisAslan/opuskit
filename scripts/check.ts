@@ -27,7 +27,7 @@ import { closestChrome, closestPiece, closestSection, closestSite } from '../src
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
 import { allSites, applyItems, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection } from '../src/features/library/collection'
-import { cleanPieces, defaultPagesFor, pieceIssues, composeRecipe, isValidSpec, rankPalettes, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
+import { COLOUR_WORDS, SHAPE_WORDS, TYPE_WORDS, recommendSectionPhotos, cleanPieces, defaultPagesFor, pieceIssues, composeRecipe, isValidSpec, rankPalettes, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
 assert.equal(recipeSeeds.length, 10, 'exactly 10 seed recipes')
 assert.equal(new Set(recipeSeeds.map((s) => s.slug)).size, 10, 'unique slugs')
@@ -81,6 +81,9 @@ for (const f of ['Inter', 'DM Sans', 'Space Grotesk', 'Syne', 'Bricolage Grotesq
   assert.ok(!famUse.has(f), `${f} is an AI-default face — keep it out of the library`)
 assert.ok(types.filter((t) => /mono/i.test(t.utility.family)).length <= 1, 'monospace utility in more than one pairing')
 assert.ok(types.filter((t) => t.utility.uppercase).length <= 1, 'uppercase utility labels in more than one pairing')
+// Menu links (utility) sit beside buttons and text (body): one face at two widths reads as a mistake (yunisaslanov).
+for (const t of types) if (t.utility.family === t.body.family)
+  assert.equal(t.utility.stretch ?? '100%', t.body.stretch ?? '100%', `${t.name}: utility is the body face at another width`)
 
 // Each palette / pairing is the default for at most two directions; seed recipes never share one.
 const count = <T,>(xs: T[]) => xs.reduce((m, x) => m.set(x, (m.get(x) ?? 0) + 1), new Map<T, number>())
@@ -314,7 +317,7 @@ const main = async () => {
   const secPkg = await adapters.cursor.generate(composeRecipe(specFromSeed(recipeSeeds[0])))
   const used = [...new Set(composeRecipe(specFromSeed(recipeSeeds[0])).pages.flatMap((p) => p.sections).filter((s) => s.code).map((s) => s.id))]
   assert.ok(used.length > 0 && used.every((id) => secPkg.files.some((f) => f.path === `src/components/sections/${blockFor(id)!.file}` && f.content === blockSource[id])), 'used sections ship their code')
-  assert.match(recipeToMarkdown(composeRecipe(specFromSeed(recipeSeeds[0]))), /Ready code:\*\* `src\/components\/sections\//, 'ready code reaches the recipe')
+  assert.match(recipeToMarkdown(composeRecipe(specFromSeed(recipeSeeds[0]))), /Reference code:\*\* `src\/components\/sections\//, 'reference code reaches the recipe')
   const tokens = secPkg.files.find((f) => f.path.endsWith('tokens.css'))!.content
   assert.ok(tokens.includes(TYPE_UTILITIES) && readFileSync(new URL('../src/app/globals.css', import.meta.url), 'utf8').includes(TYPE_UTILITIES), 'type utilities identical in packages and OpusKit previews')
 
@@ -702,6 +705,12 @@ const main = async () => {
   {
     for (const r of allSites) assert.deepEqual(validateRecipe(composeRecipe(planToSpec(collectionToPlan({ items: [{ kind: 'site', site: r }] }).plan))), [], `${r} starts a complete plan`)
     for (const p of Object.keys(purposes) as (keyof typeof purposes)[]) { const d = lookFor(p); if (d) assert.ok(d in directions, `${p}'s starting look exists`) }
+    // Two sites mixed never put one part twice on a page (Fennwood + Velmira once gave Home two Reservations).
+    for (const [a, b] of allSites.flatMap((a, i) => allSites.slice(i + 1).map((b) => [a, b] as const)))
+      for (const pg of collectionToPlan({ items: [{ kind: 'site', site: a }, { kind: 'site', site: b }] }).plan.pages) {
+        const ids = pg.sections.map((s) => s.id).filter((id) => id !== 'hero')
+        assert.equal(new Set(ids).size, ids.length, `${a} + ${b}: ${pg.label} has a part twice (${ids.join(', ')})`)
+      }
     const blank = collectionToPlan({ items: [], purpose: 'portfolio', name: 'Ada' }).plan
     assert.equal(blank.direction, lookFor('portfolio'), 'no site: the kind of site brings its look')
     assert.equal(planToSpec(blank).brief?.name, 'Ada', 'the name from About you reaches the brief')
@@ -761,6 +770,30 @@ const main = async () => {
       assert.equal(r.added.length, 2, 'both new parts were added') }
     const dirty = cleanCollection({ items: [{ kind: 'site', site: 'example:nope' }, { kind: 'section', id: 'hero' }, { kind: 'effect', id: 'grain' }, { kind: 'effect', id: 'grain' }, null], purpose: 'other', look: 'seed:nope' })
     assert.deepEqual(dirty, { items: [{ kind: 'effect', id: 'grain' }], purpose: undefined, name: undefined, about: undefined, look: undefined, like: undefined }, 'unknown ids are dropped, duplicates once')
+  }
+
+  // The recipe speaks for this site, not the look it came from (docs/plan-library.md decision 26).
+  {
+    const tAll = Object.keys(typography) as (keyof typeof typography)[], pAll = Object.keys(palettes) as (keyof typeof palettes)[]
+    for (const seed of recipeSeeds) {
+      const d = directions[seed.spec.direction]
+      const t = tAll.find((x) => !d.typography.includes(x) && x !== seed.spec.typography)!, pl = pAll.find((x) => !d.palettes.includes(x) && x !== seed.spec.palette)!
+      const r = composeRecipe({ ...specFromSeed(seed), typography: t, palette: pl, shape: seed.spec.shape === 'brutal' ? 'round' : 'brutal' })
+      for (const l of [...r.creativeDirection.do, ...r.creativeDirection.avoid, ...r.creativeDirection.visualPrinciples])
+        assert.ok(!TYPE_WORDS.test(l) && !COLOUR_WORDS.test(l) && !SHAPE_WORDS.test(l), `${seed.slug} with other picks still says “${l}”`)
+      const own = composeRecipe(specFromSeed(seed))
+      assert.ok(own.creativeDirection.do.length >= 1, `${seed.slug} keeps its own do list`)
+      assert.ok(!/\b[Aa] [aeiou]/.test(composeRecipe({ ...specFromSeed(seed), palette: pl }).summary), `${seed.slug}: “a” before a vowel in the summary`)
+      // The copy deck covers every part of every page; every media part has a line in the shot list.
+      assert.deepEqual(own.contentDirection.copy.map((p) => p.parts.length), own.pages.map((p) => p.sections.length), `${seed.slug}: copy deck covers every part`)
+      for (const p of own.pages) for (const sct of p.sections) if (['gallery', 'featured-work', 'about', 'location', 'editorial-story', 'product-grid'].includes(sct.id))
+        assert.ok(own.media.shots.some((x) => x.where.includes(sections[sct.id as keyof typeof sections].name)), `${seed.slug}: ${p.label} ${sct.id} has no shot`)
+      assert.match(recipeToMarkdown(own), /## Copy deck/, `${seed.slug}: the copy deck reaches the recipe`)
+    }
+    // A gallery shows its photos — never a list of names hiding them, even on a moving studio site (Fieldhouse, #17).
+    for (const purpose of ['studio', 'agency'] as const) assert.notEqual(recommendSectionPhotos({ ...specFromSeed(recipeSeeds[0]), purpose, motion: 'dynamic' }, 'gallery'), 'hover-reveal', `${purpose}: gallery hides its photos`)
+    const named = composeRecipe({ ...specFromSeed(recipeSeeds[0]), brief: { name: 'Morrow', offer: 'A bakery and tea room in an old stone mill.' } })
+    assert.match(named.contentDirection.source, /Morrow/, 'the copy deck starts from the owner’s words')
   }
 
   console.log(`✓ ${recipeSeeds.length} recipes × ${Object.keys(adapters).length} adapters, remix and asset logic OK`)

@@ -87,7 +87,7 @@ function demo(id: PieceId, c: PaletteColors): ReactNode {
     case 'grain': return <div className="relative grid h-full w-full place-items-center bg-(--color-text)"><Grain opacity={0.35} /><p className={`${display} relative text-3xl text-(--color-background)`}>Warm, like film</p></div>
     case 'magnet-lines': return <MagnetLines rows={6} columns={14} className="h-full w-full opacity-60" />
     case 'media-between-text': return <MediaBetweenText before="Made by" after="hand" src={PHOTOS[3].src} alt="" width="7rem" className={`${display} text-5xl`} />
-    case 'cut-reveal': return <TextEffect as="p" preset="cut" className={`${display} px-6 text-center text-5xl`}>Polo in Sheki</TextEffect>
+    case 'cut-reveal': return <TextEffect as="p" preset="cut" className={`${display} px-6 text-center text-5xl`}>Made by hand</TextEffect>
     case 'pinned-stage': return <PinnedDemo />
     case 'underline-fill': return <LinkDemo piece="underline-fill" colors={c} />
     case 'parallax-floating': return <ParallaxFloating className="size-full" photos={[{ ...PHOTOS[0], x: '6%', y: '10%', w: '22%', depth: 1.5 }, { ...PHOTOS[4], x: '72%', y: '8%', w: '20%', depth: 0.8 }, { ...PHOTOS[6], x: '10%', y: '62%', w: '18%', depth: 1 }, { ...PHOTOS[2], x: '70%', y: '60%', w: '22%', depth: 2 }]}><p className={`${display} text-3xl`}>Move the cursor</p></ParallaxFloating>

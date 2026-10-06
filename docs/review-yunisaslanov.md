@@ -30,6 +30,7 @@ changed in OpusKit. The rules that came out of it are decision 21 in `docs/plan-
 
 Also checked: all 43 ready sections, rendered large in the user's palette and lettering. Testimonials, Trust and the
 Name wall's split design were the weak ones and are fixed. Every other section held up.
+| 9 | Menu links narrower, smaller and higher than the logo and button | Wide Spec set its labels in Plex at 87.5% width; the drawn underline added 8px of padding under each link; shadcn's button kept its own 15px | Decision 22: ready code is a reference the builder fits into one site, with three "one system" QA checks in every package. The underline takes no room; a label role in the body's face keeps the body's width (check.ts); a button beside links is set like them. Patched in `yunisaslanov/` too (DrawnLink, tokens.css, Nav.tsx) |
 
 ## Still open
 

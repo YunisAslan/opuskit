@@ -19,10 +19,11 @@ import { HeroPreview } from '@/app/kit/HeroPreview'
 import { lookOf } from '@/app/kit/ProductVisual'
 import { hasItem, itemKey, itemName, notes, removeItem, siteName, siteSpec, sitesWith, toggleItem, type CollectionItem, type SiteRef } from '@/features/library/collection'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { behaviours, pieces } from '@/data/pieces'
 import { specToPlan } from '@/features/kit/plan'
 import { composeRecipe } from '@/features/recipes/engine'
-import { planFromStudio, readCollection, updateCollection, useCollection } from '@/lib/collection'
+import { planFromStudio, readCollection, startBlank, updateCollection, useCollection } from '@/lib/collection'
 import { readPlan, usePlan } from '@/lib/kit'
 import { KEYS, get } from '@/lib/store'
 import type { KitPlan, LayoutId, MediaPlacement, PurposeId, SectionTone } from '@/types/domain'
@@ -295,5 +296,28 @@ export function FlowBar({ at, next }: { at: Step; next?: ReactNode }) {
         <div className="flex shrink-0 items-center gap-2">{next}</div>
       </div>
     </div>
+  )
+}
+
+/** The other way in: no site to start from — pick the kind of site and build from its own pages. */
+export function StartBlank({ className = '' }: { className?: string }) {
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+  const go = (k: PurposeId) => {
+    const undo = startBlank(k)
+    setOpen(false)
+    toast(`A blank ${purposes[k].name.toLowerCase()} site`, { description: 'Its usual pages, nothing from your Collection.', action: { label: 'Undo', onClick: () => { undo(); router.push('/library') } } })
+    router.push('/studio/brand')
+  }
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger className={`inline-flex items-center gap-1.5 text-sm text-ink-2 underline decoration-line underline-offset-4 hover:text-ink hover:decoration-ink ${className}`}>Or start blank</PopoverTrigger>
+      <PopoverContent align="start" className="w-72 p-1">
+        <p className="px-2.5 pb-1 pt-2 text-xs text-muted">What are you making?</p>
+        {(Object.keys(purposes) as PurposeId[]).filter((k) => k !== 'other').map((k) => (
+          <button key={k} type="button" onClick={() => go(k)} className="block w-full rounded-md px-2.5 py-1.5 text-left text-sm hover:bg-secondary focus:bg-secondary focus:outline-none">{purposes[k].name}</button>
+        ))}
+      </PopoverContent>
+    </Popover>
   )
 }

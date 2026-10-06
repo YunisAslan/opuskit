@@ -202,7 +202,8 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     part no site has stays the engine's. On Pages each page says **Made from: All your sites · Sela Mor · …** — picking
     a site makes that page follow it (`pageLike`, remembered as `Collection.like`); every part says "From Sela Mor"
     (`PlanSection.from`). The Collection panel lists every collected site's parts to add by hand. The look until Brand
-    comes from the first site.
+    comes from the first site. A page never gets one part twice (2026-10-06: Fennwood + Velmira gave Home two
+    Reservations — two parts doing one job each became the same part; check.ts now mixes every pair of sites).
 18. On Pages each page opens with the **Menu** and ends with the **Footer**: locked in place (🔒, the same on every page,
     their style named), never moved or removed; **Shown / Hidden** leaves either out of one page (`toggleChrome`,
     written into the recipe and QA). Either row is picked like a part (a click on it): the right column then offers
@@ -271,6 +272,79 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     - Sections: Testimonials redesigned (label column, a big accent quotation mark, an accent rule before each name, the
       rest as cards under the quote); Trust strip fuller (ruled columns, heading and text sizes); Name wall's split
       design lost its initial-letter tiles (letters standing in for logos).
+22. **References, not parts to paste** (2026-10-06, from the yunisaslanov menu: links in a condensed Plex, 13px and 4px
+    higher than the logo and button beside them — the pairing's narrow label width, the drawn underline's padding and
+    shadcn's own button size, each correct alone, pasted side by side). The Build Package now tells the builder that the
+    code in `src/components/sections/` and `pieces/` shows each part's design and does the hard work, but every part is
+    built as this site's own: its sizes, spacing, type and alignment come from the site, and the code is edited wherever
+    it disagrees. Every package's QA carries three **one system** checks (`ONE_SYSTEM` in `shared.ts`): things of one
+    kind look alike, every row lines up, nothing looks pasted in — and a last look at each page as a stranger would.
+    Behind it in the core: the drawn underline takes no room; a pairing's label role in its body face keeps the body's
+    width (check.ts; seven pairings changed); a button beside links is set like them.
+23. **Change it where you click it** (2026-10-06, after "the effects and sections on the right and at the bottom
+    leave people lost"): the right column used to do three jobs at once — the picked part's other designs, the
+    Collection and All parts — so a click in the middle opened its choices far away, at the top of a scrolled column, as
+    96px thumbnails with cut-off names. Now one **chooser** (`Chooser` in Pages.tsx) opens from whatever is clicked: a
+    part (its row, or **Other designs** / **Other first screens** on it), the menu or footer (**Change**), a row of
+    **On every page**, and **Add an effect** — all the same dialog: what it is now, marked **Now**, then every option
+    drawn large (three across), its name and whole line, grouped (a part: its designs, then other parts doing its job,
+    each with its "Best when…"). A tap swaps it at once with Undo; the chooser stays open to compare; Done closes. A
+    part's options are drawn in that part's own look, so they compare like for like. The right column only adds:
+    **Add to {page}** — the Collection, each site's parts, All parts. "Collect more sites in the Library" is gone (the
+    header's Collection and ← Library already lead there).
+    **On every page** became cards, not a settings table, and moved from under the footer (easily missed) to the top
+    of the middle column, above the page's name — the whole site first, then this page: five small cards in a row,
+    each showing its pick moving (links on the drawn footer, the plain underline when none), its name and how many
+    options it has; the whole card opens the chooser (whose None is drawn the same way). Taking one off is its None.
+24. **Toolbox left, page middle, pages right** (2026-10-06, the user's idea; replaces where 23 put On every page —
+    under the footer it was missed, above the page it was in the way). Pages reads like a design tool: the left column
+    is the toolbox, two tabs and one search — **Parts** (your Collection, each collected site's parts, All parts) and
+    **Effects** (**On every page** first, one row each with its pick moving and its number of options, opening the
+    chooser; then **On one part**, every effect that goes on a part, grouped by what it does, collected first) —
+    everything a picture, two across, dragged onto the page or added with +. A tab and groups keep it calm as effects
+    grow. The right column is only the pages: a plain list (hover: up, down, remove) and one quiet **Add a page**,
+    whose search also takes your own page ("Add “Studio notes” as your own page") — the separate "Your own page" form
+    is gone. Phones: pages first, then the page, then the toolbox.
+26. **The recipe speaks for this site** (2026-10-06; the user: a site is strong through its colours, type, where the
+    words go, its photos and films — not a big idea, which was removed from the toolbox again). Reading a Library
+    Build Package showed four weak spots, now fixed in the engine:
+    - **Copy deck** (`contentDirection.copy`, recipe/content.md): what every part of every page says, from the owner's
+      own name and sentence; the headline examples are marked as register from another site, never to reuse; invented
+      facts are marked as placeholders. Writing it is the build's first step, before any layout.
+    - **Rules fitted to the picks** (`fitPicks`): a look's do / avoid / principles lines about type, colour or corners
+      are dropped when the owner picked lettering, a palette or a shape outside that look — no "pair a chunky serif"
+      over a one-family sans.
+    - **Shot list** (`media.shots`, recipe/media.md): each media part — first screen, film bands, galleries, about,
+      location… — with what its picture or film shows and its format. The owner picks films from it; until media
+      exists, a part uses a temporary picture of the same subject and format.
+    - The summary reads as a sentence ("in the Organic Modern look: the Corner Bakery lettering (Young Serif with
+      Alegreya Sans), the Limestone palette…").
+    check.ts asserts all four for every seed.
+27. **Start blank** (2026-10-06): besides starting from collected sites, anyone can start from nothing. "Or start
+    blank" sits in the Library's opening line and on the "Collect something first" screen: pick the kind of site, and
+    building opens on Brand with that kind's own pages (`startBlank`; `KitPlan.blank`). The Collection is left as it
+    is — what is in it now is not added, what is collected later joins as usual — and no collected site is the start
+    (Brand's colours, lettering and photo come from the kind of site's look). It makes a new recipe; Undo goes back.
+28. **The look is picked in Brand** (2026-10-06). The look (Japanese Minimal, Organic Modern…) still shapes most of a
+    site — the parts' designs, corners, menu, footer, layout, movement, the builder's principles — but after the
+    Library it came silently from the first collected site (or, blank, the kind of site's default), so the order of
+    collecting decided it. Brand now opens its middle column with **Look**, only where there is a choice to make (the
+    user: "if I picked a site, why would I want something else?"): one collected site simply is its look (no Look);
+    several collected sites in different looks pick among those ("Your sites come in different looks — which one is
+    yours?"), and the picked one brings that site's own colours, lettering, corners, menu and footer; a blank start
+    (and so does a Collection of parts only, with no site) picks from every look — those OpusKit's sites of its kind use first ("Fits your site"), filters by family, six
+    first, Show all — each bringing its defaults. Every look is drawn as your own site in it (its colours, lettering,
+    layout and first screen — 41 looks share 18 stock photos, so photos made them look alike). The pages, parts and
+    effects stay; Undo; colours and lettering can still be changed after.
+29. **Brand, one list at a time** (2026-10-06, "it's cluttered here too"): Look, Colours and Lettering stacked as three
+    long grids, eleven family chips in two right-aligned rows, long notes and cut-off lines under every tile. Now the
+    middle column is tabs — Look (only where there is a choice, decision 28) | Colours | Lettering — each tab naming its
+    pick ("Colours · Black Box"), one list under it: a one-line note, small filters on one line, the grid, Show all.
+    Tiles carry only a short mark (From Fennwood, Fits your site, Made for this look), never a cut-off line. A blank
+    start's looks carry no "From …": it takes nothing from the Collection.
+    The left column is a plain form (Your site, Name, In one sentence with a 0 / 160 count — no rules, no summary line).
+    The example says what it is: "A sample, not your site — only your colours and lettering. The real one goes much further." (it is plain on purpose; nobody should take it for the build); under it, four parts of your own pages in your picks, two across, and
+    the column scrolls with the page (too tall to stay pinned).
 
 ## 5. Open
 
@@ -282,3 +356,6 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
 4. The home page copy still describes the kit.
 5. Two whole sites in one Collection beyond "Start from"; Review — both once there are first results.
 6. Persona files and the test tasks; the pass mark agreed before testing.
+7. A Colour Chapters part on a site without colour chapters (the Library has no place to turn them on) draws every
+   chapter in the one accent, and each chapter wants a photo or clip — found building Tramontane (#17), where it was
+   swapped for Features. Either the part brings colour chapters with it, or Pages says what it needs.

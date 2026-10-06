@@ -201,7 +201,7 @@ export const pieces: Record<PieceId, Piece> = {
   'cut-reveal': {
     id: 'cut-reveal', name: 'Cut-out headline', line: 'Words slide up out of a hard mask — sharper than a fade.', slot: 'headline', source: FA,
     file: 'TextEffect.tsx', exportName: 'TextEffect', deps: M, levels: MOVING, sections: ['hero', 'intro', 'manifesto', 'contact-cta'],
-    usage: '<TextEffect as="h1" preset="cut" className="font-(family-name:--font-display) text-8xl">Polo in Sheki</TextEffect>',
+    usage: '<TextEffect as="h1" preset="cut" className="font-(family-name:--font-display) text-8xl">Made by hand</TextEffect>',
     rules: ['Best with heavy, condensed or wide display faces.', 'h1 plus at most two section headlines.'],
   },
   'underline-fill': {

@@ -104,7 +104,7 @@ const BUY: Record<World, { name: string; price: string; line: string; option: [s
   event: { name: 'Weekend pass', price: '€120', line: 'Both days, every stage, and the boat to the island on Sunday.', option: ['Day', ['Weekend', 'Saturday', 'Sunday']] },
 }
 const SPECS: Record<World, [string, [string, string][]]> = {
-  studio: ['The project', [['Client', 'Salt & Ember'], ['Place', 'Baku'], ['Year', '2025'], ['Role', 'Name, identity, menus'], ['Team', 'Three people'], ['Length', 'Six weeks']]],
+  studio: ['The project', [['Client', 'Salt & Ember'], ['Place', 'Lisbon'], ['Year', '2025'], ['Role', 'Name, identity, menus'], ['Team', 'Three people'], ['Length', 'Six weeks']]],
   food: ['The room', [['Seats', '40'], ['Counter', '12 seats'], ['Private room', 'Up to 14'], ['Kitchen', 'Wood fire'], ['Open', 'Tue–Sat, 18:00'], ['Dress', 'As you are']]],
   shop: ['Details', [['Fabric', '100% boiled wool'], ['Lining', 'Cupro'], ['Fit', 'Long, straight'], ['Length', '112 cm in size M'], ['Made in', 'Tbilisi'], ['Care', 'Dry clean']]],
   product: ['Specs', [['Size', '18 × 18 × 21 cm'], ['Weight', '2.1 kg'], ['Drivers', 'One 4" woofer, two tweeters'], ['Battery', '14 hours'], ['Connect', 'Bluetooth 5.3, line in'], ['In the box', 'Speaker, cable, a card']]],
@@ -113,7 +113,7 @@ const SPECS: Record<World, [string, [string, string][]]> = {
 }
 const W: Record<World, Copy> = {
   studio: {
-    img: brand, people: brandPeople, label: 'The studio', statement: 'Names, identities and campaigns for food, music and culture — made by three people in Baku.', body: 'A small branding studio. Thirty identities since 2019, most of them still in use.',
+    img: brand, people: brandPeople, label: 'The studio', statement: 'Names, identities and campaigns for food, music and culture — made by three people in one room.', body: 'A small branding studio. Thirty identities since 2019, most of them still in use.',
     manifesto: 'A good identity should still work on a paper bag.', attribution: 'From our first brief, 2019',
     work: 'Selected work', projects: [['Salt & Ember, a restaurant', '2025 · Identity'], ['Night Ferry festival', '2024 · Campaign'], ['Small Batch coffee', '2023 · Packaging']],
     caseTitle: 'Salt & Ember, a restaurant', facts: [['Client', 'A 40-seat restaurant'], ['Role', 'Name, identity, menus'], ['Outcome', 'Opened in March']], story: ['The kitchen had a fire before it had a name.', 'We drew one mark that works burnt into wood and printed on a receipt.', 'The menus are reprinted every week; the mark never changes.'],
@@ -125,13 +125,13 @@ const W: Record<World, Copy> = {
     clientsTitle: 'Worked with', clients: ['Salt & Ember', 'Night Ferry', 'Small Batch', 'Old Town Bakery', 'Low Tide Records', 'Harbour Museum', 'Long Table', 'Paper Moon'],
     featuresTitle: 'What every project includes', features: [{ name: 'One team', text: 'The same three people from brief to launch.' }, { name: 'Real tests', text: 'Printed, signed and worn before you see it.' }, { name: 'Every file', text: 'Masters and guidelines, yours to keep.' }],
     pricingTitle: 'Rates', plans: [['Name', '€1,800', 'project', ['A shortlist of five', 'Checks and domains']], ['Identity', '€6,500', 'project', ['Mark, type, colour', 'Two rounds', 'Guidelines']], ['Launch', '€12,000', 'project', ['Identity + campaign', 'Packaging', 'Website design']]],
-    faq: [['Do you work outside Baku?', 'Yes, most of our clients are elsewhere.'], ['Can you work with our printer?', 'Gladly — we send them the files ourselves.'], ['How soon can you start?', 'Usually within three weeks.']],
+    faq: [['Do you work outside the city?', 'Yes, most of our clients are elsewhere.'], ['Can you work with our printer?', 'Gladly — we send them the files ourselves.'], ['How soon can you start?', 'Usually within three weeks.']],
     journal: [['Why we test on a paper bag', '2 May', 'Notes'], ['Naming a ferry', '18 Apr', 'Craft'], ['A short history of our table', '3 Apr', 'Studio']],
     cta: ['Something to name', 'or make?', 'Tell us about it'],
     quotes: [['They gave our bakery a face people stop for.', 'Mira Holt', 'Old Town Bakery'], ['Calm in the room, exact on paper.', 'Jonas Reuter', 'Night Ferry'], ['The only studio that asked to see our receipts.', 'Ada Kern', 'Small Batch']],
     team: [['Leyla Aliyeva', 'Design', 'Draws the marks.'], ['Tural Mammadov', 'Words', 'Names things.'], ['Nigar Hasanova', 'Production', 'Talks to printers.'], ['Rauf Karimov', 'Strategy', 'Asks why first.']],
     stats: [['30', 'Identities since 2019'], ['6', 'Years together'], ['3', 'People'], ['1', 'Long table']], statsNote: 'Numbers from our own records, updated each season.',
-    where: { title: 'Visit the studio', address: 'Studio 4, Old Town\nBaku', hours: ['Mon–Fri, 10:00–18:00', 'By appointment'], notes: 'Ring the side door.' },
+    where: { title: 'Visit the studio', address: 'Studio 4, Old Town\nLisbon', hours: ['Mon–Fri, 10:00–18:00', 'By appointment'], notes: 'Ring the side door.' },
     rowsTitle: 'What a project gives you', rows: [['A name people can say', 'Short, easy to spell, and checked for domains and trademarks before you fall for it.', 0, 'See the names'], ['An identity that travels', 'One mark, one type family and a colour that works on a menu, a sign and a paper bag.', 2, 'See the identities'], ['Launch-ready files', 'Masters, guidelines and print-ready files for every piece, handed over at the end.', 4]],
     news: ['Notes from the table', 'One email a season: the work we finished and what we learned making it.', 'Subscribe', 'Four emails a year. Leave in one click.'],
     catsTitle: 'Browse the work', cats: [['Identities', '18 projects', 0], ['Campaigns', '7 projects', 1], ['Packaging', '9 projects', 2], ['Culture', '6 projects', 4]],
@@ -263,7 +263,7 @@ const W: Record<World, Copy> = {
     timelineTitle: 'How it grew', timeline: [['2020', 'Built for our own studio', 'Invoices in a spreadsheet had to go.'], ['2022', 'The first hundred studios', 'Bank feeds and receipts by email.'], ['2024', 'One-click quarter close', 'Books ready for the accountant in minutes.'], ['2026', 'Payroll, built in', 'One place for every number a studio has.']],
   },
   event: {
-    img: ph, people: players, label: 'Lowfield Nights', statement: 'Three nights of silent films with live scores, in a hangar the airfield forgot. Entry free with an RSVP.', body: '12–14 June 2027, the Absheron coast. Doors at 19:00, the film at 20:30.',
+    img: ph, people: players, label: 'Lowfield Nights', statement: 'Three nights of silent films with live scores, in a hangar the airfield forgot. Entry free with an RSVP.', body: '12–14 June 2027, the north coast. Doors at 19:00, the film at 20:30.',
     manifesto: 'One film a night, scored in the room.', attribution: 'The first programme, 2024',
     work: 'The programme', projects: [['Opening night', 'Saturday · 20:30'], ['Under the sky', 'Sunday · 22:30'], ['Last light', 'Monday · 22:30']],
     caseTitle: 'The first night, 2026', facts: [['Seats', '220'], ['Film', 'Silent, 1927'], ['Score', 'Written for the room']], story: ['The hangar doors stayed open to the sea.', 'The score was played once and never recorded.', 'Everyone walked to the shore together after.'],
@@ -281,7 +281,7 @@ const W: Record<World, Copy> = {
     quotes: [['The most beautiful night of my summer.', 'Aysel M.', 'Guest, 2026'], ['A score you will never hear again.', 'Farid H.', 'Guest'], ['Stay for the walk to the shore.', 'Shore Radio', 'Review']],
     team: [['Kamran', 'Tar and tape loops', 'Scores from memory.'], ['Tural', 'Double bass', 'Plays it like a timetable.'], ['Ines', 'Piano and electronics', 'Writes for the echo.'], ['Nora', 'Voice and strings', 'Speaks for the film.']],
     stats: [['3', 'Nights'], ['4', 'Films'], ['220', 'Seats a night'], ['1', 'Hangar']], statsNote: 'For the 2027 nights.',
-    where: { title: 'Getting there', address: 'Hangar 2, Lowfield airstrip\nAbsheron coast', hours: ['Doors 19:00', 'Film 20:30'], notes: 'Free shuttle from the city twice a night; park at the gate.' },
+    where: { title: 'Getting there', address: 'Hangar 2, Lowfield airstrip\nNorth coast', hours: ['Doors 19:00', 'Film 20:30'], notes: 'Free shuttle from the city twice a night; park at the gate.' },
     rowsTitle: 'Three nights in the hangar', rows: [['A film a night', 'One silent film each night, on a screen at the back of the hangar, doors open to the sea.', 0, 'See the programme'], ['Scored in the room', 'Each score is written for the hangar and played once, live.', 2], ['The walk to the shore', 'After the last night everyone walks to the water together.', 3, 'How to get there']],
     news: ['Hear when RSVPs open', 'RSVPs open once a year. The list hears first, a week before anyone else.', 'Join the list', 'Three emails a year, all about the nights.'],
     catsTitle: 'The nights', cats: [['Films', '4 films', 1], ['Scores', '4 players', 2], ['The hangar', '220 seats', 0], ['The shore', 'Last light', 3]],
@@ -360,7 +360,7 @@ function sample(id: SectionId | 'orbit-hero', world: World, brand?: string, foot
         <div className="type-body rounded-(--radius-button) bg-(--color-primary) px-5 py-3 text-center text-(--color-background)">Give 45 AZN</div>
       </div>} />
     // A sound artist's own tracks (Sela Mor) whatever the plan is — they play for real.
-    case 'listen': return <ListenSection title="Six tracks" text="Each is a short excerpt. Only one plays at a time." tracks={[['Northwind, Nardaran', 'wind-archive', 'Nardaran shore, January 2023'], ['Lathe Hymn No. 3', 'machine-hymns', 'A closed tool plant in Bayil'], ['Rain over the Dome', 'rain-caspian', 'Rooftops of Sabail, autumn 2023']].map(([title, file, recorded]) => ({ title, src: `/examples/sela-mor/media/tracks/${file}.mp3`, length: '1:15', details: [{ label: 'Recorded', value: recorded }] }))} />
+    case 'listen': return <ListenSection title="Six tracks" text="Each is a short excerpt. Only one plays at a time." tracks={[['Northwind', 'wind-archive', 'A bare shore, January 2023'], ['Lathe Hymn No. 3', 'machine-hymns', 'A closed tool plant'], ['Rain over the Dome', 'rain-caspian', 'City rooftops, autumn 2023']].map(([title, file, recorded]) => ({ title, src: `/examples/sela-mor/media/tracks/${file}.mp3`, length: '1:15', details: [{ label: 'Recorded', value: recorded }] }))} />
     // A course's own syllabus (Night Shift) whatever the plan is.
     case 'product-buy': { const p = BUY[world], ims = world === 'shop' ? [shop[3], shop[1], shop[2]] : [pick(0), pick(1), pick(2)]
       return <ProductBuySection name={p.name} price={p.price} line={p.line} images={ims.map((src) => ({ src, alt: '' }))} option={{ label: p.option[0], values: p.option[1] }} details={[{ title: 'Delivery', text: 'Ships in two working days; free over €100.' }, { title: 'Returns', text: '30 days, in the box it came in.' }, { title: 'Care', text: 'Keep it dry, out of the sun.' }]} action={{ label: 'Add to bag', href: '#' }} note="Free delivery over €100." /> }

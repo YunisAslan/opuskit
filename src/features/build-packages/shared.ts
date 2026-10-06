@@ -78,8 +78,9 @@ export function visualQa(r: UniversalRecipe): string[] {
     `Hero matches "${r.media.hero.name}": ${r.media.hero.composition}`,
     ...r.pages.flatMap((p) => p.sections.filter((s, i) => s.id === 'hero' && i > 0).map(() => `${p.label}: the hero sits mid-page exactly where the section order puts it — a full-width band after the sections above it, not moved to the top; the page's first section carries the h1.`)),
     `Controls and forms use shadcn/ui (${r.implementation.ui.components.map((c) => c.slug).join(', ')}) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.`,
-    'Sections with ready code are built from their component in src/components/sections/ (real copy and media through props, no placeholder text left) and styled only through the recipe tokens. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.',
-    ...r.pieces.map((p) => `Kit piece "${p.name}" (<${p.exportName}/> from ${p.path}) is used on ${p.where}, unchanged in behaviour and styled only through the recipe tokens.`),
+    'Sections with reference code in src/components/sections/ keep its design (real copy and media, no placeholder text left) and are fitted into this site: tokens only, the site’s type sizes and spacing, the code edited wherever its defaults disagree. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.',
+    ...r.pieces.map((p) => `Kit piece "${p.name}" (<${p.exportName}/> from ${p.path}) is used on ${p.where}: it does what the owner picked it for, and its size, place and the type around it follow the site.`),
+    ...ONE_SYSTEM,
     ...(r.concept ? [`Big idea “${r.concept.name}” is visible on every page: ${r.concept.motif.charAt(0).toLowerCase()}${r.concept.motif.slice(1)}`, `Chapters open as the big idea says: ${r.concept.chapters}`, `The site ends as the big idea says: ${r.concept.ending}`] : []),
     ...r.signatures.map((s) => `Signature moment "${s.name}" is built on ${s.where}, with its mobile and reduced-motion versions.`),
     'Every page passes the award checklist in the recipe (one idea, one unforgettable moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).',
@@ -98,12 +99,22 @@ export function visualQa(r: UniversalRecipe): string[] {
   ]
 }
 
+/** The site reads as one design, not parts pasted side by side: what the yunisaslanov build got wrong (a menu whose
+ *  links were narrower, smaller and higher than the logo and button beside them). Checked on every part. */
+export const ONE_SYSTEM = [
+  'One system: things of one kind look alike everywhere — menu links, footer links, labels and button text share one face, width and size step; headings of one level share one size.',
+  'Every row lines up: the items of one row (the menu’s logo, links and button; a card’s title and meta) share one vertical centre or baseline — none sits higher because of padding it brought along.',
+  'Nothing looks pasted in: no part keeps a size, padding, width or font from its reference code that its neighbours do not share.',
+]
+
 /** How the coding agent should work: build everything in one pass, stop only when truly blocked. */
 export function workingRules(r: UniversalRecipe, plan: string, qa: string): string {
   return `## How to work
 - Build the complete site in one pass: every page, section and step in ${plan}, in order. Do not stop between steps to ask for review, confirmation or permission to continue.
 - Start by writing a short plan (5–8 lines: visual direction, hero${r.media.storytelling ? ', the scroll-film scene map' : ''}, motion, how desktop and mobile differ), then implement immediately — do not wait for approval.
+- The code in \`src/components/sections/\` and \`src/components/pieces/\` is a reference, not a part to paste: it shows each part's design and does the hard work (layout, animation, shaders, reduced motion). Build every part as this site's own — keep its idea and behaviour, take its sizes, spacing, type and alignment from the site, and edit its code wherever its defaults disagree with what sits around it.
 - After each step, check it against ${qa} yourself and fix what fails before moving on.
+- Before calling it done, look at every page at 1440px and 390px as a stranger would: whatever sits off the line its neighbours share, differs in size or width from things of its kind, or looks pasted in from another site is a defect — fix it where it comes from.
 - Only stop to ask when truly blocked: a required file is missing and the recipe gives no temporary option, or two recipe rules contradict each other.
 - When finished: run the production build, fix every build and runtime error, check desktop (1440px) and mobile (390px) in a real browser, start the dev server and reply with the localhost URL and any temporary assets still to replace.
 `

@@ -14,7 +14,7 @@ import { shelfSites, siteName, siteSpec } from '@/features/library/collection'
 import { updateCollection, useCollection } from '@/lib/collection'
 import { useHydrated } from '@/lib/store'
 import type { FamilyId, PurposeId } from '@/types/domain'
-import { CollectButton, SiteThumb, exampleOf } from './parts'
+import { CollectButton, SiteThumb, StartBlank, exampleOf } from './parts'
 
 const SITES = shelfSites.map((ref) => { const spec = siteSpec(ref)!; return { ref, spec, name: siteName(ref), families: directions[spec.direction].families } })
 // Kinds and feels, related ones side by side; only those some site has (a filter never offers an empty list).
@@ -41,7 +41,7 @@ export function Library() {
   return (
     <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-10 md:px-8 md:pt-12">
       <h1 className="display text-[clamp(2rem,3vw,2.75rem)]">Collect. Customize. Build.</h1>
-      <p className="mt-2 text-ink-2">Pick the sites you like — we merge them into one. Make it yours, then build it.</p>
+      <p className="mt-2 text-ink-2">Pick the sites you like — we merge them into one. Make it yours, then build it. <StartBlank className="ml-1" /></p>
 
       {/* Two filters, both alike: a heading, chips under it to tick (several at once). */}
       <div className="relative mt-7 space-y-4">

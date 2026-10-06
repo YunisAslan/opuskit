@@ -94,7 +94,7 @@ function scene(id: NavStyleId, x: Ctx): ReactNode {
               <p key={l} style={{ ...display, fontSize: 60, lineHeight: 1.04, color: c.background, opacity: open ? (b === 2 && i !== 2 ? 0.3 : 1) : 0, transform: `translate(${b === 2 && i === 2 ? 18 : 0}px, ${open ? 0 : 30}px)`, transition: `all .55s ${ease} ${b === 1 ? 0.25 + i * 0.07 : 0}s` }}>{l}</p>
             ))}
           </div>
-          <p className="absolute" style={{ ...ui, left: 44, bottom: 28, fontSize: 13, color: c.background, opacity: 0.6 }}>hello@{brand.toLowerCase()}.studio · Baku</p>
+          <p className="absolute" style={{ ...ui, left: 44, bottom: 28, fontSize: 13, color: c.background, opacity: 0.6 }}>hello@{brand.toLowerCase()}.studio</p>
         </div>
       </>
     }
@@ -170,7 +170,7 @@ function scene(id: NavStyleId, x: Ctx): ReactNode {
         <div className="absolute inset-x-0 top-0 flex items-center justify-between" style={{ ...ui, height: 34, padding: '0 20px', fontSize: 12, background: c.background, borderBottom: `1px solid ${c.border}` }}>
           <Logo display={display} brand={brand} size={15} />
           <span className="flex" style={{ gap: 22 }}>{LINKS.map((l, i) => <Link key={l} ui={ui} size={12} color={c.text} on={b === 1 && i === 0}>{l}</Link>)}</span>
-          <span className="flex items-center" style={{ gap: 8, color: c.muted }}><span style={{ width: 6, height: 6, borderRadius: 6, background: c.accent, opacity: b % 2 ? 0.35 : 1, transition: 'opacity .4s' }} />Baku {time}, open now</span>
+          <span className="flex items-center" style={{ gap: 8, color: c.muted }}><span style={{ width: 6, height: 6, borderRadius: 6, background: c.accent, opacity: b % 2 ? 0.35 : 1, transition: 'opacity .4s' }} />Lisbon {time}, open now</span>
         </div>
       </>
     }
@@ -183,7 +183,7 @@ function scene(id: NavStyleId, x: Ctx): ReactNode {
             <span className="absolute" style={{ left: -14, top: 9 + b * 34, width: 6, height: 6, borderRadius: 6, background: c.accent, transition: `top .55s ${ease}` }} />
             {parts.map(([t], i) => <p key={t} style={{ ...ui, fontSize: 15, height: 34, color: i === b ? c.text : c.muted, transition: 'color .3s' }}>{t}</p>)}
           </div>
-          <p className="absolute" style={{ ...ui, left: 28, bottom: 26, fontSize: 12, color: c.muted }}>Baku · 40.4° N</p>
+          <p className="absolute" style={{ ...ui, left: 28, bottom: 26, fontSize: 12, color: c.muted }}>Open today · 10–18</p>
         </div>
         <div className="absolute overflow-hidden" style={{ left: 190, right: 0, top: 0, bottom: 0 }}>
           <div style={{ transform: `translateY(${-b * H}px)`, transition: `transform .9s ${ease}` }}>
