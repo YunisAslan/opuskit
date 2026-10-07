@@ -1,6 +1,7 @@
 'use client'
 // A ready section rendered for real, with sample content, in a plan's tokens — the same component a Build Package ships.
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react'
+import { useGoogleFonts } from '@/components/FontLoader'
 import { ScaledFrame } from '@/components/ScaledFrame'
 import { TokenScope } from '@/components/TokenScope'
 import { AboutSection } from '@/sections/About'
@@ -372,10 +373,16 @@ function sample(id: SectionId | 'orbit-hero', world: World, brand?: string, foot
   }
 }
 
-export function SectionPreview({ id, colors, type, shape, chapters, className, auto, maxHeight, width, world = 'studio', brand, footer, layout, tone, media, variant }: { id: SectionId | 'orbit-hero'; footer?: FooterStyleId; layout?: LayoutId; tone?: SectionTone; media?: MediaPlacement; variant?: string; colors: PaletteColors; type: TypographyPairing; shape: ShapeStyle; chapters?: readonly string[]; className?: string; auto?: boolean; maxHeight?: number; width?: number; world?: World; brand?: string }) {
+/** `sketch` draws the part as a plan, not a promise (Pages, decision 34): headings and labels real, body text as bars,
+ *  photos as marked blocks (`.sketch` in globals.css). */
+export function SectionPreview({ id, colors, type, shape, chapters, className, auto, maxHeight, width, world = 'studio', brand, footer, layout, tone, media, variant, sketch }: { id: SectionId | 'orbit-hero'; footer?: FooterStyleId; layout?: LayoutId; tone?: SectionTone; media?: MediaPlacement; variant?: string; colors: PaletteColors; type: TypographyPairing; shape: ShapeStyle; chapters?: readonly string[]; className?: string; auto?: boolean; maxHeight?: number; width?: number; world?: World; brand?: string; sketch?: boolean }) {
+  useGoogleFonts(sketch ? [SKETCH_FONT] : [])
+  const part = dress(sample(id, world, brand, footer), tone, media, variant)
   return (
     <ScaledFrame className={className} auto={auto} maxHeight={maxHeight} width={width}>
-      <TokenScope colors={colors} type={type} shape={shape} chapters={chapters} layout={layout}>{dress(sample(id, world, brand, footer), tone, media, variant)}</TokenScope>
+      <TokenScope colors={colors} type={type} shape={shape} chapters={chapters} layout={layout}>{sketch ? <div className="sketch">{part}</div> : part}</TokenScope>
     </ScaledFrame>
   )
 }
+/** Flow Block (OFL): every letter a block, so body text reads as a line of words-to-come. */
+export const SKETCH_FONT = 'Flow+Block'

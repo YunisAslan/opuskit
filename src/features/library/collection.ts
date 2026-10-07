@@ -9,10 +9,11 @@ import { EFFECTS, footerStyles, navStyles, pageTypes, sections } from '@/data/pa
 import { MAX_HEAVY_PIECES, behaviourOf, behaviours, pieces } from '@/data/pieces'
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { sectionVariants } from '@/data/section-variants'
-import { purposes } from '@/data/taxonomy'
+import { goals, purposes } from '@/data/taxonomy'
 import { EMPTY_PLAN, addSuggested, effectOn, onChrome, pageSuggestions, piecesFor, replaceSection, sectionGroups, setBehaviour, setHero, setSectionVariant, setStyle, specToPlan, start, toggleSitePiece, togglePiece } from '@/features/kit/plan'
 import { composeRecipe, isValidSpec, specFromSeed } from '@/features/recipes/engine'
-import type { DirectionId, FooterStyleId, HeroId, KitPlan, NavStyleId, PageTypeId, PieceId, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
+import { TRAITS, TRAIT_IDS, type Trait } from './inspire'
+import type { GoalId, DirectionId, FooterStyleId, HeroId, KitPlan, NavStyleId, PageTypeId, PieceId, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
 
 /** A site is `example:{slug}` (built, real) or `seed:{slug}` (a recipe drawn by the engine) — the kit's own `from` ids. */
 export type SiteRef = `example:${string}` | `seed:${string}`
@@ -23,14 +24,20 @@ export type CollectionItem =
   | { kind: 'menu'; id: NavStyleId; from?: SiteRef }
   | { kind: 'footer'; id: FooterStyleId; from?: SiteRef }
   | { kind: 'effect'; id: PieceId; from?: SiteRef }
+  /** One quality of a site (decision 35): its colours, lettering, first screen or movement — not the site. */
+  | { kind: 'like'; what: Trait; site: SiteRef }
 
 export type Collection = { items: CollectionItem[]; purpose?: PurposeId; name?: string; about?: string; look?: SiteRef
+  /** What visitors should do (You): the main action, forms and buttons follow it. */
+  goal?: GoalId
   /** "Home like Sela Mor": a page kind that follows one collected site instead of the blend. */
   like?: Partial<Record<PageTypeId, SiteRef>> }
 export const EMPTY_COLLECTION: Collection = { items: [] }
 
-/** Two items are the same thing when they would add the same thing (where it was seen doesn't matter). */
-export const itemKey = (i: CollectionItem) => (i.kind === 'site' ? `site:${i.site}` : i.kind === 'section' ? `section:${i.id}:${i.variant ?? ''}` : `${i.kind}:${i.id}`)
+/** One taken thing: what it is and where it was taken (decision 35) — Fennwood's gallery and Halden's are two things in
+ *  the Collection, each shown as it was taken, even in the same design. A page still gets the part once (`applyItems`). */
+const fromOf = (i: CollectionItem) => ('from' in i && i.from ? `@${i.from}` : '')
+export const itemKey = (i: CollectionItem) => (i.kind === 'site' ? `site:${i.site}` : i.kind === 'like' ? `like:${i.what}:${i.site}` : i.kind === 'section' ? `section:${i.id}:${i.variant ?? ''}${fromOf(i)}` : `${i.kind}:${i.id}${fromOf(i)}`)
 export const hasItem = (c: Collection, i: CollectionItem) => c.items.some((x) => itemKey(x) === itemKey(i))
 export const toggleItem = (c: Collection, i: CollectionItem): Collection =>
   hasItem(c, i) ? { ...c, items: c.items.filter((x) => itemKey(x) !== itemKey(i)) } : { ...c, items: [...c.items, i] }
@@ -64,11 +71,12 @@ export const sitesWith = (id: SectionId): SiteRef[] => allSites.filter((r) => r.
 export function itemName(i: CollectionItem): string {
   switch (i.kind) {
     case 'site': return siteName(i.site)
-    case 'section': { const v = i.variant && sectionVariants[i.id]?.options.find((o) => o.id === i.variant); return v ? `${sections[i.id].name} · ${v.name}` : sections[i.id].name }
+    case 'section': { const v = i.variant && sectionVariants[i.id]?.options.find((o) => o.id === i.variant); return `${v ? `${sections[i.id].name} · ${v.name}` : sections[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}` }
     case 'hero': return EFFECTS.find((e) => e.hero === i.id)?.name ?? i.id
-    case 'menu': return `Menu · ${navStyles[i.id].name}`
-    case 'footer': return `Footer · ${footerStyles[i.id].name}`
-    case 'effect': return pieces[i.id].name
+    case 'menu': return `Navigation · ${navStyles[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}`
+    case 'footer': return `Footer · ${footerStyles[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}`
+    case 'effect': return `${pieces[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}`
+    case 'like': return `${TRAITS[i.what].name} · ${siteName(i.site)}`
   }
 }
 
@@ -80,7 +88,6 @@ export function notes(c: Collection): Note[] {
   const out: Note[] = []
   const of = <K extends CollectionItem['kind']>(k: K) => c.items.filter((i): i is Extract<CollectionItem, { kind: K }> => i.kind === k)
   const sites = of('site')
-  if (sites.length > 1) out.push({ keys: sites.map(itemKey), text: `${sites.length} sites: one is the start — you pick it on Pages. From the others, take single parts with + on their page.` })
   for (const k of ['hero', 'menu', 'footer'] as const) {
     const xs = of(k)
     if (xs.length > 1) out.push({ keys: xs.map(itemKey), text: `${xs.length} ${k === 'hero' ? 'first screens' : `${k}s`}: a site has one — the first is used, the others stay here.` })
@@ -225,8 +232,9 @@ export function applyItems(plan: KitPlan, items: CollectionItem[], replace: bool
   const collected = new Set<string>() // section instance keys that came from the Collection
   const unplaced: PieceId[] = [], added: string[] = []
   const once = new Set<string>()
+  const parts = new Set<string>() // one part in one design is added once, from whichever site it was taken first
   for (const i of items) {
-    if (i.kind === 'site') continue
+    if (i.kind === 'site' || i.kind === 'like') continue
     if (i.kind === 'hero' || i.kind === 'menu' || i.kind === 'footer') {
       if (once.has(i.kind)) continue
       once.add(i.kind)
@@ -234,6 +242,8 @@ export function applyItems(plan: KitPlan, items: CollectionItem[], replace: bool
       continue
     }
     if (i.kind === 'section') {
+      if (parts.has(`${i.id}:${i.variant ?? ''}`)) continue
+      parts.add(`${i.id}:${i.variant ?? ''}`)
       // The page it belongs on: one that has it, else one with a part doing its job, else one that usually has it, else the first.
       const job = jobIds(i.id)
       const page = plan.pages.find((p) => p.sections.some((x) => x.id === i.id))
@@ -276,6 +286,7 @@ export function placement(plan: KitPlan, c: Collection): { placed: CollectionIte
       case 'menu': return plan.nav === i.id
       case 'footer': return plan.footer === i.id
       case 'effect': return effectOn(plan, i.id)
+      case 'like': return true
     }
   }
   return { placed: c.items.filter(on), waiting: c.items.filter((i) => !on(i)) }
@@ -291,6 +302,7 @@ export function cleanCollection(x: unknown): Collection {
     if (!i || typeof i !== 'object') return []
     const r = i as Record<string, unknown>, id = r.id as string
     if (r.kind === 'site') return site(r.site) ? [{ kind: 'site', site: r.site }] : []
+    if (r.kind === 'like') return site(r.site) && TRAIT_IDS.includes(r.what as Trait) ? [{ kind: 'like', what: r.what as Trait, site: r.site }] : []
     if (r.kind === 'section' && Object.hasOwn(sections, id) && !['hero', 'navbar', 'footer'].includes(id)) {
       const v = typeof r.variant === 'string' && sectionVariants[id as SectionId]?.options.some((o) => o.id === r.variant) ? { variant: r.variant } : {}
       return [{ kind: 'section', id: id as SectionId, ...v, ...from(r.from) }]
@@ -308,6 +320,7 @@ export function cleanCollection(x: unknown): Collection {
     name: typeof c.name === 'string' ? c.name.slice(0, 60) : undefined,
     about: typeof c.about === 'string' ? c.about.slice(0, 160) : undefined,
     look: site(c.look) ? c.look : undefined,
+    goal: typeof c.goal === 'string' && Object.hasOwn(goals, c.goal) ? c.goal : undefined,
     like: c.like && typeof c.like === 'object' ? Object.fromEntries(Object.entries(c.like).filter(([k, v]) => Object.hasOwn(pageTypes, k) && site(v))) as Collection['like'] : undefined,
   }
 }

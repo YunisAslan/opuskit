@@ -1,6 +1,6 @@
 # Plan — OpusKit Library
 
-The current direction (agreed with the user 2026-10-05). It replaces the kit as OpusKit's front door. This file holds the
+The current direction (agreed with the user 2026-10-05; **the flow as it stands is decisions 33–38** — Library → You → Direction → Recipe; sections 2 and 2a below describe the earlier Brand / Pages flow). It replaces the kit as OpusKit's front door. This file holds the
 model; the prototype and the test plan come next and will be added here. Keep the **Decisions** and **Open** lists current.
 
 ## 1. Why
@@ -372,6 +372,72 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     seen) from the award-site study (docs/research/) and OpusKit's own builds; the engine fits it to the owner's picks
     (`fitStyle`) and every adapter carries it. QA checks the Locked list, three of the style's moves, and the named
     moments. Regression checks in check.ts ("Room to invent").
+
+33. **Shown in a site, shipped as a component** (2026-10-07, the user asked how sections should be shared as OpusKit
+    grows). A section is found in context and delivered as a clean component:
+    - **Discover stays sites only** (decision 20). A section is taken on its site's page, seen on a real site with its
+      colours, type and photos — what people actually like is the result, not a part on its own.
+    - **What ships is always the clean component** from `src/sections/` (tokens, props, `variant`), never code cut out
+      of an example site: its accessibility (semantics, keyboard, reduced motion, contrast) is solved once and reaches
+      every site, and it takes any brand. In a package it stays a reference (decision 22).
+    - **Feed back after every build** (`docs/plan-examples.md` §3, step 7): where a builder made a section clearly
+      better, it comes back to `src/sections/` as a fix or a new design, after the user approves. This keeps the site's
+      clip and the collected component the same thing (what you see is what you get).
+    - **Finding a section by its job** as they grow ("Build trust → every design → the sites that have it") lives in
+      Pages → All parts, not as a shelf in Discover.
+
+34. **Pages is a plan, not a promise** (2026-10-07, prototype awaiting the user's review; research in
+    `docs/research/2026-10-07-part-representation.md`). Parts were real sections shrunk to ~240px: unreadable, hard to
+    tell apart, and, looking finished, a promise the build is meant to exceed (decision 32). Every field that hands a
+    plan to a maker draws what is decided clearly and what is open at low fidelity, and adds a real precedent. So:
+    - The page is a **storyboard**. Each part is a numbered frame at full column width, in the owner's colours and
+      lettering. Headings and labels are real; body text is bars (Flow Block); photos are crossed blocks (`sketch` on
+      `SectionPreview`, `.sketch` in globals.css — one rule for every section).
+    - Under each frame, **Says** (its content, as in the copy deck) and **Shows** (its shot-list row).
+    - The chooser draws options the same way, with **proof**: a clip from a site built with that very design
+      (`sectionDesign` in `closest.ts`), named as that site.
+    - **Plan | Sample** switches to stand-in words and photos, said to be a sample.
+    The edge in §1 ("you see what you'll get") now means: real sites as proof, and your exact plan.
+
+35. **Inspiration, not imitation — a new flow** (2026-10-07, after the Mara persona test: a ceramicist who collected
+    Fennwood for its warm colours got a restaurant — Menu and Reservations pages, "Book a table", a "Restaurant Site"
+    recipe; arranging pages part by part was too much for her). The user: arranging pages and sections is out of place;
+    people pick from the sites they like and say what is theirs, the engine writes the recipe. Now:
+    - **You → Inspiration → Direction → Recipe** (`STEPS` in `library/parts.tsx`).
+    - **You** (`/studio/you`): name, one sentence, kind of site — read from the sentence (`purposeFrom`) and shown. What
+      the site *is* (pages, parts, words) comes only from here; a liked site never changes it.
+    - **Inspiration** (`/library`, with the steps bar once the site has a name): the + on a site opens it large
+      (`LikeButton` → `TakeDialog` in `library/SiteTake.tsx`): the site on the left with **Take its whole look** under
+      it; on the right everything else it has — one quality (colours, lettering, first screen, movement; a `like`
+      item), its parts in their designs (navigation, every section, footer, with the real site's clip) and its effects.
+      A tap takes one or puts it back. The site's own page shows the same list (`TakeList`). The Library's kind filter
+      is only a filter now.
+    - **Direction** (`/studio/direction`): the site three ways (`directionsFor` in `features/library/inspire.ts`), each a
+      different lead look and a rotating mix of the liked qualities, saying what it took from which site. No direction
+      takes more than two of look, colours, lettering and first screen from one site, and where a direction uses the
+      look's own colours or lettering they are never by chance a source's (check.ts). Picking one writes the plan; under
+      it, the site's pages read as a list.
+    - **Brand and Pages** stay as "Adjust the look" and "Adjust pages", one link from Direction, never in the way.
+
+36. **Make it yours, on Direction** (2026-10-07, the user: teach the habit of taking from the Library, and give real
+    customising on Direction — every font, colour and look). Under the three directions, **Make it yours**: the look,
+    colours and lettering tabs (`LookPicker` in `studio/LookPicker.tsx`, every option, what fits first), with the picked
+    direction drawn live beside them; the picked card redraws too and marks what changed as "your pick". A colour,
+    lettering or look seen on a site the owner took from says "From Fennwood", and the picker ends with a link back to
+    the Library ("it joins your directions") — taking from real sites stays the way in. Brand is now only "Adjust the
+    look" for a recipe opened from an example or a saved recipe (same picker); Pages stays "Adjust pages".
+
+37. **The Library is browsing; three steps after it** (2026-10-07, the user: "why does a step open at once? Let the
+    Library be pure; from there, three steps"). Start a site opens the Library — no steps bar there, only taking. Build
+    my site (header, Collection) starts **You → Direction → Recipe** (`STEPS`); You goes straight on to Direction, and
+    links back to the Library ("Take more"). The home page tells it as Library, You, Direction, Recipe.
+
+38. **What are you making?** (2026-10-07; the user: not eighteen kinds of site but a few general, understandable options
+    that still shape the site — then: fewer questions, and no pictures of other sites, they confuse). You is three
+    inputs: name, one sentence, and **What are you making?** — six plain answers with an icon each (`OFFERS` in
+    `inspire.ts`: my work, a service, things to buy, a place or an event, something online, words or a cause), read from
+    the sentence, which also names the exact kind inside the one picked (`kindFor`). What visitors should do is read from the pages (`inferGoal`); `Collection.goal` can carry an
+    owner's pick if one is ever asked.
 
 ## 5. Open
 

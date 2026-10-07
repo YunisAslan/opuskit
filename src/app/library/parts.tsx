@@ -14,7 +14,10 @@ import { ScaledFrame } from '@/components/ScaledFrame'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { examples } from '@/data/examples'
-import { purposes } from '@/data/taxonomy'
+import { directions, motionLevels, purposes } from '@/data/taxonomy'
+import { palettes, typography } from '@/data/ingredients'
+import { TRAITS, TRAIT_IDS, siteTraits, type Trait } from '@/features/library/inspire'
+import { heroName } from '@/components/HeroPreview'
 import { HeroPreview } from '@/components/HeroPreview'
 import { lookOf } from '@/components/ProductVisual'
 import { hasItem, itemKey, itemName, notes, removeItem, siteName, siteSpec, sitesWith, toggleItem, type CollectionItem, type SiteRef } from '@/features/library/collection'
@@ -23,7 +26,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { behaviours, pieces } from '@/data/pieces'
 import { specToPlan } from '@/features/kit/plan'
 import { composeRecipe } from '@/features/recipes/engine'
-import { planFromStudio, readCollection, startBlank, updateCollection, useCollection } from '@/lib/collection'
+import { readCollection, updateCollection, useCollection } from '@/lib/collection'
 import { readPlan, usePlan } from '@/lib/kit'
 import { KEYS, get } from '@/lib/store'
 import type { KitPlan, LayoutId, MediaPlacement, PurposeId, SectionTone } from '@/types/domain'
@@ -51,18 +54,19 @@ export function sampleLook(item: CollectionItem, kind?: PurposeId): Look {
 export const exampleOf = (ref: SiteRef) => (ref.startsWith('example:') ? examples.find((e) => `example:${e.slug}` === ref) : undefined)
 
 /** One item, drawn the way you would get it. Fixed 16:10, so a shelf reads as one grid. */
-export function ItemPreview(p: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement } }) {
+export function ItemPreview(p: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement }; sketch?: boolean }) {
   useGoogleFonts(p.look.type.googleFamilies)
   // On the look's own ground, so a part shorter than the frame doesn't end in a white band.
   return <div className="size-full" style={{ background: p.look.colors.background }}><Drawn {...p} /></div>
 }
-function Drawn({ item, look, rhythm }: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement } }) {
-  const pv = { colors: look.colors, type: look.type, shape: look.shape, chapters: look.chapters, world: look.world, brand: look.brand, layout: look.layout }
+function Drawn({ item, look, rhythm, sketch }: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement }; sketch?: boolean }) {
+  const pv = { colors: look.colors, type: look.type, shape: look.shape, chapters: look.chapters, world: look.world, brand: look.brand, layout: look.layout, sketch }
   switch (item.kind) {
     case 'site': return <SiteThumb site={item.site} />
+    case 'like': return <TraitPicture what={item.what} site={item.site} />
     case 'section': return <SectionPreview id={item.id} variant={item.variant} {...pv} {...rhythm} className="aspect-[16/10]" />
     case 'footer': return <SectionPreview id="footer" footer={item.id} {...pv} className="aspect-[16/10]" />
-    case 'hero': return <div className="aspect-[16/10] overflow-hidden"><HeroPreview plan={look.plan} id={item.id} /></div>
+    case 'hero': return <div className={`aspect-[16/10] overflow-hidden ${sketch ? 'sketch' : ''}`}><HeroPreview plan={look.plan} id={item.id} /></div>
     case 'menu': return <OptionDemo id={`nav:${item.id}`} colors={look.colors} type={look.type} shape={look.shape} />
     case 'effect':
       // Links are too small on their own: they play on a drawn footer.
@@ -132,18 +136,13 @@ export function CollectButton({ item, label, quiet, className = '' }: { item: Co
   )
 }
 
-/** Collection → building: the plan is built from the Collection (rebuilt only when it changed) and the first step opens. */
+/** Collection → building (decision 35): first the owner's own words (You), then the directions made from what they liked. */
 export function useToBuild() {
   const router = useRouter()
   return () => {
     toast.dismiss() // browsing's notes stay behind with browsing
-    const building = isBuilding(readPlan())
-    const r = planFromStudio()
-    if (r.unplaced.length) toast(`${r.unplaced.map((id) => pieces[id].name).join(', ')} needs a part that can carry it.`)
-    else if (!r.rebuilt && r.added && r.undo) toast(`${r.added} new ${r.added === 1 ? 'part' : 'parts'} added to your pages — nothing you arranged was changed.`, { action: { label: 'Undo', onClick: r.undo } })
-    // Building already: back where you left off (newly collected things are on the pages now). Else the first step.
-    const to = building ? get<string>(KEYS.step, '/studio/brand') : '/studio/brand'
-    if (location.pathname !== to) router.push(to)
+    const c = readCollection()
+    router.push(c.name?.trim() && c.purpose ? '/studio/direction' : '/studio/you')
   }
 }
 /** Whether a site is being built from the Collection already (then the way on is "Continue building"). */
@@ -165,7 +164,8 @@ const OPEN = 'opuskit:open-collection'
 export const openCollection = () => window.dispatchEvent(new Event(OPEN))
 
 const GROUPS: [string, (i: CollectionItem) => boolean][] = [
-  ['Sites', (i) => i.kind === 'site'],
+  ['Whole looks', (i) => i.kind === 'site'],
+  ['Qualities', (i) => i.kind === 'like'],
   ['Parts', (i) => i.kind === 'section' || i.kind === 'hero' || i.kind === 'menu' || i.kind === 'footer'],
   ['Effects', (i) => i.kind === 'effect'],
 ]
@@ -185,21 +185,16 @@ export function CollectionSheet() {
   const all = notes(c)
   const remove = (i: CollectionItem) => { const before = readCollection(); updateCollection((x) => removeItem(x, itemKey(i))); toast(`Removed: ${itemName(i)}`, { action: { label: 'Undo', onClick: () => updateCollection(() => before) } }) }
   const clear = () => { const before = readCollection(); updateCollection((x) => ({ ...x, items: [] })); toast('Collection cleared', { action: { label: 'Undo', onClick: () => updateCollection(() => before) } }) }
-  // What Build will make, in one line: the start's pages (or the kind of site's) and look, and how much rides along.
-  const sites = c.items.flatMap((i) => (i.kind === 'site' ? [i.site] : [])), one = sites.length === 1 ? siteSpec(sites[0]) : undefined
-  const parts = c.items.filter((i) => i.kind !== 'site' && i.kind !== 'effect').length, fx = c.items.filter((i) => i.kind === 'effect').length
-  const kindPages = c.purpose ? purposes[c.purpose].pages.filter((p) => p.tier === 'recommended').length : 0
-  const summary = [
-    one ? `${one.pages.length} pages like ${siteName(sites[0])}` : sites.length > 1 ? `${sites.length} sites mixed into ${c.purpose ? `a ${purposes[c.purpose].name.toLowerCase()}` : 'one site'}` : c.purpose ? `A ${purposes[c.purpose].name.toLowerCase()}, ${kindPages} pages` : 'Pages for your kind of site',
-    parts && `${parts} ${parts === 1 ? 'part' : 'parts'}`, fx && `${fx} ${fx === 1 ? 'effect' : 'effects'}`,
-  ].filter(Boolean).join(' · ')
+  // What Build will make, in one line.
+  const summary = `${c.name?.trim() || 'Your site'}${c.purpose ? ` · ${purposes[c.purpose].name}` : ''} — three directions from ${n} ${n === 1 ? 'thing' : 'things'} you like`
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       {/* The pictures sit beside the button, not inside it: a drawn part holds buttons of its own, which can't nest. */}
-      <span className="flex h-9 shrink-0 items-center rounded-[3px] border border-line bg-white text-sm hover:border-ink">
+      {/* The whole button opens it: the pictures let clicks through to it (they are drawn parts with buttons of their own). */}
+      <span onClick={() => setOpen(true)} className="flex h-9 shrink-0 cursor-pointer items-center rounded-[3px] border border-line bg-white text-sm hover:border-ink">
         {n > 0 && (
-          <span onClick={() => setOpen(true)} className="hidden cursor-pointer -space-x-2.5 pl-1.5 sm:flex" aria-hidden inert>
-            {c.items.slice(-3).map((i) => <span key={itemKey(i)} className="block w-9 overflow-hidden rounded-[5px] border-2 border-white bg-paper-2"><span className="pointer-events-none block aspect-[16/10] overflow-hidden">{i.kind === 'site' ? <SiteThumb site={i.site} /> : <ItemPreview item={i} look={sampleLook(i, c.purpose)} />}</span></span>)}
+          <span className="pointer-events-none hidden -space-x-2.5 pl-1.5 sm:flex" aria-hidden inert>
+            {c.items.slice(-3).map((i) => <span key={itemKey(i)} className="block w-9 overflow-hidden rounded-[5px] border-2 border-white bg-paper-2"><span className="pointer-events-none block aspect-[16/10] overflow-hidden"><TakenPicture item={i} /></span></span>)}
           </span>
         )}
         <SheetTrigger className="flex h-full items-center gap-1.5 rounded-[3px] pl-1 pr-2 sm:gap-2 sm:pl-2 sm:pr-3" aria-label={`Your Collection, ${n} ${n === 1 ? 'thing' : 'things'}`}>
@@ -219,7 +214,7 @@ export function CollectionSheet() {
           <div className="grid flex-1 place-content-center px-8 text-center">
             <Layers size={28} className="mx-auto text-muted" aria-hidden />
             <p className="mt-4 text-lg">Nothing collected yet.</p>
-            <p className="mt-1 text-sm text-muted">Tap + on a site, a section or an effect you like.</p>
+            <p className="mt-1 text-sm text-muted">Tap + on a site you like — its whole look, or just its colours, lettering or first screen.</p>
           </div>
         ) : (
           <div className="flex-1 space-y-8 overflow-y-auto px-6 py-6">
@@ -234,7 +229,7 @@ export function CollectionSheet() {
                   <ul className="mt-2 grid grid-cols-2 gap-3">
                     {items.map((i) => (
                       <li key={itemKey(i)} className="group relative">
-                        <div className="overflow-hidden rounded-lg border border-line bg-white"><div className="pointer-events-none aspect-[16/10] overflow-hidden">{i.kind === 'site' ? <SiteThumb site={i.site} /> : <ItemPreview item={i} look={sampleLook(i, c.purpose)} />}</div></div>
+                        <div className="overflow-hidden rounded-lg border border-line bg-white"><div className="pointer-events-none aspect-[16/10] overflow-hidden"><TakenPicture item={i} /></div></div>
                         <p className="mt-1.5 truncate text-sm font-medium">{itemName(i)}</p>
                         <button type="button" onClick={() => remove(i)} className="absolute right-1.5 top-1.5 grid size-7 place-items-center rounded-full bg-white/90 text-ink opacity-100 shadow-sm transition-opacity hover:bg-white md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"><X size={14} aria-hidden /><span className="sr-only">Remove {itemName(i)}</span></button>
                       </li>
@@ -251,7 +246,7 @@ export function CollectionSheet() {
             <p className="text-sm text-ink-2">{summary}</p>
             <button type="button" onClick={() => { setOpen(false); toBuild() }} className="btn btn-ink mt-3 h-14 w-full text-base">{buildLabel}<ArrowRight size={18} aria-hidden /></button>
             <ol className="mt-3 flex justify-center gap-4 text-xs text-muted" aria-label="What comes next">
-              {['Brand', 'Pages', 'Recipe'].map((x, k) => <li key={x} className="flex items-center gap-1.5"><span className="grid size-4 place-items-center rounded-full border border-line text-[10px] tabular-nums">{k + 1}</span>{x}</li>)}
+              {['You', 'Direction', 'Recipe'].map((x, k) => <li key={x} className="flex items-center gap-1.5"><span className="grid size-4 place-items-center rounded-full border border-line text-[10px] tabular-nums">{k + 1}</span>{x}</li>)}
             </ol>
           </div>
         )}
@@ -260,8 +255,9 @@ export function CollectionSheet() {
   )
 }
 
-/** Building, in three steps — numbered, the ones behind you are links back. Browsing (Discover) is not a step. */
-const STEPS = [['Brand', '/studio/brand'], ['Pages', '/studio/pages'], ['Recipe', '']] as const
+/** Making a site, in three steps (decisions 35, 37) — numbered, the ones behind you are links back. The Library before
+ *  them is browsing, not a step. */
+const STEPS = [['You', '/studio/you'], ['Direction', '/studio/direction'], ['Recipe', '']] as const
 export type Step = (typeof STEPS)[number][0]
 export function Steps({ at }: { at: Step }) {
   const n = STEPS.findIndex(([s]) => s === at)
@@ -289,8 +285,6 @@ export function FlowBar({ at, next }: { at: Step; next?: ReactNode }) {
     <div className={`sticky top-16 z-30 border-b border-line bg-paper/95 backdrop-blur-sm ${FLOW_BAR}`}>
       <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-3 px-5 md:px-8">
         <div className="flex min-w-0 items-center gap-4">
-          <Link href="/library" className="-ml-2.5 hidden h-8 shrink-0 items-center gap-1.5 rounded-[3px] pl-2 pr-3 text-sm text-ink-2 transition-colors hover:bg-paper-2 hover:text-ink sm:inline-flex"><ArrowLeft size={15} aria-hidden />Library</Link>
-          <span className="hidden h-5 w-px bg-line sm:block" aria-hidden />
           <Steps at={at} />
         </div>
         <div className="flex shrink-0 items-center gap-2">{next}</div>
@@ -299,25 +293,83 @@ export function FlowBar({ at, next }: { at: Step; next?: ReactNode }) {
   )
 }
 
-/** The other way in: no site to start from — pick the kind of site and build from its own pages. */
+/** The other way in: nothing collected — start from your own words; the directions come from your kind of site. */
 export function StartBlank({ className = '' }: { className?: string }) {
-  const router = useRouter()
-  const [open, setOpen] = useState(false)
-  const go = (k: PurposeId) => {
-    const undo = startBlank(k)
-    setOpen(false)
-    toast(`A blank ${purposes[k].name.toLowerCase()} site`, { description: 'Its usual pages, nothing from your Collection.', action: { label: 'Undo', onClick: () => { undo(); router.push('/library') } } })
-    router.push('/studio/brand')
-  }
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger className={`inline-flex items-center gap-1.5 text-sm text-ink-2 underline decoration-line underline-offset-4 hover:text-ink hover:decoration-ink ${className}`}>Or start blank</PopoverTrigger>
-      <PopoverContent align="start" className="w-72 p-1">
-        <p className="px-2.5 pb-1 pt-2 text-xs text-muted">What are you making?</p>
-        {(Object.keys(purposes) as PurposeId[]).filter((k) => k !== 'other').map((k) => (
-          <button key={k} type="button" onClick={() => go(k)} className="block w-full rounded-md px-2.5 py-1.5 text-left text-sm hover:bg-secondary focus:bg-secondary focus:outline-none">{purposes[k].name}</button>
-        ))}
-      </PopoverContent>
-    </Popover>
+  return <Link href="/studio/you" className={`inline-flex items-center gap-1.5 text-sm text-ink-2 underline decoration-line underline-offset-4 hover:text-ink hover:decoration-ink ${className}`}>Or start with your own words</Link>
+}
+
+// ─── What you like in a site (decision 35) ─────────────────────────────────
+
+/** One quality of a site, drawn: its colours as swatches, its lettering in itself, its first screen and movement named. */
+export function TraitPicture({ what, site }: { what: Trait | 'look'; site: SiteRef }) {
+  const t = siteTraits(site)!
+  const pal = palettes[t.palette].colors, type = typography[t.typography]
+  useGoogleFonts(what === 'lettering' ? type.googleFamilies : [])
+  if (what === 'look') return <SiteThumb site={site} />
+  if (what === 'colours') return <span className="grid size-full grid-cols-[2fr_1fr_1fr_1fr]" aria-hidden>{[pal.background, pal.text, pal.accent, pal.surface].map((x, i) => <span key={i} style={{ background: x }} />)}</span>
+  if (what === 'lettering') return (
+    <span className="grid size-full place-content-center px-3 text-center" style={{ background: pal.background, color: pal.text }} aria-hidden>
+      <span className="block text-[2.4rem] leading-none" style={{ fontFamily: `'${type.display.family}'`, fontWeight: type.display.weight, fontStretch: type.display.stretch, fontStyle: type.display.italic ? 'italic' : undefined }}>Aa</span>
+      <span className="mt-1.5 block truncate text-[11px] opacity-70">{type.display.family}</span>
+    </span>
   )
+  const e = exampleOf(site)
+  if (what === 'opening') return (
+    <span className="relative block size-full overflow-hidden" aria-hidden>
+      {e ? <Image src={`/examples/${e.slug}.jpg`} alt="" width={400} height={250} className="size-full object-cover object-top" /> : <SiteThumb site={site} />}
+      <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-2.5 pb-1.5 pt-6 text-[11px] font-medium text-white">{heroName(t.hero)}</span>
+    </span>
+  )
+  const level = ['still', 'subtle', 'dynamic', 'immersive'].indexOf(t.motion)
+  return (
+    <span className="grid size-full place-content-center gap-2 px-3" style={{ background: pal.background, color: pal.text }} aria-hidden>
+      <span className="flex items-end justify-center gap-1">{[0, 1, 2, 3].map((k) => <span key={k} className="w-2 rounded-[1px]" style={{ height: 8 + k * 7, background: k <= level ? pal.accent : `color-mix(in oklab, ${pal.text} 15%, transparent)` }} />)}</span>
+      <span className="text-center text-[11px] font-medium">{motionLevels[t.motion].name}</span>
+    </span>
+  )
+}
+
+// ─── What was taken, drawn the same everywhere (decision 35) ────────────────
+
+// A site's own look and recipe, worked out once: a part taken from it is drawn as it is there.
+const sites = new Map<SiteRef, { look: Look; recipe: ReturnType<typeof composeRecipe> }>()
+function siteData(ref: SiteRef) {
+  if (!sites.has(ref)) { const spec = siteSpec(ref)!, recipe = composeRecipe(spec); sites.set(ref, { look: siteLook(ref, specToPlan(spec), recipe.layoutSystem.id), recipe }) }
+  return sites.get(ref)!
+}
+
+/** The recording of the very thing taken, on the site it was taken from — if that site was recorded there. */
+function clipOf(i: CollectionItem): string | undefined {
+  const ref = i.kind === 'site' || i.kind === 'like' ? i.site : i.from, e = ref && exampleOf(ref)
+  if (!e) return undefined
+  switch (i.kind) {
+    case 'like': return i.what === 'opening' ? e.clip : undefined
+    case 'hero': return e.clip
+    case 'menu': return e.sectionClips?.navbar
+    case 'footer': return e.sectionClips?.footer
+    case 'section': return e.sectionClips?.[i.id]
+    case 'effect': return e.pieceClips?.[i.id]
+    default: return undefined
+  }
+}
+
+/** One taken thing, drawn as it was taken: the site's recording of it where there is one, else drawn in that site's own
+ *  look (its colours, lettering and the part's place on its page). The same picture in the take dialog, the Collection
+ *  and the header, so what you took is what you see. */
+export function TakenPicture({ item, auto }: { item: CollectionItem; auto?: boolean }) {
+  if (item.kind === 'site') return <SiteThumb site={item.site} auto={auto} />
+  const clip = clipOf(item)
+  if (clip) return <Clip src={clip} />
+  if (item.kind === 'like') return <TraitPicture what={item.what} site={item.site} />
+  if (!item.from) return <div className="pointer-events-none size-full"><ItemPreview item={item} look={sampleLook(item)} /></div>
+  const { look, recipe } = siteData(item.from as SiteRef)
+  const at = item.kind === 'section' ? recipe.pages.flatMap((p) => p.sections).find((x) => x.id === item.id && (x.variant?.id ?? undefined) === item.variant) : undefined
+  return <div className="pointer-events-none size-full"><ItemPreview item={item} look={look} rhythm={at ? { tone: at.tone, media: at.media } : undefined} /></div>
+}
+
+/** A few seconds of the real site, muted and looping (its first frame, still, under reduced motion). */
+export function Clip({ src }: { src: string }) {
+  const [still, setStill] = useState(true)
+  useEffect(() => setStill(matchMedia('(prefers-reduced-motion: reduce)').matches), [])
+  return <video src={`${src}#t=0.1`} muted loop playsInline autoPlay={!still} preload="metadata" aria-hidden className="pointer-events-none size-full object-cover" />
 }

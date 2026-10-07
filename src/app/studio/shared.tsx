@@ -2,17 +2,17 @@
 // Shared by the Studio's Pages and Style steps: the plan's look, a page drawn top to bottom, and the way on to the recipe.
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { useGoogleFonts } from '@/components/FontLoader'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { HeroPreview } from '@/components/HeroPreview'
 import { lookOf } from '@/components/ProductVisual'
-import { FlowBar, StartBlank } from '@/app/library/parts'
+import { FlowBar, type Step } from '@/app/library/parts'
 import { heroOf, inferPurpose, planToSpec } from '@/features/kit/plan'
 import { composeRecipe, isValidSpec } from '@/features/recipes/engine'
 import { saveGeneration, type Generation } from '@/features/recipes/library'
 import { readPlan, updatePlan } from '@/lib/kit'
-import { KEYS, get, write } from '@/lib/store'
+import { KEYS, get } from '@/lib/store'
 import type { KitPlan } from '@/types/domain'
 
 /** Everything a preview of this plan is drawn with. */
@@ -52,9 +52,7 @@ export function useToRecipe() {
 }
 
 /** A step's frame: the steps bar on top (back is a step link, Next on the right), then the title and the step. */
-export function StepFrame({ at, title, next, children }: { at: 'Brand' | 'Pages'; title: ReactNode; next: ReactNode; children: ReactNode }) {
-  // Remembered, so "Continue building" from the Collection comes back to this step.
-  useEffect(() => { write(KEYS.step, at === 'Brand' ? '/studio/brand' : '/studio/pages') }, [at])
+export function StepFrame({ at, title, next, children }: { at: Step; title: ReactNode; next: ReactNode; children: ReactNode }) {
   return (
     <>
       <FlowBar at={at} next={next} />
@@ -66,13 +64,16 @@ export function StepFrame({ at, title, next, children }: { at: 'Brand' | 'Pages'
   )
 }
 
-/** Pages and Style need a plan built from the Collection; without one, the way is the Library. */
+/** Brand and Pages adjust a picked direction; without one, the way is to start with your own words. */
 export function NeedsStudio() {
   return (
     <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-14 md:px-8">
-      <h1 className="display text-[clamp(2.2rem,5vw,4rem)]">Collect something first.</h1>
-      <p className="mt-4 text-lg text-ink-2">Tap + on what you like in the Library, then Build my site.</p>
-      <div className="mt-8 flex flex-wrap items-center gap-5"><Link href="/library" className="btn btn-ink">Open the Library</Link><StartBlank /></div>
+      <h1 className="display text-[clamp(2.2rem,5vw,4rem)]">Start with your site.</h1>
+      <p className="mt-4 text-lg text-ink-2">Take what you like from real sites in the Library, then Build my site.</p>
+      <div className="mt-8 flex flex-wrap items-center gap-3"><Link href="/library" className="btn btn-ink">Open the Library</Link><Link href="/studio/you" className="btn btn-line">Start with your own words</Link></div>
     </div>
   )
 }
+
+/** Brand and Pages are fine-tuning of the direction picked: the way back is one link. */
+export const BackToDirections = () => <Link href="/studio/direction" className="group mb-5 inline-flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink"><span aria-hidden>←</span><span className="ulink">Back to the three directions</span></Link>

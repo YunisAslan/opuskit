@@ -17,8 +17,13 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
   knowledge — what its best sites are known for — is `src/data/look-knowledge.ts` (moves, craft, sparks, traps, seen);
   add to it what a new build or study teaches, with its source in `seen`.
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
-- The Library flow is the way to make a site (`docs/plan-library.md`): `/library` (Discover) → `/studio/brand` → `/studio/pages` →
-  recipe. Discover is browsing (no steps); the Collection is a cart in the site header (`CollectionSheet`, its
+- The flow is the way to make a site (`docs/plan-library.md`, decisions 35–37): `/library`, browsing with no steps (the +
+  on a site opens everything it has to take: its whole look, one quality — colours, lettering, first screen, movement —
+  its parts, its effects); Build my site starts three steps: `/studio/you` (name, sentence, kind — only the owner's) →
+  `/studio/direction` (three mixes, `directionsFor` in `features/library/inspire.ts`, none a copy) → recipe.
+  Direction ends with Make it yours (every look, colour and lettering, `studio/LookPicker.tsx`, drawn live — decision
+  36). `/studio/pages` is the optional "Adjust pages"; `/studio/brand` adjusts a recipe opened from an example or a
+  saved one. Older notes below on Brand and Pages still describe those screens. Discover is browsing (no steps); the Collection is a cart in the site header (`CollectionSheet`, its
   Build my site starts building); Brand, Pages and the recipe share one steps bar (`FlowBar`) — both in
   `src/app/library/parts.tsx`. Logic `src/features/library/collection.ts`, storage `src/lib/collection.ts`; plans made there
   carry `via: 'studio'`. Brand picks the look (each drawn as your own site), colours and lettering. Pages shows everything the build will get: each part in the design the engine picks, and the

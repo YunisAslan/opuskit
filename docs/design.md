@@ -121,7 +121,7 @@ The page tells the product, top to bottom:
      - 04 Your site: built sites taking turns, the four tool icons.
    - An orange signal travels the line (`.travel`). Stacked on phones.
 2. **Ticker:** every built site and its look (`.ticker`).
-3. **01 / How it works:** four ruled cells, each with a small real picture (`StepPicture`).
+3. **01 / How it works:** four ruled cells — Library, You, Direction, Recipe — each with a small picture (`StepPicture`).
 4. **02 / The Build Package:**
    - A dark band (`.keep-light`, `#package`) with the ShaderDither piece as a quiet WebGL texture at its top.
    - Real numbers and files from Halden's package; the "room to invent" sparks and the shot list.

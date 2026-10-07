@@ -19,10 +19,10 @@ const shown = SHOWN.map((s) => examples.find((e) => e.slug === s)!).filter(Boole
 const short = (title: string) => title.split(/[,:—]/)[0].trim()
 
 const STEPS = [
-  { n: '01', where: 'Library', title: 'Collect sites you like', text: 'Browse built, working sites — real photos, real type, real motion. Take the ones that feel like yours into the Collection. Several are mixed into one.', href: '/library' },
-  { n: '02', where: 'Brand', title: 'Make it yours', text: 'Your name and one sentence. Pick the look, the colours and the lettering, each shown as your own site — what fits comes first.', href: '/studio/brand' },
-  { n: '03', where: 'Pages', title: 'Arrange every page', text: 'Each page with the parts it usually has, drawn in the design the build will get. Swap a design, add a part or an effect, move, remove.', href: '/studio/pages' },
-  { n: '04', where: 'Recipe', title: 'Download, then build', text: 'A Build Package for your AI tool: the recipe, ready-made sections, the pictures each part needs and the checks it must pass.', href: '/library' },
+  { n: '01', where: 'Library', title: 'Take what you like', text: 'Browse built, working sites. Take a whole look, or only its colours, lettering, first screen, a part or an effect.', href: '/library', cta: 'Open the Library' },
+  { n: '02', where: 'You', title: 'Say what your site is', text: 'Its name, one sentence and its kind. That decides its pages and parts — only you do.', href: '/studio/you', cta: 'Start with your words' },
+  { n: '03', where: 'Direction', title: 'See it three ways', text: 'Your words in three mixes of what you took — none a copy of any site. Pick one, then change any look, colour or lettering.', href: '/studio/direction', cta: 'See the directions' },
+  { n: '04', where: 'Recipe', title: 'Download, then build', text: 'A Build Package for your AI tool: the recipe, ready-made sections, the pictures each part needs and the checks it must pass.', href: '/library', cta: 'Start a site' },
 ]
 
 export default async function Home() {
@@ -74,7 +74,7 @@ export default async function Home() {
               <StepPicture i={i} />
               <h3 className="display mt-6 text-[1.6rem]">{s.title}</h3>
               <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-2">{s.text}</p>
-              <Link href={s.href} className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-ink hover:text-pencil"><span className="ulink">Open {s.where}</span><ArrowUpRight size={14} aria-hidden /></Link>
+              <Link href={s.href} className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-ink hover:text-pencil"><span className="ulink">{s.cta}</span><ArrowUpRight size={14} aria-hidden /></Link>
             </li>
           ))}
         </ol>
@@ -282,23 +282,27 @@ function StepPicture({ i }: { i: number }) {
       {['halden', 'maison-vey', 'fieldhouse', 'qum'].map((s, k) => (
         <div key={s} className="relative overflow-hidden rounded-[2px] bg-white">
           <Image src={`/examples/${s}.jpg`} alt="" fill sizes="160px" className="object-cover object-top" />
-          {k === 1 && <span className="absolute right-1.5 top-1.5 grid size-5 place-items-center rounded-full bg-ink text-[10px] text-paper">✓</span>}
+          {k === 1 && <span className="absolute right-1.5 top-1.5 rounded-[2px] bg-ink px-1.5 py-0.5 text-[10px] text-paper">✓ Colours</span>}
+          {k === 2 && <span className="absolute right-1.5 top-1.5 rounded-[2px] bg-ink px-1.5 py-0.5 text-[10px] text-paper">✓ Lettering</span>}
         </div>
       ))}
     </div>
   )
   if (i === 1) return (
-    <div className="mt-6 flex aspect-[4/3] flex-col justify-between rounded-[3px] bg-[#4A1119] p-5 text-[#F8ECE8]">
-      <span className="text-[0.7rem] tracking-wide opacity-70">Maison Vey</span>
-      <span className="text-[clamp(1.4rem,2.2vw,1.9rem)] leading-none" style={{ fontFamily: 'Didot, "Bodoni 72", serif' }}>A harbour wall<br />at twenty to six</span>
-      <div className="flex gap-1.5">{['#4A1119', '#5A1A23', '#F8ECE8', '#D7B5B0', '#A9D6FF'].map((c) => <span key={c} className="h-4 flex-1 border border-white/20" style={{ background: c }} />)}</div>
+    <div className="mt-6 flex aspect-[4/3] flex-col justify-between rounded-[3px] border border-line bg-white p-4">
+      <span className="label text-muted">A · Name</span>
+      <span className="display text-[clamp(1.4rem,2vw,1.8rem)]">Lind Ceramics</span>
+      <span className="text-[0.75rem] leading-snug text-ink-2">Small-batch tableware, thrown and glazed by hand.</span>
+      <span className="flex flex-wrap gap-1">{['Portfolio', 'E-commerce', 'Studio'].map((x) => <span key={x} className={`rounded-[2px] border px-1.5 py-0.5 text-[0.65rem] ${x === 'E-commerce' ? 'border-ink bg-ink text-paper' : 'border-line text-muted'}`}>{x}</span>)}</span>
     </div>
   )
   if (i === 2) return (
-    <div className="mt-6 flex aspect-[4/3] flex-col gap-1.5 rounded-[3px] bg-paper-2 p-2.5">
-      {['Menu', 'Film on the first screen', 'Services', 'Gallery', 'Reservation', 'Footer'].map((x, k) => (
-        <div key={x} className={`flex flex-1 items-center justify-between rounded-[2px] px-2.5 text-[0.72rem] ${k === 0 || k === 5 ? 'bg-ink/5 text-muted' : 'bg-white'} ${k === 3 ? 'outline outline-1 outline-pencil' : ''}`}>
-          <span>{x}</span>{k === 3 && <span className="text-pencil">Other designs</span>}
+    <div className="mt-6 grid aspect-[4/3] grid-cols-3 gap-1.5 rounded-[3px] bg-paper-2 p-2">
+      {[['A', '#4A1119', '#F8ECE8', 'Didot, "Bodoni 72", serif'], ['B', '#E9E4DA', '#2A2622', 'Georgia, serif'], ['C', '#1E1F1C', '#E8E3D6', 'system-ui, sans-serif']].map(([l, bg, fg, f], k) => (
+        <div key={l} className={`flex flex-col justify-between rounded-[2px] p-2 ${k === 0 ? 'outline outline-2 outline-pencil' : ''}`} style={{ background: bg, color: fg }}>
+          <span className="text-[0.6rem] opacity-70">{l}</span>
+          <span className="text-[1.3rem] leading-none" style={{ fontFamily: f }}>Aa</span>
+          <span className="h-1.5 w-2/3" style={{ background: fg, opacity: 0.3 }} />
         </div>
       ))}
     </div>

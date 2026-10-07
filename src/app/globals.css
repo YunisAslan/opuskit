@@ -85,6 +85,17 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 /* Hover language: text links draw a line from the left, arrows lean the way they point, pictures come closer. */
 .ulink { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .4s var(--ease-out-expo), color .15s; }
 .ulink:hover, .group:hover .ulink { background-size: 100% 1px; }
+/* A part drawn as a plan (Pages, docs/plan-library.md decision 34): headings and labels stay real, body text becomes bars
+   (Flow Block), every photo or film a marked block in the part's own colours — what is decided is clear, what the builder
+   and the owner's files bring is left open. */
+.sketch { --font-body: 'Flow Block'; --type-body-fallback: sans-serif; }
+.sketch :is(img, video) {
+  object-position: -99999px 0;
+  --x: color-mix(in oklab, var(--color-text) 22%, transparent);
+  background: linear-gradient(to top right, transparent calc(50% - 1.5px), var(--x) 50%, transparent calc(50% + 1.5px)),
+    linear-gradient(to bottom right, transparent calc(50% - 1.5px), var(--x) 50%, transparent calc(50% + 1.5px)),
+    color-mix(in oklab, var(--color-text) 8%, var(--color-background));
+}
 svg.lucide-arrow-right, svg.lucide-arrow-up-right, svg.lucide-arrow-left { transition: transform .3s var(--ease-out-expo); }
 a:hover > svg.lucide-arrow-right, button:hover > svg.lucide-arrow-right, a:hover svg.lucide-arrow-up-right { transform: translateX(3px); }
 a:hover svg.lucide-arrow-up-right { transform: translate(2px, -2px); }

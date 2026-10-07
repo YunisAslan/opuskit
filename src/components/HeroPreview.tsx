@@ -16,5 +16,5 @@ export function HeroPreview({ plan, id }: { plan: KitPlan; id?: HeroId }) {
   const look = lookOf(plan)
   const e = EFFECTS.find((x) => x.hero === id)
   if (e?.hero === 'orbit-stickers') return <SectionPreview id="orbit-hero" colors={look.colors} type={look.type} shape={look.shape} chapters={look.chapters} className="aspect-[16/10]" />
-  return <SitePreview {...previewFromDirection(look.d.id, { colors: look.colors, type: look.type, lead: e?.lead, motion: e?.motion, title: plan.name || 'Your headline', videoSrc: e?.hero.startsWith('scroll-video') ? CLIP : undefined })} />
+  return <SitePreview {...previewFromDirection(look.d.id, { colors: look.colors, type: look.type, lead: e?.lead, motion: e?.motion, title: plan.name || 'Your headline', brand: plan.name || undefined, videoSrc: e?.hero.startsWith('scroll-video') ? CLIP : undefined })} />
 }

@@ -6,7 +6,9 @@
 // page (a part, the menu, the footer, a row of On every page) opens its own choices, large, in one chooser (`Chooser`).
 // Left, the toolbox — Parts (everything collected, each site's parts, then All parts) and Effects (On every page, then
 // the effects that go on one part) — dragged onto the page or added with +; whatever lands scrolls into view and
-// glows. Right, the site's pages. Thumbnails keep their own colours (only Brand's example takes yours).
+// glows. Right, the site's pages. The page is a plan, not a promise (decision 34): each part a frame in your colours and
+// lettering — headings real, body text as bars, photos as marked blocks — with what it says and what it shows under it;
+// "Sample" draws it with stand-in words and photos instead. Toolbox thumbnails keep their source site's colours.
 import { ArrowDown, ArrowLeftRight, ArrowRight, ArrowUp, Check, ChevronRight, Eye, EyeOff, Film, GripVertical, ImagePlus, Info, Lock, Plus, Search, Sparkles, X } from 'lucide-react'
 import Link from 'next/link'
 import { Fragment, useEffect, useMemo, useRef, useState, type DragEvent } from 'react'
@@ -18,7 +20,9 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } fr
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { LinkDemo } from '@/components/LinkDemo'
 import { TileClip } from '@/components/RealSiteClip'
-import { closestPiece } from '@/features/kit/closest'
+import { SectionPreview } from '@/components/SectionPreview'
+import { closestPiece, heroSite, sectionDesign, type Match } from '@/features/kit/closest'
+import { HeroPreview } from '@/components/HeroPreview'
 import { heroName } from '@/components/HeroPreview'
 import { ItemPreview, exampleOf, sampleLook, siteLook, type Look } from '@/app/library/parts'
 import { EFFECTS, footerStyles, navStyles, pageTypes, sections } from '@/data/patterns'
@@ -33,8 +37,8 @@ import { planFromStudio, updateCollection, useCollection } from '@/lib/collectio
 import { deleteFile, storeUpload } from '@/lib/files'
 import { readPlan, updatePlan, usePlan, writePlan } from '@/lib/kit'
 import { useHydrated } from '@/lib/store'
-import type { BehaviourId, ChromeId, FooterStyleId, HeroId, KitPlan, NavStyleId, PageTypeId, PieceId, PlanPage, PlanSection, PurposeId, SectionId } from '@/types/domain'
-import { NeedsStudio, StepFrame, usePlanLook, useToRecipe } from '../shared'
+import type { Shot, BehaviourId, ChromeId, FooterStyleId, HeroId, KitPlan, NavStyleId, PageTypeId, PieceId, PlanPage, PlanSection, PurposeId, SectionId } from '@/types/domain'
+import { BackToDirections, NeedsStudio, StepFrame, usePlanLook, useToRecipe } from '../shared'
 
 const FILM = new Set(EFFECTS.filter((e) => e.lead === 'video').map((e) => e.hero))
 // First screens made of words or a 3D object take no photos of the owner's.
@@ -75,7 +79,8 @@ export function Pages() {
   const [dropAt, setDropAt] = useState<number | null>(null)
   const [fxOver, setFxOver] = useState<string>()
   const [flash, setFlash] = useState<string>()
-  const { recipe, spec } = usePlanLook(plan)
+  const [sample, setSample] = useState(false)
+  const { recipe, spec, look: own, pv } = usePlanLook(plan)
   // The design a part will be built with: the one picked, else the one the engine picks for this look — so what is
   // shown here is what the site gets.
   const fam = directions[spec.direction].families[0]
@@ -94,7 +99,10 @@ export function Pages() {
   const page = plan.pages.find((p) => p.id === pageId) ?? plan.pages[0]
   const sites = lookChoices(c), first = plan.blank ? undefined : startSite(c)
   const base = first ? lookOfSite(first) : sampleLook({ kind: 'menu', id: recipe.chrome.nav.id }, plan.purpose)
-  const partLook = (s: PlanSection): Look => (s.from ? lookOfSite(s.from as SiteRef) : s.id === 'hero' ? base : sampleLook({ kind: 'section', id: s.id }, plan.purpose))
+  // The page and its chooser are drawn in your own colours and lettering; the toolbox keeps each source's.
+  const mine: Look = { ...own, plan, world: pv.world, brand: pv.brand, layout: pv.layout }
+  const sketch = !sample
+  const built = recipe.pages.find((p) => p.id === page.id)
   const collected = new Set(c.items.flatMap((i) => (i.kind === 'section' ? [i.id] : i.kind === 'hero' ? ['hero'] : [])))
   const add = (type: PageTypeId, label?: string) => { let id = ''; updatePlan((p) => { const r = addPage(p, type, label); id = r.id; return r.plan }); setPageId(id) }
   const where = placement(plan, c)
@@ -138,8 +146,8 @@ export function Pages() {
     if (x.t === 'chrome') {
       const nav = x.c === 'nav'
       return { title: nav ? 'Menu' : 'Footer', line: 'The same on every page — pick one.', groups: [{ title: nav ? 'Menus' : 'Footers', options: nav
-        ? Object.values(navStyles).map((n) => ({ key: n.id, label: n.name, sub: n.line, on: recipe.chrome.nav.id === n.id, preview: <ItemPreview item={{ kind: 'menu', id: n.id }} look={base} />, pick: () => change(`Menu — ${n.name}`, (p) => setStyle(p, 'nav', n.id)) }))
-        : Object.values(footerStyles).map((f) => ({ key: f.id, label: f.name, sub: f.line, on: recipe.chrome.footerStyle.id === f.id, preview: <ItemPreview item={{ kind: 'footer', id: f.id }} look={base} />, pick: () => change(`Footer — ${f.name}`, (p) => setStyle(p, 'footer', f.id)) })) }] }
+        ? Object.values(navStyles).map((n) => ({ key: n.id, label: n.name, sub: n.line, on: recipe.chrome.nav.id === n.id, preview: <ItemPreview item={{ kind: 'menu', id: n.id }} look={mine} />, pick: () => change(`Menu — ${n.name}`, (p) => setStyle(p, 'nav', n.id)) }))
+        : Object.values(footerStyles).map((f) => ({ key: f.id, label: f.name, sub: f.line, on: recipe.chrome.footerStyle.id === f.id, preview: <ItemPreview item={{ kind: 'footer', id: f.id }} look={mine} sketch={sketch} />, pick: () => change(`Footer — ${f.name}`, (p) => setStyle(p, 'footer', f.id)) })) }] }
     }
     if (x.t === 'site') {
       const g = behaviours[x.b], now = picksOf(plan, x.b)
@@ -151,18 +159,18 @@ export function Pages() {
     }
     const s = page.sections.find((y) => y.key === x.key)
     if (!s) return
-    const look = partLook(s), where = `${page.label} · ${s.id === 'hero' ? 'First screen' : jobOf(s.id)}`
+    const look = mine, where = `${page.label} · ${s.id === 'hero' ? 'First screen' : jobOf(s.id)}`
     const flashing = (f: () => void) => () => { f(); setFlash(s.key) }
     if (s.id === 'hero') return { title: heroName(heroOf(plan, s)), line: `${where} — pick another first screen; it changes this one only.`, groups: [{ title: 'First screens', options: EFFECTS.map((e) => ({
-      key: e.hero, label: e.name, sub: e.line, badge: e.lead === 'video' ? 'Needs a film' : undefined, on: heroOf(plan, s) === e.hero,
-      preview: <ItemPreview item={{ kind: 'hero', id: e.hero }} look={look} />, pick: flashing(() => change(`First screen — ${heroName(e.hero)}`, (p) => setPartHero(p, page.id, s.key, e.hero))) })) }] }
+      key: e.hero, label: e.name, sub: e.line, badge: e.lead === 'video' ? 'Needs a film' : undefined, on: heroOf(plan, s) === e.hero, proof: heroSite(spec, e.hero),
+      preview: <ItemPreview item={{ kind: 'hero', id: e.hero }} look={look} sketch={sketch} />, pick: flashing(() => change(`First screen — ${heroName(e.hero)}`, (p) => setPartHero(p, page.id, s.key, e.hero))) })) }] }
     const name = sections[s.id].name, cur = designOf(s), vs = sectionVariants[s.id]?.options
     const others = (sectionGroups.find((g) => g.ids.includes(s.id))?.ids ?? []).filter((y) => y !== s.id)
     return { title: name, line: `${where} — pick a design, or another part that does the same job.`, groups: [
-      { title: vs ? `Designs of ${name}` : name, options: (vs ?? [undefined]).map((o) => ({ key: o?.id ?? s.id, label: o?.name ?? name, sub: o?.line ?? sectionGuide[s.id]?.look, on: !o || o.id === cur,
-        preview: <ItemPreview item={{ kind: 'section', id: s.id, ...(o ? { variant: o.id } : {}) }} look={look} />, pick: flashing(() => { if (o && o.id !== cur) change(`${name} — ${o.name}`, (p) => setSectionVariant(p, page.id, s.key, o.id)) }) })) },
-      { title: `Other parts · ${jobOf(s.id)}`, options: others.map((y) => { const v = variantFor(y, fam); return { key: y, label: sections[y].name, sub: sectionGuide[y] && `Best when ${sectionGuide[y].bestWhen}`, on: false,
-        preview: <ItemPreview item={{ kind: 'section', id: y, ...(v ? { variant: v } : {}) }} look={look} />, pick: flashing(() => change(`${jobOf(s.id)} — ${sections[y].name}`, (p) => setSectionVariant(replaceSection(p, page.id, s.key, y), page.id, s.key, undefined))) } }) },
+      { title: vs ? `Designs of ${name}` : name, options: (vs ?? [undefined]).map((o) => ({ key: o?.id ?? s.id, label: o?.name ?? name, sub: o?.line ?? sectionGuide[s.id]?.look, on: !o || o.id === cur, proof: sectionDesign(spec, s.id, o?.id),
+        preview: <ItemPreview item={{ kind: 'section', id: s.id, ...(o ? { variant: o.id } : {}) }} look={look} sketch={sketch} />, pick: flashing(() => { if (o && o.id !== cur) change(`${name} — ${o.name}`, (p) => setSectionVariant(p, page.id, s.key, o.id)) }) })) },
+      { title: `Other parts · ${jobOf(s.id)}`, options: others.map((y) => { const v = variantFor(y, fam); return { key: y, label: sections[y].name, sub: sectionGuide[y] && `Best when ${sectionGuide[y].bestWhen}`, on: false, proof: sectionDesign(spec, y, v),
+        preview: <ItemPreview item={{ kind: 'section', id: y, ...(v ? { variant: v } : {}) }} look={look} sketch={sketch} />, pick: flashing(() => change(`${jobOf(s.id)} — ${sections[y].name}`, (p) => setSectionVariant(replaceSection(p, page.id, s.key, y), page.id, s.key, undefined))) } }) },
     ] }
   }
   const open = chooser(choose)
@@ -192,7 +200,8 @@ export function Pages() {
 
   const title = (
     <div>
-      <h1 className="display text-[clamp(2.2rem,4vw,3.4rem)]">Pages</h1>
+      <BackToDirections />
+      <h1 className="display text-[clamp(2.2rem,4vw,3.4rem)]">Adjust pages</h1>
       {!plan.purpose && (
         <div className="mt-4 flex flex-wrap items-center gap-1.5">
           <span className="mr-1 text-sm text-muted">What are you making?</span>{(Object.keys(purposes) as PurposeId[]).filter((k) => k !== 'other').map((k) => <Chip key={k} active={false} onClick={() => rebuild({ purpose: k })}>{purposes[k].name}</Chip>)}
@@ -202,7 +211,7 @@ export function Pages() {
   )
 
   return (
-    <StepFrame at="Pages" title={title} next={<button type="button" onClick={toRecipe} className="btn btn-ink btn-sm"><span>Next<span className="hidden sm:inline">: Recipe</span></span><ArrowRight size={14} aria-hidden /></button>}>
+    <StepFrame at="Direction" title={title} next={<button type="button" onClick={toRecipe} className="btn btn-ink btn-sm"><span>Next<span className="hidden sm:inline">: Recipe</span></span><ArrowRight size={14} aria-hidden /></button>}>
       <div className="mt-8 grid gap-8 lg:grid-cols-[17rem_1fr_11rem] lg:items-start xl:grid-cols-[20rem_1fr_13rem]">
         <Panel plan={plan} page={page} look={base} c={c} sites={sites} placed={where.placed.length} onSite={(b) => setChoose({ t: 'site', b })}
           onDrag={start} onDragEnd={end} onAdd={placeNew} onEffect={(id) => putEffect(id)}
@@ -227,37 +236,50 @@ export function Pages() {
               </div>
             )}
           </div>
-          <p className="mt-2 flex items-center gap-1.5 text-xs text-muted"><Info size={13} aria-hidden />Each part is shown in its source site’s colours — on your site they all take your Brand colours.</p>
-          <div className="mt-3"><ChromeRow c="navbar" page={page} onPick={() => setChoose({ t: 'chrome', c: 'nav' })} styleName={recipe.chrome.nav.name} preview={<ItemPreview item={{ kind: 'menu', id: recipe.chrome.nav.id }} look={base} />} /></div>
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            <p className="flex min-w-0 flex-1 items-start gap-1.5 text-xs leading-relaxed text-muted"><Info size={13} className="mt-px shrink-0" aria-hidden />{sample
+              ? 'A sample with stand-in words and photos, in your colours and lettering. Your site is built from the plan and goes further.'
+              : 'Your plan, in your colours and lettering. Bars are your words to come, crossed blocks your photos. The builder designs every detail inside each part.'}</p>
+            <div role="group" aria-label="Draw the page as" className="flex shrink-0 rounded-[3px] bg-paper-2 p-0.5 font-mono text-[11px] uppercase tracking-[.12em]">
+              {([[false, 'Plan'], [true, 'Sample']] as const).map(([v, l]) => (
+                <button key={l} type="button" aria-pressed={sample === v} onClick={() => setSample(v)} className={`h-7 rounded-[2px] px-3 transition-colors ${sample === v ? 'bg-ink text-paper' : 'text-muted hover:bg-white hover:text-ink'}`}>{l}</button>
+              ))}
+            </div>
+          </div>
+          <div className="mt-3"><ChromeRow c="navbar" page={page} onPick={() => setChoose({ t: 'chrome', c: 'nav' })} styleName={recipe.chrome.nav.name} preview={<ItemPreview item={{ kind: 'menu', id: recipe.chrome.nav.id }} look={mine} />} /></div>
           {isStandardPage(page.type) && !page.sections.length && !drag
             ? <p className="mt-2 rounded-lg bg-paper-2 px-4 py-3 text-ink-2">Written for you — a {pageTypes[page.type].name.toLowerCase()} page needs no parts.</p>
             : (
-              <ol className="mt-2 min-h-16 space-y-2" aria-label={`Parts of ${page.label}`} onDragOver={(e) => { if (drag && drag.t !== 'effect') { e.preventDefault(); if (!page.sections.length) setDropAt(0) } }} onDrop={(e) => drop(e)} onDragLeave={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) { setDropAt(null); setFxOver(undefined) } }}>
+              <ol className="mt-2 min-h-16 space-y-3" aria-label={`Parts of ${page.label}`} onDragOver={(e) => { if (drag && drag.t !== 'effect') { e.preventDefault(); if (!page.sections.length) setDropAt(0) } }} onDrop={(e) => drop(e)} onDragLeave={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) { setDropAt(null); setFxOver(undefined) } }}>
                 {page.sections.map((s, i) => (
                   <Fragment key={s.key}>
                     {dropAt === i && drag?.t !== 'effect' && line}
                     <li data-part={s.key} draggable onDragStart={(e) => start(e, { t: 'move', key: s.key })} onDragEnd={end} onDragOver={(e) => over(e, i, s.key)} onDrop={(e) => { e.stopPropagation(); drop(e, s.key) }}
-                      className={`group rounded-lg border bg-white p-2 pr-3 transition-[box-shadow,border-color,opacity] duration-300 ${flash === s.key ? 'border-pencil shadow-[0_0_0_4px_var(--color-pencil-soft)]' : fxOver === s.key ? 'border-pencil' : 'border-line'} ${drag?.t === 'move' && drag.key === s.key ? 'opacity-40' : ''}`}>
-                      <div className="flex items-center gap-3">
-                        <GripVertical size={16} className="shrink-0 cursor-grab text-muted/60 active:cursor-grabbing" aria-hidden />
-                        <div className="relative flex min-w-0 flex-1 items-center gap-4 text-left">
-                          <button type="button" onClick={() => setChoose({ t: 'part', key: s.key })} aria-label={`Change ${s.id === 'hero' ? 'the first screen' : sections[s.id].name}`} className="absolute inset-0 z-10 cursor-pointer" />
-                          <LazyMount className="pointer-events-none aspect-[16/10] w-36 shrink-0 overflow-hidden rounded-md border border-line sm:w-44">
-                            {s.id === 'hero' ? <ItemPreview item={{ kind: 'hero', id: heroOf(plan, s)! }} look={partLook(s)} /> : <ItemPreview item={{ kind: 'section', id: s.id, ...(designOf(s) ? { variant: designOf(s) } : {}) }} look={partLook(s)} />}
-                          </LazyMount>
-                          <span className="min-w-0 flex-1">
-                            <span className="block font-medium leading-snug">{s.id === 'hero' ? heroName(heroOf(plan, s)) : sections[s.id].name}</span>
-                            <span className="mt-0.5 block truncate text-sm text-muted">{s.id === 'hero' ? 'First screen' : partSub(s.id, designOf(s))}</span>
-                            {s.from ? <span className="mt-1 block text-xs font-medium text-pencil">From {siteName(s.from as SiteRef)}</span> : collected.has(s.id) && <span className="mt-1 block text-xs font-medium text-pencil">From your Collection</span>}
-                          </span>
-                        </div>
+                      className={`group overflow-hidden rounded-[3px] border bg-white transition-[box-shadow,border-color,opacity] duration-300 ${flash === s.key ? 'border-pencil shadow-[0_0_0_4px_var(--color-pencil-soft)]' : fxOver === s.key ? 'border-pencil' : 'border-line hover:border-ink/40'} ${drag?.t === 'move' && drag.key === s.key ? 'opacity-40' : ''}`}>
+                      {/* The frame's head: its number on the page, the part and its design; moving and removing on hover. */}
+                      <div className="flex items-center gap-2 border-b border-line py-1 pl-2 pr-1">
+                        <GripVertical size={15} className="shrink-0 cursor-grab text-muted/60 active:cursor-grabbing" aria-hidden />
+                        <p className="flex min-w-0 flex-1 items-baseline gap-2.5">
+                          <span className="label shrink-0 tabular-nums text-muted">{String(i + 1).padStart(2, '0')}</span>
+                          <span className="truncate font-medium">{s.id === 'hero' ? heroName(heroOf(plan, s)) : sections[s.id].name}</span>
+                          <span className="hidden truncate text-sm text-muted sm:inline">{s.id === 'hero' ? 'First screen' : partSub(s.id, designOf(s))}</span>
+                          {s.from ? <span className="hidden shrink-0 text-xs font-medium text-pencil md:inline">From {siteName(s.from as SiteRef)}</span> : collected.has(s.id) && <span className="hidden shrink-0 text-xs font-medium text-pencil md:inline">From your Collection</span>}
+                        </p>
                         <span className="flex shrink-0 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
                           <Icon label="Move up" disabled={i === 0} onClick={() => { updatePlan((x) => moveSection(x, page.id, s.key, -1)); setFlash(s.key) }}><ArrowUp size={16} /></Icon>
                           <Icon label="Move down" disabled={i === page.sections.length - 1} onClick={() => { updatePlan((x) => moveSection(x, page.id, s.key, 1)); setFlash(s.key) }}><ArrowDown size={16} /></Icon>
                           <Icon label="Remove" onClick={() => { change(`Removed from ${page.label}`, (x) => removeSection(x, page.id, s.key)) }}><X size={16} /></Icon>
                         </span>
                       </div>
-                      <PartExtras plan={plan} page={page} part={s} onChange={() => setChoose({ t: 'part', key: s.key })} collectedFx={c.items.flatMap((x) => (x.kind === 'effect' ? [x.id] : []))} />
+                      <button type="button" onClick={() => setChoose({ t: 'part', key: s.key })} aria-label={`Change ${s.id === 'hero' ? 'the first screen' : sections[s.id].name}`} className="relative block w-full cursor-pointer text-left" style={{ background: own.colors.background }}>
+                        <LazyMount className="pointer-events-none min-h-32">
+                          {s.id === 'hero'
+                            ? <div className={`aspect-[2/1] overflow-hidden ${sketch ? 'sketch' : ''}`} style={{ '--color-text': own.colors.text, '--color-background': own.colors.background } as React.CSSProperties}><HeroPreview plan={plan} id={heroOf(plan, s)} /></div>
+                            : <SectionPreview id={s.id} {...pv} variant={designOf(s)} tone={built?.sections[i]?.tone} media={built?.sections[i]?.media} sketch={sketch} auto maxHeight={300} />}
+                        </LazyMount>
+                      </button>
+                      <PartBrief part={s} page={page} pages={plan.pages.length} shots={recipe.media.shots} />
+                      <div className="px-2 pb-2"><PartExtras plan={plan} page={page} part={s} onChange={() => setChoose({ t: 'part', key: s.key })} collectedFx={c.items.flatMap((x) => (x.kind === 'effect' ? [x.id] : []))} /></div>
                     </li>
                   </Fragment>
                 ))}
@@ -265,7 +287,7 @@ export function Pages() {
                 {!page.sections.length && drag && <li className="rounded-lg border border-dashed border-pencil px-4 py-6 text-center text-sm text-pencil">Drop it here</li>}
               </ol>
             )}
-          <div className="mt-2"><ChromeRow c="footer" page={page} onPick={() => setChoose({ t: 'chrome', c: 'footer' })} styleName={recipe.chrome.footerStyle.name} preview={<ItemPreview item={{ kind: 'footer', id: recipe.chrome.footerStyle.id }} look={base} />} /></div>
+          <div className="mt-2"><ChromeRow c="footer" page={page} onPick={() => setChoose({ t: 'chrome', c: 'footer' })} styleName={recipe.chrome.footerStyle.name} preview={<ItemPreview item={{ kind: 'footer', id: recipe.chrome.footerStyle.id }} look={mine} sketch={sketch} />} /></div>
         </section>
 
         <nav aria-label="Your pages" className="order-first lg:sticky lg:top-36 lg:order-none">
@@ -320,7 +342,8 @@ function Panel({ plan, page, look, c, sites, placed, onSite, onDrag, onDragEnd, 
   const of = <K extends CollectionItem['kind']>(k: K) => c.items.filter((i): i is Extract<CollectionItem, { kind: K }> => i.kind === k)
   const on = (id: SectionId, variant?: string) => page.sections.some((s) => s.id === id && (!variant || s.variant === variant))
   const hit = (...t: string[]) => !q || t.join(' ').toLowerCase().includes(q.trim().toLowerCase())
-  const sample = (i: CollectionItem) => sampleLook(i, plan.purpose)
+  // A taken part keeps the look of the site it was taken from (what was taken is what is seen); anything else its sample.
+  const sample = (i: CollectionItem) => ('from' in i && i.from ? lookOfSite(i.from) : sampleLook(i, plan.purpose))
   // One tile: the picture, its name under it, and + (or ⇄ for what replaces) over its corner; a tick once it is here.
   const tile = (key: string, item: CollectionItem, lk: Look, label: string, sub: string, d: Drag | undefined, act: () => void, done: boolean, verb = 'Add', badge?: string) => (
     <li key={key} draggable={!!d} onDragStart={d ? (e) => onDrag(e, d) : undefined} onDragEnd={onDragEnd} className={`group relative min-w-0 ${d ? 'cursor-grab active:cursor-grabbing' : ''}`}>
@@ -468,6 +491,25 @@ function ChromeRow({ c, page, onPick, styleName, preview }: { c: ChromeId; page:
   )
 }
 
+// ─── What a part says and shows: the plan in words, from the recipe's copy deck and shot list ───
+
+function PartBrief({ part, page, pages, shots }: { part: PlanSection; page: PlanPage; pages: number; shots: Shot[] }) {
+  const at = `${pages > 1 ? `${page.label} · ` : ''}${part.id === 'hero' ? 'First screen' : sections[part.id].name}`
+  const shot = shots.find((x) => x.where.split('; ').some((w) => w === at || w.startsWith(`${at} — `)))
+  const says = part.id === 'hero' ? sections.hero.content : sections[part.id].content
+  const rows: [string, string][] = [['Says', says], ...(shot ? [[shot.kind === 'film' ? 'Shows · film' : 'Shows', `${shot.shows[0].toUpperCase()}${shot.shows.slice(1)} — ${shot.count > 1 ? `${shot.count} photos${shot.per ? ` per ${shot.per}` : ''}, ` : ''}${shot.ratio ?? ''}`] as [string, string]] : [])]
+  return (
+    <dl className="grid gap-px border-t border-line bg-line sm:grid-cols-2">
+      {rows.map(([k, v]) => (
+        <div key={k} className={`bg-white px-3 py-2 ${rows.length === 1 ? 'sm:col-span-2' : ''}`}>
+          <dt className="label text-muted">{k}</dt>
+          <dd className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-ink-2" title={v}>{v}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
 // ─── What belongs on one part: an effect, your photos, your film ─────────────
 
 const placeOf = (page: PlanPage, part: PlanSection) => `${page.label} · ${part.id === 'hero' ? 'First screen' : jobOf(part.id)}`
@@ -494,7 +536,7 @@ function PartExtras({ plan, page, part, collectedFx, onChange }: { plan: KitPlan
   const nPhotos = mine.filter((u) => u.kind === 'image').length, hasFilm = mine.some((u) => u.kind === 'video')
   const chip = 'inline-flex h-7 items-center gap-1.5 rounded-[3px] border px-2.5 text-xs transition-colors'
   return (
-    <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-line pt-2">
+    <div className="flex flex-wrap items-center gap-1.5 border-t border-line pt-2">
       <button type="button" onClick={onChange} className={`${chip} border-line text-ink-2 hover:border-ink hover:text-ink`}><ArrowLeftRight size={12} aria-hidden />{part.id === 'hero' ? 'Other first screens' : 'Other designs'}</button>
       {part.pieces.map((id) => (
         <span key={id} className={`${chip} border-pencil/30 bg-pencil/5 text-pencil`}><Sparkles size={12} aria-hidden />{pieces[id].name}
@@ -544,7 +586,7 @@ function EffectPicker({ plan, page, part, collectedFx }: { plan: KitPlan; page: 
 
 // ─── The chooser: one place where anything on the page is changed ───────────
 
-type ChooserOption = { key: string; label: string; sub?: string; badge?: string; on: boolean; preview: React.ReactNode; pick: () => void }
+type ChooserOption = { key: string; label: string; sub?: string; badge?: string; on: boolean; preview: React.ReactNode; pick: () => void; /** A real site built with this very option. */ proof?: Match }
 type ChooserProps = { title: string; line: string; many?: boolean; groups: { title: string; sub?: string; options: ChooserOption[] }[] }
 
 /** Opens from the thing clicked, never somewhere else on the screen: what it is now (marked "Now"), then every option
@@ -576,6 +618,13 @@ function Chooser({ title, line, many, groups, onClose }: ChooserProps & { onClos
                       <span className="flex items-center gap-2 text-sm font-medium">{o.label}{o.badge && <span className="rounded-[3px] bg-pencil/10 px-1.5 py-0.5 text-[10px] font-medium text-pencil">{o.badge}</span>}</span>
                       {o.sub && <span className="mt-0.5 block text-xs leading-relaxed text-muted">{o.sub}</span>}
                     </button>
+                    {/* Proof, not a promise: where this very design went on a site built with OpusKit. */}
+                    {o.proof && (
+                      <div className="relative z-10 mt-2 flex items-center gap-2.5 border-t border-line pt-2">
+                        <TileClip match={o.proof} className="aspect-[16/10] w-24 shrink-0 rounded-[2px]" />
+                        <p className="text-xs leading-snug text-muted">Built with this design: <Link href={`/examples/${o.proof.example.slug}`} className="link text-ink-2">{o.proof.example.title.split(/ [—|] |, |: /)[0]}</Link></p>
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>

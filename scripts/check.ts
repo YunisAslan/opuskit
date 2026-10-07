@@ -26,7 +26,8 @@ import exampleSpecs from '../src/data/example-specs.generated.json'
 import { closestChrome, closestPiece, closestSection, closestSite } from '../src/features/kit/closest'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
-import { allSites, applyItems, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection } from '../src/features/library/collection'
+import { allSites, applyItems, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection, type SiteRef } from '../src/features/library/collection'
+import { OFFERS, OFFER_IDS, directionsFor, offerOf, purposeFrom, siteTraits } from '../src/features/library/inspire'
 import { COLOUR_WORDS, SHAPE_WORDS, TYPE_WORDS, recommendSectionPhotos, cleanPieces, defaultPagesFor, pieceIssues, composeRecipe, isValidSpec, rankPalettes, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
 assert.equal(recipeSeeds.length, 10, 'exactly 10 seed recipes')
@@ -732,7 +733,25 @@ const main = async () => {
     assert.ok(m.unplaced.includes('number-ticker') || m.plan.pages.some((p) => p.sections.some((x) => x.pieces.includes('number-ticker'))), 'a moment lands on a part that carries it, or is reported')
     const two: Collection = { items: [{ kind: 'site', site: 'example:qum' }, { kind: 'site', site: 'example:hane' }], look: 'example:hane' }
     assert.equal(startSite(two), 'example:hane', 'with two sites, the picked look is the start')
-    assert.ok(notes(two).length > 0, 'two sites get a quiet note')
+    // Inspiration, not imitation (decision 35): the kind of site is the owner's; no direction copies a liked site.
+    assert.equal(purposeFrom('Small-batch tableware, thrown and glazed by hand in my studio.'), 'ecommerce', 'a maker who sells is a shop, read from the sentence')
+    assert.equal(purposeFrom('A wood-fired bakery and café by the harbour'), 'restaurant')
+    for (const p of Object.keys(purposes) as (keyof typeof purposes)[]) if (p !== 'other') assert.ok(offerOf(p), `"What do you offer?" covers every kind of site (${p})`)
+    for (const o of OFFER_IDS) for (const g of OFFERS[o].goals) assert.ok(goals[g], `${o} offers a known goal (${g})`)
+    assert.equal(directionsFor({ items: [], purpose: 'ecommerce', goal: 'visit', name: 'Lind' })[0].plan.goal, 'visit', 'what visitors should do reaches the plan')
+    for (const sites of [['example:fennwood'], ['example:fennwood', 'example:qum'], ['example:halden', 'example:maison-vey', 'example:fieldhouse']] as SiteRef[][]) {
+      const dirs = directionsFor({ items: sites.map((site) => ({ kind: 'site' as const, site })), purpose: 'ecommerce', name: 'Lind' })
+      assert.equal(dirs.length, 3, 'three directions')
+      assert.equal(new Set(dirs.map((d) => JSON.stringify([d.plan.direction, d.plan.palette, d.plan.typography]))).size, 3, 'the three directions differ')
+      for (const d of dirs) {
+        assert.equal(d.plan.purpose, 'ecommerce', 'the pages are the owner’s kind, whatever the liked sites are')
+        const sp = planToSpec(d.plan)
+        for (const r of sites) {
+          const t = siteTraits(r)!, same = [sp.direction === t.direction, sp.palette === t.palette, sp.typography === t.typography, !!d.plan.hero && d.plan.hero === t.hero].filter(Boolean).length
+          assert.ok(same <= 2, `a direction takes at most two of look, colours, lettering, first screen from ${r} (took ${same})`)
+        }
+      }
+    }
     { const col: Collection = { items: [{ kind: 'site', site: 'example:qum' }, { kind: 'section', id: 'faq' }, { kind: 'effect', id: 'cut-reveal' }, { kind: 'site', site: 'example:hane' }] }
       const pl = collectionToPlan(col).plan, where = placement(pl, col)
       assert.ok(!where.waiting.some((i) => i.kind !== 'site'), 'parts and effects are on the pages')
@@ -769,7 +788,7 @@ const main = async () => {
       assert.deepEqual(r.plan.pages[0].sections.slice(0, 2).map((x) => x.key), moved.pages[0].sections.slice(0, 2).map((x) => x.key), 'and keeps their order')
       assert.equal(r.added.length, 2, 'both new parts were added') }
     const dirty = cleanCollection({ items: [{ kind: 'site', site: 'example:nope' }, { kind: 'section', id: 'hero' }, { kind: 'effect', id: 'grain' }, { kind: 'effect', id: 'grain' }, null], purpose: 'other', look: 'seed:nope' })
-    assert.deepEqual(dirty, { items: [{ kind: 'effect', id: 'grain' }], purpose: undefined, name: undefined, about: undefined, look: undefined, like: undefined }, 'unknown ids are dropped, duplicates once')
+    assert.deepEqual(dirty, { items: [{ kind: 'effect', id: 'grain' }], purpose: undefined, name: undefined, about: undefined, look: undefined, goal: undefined, like: undefined }, 'unknown ids are dropped, duplicates once')
   }
 
   // The recipe speaks for this site, not the look it came from (docs/plan-library.md decision 26).

@@ -1,7 +1,8 @@
 'use client'
-// Discover (docs/plan-library.md): sites only — whole sites are what people know how to judge. Their parts are
-// collected on each site's own page (in that site's look); effects are picked on a part in Pages; anything no site has
-// is in Pages → All parts. One row of filters above the cards: kinds of site, feels (several of each).
+// Discover (docs/plan-library.md): sites only — whole sites are what people know how to judge. The + on a site asks
+// what you like about it (decision 35): its whole look, or only its colours, lettering, first screen or movement; parts
+// are taken on its own page. The Library is only browsing — no steps; Build my site (header, Collection) starts them.
+// One row of filters above the cards: kinds of site, feels (several of each).
 import { Maximize2 } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'motion/react'
@@ -11,10 +12,10 @@ import { Chip } from '@/components/ui'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { directions, families, purposes } from '@/data/taxonomy'
 import { shelfSites, siteName, siteSpec } from '@/features/library/collection'
-import { updateCollection, useCollection } from '@/lib/collection'
 import { useHydrated } from '@/lib/store'
 import type { FamilyId, PurposeId } from '@/types/domain'
-import { CollectButton, SiteThumb, StartBlank, exampleOf } from './parts'
+import { SiteThumb, StartBlank, exampleOf } from './parts'
+import { LikeButton } from './SiteTake'
 
 const SITES = shelfSites.map((ref) => { const spec = siteSpec(ref)!; return { ref, spec, name: siteName(ref), families: directions[spec.direction].families } })
 // Kinds and feels, related ones side by side; only those some site has (a filter never offers an empty list).
@@ -29,31 +30,29 @@ const FEELS = (['quiet', 'minimal', 'editorial', 'organic', 'bold', 'raw', 'cine
 
 export function Library() {
   const ready = useHydrated()
-  const c = useCollection()
   const [feels, setFeels] = useState<FamilyId[]>([])
-  // Kinds of site: a filter, never a question. When just one is picked, the Collection keeps it as the kind of pages
-  // built later; none or several leave that to the sites collected.
-  const [picked, setPicked] = useState<PurposeId[] | null>(null)
-  const kinds = picked ?? (ready && c.purpose ? [c.purpose] : [])
-  const setKinds = (ks: PurposeId[]) => { setPicked(ks); updateCollection((x) => ({ ...x, purpose: ks.length === 1 ? ks[0] : undefined })) }
+  // Kinds of site: only a filter. Inspiration comes from any kind — a shop can take a restaurant's colours — so the
+  // owner's own kind (You) is never set or read here.
+  const [kinds, setKinds] = useState<PurposeId[]>([])
   const clear = () => { setKinds([]); setFeels([]) }
 
   return (
     <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-10 md:px-8 md:pt-12">
-      <p className="label mb-4">Library · Discover</p>
-      <h1 className="display text-[clamp(2rem,3vw,2.75rem)]">Collect. Customize. Build.</h1>
-      <p className="mt-2 text-ink-2">Pick the sites you like — we merge them into one. Make it yours, then build it. <StartBlank className="ml-1" /></p>
+      {/* One message: look at sites, take the pieces you like, your site is put together from them. */}
+      <h1 className="display text-[clamp(2rem,3vw,2.75rem)]">Take what you like.</h1>
+      <p className="mt-2 text-ink-2">Look through real sites and take the pieces you like — your site is put together from them.</p>
 
-      {/* Two filters, both alike: a heading, chips under it to tick (several at once). */}
-      <div className="relative mt-7 space-y-4">
+      {/* Two filters, both alike: a label, chips beside it to tick (several at once). */}
+      <div className="relative mt-8 space-y-2.5">
         {(!!kinds.length || !!feels.length) && <button type="button" onClick={clear} className="absolute right-0 top-0 text-[13px] text-muted hover:text-ink">Clear filters</button>}
-        <Multi label="Kind of site" options={KINDS} name={(k) => purposes[k as PurposeId].name} value={kinds} onChange={(v) => setKinds(v as PurposeId[])} />
+        <Multi label="Kind" options={KINDS} name={(k) => purposes[k as PurposeId].name} value={kinds} onChange={(v) => setKinds(v as PurposeId[])} />
         <Multi label="Feel" options={FEELS} name={(f) => families[f as FamilyId].name} value={feels} onChange={(v) => setFeels(v as FamilyId[])} />
       </div>
 
       <motion.div key={`${kinds.join()}|${feels.join()}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, ease: 'easeOut' }} className="pt-10">
         {ready && <Sites kinds={kinds} feels={feels} onClear={clear} />}
       </motion.div>
+      <p className="mt-16 border-t border-line pt-6 text-sm text-muted">Nothing here for you? <StartBlank /></p>
     </div>
   )
 }
@@ -63,8 +62,8 @@ export function Library() {
 function Multi({ label, options, name, value, onChange }: { label: string; options: string[]; name: (id: string) => string; value: string[]; onChange: (v: string[]) => void }) {
   const flip = (id: string) => onChange(value.includes(id) ? value.filter((x) => x !== id) : [...value, id])
   return (
-    <div role="group" aria-labelledby={`f-${label}`}>
-      <h2 id={`f-${label}`} className="mb-1.5 text-[13px] font-medium text-ink-2">{label}</h2>
+    <div role="group" aria-labelledby={`f-${label}`} className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:gap-4">
+      <h2 id={`f-${label}`} className="label w-12 shrink-0 text-muted">{label}</h2>
       <div className="flex flex-wrap gap-1.5">
         {options.map((id) => <Chip key={id} small active={value.includes(id)} onClick={() => flip(id)}>{name(id)}</Chip>)}
       </div>
@@ -88,7 +87,7 @@ function Sites({ kinds, feels, onClear }: { kinds: PurposeId[]; feels: FamilyId[
           </Link>
           <div className="absolute right-2.5 top-2.5 flex gap-1.5">
             <Expand site={s} />
-            <CollectButton item={{ kind: 'site', site: s.ref }} quiet />
+            <LikeButton site={s.ref} />
           </div>
         </li>
       ))}
@@ -113,7 +112,7 @@ function Expand({ site: s }: { site: (typeof SITES)[number] }) {
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <Link href={`/library/sites/${s.ref.replace(':', '/')}`} className="hidden h-9 items-center rounded-[3px] px-3.5 text-sm text-ink-2 hover:bg-paper-2 hover:text-ink sm:inline-flex">See its parts</Link>
-              <CollectButton item={{ kind: 'site', site: s.ref }} label="Collect" />
+              <LikeButton site={s.ref} label="I like…" className="h-9 px-3.5" />
             </div>
           </div>
           {e?.clip
