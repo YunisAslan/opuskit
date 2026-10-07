@@ -2,7 +2,8 @@
 // The Library's Collection, kept in the browser like the kit's plan.
 import { useMemo } from 'react'
 import { EMPTY_COLLECTION, applyItems, cleanCollection, collectionToPlan, itemKey, type Collection } from '@/features/library/collection'
-import type { PieceId, PurposeId } from '@/types/domain'
+import { specToPlan } from '@/features/kit/plan'
+import type { PieceId, PurposeId, RecipeSpec } from '@/types/domain'
 import { readPlan, updatePlan, writePlan } from './kit'
 import { KEYS, get, useStored, write } from './store'
 
@@ -45,5 +46,14 @@ export function startBlank(purpose: PurposeId): () => void {
   writePlan({ ...r.plan, via: 'studio', blank: true })
   write(KEYS.composed, { purpose, keys: readCollection().items.map(itemKey) })
   write(KEYS.step, '/studio/brand')
+  return () => { writePlan(before); write(KEYS.composed, last) }
+}
+
+/** Opens a finished recipe (a saved one, an example's) in the building steps: Brand and Pages edit it, the recipe it
+ *  came from is updated. The Collection is left as it is and is not mixed in. */
+export function openInStudio(spec: RecipeSpec, fromId?: string): () => void {
+  const before = readPlan(), last = get<Composed | string | null>(KEYS.composed, null)
+  writePlan({ ...specToPlan(spec, fromId), via: 'studio' })
+  write(KEYS.composed, { purpose: spec.purpose, keys: readCollection().items.map(itemKey) })
   return () => { writePlan(before); write(KEYS.composed, last) }
 }

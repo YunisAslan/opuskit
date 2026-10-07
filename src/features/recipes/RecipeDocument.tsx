@@ -16,12 +16,9 @@ import { toast } from 'sonner'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { TypeSpecimen } from '@/components/TypeSpecimen'
 import { CopyButton } from '@/components/ui'
-import { buildPackageLocked, lockedSections } from '@/config/pricing'
 import { img } from '@/data/images'
 import { directions, purposes } from '@/data/taxonomy'
 import { resources } from '@/data/resources'
-import { useAccess } from '@/features/billing'
-import { CheckoutDialog } from '@/features/billing/CheckoutDialog'
 import { adapters } from '@/features/build-packages'
 import { BuildTab, downloadPackage, useBuildPackage } from '@/features/build-packages/BuildPanel'
 import { MediaSlots, SLOTS } from '@/components/MediaSlots'
@@ -49,12 +46,10 @@ const STATUS: Record<string, { label: string; mark: typeof Check; cls: string }>
   optional: { label: 'Optional', mark: Circle, cls: 'text-muted' },
 }
 
-/** `inKit`: shown as step 3 of the kit (its step bar is above), so the bar's own way back replaces "Customise in kit". */
-/** `studio`: made in the Library's Studio — every Change leads back to its Pages or Style step, not to the kit. */
-export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, studio = false }: { recipe: UniversalRecipe; recipeRef: string; onChange: (spec: RecipeSpec) => void; inKit?: boolean; studio?: boolean }) {
-  const { unlocked } = useAccess(recipeRef)
+/** `studio`: this recipe is the one being built (its steps bar is on top); otherwise a Change first opens it in the
+ *  building steps (/studio/open), so Brand and Pages edit this recipe. */
+export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false }: { recipe: UniversalRecipe; recipeRef: string; onChange: (spec: RecipeSpec) => void; studio?: boolean }) {
   const saved = useSaved().some((s) => s.ref === recipeRef)
-  const [checkout, setCheckout] = useState(false)
   const [tab, setTab] = useState<TabId>('overview')
   // The tool the user picked in the kit; none if they chose to decide later. We never pick one for them.
   const [target, setTarget] = useState<BuildTarget | null>(r.metadata.spec.target === 'not-sure' ? null : r.metadata.spec.target)
@@ -62,15 +57,13 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, 
   const spec = r.metadata.spec
   const colors = Object.fromEntries(r.visualSystem.palette.tokens.map((t) => [t.role, t.hex])) as PaletteColors
   const look = { colors, type: r.visualSystem.typography, shape: r.visualSystem.shape }
-  const { pkg, error } = useBuildPackage(r, target, unlocked)
+  const { pkg, error } = useBuildPackage(r, target, true)
   const [kind, key] = recipeRef.split(':')
-  // Every change happens in the kit (the one editor), opened on this recipe at the matching spot.
+  // Every change happens in the building steps: Brand for the look, colours and lettering, Pages for everything else.
   const editHref = (step?: string) => {
-    if (studio) return step === 'pages' || step === 'kit' || step === 'photos' ? '/studio/pages' : '/studio/brand'
-    const [at, spot] = KIT_SPOT[step ?? ''] ?? ['style']
-    return `/kit?from=${kind}:${key}&step=${at}${spot ? `&${at === 'style' ? 'cat' : 'shelf'}=${spot}` : ''}`
+    const to = ['direction', 'palette', 'typography', 'brand'].includes(step ?? '') ? 'brand' : 'pages'
+    return studio ? `/studio/${to}` : `/studio/open?from=${kind}:${key}&to=${to}`
   }
-  const isLocked = (t: TabId) => !unlocked && ((t === 'motion' && lockedSections.includes('motion')) || (t === 'build' && buildPackageLocked))
 
   useEffect(() => { markRecent(recipeRef) }, [recipeRef])
   // Tab survives reloads and is linkable (#design).
@@ -81,15 +74,13 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, 
 
   const actions = (
     <>
-          <button type="button" className="btn btn-sm inline-flex items-center gap-1.5 text-ink-2 hover:text-ink" aria-pressed={saved} onClick={() => { toggleSaved(recipeRef); toast(saved ? 'Removed from saved' : 'Saved — find it under Saved') }}>
+          <button type="button" className="btn btn-sm inline-flex items-center gap-1.5 text-ink-2 hover:bg-paper-2 hover:text-ink" aria-pressed={saved} onClick={() => { toggleSaved(recipeRef); toast(saved ? 'Removed from saved' : 'Saved — find it under Saved') }}>
         {saved ? <BookmarkCheck size={16} aria-hidden /> : <Bookmark size={16} aria-hidden />}<span className={studio ? 'max-sm:sr-only' : ''}>{saved ? 'Saved' : 'Save'}</span>
       </button>
       <div className="ml-auto flex flex-wrap items-center gap-2">
-        {unlocked ? (
-          <>
             <CopyButton text={() => recipeToMarkdown(r)} label="Copy recipe" className={studio ? 'max-lg:hidden' : ''} />
             <Select value={target ?? undefined} onValueChange={(v) => setTarget(v as BuildTarget)}>
-              <SelectTrigger aria-label="Build with" className={`rounded-full ${studio ? 'min-w-36 max-sm:hidden' : 'min-w-44'}`}><SelectValue placeholder="Choose your tool" /></SelectTrigger>
+              <SelectTrigger aria-label="Build with" className={`rounded-[3px] ${studio ? 'min-w-36 max-sm:hidden' : 'min-w-44'}`}><SelectValue placeholder="Choose your tool" /></SelectTrigger>
               <SelectContent side={studio ? 'bottom' : 'top'} align="end" sideOffset={8}>
                 {Object.values(adapters).map((a) => (
                   <SelectItem key={a.id} value={a.id}><ToolIcon id={a.id} className="size-4" />{a.name}</SelectItem>
@@ -100,8 +91,6 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, 
               onClick={async () => { if (!pkg) return; setZipping(true); try { await downloadPackage(pkg, r) } finally { setZipping(false) } }}>
               <Download size={16} aria-hidden />{zipping ? 'Preparing…' : 'Download build kit'}
             </button>
-          </>
-        ) : <button type="button" className={`btn btn-ink whitespace-nowrap ${studio ? 'btn-sm' : ''}`} onClick={() => setCheckout(true)}>{studio ? <><span className="sm:hidden">Unlock</span><span className="max-sm:hidden">Unlock full recipe</span></> : 'Unlock full recipe'}</button>}
       </div>
     </>
   )
@@ -125,14 +114,13 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, 
         {TABS.map((t) => (
           <button key={t.id} id={`tab-${t.id}`} type="button" role="tab" aria-selected={tab === t.id} aria-controls={`panel-${t.id}`} tabIndex={tab === t.id ? 0 : -1}
             onClick={() => pick(t.id)} className={`shrink-0 border-b-2 px-3 py-3.5 text-sm transition-colors ${tab === t.id ? 'border-ink text-ink' : 'border-transparent text-muted hover:text-ink'}`}>
-            {t.label}{isLocked(t.id) && <span className="ml-1 text-xs text-muted">· locked</span>}
+            {t.label}
           </button>
         ))}
       </div>
 
       <section id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="pt-10">
-        {isLocked(tab) ? <Locked onUnlock={() => setCheckout(true)} what={tab === 'build' ? 'Build Packages' : 'The motion system'} />
-          : tab === 'overview' ? <Overview r={r} look={look} editHref={editHref} studio={studio} />
+        {tab === 'overview' ? <Overview r={r} look={look} editHref={editHref} studio={studio} />
           : tab === 'design' ? <Design r={r} look={look} colors={colors} editHref={editHref} />
           : tab === 'pages' ? <Pages r={r} editHref={editHref} />
           : tab === 'media' ? <Media r={r} spec={spec} update={update} editHref={editHref} />
@@ -144,13 +132,12 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, 
       {!studio && (
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper/95 backdrop-blur-sm">
           <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-2 px-5 py-3 md:px-8">
-            {!inKit && <Link href={editHref()} className="btn btn-line btn-sm inline-flex items-center gap-1.5"><SlidersHorizontal size={15} aria-hidden />Customise in kit</Link>}
+            <Link href={editHref('pages')} className="btn btn-line btn-sm inline-flex items-center gap-1.5"><SlidersHorizontal size={15} aria-hidden />Change it</Link>
             {actions}
           </div>
         </div>
       )}
 
-      <CheckoutDialog open={checkout} onClose={() => setCheckout(false)} recipeRef={recipeRef} recipeTitle={r.title} />
     </article>
     </>
   )
@@ -158,12 +145,6 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, inKit = false, 
 
 type Look = { colors: PaletteColors; type: UniversalRecipe['visualSystem']['typography']; shape: UniversalRecipe['visualSystem']['shape'] }
 type Edit = (step?: string) => string
-
-/** Questionnaire step → where the same choice lives in the kit: [kit step, style category or components shelf]. */
-const KIT_SPOT: Record<string, [string, string?]> = {
-  direction: ['style', 'look'], palette: ['style', 'colours'], typography: ['style', 'lettering'], shape: ['style', 'shape'], nav: ['style', 'menu'], footer: ['style', 'menu'], photos: ['pages'],
-  lead: ['pages', 'first-screen'], motion: ['style', 'motion'], touches: ['style', 'idea'], idea: ['style', 'idea'], pages: ['pages'], kit: ['style', 'behaviour'],
-}
 
 const ChangeLink = ({ href, label = 'Change' }: { href: string; label?: string }) =>
   <Link href={href} className="link inline-flex items-center gap-1 text-sm"><Pencil size={13} aria-hidden />{label}</Link>
@@ -202,9 +183,9 @@ function Overview({ r, look, editHref, studio }: { r: UniversalRecipe; look: Loo
   ]
   return (
     <div className="space-y-12">
-      <SitePreview {...previewFromRecipe(r, name ? { title: name, brand: name } : {})} className="rounded-xl border border-line" />
+      <SitePreview {...previewFromRecipe(r, name ? { title: name, brand: name } : {})} className="rounded-[3px] border border-line" />
       <div>
-        <Heading title="Your choices"><ChangeLink href={editHref()} label={studio ? 'Change' : 'Customise in kit'} /></Heading>
+        <Heading title="Your choices"><ChangeLink href={editHref()} label="Change" /></Heading>
         <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {tiles.map((x) => (
             <li key={x.label} className="choice group relative overflow-hidden">
@@ -230,6 +211,20 @@ function Design({ r, look, colors, editHref }: { r: UniversalRecipe; look: Look;
   const l = r.layoutSystem
   return (
     <div className="space-y-16">
+      {/* What the package hands the builder beyond the picks: the look's best moves, and room to invent with them. */}
+      <div>
+        <Heading title={`Room to invent — ${r.style.look}`} />
+        <p className="mt-2 max-w-2xl text-sm text-ink-2">Everything you picked stays as you picked it. The rest the builder designs — like someone who knows {r.style.look}, from what its best sites do — and every page gets one moment people remember.</p>
+        <div className="mt-6 grid border border-line md:grid-cols-2">
+          {([['Known for', r.style.moves], ['Ideas for the moments', r.style.sparks]] as const).map(([name, xs], i) => (
+            <div key={name} className={`p-5 md:p-6 ${i ? 'border-t border-line md:border-l md:border-t-0' : ''}`}>
+              <p className="label">{name}</p>
+              <ul className="mt-4 space-y-2.5 text-sm text-ink-2">{xs.map((x) => <li key={x} className="flex gap-2.5"><span className="mt-[0.45em] size-1.5 shrink-0 bg-pencil" aria-hidden />{x}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div>
         <Heading title={`Colors — ${r.visualSystem.palette.name}`}><ChangeLink href={editHref('palette')} /></Heading>
         <p className="mt-2 max-w-2xl text-sm text-ink-2">{r.whyItWorks.palette}</p>
@@ -278,7 +273,7 @@ function Design({ r, look, colors, editHref }: { r: UniversalRecipe; look: Look;
         <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,26rem)_1fr]">
           <ControlsPreview colors={colors} r={r} />
           <ul className="flex flex-wrap content-start gap-2">
-            {r.implementation.ui.components.map((c) => <li key={c.slug} title={c.where.join(', ')} className="rounded-full border border-line bg-white px-3 py-1.5 text-sm">{c.name}</li>)}
+            {r.implementation.ui.components.map((c) => <li key={c.slug} title={c.where.join(', ')} className="rounded-[3px] border border-line bg-white px-3 py-1.5 text-sm">{c.name}</li>)}
           </ul>
         </div>
       </div>
@@ -408,7 +403,7 @@ function Motion({ r, look, editHref }: { r: UniversalRecipe; look: Look; editHre
       <div>
         <Heading title={`Movement — ${r.motion.level.name}`}><ChangeLink href={editHref('motion')} /></Heading>
         <p className="mt-2 max-w-2xl text-ink-2">{r.motion.principle}</p>
-        <ul className="mt-5 flex flex-wrap gap-2">{r.motion.patterns.map((p) => <li key={p.id} className="rounded-full border border-line bg-white px-3 py-1.5 text-sm">{p.name}</li>)}</ul>
+        <ul className="mt-5 flex flex-wrap gap-2">{r.motion.patterns.map((p) => <li key={p.id} className="rounded-[3px] border border-line bg-white px-3 py-1.5 text-sm">{p.name}</li>)}</ul>
       </div>
       {r.concept && (
         <div>
@@ -440,7 +435,7 @@ function Motion({ r, look, editHref }: { r: UniversalRecipe; look: Look; editHre
       </div>
       {r.pieces.length > 0 && (
         <div>
-          <Heading title="Your kit"><ChangeLink href="/kit?step=pages" label="Open in the showcase" /></Heading>
+          <Heading title="Your kit"><ChangeLink href={editHref('pages')} /></Heading>
           <p className="mt-2 max-w-2xl text-sm text-ink-2">Ready components — their code ships in your Build Package (src/components/pieces/), already in your colours and fonts.</p>
           <ul className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {r.pieces.map((p) => (
@@ -464,16 +459,6 @@ function Motion({ r, look, editHref }: { r: UniversalRecipe; look: Look; editHre
           <ol className="mt-4 max-w-3xl list-decimal space-y-1.5 pl-5 text-sm text-ink-2">{r.media.storytelling.map((x) => <li key={x}>{x}</li>)}</ol>
         </div>
       )}
-    </div>
-  )
-}
-
-function Locked({ what, onUnlock }: { what: string; onUnlock: () => void }) {
-  return (
-    <div className="mx-auto max-w-lg rounded-lg border border-dashed border-muted p-8 text-center">
-      <p className="text-lg font-medium">{what} are part of the full recipe.</p>
-      <p className="mt-2 text-sm text-ink-2">Unlock to download a build kit for Claude Code, Cursor, v0 or Lovable — with your files included.</p>
-      <button type="button" className="btn btn-ink mt-5" onClick={onUnlock}>See what&apos;s included</button>
     </div>
   )
 }

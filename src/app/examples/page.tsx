@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: 'Examples', description: 'Finished si
 export default function ExamplesPage() {
   return (
     <>
-      <PageIntro title="See what a recipe builds.">Real, working sites — not mockups. Each one started as a Universal Recipe and was built from its Build Package.</PageIntro>
+      <PageIntro label={`Examples · ${examples.length} built sites`} title="See what a recipe builds.">Real, working sites — not mockups. Each one started as a Universal Recipe and was built from its Build Package.</PageIntro>
       <div className="mx-auto max-w-[1440px] px-5 pb-24 md:px-8">
         <ul className="grid gap-x-6 gap-y-14 md:grid-cols-2 xl:grid-cols-3">
           {examples.map((e) => (

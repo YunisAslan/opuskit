@@ -8,6 +8,7 @@
 // (what fits leads), more on request; 3 an example in your picks (marked as an example) and OpusKit's built sites that
 // use them. Until something is picked, the start site's look (or the kind of site's) is used. Photos and films are added
 // on the parts that show them, in Pages.
+import { SERIF_FAMILIES } from '@/lib/type-tokens'
 import { ArrowRight, Check } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
@@ -40,14 +41,13 @@ const ALL_TYPE = Object.keys(typography) as TypographyId[]
 const ALL_COLOURS = Object.keys(palettes) as PaletteId[]
 const isDark = (id: PaletteId) => luminance(palettes[id].colors.background) < 0.2
 // What kind of face leads each pairing (its display family), for the lettering filter.
-const SERIF = new Set(['Amiri', 'Ancizar Serif', 'Bellefair', 'Besley', 'Bodoni Moda', 'Castoro Titling', 'Cormorant', 'Gilda Display', 'Gloock', 'Hedvig Letters Serif', 'Ibarra Real Nova', 'Imbue', 'Italiana', 'Kalnia', 'Labrada', 'Libre Caslon Display', 'Literata', 'Newsreader', 'Noto Serif Display', 'Petrona', 'Prata', 'Sedan', 'Shippori Mincho', 'Young Serif'])
 const EXPRESSIVE = new Set(['Bagel Fat One', 'Ballet', 'Boldonse', 'Caprasimo', 'Caveat Brush', 'Grenze Gotisch', 'Monoton', 'Permanent Marker', 'Press Start 2P', 'Rubik Mono One', 'Tektur', 'Tilt Warp'])
 const KINDS = ['Serif', 'Sans', 'Expressive'] as const
 const ALL_LOOKS = Object.keys(directions) as DirectionId[]
 const FAMILIES = Object.keys(families) as FamilyId[]
 // What a new look resets to its own defaults; everything about the pages and parts stays.
 const FOLLOWS_LOOK = ['palette', 'typography', 'shape', 'nav', 'footer', 'rotation'] as const
-const typeKind = (id: TypographyId) => { const f = typography[id].display.family; return SERIF.has(f) ? 'Serif' : EXPRESSIVE.has(f) ? 'Expressive' : 'Sans' }
+const typeKind = (id: TypographyId) => { const f = typography[id].display.family; return SERIF_FAMILIES.has(f) ? 'Serif' : EXPRESSIVE.has(f) ? 'Expressive' : 'Sans' }
 
 export function Brand() {
   const ready = useHydrated()
@@ -135,7 +135,7 @@ export function Brand() {
         {/* 2 — one list at a time: the look (only where there is a choice), colours, lettering — each tab names its pick */}
         <div className="min-w-0">
           <div role="tablist" aria-label="Brand" className="sticky top-[7.5rem] z-10 bg-paper pb-4">
-            <div className={`grid gap-1 rounded-xl bg-paper-2 p-1 ${lookChoice ? 'grid-cols-3' : 'grid-cols-2'}`}>
+            <div className={`grid gap-1 rounded-[3px] bg-paper-2 p-1 ${lookChoice ? 'grid-cols-3' : 'grid-cols-2'}`}>
               {([...(lookChoice ? [['look', 'Look', look.d.name]] : []), ['colours', 'Colours', palettes[spec.palette].name], ['lettering', 'Lettering', look.type.name]] as const).map(([k, name, now]) => (
                 <button key={k} type="button" role="tab" aria-selected={at === k} onClick={() => setTab(k as typeof at)}
                   className={`min-w-0 rounded-lg px-3 py-2 text-left transition-colors ${at === k ? 'bg-white shadow-sm' : 'hover:bg-white/60'}`}>

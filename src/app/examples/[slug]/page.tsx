@@ -31,16 +31,15 @@ export default async function ExamplePage(props: PageProps<'/examples/[slug]'>) 
 
   return (
     <article className="mx-auto max-w-[1440px] px-5 pb-24 pt-14 md:px-8 md:pt-20">
-      <p className="text-sm text-muted">{e.mood.join(' · ')}</p>
+      <p className="label">Example · {e.mood.join(' · ')}</p>
       <h1 className="display mt-4 max-w-3xl text-[clamp(2.4rem,5vw,4.6rem)]">{e.title}</h1>
       <p className="prose-serif mt-5 max-w-xl text-ink-2">{e.summary}</p>
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <a href={e.livePath} target="_blank" rel="noreferrer" className="btn btn-ink inline-flex items-center gap-2"><ExternalLink size={16} aria-hidden />Visit the live site</a>
-        <Link href={`/kit?from=example:${e.slug}`} className="btn btn-line inline-flex items-center gap-2"><SlidersHorizontal size={16} aria-hidden />Customise in kit</Link>
+        <Link href={`/studio/open?from=example:${e.slug}&to=brand`} className="btn btn-line inline-flex items-center gap-2"><SlidersHorizontal size={16} aria-hidden />Make it yours</Link>
         <a href={`/downloads/${e.slug}.zip`} download className="btn btn-line inline-flex items-center gap-2"><Download size={16} aria-hidden />Copy the code</a>
-        {e.recipeSlug && <Link href={`/recipe/${e.recipeSlug}`} className="text-sm link">See its recipe</Link>}
       </div>
-      <p className="mt-3 max-w-2xl text-sm text-muted">Copy the code: the site exactly as built, ready to run — photos and videos are placeholders of the same size (they belong to the original site). Customise: open its recipe in the kit, change what you like, and get your own.</p>
+      <p className="mt-3 max-w-2xl text-sm text-muted">Copy the code: the site exactly as built, ready to run — photos and videos are placeholders of the same size (they belong to the original site). Make it yours: its recipe opens in Brand and Pages — change the name, colours, lettering and parts, and get your own Build Package.</p>
       <div className="mt-10 overflow-hidden rounded-lg border border-line">
         {e.hero.kind === 'video'
           ? <video src={e.hero.src} poster={e.hero.poster} autoPlay muted loop playsInline preload="metadata" className="w-full" aria-label={`${e.title} — hero footage`} />

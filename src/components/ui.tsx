@@ -23,15 +23,16 @@ export function CopyButton({ text, label = 'Copy', className = '' }: { text: str
 export function Chip({ active, onClick, small, children }: { active: boolean; onClick: () => void; small?: boolean; children: ReactNode }) {
   return (
     <button type="button" aria-pressed={active} onClick={onClick}
-      className={`rounded-full border border-line ${small ? 'px-2.5 py-1 text-[13px]' : 'px-3 py-1.5 text-sm'} transition-colors hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper`}>
+      className={`rounded-[3px] border border-line ${small ? 'px-2.5 py-1 text-[13px]' : 'px-3 py-1.5 text-sm'} transition-colors hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper`}>
       {children}
     </button>
   )
 }
 
-export function PageIntro({ title, children }: { title: string; children?: ReactNode }) {
+export function PageIntro({ label, title, children }: { label?: string; title: string; children?: ReactNode }) {
   return (
     <div className="mx-auto max-w-[1440px] px-5 pb-10 pt-14 md:px-8 md:pt-20">
+      {label && <p className="label mb-5">{label}</p>}
       <h1 className="display max-w-4xl text-[clamp(2.6rem,6vw,5.5rem)]">{title}</h1>
       {children && <div className="mt-6 max-w-xl text-lg text-ink-2">{children}</div>}
     </div>

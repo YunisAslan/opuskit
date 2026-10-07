@@ -48,9 +48,9 @@ its `examples.ts` entry; grep for `/examples/{slug}` (kit sample photos use some
 
 ## 4. The built sites — what is open
 
-All sixteen are built, registered and live. Open:
-- **Clips for #11–#16** (Inkwell & Moth, Kür Delta Watch, Night Shift, Aster House, Sela Mor, QUM): waiting for the user's
-  screen recordings.
+All nineteen are built, registered and live. Open:
+- **Clips for #11–#18 and #20** (Inkwell & Moth, Kür Delta Watch, Night Shift, Aster House, Sela Mor, QUM, Fieldhouse, Maison Vey, Halden):
+  waiting for the user's screen recordings.
 - **Re-recordings** (section clips that are a held still frame because the recording never stopped on them; ~4 s
   standing still on each fixes it):
 
@@ -97,5 +97,7 @@ watchmaker) — nearly every watch photo carries a real brand's logo.
 | 14 | Aster House | ✓ | ✓ | ✓ | ✓ live | waiting for recording |
 | 15 | Sela Mor | ✓ | ✓ | ✓ | ✓ live | waiting for recording |
 | 16 | QUM | ✓ (`examples/qum/opuskit.json`, approved 2026-10-04) | ✓ 23 photos (Pexels, `media-src/SOURCES.md`) | ✓ Prompt 1 (subagent); no fix round; 20 static files; reviewed 1440 + 390 | ✓ live at `/live/qum` (click-through checked), `npm run check` ✓ | waiting for recording |
-| 17 | Fieldhouse | ✓ via the Library (blank → Studio; Modern Heritage · Warm Black · Moonlit Italic; Home: Photo with depth, Featured Work, Manifesto, Testimonials, Closing CTA · Work · Project · About · Contact) — approved | photos: Unsplash connector (to do) | started, stopped early (BUILD-LOG.md) | | |
-| 18–20 | §5 | | | | | |
+| 17 | Fieldhouse | ✓ via the Library (blank → Studio; Modern Heritage · Warm Black · Moonlit Italic; Home: Photo with depth, Featured Work, Manifesto, Testimonials, Closing CTA · Work · Project · About · Contact) — approved | ✓ 28 photos (Unsplash connector, `media-src/SOURCES.md`) | ✓ Prompt 2 (real photos) + fix round 1 (Home photos without hover, project cover full width); reviewed 1440 + 390 | ✓ live at `/live/fieldhouse` (click-through checked), `npm run check` ✓ | waiting for recording |
+| 18 | Maison Vey | ✓ via the Library (blank → E-commerce; Luxury Editorial · Oxblood Room · Gala Night; Home: Product in the spotlight, Product Grid, Collection, Editorial Story, Testimonials, Trust Strip, Newsletter · Shop · Product · Cart · Checkout · About: About, Process) — saved 2026-10-07 | ✓ 33 photos (Unsplash connector, over the build's temporary ones) | ✓ Prompt 1 in an isolated `claude -p` session (resumed once); approved by the user ("Pages-də necə qurulubsa realda da elədir") | ✓ live at `/live/maison-vey` (click-through checked), `npm run check` ✓ | waiting for recording |
+| 19 | Low Hum | §5 — after Halden | | | | |
+| 20 | Halden | ✓ via the Library (blank → Health & wellness; Dark Cinematic · Charcoal Signal · Opening Credits; Home: Film on the first screen, Services, How It Works, Gallery, Testimonials (Wall), Pricing, Location, Reservation · The baths · Visit · FAQ · Sign In · Sign Up; Smooth scroll + Scroll progress, both by the user) — saved 2026-10-07 | ✓ the user's film (drone over fog, 4K) via `prepare-video.sh`; 21 photos (Unsplash connector) | ✓ Prompt 1 + Prompt 2 (scene map fitted to the film) in an isolated `claude -p` session; reviewed 1440 + 390 | ✓ live at `/live/halden` (click-through checked), `npm run check` ✓ | waiting for recording |

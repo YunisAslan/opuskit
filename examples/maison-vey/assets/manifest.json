@@ -1,0 +1,362 @@
+{
+  "recipe": "luxury-fashion",
+  "title": "Maison Vey — Refined Luxury Editorial Store",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "create",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "find",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Bodoni Moda, Jost (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "create",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "productPhotography": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Own photoshoot",
+      "replaceWith": "user-owned-product-photos",
+      "usage": "Hero, product grid, detail views",
+      "specs": "Consistent angles: front, 3/4, detail; seamless background",
+      "note": "Placeholder files in public/media/ until the owner's photos arrive."
+    },
+    "lifestyleImages": {
+      "required": false,
+      "level": "recommended",
+      "status": "temporary",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Editorial story sections",
+      "specs": "Product in context, same grade",
+      "note": "Placeholder files in public/media/ until the owner's photos arrive."
+    },
+    "turntableSequence": {
+      "required": false,
+      "level": "optional",
+      "status": "temporary",
+      "source": "Own photoshoot",
+      "replaceWith": "user-owned-product-photos",
+      "usage": "Scroll-rotating product",
+      "specs": "Fixed camera, 7.5–15° per frame",
+      "note": "Placeholder files in public/media/ until the owner's photos arrive."
+    }
+  },
+  "temporary": {
+    "productPhotography": {
+      "status": "temporary",
+      "file": "public/media/productPhotography.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Asset checklist: Product photography",
+      "usage": "Empty bag state",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "lifestyleImages": {
+      "status": "temporary",
+      "file": "public/media/lifestyleImages.jpg",
+      "ratio": "3:2",
+      "size": "2400x1600",
+      "shot": "Asset checklist: Lifestyle images",
+      "usage": "404 page",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "turntableSequence": {
+      "status": "temporary",
+      "file": "public/media/turntableSequence.jpg",
+      "ratio": "1:1",
+      "size": "2400x2400",
+      "shot": "Asset checklist: Turntable sequence",
+      "usage": "Optional scroll-rotating product (not used yet; one frame of 24–48)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "hero": {
+      "status": "temporary",
+      "file": "public/media/hero.jpg",
+      "ratio": "16:9",
+      "size": "2800x1575",
+      "shot": "Home · First screen — Product stage (16:9)",
+      "usage": "Home hero, desktop",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "hero-mobile": {
+      "status": "temporary",
+      "file": "public/media/hero-mobile.jpg",
+      "ratio": "4:5",
+      "size": "2240x2800",
+      "shot": "Home · First screen — Product stage (4:5 crop)",
+      "usage": "Home hero, phones",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "editorial-place": {
+      "status": "temporary",
+      "file": "public/media/editorial-place.jpg",
+      "ratio": "3:2",
+      "size": "2400x1600",
+      "shot": "Home · Editorial Story (3:2)",
+      "usage": "Home editorial story, opening image",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "editorial-hands": {
+      "status": "temporary",
+      "file": "public/media/editorial-hands.jpg",
+      "ratio": "4:5",
+      "size": "1920x2400",
+      "shot": "Home · Editorial Story (4:5)",
+      "usage": "Home editorial story, second image",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "highlight-salt-quay": {
+      "status": "temporary",
+      "file": "public/media/highlight-salt-quay.jpg",
+      "ratio": "4:5",
+      "size": "1920x2400",
+      "shot": "Shop · Product Highlight",
+      "usage": "Shop product highlight",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "about-portrait": {
+      "status": "temporary",
+      "file": "public/media/about-portrait.jpg",
+      "ratio": "4:5",
+      "size": "1920x2400",
+      "shot": "About · About",
+      "usage": "About portrait",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-salt-quay": {
+      "status": "temporary",
+      "file": "public/media/product-salt-quay.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid (Home, Shop, Product, Cart)",
+      "usage": "Product grids, buy box (front)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-salt-quay-angle": {
+      "status": "temporary",
+      "file": "public/media/product-salt-quay-angle.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid — second angle",
+      "usage": "Grid hover image, buy box (3/4)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-salt-quay-detail": {
+      "status": "temporary",
+      "file": "public/media/product-salt-quay-detail.jpg",
+      "ratio": "1:1",
+      "size": "2400x2400",
+      "shot": "Product · Product Highlight",
+      "usage": "Buy box (detail), Product page highlight",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "collection-salt-quay": {
+      "status": "temporary",
+      "file": "public/media/collection-salt-quay.jpg",
+      "ratio": "4:5",
+      "size": "1920x2400",
+      "shot": "Home · Collection / Shop · Collection",
+      "usage": "Collection strips (Home, Shop)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-orangery": {
+      "status": "temporary",
+      "file": "public/media/product-orangery.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid (Home, Shop, Product, Cart)",
+      "usage": "Product grids, buy box (front)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-orangery-angle": {
+      "status": "temporary",
+      "file": "public/media/product-orangery-angle.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid — second angle",
+      "usage": "Grid hover image, buy box (3/4)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-orangery-detail": {
+      "status": "temporary",
+      "file": "public/media/product-orangery-detail.jpg",
+      "ratio": "1:1",
+      "size": "2400x2400",
+      "shot": "Product · Product Highlight",
+      "usage": "Buy box (detail), Product page highlight",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "collection-orangery": {
+      "status": "temporary",
+      "file": "public/media/collection-orangery.jpg",
+      "ratio": "4:5",
+      "size": "1920x2400",
+      "shot": "Home · Collection / Shop · Collection",
+      "usage": "Collection strips (Home, Shop)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-fig-courtyard": {
+      "status": "temporary",
+      "file": "public/media/product-fig-courtyard.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid (Home, Shop, Product, Cart)",
+      "usage": "Product grids, buy box (front)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-fig-courtyard-angle": {
+      "status": "temporary",
+      "file": "public/media/product-fig-courtyard-angle.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid — second angle",
+      "usage": "Grid hover image, buy box (3/4)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-fig-courtyard-detail": {
+      "status": "temporary",
+      "file": "public/media/product-fig-courtyard-detail.jpg",
+      "ratio": "1:1",
+      "size": "2400x2400",
+      "shot": "Product · Product Highlight",
+      "usage": "Buy box (detail), Product page highlight",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "collection-fig-courtyard": {
+      "status": "temporary",
+      "file": "public/media/collection-fig-courtyard.jpg",
+      "ratio": "4:5",
+      "size": "1920x2400",
+      "shot": "Home · Collection / Shop · Collection",
+      "usage": "Collection strips (Home, Shop)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-reading-room": {
+      "status": "temporary",
+      "file": "public/media/product-reading-room.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid (Home, Shop, Product, Cart)",
+      "usage": "Product grids, buy box (front)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-reading-room-angle": {
+      "status": "temporary",
+      "file": "public/media/product-reading-room-angle.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid — second angle",
+      "usage": "Grid hover image, buy box (3/4)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-reading-room-detail": {
+      "status": "temporary",
+      "file": "public/media/product-reading-room-detail.jpg",
+      "ratio": "1:1",
+      "size": "2400x2400",
+      "shot": "Product · Product Highlight",
+      "usage": "Buy box (detail), Product page highlight",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "collection-reading-room": {
+      "status": "temporary",
+      "file": "public/media/collection-reading-room.jpg",
+      "ratio": "4:5",
+      "size": "1920x2400",
+      "shot": "Home · Collection / Shop · Collection",
+      "usage": "Collection strips (Home, Shop)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-night-ferry": {
+      "status": "temporary",
+      "file": "public/media/product-night-ferry.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid (Home, Shop, Product, Cart)",
+      "usage": "Product grids, buy box (front)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-night-ferry-angle": {
+      "status": "temporary",
+      "file": "public/media/product-night-ferry-angle.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid — second angle",
+      "usage": "Grid hover image, buy box (3/4)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-night-ferry-detail": {
+      "status": "temporary",
+      "file": "public/media/product-night-ferry-detail.jpg",
+      "ratio": "1:1",
+      "size": "2400x2400",
+      "shot": "Product · Product Highlight",
+      "usage": "Buy box (detail), Product page highlight",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "collection-night-ferry": {
+      "status": "temporary",
+      "file": "public/media/collection-night-ferry.jpg",
+      "ratio": "4:5",
+      "size": "1920x2400",
+      "shot": "Home · Collection / Shop · Collection",
+      "usage": "Collection strips (Home, Shop)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-discovery-set": {
+      "status": "temporary",
+      "file": "public/media/product-discovery-set.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid (Home, Shop, Product, Cart)",
+      "usage": "Product grids, buy box (front)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-discovery-set-angle": {
+      "status": "temporary",
+      "file": "public/media/product-discovery-set-angle.jpg",
+      "ratio": "4:5",
+      "size": "1600x2000",
+      "shot": "Product Grid — second angle",
+      "usage": "Grid hover image, buy box (3/4)",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "product-discovery-set-detail": {
+      "status": "temporary",
+      "file": "public/media/product-discovery-set-detail.jpg",
+      "ratio": "1:1",
+      "size": "2400x2400",
+      "shot": "Product · Product Highlight",
+      "usage": "Buy box (detail), Product page highlight",
+      "replaceWith": "user-owned-photo, same file name"
+    },
+    "collection-discovery-set": {
+      "status": "temporary",
+      "file": "public/media/collection-discovery-set.jpg",
+      "ratio": "4:5",
+      "size": "1920x2400",
+      "shot": "Home · Collection / Shop · Collection",
+      "usage": "Collection strips (Home, Shop)",
+      "replaceWith": "user-owned-photo, same file name"
+    }
+  }
+}

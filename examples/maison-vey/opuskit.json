@@ -1,0 +1,98 @@
+{
+  "opuskit": 1,
+  "recipe": "luxury-fashion",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "luxury-fashion",
+    "brief": {
+      "name": "Maison Vey",
+      "offer": "A small perfume house making five scents by hand, each one a single place at a single hour.",
+      "goal": "buy"
+    },
+    "purpose": "ecommerce",
+    "direction": "luxury-editorial",
+    "characters": [
+      "elegant"
+    ],
+    "lead": "product",
+    "motion": "subtle",
+    "hero": "product-stage",
+    "layout": "editorial",
+    "palette": "oxblood-room",
+    "typography": "gala-night",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "have",
+    "concept": "off",
+    "signatures": [],
+    "pages": [
+      {
+        "id": "2vkclyo6",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "product-grid",
+          "collection",
+          "editorial-story",
+          "testimonials",
+          "trust",
+          "newsletter"
+        ]
+      },
+      {
+        "id": "cmby5aqt",
+        "type": "shop",
+        "label": "Shop",
+        "purpose": "Let visitors browse and choose confidently.",
+        "sections": [
+          "product-grid",
+          "product-highlight",
+          "collection",
+          "faq"
+        ]
+      },
+      {
+        "id": "8nq62s5l",
+        "type": "product-detail",
+        "label": "Product",
+        "purpose": "Show one product in full: gallery, price, variants, add-to-cart, and related items.",
+        "sections": [
+          "product-buy",
+          "product-highlight",
+          "testimonials",
+          "faq",
+          "product-grid"
+        ]
+      },
+      {
+        "id": "69u6k6v6",
+        "type": "cart",
+        "label": "Cart",
+        "purpose": "Let visitors review and adjust their selection before checkout.",
+        "sections": [
+          "product-grid"
+        ]
+      },
+      {
+        "id": "m6t6fo8l",
+        "type": "checkout",
+        "label": "Checkout",
+        "purpose": "Collect payment and shipping with as little friction as possible.",
+        "sections": []
+      },
+      {
+        "id": "rm34u2mk",
+        "type": "about",
+        "label": "About",
+        "purpose": "Put a human face and point of view on the work; build trust.",
+        "sections": [
+          "about",
+          "process"
+        ]
+      }
+    ],
+    "target": "not-sure"
+  }
+}

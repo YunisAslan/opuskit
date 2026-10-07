@@ -1,6 +1,6 @@
 # Review — yunisaslanov, the first site built through the Library
 
-2026-10-06. The user built a portfolio (`yunisaslanov/`, kept local and not committed: it holds the owner's own photo)
+2026-10-06. The user built a portfolio (`examples/yunisaslanov/`; moved there 2026-10-07. Not registered as an example: it holds the owner's own photo)
 through the Library flow, starting from Inkwell & Moth: Brand picked the Grading Suite palette and the Wide Spec
 lettering, Pages added the Dithered pattern on the first screen, and a Claude Code Build Package was built from the
 recipe. This file records what went wrong between what the owner saw in OpusKit and what the build made, why, and what
@@ -30,16 +30,16 @@ changed in OpusKit. The rules that came out of it are decision 21 in `docs/plan-
 
 Also checked: all 43 ready sections, rendered large in the user's palette and lettering. Testimonials, Trust and the
 Name wall's split design were the weak ones and are fixed. Every other section held up.
-| 9 | Menu links narrower, smaller and higher than the logo and button | Wide Spec set its labels in Plex at 87.5% width; the drawn underline added 8px of padding under each link; shadcn's button kept its own 15px | Decision 22: ready code is a reference the builder fits into one site, with three "one system" QA checks in every package. The underline takes no room; a label role in the body's face keeps the body's width (check.ts); a button beside links is set like them. Patched in `yunisaslanov/` too (DrawnLink, tokens.css, Nav.tsx) |
+| 9 | Menu links narrower, smaller and higher than the logo and button | Wide Spec set its labels in Plex at 87.5% width; the drawn underline added 8px of padding under each link; shadcn's button kept its own 15px | Decision 22: ready code is a reference the builder fits into one site, with three "one system" QA checks in every package. The underline takes no room; a label role in the body's face keeps the body's width (check.ts); a button beside links is set like them. Patched in `examples/yunisaslanov/` too (DrawnLink, tokens.css, Nav.tsx) |
 
 ## Still open
 
 - "Random letters": we could not tell which spot was meant. The closest are the home project index (titles offset at
   random) and the tilted, taped photos. Both come from Inkwell & Moth's Experimental layout and Scrapbook look, which
   the site started from. Ask the user if something else was meant.
-- The built `yunisaslanov/` keeps its old sections; only new Build Packages get the redesigned ones. Rebuild it if the
+- The built `examples/yunisaslanov/` keeps its old sections; only new Build Packages get the redesigned ones. Rebuild it if the
   user wants.
 - The recipe page still lists "Big idea: None" with a Change link, and Studio has no place for a big idea. Settle this
   when the Recipe step is reworked.
-- `yunisaslanov/next.config.ts` had no `turbopack.root` pin, so a build there risked OpusKit's own `node_modules`. The
+- `examples/yunisaslanov/next.config.ts` had no `turbopack.root` pin, so a build there risked OpusKit's own `node_modules`. The
   pin was added there by hand. Fresh Claude Code builds will not have it yet (AGENTS.md, "Example projects").

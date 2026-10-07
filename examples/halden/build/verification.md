@@ -1,0 +1,46 @@
+# Verification
+
+The build is done when every item passes.
+
+- [ ] Background is #181D21; no other page background colors are introduced.
+- [ ] Display text uses Imbue 300; body uses Hanken Grotesk; no other families appear.
+- [ ] Accent #FF4421 covers < 5% of any viewport.
+- [ ] Pages: Home · The baths · Visit · FAQ · Sign In · Sign Up — every page shares the same navbar and footer, except: Sign In — no menu and no footer on this page — it stands on its own.; Sign Up — no menu and no footer on this page — it stands on its own. Leave them out with a route group whose own layout.tsx omits them — never render and hide with CSS.
+- [ ] Footer “Signature columns”: Dark band (text colour as ground): the logo large on the left (5 of 12 columns), 2–3 link columns with headings, then a hairline and one row: copyright left, legal links right.
+- [ ] Home section order: Hero → Services → How It Works → Gallery → Testimonials → Pricing → Location → Reservation.
+- [ ] The baths section order: Services → Process → Pricing → FAQ.
+- [ ] Visit section order: Reservation → Location → FAQ.
+- [ ] FAQ section order: FAQ.
+- [ ] Sign In section order: .
+- [ ] Sign Up section order: .
+- [ ] Hero matches "Scroll-controlled video": A pinned 100svh stage; the video's playhead is mapped to scroll progress over ~300vh. Type appears at chapter points.
+- [ ] Controls and forms use shadcn/ui (button, sheet, sonner, tooltip, navigation-menu, dropdown-menu, calendar, popover, select, form, label, dialog, carousel, tabs, switch, card, badge, input, textarea, accordion, command, checkbox, input-otp) restyled to the recipe tokens and shape — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover.
+- [ ] Sections with reference code in src/components/sections/ keep its design (real copy and media, no placeholder text left) and are fitted into this site: tokens only, the site’s type sizes and spacing, the code edited wherever its defaults disagree. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.
+- [ ] Kit piece "Smooth scroll" (<SmoothScroll/> from src/components/pieces/SmoothScroll.tsx) is used on Whole site — mount once in app/layout.tsx: it does what the owner picked it for, and its size, place and the type around it follow the site.
+- [ ] Kit piece "Reading line" (<ScrollProgress/> from src/components/pieces/ScrollProgress.tsx) is used on Whole site — mount once in app/layout.tsx: it does what the owner picked it for, and its size, place and the type around it follow the site.
+- [ ] One system: things of one kind look alike everywhere — menu links, footer links, labels and button text share one face, width and size step; headings of one level share one size.
+- [ ] Every row lines up: the items of one row (the menu’s logo, links and button; a card’s title and meta) share one vertical centre or baseline — none sits higher because of padding it brought along.
+- [ ] Nothing looks pasted in: no part keeps a size, padding, width or font from its reference code that its neighbours do not share.
+- [ ] Every page passes the award checklist in the recipe (one idea, one unforgettable moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).
+- [ ] Video: public/media/heroVideo.mp4 and mobileVideoEncode.mp4 exist and were produced by prepare-video.sh (not raw browser uploads); file size ≤ 6 MB desktop / ≤ 3 MB mobile; poster images (posterImage.jpg, posterMobile.jpg) exist and load before the video.
+- [ ] Video sharpness: ffprobe shows heroVideo.mp4 ≥ 1920 px wide and mobileVideoEncode.mp4 ≥ 1080 px tall — if not, re-run prepare-video.sh (it sharpens small sources) rather than letting the browser stretch it.
+- [ ] Scroll film: forward, fast and backward scrolling move the video with the scroll; every scene message appears on its own scene, one at a time (desktop and 390px).
+- [ ] Layout: Overlay text in 5–6 columns at bottom-left; interstitial text centred in 8; section spacing Media sections are 100svh; text sections 120–160px padding.
+- [ ] Shape “Sharp”: buttons 0px, cards 0px, media 0px radius (rounded-button / rounded-card / rounded-media) — No rounded corners anywhere; structure comes from lines and space.
+- [ ] Menu “Classic bar”: Full-width bar: logo left, 4–6 links and the primary action right, on the page ground with a hairline bottom border.
+- [ ] Absent: Tinted charcoal standing in for black.
+- [ ] Absent: Neon glows.
+- [ ] Absent: Many small elements.
+- [ ] Absent: A cream or beige page ground with a clay/terracotta accent.
+- [ ] Absent: A near-black ground with one acid-green or orange accent, or tinted charcoal standing in for black.
+- [ ] Absent: Small uppercase, letter-spaced monospace labels above every heading.
+- [ ] Absent: Numbered markers (01 / 02) on content that is not a real sequence.
+- [ ] Absent: Meta strings joined with middle dots or spaced em dashes, and "→" appended to links.
+- [ ] Absent: One italic or coloured accent word inside an otherwise plain headline.
+- [ ] Absent: Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe's fonts.
+- [ ] Absent: Text in mix-blend-difference (or any blend mode) over a photo — its colours turn random; text on a picture sits on a scrim or a solid block.
+- [ ] Absent: Effects nobody picked: no text effect, hover, cursor or scroll trick beyond the recipe's motion system and Your Kit.
+- [ ] Mobile (390px): no horizontal scroll, headlines re-broken intentionally, touch targets ≥ 44px.
+- [ ] prefers-reduced-motion: every animation has its documented alternative.
+- [ ] Every media element is rendered through the asset config layer; temporary assets are listed in the manifest.
+- [ ] Lighthouse on mobile: LCP < 2.5s, CLS < 0.1.

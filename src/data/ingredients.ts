@@ -106,8 +106,8 @@ export const palettes: Record<PaletteId, Palette> = {
   'oxblood-room': {
     id: 'oxblood-room', name: 'Oxblood Room', line: 'Claret walls, powder blue', dark: true, tags: ['cinematic', 'luxury', 'hospitality'],
     colors: { background: '#4A1119', surface: '#5A1A23', text: '#F8ECE8', muted: '#D7B5B0', primary: '#F8ECE8', secondary: '#6B2530', accent: '#A9D6FF', border: '#6E2A34' },
-    usage: { accent: 'Powder blue for time-codes, active chapter and play states' },
-    why: 'A claret room is warm and dramatic like a cinema interior; the cool powder-blue accent keeps it modern instead of the usual brown-black with copper.',
+    usage: { accent: 'Powder blue for links, the active state and one detail per view — never fills' },
+    why: 'A claret room is warm and dramatic, like a lit room at night; the cool powder-blue accent keeps it modern instead of the usual brown-black with copper.',
   },
   'black-box': {
     id: 'black-box', name: 'Black Box', line: 'Pure black, pure white, nothing else', dark: true, tags: ['cinematic', 'monochrome', 'raw'],
@@ -191,7 +191,7 @@ export const palettes: Record<PaletteId, Palette> = {
   'graphite-sand': {
     id: 'graphite-sand', name: 'Graphite & Sand', line: 'Soft graphite, warm white, desert sand', dark: true, tags: ['cinematic', 'editorial', 'heritage'],
     colors: { background: '#303030', surface: '#3A3A3A', text: '#F5F2EC', muted: '#B5B0A8', primary: '#F5F2EC', secondary: '#444444', accent: '#F6CEA0', border: '#4A4A4A' },
-    usage: { accent: 'Sand for the active chapter, time-codes and one word — never fills', text: 'Warm white, never pure white' },
+    usage: { accent: 'Sand for the active state, links and one word — never fills', text: 'Warm white, never pure white' },
     why: 'A graphite that is clearly grey (not black, not navy) under footage and 3D, with one warm sand note — the Getty "Persepolis Reimagined" palette. Calm, archival and cinematic.',
   },
   'grading-suite': {
@@ -275,7 +275,7 @@ export const palettes: Record<PaletteId, Palette> = {
   'warm-black': {
     id: 'warm-black', name: 'Warm Black', line: 'Warm near-black, bone, brass', dark: true, tags: ['hospitality', 'luxury', 'cinematic'],
     colors: { background: '#231F1B', surface: '#2E2925', text: '#F4EFE8', muted: '#B8AFA4', primary: '#F4EFE8', secondary: '#3F3933', accent: '#D2AE6E', border: '#4A433C' },
-    usage: { accent: 'Brass for links, small caps labels and one rule per view' },
+    usage: { accent: 'Brass for links, the active state and one rule per view' },
     why: 'The warm black of hotel and resort films (Son Daven, LXL Creative): darker than espresso, softer than black, so amber photography glows and bone type reads like letterpress.',
   },
 }

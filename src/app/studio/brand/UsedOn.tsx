@@ -19,7 +19,7 @@ export function UsedOn({ plan, palette, type, shape, photo }: { plan: KitPlan; p
 
   return (
     <div className="space-y-5">
-      <div className="overflow-hidden rounded-xl border border-line" style={{ background: c.background, color: c.text }}>
+      <div className="overflow-hidden rounded-[3px] border border-line" style={{ background: c.background, color: c.text }}>
         <div className="flex items-center justify-between px-6 pt-5 text-sm" style={face(t.utility)}>
           <span style={{ ...face(t.display), fontSize: '1.15rem', textTransform: 'none' }}>{name}</span>
           <span className="flex gap-5" style={{ color: c.muted }}><span style={{ color: c.text }}>Work</span><span>About</span><span>Contact</span></span>

@@ -254,7 +254,7 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     designs) for anything no collected site has. The closer-look dialog (18e) went with the shelves.
 18b. (Replaced by 20.) Discover's "For" filter: every kind as a chip, wrapping onto the next line (no sideways-scrolling row, no "More").
 19. New example sites (#17–#20) are on hold (`docs/plan-examples.md` §5).
-21. **What you see is what you get** (2026-10-06, from the first real site built through the Library — `yunisaslanov/`,
+21. **What you see is what you get** (2026-10-06, from the first real site built through the Library — `examples/yunisaslanov/`,
     started from Inkwell & Moth). Its build carried things the owner never saw: the start site's link hover (Hand-drawn
     underline), a big idea the engine picked ("Loud covers, quiet reading") with its signature moment, a second typeface
     (IBM Plex Sans, the pairing's text face) and a Testimonials design other than the one Pages showed. Now:
@@ -346,14 +346,40 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     The example says what it is: "A sample, not your site — only your colours and lettering. The real one goes much further." (it is plain on purpose; nobody should take it for the build); under it, four parts of your own pages in your picks, two across, and
     the column scrolls with the page (too tall to stay pinned).
 
+30. **The recipe agrees with itself** (2026-10-07, from #17–#20 built the Library way; `docs/review-engine-2026-10-07.md`).
+    Every builder had settled the same contradictions and silences by hand. Now: the asset layer and the checklist are
+    the shot list (one key per shot, per item where a page repeats); every frame number, ratio and film length has one
+    source; rules never forbid the owner's own palette, fonts or designs; defaults follow the kind of site (a new
+    "Spa & bathhouse" kind apart from clinics; references and section wording of the site's own kind; only the controls
+    the parts use); forms say where they go; error colour and caption role exist. Regression checks in check.ts.
+31. **The kit is gone; OpusKit has its own look** (2026-10-07, the user: "Kiti də çıxarırıq … Premium olmalıyıq",
+    after getartcraft.com and mux.com). Removed: `/kit`, login / signup / account, pricing and the paywall (the recipe
+    page is always unlocked), explore, resources, `/recipe/{slug}`; old links redirect (`next.config.ts`). Every recipe
+    (example, seed, saved) opens in Brand / Pages through `/studio/open`. New look: cool stone ground, ink, hairline
+    ruled frame, one signal orange; Archivo wide for headings, Geist for text, Geist Mono for labels and square
+    buttons; no pills. The home page tells what OpusKit is now: Library → Brand → Pages → Recipe, the Build Package
+    (Halden's real files and shot list), the examples, the tools it builds with.
+32. **Room to invent, and what each look is known for** (2026-10-07, the user: a recipe that says every detail and
+    allows nothing beyond it gets flat sites; give the builder model room to be creative, so the owner gets a "wow";
+    and the engine should know what sites in each style do — from what OpusKit learned, not a live search). Every
+    Build Package now says what is **Locked** (the owner's picks: colours, lettering, pages and part order, each part's
+    design, menu, footer, shape, first screen, the copy's facts, files, picked effects, one system, a11y, speed) and
+    what is **Free** (composition inside parts, hand-overs, type moments, every state, small details; where the recipe is
+    silent, decide as a designer of this style would). **Your move:** every page gets one remembered moment — Home's is
+    the first screen; on other pages without a signature moment the builder designs one, from the look's sparks or
+    better, names it in the plan and the final reply. "Do not invent / Do not add others / Never an effect nobody
+    picked" are gone. Each look carries `lookKnowledge` (`src/data/look-knowledge.ts`: moves, craft, sparks, traps,
+    seen) from the award-site study (docs/research/) and OpusKit's own builds; the engine fits it to the owner's picks
+    (`fitStyle`) and every adapter carries it. QA checks the Locked list, three of the style's moves, and the named
+    moments. Regression checks in check.ts ("Room to invent").
+
 ## 5. Open
 
-1. Retiring the kit: the choices only it edits (shape, menu and footer look, movement, big idea, behaviours) — the engine
-   picks them, or some move to Style (Claude suggests: the engine, except the menu look in Style); examples' "Customise
-   in kit" and saved recipes to open on Pages; then `/kit` is deleted.
-2. "Your own colours" in Style (the palette editor already exists in the code).
+1. ~~Retiring the kit~~ — done (decision 31). Shape, menu and footer look, movement and behaviours are now the engine's
+   (from the look); a later step may give the menu look a place in Brand.
+2. "Your own colours" in Brand (the old palette editor went with the kit; rebuild it in the new style if wanted).
 3. Recipe: "you picked / we added, and why".
-4. The home page copy still describes the kit.
+4. ~~The home page copy still describes the kit~~ — done (decision 31).
 5. Two whole sites in one Collection beyond "Start from"; Review — both once there are first results.
 6. Persona files and the test tasks; the pass mark agreed before testing.
 7. A Colour Chapters part on a site without colour chapters (the Library has no place to turn them on) draws every

@@ -1,0 +1,77 @@
+@import "../styles/tokens.css";
+@import "../styles/motion.css";
+
+/* shadcn/ui theme — hex values straight from recipe/ui.md, so the primitives and the recipe tokens always match.
+   Components in src/components/ui are styled with the --color-* tokens; these stay for anything shadcn-shaped. */
+:root {
+  --background: #4A1119; --foreground: #F8ECE8;
+  --card: #5A1A23; --card-foreground: #F8ECE8; --popover: #5A1A23; --popover-foreground: #F8ECE8;
+  --primary: #F8ECE8; --primary-foreground: #4A1119; --secondary: #6B2530; --secondary-foreground: #F8ECE8;
+  --muted: #5A1A23; --muted-foreground: #D7B5B0; --accent: #6B2530; --accent-foreground: #F8ECE8;
+  --border: #6E2A34; --input: #D7B5B0; --ring: #F8ECE8; --radius: 0px;
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { font-size: var(--type-body-size); line-height: var(--type-body-leading); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  /* Bodoni Moda's optical-size axis keeps the hairlines fine at display size */
+  .type-display, .type-heading { font-optical-sizing: auto; }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+  /* Designed focus: no rings or outlines. Links and buttons gain an underline or a change of ground (see components). */
+  :focus { outline: none; }
+  :focus-visible { outline: none; }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; }
+  [id] { scroll-margin-top: calc(var(--nav-h) + 24px); }
+}
+
+/* The link behaviour of the site: a plain underline that arrives on hover or focus; the current page keeps it. */
+@utility link-quiet {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  transition: text-decoration-color 160ms ease-out, color 160ms ease-out;
+  &:hover, &:focus-visible, &[aria-current="page"] { text-decoration-color: currentColor; }
+}
+
+/* Buttons: one shape, two weights. Text in the body face; focus changes the ground, never a ring. */
+@utility btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  min-height: 48px; padding-inline: 28px;
+  background: var(--color-primary); color: var(--color-background);
+  border: 1px solid var(--color-primary); border-radius: var(--radius-button);
+  font-family: var(--font-body); font-size: var(--type-body-size); line-height: 1.2; font-weight: 400;
+  transition: background-color 160ms ease-out, color 160ms ease-out;
+  &:hover, &:focus-visible { background: transparent; color: var(--color-text); }
+  &:disabled { opacity: 0.5; pointer-events: none; }
+}
+@utility btn-secondary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  min-height: 48px; padding-inline: 28px;
+  background: transparent; color: var(--color-text);
+  border: 1px solid var(--color-muted); border-radius: var(--radius-button);
+  font-family: var(--font-body); font-size: var(--type-body-size); line-height: 1.2; font-weight: 400;
+  transition: background-color 160ms ease-out, border-color 160ms ease-out;
+  &:hover, &:focus-visible { background: var(--color-secondary); border-color: var(--color-text); }
+}
+
+/* Radix open/close animations: a short fade and slide, dropped entirely for reduced motion */
+@keyframes vey-fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes vey-fade-out { from { opacity: 1 } to { opacity: 0 } }
+@keyframes vey-slide-in-right { from { transform: translateX(100%) } to { transform: translateX(0) } }
+@keyframes vey-slide-out-right { from { transform: translateX(0) } to { transform: translateX(100%) } }
+@keyframes vey-slide-in-bottom { from { transform: translateY(100%) } to { transform: translateY(0) } }
+@keyframes vey-slide-out-bottom { from { transform: translateY(0) } to { transform: translateY(100%) } }
+@keyframes vey-slide-in-top { from { transform: translateY(-100%) } to { transform: translateY(0) } }
+@keyframes vey-slide-out-top { from { transform: translateY(0) } to { transform: translateY(-100%) } }
+@keyframes vey-accordion-down { from { height: 0 } to { height: var(--radix-accordion-content-height) } }
+@keyframes vey-accordion-up { from { height: var(--radix-accordion-content-height) } to { height: 0 } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* Scrollbars hidden on swipe rows (they still scroll by touch, wheel and keyboard) */
+@utility no-scrollbar { scrollbar-width: none; &::-webkit-scrollbar { display: none; } }

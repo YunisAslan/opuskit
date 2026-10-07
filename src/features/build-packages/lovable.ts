@@ -32,6 +32,8 @@ ${r.creativeDirection.visualPrinciples.map((x) => `- ${x}`).join('\n')}
 Do: ${r.creativeDirection.do.join('; ')}.
 Avoid: ${r.creativeDirection.avoid.join('; ')}; gradients; glassmorphism; generic cards.
 Not the generic AI look: ${r.creativeDirection.genericAvoid.join('; ')}.
+Style (${r.style.look}) is known for: ${r.style.moves.join('; ')}. Craft: ${r.style.craft.join('; ')}.
+Room to invent: keep the colours, fonts, pages, section order and the copy's facts; design everything else yourself. Every page gets one remembered moment (Home: the hero) — from these sparks or better: ${r.style.sparks.join('; ')}.
 
 ## Page structure
 ${r.pages.map((p, i) => `${i + 1}. ${p.label} — ${p.purpose}`).join('\n')}

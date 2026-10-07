@@ -71,7 +71,7 @@ export type World = 'studio' | 'food' | 'shop' | 'product' | 'software' | 'event
 const WORLD_OF: Partial<Record<PurposeId, World>> = {
   portfolio: 'studio', agency: 'studio', studio: 'studio', 'personal-brand': 'studio', experiment: 'studio', blog: 'studio',
   restaurant: 'food', hotel: 'food', fashion: 'shop', ecommerce: 'shop', product: 'product', saas: 'software', course: 'software',
-  event: 'event', nonprofit: 'event', clinic: 'event', 'real-estate': 'event',
+  event: 'event', nonprofit: 'event', clinic: 'event', 'real-estate': 'event', spa: 'food',
 }
 export const worldFor = (purpose?: PurposeId): World => (purpose && WORLD_OF[purpose]) || 'studio'
 

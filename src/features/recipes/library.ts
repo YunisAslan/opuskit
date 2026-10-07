@@ -27,7 +27,7 @@ export function saveGeneration(spec: RecipeSpec, id = crypto.randomUUID().slice(
 
 export function resolveRef(ref: string, gens: Generations): { recipe: UniversalRecipe; href: string } | null {
   const [kind, key] = ref.split(':')
-  if (kind === 'seed' && seedBySlug[key]) return { recipe: composeRecipe(specFromSeed(seedBySlug[key])), href: `/recipe/${key}` }
+  if (kind === 'seed' && seedBySlug[key]) return { recipe: composeRecipe(specFromSeed(seedBySlug[key])), href: `/studio/open?from=seed:${key}` }
   const g = gens[key]
   if (kind === 'gen' && g && isValidSpec(g.spec)) return { recipe: composeRecipe(g.spec, key), href: `/result/${key}` }
   return null

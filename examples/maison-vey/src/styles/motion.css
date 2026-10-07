@@ -1,0 +1,36 @@
+/* Motion system — states for src/components/motion/Reveal.tsx. Transform, opacity and clip-path only. */
+
+/* Clip reveal: the frame first… */
+.reveal-clip { clip-path: inset(100% 0 0 0); transition: clip-path 800ms var(--ease-page); }
+[data-in] > .reveal-clip { clip-path: inset(0 0 0 0); }
+
+/* Image clip reveal: the curtain opens, the picture settles */
+.reveal-image { overflow: hidden; clip-path: inset(100% 0 0 0); transition: clip-path 1100ms var(--ease-page); }
+.reveal-image__inner { transform: scale(1.15); transition: transform 1100ms var(--ease-page); height: 100%; }
+[data-in] > .reveal-image { clip-path: inset(0 0 0 0); }
+[data-in] > .reveal-image .reveal-image__inner { transform: none; }
+
+/* …then the words, 70ms apart, after the frame has started to open */
+.reveal-rise { opacity: 0; transform: translateY(16px); transition: opacity 800ms var(--ease-page), transform 800ms var(--ease-page); transition-delay: calc(200ms + var(--i, 0) * 70ms); }
+[data-in] .reveal-rise, .reveal-rise[data-in] { opacity: 1; transform: none; }
+
+/* Line-by-line headline */
+.reveal-line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.reveal-line > span { display: block; transform: translateY(105%); transition: transform 700ms var(--ease-line); transition-delay: calc(var(--i, 0) * 80ms); }
+[data-in] .reveal-line > span { transform: none; }
+
+/* Hero product: fades and settles once on load; the words around it are already there */
+@keyframes vey-stage { from { opacity: 0.85; transform: scale(1.04); } to { opacity: 1; transform: none; } }
+.stage-in { animation: vey-stage 1600ms var(--ease-page) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Clip reveal → opacity only, 200ms, no translate */
+  .reveal-clip, .reveal-image { clip-path: none; opacity: 0; transition: opacity 200ms ease-out; }
+  [data-in] > .reveal-clip, [data-in] > .reveal-image { opacity: 1; }
+  .reveal-image__inner { transform: none; transition: none; }
+  .reveal-rise { transform: none; transition: opacity 200ms ease-out; transition-delay: 0ms; }
+  /* Headline lines show immediately */
+  .reveal-line > span { transform: none; transition: none; }
+  .stage-in { animation: none; }
+  .drift { transform: none !important; }
+}

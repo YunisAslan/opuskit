@@ -19,7 +19,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { LinkDemo } from '@/components/LinkDemo'
 import { TileClip } from '@/components/RealSiteClip'
 import { closestPiece } from '@/features/kit/closest'
-import { heroName } from '@/app/kit/HeroPreview'
+import { heroName } from '@/components/HeroPreview'
 import { ItemPreview, exampleOf, sampleLook, siteLook, type Look } from '@/app/library/parts'
 import { EFFECTS, footerStyles, navStyles, pageTypes, sections } from '@/data/patterns'
 import { sectionVariants, variantFor } from '@/data/section-variants'
@@ -327,10 +327,10 @@ function Panel({ plan, page, look, c, sites, placed, onSite, onDrag, onDragEnd, 
       <div className={`overflow-hidden rounded-md border bg-white transition-colors ${done ? 'border-pencil/40' : 'border-line group-hover:border-ink'}`}>
         <LazyMount className="pointer-events-none aspect-[16/10] overflow-hidden"><ItemPreview item={item} look={lk} /></LazyMount>
       </div>
-      <p className="mt-1.5 line-clamp-2 text-[13px] font-medium leading-tight">{label}{badge && <span className="ml-1 align-middle rounded-full bg-pencil/10 px-1.5 py-px text-[10px] font-medium text-pencil">{badge}</span>}</p>
+      <p className="mt-1.5 line-clamp-2 text-[13px] font-medium leading-tight">{label}{badge && <span className="ml-1 align-middle rounded-[3px] bg-pencil/10 px-1.5 py-px text-[10px] font-medium text-pencil">{badge}</span>}</p>
       {sub && <p className="mt-0.5 truncate text-[11px] text-muted" title={sub}>{sub}</p>}
       <button type="button" disabled={done} onClick={act} aria-label={done ? `${label}: already here` : `${verb} ${label}`} title={done ? 'Already on this page' : verb === 'Use' ? 'Use this one' : `Add to ${page.label}`}
-        className={`absolute right-1.5 top-1.5 grid size-7 place-items-center rounded-full shadow-sm transition ${done ? 'bg-pencil text-white' : 'bg-white text-ink hover:bg-ink hover:text-paper md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100'}`}>
+        className={`absolute right-1.5 top-1.5 grid size-7 place-items-center rounded-full shadow-sm transition ${done ? 'bg-pencil text-paper' : 'bg-white text-ink hover:bg-ink hover:text-paper md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100'}`}>
         {done ? <Check size={14} aria-hidden /> : verb === 'Use' ? <ArrowLeftRight size={13} aria-hidden /> : <Plus size={15} aria-hidden />}
       </button>
     </li>
@@ -377,15 +377,15 @@ function Panel({ plan, page, look, c, sites, placed, onSite, onDrag, onDragEnd, 
   return (
     <aside className="order-last lg:sticky lg:top-36 lg:order-none lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto lg:pr-1 lg:[scrollbar-color:var(--color-line)_transparent] lg:[scrollbar-width:thin]" aria-label={`Add to ${page.label}`}>
       <div className="sticky top-0 z-10 space-y-2 bg-paper pb-3">
-        <div role="tablist" aria-label="What to add" className="grid grid-cols-2 rounded-full bg-paper-2 p-1 text-sm">
+        <div role="tablist" aria-label="What to add" className="grid grid-cols-2 rounded-[3px] bg-paper-2 p-1 text-sm">
           {([['parts', 'Parts'], ['effects', 'Effects']] as const).map(([k, name]) => (
             <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
-              className={`h-8 rounded-full font-medium transition-colors ${tab === k ? 'bg-white text-ink shadow-sm' : 'text-muted hover:text-ink'}`}>{name}</button>
+              className={`h-8 rounded-[3px] font-medium transition-colors ${tab === k ? 'bg-white text-ink shadow-sm' : 'text-muted hover:text-ink'}`}>{name}</button>
           ))}
         </div>
         <label className="relative block"><span className="sr-only">{tab === 'parts' ? 'Search parts' : 'Search effects'}</span>
           <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
-          <Input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tab === 'parts' ? 'Search parts — reviews, prices, FAQ…' : `Search ${nEffects} effects`} className="h-9 rounded-full bg-white pl-8 text-sm" /></label>
+          <Input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tab === 'parts' ? 'Search parts — reviews, prices, FAQ…' : `Search ${nEffects} effects`} className="h-9 rounded-[3px] bg-white pl-8 text-sm" /></label>
         <p className="px-1 text-xs text-muted">{tab === 'parts' ? `Drag onto ${page.label}, or +.` : 'Drag onto a part, or +.'}</p>
       </div>
       {tab === 'parts' ? (
@@ -460,10 +460,10 @@ function ChromeRow({ c, page, onPick, styleName, preview }: { c: ChromeId; page:
         <p className="mt-0.5 truncate text-sm text-muted">{hidden ? `Not on ${page.label}` : `${styleName} · the same on every page`}</p>
       </div>
       <button type="button" onClick={() => change(hidden ? `${name} back on ${page.label}` : `${name} left out of ${page.label}`, (p) => toggleChrome(p, page.id, c))}
-        className="relative z-10 inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm text-ink-2 hover:bg-black/5 hover:text-ink" aria-pressed={!hidden}>
+        className="relative z-10 inline-flex h-8 shrink-0 items-center gap-1.5 rounded-[3px] px-3 text-sm text-ink-2 hover:bg-black/5 hover:text-ink" aria-pressed={!hidden}>
         {hidden ? <EyeOff size={15} aria-hidden /> : <Eye size={15} aria-hidden />}<span className="max-sm:sr-only">{hidden ? 'Hidden' : 'Shown'}</span>
       </button>
-      <button type="button" onClick={onPick} className="relative z-10 inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border border-line bg-white px-3 text-sm text-ink-2 hover:border-ink hover:text-ink"><ArrowLeftRight size={14} aria-hidden />Change</button>
+      <button type="button" onClick={onPick} className="relative z-10 inline-flex h-8 shrink-0 items-center gap-1.5 rounded-[3px] border border-line bg-white px-3 text-sm text-ink-2 hover:border-ink hover:text-ink"><ArrowLeftRight size={14} aria-hidden />Change</button>
     </div>
   )
 }
@@ -492,7 +492,7 @@ function PartExtras({ plan, page, part, collectedFx, onChange }: { plan: KitPlan
     updatePlan((p) => ({ ...p, uploads: (p.uploads ?? []).filter((u) => !gone.includes(u)) }))
   }
   const nPhotos = mine.filter((u) => u.kind === 'image').length, hasFilm = mine.some((u) => u.kind === 'video')
-  const chip = 'inline-flex h-7 items-center gap-1.5 rounded-full border px-2.5 text-xs transition-colors'
+  const chip = 'inline-flex h-7 items-center gap-1.5 rounded-[3px] border px-2.5 text-xs transition-colors'
   return (
     <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-line pt-2">
       <button type="button" onClick={onChange} className={`${chip} border-line text-ink-2 hover:border-ink hover:text-ink`}><ArrowLeftRight size={12} aria-hidden />{part.id === 'hero' ? 'Other first screens' : 'Other designs'}</button>
@@ -531,7 +531,7 @@ function EffectPicker({ plan, page, part, collectedFx }: { plan: KitPlan; page: 
   })
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className="inline-flex h-7 items-center gap-1.5 rounded-full border border-line px-2.5 text-xs text-ink-2 transition-colors hover:border-ink hover:text-ink"><Sparkles size={12} aria-hidden />{part.pieces.length ? 'Effects' : 'Add an effect'}</button>
+      <button type="button" onClick={() => setOpen(true)} className="inline-flex h-7 items-center gap-1.5 rounded-[3px] border border-line px-2.5 text-xs text-ink-2 transition-colors hover:border-ink hover:text-ink"><Sparkles size={12} aria-hidden />{part.pieces.length ? 'Effects' : 'Add an effect'}</button>
       {open && <Chooser many onClose={() => setOpen(false)} title={`Effects for ${part.id === 'hero' ? 'the first screen' : jobOf(part.id).toLowerCase()}`} line={`${page.label} · one per group — tap again to take it off.`}
         groups={slots.map((slot) => ({ title: pieceSlots[slot].name, sub: pieceSlots[slot].line, options: options.filter((id) => pieces[id].slot === slot).map((id) => {
           const real = closestPiece(spec, id)
@@ -570,10 +570,10 @@ function Chooser({ title, line, many, groups, onClose }: ChooserProps & { onClos
                         button's ::after covers the whole card. */}
                     <div className={`relative overflow-hidden rounded-lg border bg-white transition-shadow ${o.on ? 'border-pencil ring-2 ring-pencil' : 'border-line group-hover:border-ink'}`}>
                       <div aria-hidden><LazyMount className="pointer-events-none aspect-[16/10] overflow-hidden">{o.preview}</LazyMount></div>
-                      {o.on && <span className="absolute left-2 top-2 inline-flex h-6 items-center gap-1 rounded-full bg-pencil pl-1.5 pr-2 text-xs font-medium text-white shadow-sm"><Check size={13} aria-hidden />{many ? 'On' : 'Now'}</span>}
+                      {o.on && <span className="absolute left-2 top-2 inline-flex h-6 items-center gap-1 rounded-[3px] bg-pencil pl-1.5 pr-2 text-xs font-medium text-paper shadow-sm"><Check size={13} aria-hidden />{many ? 'On' : 'Now'}</span>}
                     </div>
                     <button type="button" role={many ? 'checkbox' : 'radio'} aria-checked={o.on} onClick={o.pick} className="mt-2 block w-full text-left after:absolute after:inset-0 after:rounded-lg">
-                      <span className="flex items-center gap-2 text-sm font-medium">{o.label}{o.badge && <span className="rounded-full bg-pencil/10 px-1.5 py-0.5 text-[10px] font-medium text-pencil">{o.badge}</span>}</span>
+                      <span className="flex items-center gap-2 text-sm font-medium">{o.label}{o.badge && <span className="rounded-[3px] bg-pencil/10 px-1.5 py-0.5 text-[10px] font-medium text-pencil">{o.badge}</span>}</span>
                       {o.sub && <span className="mt-0.5 block text-xs leading-relaxed text-muted">{o.sub}</span>}
                     </button>
                   </li>

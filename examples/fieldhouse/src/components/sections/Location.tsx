@@ -1,36 +1,24 @@
-// OpusKit section — Location: address, hours, how to get there, one exterior photo, and a real map link. `media`: side
-// (photo beside the facts), full (a wide photo, the facts in a row under it) or over (the facts on a card over the photo).
-import type { ReactNode } from 'react'
-type P = { tone?: 'ground' | 'surface' | 'inverse' | 'chapter'; media?: 'side' | 'full' | 'over'; title: string; address: string; hours: string[]; notes?: ReactNode; mapUrl: string; image: string; alt: string }
-export function LocationSection({ tone, media = 'side', title, address, hours, notes, mapUrl, image, alt }: P) {
-  const map = <a href={mapUrl} target="_blank" rel="noreferrer" className="type-body inline-block rounded-(--radius-button) border border-(--color-text) px-5 py-2.5">Open in maps</a>
-  const facts = <>
-    <address className="type-body whitespace-pre-line not-italic">{address}</address>
-    <ul className="type-body space-y-1 text-(--color-muted)">{hours.map((h) => <li key={h}>{h}</li>)}</ul>
-    {notes && <p className="type-body text-(--color-muted)">{notes}</p>}
-  </>
-  if (media === 'over') return (
-    <section data-tone={tone === 'ground' ? undefined : tone} className="relative isolate px-(--gutter) py-(--section-y)">
-      <img src={image} alt={alt} loading="lazy" className="absolute inset-0 -z-10 h-full w-full object-cover" />
-      <div className="mx-auto flex max-w-(--container) justify-end">
-        <div className="w-full max-w-md space-y-5 rounded-(--radius-card) bg-(--color-background) p-8 shadow-(--shadow-card)"><h2 className="type-heading">{title}</h2>{facts}{map}</div>
-      </div>
-    </section>
-  )
-  if (media === 'full') return (
-    <section data-tone={tone === 'ground' ? undefined : tone} className="px-(--gutter) py-(--section-y)">
-      <div className="mx-auto max-w-(--container)">
-        <h2 className="type-heading">{title}</h2>
-        <img src={image} alt={alt} loading="lazy" className="mt-8 aspect-(--ratio-media) w-full rounded-(--radius-media) object-cover" />
-        <div className="mt-8 grid gap-6 md:grid-cols-4 [&>*]:md:col-span-1">{facts}<div>{map}</div></div>
-      </div>
-    </section>
-  )
+import { MediaAsset } from '@/components/MediaAsset'
+import { ImageReveal, Lines, Reveal } from '@/components/motion'
+import type { AssetKey } from '@/config/assets'
+// Location — side: the way in, large, beside the facts (address, hours, how to get there, a real map link), and one
+// view inside under them. Phones: stacked, the address taps to the map.
+type P = { id?: string; title: string; address: string; hours: string[]; notes?: string; mapUrl: string; image: AssetKey; image2?: AssetKey }
+export function LocationSection({ id, title, address, hours, notes, mapUrl, image, image2 }: P) {
   return (
-    <section data-tone={tone === 'ground' ? undefined : tone} className="px-(--gutter) py-(--section-y)">
-      <div className="mx-auto grid max-w-(--container) gap-10 md:grid-cols-12">
-        <img src={image} alt={alt} loading="lazy" className="aspect-[4/3] w-full rounded-(--radius-media) object-cover md:col-span-7" />
-        <div className="space-y-5 md:col-span-4 md:col-start-9"><h2 className="type-heading">{title}</h2>{facts}<div className="pt-1">{map}</div></div>
+    <section id={id} className="section-y px-(--gutter)">
+      <div className="mx-auto grid max-w-(--container) gap-x-8 gap-y-12 md:grid-cols-12">
+        <ImageReveal className="aspect-3/2 md:col-span-7"><MediaAsset id={image} fill sizes="(min-width: 768px) 55vw, 100vw" /></ImageReveal>
+        <div className="md:col-span-4 md:col-start-9">
+          <Lines lines={[title]} className="type-heading" />
+          <Reveal delay={0.1} className="mt-8" inner="space-y-6">
+            <a href={mapUrl} target="_blank" rel="noreferrer" className="type-body link-line block whitespace-pre-line not-italic">{address}</a>
+            <ul className="type-body space-y-1 text-(--color-muted)">{hours.map((h) => <li key={h}>{h}</li>)}</ul>
+            {notes && <p className="type-body max-w-[40ch] text-(--color-muted)">{notes}</p>}
+            <a href={mapUrl} target="_blank" rel="noreferrer" className="type-utility inline-flex h-11 items-center rounded-button border border-(--color-text) px-6 transition-colors duration-150 hover:bg-(--color-secondary) focus-visible:bg-(--color-secondary)">Open in maps</a>
+          </Reveal>
+          {image2 && <ImageReveal className="mt-14 aspect-3/2" delay={0.15}><MediaAsset id={image2} fill sizes="(min-width: 768px) 28vw, 100vw" /></ImageReveal>}
+        </div>
       </div>
     </section>
   )

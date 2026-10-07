@@ -117,7 +117,7 @@ export const startSite = (c: Collection): SiteRef | undefined => {
 const LOOK_FOR: Partial<Record<PurposeId, DirectionId>> = {
   portfolio: 'art-editorial', agency: 'swiss-modern', studio: 'architectural-minimal', fashion: 'fashion-editorial', restaurant: 'warm-hospitality',
   ecommerce: 'scandinavian-minimal', product: 'bento-product', saas: 'technical-minimal', 'personal-brand': 'modern-heritage', experiment: 'digital-futurism',
-  blog: 'news-grid', event: 'cinematic-editorial', nonprofit: 'soft-pastel', 'real-estate': 'scandinavian-minimal', hotel: 'coastal-calm', course: 'organic-modern', clinic: 'japanese-minimal',
+  blog: 'news-grid', event: 'cinematic-editorial', nonprofit: 'soft-pastel', 'real-estate': 'scandinavian-minimal', hotel: 'coastal-calm', course: 'organic-modern', clinic: 'japanese-minimal', spa: 'coastal-calm',
 }
 export const lookFor = (purpose?: PurposeId): DirectionId | undefined => (purpose ? LOOK_FOR[purpose] : undefined)
 

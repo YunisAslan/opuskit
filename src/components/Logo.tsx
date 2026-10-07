@@ -12,7 +12,7 @@ export function Logo({ className = '' }: { className?: string }) {
   return (
     <span className={`inline-flex items-center gap-2 ${className}`}>
       <Symbol className="h-[1.15em] w-auto" />
-      <span className="font-semibold tracking-[-0.04em]">OpusKit</span>
+      <span className="font-(family-name:--font-display) font-semibold tracking-[-0.03em] [font-stretch:108%]">OpusKit</span>
     </span>
   )
 }

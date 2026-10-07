@@ -278,7 +278,7 @@ export const purposes: Record<PurposeId, Purpose> = {
     ctaPattern: 'Enrol with the price and start date beside the button; a free preview lesson is the secondary action.',
   },
   clinic: {
-    id: 'clinic', name: 'Health & wellness', noun: 'Practice', hint: 'Treatments, practitioners, appointments',
+    id: 'clinic', name: 'Clinic & therapy', noun: 'Practice', hint: 'Treatments, practitioners, appointments',
     pages: [
       { type: 'home', label: 'Home', tier: 'recommended', sections: ['hero', 'services', 'how-it-works', 'team', 'testimonials', 'pricing', 'location', 'reservation'] },
       { type: 'services', label: 'Treatments', tier: 'recommended', sections: ['services', 'process', 'pricing', 'faq'] },
@@ -291,6 +291,22 @@ export const purposes: Record<PurposeId, Purpose> = {
     ],
     components: ['Navigation', 'Hero', 'ServiceList', 'MediaSection', 'ReservationForm', 'Accordion', 'Footer'],
     ctaPattern: '"Book an appointment" sits in the header and after every treatment; the phone number is always visible.',
+  },
+  // A place people come to for heat, water and rest — not a clinic: no practitioners, patients or appointments (Halden, #20).
+  spa: {
+    id: 'spa', name: 'Spa & bathhouse', noun: 'Spa Site', hint: 'Sessions, rituals, booking a visit',
+    pages: [
+      { type: 'home', label: 'Home', tier: 'recommended', sections: ['hero', 'intro', 'services', 'how-it-works', 'gallery', 'testimonials', 'pricing', 'location', 'reservation'] },
+      { type: 'services', label: 'The experience', tier: 'recommended', sections: ['services', 'process', 'pricing', 'faq'] },
+      { type: 'reservations', label: 'Book a visit', tier: 'recommended', sections: ['reservation', 'location', 'faq'] },
+      { type: 'faq', label: 'FAQ', tier: 'recommended', sections: ['faq'] },
+      { type: 'gallery', label: 'Gallery', tier: 'optional' },
+      { type: 'gift-cards', label: 'Gift cards', tier: 'optional' },
+      { type: 'about', label: 'About', tier: 'optional' },
+      { type: 'journal', label: 'Journal', tier: 'optional' },
+    ],
+    components: ['Navigation', 'Hero', 'ServiceList', 'Gallery', 'ReservationForm', 'Accordion', 'Footer'],
+    ctaPattern: '"Book a visit" sits in the header and after the prices; opening hours and how to get there are always one tap away.',
   },
 }
 
@@ -917,7 +933,7 @@ export const motionLevels: Record<MotionLevel, MotionLevelInfo> = {
 // ─── Project brief ───────────────────────────────────────────────────────────
 
 export const goals: Record<GoalId, Goal> = {
-  contact: { id: 'contact', name: 'Get in touch', line: 'Messages, calls, emails', effect: 'Every page ends with a contact prompt; a real email address is always visible.', page: 'contact', cta: ['Start a project', 'Say hello', 'Email us'] },
+  contact: { id: 'contact', name: 'Get in touch', line: 'Messages, calls, emails', effect: 'Getting in touch is one step away on every page — the menu’s action and the footer’s email, plus the closing part on the pages that have one; a real email address is always visible.', page: 'contact', cta: ['Start a project', 'Say hello', 'Email us'] },
   book: { id: 'book', name: 'Book or reserve', line: 'Tables, sessions, appointments', effect: 'Booking becomes the sticky primary action on mobile and in the navigation.', page: 'reservations', cta: ['Book a table', 'Reserve your time', 'Check availability'] },
   buy: { id: 'buy', name: 'Buy something', line: 'Products, tickets, editions', effect: 'Product pages, a cart and a short checkout path are prioritised.', page: 'shop', cta: ['Add to bag', 'Shop the collection', 'Buy now'] },
   signup: { id: 'signup', name: 'Sign up or start a trial', line: 'Accounts, trials, demos', effect: 'One primary "start" action in the hero and the end; pricing stays reachable.', page: 'sign-up', cta: ['Start free', 'Get started', 'Book a demo'] },

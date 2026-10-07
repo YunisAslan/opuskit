@@ -5,8 +5,8 @@
     "logo": {
       "required": true,
       "level": "required",
-      "status": "create",
-      "source": "Your brand identity",
+      "status": "have",
+      "source": "Made for this build: src/components/Logo.tsx (gable mark + name in Cormorant italic) and src/app/icon.svg (favicon)",
       "replaceWith": "user-owned-logo",
       "usage": "Navigation, footer, favicon",
       "specs": "SVG; dark and light versions; square symbol for favicon"
@@ -14,8 +14,8 @@
     "typefaces": {
       "required": true,
       "level": "required",
-      "status": "find",
-      "source": "Google Fonts",
+      "status": "have",
+      "source": "Google Fonts via next/font (self-hosted): Cormorant 500/600 normal+italic, Karla 400/500",
       "replaceWith": "user-owned-fonts",
       "usage": "All text",
       "specs": "Cormorant, Karla (Google Fonts)"
@@ -23,8 +23,8 @@
     "finalCopy": {
       "required": true,
       "level": "required",
-      "status": "create",
-      "source": "Written by you",
+      "status": "have",
+      "source": "src/content/site.ts — written from the owner line; names, quotes, numbers, address and dates marked PLACEHOLDER for the owner to replace",
       "replaceWith": "user-owned-copy",
       "usage": "Headlines, body, CTAs",
       "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
@@ -32,8 +32,8 @@
     "photographySet": {
       "required": true,
       "level": "required",
-      "status": "find",
-      "source": "Unsplash / Pexels",
+      "status": "have",
+      "source": "Owner's photos (Unsplash, credited in media-src/SOURCES.md), graded and cropped in public/media/",
       "replaceWith": "user-owned-images",
       "usage": "Hero, section media, gallery",
       "specs": "Min 2400px long edge, consistent grade, mix of wide (3:2) and portrait (4:5)"
@@ -41,11 +41,210 @@
     "mobileHeroCrop": {
       "required": false,
       "level": "recommended",
-      "status": "find",
-      "source": "Unsplash / Pexels",
+      "status": "have",
+      "source": "public/media/hero-mobile.jpg (4:5 crop of the hero)",
       "replaceWith": "user-owned-images",
       "usage": "Hero on small screens",
       "specs": "4:5 or 9:16 crop with focal point centred"
     }
-  }
+  },
+  "files": {
+    "hero": {
+      "status": "have",
+      "path": "public/media/hero.jpg",
+      "size": "2800x1575",
+      "alt": "A long glazed barn house at dusk, lit from inside, a bare oak beside it",
+      "usage": "Home first screen (from 768px)"
+    },
+    "heroMobile": {
+      "status": "have",
+      "path": "public/media/hero-mobile.jpg",
+      "size": "1600x2000",
+      "alt": "A long glazed barn house at dusk, lit from inside, a bare oak beside it",
+      "usage": "Home first screen (phones)"
+    },
+    "project1": {
+      "status": "have",
+      "path": "public/media/project-1.jpg",
+      "size": "2400x1600",
+      "alt": "A timber barn house at dusk, its windows lit",
+      "usage": "Featured Work (Home, Work, Project) and the case study picture"
+    },
+    "project2": {
+      "status": "have",
+      "path": "public/media/project-2.jpg",
+      "size": "2400x1600",
+      "alt": "A new glass gable set on the old stone base of a barn",
+      "usage": "Featured Work (Home, Work, Project) and the case study picture"
+    },
+    "project3": {
+      "status": "have",
+      "path": "public/media/project-3.jpg",
+      "size": "2400x1600",
+      "alt": "A dark timber barn house in a meadow under a low sun",
+      "usage": "Featured Work (Home, Work, Project) and the case study picture"
+    },
+    "project4": {
+      "status": "have",
+      "path": "public/media/project-4.jpg",
+      "size": "2400x1600",
+      "alt": "A stone farm barn among blossom, before its windows go in",
+      "usage": "Featured Work (Home, Work, Project) and the case study picture"
+    },
+    "gallery1": {
+      "status": "have",
+      "path": "public/media/gallery-1.jpg",
+      "size": "2400x1600",
+      "alt": "The kept roof timbers of a converted barn, a ring chandelier hanging from them",
+      "usage": "Gallery strip (Work; some on Project)"
+    },
+    "gallery2": {
+      "status": "have",
+      "path": "public/media/gallery-2.jpg",
+      "size": "2400x1600",
+      "alt": "An attic under the old rafters, with new glazing in the roof",
+      "usage": "Gallery strip (Work; some on Project)"
+    },
+    "gallery3": {
+      "status": "have",
+      "path": "public/media/gallery-3.jpg",
+      "size": "1920x2400",
+      "alt": "A living room under timber ceiling beams",
+      "usage": "Gallery strip (Work; some on Project)"
+    },
+    "gallery4": {
+      "status": "have",
+      "path": "public/media/gallery-4.jpg",
+      "size": "1920x2400",
+      "alt": "A double-height barn room with a gallery and a tall window",
+      "usage": "Gallery strip (Work; some on Project)"
+    },
+    "gallery5": {
+      "status": "have",
+      "path": "public/media/gallery-5.jpg",
+      "size": "2400x1600",
+      "alt": "An open kitchen and living room with a wood stove under a vaulted roof",
+      "usage": "Gallery strip (Work; some on Project)"
+    },
+    "gallery6": {
+      "status": "have",
+      "path": "public/media/gallery-6.jpg",
+      "size": "1920x2400",
+      "alt": "A hand-hewn post meeting its beam",
+      "usage": "Gallery strip (Work; some on Project)"
+    },
+    "gallery7": {
+      "status": "have",
+      "path": "public/media/gallery-7.jpg",
+      "size": "1919x2400",
+      "alt": "Old oak beams in low sun",
+      "usage": "Gallery strip (Work; some on Project)"
+    },
+    "gallery8": {
+      "status": "have",
+      "path": "public/media/gallery-8.jpg",
+      "size": "2400x1600",
+      "alt": "A dry stone barn wall with a shuttered window",
+      "usage": "Gallery strip (Work; some on Project)"
+    },
+    "gallery9": {
+      "status": "have",
+      "path": "public/media/gallery-9.jpg",
+      "size": "1919x2400",
+      "alt": "Weathered barn boards and an iron hinge",
+      "usage": "Gallery strip (Work; some on Project)"
+    },
+    "gallery10": {
+      "status": "have",
+      "path": "public/media/gallery-10.jpg",
+      "size": "1920x2400",
+      "alt": "Hands notching a new log with a chisel",
+      "usage": "Gallery strip (Work; some on Project)"
+    },
+    "case1": {
+      "status": "have",
+      "path": "public/media/case-1.jpg",
+      "size": "2400x1600",
+      "alt": "Inside the barn as it was found, light coming through the boards",
+      "usage": "Project, How it was made strip"
+    },
+    "case2": {
+      "status": "have",
+      "path": "public/media/case-2.jpg",
+      "size": "2400x1600",
+      "alt": "The floor plans laid out on the drawing table",
+      "usage": "Project, How it was made strip"
+    },
+    "case3": {
+      "status": "have",
+      "path": "public/media/case-3.jpg",
+      "size": "2400x1600",
+      "alt": "Marking out new timber with a pencil",
+      "usage": "Project, How it was made strip"
+    },
+    "case4": {
+      "status": "have",
+      "path": "public/media/case-4.jpg",
+      "size": "2400x1600",
+      "alt": "The finished roof: old trusses over new boards",
+      "usage": "Project, How it was made strip"
+    },
+    "about": {
+      "status": "have",
+      "path": "public/media/about.jpg",
+      "size": "1920x2400",
+      "alt": "The architect at the drawing table",
+      "usage": "About, portrait"
+    },
+    "about2": {
+      "status": "have",
+      "path": "public/media/about-2.jpg",
+      "size": "1920x2400",
+      "alt": "One of the studio outside an old barn",
+      "usage": "About, second picture"
+    },
+    "team1": {
+      "status": "have",
+      "path": "public/media/team-1.jpg",
+      "size": "1600x2000",
+      "alt": "Portrait of Clara Wren in warm window light",
+      "usage": "About, Team"
+    },
+    "team2": {
+      "status": "have",
+      "path": "public/media/team-2.jpg",
+      "size": "1600x2000",
+      "alt": "Portrait of Owen Hale in side light",
+      "usage": "About, Team"
+    },
+    "team3": {
+      "status": "have",
+      "path": "public/media/team-3.jpg",
+      "size": "1600x2000",
+      "alt": "Portrait of Isla Marsh by a window",
+      "usage": "About, Team"
+    },
+    "team4": {
+      "status": "have",
+      "path": "public/media/team-4.jpg",
+      "size": "1600x2000",
+      "alt": "Portrait of Bill Rook in the workshop",
+      "usage": "About, Team"
+    },
+    "location1": {
+      "status": "have",
+      "path": "public/media/location-1.jpg",
+      "size": "2400x1600",
+      "alt": "The way in: a stable door in a stone wall",
+      "usage": "Contact, Location: the way in"
+    },
+    "location2": {
+      "status": "have",
+      "path": "public/media/location-2.jpg",
+      "size": "2400x1600",
+      "alt": "Inside the studio: the desk under old posts, sun on the floor",
+      "usage": "Contact, Location: inside"
+    }
+  },
+  "temporary": []
 }

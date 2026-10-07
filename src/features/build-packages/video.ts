@@ -117,12 +117,15 @@ fit_budget() { # $1 file, $2 max MB, then the ffmpeg encode with the CRF value w
     args=(); for a in "$@"; do [ "$a" = CRF ] && a=$crf; args+=("$a"); done; "\${args[@]}"
     [ "$(wc -c < "$f")" -le "$max" ] || [ "$crf" -ge 32 ] && break; crf=$((crf + 2))
   done
-  if [ "$crf" -gt 20 ]; then echo "  (CRF $crf to stay within $(( max / 1000000 )) MB)"; fi
+  if [ "$crf" -gt 24 ]; then echo "  ⚠ CRF $crf to stay within $(( max / 1000000 )) MB — visibly softer. Trim the film to the length the shot list gives (recipe/media.md) and re-run."
+  elif [ "$crf" -gt 20 ]; then echo "  (CRF $crf to stay within $(( max / 1000000 )) MB)"; fi
 }
 fit_budget "$OUT/heroVideo.mp4" 6 ffmpeg -v error -y -i "$WORK" -vf "$FIT" $X264 -crf CRF "$OUT/heroVideo.mp4"
 echo "✓ heroVideo.mp4 — normal playback"
 ${scrub ? `# Scroll-controlled: a keyframe every 6 frames keeps seeking instant without the size of all-intra.
-fit_budget "$OUT/scrubReadyEncode.mp4" 6 ffmpeg -v error -y -i "$WORK" -vf "$FIT" $X264 -crf CRF -g 6 -keyint_min 6 -sc_threshold 0 "$OUT/scrubReadyEncode.mp4"
+# A scrubbed film is seen frame by frame: its budget grows with its length (about 0.35 MB a second, at least 6 MB).
+DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$WORK" | cut -d. -f1); SCRUB_MB=$(( DUR * 35 / 100 )); [ "$SCRUB_MB" -lt 6 ] && SCRUB_MB=6
+fit_budget "$OUT/scrubReadyEncode.mp4" "$SCRUB_MB" ffmpeg -v error -y -i "$WORK" -vf "$FIT" $X264 -crf CRF -g 6 -keyint_min 6 -sc_threshold 0 "$OUT/scrubReadyEncode.mp4"
 echo "✓ scrubReadyEncode.mp4 — scroll-scrubbed desktop hero"
 ` : ''}# Phones: from the ORIGINAL — a vertical source is already the right shape, a wide one gets a 9:16 centre crop.
 fit_budget "$OUT/mobileVideoEncode.mp4" 3 ffmpeg -v error -y -i "$ORIG" -vf "crop='min(iw,ih*9/16)':ih,scale=-2:'min(1920,ih)':flags=lanczos" $X264 -crf CRF -g 6 -keyint_min 6 -sc_threshold 0 "$OUT/mobileVideoEncode.mp4"

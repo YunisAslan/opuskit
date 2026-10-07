@@ -3,7 +3,8 @@
 import { chromeNote } from '@/features/recipes/engine'
 import { resources } from '@/data/resources'
 import { inspirationSources } from '@/data/patterns'
-import type { FontSpec, UniversalRecipe } from '@/types/domain'
+import { errorColor } from '@/lib/frame'
+import type { FontSpec, PaletteColors, UniversalRecipe } from '@/types/domain'
 
 const list = (xs: string[]) => xs.map((x) => `- ${x}`).join('\n')
 const font = (label: string, f: FontSpec) =>
@@ -25,6 +26,14 @@ export const recipeSections = {
       + (r.signatures.length ? `\n\nIt reaches the pages through these signature moments (details in the motion recipe): ${r.signatures.map((s) => `${s.name} — ${s.where}`).join('; ')}.` : '')
   },
 
+  style: (r: UniversalRecipe) => {
+    const k = r.style
+    const seen = k.seen.map((x) => (x.startsWith('example:') ? `${x.slice(8)} (built with OpusKit)` : x)).join(', ')
+    return `## What ${k.look} is known for\n\nWhat the best sites in this style do — from OpusKit’s study of award sites and from the sites it has built. Not a checklist to copy: use it to design like someone who knows the style.\n\n### Its moves\n${list(k.moves)}\n\n### The craft\n${list(k.craft)}\n\n### Sparks — seeds for a remembered moment\n${list(k.sparks)}\n\n### Traps\n${list(k.traps)}\n\nLearned from: ${seen}.`
+  },
+
+  room: (r: UniversalRecipe) => `## Room to invent\n\nThis recipe fixes what the owner chose and leaves the rest to you — and a literal, safe build of it is a failure too. The test: the owner recognises every part they picked, and is surprised by how good it feels.\n\n### Locked — the owner chose these; keep them\n${list(lockedList(r))}\n\n### Free — yours to design, and expected\n${list(FREE)}\n\n### Your move\n${list(yourMove(r))}`,
+
   award: (r: UniversalRecipe) => `## Award checklist\n\nWhat separates an award-winning site from a good template (from a study of 12 Awwwards sites). Check every page against it.\n\n${list(awardChecklist(r))}`,
 
   color: (r: UniversalRecipe) => {
@@ -32,13 +41,14 @@ export const recipeSections = {
     const rows = p.tokens.map((t) => `| ${t.role} | \`${t.hex}\` | ${t.purpose} | ${t.usage} | ${t.contrast ?? '—'} |`).join('\n')
     const css = p.tokens.map((t) => `  --color-${t.role}: ${t.hex};`).join('\n')
     const rot = r.visualSystem.rotation
-    return `## Color System — ${p.name}\n\n| Role | Hex | Purpose | Usage | Contrast |\n|---|---|---|---|---|\n${rows}\n\n\`\`\`css\n:root {\n${css}\n}\n\`\`\``
+    const err = errorColor(Object.fromEntries(p.tokens.map((t) => [t.role, t.hex])) as PaletteColors)
+    return `## Color System — ${p.name}\n\n| Role | Hex | Purpose | Usage | Contrast |\n|---|---|---|---|---|\n${rows}\n| error | \`${err}\` | Form errors and failed states | Only for an error message, an invalid field’s border and a failed state — never decoration, never the accent’s job | AA on background |\n\n\`\`\`css\n:root {\n${css}\n  --color-error: ${err};\n}\n\`\`\``
       + (rot ? `\n\n### Colour chapters — ${rot.name}\n\n${rot.line}. ${rot.why} The page stays on the palette above; each chapter section (Colour Chapters, and any section you mark as a chapter) takes the next colour in turn as a full field — \`--color-chapter-1\` ${rot.colors[0]}, \`--color-chapter-2\` ${rot.colors[1]}, \`--color-chapter-3\` ${rot.colors[2]}. Never two chapter colours in one view; never a thin stripe of one.` : '')
   },
 
   typography: (r: UniversalRecipe) => {
     const t = r.visualSystem.typography
-    return `## Typography — ${t.name}\n\n| Role | Family | Weight | Size | Line-height | Letter-spacing | Use |\n|---|---|---|---|---|---|---|\n${font('Display', t.display)}\n${font('Heading', t.heading)}\n${font('Body', t.body)}\n${font('Utility', t.utility)}\n\nSource: ${t.source} (${t.googleFamilies.map((g) => g.split(':')[0].replace(/\+/g, ' ')).join(', ')})\n\n**Why this pairing works:** ${t.why}`
+    return `## Typography — ${t.name}\n\n| Role | Family | Weight | Size | Line-height | Letter-spacing | Use |\n|---|---|---|---|---|---|---|\n${font('Display', t.display)}\n${font('Heading', t.heading)}\n${font('Body', t.body)}\n${font('Utility', t.utility)}\n\nCaptions, prices beside pictures and small notes use \`type-caption\` (${t.body.family}, small, sentence case) — the utility role is for the menu and labels.${(['display', 'heading', 'body', 'utility'] as const).some((k) => t[k].italic) ? ` Italic roles (${(['display', 'heading', 'body', 'utility'] as const).filter((k) => t[k].italic).join(', ')}) are italic in their type-* class already.` : ''}\n\nSource: ${t.source} (${t.googleFamilies.map((g) => g.split(':')[0].replace(/\+/g, ' ')).join(', ')})\n\n**Why this pairing works:** ${t.why}`
   },
 
   layout: (r: UniversalRecipe) => {
@@ -64,7 +74,7 @@ export const recipeSections = {
         const i = m.imagery, x = i.presentation
         return `\n\n### Photos — ${x.name}\n\n${x.line} ${i.photos ? `${i.photos} photos supplied (${i.orientation}), in /media — keep their order.` : `Suits ${x.ideal}.`}${i.recommended === x.id ? ` Chosen because: ${i.why}.` : ' Chosen by the owner.'}`
           + (i.note ? `\n\n**Owner’s request (follow it):** “${i.note}”` : '')
-          + `\n- **Composition:** ${x.composition}\n- **Behavior:** ${x.behavior}\n- **Responsive:** ${x.responsive}\n- **Where:** every gallery, lookbook, featured-work or story section; supporting images elsewhere come from the same set.`
+          + `\n- **Composition:** ${x.composition}\n- **Behavior:** ${x.behavior}\n- **Responsive:** ${x.responsive}\n- **Where:** the site’s default for photo sets; a part with its own **Photos** line in recipe/layout.md follows that line instead.`
           + (x.components.length ? `\n- **Start from:** ${x.components.map((c) => `[${c.name}](${c.url})`).join(', ')} — restyle to this recipe’s tokens and type; never ship a component’s demo look.` : '')
       })() : '')
       + (m.shots.length ? `\n\n### Shot list — part by part\n\nWhat each picture or film shows. Real media is what makes the site premium: find, shoot or make exactly these; until one exists, its part uses a temporary picture of the same subject and format.\n\n| Where | | What it shows | Format |\n|---|---|---|---|\n${m.shots.map((x) => `| ${x.where} | ${x.kind} | ${x.shows} | ${x.format} |`).join('\n')}` : '')
@@ -78,7 +88,7 @@ export const recipeSections = {
 
   signatures: (r: UniversalRecipe) => r.signatures.length
     ? `## Signature Moments\n\nThe small interactions people remember. Build each one exactly where it is placed — they are part of the design, not optional polish.\n\n${r.signatures.map((s) => `### ${s.name} — ${s.where}\n- **What visitors experience:** ${s.experience}\n- **How:** ${s.implementation}\n- **Mobile:** ${s.mobile}\n- **Reduced motion:** ${s.reducedMotion}` + (s.components?.length ? `\n- **Start from:** ${s.components.map((c) => `[${c.name}](${c.url})`).join(', ')} — restyle to this recipe’s tokens; never ship the demo look.` : '')).join('\n\n')}`
-    : '## Signature Moments\n\nNone — this recipe keeps interaction deliberately quiet.',
+    : `## Signature Moments\n\nNone were picked: the first screen (${r.media.hero.name})${r.pieces.length ? ' and the effects the owner picked (Your Kit)' : ''} carry Home. Every other page gets one moment you design yourself — see Room to invent: one per page, never more.`,
 
   kit: (r: UniversalRecipe) => r.pieces.length
     ? `## Your Kit — ready pieces\n\nThe owner picked these components. Their code is already in the project at \`src/components/pieces/\` — it does the hard part (the animation, shader or interaction, and its reduced-motion version), so build on it rather than from scratch, and do not add other animation libraries for the same job. It reads colours and fonts from the recipe tokens (\`--color-*\`, \`--font-*\`). It is a reference, not a sealed part: keep what the owner picked it for — its behaviour — and fit everything else to the site (size, place, spacing, the type around it), editing its code wherever its defaults disagree.\n\n${r.pieces.map((p) => `### ${p.name} — ${p.where}\n${p.line}\n- **Code:** \`${p.path}\` → \`import { ${p.exportName} } from '@/components/pieces/${p.file.replace(/\.tsx$/, '')}'\`\n- **Use:** \`${p.usage}\`\n${p.rules.map((x) => `- ${x}`).join('\n')}` + (p.issue ? `\n- **Note:** ${p.issue}` : '')).join('\n\n')}\n\nLicences: adapted from MIT-licensed libraries — see \`THIRD-PARTY-NOTICES.md\`.`
@@ -141,20 +151,58 @@ export const WEBGL_CHECKLIST = [
   'Verify: Lighthouse on mobile and a 4× CPU-throttled run — still smooth, LCP still < 2.5 s.',
 ]
 
+/** What the builder must keep: everything the owner chose, said with this recipe's own names. */
+export function lockedList(r: UniversalRecipe): string[] {
+  const t = r.visualSystem.typography
+  const picked = [...r.pieces.map((p) => `${p.name} (${p.where})`), ...r.signatures.map((s) => `${s.name} (${s.where})`)]
+  return [
+    `Colours: the ${r.visualSystem.palette.name} tokens in tokens.css — tints and shades of them are fine, new hues are not.`,
+    `Lettering: ${[...new Set([t.display.family, t.heading.family, t.body.family, t.utility.family])].join(', ')}, each in its role.`,
+    `Pages and the order of their parts: ${r.pages.map((p) => `${p.label} (${p.sections.length ? p.sections.map((x) => x.name.split(' — ')[0]).join(' → ') : 'its own form or text'})`).join('; ')}.`,
+    `Each part’s design as the owner picked it (recipe/layout.md); the menu “${r.chrome.nav.name}”, the footer “${r.chrome.footerStyle.name}”, the shape “${r.visualSystem.shape.name}”, the first screen “${r.media.hero.name}”.`,
+    'The facts in the copy deck — names, prices, times, places, promises. Sharpen the wording; never the facts.',
+    'The owner’s files and the shot list (what each picture shows, its ratio).',
+    ...(picked.length ? [`The effects the owner picked: ${picked.join('; ')}.`] : []),
+    'One system, accessibility and speed (build/verification.md).',
+  ]
+}
+
+const FREE = [
+  'Composition inside each part: scale, offsets, overlaps, crops, where the empty space goes — beyond the reference code’s defaults, as long as the part stays recognisable.',
+  'The hand-over between parts: a shared edge, a colour turn, a line that carries on, a change of pace — the page reads as one piece, not stacked blocks.',
+  'Typographic moments: where a headline breaks, one word set larger or in the italic, numerals, captions, small labels.',
+  'Every state: hover, focus, press, loading, empty, success, error, the 404 — each in the style’s voice.',
+  'Small details that make it feel made by hand for this owner: a caption that follows, a counter, a line in the footer, the favicon.',
+  'Where the recipe is silent, decide as a designer of this style would — never the plainest default.',
+]
+
+function yourMove(r: UniversalRecipe): string[] {
+  const placed = new Set(r.signatures.map((s) => s.where.split(' — ')[0]))
+  const open = r.pages.slice(1).filter((p) => p.sections.length && !placed.has(p.label)).map((p) => p.label) // forms and legal pages stay plain
+  const still = r.motion.level.id === 'still'
+  return [
+    `Every page gets one moment people remember. Home has it: the first screen (${r.media.hero.name}).${open.length ? ` Design one yourself for: ${open.join(', ')}.` : ''}`,
+    `Start from the sparks in “What ${r.style.look} is known for”, or invent a better one. Make it this owner’s — tied to their words, pictures or trade — not a stock effect.`,
+    still ? 'This site doesn’t move (motion: Still): your moment is composition, type or an interaction state — a size, a crop, a reveal on hover — not an animation.' : `Keep it inside the motion level (${r.motion.level.name}) and the Locked list; give it a mobile and a reduced-motion version.`,
+    'Use at least three of the style’s moves and every craft detail that fits; avoid its traps.',
+    'Name each moment in your plan before you build, and again in your final reply — so the owner can see what you added.',
+  ]
+}
+
 /** What separates an award site from a good template — the study's findings as checks, with this recipe's own idea in them. */
 export function awardChecklist(r: UniversalRecipe): string[] {
   const t = r.visualSystem.typography
   const preloader = r.pieces.some((p) => p.id === 'preloader')
   return [
     r.concept ? `One idea: everything serves “${r.concept.name}”. A part that doesn’t serve it gets quieter, not louder.` : 'One idea: everything serves the creative direction. A part that doesn’t serve it gets quieter, not louder.',
-    'One unforgettable moment per page — and only one. Everything else on that page supports it.',
+    `One moment per page that people remember — and only one: on Home it is the first screen (${r.media.hero.name})${r.signatures.length ? ', on other pages the signature moments below, and where none is placed one you design' : ', on other pages one you design (Room to invent)'}. Never a stock effect pasted in — it grows out of this style; everything else on the page supports it.`,
     `Type scale contrast: the biggest ${t.display.family} size is at least 6× the body size on desktop, labels stay small (11–14 px, ${t.utility.family}), and nothing in between competes.`,
     'Motion choreography: one thing moves at a time; each arrival enters, holds and leaves; staggers of 40–80 ms; the same one or two easings everywhere.',
     preloader ? 'The first seconds: the preloader follows real loading and is gone within 2.5 s; the first screen is complete the moment it lifts.' : 'The first seconds: the first screen is complete and readable before anything animates.',
     'Mobile is its own composition: headlines re-broken by hand, media re-cropped, pinned and hover effects replaced by their mobile versions — never a squeezed desktop.',
     `The ending is designed: the footer (${r.chrome.footerStyle.name}) is a moment${r.concept ? ` — ${r.concept.ending.charAt(0).toLowerCase()}${r.concept.ending.slice(1)}` : ', not leftovers'}`,
     'Craft details: text selection in the accent colour, a favicon from the logo, designed focus states, no layout shift, real copy everywhere, a 404 page in the same voice.',
-    'Smooth is part of the effect: 60 fps on a mid-range laptop; animate transform and opacity only; nothing runs off-screen.',
+    'Smooth is part of the effect: 60 fps on a mid-range laptop; animate only transform, opacity and clip-path; nothing runs off-screen.',
   ]
 }
 

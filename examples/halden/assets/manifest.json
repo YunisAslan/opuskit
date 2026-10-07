@@ -1,0 +1,306 @@
+{
+  "recipe": "cinematic-editorial",
+  "title": "Halden — Nocturne Dark Cinematic Practice",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Drawn for this build: src/components/Logo.tsx, src/app/icon.svg",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon",
+      "note": "A simple wordmark and horizon mark — replace with the owner’s own logo when there is one."
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts via next/font (self-hosted at build)",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Imbue, Hanken Grotesk (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "src/content/site.ts",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "note": "Written in the recipe voice. Everything marked ⚑ (address, phone, email, hours, prices, quotes) is invented and must be replaced."
+    },
+    "heroVideo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "25 s drone shot over a sea of fog at first light (media-src/hero-original.mp4, 3840×2160), encoded by scripts/prepare-video.sh",
+      "replaceWith": "user-owned-video",
+      "usage": "Hero (loop or scroll-controlled)",
+      "specs": "1920×1080 H.264, 25.3 s",
+      "file": "public/media/heroVideo.mp4"
+    },
+    "posterImage": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "First frame of the film, written by scripts/prepare-video.sh",
+      "replaceWith": "user-owned-images",
+      "usage": "Shown before video loads and on reduced motion",
+      "file": "public/media/posterImage.jpg",
+      "specs": "1920×1080 JPEG"
+    },
+    "mobileVideoEncode": {
+      "required": true,
+      "level": "recommended",
+      "status": "have",
+      "source": "25 s drone shot over a sea of fog at first light (media-src/hero-original.mp4, 3840×2160), encoded by scripts/prepare-video.sh",
+      "replaceWith": "user-owned-video",
+      "usage": "Hero on small screens",
+      "specs": "1080×1920 (9:16) H.264, 25.3 s, 2.3 MB",
+      "file": "public/media/mobileVideoEncode.mp4"
+    },
+    "supportingImages": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Theodor Tietze (https://unsplash.com/photos/a-modern-black-floating-house-on-a-lake-f63xr0j0abg); original media-src/A5.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Sections between video moments: sign in and sign up",
+      "file": "public/media/supportingImages.jpg",
+      "specs": "1920×2400 JPEG — Sign in / Sign up: a sauna house on the water, its chimney, a grey sky"
+    },
+    "secondaryVideo": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "not delivered — the real still secondaryPoster.jpg is shown",
+      "replaceWith": "user-owned-video",
+      "usage": "Gallery closing frame (chapter transition) on Home",
+      "specs": "Same grade as the hero",
+      "file": "public/media/secondaryVideo.mp4",
+      "note": "Optional. Drop a slow 16:9 clip (same grade as the hero, ≤ 4 MB, H.264, muted) at public/media/secondaryVideo.mp4 and it loops in place of the still. No code change."
+    },
+    "scrubReadyEncode": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "25 s drone shot over a sea of fog at first light (media-src/hero-original.mp4, 3840×2160), encoded by scripts/prepare-video.sh",
+      "replaceWith": "user-owned-video",
+      "usage": "Scroll-controlled hero",
+      "specs": "1920×1080 H.264, 25.3 s",
+      "file": "public/media/scrubReadyEncode.mp4"
+    },
+    "posterMobile": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "First frame of the film, written by scripts/prepare-video.sh",
+      "replaceWith": "user-owned-images",
+      "usage": "Phone poster for the opening film",
+      "file": "public/media/posterMobile.jpg",
+      "specs": "1080×1920 JPEG"
+    },
+    "gallery1": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Atle Mo (https://unsplash.com/photos/brown-wooden-house-on-brown-rock-near-body-of-water-ibqEcam6ns4); original media-src/A0.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Gallery",
+      "file": "public/media/gallery1.jpg",
+      "specs": "2400×1600 JPEG — Gallery: a timber sauna on the rocks, the sea beyond"
+    },
+    "gallery2": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, SeongUk Kim (https://unsplash.com/photos/black-wood-burner-near-brown-firewood-YOdU8nmUAB4); original media-src/B11.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Gallery",
+      "file": "public/media/gallery2.jpg",
+      "specs": "1920×2400 JPEG — Gallery: birch logs and the stove fire, close"
+    },
+    "gallery3": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Dorini Damsa (https://unsplash.com/photos/brown-wooden-dock-bridge-OXNAg_nsj_c); original media-src/J15.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Gallery (full width)",
+      "file": "public/media/gallery3.jpg",
+      "specs": "2400×1600 JPEG — Gallery: the bathing pier and its ladders at blue hour"
+    },
+    "gallery4": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Mika Ruusunen (https://unsplash.com/photos/a-person-in-a-body-of-water-surrounded-by-snow-IPGkuVpa0ok); original media-src/C4.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Gallery",
+      "file": "public/media/gallery4.jpg",
+      "specs": "2400×1600 JPEG — Gallery: a bather in the winter sea, snow on the shore"
+    },
+    "gallery5": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Jose de la Cruz (https://unsplash.com/photos/man-covering-his-half-face-with-brown-knit-cap-beside-body-of-water-at-daytime-Ue0B5sMlHj4); original media-src/D3.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Gallery",
+      "file": "public/media/gallery5.jpg",
+      "specs": "1920×2400 JPEG — Gallery: wrapped in a wool blanket after the sea"
+    },
+    "secondaryPoster": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Kevin Bessat (https://unsplash.com/photos/wooden-stairs-leading-into-calm-still-water-O79o-5hEO6g); original media-src/C18.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Gallery closing frame (poster of the secondary film)",
+      "file": "public/media/secondaryPoster.jpg",
+      "specs": "2400×1600 JPEG — Gallery closing frame: steps into a still, empty sea"
+    },
+    "locationHomeArrival": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Melina Kiefer (https://unsplash.com/photos/red-and-white-house-near-body-of-water-during-daytime-4k2FQMXi5AA); original media-src/A20.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Location",
+      "file": "public/media/locationHomeArrival.jpg",
+      "specs": "2400×1600 JPEG — Location: the shore path to the huts, as visitors arrive"
+    },
+    "locationHomeInside": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, HUUM (https://unsplash.com/photos/a-wooden-bench-sitting-next-to-a-window-cwSKJGlHGJI); original media-src/I12.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Location",
+      "file": "public/media/locationHomeInside.jpg",
+      "specs": "2400×1600 JPEG — Location: the benches, the stove and the long window onto snow"
+    },
+    "locationVisitArrival": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Marko Sabolić (https://unsplash.com/photos/a-man-standing-on-a-dock-next-to-a-body-of-water-4g1cjX9r4qU); original media-src/A4.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Visit · Location",
+      "file": "public/media/locationVisitArrival.jpg",
+      "specs": "2400×1600 JPEG — Visit: the pier out to the bath hut"
+    },
+    "locationVisitInside": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, HUUM (https://unsplash.com/photos/a-wooden-sauna-with-a-window-and-a-stack-of-rocks-nT8eHVXHw5o); original media-src/I5.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Visit · Location",
+      "file": "public/media/locationVisitInside.jpg",
+      "specs": "2400×1600 JPEG — Visit: inside, the window onto the snow"
+    },
+    "stepArrive": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, CHUTTERSNAP (https://unsplash.com/photos/white-bathrobe-SJigwrcNR48); original media-src/H7.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · How It Works",
+      "file": "public/media/stepArrive.jpg",
+      "specs": "2400×1600 JPEG — Step 1, arrive: a robe on its hook"
+    },
+    "stepHeat": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Anne Nygård (https://unsplash.com/photos/a-sauna-with-rocks-a-bucket-and-wood-NRZ1bc4h9ME); original media-src/I13.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · How It Works",
+      "file": "public/media/stepHeat.jpg",
+      "specs": "2400×1600 JPEG — Step 2, heat: the stones, the bucket, the benches in low light"
+    },
+    "stepSea": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, ONUR KURT (https://unsplash.com/photos/metal-ladder-on-a-wooden-dock-over-water-Iwz0oUada14); original media-src/J26.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · How It Works",
+      "file": "public/media/stepSea.jpg",
+      "specs": "2400×1600 JPEG — Step 3, the sea: the ladder into the water"
+    },
+    "stepRest": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Peter Herrmann (https://unsplash.com/photos/a-coffee-cup-sitting-on-top-of-a-saucer-f9EcQ6berNU); original media-src/G22.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · How It Works",
+      "file": "public/media/stepRest.jpg",
+      "specs": "2400×1600 JPEG — Step 4, rest: tea by the window"
+    },
+    "serviceSauna": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Julia Elliot (https://unsplash.com/photos/a-wooden-room-with-a-bench-and-a-window-SMbky1sSBgQ); original media-src/I7.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Services · hover preview",
+      "file": "public/media/serviceSauna.jpg",
+      "specs": "1920×2400 JPEG — The sauna room and its window onto the water"
+    },
+    "serviceSea": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Julio Wolf (https://unsplash.com/photos/a-wooden-dock-in-the-middle-of-a-body-of-water-PKKH8i1vbzc); original media-src/J25.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Services · hover preview",
+      "file": "public/media/serviceSea.jpg",
+      "specs": "1920×2400 JPEG — The sea from the jetty"
+    },
+    "serviceSmoke": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, HUUM (https://unsplash.com/photos/sauna-heater-with-hot-stones-IsDUT74YEp4); original media-src/K0.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Services · hover preview",
+      "file": "public/media/serviceSmoke.jpg",
+      "specs": "1920×2400 JPEG — Steam rising off the stones"
+    },
+    "serviceTubs": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Sophie Grieve-Williams (https://unsplash.com/photos/a-wooden-hot-tub-sitting-on-top-of-a-lush-green-field-ozb0D8Foio4); original media-src/E9.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Services · hover preview",
+      "file": "public/media/serviceTubs.jpg",
+      "specs": "1920×2400 JPEG — A wood-fired cedar tub"
+    },
+    "serviceQuiet": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, Luz Brunetti (https://unsplash.com/photos/white-ceramic-mug-on-bed-hKqdN5clIWA); original media-src/G7.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Services · hover preview",
+      "file": "public/media/serviceQuiet.jpg",
+      "specs": "1920×2400 JPEG — The quiet room: a blanket and a cup"
+    },
+    "servicePrivate": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash, alex geerts (https://unsplash.com/photos/a-house-sitting-on-top-of-a-hill-next-to-a-forest-sHaEWugVo9s); original media-src/F2.jpg",
+      "replaceWith": "user-owned-images",
+      "usage": "Services · hover preview",
+      "file": "public/media/servicePrivate.jpg",
+      "specs": "1920×2400 JPEG — The house lit at dusk above the shore"
+    }
+  }
+}

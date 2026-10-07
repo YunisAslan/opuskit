@@ -148,7 +148,7 @@ export const pieces: Record<PieceId, Piece> = {
     id: 'scroll-progress', name: 'Reading line', line: 'A hairline across the top fills as the visitor reads.', slot: 'scroll', source: MP,
     file: 'ScrollProgress.tsx', exportName: 'ScrollProgress', deps: M, levels: ALL, sections: ['journal', 'case-study', 'editorial-story'],
     usage: '<ScrollProgress />',
-    rules: ['Long pages only (journal posts, case studies) — not the home page.'],
+    rules: ['Mounted once in the root layout and shown on every page that scrolls two screens or more; on shorter pages (forms, sign in, 404) it hides itself — never a per-page exception list.'],
   },
   'velocity-band': {
     id: 'velocity-band', name: 'Type that races the scroll', line: 'A band of big words drifts sideways and speeds up with scrolling.', slot: 'scroll', source: MU,

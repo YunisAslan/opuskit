@@ -1,0 +1,46 @@
+---
+description: Media handling: asset config layer, posters, crops, temporary assets. Apply when rendering images, video or 3D.
+globs: 
+alwaysApply: false
+---
+
+## Media Direction — Product-led
+
+The product is photographed like an object of desire: isolated, well-lit, from consistent angles.
+
+### Treatment
+- Seamless backgrounds matching the palette surface color
+- Same lighting and lens across all product shots
+- Show scale and detail (close-ups)
+- Use lifestyle images only in editorial sections
+
+**Formats:** Transparent PNG/WebP cut-outs or AVIF on seamless background; 2400px min
+
+### Hero — Product stage
+- **Composition:** The product isolated on a clean surface, large and centred or offset, with name, one-line promise and price/CTA.
+- **Behavior:** Subtle: product fades/scales in. Dynamic: product rotates or swaps angles on scroll using an image sequence (24–48 frames).
+- **Responsive:** Mobile: product first, text beneath, CTA sticky at bottom.
+- **Requires:** Product photo on seamless background (min 2400px); Optional 24–48 frame turntable sequence
+- **Fallback:** Temporary curated product image; mark as placeholder.
+
+### Shot list — part by part
+
+What each picture or film shows. Real media is what makes the site premium: find, shoot or make exactly these; until one exists, its part uses a temporary picture of the same subject and format.
+
+| Where | | What it shows | Format |
+|---|---|---|---|
+| Home · First screen — Product stage | photo | The opening picture of Maison Vey: the place, the thing it makes or the person, at its best light, with calm space where the headline sits | min 2800px · 16:9 for desktop and a 4:5 crop for phones |
+| Home · Product Grid | photo | each product alone on the same ground, from the same angle, in the same light | one per product · 4:5 · min 2000px |
+| Home · Collection | photo | one picture per range: its best piece, all styled and lit the same way | 3–6 photos · 4:5 · min 2400px |
+| Home · Editorial Story | photo | the pictures that carry the story between paragraphs: a detail, the place, the people | 2–4 photos · mixed 3:2 and 4:5 · min 2400px |
+| Shop · Product Grid | photo | each product alone on the same ground, from the same angle, in the same light | one per product · 4:5 · min 2000px |
+| Shop · Product Highlight | photo | the main product up close: in hand or in use, its material visible | 1–3 photos · 4:5 or 1:1 · min 2400px |
+| Shop · Collection | photo | one picture per range: its best piece, all styled and lit the same way | 3–6 photos · 4:5 · min 2400px |
+| Product · Product Highlight | photo | the main product up close: in hand or in use, its material visible | 1–3 photos · 4:5 or 1:1 · min 2400px |
+| Product · Product Grid | photo | each product alone on the same ground, from the same angle, in the same light | one per product · 4:5 · min 2000px |
+| Cart · Product Grid | photo | each product alone on the same ground, from the same angle, in the same light | one per product · 4:5 · min 2000px |
+| About · About | photo | a real portrait of the person or the team, in their own place | 1–2 photos · 4:5 portrait · min 2400px |
+
+## Asset layer
+- Render all media via <MediaAsset id="…" /> reading src/config/assets.ts.
+- Asset statuses live in @assets/manifest.json. Temporary assets must stay replaceable.

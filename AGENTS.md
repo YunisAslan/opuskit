@@ -9,7 +9,13 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
 - Domain types: `src/types/domain.ts`. Knowledge base (curated ingredients): `src/data/`.
 - Recipe engine (deterministic composition): `src/features/recipes/engine.ts`.
 - Build Package adapters: `src/features/build-packages/`. Every recipe carries a copy deck (what each part says, from the
-  owner's words), a shot list (what each media part shows) and rules fitted to the owner's picks (decision 26).
+  owner's words), a shot list (what each media part shows) and rules fitted to the owner's picks (decision 26). The shot
+  list is the asset layer: `src/config/assets.ts`, the manifest and the checklist's photo rows are written from it
+  (`shotAssets`, `fitSets`), and every frame number in the recipe text is the token tokens.css ships (decision 30).
+  Every package keeps the owner's picks (Room to invent → Locked) and asks the builder to design the rest and one
+  remembered moment per page (decision 32); never write "do not invent / do not add" into a package. Each look's
+  knowledge — what its best sites are known for — is `src/data/look-knowledge.ts` (moves, craft, sparks, traps, seen);
+  add to it what a new build or study teaches, with its source in `seen`.
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
 - The Library flow is the way to make a site (`docs/plan-library.md`): `/library` (Discover) → `/studio/brand` → `/studio/pages` →
   recipe. Discover is browsing (no steps); the Collection is a cart in the site header (`CollectionSheet`, its
@@ -18,47 +24,20 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
   carry `via: 'studio'`. Brand picks the look (each drawn as your own site), colours and lettering. Pages shows everything the build will get: each part in the design the engine picks, and the
   site-wide behaviours under "On every page"; such plans get no big idea (decision 21). Anything on Pages is changed in one chooser that
   opens from what is clicked (`Chooser`, decision 23); the left column is the toolbox (Parts | Effects, with On every
-  page), the right one the pages (decision 24). The kit below still opens examples and saved recipes until it is retired.
-- The kit (`/kit`) is the only way to make or change a recipe (the questionnaire was retired 2026-09-30; `/create`
-  redirects here). A builder in three steps, always visible in its
-  step bar: 1 Design (same on every page: "About your site" first in the list — name, what it is, kind of site, what visitors
-  should do, each saying what it shapes — though the step opens on Look, so people see sites before a form; then biggest first —
-  look, movement, big idea (`concepts` in patterns.ts: the one idea the site is built around — recommended until picked, or
-  'off'; its first two signature moments land on the recipe's sections, its words go into the Build Package with the award
-  checklist), colours (+ optional colour chapters), lettering, shape, menu & footer (`navStyles`, `footerStyles` —
-  each footer style is a `variant` of the ready `src/sections/Footer.tsx`), behaviour),
-  2 Pages (pages and their sections, plus Your files: logo, video, photos, photo note), 3 Recipe — the result page itself (Next on Pages saves the recipe,
-  or updates the one the plan came from, and opens it; the same `StepBar` shows there). Every page's brief (`purpose`) is
-  editable (the page title's ⋯ menu → "What this page does", a dialog) — it's how forms & legal pages (no sections) are customised. Every page arrives filled with what that kind of page usually
-  has (`start`, `resetPage`). Pages speaks plain words, not component names, one idea per column: left the pages; middle
-  the page itself — menu at the top and footer at the bottom (the same on every page; a page can leave either out —
-  `toggleChrome`, `PageSpec.hide`, written into the recipe and QA), its parts in between, each titled by its job
-  (`sectionGroups[].job`, `jobOf`) with its look (`src/data/section-guide.ts`) and chips for its effects; drag, up/down or
-  remove on the row itself;
-  right one job at a time, named by a switch at its top ("Add a part" | "Edit …") — Add: every part, grouped by job;
-  clicking a card adds it (after the picked part, else before the closing parts) or drag it to a spot, and the panel stays
-  on Add; Edit (a row clicked, or its "+ Effect" chip): the part as it is, then tabs — Effects (moments) first, Other
-  designs (same job, `swapOptions`, `replaceSection`; for the first screen, the first screens — `setHero`, which moves
-  Movement into a level it supports and says so), Photos (photo sections); the menu/footer row shows "Show on this page"
-  and its site-wide look. Every change scrolls the page to that part and makes it glow (`land`). Options show a real
-  site and the same thing drawn in your style, side by side (`DualShot`); menus are drawn (`MenuDemo`) and link
-  behaviours play on a drawn footer (`LinkDemo`), since both are too small in a recording. The film/image part (`hero`) is free like any
-  part: dragged anywhere, mid-page, onto any page, or removed; the engine then writes it as a full-width band at that spot
-  (`midPageHero`, QA checks it stays there), and only `setHero` on a site with none adds one (top of the first page). Each film/image part
-  shows its own pick (`setPartHero`, `heroOf`; the recipe's `heroBands`): the site's first one is its first screen (`plan.hero`,
-  sets media and movement), and changing one never changes another. Structure and effects never share a list. Pages
-  never links back to Design. Pieces come in two kinds (`behaviours` in pieces.ts): behaviours — how
-  headlines arrive, what links and the main button do, whole-site extras — are site-wide, one per kind, set in Design
-  (`setBehaviour`); moments are picked on one part in Pages (`piecesFor`, `togglePiece`) and stay on it — a swap keeps
-  them when the new look can carry them, else turns them off; they never wander. Photo layout is per photo section
-  (`PHOTO_SECTIONS`, `setSectionPhotos`); a section without a pick gets `recommendSectionPhotos`. Logic: `src/features/kit/plan.ts` (pure, tested in check.ts); storage: `src/lib/kit.ts`.
-- The kit is the one editor. Every recipe opens in it — `/kit?from=seed:{slug}|gen:{id}|example:{slug}` (`specToPlan`;
-  an example's recipe is rebuilt from its recorded `choices` by `specFromChoices`). What the kit doesn't edit rides along in
-  `plan.from`; a plan opened from a saved recipe updates that recipe. Result/recipe "Change" links point into the kit.
+  page), the right one the pages (decision 24).
+- The kit was retired 2026-10-07 (with accounts, pricing/paywall, explore, resources and `/recipe/{slug}`). Every recipe
+  opens in the studio: `/studio/open?from=seed:{slug}|gen:{id}|example:{slug}&to=brand|pages` (`openInStudio` in
+  `src/lib/collection.ts`, `specToPlan`; an example's recipe is rebuilt from its `choices` by `specFromChoices`); `/kit`
+  redirects there (`next.config.ts`). The plan model Brand and Pages edit is still `KitPlan` in `src/features/kit/plan.ts`
+  (pure, tested in check.ts; storage `src/lib/kit.ts`); what the studio doesn't edit rides along in `plan.from`, and a plan
+  opened from a saved recipe updates that recipe. The recipe page (`/result/[id]`) is always unlocked.
+- OpusKit's own look — read `docs/design.md` before changing the landing, the chrome or any screen's look: tokens
+  (stone, ink, hairline, one orange; dark mode), Archivo / Geist / Geist Mono, the ruled frame and its crosses, nav and
+  buttons, hover language, the landing's sections, what the user approved and rejected.
 - Ready sections: every content section (all but navbar, hero, footer) is a component in `src/sections/`, listed in
   `src/data/blocks.ts`, shipped to `src/components/sections/` for the sections a recipe uses. OpusKit-written, tokens only
   (`--color-*`, `--radius-*`, `type-display|heading|body|utility` from `src/lib/type-tokens.ts`), content through props,
-  no import beyond `react`. The kit renders them for real with sample content (`SectionPreview`), dressed as one of six
+  no import beyond `react`. Brand and Pages render them for real with sample content (`SectionPreview`), dressed as one of six
   worlds (studio, food, shop, product, software, event — `worldFor(purpose)`) so a café sees cups and a shop sees products.
   Many come in several designs (a `variant` prop; `src/data/section-variants.ts` — the engine picks one per look family,
   the owner can pick another in Pages → Other designs; check.ts asserts each design exists in the code). Two section ids
@@ -90,7 +69,7 @@ Not committed: `node_modules/`, `.next/`, `tsconfig.tsbuildinfo`, `.DS_Store` �
 two with `npm install` / `npm run build` (the root `.gitignore`'s bare `node_modules`/`.next` patterns
 already cover any depth, including here). Any `media-src/`-style pre-processing source (raw footage
 before ffmpeg, etc.) is reference-only — keep it out unless it's small and its license is clear.
-`media-src/recording/` holds the user's full screen recordings of the live site, kept on purpose: the kit's clips
+`media-src/recording/` holds the user's full screen recordings of the live site, kept on purpose: the clips
 (`clip`, `sectionClips`, `pieceClips`, `signatureClips`) are cut from them with ffmpeg, and can be re-cut later.
 
 Before the very first `npm install`/build ever runs inside a freshly dropped-in example, check its
@@ -100,7 +79,7 @@ project won't have it yet, and building it even once without the pin risks OpusK
 ### Showing one on the site
 
 After adding or changing an example, run `npm run examples`. It writes:
-- `src/data/example-specs.generated.json` — the exact recipe each example was built from, which "Customise in kit" opens.
+- `src/data/example-specs.generated.json` — the exact recipe each example was built from, which "Make it yours" opens in the studio.
   Read from the example's `opuskit.json` (every Build Package ships one — keep it, it's committed with the example), or,
   for older examples without it, rebuilt from its `choices` plus its own `recipe/layout.md` (pages, sections, first
   screen, layout, shape, menu). `npm run check` composes each spec and asserts it matches that layout.md.
@@ -112,7 +91,7 @@ Each example is registered in `src/data/examples.ts` (title/summary — copy fro
 `<title>`/meta description, not the abstract recipe doc, since a build often renames the brand).
 Its clips: `clip` (10–15 s, first screen + scroll) and `sectionClips` (3–5 s per section, the section standing still and framed
 on it — never the page scrolling past; `examples/{slug}/public/media/clips/{sectionId}.mp4`)
-feed the kit's "a site like this" (`src/features/kit/closest.ts`); an old example carries `legacy: true` and is never offered there.
+feed "a site like this" in Pages (`src/features/kit/closest.ts`); an old example carries `legacy: true` and is never offered there.
 Its card on `/examples` shows `public/examples/{slug}.jpg` — a 1440×900 JPEG screenshot of its live homepage, taken
 once the hero video has real frames (a black first frame makes a blank card). After replacing one, clear
 `.next/dev/cache/images` or the dev server keeps serving the old one.

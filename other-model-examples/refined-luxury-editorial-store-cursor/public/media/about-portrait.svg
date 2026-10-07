@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2000" width="1600" height="2000" role="img">
+  <defs>
+    <linearGradient id="pbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5A1A23"/><stop offset="1" stop-color="#4A1119"/></linearGradient>
+    <radialGradient id="pl" cx="0.4" cy="0.32" r="0.6"><stop offset="0" stop-color="#fff" stop-opacity="0.14"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1600" height="2000" fill="url(#pbg)"/>
+  <ellipse cx="800" cy="800" rx="480" ry="880" fill="#6B2530" opacity="0.55"/>
+  <rect width="1600" height="2000" fill="url(#pl)"/>
+  <text x="128" y="1880" fill="#D7B5B0" font-family="Helvetica, Arial, sans-serif" font-size="44" letter-spacing="8">Vera, in the workshop</text>
+</svg>

@@ -15,8 +15,8 @@ import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { examples } from '@/data/examples'
 import { purposes } from '@/data/taxonomy'
-import { HeroPreview } from '@/app/kit/HeroPreview'
-import { lookOf } from '@/app/kit/ProductVisual'
+import { HeroPreview } from '@/components/HeroPreview'
+import { lookOf } from '@/components/ProductVisual'
 import { hasItem, itemKey, itemName, notes, removeItem, siteName, siteSpec, sitesWith, toggleItem, type CollectionItem, type SiteRef } from '@/features/library/collection'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -196,16 +196,16 @@ export function CollectionSheet() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       {/* The pictures sit beside the button, not inside it: a drawn part holds buttons of its own, which can't nest. */}
-      <span className="flex h-9 shrink-0 items-center rounded-full border border-line bg-white text-sm hover:border-ink">
+      <span className="flex h-9 shrink-0 items-center rounded-[3px] border border-line bg-white text-sm hover:border-ink">
         {n > 0 && (
           <span onClick={() => setOpen(true)} className="hidden cursor-pointer -space-x-2.5 pl-1.5 sm:flex" aria-hidden inert>
             {c.items.slice(-3).map((i) => <span key={itemKey(i)} className="block w-9 overflow-hidden rounded-[5px] border-2 border-white bg-paper-2"><span className="pointer-events-none block aspect-[16/10] overflow-hidden">{i.kind === 'site' ? <SiteThumb site={i.site} /> : <ItemPreview item={i} look={sampleLook(i, c.purpose)} />}</span></span>)}
           </span>
         )}
-        <SheetTrigger className="flex h-full items-center gap-1.5 rounded-full pl-1 pr-2 sm:gap-2 sm:pl-2 sm:pr-3" aria-label={`Your Collection, ${n} ${n === 1 ? 'thing' : 'things'}`}>
+        <SheetTrigger className="flex h-full items-center gap-1.5 rounded-[3px] pl-1 pr-2 sm:gap-2 sm:pl-2 sm:pr-3" aria-label={`Your Collection, ${n} ${n === 1 ? 'thing' : 'things'}`}>
           <Layers size={16} className={`ml-1 text-muted ${n ? 'sm:hidden' : ''}`} aria-hidden />
           <span className="hidden font-medium sm:inline">Collection</span>
-          <span key={bump} className={`grid h-5 min-w-5 place-items-center rounded-full px-1 text-[11px] font-medium tabular-nums ${n ? 'bg-pencil text-white' : 'bg-paper-2 text-muted'} ${bump ? 'bump' : ''}`}>{n}</span>
+          <span key={bump} className={`grid h-5 min-w-5 place-items-center rounded-[3px] px-1 text-[11px] font-medium tabular-nums ${n ? 'bg-pencil text-paper' : 'bg-paper-2 text-muted'} ${bump ? 'bump' : ''}`}>{n}</span>
         </SheetTrigger>
       </span>
       {/* Wide enough to look at what you picked (the sheet's own default is 24rem). */}
@@ -273,7 +273,7 @@ export function Steps({ at }: { at: Step }) {
           <li key={s} className="flex items-center gap-1.5">
             {i > 0 && <span className={`hidden h-px w-3 sm:block md:w-6 ${i <= n ? 'bg-ink/40' : 'bg-line'}`} aria-hidden />}
             {i < n && href
-              ? <Link href={href} className="flex items-center gap-1.5 text-ink-2 hover:text-ink">{dot}<span className="hidden sm:inline">{s}</span></Link>
+              ? <Link href={href} className="group flex items-center gap-1.5 text-ink-2 hover:text-ink">{dot}<span className="ulink hidden sm:inline">{s}</span></Link>
               : <span aria-current={i === n ? 'step' : undefined} className={`flex items-center gap-1.5 ${i === n ? 'font-medium text-ink' : 'text-muted'}`}>{dot}<span className={i === n ? '' : 'hidden sm:inline'}>{s}</span></span>}
           </li>
         )
@@ -289,7 +289,7 @@ export function FlowBar({ at, next }: { at: Step; next?: ReactNode }) {
     <div className={`sticky top-16 z-30 border-b border-line bg-paper/95 backdrop-blur-sm ${FLOW_BAR}`}>
       <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-3 px-5 md:px-8">
         <div className="flex min-w-0 items-center gap-4">
-          <Link href="/library" className="-ml-2.5 hidden h-8 shrink-0 items-center gap-1.5 rounded-full pl-2 pr-3 text-sm text-ink-2 transition-colors hover:bg-paper-2 hover:text-ink sm:inline-flex"><ArrowLeft size={15} aria-hidden />Library</Link>
+          <Link href="/library" className="-ml-2.5 hidden h-8 shrink-0 items-center gap-1.5 rounded-[3px] pl-2 pr-3 text-sm text-ink-2 transition-colors hover:bg-paper-2 hover:text-ink sm:inline-flex"><ArrowLeft size={15} aria-hidden />Library</Link>
           <span className="hidden h-5 w-px bg-line sm:block" aria-hidden />
           <Steps at={at} />
         </div>

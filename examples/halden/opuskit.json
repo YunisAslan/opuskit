@@ -1,0 +1,126 @@
+{
+  "opuskit": 1,
+  "recipe": "cinematic-editorial",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "cinematic-editorial",
+    "brief": {
+      "name": "Halden",
+      "offer": "A wood-fired sauna and cold-sea bathhouse on a northern coast: heat, salt water and the long quiet in between.",
+      "goal": "book"
+    },
+    "purpose": "spa",
+    "direction": "dark-cinematic",
+    "characters": [
+      "mysterious"
+    ],
+    "lead": "video",
+    "motion": "immersive",
+    "hero": "scroll-video",
+    "layout": "full-bleed",
+    "palette": "charcoal-signal",
+    "typography": "opening-credits",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "temporary",
+    "concept": "off",
+    "sectionVariants": [
+      {
+        "page": "danhs2i2",
+        "index": 4,
+        "variant": "wall"
+      }
+    ],
+    "signatures": [],
+    "pieces": [
+      "smooth-scroll",
+      "scroll-progress"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "smooth-scroll",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "scroll-progress",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "danhs2i2",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "services",
+          "how-it-works",
+          "gallery",
+          "testimonials",
+          "pricing",
+          "location",
+          "reservation"
+        ]
+      },
+      {
+        "id": "7y02nnl3",
+        "type": "services",
+        "label": "The baths",
+        "purpose": "Make the offer and the way of working clear enough to remove hesitation.",
+        "sections": [
+          "services",
+          "process",
+          "pricing",
+          "faq"
+        ]
+      },
+      {
+        "id": "89auffpj",
+        "type": "reservations",
+        "label": "Visit",
+        "purpose": "Convert interest into a booking with minimal friction.",
+        "sections": [
+          "reservation",
+          "location",
+          "faq"
+        ]
+      },
+      {
+        "id": "fhrtbnkm",
+        "type": "faq",
+        "label": "FAQ",
+        "purpose": "Answer the questions that would otherwise stall a decision.",
+        "sections": [
+          "faq"
+        ]
+      },
+      {
+        "id": "zh3ks5fm",
+        "type": "sign-in",
+        "label": "Sign In",
+        "purpose": "Standard sign-in: email/password, forgot-password link, link to sign up.",
+        "sections": [],
+        "hide": [
+          "navbar",
+          "footer"
+        ]
+      },
+      {
+        "id": "w6mze0hm",
+        "type": "sign-up",
+        "label": "Sign Up",
+        "purpose": "Standard sign-up: minimal required fields, clear value of creating an account.",
+        "sections": [],
+        "hide": [
+          "navbar",
+          "footer"
+        ]
+      }
+    ],
+    "target": "not-sure",
+    "nav": "classic-bar"
+  }
+}

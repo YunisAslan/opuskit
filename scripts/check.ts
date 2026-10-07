@@ -785,7 +785,7 @@ const main = async () => {
       assert.ok(own.creativeDirection.do.length >= 1, `${seed.slug} keeps its own do list`)
       assert.ok(!/\b[Aa] [aeiou]/.test(composeRecipe({ ...specFromSeed(seed), palette: pl }).summary), `${seed.slug}: “a” before a vowel in the summary`)
       // The copy deck covers every part of every page; every media part has a line in the shot list.
-      assert.deepEqual(own.contentDirection.copy.map((p) => p.parts.length), own.pages.map((p) => p.sections.length), `${seed.slug}: copy deck covers every part`)
+      own.pages.forEach((p, i) => { const parts = own.contentDirection.copy[i].parts; assert.ok(p.sections.every((x) => parts.some((y) => y.part === x.name.split(' — ')[0])) && parts.length >= Math.max(1, p.sections.length) || !p.sections.length, `${seed.slug}: copy deck covers every part of ${p.label}`) })
       for (const p of own.pages) for (const sct of p.sections) if (['gallery', 'featured-work', 'about', 'location', 'editorial-story', 'product-grid'].includes(sct.id))
         assert.ok(own.media.shots.some((x) => x.where.includes(sections[sct.id as keyof typeof sections].name)), `${seed.slug}: ${p.label} ${sct.id} has no shot`)
       assert.match(recipeToMarkdown(own), /## Copy deck/, `${seed.slug}: the copy deck reaches the recipe`)
@@ -794,6 +794,67 @@ const main = async () => {
     for (const purpose of ['studio', 'agency'] as const) assert.notEqual(recommendSectionPhotos({ ...specFromSeed(recipeSeeds[0]), purpose, motion: 'dynamic' }, 'gallery'), 'hover-reveal', `${purpose}: gallery hides its photos`)
     const named = composeRecipe({ ...specFromSeed(recipeSeeds[0]), brief: { name: 'Morrow', offer: 'A bakery and tea room in an old stone mill.' } })
     assert.match(named.contentDirection.source, /Morrow/, 'the copy deck starts from the owner’s words')
+  }
+
+  // Engine review, 2026-10-07 (docs/review-engine-2026-10-07.md): what Fieldhouse, Maison Vey and Halden had to settle by hand.
+  {
+    const { assetsConfigTs, tokensCss, shotAssets } = await import('../src/features/build-packages/shared')
+    const built = ['fieldhouse', 'maison-vey', 'halden'].map((x) => composeRecipe(JSON.parse(readFileSync(`examples/${x}/opuskit.json`, 'utf8')).spec))
+    for (const r of built) {
+      const conf = assetsConfigTs(r), md = recipeToMarkdown(r), css = tokensCss(r)
+      // 1 · The asset layer is the shot list: every photo shot has its key, its files and size; the checklist counts the same.
+      for (const x of r.media.shots.filter((x) => x.kind === 'photo')) assert.ok(conf.includes(`  ${x.key}: { src:`), `${r.slug}: asset layer has ${x.key}`)
+      const sets = r.assetRequirements.filter((a) => a.set), total = shotAssets(r).reduce((t, x) => t + x.files.length, 0)
+      assert.equal(sets.reduce((t, a) => t + Number(/^(\d+)/.exec(a.quantity)?.[1] ?? 0), 0), total, `${r.slug}: checklist counts the shot list`)
+      assert.ok(!/\bstatus: 'optional'/.test(conf), `${r.slug}: no optional entry no part uses`)
+      // 2 · One number per frame value: the text says what tokens.css ships.
+      const y = /--section-y: ([^;]+);/.exec(css)![1]
+      assert.ok(r.layoutSystem.sectionSpacing.includes(y) && md.includes(y), `${r.slug}: section spacing text matches the token`)
+      // 3 · One film length.
+      if (r.media.hero.id.startsWith('scroll-video')) assert.ok(!/5–8 ?s|5–15 ?s/.test(md) && /not a loop/.test(r.media.shots.find((x) => x.kind === 'film')!.format), `${r.slug}: one film length, no loop for a scrubbed film`)
+      // 4 · No rule forbids the owner's own picks.
+      for (const l of [...r.creativeDirection.avoid, ...r.creativeDirection.genericAvoid]) assert.ok(!(palettes[r.metadata.spec.palette].dark && /charcoal|near-black/i.test(l)), `${r.slug}: “${l}” bans its own palette`)
+      // 5 · Controls only where a part uses them; forms say where they go.
+      assert.ok(!r.implementation.ui.components.some((c) => ['tooltip', 'navigation-menu', 'dropdown-menu', 'slider', 'pagination', 'input-otp'].includes(c.slug)), `${r.slug}: unused controls in the UI kit`)
+      assert.ok(r.implementation.ui.rules.some((x) => x.startsWith('Where a form goes')), `${r.slug}: forms say where they go`)
+      if (!r.implementation.ui.components.some((c) => c.slug === 'calendar')) assert.ok(!r.implementation.ui.rules.some((x) => /Calendar/.test(x)), `${r.slug}: no calendar rule without a date field`)
+      // 6 · A dark palette keeps its footer on the ground; the error colour and caption role exist.
+      if (palettes[r.metadata.spec.palette].dark) assert.match(r.chrome.footer.code?.usage ?? '<FooterSection light', /<FooterSection[^>]* light /, `${r.slug}: footer on the ground`)
+      assert.ok(css.includes('--color-error:') && css.includes('@utility type-caption'), `${r.slug}: error colour and caption role`)
+      // 7 · The reference call shows the design picked for the part.
+      for (const p of r.pages) for (const x of p.sections) if (x.variant && x.code && /variant="/.test(x.code.usage)) assert.match(x.code.usage, new RegExp(`variant="${x.variant.id}"`), `${r.slug}: ${x.name} reference shows its design`)
+    }
+    // 8 · Featured work and case studies show their pictures; a spa is not a clinic; references are of the site's own kind.
+    const studio = composeRecipe({ ...specFromSeed(recipeSeeds[0]), purpose: 'studio', motion: 'dynamic', pages: [{ id: 'w', type: 'project', label: 'Project', purpose: '', sections: ['case-study', 'gallery'] }, { id: 'h', type: 'home', label: 'Home', purpose: '', sections: ['hero', 'featured-work'] }] })
+    assert.notEqual(studio.pages[1].sections[1].photos?.id, 'hover-reveal', 'featured work hides its photos by default')
+    assert.equal(studio.pages[0].sections[0].media, 'full', 'a case study opens with its picture, full width')
+    assert.ok(studio.media.shots.some((x) => x.per === 'project'), 'project pages need pictures per project')
+    assert.ok(!defaultPagesFor('spa').some((p) => p.type === 'team') && purposes.spa.noun !== 'Practice', 'a spa is not a clinic')
+    const shop = composeRecipe({ ...specFromSeed(recipeSeeds.find((x) => x.spec.purpose === 'fashion') ?? recipeSeeds[0]), purpose: 'studio' })
+    assert.ok(!shop.references.some((x) => /fashion|e-commerce/i.test(x.title)), 'a studio on a fashion seed studies studios, not stores')
+  }
+
+  // Room to invent, 2026-10-07 (decision 32): every look carries what its best sites are known for, and every package
+  // keeps the owner's picks while asking the builder to design the rest — never "do not invent" or "do not add".
+  {
+    const { lookKnowledge } = await import('../src/data/look-knowledge')
+    const slugs = new Set(Object.keys(JSON.parse(readFileSync('src/data/example-specs.generated.json', 'utf8'))))
+    for (const id of Object.keys(directions) as DirectionId[]) {
+      const k = lookKnowledge[id]
+      assert.ok(k, `${id}: look knowledge`)
+      assert.ok(k.moves.length >= 3 && k.craft.length >= 2 && k.sparks.length >= 2 && k.traps.length >= 1 && k.seen.length >= 1, `${id}: knowledge has moves, craft, sparks, traps, seen`)
+      for (const x of k.seen.filter((x) => x.startsWith('example:'))) assert.ok(slugs.has(x.slice(8)), `${id}: ${x} is a built example`)
+      for (const x of [...k.moves, ...k.craft, ...k.sparks, ...k.traps]) assert.ok(!/\bGSAP\b|React Bits|Aceternity/i.test(x), `${id}: knowledge never needs a forbidden library — ${x}`)
+    }
+    for (const seed of recipeSeeds.slice(0, 4)) {
+      const r = composeRecipe(specFromSeed(seed))
+      for (const [id, a] of Object.entries(adapters)) {
+        const text = (await a.generate(r)).files.map((f) => f.content).join('\n')
+        assert.ok(/Room to invent/.test(text), `${seed.slug} · ${id}: the package gives room to invent`)
+        assert.ok(text.includes(r.style.sparks[0]), `${seed.slug} · ${id}: the package carries the look's sparks`)
+        assert.ok(!/do not invent|Do not add others|Never an effect nobody picked/i.test(text), `${seed.slug} · ${id}: nothing forbids inventing`)
+      }
+    }
   }
 
   console.log(`✓ ${recipeSeeds.length} recipes × ${Object.keys(adapters).length} adapters, remix and asset logic OK`)

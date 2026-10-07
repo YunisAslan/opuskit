@@ -1,0 +1,111 @@
+/* Recipe tokens first (they import Tailwind) — they own every --color-* the site uses. */
+@import "../styles/tokens.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* shadcn's dark: classes key off a .dark class this site never sets — the recipe is dark by its own tokens. */
+@custom-variant dark (&:is(.dark *));
+
+/* shadcn/ui theme — the recipe's hex block (recipe/ui.md). Only names that don't collide with the recipe tokens are
+   mapped into Tailwind here: background, primary, secondary, border come from tokens.css with the same values, and the
+   components' muted/accent highlights were rewritten to `secondary`, so --color-accent stays the recipe's one signal. */
+:root {
+  --background: #181D21; --foreground: #FFFFFF;
+  --card: #22282D; --card-foreground: #FFFFFF; --popover: #22282D; --popover-foreground: #FFFFFF;
+  --primary: #FFFFFF; --primary-foreground: #181D21; --secondary: #2B3238; --secondary-foreground: #FFFFFF;
+  --muted: #22282D; --muted-foreground: #A3ABB2; --accent: #2B3238; --accent-foreground: #FFFFFF;
+  --border: #363E45; --input: #A3ABB2; --ring: #FFFFFF; --radius: 0px;
+  --destructive: #FF4421;
+
+  /* next/font hashes the family names; point the recipe's font roles at them. */
+  --font-display: var(--font-imbue), 'Imbue', serif;
+  --font-heading: var(--font-imbue), 'Imbue', serif;
+  --font-body: var(--font-hanken), 'Hanken Grotesk', sans-serif;
+  --font-utility: var(--font-hanken), 'Hanken Grotesk', sans-serif;
+
+  /* Motion — the same two easings everywhere (recipe/motion.md). */
+  --ease-cut: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-line: cubic-bezier(0.22, 1, 0.36, 1);
+  --nav-h: 64px;
+}
+
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-body);
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+  --ease-cut: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-line: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  * { @apply border-(--color-border); }
+  html { -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; }
+  body { @apply antialiased; }
+  ::selection { background: var(--color-accent); color: var(--chap-text); }
+  /* Designed focus: no rings or glows. Links and buttons get an underline or background change (set per component);
+     anything else that takes focus shows a 1px line in the text colour. */
+  :focus { outline: none; }
+  :focus-visible { outline: 1px solid var(--color-text); outline-offset: 4px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, [role="combobox"]:focus-visible,
+  [role="tab"]:focus-visible, [role="checkbox"]:focus-visible, [role="switch"]:focus-visible { outline: none; }
+  img, video { display: block; }
+}
+
+/* The one step between heading and body: every h3 on the site (a service, a step, a plan, a photo's title). */
+@utility type-title {
+  font-family: var(--font-heading); font-size: clamp(1.375rem, 2vw, 1.75rem); font-weight: var(--type-heading-weight);
+  line-height: 1.1; letter-spacing: 0;
+}
+
+/* Links in text: a plain underline appears on hover and focus; the current page keeps it. */
+@utility link-line {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+  transition: text-decoration-color 160ms ease-out, color 160ms ease-out;
+  &:hover, &:focus-visible, &[aria-current="page"] { text-decoration-color: currentColor; }
+}
+
+/* Buttons — two shapes, set in the utility type role. Focus swaps the background like hover. */
+@utility btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  min-height: 48px; padding: 0 24px; border-radius: var(--radius-button);
+  font-family: var(--font-utility); font-size: var(--type-utility-size); font-weight: var(--type-utility-weight);
+  line-height: 1; white-space: nowrap; cursor: pointer;
+  transition: background-color 160ms ease-out, color 160ms ease-out, border-color 160ms ease-out;
+}
+@utility btn-solid {
+  background: var(--color-accent); color: var(--chap-text);
+  &:hover, &:focus-visible { background: var(--color-text); color: var(--color-background); }
+}
+@utility btn-line {
+  border: 1px solid currentColor; color: var(--color-text);
+  &:hover, &:focus-visible { background: var(--color-text); color: var(--color-background); border-color: var(--color-text); }
+}
+
+/* Page transition — a short crossfade of the page between routes (View Transitions; instant on reduced motion). */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 480ms; animation-timing-function: var(--ease-cut); }
+::view-transition-group(site-nav) { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  *, *::before, *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; }
+}

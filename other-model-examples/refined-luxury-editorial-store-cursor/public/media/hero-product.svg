@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2000" width="1600" height="2000" role="img">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6B2530"/><stop offset="0.28" stop-color="#7E2E38"/>
+      <stop offset="0.62" stop-color="#6B2530"/><stop offset="1" stop-color="#3E0E14"/>
+    </linearGradient>
+    <linearGradient id="cap" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#B49A93"/><stop offset="0.5" stop-color="#D7B5B0"/><stop offset="1" stop-color="#8A6B66"/>
+    </linearGradient>
+    <radialGradient id="floor" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#000" stop-opacity="0.5"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig" cx="0.42" cy="0.4" r="0.8">
+      <stop offset="0" stop-color="#6C2531"/><stop offset="0.55" stop-color="#5A1A23"/><stop offset="1" stop-color="#4A1119"/>
+    </radialGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.5" stop-color="#fff" stop-opacity="0.22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="2000" fill="url(#vig)"/>
+  <ellipse cx="768" cy="1850" rx="414.96" ry="87.36000000000001" fill="url(#floor)"/>
+  <rect x="676.272" y="600" width="183.456" height="157.5" fill="url(#cap)"/>
+  <rect x="702.48" y="810" width="131.04" height="105" fill="url(#glass)"/>
+  <path d="M 549.6 1902 L 549.6 1041
+           Q 549.6 894 702.48 852
+           L 833.52 852
+           Q 986.4 894 986.4 1041
+           L 986.4 1902 Z" fill="url(#glass)"/>
+  <rect x="602.0160000000001" y="1104" width="43.68000000000001" height="735" fill="url(#shine)"/>
+  <rect x="628.2239999999999" y="1209" width="279.552" height="483" fill="#4A1119" stroke="#6E2A34"/>
+  <text x="768" y="1335" fill="#F8ECE8" font-family="Georgia, serif" font-size="69.888" text-anchor="middle">MAISON VEY</text>
+  <text x="768" y="1482" fill="#F8ECE8" font-family="Georgia, serif" font-size="56.784000000000006" text-anchor="middle">Quiet Harbour</text>
+  <text x="768" y="1608" fill="#D7B5B0" font-family="Helvetica, Arial, sans-serif" font-size="25.334400000000002" letter-spacing="8.736" text-anchor="middle">6 A.M.</text>
+</svg>

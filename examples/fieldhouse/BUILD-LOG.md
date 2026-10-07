@@ -29,10 +29,15 @@ into a fresh `create-next-app@16.3.8` project (TypeScript, Tailwind, ESLint, App
 
 ## 3. Media
 
-None yet. Photos could not be fetched this time (Pexels shows a "verify you are human" check to the automated browser;
-the Unsplash connector needs re-authorising), so the user asked for the site to be built first with temporary
-pictures, and for the list of photos each part needs (recipe/media.md → Shot list). The real photos replace the
-temporary ones later, file for file, without touching code.
+2026-10-06: none yet (Pexels showed a "verify you are human" check to the automated browser; the Unsplash connector
+needed re-authorising), so the build started with temporary pictures (Prompt 1).
+
+2026-10-07: 28 photos found and picked by Claude through the Unsplash connector, by the shot list in
+`recipe/media.md`: the first screen (desktop 16:9 and a 4:5 phone crop), four projects, a gallery of ten (wide views,
+details, hands at work), four case-study moments (before, drawing, making, after), two About pictures, four team
+portraits, two for Location. Two first picks for About were swapped out because a cap and a T-shirt carried a brand
+mark. One shared grade, crops by the shot list's ratios, sizes and sources in `media-src/SOURCES.md`; originals in
+`media-src/`, the copies the site uses in `public/media/`. So the build no longer needs temporary pictures (Prompt 2).
 
 ## 4. Prompts to Claude Code
 
@@ -58,3 +63,56 @@ implementation plan: it had set up shadcn/ui (`components.json`, `src/components
 `src/app/globals.css`) and was reading the reference sections; no page was written yet. To go on: a fresh subagent,
 built the same way (outside the repo, sees only the project), with the same prompt plus "Continue where the last
 build stopped: shadcn/ui is set up, no pages yet." — logged here as Prompt 2.
+
+### Prompt 2 (2026-10-07)
+
+A fresh Claude Code subagent, run the same way as Prompt 1 (the project moved outside the OpusKit repository, this log
+and the photo originals kept outside it until the build ended; the same four rules, port 3017), with:
+
+```
+Read CLAUDE.md and build the whole site following build/implementation-plan.md. Continue where the last build stopped: shadcn/ui is set up, no pages yet.
+
+My photos are ready, so no temporary pictures are needed: they are in public/media/. Each file name says the part it is for (hero and hero-mobile, project-1 to project-4, gallery-1 to gallery-10, case-1 to case-4, about and about-2, team-1 to team-4, location-1 and location-2), and media-src/SOURCES.md says what each one shows. Use them through src/config/assets.ts and record them in assets/manifest.json.
+```
+
+### Prompt 2, resumed (2026-10-07)
+
+The session ended while Prompt 2 was running (it had written the layout, menu, footer, first screen and shared
+components; no inner pages yet). The same subagent was resumed with:
+
+```
+continue where you left off
+```
+
+The resumed run stopped once more on the account's usage limit and was resumed again with the same words
+("continue where you left off"); it then finished the site: Home, Work, four project pages (`/work/{slug}`), About,
+Contact, Privacy and a not-found page, every word in `src/content/site.ts` (invented facts marked `PLACEHOLDER`), a
+barn-gable logo it drew (`src/components/Logo.tsx`, also the favicon), all 28 photos through `src/config/assets.ts`.
+Its own notes: the enquiry form has no server (it opens the visitor's mail app); all four project pages share the four
+"how it was made" photos; Featured Work is "large and small pictures" on Work and "names that reveal photos" on Home and
+the project pages; form errors use the brass accent (the palette has no error colour).
+
+## 5. Review (2026-10-07)
+
+Production build clean (12 routes). Every page at 1440 and 390 in Chromium, and Home on an emulated touch phone: no
+console errors, no failed requests (only the 404 page's own 404), no sideways scroll; the pinned sideways galleries,
+the menu's section index and the touch thumbnails in the project list all work.
+
+## 6. Fix round 1 (2026-10-07)
+
+From the review: Home shows almost no pictures after the first screen (on a computer the projects' photos appear only
+on hover), and each project page's main photo sits small beside the text. The same subagent, resumed the same way
+(the project outside the repository, this log and the photo originals kept outside it), was sent:
+
+```
+Two things to fix, both about pictures.
+
+1. Home: after the first screen the page is almost all words. On a computer the four barns' photos only appear when you hover a name, so most visitors never see them. This studio is shown by its buildings: let the photos of the four barns be seen on Home without hovering, large, while keeping the list of names.
+
+2. Project pages: each barn's main photo sits small, half the width, beside the text. Make it the page's big picture — wide and large, before the story and the facts.
+```
+
+Result: Home now keeps the list of names beside one large photo that holds its place and shows the barn in view
+(`src/components/BarnIndex.tsx`, new; on phones each name has its own full-width photo); each project page opens with
+its title, then the main photo full width (16:9, 3:2 on phones), then the facts and story
+(`src/components/sections/CaseStudy.tsx`). Build and lint pass.

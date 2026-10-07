@@ -23,7 +23,7 @@ const KINDS = ([
   ['portfolio', 'agency', 'studio', 'personal-brand', 'experiment'],
   ['fashion', 'ecommerce', 'product', 'saas'],
   ['restaurant', 'hotel', 'real-estate', 'event'],
-  ['blog', 'nonprofit', 'course', 'clinic'],
+  ['blog', 'nonprofit', 'course', 'clinic', 'spa'],
 ] as PurposeId[][]).flat().filter(has)
 const FEELS = (['quiet', 'minimal', 'editorial', 'organic', 'bold', 'raw', 'cinematic', 'experimental', 'futuristic'] as FamilyId[]).filter((f) => SITES.some((s) => s.families.includes(f)))
 
@@ -40,6 +40,7 @@ export function Library() {
 
   return (
     <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-10 md:px-8 md:pt-12">
+      <p className="label mb-4">Library · Discover</p>
       <h1 className="display text-[clamp(2rem,3vw,2.75rem)]">Collect. Customize. Build.</h1>
       <p className="mt-2 text-ink-2">Pick the sites you like — we merge them into one. Make it yours, then build it. <StartBlank className="ml-1" /></p>
 
@@ -81,7 +82,7 @@ function Sites({ kinds, feels, onClear }: { kinds: PurposeId[]; feels: FamilyId[
       {list.map((s) => (
         <li key={s.ref} className="group relative">
           <Link href={`/library/sites/${s.ref.replace(':', '/')}`} className="block">
-            <div className="overflow-hidden rounded-lg border border-line"><LazyMount className="aspect-[16/10]"><SiteThumb site={s.ref} auto /></LazyMount></div>
+            <div className="overflow-hidden rounded-lg border border-line transition-[border-color,translate,box-shadow] duration-300 group-hover:-translate-y-1 group-hover:border-ink group-hover:shadow-[0_16px_32px_-20px_rgb(0_0_0/.45)]"><LazyMount className="aspect-[16/10]"><SiteThumb site={s.ref} auto /></LazyMount></div>
             <h2 className="mt-3 text-lg font-medium tracking-tight group-hover:text-pencil">{s.name}</h2>
             <p className="mt-0.5 text-sm text-muted">{purposes[s.spec.purpose].name} · {directions[s.spec.direction].name}</p>
           </Link>
@@ -111,7 +112,7 @@ function Expand({ site: s }: { site: (typeof SITES)[number] }) {
               <DialogDescription className="text-sm text-muted">{purposes[s.spec.purpose].name} · {directions[s.spec.direction].name}</DialogDescription>
             </div>
             <div className="flex shrink-0 items-center gap-2">
-              <Link href={`/library/sites/${s.ref.replace(':', '/')}`} className="hidden h-9 items-center rounded-full px-3.5 text-sm text-ink-2 hover:bg-paper-2 hover:text-ink sm:inline-flex">See its parts</Link>
+              <Link href={`/library/sites/${s.ref.replace(':', '/')}`} className="hidden h-9 items-center rounded-[3px] px-3.5 text-sm text-ink-2 hover:bg-paper-2 hover:text-ink sm:inline-flex">See its parts</Link>
               <CollectButton item={{ kind: 'site', site: s.ref }} label="Collect" />
             </div>
           </div>

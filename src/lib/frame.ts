@@ -9,7 +9,7 @@ export type Frame = { container: string; gutter: string; sectionY: string; ratio
 
 export const FRAMES: Record<LayoutId, Frame> = {
   balanced: { container: '1200px', gutter: 'clamp(20px, 4vw, 32px)', sectionY: 'clamp(88px, 11vw, 152px)', ratioCard: '4 / 5', ratioMedia: '16 / 9' },
-  editorial: { container: '1440px', gutter: 'clamp(20px, 3vw, 44px)', sectionY: 'clamp(104px, 13vw, 196px)', ratioCard: '3 / 4', ratioMedia: '3 / 4' },
+  editorial: { container: '1440px', gutter: 'clamp(20px, 3vw, 44px)', sectionY: 'clamp(104px, 13vw, 196px)', ratioCard: '3 / 4', ratioMedia: '3 / 2' },
   asymmetric: { container: '100%', gutter: '5vw', sectionY: 'clamp(112px, 15vw, 232px)', ratioCard: '4 / 5', ratioMedia: '3 / 2' },
   grid: { container: '100%', gutter: 'clamp(16px, 2vw, 24px)', sectionY: 'clamp(72px, 9vw, 120px)', ratioCard: '1 / 1', ratioMedia: '4 / 3' },
   'full-bleed': { container: '1200px', gutter: 'clamp(20px, 4vw, 40px)', sectionY: 'clamp(96px, 12vw, 160px)', ratioCard: '3 / 2', ratioMedia: '16 / 9' },
@@ -36,5 +36,12 @@ export const TONE_CSS = `[data-tone="surface"]{background:var(--color-surface)}
 [data-tone="inverse"]{--color-background:var(--inv-bg);--color-text:var(--inv-text);--color-primary:var(--inv-text);--color-accent:var(--inv-accent)}
 [data-tone="chapter"]{--color-background:var(--chap-bg);--color-text:var(--chap-text);--color-primary:var(--chap-text);--color-accent:var(--chap-text)}
 [data-tone="inverse"],[data-tone="chapter"]{--color-muted:color-mix(in oklab,var(--color-text) 72%,var(--color-background));--color-surface:color-mix(in oklab,var(--color-text) 7%,var(--color-background));--color-secondary:color-mix(in oklab,var(--color-text) 14%,var(--color-background));--color-border:color-mix(in oklab,var(--color-text) 24%,var(--color-background));background:var(--color-background);color:var(--color-text)}`
+
+/** The error colour no palette names: a red that reads on this ground (AA, 4.5:1) — form errors used to borrow the accent
+ *  (Fieldhouse, Maison Vey). The warmest of a few reds that passes; the text colour if none does. */
+export function errorColor(c: PaletteColors): string {
+  const reds = ['#B42318', '#C8102E', '#9F1D14', '#FF7A6B', '#FF9286', '#FFB4A9']
+  return reds.find((x) => contrast(x, c.background) >= 4.5) ?? c.text
+}
 
 export const TONES: SectionTone[] = ['ground', 'surface', 'inverse', 'chapter']

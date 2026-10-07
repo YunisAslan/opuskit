@@ -1,9 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { use, useMemo } from 'react'
-import { StepBar } from '@/app/kit/StepBar'
-import { specToPlan } from '@/features/kit/plan'
 import { updatePlan, usePlan } from '@/lib/kit'
 import { composeRecipe, isValidSpec } from '@/features/recipes/engine'
 import { saveGeneration, useGenerations } from '@/features/recipes/library'
@@ -14,10 +11,9 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
   const { id } = use(params)
   const gen = useGenerations()[id]
   const recipe = useMemo(() => (gen && isValidSpec(gen.spec) ? composeRecipe(gen.spec, id) : null), [gen, id])
-  // Step 3 of the kit: the bar reads the kit's plan when this recipe came from it, else this recipe as a plan.
-  const kit = usePlan(), router = useRouter()
-  const own = kit.fromId === id
-  const plan = useMemo(() => (own ? kit : gen && isValidSpec(gen.spec) ? specToPlan(gen.spec, id) : kit), [own, kit, gen, id])
+  // The recipe being built shows the steps bar; any other opens in the building steps when changed.
+  const kit = usePlan()
+  const own = kit.fromId === id && kit.via === 'studio'
 
   if (!useHydrated()) return <div className="min-h-screen" />
   if (!recipe) {
@@ -31,12 +27,11 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
   }
   return (
     <>
-      {!(own && kit.via === 'studio') && <StepBar plan={plan} step="recipe" sticky={false} onGo={(s) => s !== 'recipe' && router.push(`/kit?step=${s}${own ? '' : `&from=gen:${id}`}`)} onSite={() => router.push(`/kit?step=style&cat=site${own ? '' : `&from=gen:${id}`}`)} />}
       <RecipeDocument recipe={recipe} recipeRef={`gen:${id}`} onChange={(spec) => {
         saveGeneration(spec, id)
-        // Files added here are the kit's files too, so the next update from the kit keeps them.
+        // Files added here are the plan's files too, so the next update from the steps keeps them.
         if (own) updatePlan((p) => ({ ...p, from: spec, uploads: spec.uploads, assets: spec.assets, mediaPlan: spec.mediaPlan }))
-      }} inKit studio={own && kit.via === 'studio'} />
+      }} studio={own} />
     </>
   )
 }

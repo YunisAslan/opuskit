@@ -1,0 +1,34 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Maison Vey — Refined Luxury Editorial Store — design system
+
+Source of truth: @docs/recipe.md. Do not invent colors, fonts, spacing or sections.
+
+- Tokens only (src/styles/tokens.css). No raw hex in components.
+- Fonts: display Bodoni Moda 400; heading Bodoni Moda; body Jost; utility Jost.
+- Spacing: 8px scale (4px, 8px, 12px, 16px, 24px, 32px, 48px, 64px, 96px, 128px, 160px, 240px).
+- Layout: Editorial — Headlines 8 columns, body 5 columns max (~65ch), captions in the rail.
+- Mood: Refined, Unhurried, Exclusive, Elegant.
+
+## Do
+- Use the high-contrast serif at large sizes only
+- Space sections far apart
+- Keep UI text small, in sentence case
+
+## Avoid
+- Discount-style badges
+- Gold gradients
+- Crowded product grids
+- A cream or beige page ground with a clay/terracotta accent
+- A near-black ground with one acid-green or orange accent, or tinted charcoal standing in for black
+- Small uppercase, letter-spaced monospace labels above every heading
+- Numbered markers (01 / 02) on content that is not a real sequence
+- Meta strings joined with middle dots or spaced em dashes, and "→" appended to links
+- One italic or coloured accent word inside an otherwise plain headline
+- Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe's fonts
+- Text in mix-blend-difference (or any blend mode) over a photo — its colours turn random; text on a picture sits on a scrim or a solid block
+- Effects nobody picked: no text effect, hover, cursor or scroll trick beyond the recipe's motion system and Your Kit

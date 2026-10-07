@@ -340,7 +340,7 @@ export function inferPurpose(plan: KitPlan): PurposeId {
 
 const GOAL_OF: Partial<Record<PurposeId, GoalId>> = {
   portfolio: 'contact', agency: 'contact', studio: 'contact', 'personal-brand': 'contact', 'real-estate': 'contact', experiment: 'explore',
-  ecommerce: 'buy', fashion: 'buy', product: 'buy', restaurant: 'book', hotel: 'book', clinic: 'book', event: 'book',
+  ecommerce: 'buy', fashion: 'buy', product: 'buy', restaurant: 'book', hotel: 'book', clinic: 'book', spa: 'book', event: 'book',
   saas: 'signup', blog: 'subscribe', nonprofit: 'donate', course: 'apply',
 }
 /** What visitors should do, read from what the site has (the owner never has to say): its parts and pages first —

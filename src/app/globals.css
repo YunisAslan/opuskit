@@ -5,25 +5,40 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-paper: #F5F0E6;
-  --color-paper-2: #ECE6D9;
-  --color-white: #FFFFFF;
-  --color-ink: #151413;
-  --color-ink-2: #2B2926;
-  --color-muted: #6B665C;
-  --color-line: #DCD5C7;
-  --color-pencil: #2E48D6;
-  --color-pencil-soft: #DCE1FA;
+  /* OpusKit 2026-10 — a studio instrument: cool stone ground, near-black ink, hairline structure, one signal orange
+     used sparingly (active, live, the one thing to press). Archivo (a touch wide) for display, Geist for reading,
+     Geist Mono for small labels. */
+  --color-paper: #EFEFEB;
+  --color-paper-2: #E5E5E0;
+  --color-white: #FAFAF8;
+  --color-ink: #0E0E10;
+  --color-ink-2: #2B2B30;
+  --color-muted: #66666C;
+  --color-line: #D4D4CE;
+  --color-pencil: #E0480F;
+  --color-pencil-soft: #FBE3D8;
   --color-warn: #9A5B00;
-  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-newsreader), Georgia, serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), var(--font-geist), ui-sans-serif, sans-serif;
+  --font-serif: var(--font-geist), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-html { background: var(--color-paper); color: var(--color-ink); -webkit-text-size-adjust: 100%; }
+/* Dark: graphite ground, warm bone ink, the orange turned up a notch so it still reads as the one signal. Set on
+   <html class="dark"> before paint (layout.tsx) from the visitor's choice, else their system; ThemeToggle flips it.
+   .keep-light pins the light palette on a block that is dark on purpose in both modes (the Build Package band). */
+.dark {
+  --color-paper: #111113; --color-paper-2: #1B1B1E; --color-white: #18181B;
+  --color-ink: #ECECE6; --color-ink-2: #C3C3BD; --color-muted: #8F8F96; --color-line: #2B2B30;
+  --color-pencil: #FF5C21; --color-pencil-soft: #3A1B0E; --color-warn: #E3A33B;
+  --destructive: #F97066;
+  color-scheme: dark;
+}
+.keep-light { --color-paper: #EFEFEB; --color-paper-2: #E5E5E0; --color-white: #FAFAF8; --color-ink: #0A0A0C; --color-ink-2: #2B2B30; --color-muted: #66666C; --color-line: #D4D4CE; --color-pencil: #FF5C21; }
+html { color-scheme: light; background: var(--color-paper); color: var(--color-ink); -webkit-text-size-adjust: 100%; }
 body { font-family: var(--font-sans); background: var(--color-paper); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
-::selection { background: var(--color-pencil); color: white; }
+::selection { background: var(--color-ink); color: var(--color-paper); }
 :focus-visible:not([data-slot]) { outline: 2px solid var(--color-pencil); outline-offset: 2px; border-radius: 2px; }
 /* Fields, selects, menus and their options (shadcn/ui, data-slot) show focus with a darker border or highlight — no rings. */
 [data-slot]:focus, [data-slot]:focus-visible { outline: none; box-shadow: none; }
@@ -33,32 +48,61 @@ button:not(:disabled), summary, select, [role="option"]:not([aria-disabled="true
 button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 
 /* Recipe type roles for previews of ready pieces and sections (same block as every Build Package's tokens.css). */
-@utility type-display { font-family: var(--font-display), sans-serif; font-size: var(--type-display-size); font-weight: var(--type-display-weight); line-height: var(--type-display-leading); letter-spacing: var(--type-display-tracking); text-transform: var(--type-display-case, none); font-stretch: var(--type-display-stretch, normal); }
-@utility type-heading { font-family: var(--font-heading), sans-serif; font-size: var(--type-heading-size); font-weight: var(--type-heading-weight); line-height: var(--type-heading-leading); letter-spacing: var(--type-heading-tracking); text-transform: var(--type-heading-case, none); font-stretch: var(--type-heading-stretch, normal); }
-@utility type-body { font-family: var(--font-body), sans-serif; font-size: var(--type-body-size); font-weight: var(--type-body-weight); line-height: var(--type-body-leading); letter-spacing: var(--type-body-tracking); text-transform: var(--type-body-case, none); font-stretch: var(--type-body-stretch, normal); }
-@utility type-utility { font-family: var(--font-utility), sans-serif; font-size: var(--type-utility-size); font-weight: var(--type-utility-weight); line-height: var(--type-utility-leading); letter-spacing: var(--type-utility-tracking); text-transform: var(--type-utility-case, none); font-stretch: var(--type-utility-stretch, normal); }
+@utility type-display { font-family: var(--font-display), var(--type-display-fallback, sans-serif); font-size: var(--type-display-size); font-weight: var(--type-display-weight); line-height: var(--type-display-leading); letter-spacing: var(--type-display-tracking); text-transform: var(--type-display-case, none); font-stretch: var(--type-display-stretch, normal); font-style: var(--type-display-style, normal); }
+@utility type-heading { font-family: var(--font-heading), var(--type-heading-fallback, sans-serif); font-size: var(--type-heading-size); font-weight: var(--type-heading-weight); line-height: var(--type-heading-leading); letter-spacing: var(--type-heading-tracking); text-transform: var(--type-heading-case, none); font-stretch: var(--type-heading-stretch, normal); font-style: var(--type-heading-style, normal); }
+@utility type-body { font-family: var(--font-body), var(--type-body-fallback, sans-serif); font-size: var(--type-body-size); font-weight: var(--type-body-weight); line-height: var(--type-body-leading); letter-spacing: var(--type-body-tracking); text-transform: var(--type-body-case, none); font-stretch: var(--type-body-stretch, normal); font-style: var(--type-body-style, normal); }
+@utility type-utility { font-family: var(--font-utility), var(--type-utility-fallback, sans-serif); font-size: var(--type-utility-size); font-weight: var(--type-utility-weight); line-height: var(--type-utility-leading); letter-spacing: var(--type-utility-tracking); text-transform: var(--type-utility-case, none); font-stretch: var(--type-utility-stretch, normal); font-style: var(--type-utility-style, normal); }
 
-.display { font-weight: 600; letter-spacing: -0.045em; line-height: 0.92; }
-.prose-serif { font-family: var(--font-serif); font-size: 1.125rem; line-height: 1.65; }
+.display { font-family: var(--font-display); font-weight: 600; font-stretch: 108%; letter-spacing: -0.04em; line-height: 0.96; }
+.display-xl { font-family: var(--font-display); font-weight: 600; font-stretch: 108%; letter-spacing: -0.05em; line-height: 0.88; }
+/* The name, set as on the first landing: wide, heavy caps. */
+.wordmark { font-family: var(--font-display); font-weight: 700; font-stretch: 125%; letter-spacing: -0.04em; line-height: 0.88; text-transform: uppercase; }
+.prose-serif { font-size: 1.0625rem; line-height: 1.6; color: var(--color-ink-2); }
+/* Micro labels: mono, small, wide-tracked caps — section names, counts, meta. */
+.label { font-family: var(--font-mono); font-size: .6875rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--color-muted); }
+/* The page frame: content between two hairline rails, sections split by hairlines with a cross where they meet the
+   rails (.xm) — the structure is visible. .grid-paper is the faint drafting grid behind the hero's flow. */
+.frame { max-width: 1440px; margin-inline: auto; border-inline: 1px solid var(--color-line); }
+.rule { border-top: 1px solid var(--color-line); }
+.xm { position: relative; }
+.xm::before, .xm::after { content: ''; position: absolute; top: -5px; z-index: 2; width: 9px; height: 9px; background: linear-gradient(var(--color-muted), var(--color-muted)) center / 1px 100% no-repeat, linear-gradient(var(--color-muted), var(--color-muted)) center / 100% 1px no-repeat; }
+.xm::before { left: -5px; } .xm::after { right: -5px; }
+.grid-paper { background-image: linear-gradient(var(--color-line) 1px, transparent 1px), linear-gradient(90deg, var(--color-line) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
+.cell { border: 1px solid var(--color-line); background: var(--color-white); }
+.dot-live { display: inline-block; width: .5rem; height: .5rem; background: var(--color-pencil); border-radius: 999px; box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-pencil) 22%, transparent); }
 
 /* Buttons */
-.btn { cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 48px; padding: 0 1.4rem; border-radius: 999px; font-weight: 500; font-size: .95rem; transition: background-color .15s, color .15s, border-color .15s; }
+.btn { cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 46px; padding: 0 1.35rem; border-radius: 2px; font-family: var(--font-mono); font-weight: 500; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; transition: background-color .15s, color .15s, border-color .15s; }
 .btn-ink { background: var(--color-ink); color: var(--color-paper); }
 .btn-ink:hover { background: var(--color-ink-2); }
-.btn-line { border: 1px solid var(--color-ink); }
+.btn-line { border: 1px solid var(--color-ink); background: transparent; }
+.btn-signal { background: var(--color-pencil); color: #fff; }
+.btn-signal:hover { background: color-mix(in oklab, var(--color-pencil) 82%, #000); }
+.dark .btn-signal { color: var(--color-paper); }
+.dark .btn-signal:hover { background: color-mix(in oklab, var(--color-pencil) 85%, #fff); }
 .btn-line:hover { background: var(--color-ink); color: var(--color-paper); }
-.btn-sm { min-height: 36px; padding: 0 1rem; font-size: .85rem; }
+.btn-sm { min-height: 34px; padding: 0 .9rem; font-size: .6875rem; }
+/* Hover language: text links draw a line from the left, arrows lean the way they point, pictures come closer. */
+.ulink { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .4s var(--ease-out-expo), color .15s; }
+.ulink:hover, .group:hover .ulink { background-size: 100% 1px; }
+svg.lucide-arrow-right, svg.lucide-arrow-up-right, svg.lucide-arrow-left { transition: transform .3s var(--ease-out-expo); }
+a:hover > svg.lucide-arrow-right, button:hover > svg.lucide-arrow-right, a:hover svg.lucide-arrow-up-right { transform: translateX(3px); }
+a:hover svg.lucide-arrow-up-right { transform: translate(2px, -2px); }
+a:hover > svg.lucide-arrow-left { transform: translateX(-3px); }
+.ticker:hover { animation-play-state: paused; }
+/* The theme switch: the new mode grows out of the button (View Transitions; a plain swap elsewhere). */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 .link { text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; }
-.link:hover { color: var(--color-pencil); }
+.link:hover { color: var(--color-ink); text-decoration-color: var(--color-pencil); }
 
 /* Blue-pencil annotation — the one signature device */
-.pencil { font-family: var(--font-sans); color: var(--color-pencil); font-size: .78rem; font-weight: 500; }
+.pencil { font-family: var(--font-mono); color: var(--color-pencil); font-size: .6875rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
 .pencil-line { background: var(--color-pencil); }
 
 /* Choice cards in the creator */
-.choice { position: relative; text-align: left; border: 1px solid var(--color-line); background: var(--color-white); border-radius: 10px; transition: border-color .15s, box-shadow .15s; }
+.choice { position: relative; text-align: left; border: 1px solid var(--color-line); background: var(--color-white); border-radius: 3px; transition: border-color .15s, box-shadow .15s; }
 .choice:hover { border-color: var(--color-ink); }
-.choice[aria-pressed="true"], .choice[aria-checked="true"] { border-color: var(--color-pencil); box-shadow: 0 0 0 1px var(--color-pencil); }
+.choice[aria-pressed="true"], .choice[aria-checked="true"] { border-color: var(--color-ink); box-shadow: 0 0 0 1px var(--color-ink); }
 
 /* Reveal on view (opt-in, class toggled by <Reveal/>) */
 .reveal { opacity: 0; transform: translateY(14px); transition: opacity .7s var(--ease-out-expo), transform .7s var(--ease-out-expo); }
@@ -233,11 +277,11 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 }
 
 :root {
-  --background: #F5F0E6; --foreground: #151413;
-  --card: #FFFFFF; --card-foreground: #151413; --popover: #FFFFFF; --popover-foreground: #151413;
-  --primary: #151413; --primary-foreground: #F5F0E6; --secondary: #ECE6D9; --secondary-foreground: #151413;
-  --muted-foreground: #6B665C; --accent: #DCE1FA; --accent-foreground: #151413;
-  --destructive: #B42318; --border: #DCD5C7; --input: #CFC6B4; --ring: #2E48D6; --radius: 0.625rem;
+  --background: var(--color-paper); --foreground: var(--color-ink);
+  --card: var(--color-white); --card-foreground: var(--color-ink); --popover: var(--color-white); --popover-foreground: var(--color-ink);
+  --primary: var(--color-ink); --primary-foreground: var(--color-paper); --secondary: var(--color-paper-2); --secondary-foreground: var(--color-ink);
+  --muted-foreground: var(--color-muted); --accent: var(--color-paper-2); --accent-foreground: var(--color-ink);
+  --destructive: #B42318; --border: var(--color-line); --input: color-mix(in oklab, var(--color-line) 85%, var(--color-ink)); --ring: var(--color-ink); --radius: 0.25rem;
 }
 
 @layer base {
@@ -252,3 +296,22 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 [data-tone="inverse"]{--color-background:var(--inv-bg);--color-text:var(--inv-text);--color-primary:var(--inv-text);--color-accent:var(--inv-accent)}
 [data-tone="chapter"]{--color-background:var(--chap-bg);--color-text:var(--chap-text);--color-primary:var(--chap-text);--color-accent:var(--chap-text)}
 [data-tone="inverse"],[data-tone="chapter"]{--color-muted:color-mix(in oklab,var(--color-text) 72%,var(--color-background));--color-surface:color-mix(in oklab,var(--color-text) 7%,var(--color-background));--color-secondary:color-mix(in oklab,var(--color-text) 14%,var(--color-background));--color-border:color-mix(in oklab,var(--color-text) 24%,var(--color-background));background:var(--color-background);color:var(--color-text)}
+
+/* Landing: the showcase's progress line. */
+@keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* Hero flow: a signal travels the line from the sites you like to the site you get; the finished sites take turns. */
+@keyframes travel { from { left: 0%; opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } to { left: 100%; opacity: 0; } }
+.travel { animation: travel 5.5s cubic-bezier(.45,.05,.35,1) infinite; }
+@keyframes travel-y { from { top: 0%; opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } to { top: 100%; opacity: 0; } }
+.travel-y { animation: travel-y 5.5s cubic-bezier(.45,.05,.35,1) infinite; }
+@keyframes take-turns { 0%, 22% { opacity: 1; } 27%, 100% { opacity: 0; } }
+.take-turns { opacity: 0; animation: take-turns 16s infinite; }
+.take-turns:first-child { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .travel, .travel-y { display: none; } .take-turns { animation: none; } }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ticker { animation: ticker 70s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .ticker { animation: none !important; } }
+/* In dark mode the Build Package band would melt into the ground: a deeper black and hairlines. */
+.dark #package { background-color: #0A0A0C; border-block: 1px solid #2B2B30; }
+/* Showcase: each site wipes in from the left over the last one, settling from a slight zoom. */
+@keyframes wipe { from { clip-path: inset(0 100% 0 0); transform: scale(1.04); } to { clip-path: inset(0 0 0 0); transform: scale(1); } }

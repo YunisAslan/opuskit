@@ -21,12 +21,12 @@ export default function SavedPage() {
   if (!hydrated) return <div className="min-h-screen" />
   return (
     <>
-      <PageIntro title="Saved recipes" />
+      <PageIntro label="Yours · kept in this browser" title="Saved recipes" />
       <div className="mx-auto max-w-[1440px] px-5 pb-24 md:px-8">
-        {/* The site being built in the kit — one draft, kept until it becomes a recipe. */}
+        {/* The site being built — one draft, kept until it becomes a recipe. */}
         {plan.pages.length > 0 && (
-          <Link href="/kit" className="choice mb-10 flex flex-wrap items-center justify-between gap-3 p-5">
-            <span><span className="block text-xs uppercase tracking-wider text-muted">Draft in the kit</span>
+          <Link href="/studio/pages" className="choice mb-10 flex flex-wrap items-center justify-between gap-3 p-5">
+            <span><span className="block text-xs uppercase tracking-wider text-muted">Site in progress</span>
               <span className="mt-1 block text-lg font-medium">{plan.name || 'Untitled site'}</span>
               <span className="block text-sm text-muted">{draft.pages} page{draft.pages === 1 ? '' : 's'} · {draft.sections} section{draft.sections === 1 ? '' : 's'}{draft.pieces ? ` · ${draft.pieces} effect${draft.pieces === 1 ? '' : 's'}` : ''}</span></span>
             <span className="btn btn-ink btn-sm">Continue</span>
@@ -35,8 +35,8 @@ export default function SavedPage() {
         {saved.length === 0 ? (
           <div className="border-t border-line py-20">
             <p className="text-2xl tracking-tight">Nothing saved yet.</p>
-            <p className="mt-2 text-ink-2">Start exploring recipes worth remembering.</p>
-            <Link href="/explore" className="btn btn-ink mt-6">Explore recipes</Link>
+            <p className="mt-2 text-ink-2">A recipe you save from its page shows up here.</p>
+            <Link href="/library" className="btn btn-ink mt-6">Open the Library</Link>
           </div>
         ) : (
           <>

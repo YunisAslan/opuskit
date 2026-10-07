@@ -7,7 +7,7 @@ import type { ImageKey } from '@/data/images'
 export type PurposeId =
   | 'portfolio' | 'agency' | 'studio' | 'fashion' | 'restaurant' | 'ecommerce'
   | 'product' | 'saas' | 'personal-brand' | 'experiment' | 'other'
-  | 'blog' | 'event' | 'nonprofit' | 'real-estate' | 'hotel' | 'course' | 'clinic'
+  | 'blog' | 'event' | 'nonprofit' | 'real-estate' | 'hotel' | 'course' | 'clinic' | 'spa'
 
 export type FamilyId =
   | 'quiet' | 'editorial' | 'cinematic' | 'minimal' | 'bold' | 'raw' | 'organic' | 'experimental' | 'futuristic'
@@ -262,6 +262,8 @@ export type AssetSpec = {
   level: 'required' | 'recommended' | 'optional'
   usage: string
   specs: string
+  /** A set of photos for the site's parts: its count and files come from the shot list, not from this row. */
+  set?: true
 }
 
 export type MediaPattern = {
@@ -576,7 +578,10 @@ export type PageBlueprint = { id: string; type: PageTypeId; label: string; purpo
 /** `storytelling`: for scroll-controlled film heroes, how video and text become one scroll timeline. */
 /** `framing`: how the owner's own video is shaped per screen, when its shape isn't already 16:9. */
 /** One line of the shot list: which part, what its picture or film shows, and its format. */
-export type Shot = { where: string; kind: 'photo' | 'film'; shows: string; format: string }
+/** One picture or film the site needs, once — however many parts and pages show it. `key` is its entry in the asset
+ *  layer (src/config/assets.ts); `count` files, each `size` at `ratio`; `per` when every item has its own set
+ *  (each product, each project), so the files repeat per item. */
+export type Shot = { key: string; where: string; kind: 'photo' | 'film'; shows: string; format: string; count: number; ratio?: string; size?: string; per?: string }
 
 export type MediaRecipe = MediaPattern & { hero: HeroPattern; storytelling?: string[]; imagery?: ImageryPlan; framing?: string; shots: Shot[] }
 
@@ -640,12 +645,29 @@ export type RecipeMetadata = {
   image: ImageKey
 }
 
+/** What excellent sites in one look are known for — from OpusKit's research and its own builds (data/look-knowledge.ts).
+ *  It goes into every Build Package as the style's best moves and as seeds for the builder's own moments. */
+export type LookKnowledge = {
+  /** The visible moves sites in this style are known for. */
+  moves: string[]
+  /** Details that separate a premium site in this style from a template of it. */
+  craft: string[]
+  /** Seeds for a remembered moment — ideas to start from, not to copy. */
+  sparks: string[]
+  /** What goes wrong when this style is built badly. */
+  traps: string[]
+  /** What it rests on: research sites by name, `example:{slug}` for OpusKit's own builds. */
+  seen: string[]
+}
+
 export type UniversalRecipe = {
   id: string
   title: string
   slug: string
   summary: string
   creativeDirection: CreativeDirection
+  /** The look's knowledge, fitted to the owner's picks (lines that would forbid their colours or fonts are left out). */
+  style: LookKnowledge & { look: string }
   designPrinciples: string[]
   visualSystem: VisualSystem
   layoutSystem: LayoutSystem

@@ -1,4 +1,304 @@
 {
+ "halden": {
+  "base": "cinematic-editorial",
+  "brief": {
+   "name": "Halden",
+   "offer": "A wood-fired sauna and cold-sea bathhouse on a northern coast: heat, salt water and the long quiet in between.",
+   "goal": "book"
+  },
+  "purpose": "spa",
+  "direction": "dark-cinematic",
+  "characters": [
+   "mysterious"
+  ],
+  "lead": "video",
+  "motion": "immersive",
+  "hero": "scroll-video",
+  "layout": "full-bleed",
+  "palette": "charcoal-signal",
+  "typography": "opening-credits",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "temporary",
+  "concept": "off",
+  "sectionVariants": [
+   {
+    "page": "danhs2i2",
+    "index": 4,
+    "variant": "wall"
+   }
+  ],
+  "signatures": [],
+  "pieces": [
+   "smooth-scroll",
+   "scroll-progress"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "smooth-scroll",
+    "page": "*",
+    "index": -1
+   },
+   {
+    "piece": "scroll-progress",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "services",
+     "how-it-works",
+     "gallery",
+     "testimonials",
+     "pricing",
+     "location",
+     "reservation"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "services",
+    "label": "The baths",
+    "purpose": "Make the offer and the way of working clear enough to remove hesitation.",
+    "sections": [
+     "services",
+     "process",
+     "pricing",
+     "faq"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "reservations",
+    "label": "Visit",
+    "purpose": "Convert interest into a booking with minimal friction.",
+    "sections": [
+     "reservation",
+     "location",
+     "faq"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "faq",
+    "label": "FAQ",
+    "purpose": "Answer the questions that would otherwise stall a decision.",
+    "sections": [
+     "faq"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "sign-in",
+    "label": "Sign In",
+    "purpose": "Standard sign-in: email/password, forgot-password link, link to sign up.",
+    "sections": [],
+    "hide": [
+     "navbar",
+     "footer"
+    ]
+   },
+   {
+    "id": "p6",
+    "type": "sign-up",
+    "label": "Sign Up",
+    "purpose": "Standard sign-up: minimal required fields, clear value of creating an account.",
+    "sections": [],
+    "hide": [
+     "navbar",
+     "footer"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "nav": "classic-bar",
+  "footer": "signature"
+ },
+ "maison-vey": {
+  "base": "luxury-fashion",
+  "brief": {
+   "name": "Maison Vey",
+   "offer": "A small perfume house making five scents by hand, each one a single place at a single hour.",
+   "goal": "buy"
+  },
+  "purpose": "ecommerce",
+  "direction": "luxury-editorial",
+  "characters": [
+   "elegant"
+  ],
+  "lead": "product",
+  "motion": "subtle",
+  "hero": "product-stage",
+  "layout": "editorial",
+  "palette": "oxblood-room",
+  "typography": "gala-night",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "concept": "off",
+  "signatures": [],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "product-grid",
+     "collection",
+     "editorial-story",
+     "testimonials",
+     "trust",
+     "newsletter"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "shop",
+    "label": "Shop",
+    "purpose": "Let visitors browse and choose confidently.",
+    "sections": [
+     "product-grid",
+     "product-highlight",
+     "collection",
+     "faq"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "product-detail",
+    "label": "Product",
+    "purpose": "Show one product in full: gallery, price, variants, add-to-cart, and related items.",
+    "sections": [
+     "product-buy",
+     "product-highlight",
+     "testimonials",
+     "faq",
+     "product-grid"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "cart",
+    "label": "Cart",
+    "purpose": "Let visitors review and adjust their selection before checkout.",
+    "sections": [
+     "product-grid"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "checkout",
+    "label": "Checkout",
+    "purpose": "Collect payment and shipping with as little friction as possible.",
+    "sections": []
+   },
+   {
+    "id": "p6",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "process"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "footer": "signature"
+ },
+ "fieldhouse": {
+  "base": "luxury-fashion",
+  "brief": {
+   "name": "Fieldhouse",
+   "offer": "An architecture studio that turns old barns into houses — keeping the timber, the stone and the light.",
+   "goal": "contact"
+  },
+  "purpose": "studio",
+  "direction": "modern-heritage",
+  "characters": [
+   "elegant"
+  ],
+  "lead": "photography",
+  "motion": "dynamic",
+  "hero": "parallax-photo",
+  "layout": "editorial",
+  "palette": "warm-black",
+  "typography": "moonlit-italic",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "concept": "off",
+  "signatures": [],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "featured-work",
+     "manifesto",
+     "testimonials",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "work",
+    "label": "Work",
+    "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+    "sections": [
+     "featured-work",
+     "gallery"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "project",
+    "label": "Project",
+    "purpose": "Show one project in full: what it was, the facts (client, place, year, role), the pictures in order, and the way to the next project.",
+    "sections": [
+     "case-study",
+     "gallery",
+     "specs",
+     "featured-work"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "process",
+     "team"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "contact",
+    "label": "Contact",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "contact-cta",
+     "location"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "footer": "signature"
+ },
  "qum": {
   "base": "organic-modern",
   "brief": {

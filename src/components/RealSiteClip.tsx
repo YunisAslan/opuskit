@@ -45,7 +45,7 @@ export function TileClip({ match, className = 'aspect-video' }: { match: Match; 
     <div className={`relative overflow-hidden bg-paper-2 ${className}`}>
       <video ref={ref} key={match.clip} src={`${match.clip}#t=0.1`} muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" aria-label={`${name}, a real site built with OpusKit`} />
       <button type="button" aria-label={`See ${name} larger`} onClick={(e) => { e.stopPropagation(); setOpen(true) }}
-        className="pointer-events-auto absolute bottom-1.5 right-1.5 z-10 rounded-full bg-white/90 p-1.5 text-ink shadow-sm hover:bg-white">
+        className="pointer-events-auto absolute bottom-1.5 right-1.5 z-10 rounded-[3px] bg-white/90 p-1.5 text-ink shadow-sm hover:bg-white">
         <Maximize2 size={13} aria-hidden />
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -76,10 +76,10 @@ export function DualShot({ real, drawn, className = 'aspect-[16/10]' }: { real?:
         <div className="size-full shrink-0 snap-start"><TileClip match={real} className="size-full" /></div>
         <div className="pointer-events-none size-full shrink-0 snap-start overflow-hidden">{drawn}</div>
       </div>
-      <span role="group" aria-label="Show" className="pointer-events-auto absolute bottom-1.5 left-1.5 z-10 flex rounded-full bg-white/90 p-0.5 text-[10px] font-medium shadow-sm">
+      <span role="group" aria-label="Show" className="pointer-events-auto absolute bottom-1.5 left-1.5 z-10 flex rounded-[3px] bg-white/90 p-0.5 text-[10px] font-medium shadow-sm">
         {['Real site', 'Your style'].map((l, i) => (
           <button key={l} type="button" aria-pressed={side === i} onClick={(e) => { e.stopPropagation(); go(i) }}
-            className={`rounded-full px-2 py-0.5 ${side === i ? 'bg-ink text-white' : 'text-ink-2 hover:text-ink'}`}>{l}</button>
+            className={`rounded-[3px] px-2 py-0.5 ${side === i ? 'bg-ink text-paper' : 'text-ink-2 hover:text-ink'}`}>{l}</button>
         ))}
       </span>
     </div>
