@@ -1,0 +1,77 @@
+{
+  "recipe": "swiss-modern",
+  "title": "Raster School — Precise Swiss Modern Course Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon. Until the owner’s own exists: the name set as a wordmark in the display face, and its first letter as the favicon — no invented symbol to throw away later",
+      "temporary": true,
+      "note": "Wordmark set in Zalando Sans 800 (components/site/Logo.tsx); favicon is the letter R (src/app/icon.svg). Replace when the owner’s logo exists."
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Zalando Sans (Google Fonts)",
+      "note": "Zalando Sans via next/font/google (variable, wght + wdth)."
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "temporary": true,
+      "note": "Written in src/content/. Every invented fact (prices, dates, names, quotes, address) is marked PLACEHOLDER there."
+    },
+    "finalHeadlineCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Hero and section statements",
+      "specs": "Short: 3–8 words each; written before layout",
+      "note": "src/content/course.ts"
+    },
+    "team": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash (media-src/SOURCES.md)",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Team",
+      "specs": "4 files · 1:1 · 2000×2000 — one portrait per person, in the same light and framing, ideally where they work",
+      "files": [
+        "public/media/team-1.jpg",
+        "public/media/team-2.jpg",
+        "public/media/team-3.jpg",
+        "public/media/team-4.jpg"
+      ],
+      "note": "The owner's photos, 2000×2000 black and white portraits. Alt text per file in src/config/assets.ts."
+    },
+    "about": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Unsplash (media-src/SOURCES.md)",
+      "replaceWith": "user-owned-images",
+      "usage": "Instructor · About",
+      "specs": "1 file · 4:3 · 2400×1800 — a real portrait of the person or the team, in their own place",
+      "files": [
+        "public/media/about.jpg"
+      ],
+      "note": "The owner's photo, 2400×1800 black and white: hands inking a letterpress forme with a roller."
+    }
+  }
+}

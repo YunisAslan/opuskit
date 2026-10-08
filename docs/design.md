@@ -83,7 +83,7 @@ The shadcn variables (`--background`, `--card`, `--border`, …) read these toke
   cell like the header's (mono number + name); the current one on a `white` surface, the way walked underlined 2px in
   `pencil`, done steps ticked. Hover fills `paper-2`. Every step opens at any time except one there is nothing for yet
   (Direction without a name and kind, Recipe without a recipe) — shown faded with a reason on hover. Sticky things under
-  it sit at `top-[113px]` (header 57 + bar 56). On Direction only the right column (Your brand) is sticky; the picker's
+  it sit at `top-[112px]`, or `top-[111px]` when they have a top border (the bar sticks at 56 and ends at 112; one hairline, never a gap or a double line). On Direction only the right column (Your brand) is sticky; the picker's
   tabs scroll with the lists.
 - **Recipe page tabs** (`RecipeDocument.tsx`; three — Your site, Your files, Build, decision 47): the same ruled cells as the steps bar, but names only — tabs are not steps, so no
   numbers (the user, 2026-10-08); the open tab on `white` with a 2px `pencil` underline, hover `paper-2`). Section heads are `.display` titles over a hairline;
@@ -92,6 +92,20 @@ The shadcn variables (`--background`, `--card`, `--border`, …) read these toke
   in a pencil `.label`.
 - Library and studio controls are shadcn/ui (see AGENTS.md). Corners are 2–4px everywhere; no pills. Round only for
   dots, toggles, avatars and step numbers.
+
+## The brand poster (`components/BrandCard.tsx`)
+
+The owner's brand is drawn as a poster, the same everywhere (2026-10-08; a first "brand sheet" with crop marks, ruled
+cells and hex labels was "a bit odd"; the user: simple, creative, and no buttons that ask to be clicked):
+- **Full** (`BrandCard` — Direction's right column, the recipe page's Your brand): the accent as one short rule; the
+  name in the display face; the sentence in the body face; a big "Aa" with the faces named; down the right edge the palette as a printer's colour bar (each band names its
+  role and hex on hover).
+- **Mini** (`BrandSheetMini` — Saved's cards, the landing's 02 station): the same, small.
+- **OpusKit's maker's label** (`MakerLabel`): the OpusKit logo on an ink plate, at the poster's foot, on the type
+  specimen's line (right of the "Aa"). It is OpusKit's own — its face, ink and paper, following
+  OpusKit's light/dark — and never changes with the owner's palette or lettering.
+- No buttons or links inside it: a picture of a button asks to be pressed. Everything is in the owner's palette and
+  faces; a new palette re-inks it with a 300ms colour cross-fade.
 
 ## Hover language (`globals.css`)
 

@@ -16,8 +16,8 @@ should be as good as **Sela Mor** — that is the bar for every new example too.
 
 ## 2. Rules
 
-- **No fake examples.** Every site is made the way a user would make it: **Library → Brand → Pages → Recipe → Build
-  Package → Claude Code** (from #17, 2026-10-06; #1–#16 were made in the kit).
+- **No fake examples.** Every site is made the way a user would make it: **Library → You → Direction → Recipe → Build
+  Package → Claude Code** (the flow since #19; #17–#18 went through the older Brand / Pages screens, #1–#16 the kit).
   Allowed: providing media, and asking for fixes in plain words. Not allowed: hand-written code, hiding a change that
   went outside the recipe. Every prompt goes into `examples/{slug}/BUILD-LOG.md`, word for word, in order.
 - No real brands, logos, famous people or film/TV footage. Brand names are made up; copy is real (no lorem).
@@ -33,11 +33,11 @@ should be as good as **Sela Mor** — that is the bar for every new example too.
 
 | Step | Who | What |
 |---|---|---|
-| 1 | Claude | Builds the recipe **through the Library flow** in a real browser, as a user would (collect sites or start blank, Brand, Pages, Next: Recipe), and shows it. The user approves. (#1–#16: in the kit.) |
+| 1 | Claude | Builds the recipe **through the flow** in a real (headless) browser, as a user would: take a site's signature parts in the Library (decision 52), You (name, sentence, kind), Direction (look, colours, lettering — palettes previewed by fit), Next: Recipe; sends it to the user as a `/studio/open?recipe=…` link. The user approves. |
 | 2 | Claude | Writes the media brief (§5): photos Claude will find, and the shot list for any film or sound the user picks. |
 | 3 | Claude + user | Claude downloads photos into `media-src/` (sources in `media-src/SOURCES.md`), resizes them (≤ 2400 px long side, JPEG q82) into `public/media/`. The user drops films/sound into the project root or `media-src/`. |
 | 4 | Claude | `create-next-app@16.3.8` (TypeScript, Tailwind, ESLint, App Router, src/, `--skip-install --disable-git`), **`turbopack.root` pin in `next.config.ts` before any install/build**, `scripts/build-package.ts spec.json examples/{slug}`, keep `build/` out of `.gitignore`, remove the placeholder SVGs, `npm install`, the package README's `npm i …`. Films through `bash scripts/prepare-video.sh`. |
-| 5 | Claude Code | A fresh subagent builds it from the package with the prompt in `BUILD-LOG.md` (it is told only: stay inside the folder, read CLAUDE.md and AGENTS.md, its port, never touch the `turbopack.root` line). Resumed with "continue where you left off" after a limit; logged. |
+| 5 | Claude Code | A fresh subagent builds it from the package with the prompt in `BUILD-LOG.md` (it is told only: stay inside the folder, read CLAUDE.md and AGENTS.md, its port, never touch the `turbopack.root` line; in a `claude -p` session also to stop its dev server before its final reply — otherwise the session waits on it and never ends, #22). Resumed with "continue where you left off" after a limit; logged. |
 | 6 | Claude | Review: production build, 1440 px + 390 px in a real browser, overflow, console errors, failed requests. Fix prompts only (1–2 rounds). Fixes to shipped pieces/sections go into OpusKit's own sources too. |
 | 7 | Claude + user | Feed back (decision 33 in `docs/plan-library.md`): compare each section the builder made with its source in `src/sections/`. Where the build made it clearly better (layout, states, motion, a11y), list it and **ask**; once approved, bring it back as a fix or a new `variant` (tokens and props only, `npm run pieces`, `npm run check`). So the clip shows what a collector gets. |
 | 8 | Claude | Registration: `src/data/examples.ts` (title/summary from the site's own `<title>`/meta, `choices` with exact option names), `public/examples/{slug}` symlink, card screenshot `public/examples/{slug}.jpg`, `npm run examples`, live export (AGENTS.md "Showing one on the site"), click-through from the nav in a real browser, `npm run check`. |
@@ -49,8 +49,8 @@ its `examples.ts` entry; grep for `/examples/{slug}` (kit sample photos use some
 
 ## 4. The built sites — what is open
 
-All twenty-one are built, registered and live. Open:
-- **Clips for #11–#21** (Inkwell & Moth, Kür Delta Watch, Night Shift, Aster House, Sela Mor, QUM, Fieldhouse, Maison Vey, Low Hum, Halden, Pale Hour):
+All twenty-two are built, registered and live. Open:
+- **Clips for #11–#21** (Inkwell & Moth, Kür Delta Watch, Night Shift, Aster House, Sela Mor, QUM, Fieldhouse, Maison Vey, Low Hum, Halden, Pale Hour, Raster School):
   waiting for the user's screen recordings.
 - **Re-recordings** (section clips that are a held still frame because the recording never stopped on them; ~4 s
   standing still on each fixes it):
@@ -87,6 +87,31 @@ Code.
 Order: 17 → 18 → 19 → 20 (the user's film last). Palettes and lettering by fit, previewed in Brand. Not used: Orrery (a
 watchmaker) — nearly every watch photo carries a real brand's logo.
 
+## 5b. Next sites (#22–#25, 2026-10-08) — examples that also strengthen the engine
+
+The user (2026-10-08): the next sites are made for two things at once — a premium example in a look no example has
+yet, and a stronger engine. So each site carries one **engine test**: something no build has tried, chosen so the
+build shows where the recipe is silent, contradicts itself or falls short. After each build, before registering:
+compare the Build Package with the built code (as `docs/review-engine-2026-10-07.md` did), write the gaps into the
+site's `BUILD-LOG.md` → Engine lessons, fix them in the engine with a check.ts regression, and only then start the next
+site — so every site is built on what the one before it taught.
+
+Made through the flow (Library → You → Direction → Recipe), approved by the user from a `/studio/open?recipe=…` link,
+built in an isolated `claude -p` session outside the repo. Photos: Claude (Unsplash connector); films: the user.
+
+| # | Site | Kind | Look (new) · motion · lead | Media | Engine test |
+|---|---|---|---|---|---|
+| 22 | **Raster School** — a six-week evening course in typographic design: grids, lettering, a poster at the end | Course / education | Swiss Modern · **still** · typography | ~10 photos (Claude): studio, posters on walls, hands at work | The first **still** site: does it feel alive through the seasoning alone — loaders, Swiss micro-interactions, no parallax? A course's own parts (curriculum, schedule, pricing, enrol form) and worst-case content (long module names, a sold-out cohort, zero seats left) |
+| 23 | **Kelp Line** — volunteers replanting kelp forests on a cold northern coast; dives, beach days, a planting count | Nonprofit / cause | Coastal Calm · subtle · photography | ~20 photos (Claude): underwater kelp, divers, shoreline, hands with seedlings | **Donate** as the main action (form, amounts, what each buys), **numbers** that change (stats, a running count — tabular figures), events with dates, the **subtle** parallax dose (one picture on the whole site) |
+| 24 | **Pip & Kiln** — bright glazed mugs, plates and vases from a two-person pottery; Saturday workshops | E-commerce | Playful Pop · dynamic · product | ~30 photos (Claude): product shots on colour, the studio, glazing | A **whole shop** through the flow: product grid, product page, cart, checkout, the cart micro-interactions, out of stock, one product in a category; the sentence's “workshops” adds a page (`pagesFromWords`); product photos per item from the shot list |
+| 25 | **Ninth Row** — a 120-seat arthouse cinema: the month's programme, a late-night series, tickets | Event (cinema) | Film-inspired · immersive · video | a film (the user — own footage of a projector, seats, a lit screen; no film/TV footage), ~12 photos (Claude) | **Listings**: a programme with long titles, sold-out and cancelled screenings, an empty week; title cards between chapters; the **immersive** parallax dose next to a film first screen; is a cinema read as an event venue (decision 46)? |
+
+Order: 22 → 23 → 24 → 25 (the user's film last). Palettes and lettering picked by fit in Direction, previewed on the
+page. Each concept is international and invented (no Azerbaijan theming, no real brands or logos in the photos).
+Still open for later: Victorian, Surrealism, Synthwave, Y2K Chrome, Pixel Art, Maximalism, Bohemian, Soft Pastel,
+Swiss Editorial, Fashion Editorial, Raw Editorial, Art Direction, Immersive Portfolio, Conceptual Sketch, Cyberpunk,
+Warm Hospitality — and the kinds with one example (real estate, personal brand, clinic, blog, SaaS).
+
 ## 6. Progress
 
 | # | Site | Recipe | Media | Build | Registered | Clips |
@@ -103,3 +128,7 @@ watchmaker) — nearly every watch photo carries a real brand's logo.
 | 19 | Low Hum | ✓ the new flow, Library → You → Direction (no Pages screen): parts from Fennwood (first screen, Menu, Reservation), Lowfield Nights (Schedule, Words that arrive), Inkwell & Moth (Prints on a desk); Restaurant; Retro Seventies · Espresso · Soft Seventies; Home · Menu · Reservations — approved 2026-10-08 | ✓ 11 photos (Unsplash connector, `media-src/SOURCES.md`) | ✓ Prompt 1 + Prompt 2 (photos, alts, readable first screen, visible focus) in an isolated `claude -p` session; reviewed 1440 + 390 | ✓ live at `/live/low-hum` (click-through checked), `npm run check` ✓ | waiting for recording |
 | 20 | Halden | ✓ via the Library (blank → Health & wellness; Dark Cinematic · Charcoal Signal · Opening Credits; Home: Film on the first screen, Services, How It Works, Gallery, Testimonials (Wall), Pricing, Location, Reservation · The baths · Visit · FAQ · Sign In · Sign Up; Smooth scroll + Scroll progress, both by the user) — saved 2026-10-07 | ✓ the user's film (drone over fog, 4K) via `prepare-video.sh`; 21 photos (Unsplash connector) | ✓ Prompt 1 + Prompt 2 (scene map fitted to the film) in an isolated `claude -p` session; reviewed 1440 + 390 | ✓ live at `/live/halden` (click-through checked), `npm run check` ✓ | waiting for recording |
 | 21 | Pale Hour | ✓ the flow: parts from Sela Mor (Featured Work, Schedule, Photos follow the cursor), Fieldhouse (Gallery, Tap to open large), Slow Atlas (Journal, Cut-out headline); A place or an event → Gallery or museum (decision 46); Art Editorial · Gallery Grey · Cut Glass; Home · Exhibitions · Visit · About — approved 2026-10-08 | ✓ 23 photos (Unsplash connector, `media-src/SOURCES.md`) | ✓ Prompt 1 + Prompt 2 (photos, readable first screen, no real brand) + Prompt 3 (no hand-written `/_next/image`, for the static export) in an isolated `claude -p` session; reviewed 1440 + 390 | ✓ live at `/live/pale-hour` (click-through checked), `npm run check` ✓ | waiting for recording |
+| 22 | Raster School | ✓ the flow: parts from Night Shift (Process, Pricing), Sela Mor (Schedule), Brasshand (Manifesto, Team); Course / education; Swiss Modern · Klein Field · Grid Discipline · **still**; Home · Curriculum · Enrol · Instructor · FAQ — approved 2026-10-08 | ✓ 5 photos (Unsplash connector, `media-src/SOURCES.md`) | ✓ Prompt 1 + Prompt 2 (photos, alts, caption) in an isolated `claude -p` session; reviewed 1440 + 390; Engine lessons 1–7 in its BUILD-LOG | ✓ live at `/live/raster-school` (click-through checked), `npm run check` ✓ | waiting for recording |
+| 23 | Kelp Line | planned (§5b) | | | | |
+| 24 | Pip & Kiln | planned (§5b) | | | | |
+| 25 | Ninth Row | planned (§5b) | | | | |

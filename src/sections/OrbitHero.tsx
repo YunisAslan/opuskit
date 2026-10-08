@@ -14,7 +14,7 @@ function Orbiter({ item, i, n, turn }: { item: OrbitItem; i: number; n: number; 
   return (
     <motion.img src={item.src} alt={item.alt} draggable={false} className="absolute -translate-x-1/2 -translate-y-1/2 select-none object-contain"
       style={{ left, top, width: item.size ?? 120, rotate: item.tilt ?? 0 }}
-      initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 18, delay: 0.2 + i * 0.05 }} />
+      initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 18, delay: 0.2 + i * 0.05 }} />
   )
 }
 

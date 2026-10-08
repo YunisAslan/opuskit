@@ -180,8 +180,8 @@ export const motionPatterns: MotionPattern[] = [
   {
     id: 'state-feedback', name: 'State feedback', levels: ['still', 'subtle', 'dynamic', 'immersive'],
     purpose: 'Confirm interaction (hover, focus, press) so controls feel responsive.',
-    trigger: 'Pointer hover, keyboard focus, active press', behavior: 'Color/underline/opacity change; no layout shift.',
-    duration: '120–180ms', easing: 'ease-out', implementation: 'CSS transitions on color, opacity, transform.', tech: 'css',
+    trigger: 'Pointer hover, keyboard focus, active press', behavior: 'Color/underline/opacity change on hover — only where a pointer can hover; every pressable scales to 0.97 while pressed; no layout shift.',
+    duration: 'press 140ms (--duration-press), hover 150ms', easing: 'var(--ease-out) for the press, ease for colour', implementation: 'CSS transitions that name each property they move (never all); `:active { transform: scale(0.97) }` on every button, link card and tile; hover styles under `@media (hover: hover) and (pointer: fine)` — Tailwind v4\'s hover: already is.', tech: 'css',
     performance: 'Transition only color, opacity, transform.', reducedMotion: 'Keep — these are not motion-heavy; remove transform component.',
   },
   {
@@ -208,9 +208,9 @@ export const motionPatterns: MotionPattern[] = [
   {
     id: 'parallax-drift', name: 'Parallax drift', levels: ['dynamic', 'immersive'], leads: ['photography', 'product', 'illustration', '3d'],
     purpose: 'Add depth so media feels like a space rather than a flat picture.',
-    trigger: 'Scroll progress while element is in view', behavior: 'Media translates at 0.2–0.35× scroll speed within an overflow-hidden frame.',
+    trigger: 'Scroll progress while element is in view', behavior: 'The picture travels 6–10% of its frame’s height across its pass through the screen, scaled 1.1 inside an overflow-hidden frame so no edge shows; up to two bands a page — a spice, not the dish.',
     duration: 'Scroll-linked', easing: 'linear (scrub)', implementation: 'CSS scroll-driven animations (animation-timeline: view()) with a Motion useScroll + useTransform fallback for browsers without it.', tech: 'css',
-    performance: 'Only transform; set will-change on the moving layer only while in view.', reducedMotion: 'Disable parallax — static image.',
+    performance: 'Only transform; set will-change on the moving layer only while in view; never background-attachment: fixed (it breaks on phones). Phones: half the travel.', reducedMotion: 'Disable parallax — static image.',
   },
   {
     id: 'smooth-scroll', name: 'Smooth scroll', levels: ['immersive'],

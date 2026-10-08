@@ -22,6 +22,7 @@ import { normalizeSpec } from './engine'
 import { toggleSaved, useSaved } from './library'
 import { FlowBar, SiteThumb, exampleOf } from '@/app/library/parts'
 import { BrandCard } from '@/components/BrandCard'
+import { useGoogleFonts } from '@/components/FontLoader'
 import { siteName, takenName, type SiteRef } from '@/features/library/collection'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { Chip, CopyButton } from '@/components/ui'
@@ -102,7 +103,7 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false 
       </header>
 
       {/* Ruled cells like the steps bar (docs/design.md): the open tab on white, underlined in pencil. */}
-      <div role="tablist" aria-label="Recipe" className={`sticky ${studio ? 'top-[113px]' : 'top-[57px]'} z-20 -mx-5 mt-10 flex overflow-x-auto overflow-y-hidden border-y border-line bg-paper/95 backdrop-blur-sm [scrollbar-width:none] md:-mx-8`}
+      <div role="tablist" aria-label="Recipe" className={`sticky ${studio ? 'top-[111px]' : 'top-[56px]'} z-20 -mx-5 mt-10 flex overflow-x-auto overflow-y-hidden border-y border-line bg-paper/95 backdrop-blur-sm [scrollbar-width:none] md:-mx-8`}
         onKeyDown={(e) => {
           const i = TABS.findIndex((t) => t.id === tab)
           const n = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : -1
@@ -155,6 +156,7 @@ const From = ({ site }: { site?: string }) => site ? <span className="label shri
 
 function YourSite({ r, look, editHref }: { r: UniversalRecipe; look: Look; editHref: Edit }) {
   const spec = r.metadata.spec, c = look.colors, t = look.type
+  useGoogleFonts(t.googleFamilies) // the brand poster speaks in the owner's faces
   // Only what the owner picked in Direction (decision 49); everything else is read from it and never listed.
   const facts: [string, string, string][] = [['Look', directions[spec.direction].name, 'direction'], ['Colours', r.visualSystem.palette.name, 'palette'], ['Lettering', t.name, 'typography']]
   return (
@@ -163,7 +165,7 @@ function YourSite({ r, look, editHref }: { r: UniversalRecipe; look: Look; editH
         <div>
           <Heading title="Your brand"><ChangeLink href={editHref()} label="Change the look" /></Heading>
           <div className="mt-6">
-            <BrandCard name={spec.brief?.name} about={spec.brief?.offer} cta={r.contentDirection.ctaExamples[0]} colors={c} type={t} button={r.visualSystem.shape.button}
+            <BrandCard name={spec.brief?.name} about={spec.brief?.offer} colors={c} type={t}
               caption={`${t.display.family}${t.body.family !== t.display.family ? ` + ${t.body.family}` : ''} — exactly as your site will use them.`} />
           </div>
         </div>

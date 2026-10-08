@@ -7,6 +7,7 @@ import { chromeNote } from '@/features/recipes/engine'
 import { recipeSections as S, recipeToMarkdown } from '@/features/recipes/markdown'
 import type { BuildPackageAdapter, UniversalRecipe } from '@/types/domain'
 import { assertComplete, assetManifest, manifestJson, tokensCss } from './shared'
+import { craftBrief, craftGuide } from './craft'
 
 export const LOVABLE_KNOWLEDGE_LIMIT = 10_000
 
@@ -46,6 +47,7 @@ All media goes through one MediaAsset component reading an assets config object.
 
 ## Motion
 ${r.motion.level.name}: ${r.motion.principle} Always respect prefers-reduced-motion.
+${craftBrief(r)}
 
 ## Content
 Tone: ${r.contentDirection.tone}. ${r.contentDirection.voice} Never use: ${r.contentDirection.wordsToAvoid.join(', ')}.
@@ -78,6 +80,7 @@ export const lovableAdapter: BuildPackageAdapter = {
       `Add the shared footer: ${r.chrome.footer.composition} ${keep}`,
       `Make every page responsive: ${r.implementation.responsive.slice(0, 3).join(' ')} Only change layout at breakpoints.`,
       ...(r.motion.level.id !== 'still' ? [`Add motion: ${r.motion.patterns.filter((p) => p.id !== 'state-feedback').map((p) => `${p.name} — ${p.behavior}`).join('; ')}. Respect prefers-reduced-motion. Don't change layout or copy.`] : []),
+      `Season and finish every page: follow interaction-craft.md and recipe.md → Seasoning — every control answers the press, smooth loaders, this site's few micro-interactions used the same way everywhere, parallax only in its dose. Then try the worst case (interaction-craft.md) at 320px. Don't change layout or copy.`,
       ...r.signatures.map((s) => `Add the signature moment "${s.name}" on ${s.where}: ${s.experience} ${s.implementation} On mobile: ${s.mobile} Don't change layout or copy.`),
     ]
     return {
@@ -89,6 +92,7 @@ export const lovableAdapter: BuildPackageAdapter = {
         { path: 'tokens.css', content: tokensCss(r) },
         { path: 'assets/manifest.json', content: manifestJson(r) },
         { path: 'recipe.md', content: recipeToMarkdown(r) },
+        { path: 'interaction-craft.md', content: craftGuide(r) },
       ],
       instructions: `1. Create a new Lovable project.\n2. Open Project settings → Knowledge and paste KNOWLEDGE.md.\n3. Upload any real images/logo you have in the chat.\n4. Send the prompts in PROMPTS.md one at a time, starting in Plan mode.\n5. If you connect GitHub later, commit recipe.md and design-system.md to the repo for reference.`,
     }

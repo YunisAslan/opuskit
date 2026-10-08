@@ -11,7 +11,6 @@ import { BuildButton, CollectionSheet } from '@/app/library/parts'
 
 const NAV = [
   { href: '/library', label: 'Library' },
-  { href: '/examples', label: 'Examples' },
   { href: '/saved', label: 'Saved' },
 ]
 
@@ -32,7 +31,8 @@ export function Header() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2 px-3 md:px-4">
-          <ThemeToggle />
+          {/* On a phone the theme switch lives in the menu: logo, Collection, Build and the menu fill 390px already. */}
+          <span className="hidden sm:contents"><ThemeToggle /></span>
           {/* One Collection for every screen size (two would open two sheets). */}
           <CollectionSheet />
           {n ? <BuildButton /> : null}
@@ -48,7 +48,7 @@ export function Header() {
           {NAV.map((x) => (
             <Link key={x.href} href={x.href} onClick={() => setOpen(false)} className="display block border-b border-line py-4 text-3xl transition-[color,padding] hover:pl-2 hover:text-pencil">{x.label}</Link>
           ))}
-          <Link href="/library" onClick={() => setOpen(false)} className="btn btn-ink mt-6 w-full">Start a site</Link>
+          <div className="mt-6 flex items-center gap-3"><Link href="/library" onClick={() => setOpen(false)} className="btn btn-ink flex-1">Start a site</Link><ThemeToggle /></div>
         </nav>
       )}
     </header>
@@ -57,7 +57,7 @@ export function Header() {
 
 const COLUMNS: [string, [string, string][]][] = [
   ['Make', [['/library', 'Library'], ['/studio/you', 'Your site'], ['/studio/direction', 'Make it yours']]],
-  ['See', [['/examples', 'Examples'], ['/#how', 'How it works'], ['/#package', 'The Build Package']]],
+  ['See', [['/#how', 'How it works'], ['/#package', 'The Build Package']]],
   ['Yours', [['/saved', 'Saved recipes']]],
 ]
 

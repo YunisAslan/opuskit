@@ -44,6 +44,35 @@ export type ExampleProject = {
 
 export const examples: ExampleProject[] = [
   {
+    slug: 'raster-school',
+    title: 'Raster School, an evening course in typographic design',
+    summary: 'A six-week evening course in typographic design: grids, lettering and a poster of your own at the end. Twelve seats a cohort, in the studio or online.',
+    mood: ['Rational', 'Direct', 'Graphic'],
+    // Its first screen is type, not media: the hero still is the site's own first screen.
+    hero: { kind: 'image', src: '/examples/raster-school/media/poster.jpg' },
+    livePath: '/live/raster-school',
+    // Parts taken from Night Shift, Sela Mor and Brasshand, then You → Direction (Swiss Modern, the first still site),
+    // built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
+    choices: [
+      { label: 'Making', value: 'Course / education' },
+      { label: 'Name', value: 'Raster School' },
+      { label: 'Visitors should', value: 'Apply or enrol' },
+      { label: 'Style', value: 'Swiss Modern' },
+      { label: 'First screen', value: 'Typographic statement' },
+      { label: 'Movement', value: 'Still' },
+      { label: 'Colors', value: 'Klein Field' },
+      { label: 'Lettering', value: 'Grid Discipline' },
+      { label: 'Layout', value: 'Grid-driven' },
+      { label: 'Shape', value: 'Sharp' },
+      { label: 'Menu', value: 'Floating pill' },
+      { label: 'Footer', value: 'Big name' },
+      { label: 'Big idea', value: 'None' },
+      { label: 'Pages', value: 'Home, Curriculum, Enrol, Instructor, FAQ' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Photos are from Unsplash (credits in media-src/SOURCES.md); the school, its teachers, students, prices, cohorts and Basel address are made up, and applications open the visitor’s own email — none is sent.',
+  },
+  {
     slug: 'pale-hour',
     title: 'Pale Hour, photography gallery and bookshop',
     summary: 'A photography gallery and bookshop in an old print works. Three exhibitions a year, talks on Thursdays, photobooks to take home.',

@@ -7,7 +7,8 @@ import { directions, purposes } from '@/data/taxonomy'
 import { resolveRef, toggleSaved, useGenerations, useSaved } from '@/features/recipes/library'
 import { usePlan } from '@/lib/kit'
 import { useHydrated } from '@/lib/store'
-import type { UniversalRecipe } from '@/types/domain'
+import type { PaletteColors, UniversalRecipe } from '@/types/domain'
+import { BrandSheetMini } from '@/components/BrandCard'
 
 export default function SavedPage() {
   const gens = useGenerations()
@@ -53,18 +54,10 @@ export default function SavedPage() {
   )
 }
 
-/** A saved recipe as its brand: the name in its display face, the sentence, the palette. */
+/** A saved recipe as its brand: the same brand sheet as Direction and the recipe page, small. */
 function Brand({ r }: { r: UniversalRecipe }) {
   const t = r.visualSystem.typography, spec = r.metadata.spec
-  const c = Object.fromEntries(r.visualSystem.palette.tokens.map((x) => [x.role, x.hex])) as Record<string, string>
+  const c = Object.fromEntries(r.visualSystem.palette.tokens.map((x) => [x.role, x.hex])) as PaletteColors
   useGoogleFonts(t.googleFamilies)
-  return (
-    <div className="flex aspect-[16/10] flex-col justify-between overflow-hidden p-6" style={{ background: c.background, color: c.text }}>
-      <div>
-        <p className="text-[2.2rem] leading-none" style={{ fontFamily: `'${t.display.family}'`, fontWeight: t.display.weight, letterSpacing: t.display.letterSpacing, fontStyle: t.display.italic ? 'italic' : undefined, textTransform: t.display.uppercase ? 'uppercase' : undefined }}>{spec.brief?.name || r.title}</p>
-        <p className="mt-3 line-clamp-2 max-w-[38ch] text-sm" style={{ fontFamily: `'${t.body.family}'`, color: c.muted }}>{spec.brief?.offer || r.summary}</p>
-      </div>
-      <div className="flex" aria-hidden>{(['background', 'surface', 'text', 'primary', 'accent'] as const).map((k) => <span key={k} className="h-5 flex-1" style={{ background: c[k], outline: `1px solid ${c.border}` }} />)}</div>
-    </div>
-  )
+  return <BrandSheetMini name={spec.brief?.name || r.title.split(' — ')[0]} about={spec.brief?.offer || r.summary} colors={c} type={t} nameSize="2.2rem" className="aspect-[16/10]" />
 }

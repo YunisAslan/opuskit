@@ -15,7 +15,7 @@ import { seedBySlug } from '@/data/recipes'
 import { directions, motionLevels, purposes } from '@/data/taxonomy'
 import { heroName } from '@/components/HeroPreview'
 import { jobOf, specToPlan } from '@/features/kit/plan'
-import { hasItem, itemKey, siteName, siteSpec, toggleItem, type CollectionItem, type SiteRef } from '@/features/library/collection'
+import { SIGNATURE_PARTS, hasItem, itemKey, siteName, siteSpec, toggleItem, type CollectionItem, type SiteRef } from '@/features/library/collection'
 import { TRAITS, TRAIT_IDS, siteTraits } from '@/features/library/inspire'
 import { composeRecipe } from '@/features/recipes/engine'
 import { updateCollection, useCollection } from '@/lib/collection'
@@ -39,7 +39,7 @@ function useTakeables(site: SiteRef) {
     const nav: CollectionItem = { kind: 'menu', id: recipe.chrome.nav.id, from: site }
     push({ item: nav, title: 'Navigation', sub: recipe.chrome.nav.name, picture: drawn(nav) })
     for (const pg of recipe.pages) for (const s of pg.sections) {
-      if (s.id === 'hero' || s.id === 'navbar' || s.id === 'footer') continue
+      if (!SIGNATURE_PARTS.has(s.id)) continue // only what carries the site's design (decision 52)
       const item: CollectionItem = { kind: 'section', id: s.id, ...(s.variant ? { variant: s.variant.id } : {}), from: site }
       push({ item, title: sections[s.id].name, sub: `${jobOf(s.id)}${s.variant ? ` · ${s.variant.name}` : ''} · ${pg.label}`, picture: drawn(item) })
     }
@@ -67,7 +67,7 @@ export function TakeList({ site, cols = 'sm:grid-cols-2 lg:grid-cols-3', noLook 
       <Group title="Just one thing" line="Only this quality comes along. Your directions mix it with the rest.">
         <ul className="grid grid-cols-2 gap-x-5 gap-y-6 lg:grid-cols-4">{qualities.map((x) => <Take key={itemKey(x.item)} {...x} />)}</ul>
       </Group>
-      <Group title="Its parts" line="A part comes in this design, on the page of yours where it belongs.">
+      <Group title="Its parts" line="What gives it its character. Everything else your site needs is added for you.">
         <ul className={`grid gap-x-5 gap-y-6 ${cols}`}>{parts.map((x) => <Take key={itemKey(x.item)} {...x} />)}</ul>
       </Group>
       {!!effects.length && (

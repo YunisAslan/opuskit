@@ -20,6 +20,10 @@ const nextConfig: NextConfig = {
       { source: '/recipe/:slug', destination: '/studio/open?from=seed::slug', permanent: false },
       { source: '/:page(explore|resources)', destination: '/library', permanent: false },
       { source: '/:page(pricing|login|signup|account)', destination: '/', permanent: false },
+      // Retired 2026-10-08: every built site has its page in the Library. Only a slug (no dot), so /examples/{slug}.jpg
+      // and the symlinked /examples/{slug}/media/… stay files.
+      { source: '/examples', destination: '/library', permanent: false },
+      { source: '/examples/:slug([a-z0-9-]+)', destination: '/library/sites/example/:slug', permanent: false },
     ]
   },
   async rewrites() {

@@ -4,6 +4,7 @@ import { chromeNote } from '@/features/recipes/engine'
 import { resources } from '@/data/resources'
 import { inspirationSources } from '@/data/patterns'
 import { errorColor } from '@/lib/frame'
+import { seasoning } from '@/features/build-packages/craft'
 import type { FontSpec, PaletteColors, UniversalRecipe } from '@/types/domain'
 
 const list = (xs: string[]) => xs.map((x) => `- ${x}`).join('\n')
@@ -89,6 +90,8 @@ export const recipeSections = {
   signatures: (r: UniversalRecipe) => r.signatures.length
     ? `## Signature Moments\n\nThe small interactions people remember. Build each one exactly where it is placed — they are part of the design, not optional polish.\n\n${r.signatures.map((s) => `### ${s.name} — ${s.where}\n- **What visitors experience:** ${s.experience}\n- **How:** ${s.implementation}\n- **Mobile:** ${s.mobile}\n- **Reduced motion:** ${s.reducedMotion}` + (s.components?.length ? `\n- **Start from:** ${s.components.map((c) => `[${c.name}](${c.url})`).join(', ')} — restyle to this recipe’s tokens; never ship the demo look.` : '')).join('\n\n')}`
     : `## Signature Moments\n\nNone were picked: the first screen (${r.media.hero.name})${r.pieces.length ? ' and the effects the owner picked (Your Kit)' : ''} carry Home. Every other page gets one moment you design yourself — see Room to invent: one per page, never more.`,
+
+  seasoning,
 
   kit: (r: UniversalRecipe) => r.pieces.length
     ? `## Your Kit — ready pieces\n\nThe owner picked these components. Their code is already in the project at \`src/components/pieces/\` — it does the hard part (the animation, shader or interaction, and its reduced-motion version), so build on it rather than from scratch, and do not add other animation libraries for the same job. It reads colours and fonts from the recipe tokens (\`--color-*\`, \`--font-*\`). It is a reference, not a sealed part: keep what the owner picked it for — its behaviour — and fit everything else to the site (size, place, spacing, the type around it), editing its code wherever its defaults disagree.\n\n${r.pieces.map((p) => `### ${p.name} — ${p.where}\n${p.line}\n- **Code:** \`${p.path}\` → \`import { ${p.exportName} } from '@/components/pieces/${p.file.replace(/\.tsx$/, '')}'\`\n- **Use:** \`${p.usage}\`\n${p.rules.map((x) => `- ${x}`).join('\n')}` + (p.issue ? `\n- **Note:** ${p.issue}` : '')).join('\n\n')}\n\nLicences: adapted from MIT-licensed libraries — see \`THIRD-PARTY-NOTICES.md\`.`

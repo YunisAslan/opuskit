@@ -8,7 +8,7 @@ import { contrast, deltaE, oklab } from '../src/lib/color'
 import { recipeSeeds } from '../src/data/recipes'
 import { concepts, heroes, imagePresentations, signaturePatterns } from '../src/data/patterns'
 import { behaviours, isMoment, pieces } from '../src/data/pieces'
-import { blockSource, pieceSource } from '../src/data/pieces-source.generated'
+import { blockSource, heroSource, pieceSource } from '../src/data/pieces-source.generated'
 import { blockFor } from '../src/data/blocks'
 import { sections } from '../src/data/patterns'
 import { TYPE_UTILITIES } from '../src/lib/type-tokens'
@@ -919,6 +919,63 @@ const main = async () => {
         assert.ok(/Room to invent/.test(text), `${seed.slug} · ${id}: the package gives room to invent`)
         assert.ok(text.includes(r.style.sparks[0]), `${seed.slug} · ${id}: the package carries the look's sparks`)
         assert.ok(!/do not invent|Do not add others|Never an effect nobody picked/i.test(text), `${seed.slug} · ${id}: nothing forbids inventing`)
+      }
+    }
+  }
+
+  // Interaction craft, 2026-10-08 (decision 50): every package says how controls, motion and phones feel — adapted from
+  // Emil Kowalski's skills (MIT) — with its curves and times as tokens and its checks in the definition of done.
+  {
+    for (const seed of recipeSeeds) {
+      const r = composeRecipe(specFromSeed(seed))
+      const qa = visualQa(r).join('\n')
+      assert.ok(/scale 0\.97/.test(qa) && /Worst case/.test(qa) && /svh/.test(qa) && /gentler, not gone/.test(qa), `${seed.slug}: QA checks feel, worst case, phone and reduced motion`)
+      for (const p of [...r.motion.patterns, ...r.signatures]) for (const v of Object.values(p)) if (typeof v === 'string') assert.ok(!/transition:\s*all|scale\(0\)|\bease-in\b(?!-out)/.test(v), `${seed.slug}: ${p.name} never asks for transition: all, scale(0) or ease-in`)
+    }
+    const r = composeRecipe(specFromSeed(recipeSeeds[0]))
+    for (const [id, a] of Object.entries(adapters)) {
+      const tokens = (await a.generate(r)).files.find((f) => f.path.endsWith('tokens.css'))!.content
+      assert.match(tokens, /--ease-out: cubic-bezier\(0\.23, 1, 0\.32, 1\)/, `${id}: tokens.css ships the strong curves`)
+      assert.match(tokens, /--duration-menu: 200ms/, `${id}: tokens.css ships the UI times`)
+    }
+    const craft = (await adapters['claude-code'].generate(r)).files.find((f) => f.path === '.claude/skills/interaction-craft/SKILL.md')?.content ?? ''
+    assert.ok(craft.includes('Copyright (c) 2026 Emil Kowalski') && craft.includes('Permission is hereby granted'), 'interaction-craft carries its MIT notice')
+    assert.ok(craft.includes(`themeColor: '${r.visualSystem.palette.tokens[0].hex}'`), 'theme-color is the page ground')
+    const still = composeRecipe(remix(specFromSeed(recipeSeeds[3]), { motion: 'still' }))
+    assert.ok((await adapters['claude-code'].generate(still)).files.some((f) => f.path.includes('interaction-craft')), 'a still site gets interaction craft too')
+    assert.ok((await adapters.cursor.generate(r)).files.some((f) => f.path === '.cursor/rules/interaction-craft.mdc'), 'Cursor gets the craft rule')
+    // Seasoning — smooth loaders, micro-interactions, parallax: salt, not sauce. Every tool gets the dose and the guide.
+    for (const seed of recipeSeeds) {
+      const sr = composeRecipe(specFromSeed(seed))
+      assert.ok(visualQa(sr).some((l) => l.startsWith('Seasoning')), `${seed.slug}: QA checks the seasoning`)
+      assert.ok(!lovableKnowledge(sr).endsWith('…'), `${seed.slug}: Lovable knowledge is never cut off`)
+      for (const [id, a] of Object.entries(adapters)) {
+        const text = (await a.generate(sr)).files.map((f) => f.content).join('\n')
+        assert.ok(/## Seasoning — smooth loaders, micro-interactions, parallax/.test(text) && /# Interaction craft/.test(text), `${seed.slug} · ${id}: the package carries the seasoning and the craft guide`)
+      }
+    }
+    const stillSeason = recipeToMarkdown(still)
+    assert.match(stillSeason, /### Parallax — none/, 'a still site gets no parallax')
+    assert.ok(!/animation-timeline/.test(stillSeason.split('## Seasoning')[1].split('\n## ')[0]), 'a still site is never told how to build parallax')
+    // Raster School (#22): a pill menu is round by definition — never the default on a site with square corners.
+    for (const purpose of ['course', 'saas', 'product', 'nonprofit'] as const) assert.ok(!/pill/.test(composeRecipe({ ...specFromSeed(recipeSeeds[0]), direction: 'swiss-modern', purpose, nav: undefined, shape: 'sharp' }).chrome.nav.id), `${purpose}: no pill menu on a sharp site`)
+    // Raster School (#22): a course taught “in our studio or online” was read as a shop — a bare “online” sells nothing.
+    assert.equal(purposeFrom('A six-week evening course in typographic design: grids, lettering and a poster of your own at the end. Twelve seats a cohort, in our studio or online.'), 'course', 'a course taught online is a course')
+    assert.equal(purposeFrom('Hand-thrown mugs, sold in our online shop.'), 'ecommerce', 'an online shop still sells')
+    for (const src of [...Object.values(pieceSource), ...Object.values(blockSource), ...Object.values(heroSource)]) assert.ok(!/scale: 0[ ,}]|transition:\s*all|transition-all/.test(src!), 'no shipped piece or section enters from scale(0) or transitions all')
+  }
+
+  // Decision 52: a site lends only the parts that carry its design, and a taken part never replaces what the kind of
+  // site needs (a booking, the address, prices, questions…) — those are the engine's, picked or not.
+  {
+    const { SIGNATURE_PARTS } = await import('../src/features/library/collection')
+    const items = [...SIGNATURE_PARTS].map((id) => ({ kind: 'section' as const, id }))
+    for (const purpose of Object.keys(purposes).filter((x) => x !== 'other') as (keyof typeof purposes)[]) {
+      const base = start(EMPTY_PLAN, purpose)
+      const after = applyItems(base, items, true).plan
+      for (const pg of base.pages) {
+        const kept = after.pages.find((x) => x.id === pg.id)!.sections.map((x) => x.id)
+        for (const x of pg.sections) if (!SIGNATURE_PARTS.has(x.id)) assert.ok(kept.includes(x.id), `${purpose} · ${pg.label}: taking parts keeps its ${x.id}`)
       }
     }
   }

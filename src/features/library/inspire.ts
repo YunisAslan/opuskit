@@ -44,10 +44,11 @@ const WORDS: [PurposeId, RegExp][] = [
   ['spa', /\b(spa|sauna|bath ?house|massage|wellness|hammam)\b/i],
   ['clinic', /\b(clinic|therap(y|ist)|dentist|dental|doctor|physio|counsell?ing|psycholog)/i],
   ['fashion', /\b(clothing|clothes|fashion|apparel|garments|jewell?ery|accessories|label)\b/i],
-  ['ecommerce', /\b(shop|store|sell|selling|online|products?|handmade|ceramics?|pottery|tableware|candles?|prints|goods|homeware|order)\b/i],
+  // A bare “online” is where something happens (“in our studio or online”), not a shop: only an online shop or store sells (#22).
+  ['ecommerce', /\b(shop|store|sell|selling|online (shop|store)|products?|handmade|ceramics?|pottery|tableware|candles?|prints|goods|homeware|order)\b/i],
   ['product', /\b(device|gadget|keyboard|speaker|hardware|app for|one product)\b/i],
   ['saas', /\b(software|saas|platform|app|tool for|dashboard|api)\b/i],
-  ['course', /\b(course|classes|lessons|workshops?|teach(ing)?|school|tutor)\b/i],
+  ['course', /\b(courses?|classes|lessons|workshops?|teach(ing)?|school|tutors?|cohorts?|curriculum|enrol(l|ment|ling)?|students?|academy|bootcamp|masterclass(es)?)\b/i],
   ['event', /\b(festivals?|weddings?|conferences?|events?|gigs?|concerts?|exhibitions?|galler(y|ies)|museums?)\b/i],
   ['nonprofit', /\b(charity|non-?profit|foundation|volunteers?|donat|cause)\b/i],
   ['real-estate', /\b(real estate|property|properties|apartments|homes for sale|lettings)\b/i],

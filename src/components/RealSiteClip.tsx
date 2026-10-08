@@ -21,7 +21,7 @@ export function RealSiteClip({ match, label }: { match: Match; label: string }) 
         {still !== undefined && <video key={clip} src={clip} muted loop playsInline autoPlay={!still} controls={still} preload="metadata" className="block h-auto w-full" aria-label={`${e.title}, a few seconds of the real site`} />}
       </div>
       <figcaption className="px-3 py-2 text-xs text-muted">
-        {label}: <Link href={`/examples/${e.slug}`} className="link">{siteName(match)}</Link>, built with OpusKit. Colours and typefaces will follow your choices.
+        {label}: <Link href={`/library/sites/example/${e.slug}`} className="link">{siteName(match)}</Link>, built with OpusKit. Colours and typefaces will follow your choices.
       </figcaption>
     </figure>
   )
@@ -53,7 +53,7 @@ export function TileClip({ match, className = 'aspect-video' }: { match: Match; 
           <DialogTitle className="sr-only">{name}</DialogTitle>
           <video src={match.clip} muted loop playsInline autoPlay controls className="block h-auto w-full rounded-md" />
           <DialogDescription className="text-xs">
-            <Link href={`/examples/${match.example.slug}`} className="link">{name}</Link>, built with OpusKit. Colours and typefaces will follow your choices.
+            <Link href={`/library/sites/example/${match.example.slug}`} className="link">{name}</Link>, built with OpusKit. Colours and typefaces will follow your choices.
           </DialogDescription>
         </DialogContent>
       </Dialog>

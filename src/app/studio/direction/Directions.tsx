@@ -9,9 +9,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { palettes, typography } from '@/data/ingredients'
-import { goals, purposes } from '@/data/taxonomy'
+import { purposes } from '@/data/taxonomy'
 import { collectionSig, takenFrom, takenOf } from '@/features/library/collection'
-import { inferGoal } from '@/features/kit/plan'
 import { directionsFor, purposeFrom } from '@/features/library/inspire'
 import { updateCollection, useCollection } from '@/lib/collection'
 import { readPlan, updatePlan, usePlan, writePlan } from '@/lib/kit'
@@ -72,7 +71,7 @@ export function Directions() {
       {live && (
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
           {/* What is exact (the brand) beside the lists; first on phones, so a pick is seen where it is made. */}
-          <div className="lg:order-2 lg:sticky lg:top-36"><YourBrand plan={plan} /></div>
+          <div className="min-w-0 lg:order-2 lg:sticky lg:top-36"><YourBrand plan={plan} /></div>
           <div className="lg:order-1"><LookPicker every /></div>
         </div>
       )}
@@ -87,7 +86,7 @@ function YourBrand({ plan }: { plan: KitPlan }) {
   return (
     <div>
       <p className="label mb-3 text-muted">Your brand</p>
-      <BrandCard name={plan.name} about={plan.about} cta={goals[inferGoal(plan)].cta[0]} colors={look.colors} type={t} button={look.shape.button}
+      <BrandCard name={plan.name} about={plan.about} colors={look.colors} type={t}
         caption={`${palettes[spec.palette].name} · ${typography[spec.typography].name} (${t.display.family}${t.body.family !== t.display.family ? ` + ${t.body.family}` : ''})`} />
     </div>
   )

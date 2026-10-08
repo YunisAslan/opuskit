@@ -5,8 +5,24 @@ Keep this file current: update "Now" and "Next" whenever a step finishes.
 
 Talk to the user in Azerbaijani; code, docs and commits in English.
 
-## Now (2026-10-08 — committed and pushed; 2026-10-07's flow is in `e7e0220`)
+## Now (2026-10-08 — #22 Raster School and the work around it are not committed yet; earlier work committed and pushed; 2026-10-07's flow is in `e7e0220`)
 
+- **#22 Raster School built** — the first still site (Swiss Modern · Klein Field), the first package with Interaction
+  craft and Seasoning, isolated `claude -p`, 5 Unsplash photos, live at `/live/raster-school`. Its Engine lessons (7, all
+  fixed or answered) are in `examples/raster-school/BUILD-LOG.md`: still reachable through the flow, the sentence
+  reader's "online", parts gathering on Home (decision 52), tabular figures, no pill menu on square sites, and the
+  `-p` session waiting on its dev server. Open: a course is drawn in the software sample world (`worldFor`).
+- **Interaction craft** (decision 50, not committed): Emil Kowalski's skills (MIT) adapted into every Build Package —
+  motion tokens in tokens.css, an `interaction-craft` skill / Cursor rule (press, popovers, curves and times, reduced
+  motion, phones, worst-case content), craft lines in verification; `src/features/build-packages/craft.ts`. Next: see
+  it in the next example build; OpusKit's own UI could follow the same rules (ask first).
+- **Signature parts only** (decision 52): a site's + offers only parts that carry its design (`SIGNATURE_PARTS`); FAQ,
+  pricing, booking, address… come from the kind of site, and a taken part never replaces them (check.ts).
+- **Brand poster and no /examples** (2026-10-08): Your brand is a poster (`BrandCard`, `BrandSheetMini` — Direction,
+  recipe page, Saved, the landing; `docs/design.md`); the `/examples` pages are gone — every built site's page is
+  `/library/sites/example/{slug}` (redirects in `next.config.ts`); the header's theme switch moves into the phone menu.
+- **Seasoning** (decision 51, not committed): smooth loaders, micro-interactions (a small set per look family) and
+  parallax by motion-level dose — "salt, not sauce" — in every recipe; all five tools now get the craft guide.
 - **Direction reworked, Pages retired** (decision 39): Make it yours on top, three small ready packs under it (taken-by-name
   qualities in all three; looks differ in family and layout); no pages list (the user: not needed, keep packs plain). `/studio/pages` is gone (redirects to
   Direction); pages come from the kind of site and the sentence (`pagesFromWords`). Previews use the owner's sentence,
@@ -102,9 +118,9 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 
 ## Next
 
-1. **Next example site** — the user: raise the level of every site. Pick a look no example has yet
-   (`docs/plan-examples.md`), make the recipe through the flow, send it to the user's browser by link
-   (`/studio/open?recipe=…`) to approve, then build isolated (outside the repo) and register.
+1. **Next example sites #23–#25** (`docs/plan-examples.md` §5b): Kelp Line (Coastal Calm, donate), Pip & Kiln (Playful Pop, a whole shop),
+   Ninth Row (Film-inspired, the user's film). Each carries one engine test; after each build, Engine lessons are fixed
+   in the engine before the next. Recipe through the flow → link to the user → isolated build → register.
 2. **Clips** for #11–#21: the user's screen recordings of the live exports (Low Hum and Pale Hour are new).
 3. **Feed back from the builds** (decision 33, ask first): Low Hum's wavy section edges, sticky mobile "Book" button,
    shrinking menu bar and mint focus style; Pale Hour's floor-plan index, live opening-hours line and museum-order
@@ -112,6 +128,12 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 4. Known gaps: "Event / wedding" is the kind's name even for a gallery (renaming breaks older examples' `choices`);
    older recipes and examples have no `taken`, so What you took is empty for them.
 5. Rerun the Mara persona bot on the new flow and compare with the first run. Open points in `docs/plan-library.md` §5.
+
+## Night runs
+
+A scheduled cloud session builds the next example sites unattended, one after another, learning from each:
+`docs/NIGHT-RUN.md`. It works on a `night/YYYY-MM-DD` branch and reports in a pull request; the user approves recipes,
+media and section feedback there.
 
 ## Working agreements (from the user)
 

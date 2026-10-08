@@ -8,7 +8,8 @@ import { examples } from '@/data/examples'
 import { directions, purposes } from '@/data/taxonomy'
 import { adapters } from '@/features/build-packages'
 import { composeRecipe } from '@/features/recipes/engine'
-import type { RecipeSpec } from '@/types/domain'
+import type { PaletteColors, RecipeSpec } from '@/types/domain'
+import { BrandSheetMini } from '@/components/BrandCard'
 
 // The landing page tells what OpusKit is today: the Library of real sites, the three building steps, the Build
 // Package, and the sites made that way. Every picture and number here is the real thing (examples.ts, the engine).
@@ -45,7 +46,7 @@ export default async function Home() {
           <p className="mx-auto mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-ink-2">OpusKit turns real, built sites into a recipe for yours — your name, colours, lettering and pages — and your AI tool builds the finished site from it.</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link href="/library" className="btn btn-ink">Start a site<ArrowRight size={16} aria-hidden /></Link>
-            <Link href="/examples" className="btn btn-line bg-paper/70 backdrop-blur-sm">See what it builds</Link>
+            <Link href="/library" className="btn btn-line bg-paper/70 backdrop-blur-sm">See what it builds</Link>
           </div>
         </div>
         <HeroFlow recipe={recipe} />
@@ -141,7 +142,7 @@ export default async function Home() {
             const s = specs[e.slug]
             return (
               <li key={e.slug} className="group">
-                <Link href={`/examples/${e.slug}`} className="block">
+                <Link href={`/library/sites/example/${e.slug}`} className="block">
                   <div className="relative aspect-[16/10] overflow-hidden rounded-[3px] bg-paper-2">
                     <Image src={`/examples/${e.slug}.jpg`} alt={`${e.title} — homepage`} fill sizes="(min-width:1024px) 25vw, 50vw" className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]" />
                   </div>
@@ -155,7 +156,7 @@ export default async function Home() {
             )
           })}
         </ul>
-        <div className="flex justify-center p-12"><Link href="/examples" className="btn btn-line">All {examples.length} examples<ArrowRight size={16} aria-hidden /></Link></div>
+        <div className="flex justify-center p-12"><Link href="/library" className="btn btn-line">All {examples.length} sites in the Library<ArrowRight size={16} aria-hidden /></Link></div>
       </section>
 
       {/* ── 04 Tools ── */}
@@ -184,7 +185,7 @@ export default async function Home() {
           <h2 className="display-xl mx-auto mt-6 max-w-5xl text-[clamp(2.8rem,7.5vw,6.8rem)]">Start with a site you like.</h2>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
             <Link href="/library" className="btn btn-ink">Open the Library<ArrowRight size={16} aria-hidden /></Link>
-            <Link href="/examples" className="btn btn-line">See the examples</Link>
+            <Link href="/library" className="btn btn-line">See the Library</Link>
           </div>
         </div>
       </section>
@@ -211,13 +212,12 @@ function HeroFlow({ recipe }: { recipe: ReturnType<typeof composeRecipe> }) {
       ),
     },
     {
-      n: '02', name: 'Make it yours', caption: 'Your name, colours, lettering, pages',
+      n: '02', name: 'Make it yours', caption: 'Your name, colours and lettering',
       visual: (
-        <div className="mx-auto flex h-full w-[86%] flex-col gap-2 rounded-[3px] border border-line bg-white p-3 text-left shadow-[0_12px_28px_-18px_rgb(14_14_16/.35)]">
-          <div className="flex items-baseline justify-between"><span className="text-[0.95rem] font-medium" style={{ fontFamily: `'${t.display.family}', serif` }}>Your name</span><span className="label">Aa · {t.display.family}</span></div>
-          <div className="flex gap-1">{recipe.visualSystem.palette.tokens.slice(0, 6).map((c) => <span key={c.role} className="h-5 flex-1 rounded-[2px] border border-ink/10" style={{ background: c.hex }} />)}</div>
-          <ul className="mt-auto space-y-1">{recipe.pages.slice(0, 3).map((p) => <li key={p.id} className="flex justify-between rounded-[2px] bg-paper-2 px-2 py-1 text-[0.7rem]"><span>{p.label}</span><span className="text-muted">{p.sections.length} parts</span></li>)}</ul>
-        </div>
+        <>{/* The sheet speaks in the recipe's own faces: React hoists this stylesheet into <head>. */}
+        <link rel="stylesheet" precedence="default" href={`https://fonts.googleapis.com/css2?${t.googleFamilies.map((f) => `family=${f}`).join('&')}&display=swap`} />
+        <BrandSheetMini name={recipe.metadata.spec.brief?.name || 'Your name'} colors={Object.fromEntries(recipe.visualSystem.palette.tokens.map((c) => [c.role, c.hex])) as PaletteColors} type={t} nameSize="1.35rem" specimen={false}
+          className="mx-auto h-full w-[86%] rounded-[3px] border border-line text-left shadow-[0_12px_28px_-18px_rgb(14_14_16/.35)]" /></>
       ),
     },
     {

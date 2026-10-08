@@ -175,6 +175,12 @@ export function previewPlan(c: Collection): KitPlan {
 // ─── Collection → plan (Compose) ────────────────────────────────────────────
 
 const NOT_SWAPPED = new Set<SectionId>(['contact-cta', 'cta-band', 'donate']) // three different jobs (see sectionGroups)
+
+/** The parts a site lends (decision 52): only what carries its design and feel — how it shows its work, its products,
+ *  its story and its place. Everything else (questions, prices, a booking, the address, a newsletter, proof…) is the
+ *  engine's: the kind of site and the owner's sentence give it, drawn in the look's design, and a taken part never
+ *  replaces it. */
+export const SIGNATURE_PARTS = new Set<SectionId>(['featured-work', 'case-study', 'gallery', 'lookbook', 'collection', 'product-highlight', 'product-grid', 'manifesto', 'editorial-story', 'timeline', 'chapters', 'menu', 'schedule', 'listen'])
 const jobIds = (id: SectionId) => sectionGroups.find((g) => g.ids.includes(id))?.ids ?? [id]
 
 export type Composed = { plan: KitPlan; picked: number; unplaced: PieceId[] }
@@ -284,7 +290,8 @@ export function applyItems(plan: KitPlan, items: CollectionItem[], replace: bool
       if (!page) continue
       let k = replace ? page.sections.find((x) => x.id === i.id && !collected.has(x.key))?.key : undefined
       if (!k && replace && !NOT_SWAPPED.has(i.id)) {
-        const same = page.sections.find((x) => job.includes(x.id) && !NOT_SWAPPED.has(x.id) && !collected.has(x.key))
+        // Only another signature part gives way: what the kind of site needs (a booking, the address, prices…) stays.
+        const same = page.sections.find((x) => job.includes(x.id) && SIGNATURE_PARTS.has(x.id) && !NOT_SWAPPED.has(x.id) && !collected.has(x.key))
         if (same) {
           plan = replaceSection(plan, page.id, same.key, i.id); k = same.key
           // A part that replaced one after the page's closing part moves above it (a booking stays last; a page led by one keeps it first).

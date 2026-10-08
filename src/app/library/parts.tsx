@@ -300,7 +300,7 @@ export function Steps({ at, onRecipe }: { at: Step; onRecipe?: () => void }) {
 
 /** The bar under the site's header while building: the steps, and Next. `onRecipe` saves the plan as the recipe first,
  *  so the Recipe step always opens what was just picked. */
-export const FLOW_BAR = 'h-14' // 56px + its line: sticky things below it sit at top-[113px] (header 56 + 1, bar 56)
+export const FLOW_BAR = 'h-14' // 56px with its line (it sticks at 56, over the header's line): it ends at 112. A sticky thing below it with a top border sits at top-[111px], so the two lines are one; without one, at top-[112px]
 export function FlowBar({ at, next, onRecipe }: { at: Step; next?: ReactNode; onRecipe?: () => void }) {
   return (
     <div className={`sticky top-14 z-30 border-b border-line bg-paper/95 backdrop-blur-sm ${FLOW_BAR}`}>

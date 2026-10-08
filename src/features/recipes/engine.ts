@@ -701,9 +701,16 @@ export function rankPalettes(spec: Pick<RecipeSpec, 'direction' | 'purpose' | 'l
 export const recommendPalette = (spec: Pick<RecipeSpec, 'direction' | 'purpose' | 'lead'>) => rankPalettes(spec)[0]
 
 /** Menu style that suits the kind of site, unless the user picked one. */
-export function recommendedNav(spec: Pick<RecipeSpec, 'purpose' | 'direction'>): NavStyleId {
+export function recommendedNav(spec: Pick<RecipeSpec, 'purpose' | 'direction'> & { shape?: ShapeId }): NavStyleId {
   const d = directions[spec.direction]
   if (d.nav) return d.nav
+  // A pill is round by definition: on a site with square corners it would be the one rounded thing (Raster School, #22).
+  const square = shapeStyles[spec.shape ?? recommendedShape(spec)].button === '0px'
+  const nav = byPurposeNav(spec, d)
+  return square && (nav === 'floating-pill' || nav === 'split-pill') ? 'classic-bar' : nav
+}
+
+function byPurposeNav(spec: Pick<RecipeSpec, 'purpose'>, d: (typeof directions)[DirectionId]): NavStyleId {
   if (d.families.includes('editorial') && (spec.purpose === 'portfolio' || spec.purpose === 'studio')) return 'side-index'
   const byPurpose: Record<PurposeId, NavStyleId> = {
     portfolio: 'fullscreen-menu', agency: 'fullscreen-menu', studio: 'fullscreen-menu', fashion: 'centered-logo', restaurant: 'centered-logo',
@@ -769,6 +776,7 @@ function uiKit(pages: PageBlueprint[], colors: PaletteColors, shape: ShapeStyle,
       'No focus rings, glows or outlines on fields, selects, menus or their options — remove shadcn’s ring-* / outline classes. A focused field only darkens its border to the text color; a highlighted option only changes its background.',
       'Keep Radix accessibility intact: labels tied to fields, keyboard navigation, 44px touch targets, prefers-reduced-motion on every open/close animation.',
       'Mobile: Select, Popover and Dropdown open as a bottom Sheet/Drawer on screens under 640px.',
+      'Open and close as tokens.css says: popovers, dropdowns and selects scale from 0.95 with opacity out of their trigger (keep shadcn’s origin-(--radix-…-transform-origin) classes) in --duration-menu on --ease-out; dialogs stay centred (--duration-dialog); sheets slide on --ease-drawer (--duration-sheet); an exit leaves the way it came, never slower; toasts are sonner.',
     ],
   }
 }
@@ -1164,6 +1172,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
         ...(pages.some((p) => p.sections.some((x) => x.photos)) ? [`Build each photo part as its own Photos line says (recipe/layout.md): ${uniq(pages.flatMap((p) => p.sections.flatMap((x) => (x.photos ? [`${x.name.split(' — ')[0]} — ${x.photos.name}`] : [])))).join('; ')}.`] : imagery ? [`Build the photo layout: ${imagery.presentation.name} (see Media → Photos).`] : []),
         'Make every section responsive (mobile first, then tablet and desktop).',
         spec.motion === 'still' ? 'Add state feedback (hover/focus) only.' : `Add motion in order of importance: ${patterns.filter((p) => p.id !== 'state-feedback').map((p) => p.name).join(', ')}.`,
+        'Season every page (recipe → Seasoning): smooth loaders everywhere, this site’s few micro-interactions used the same way on every page, parallax only in its dose — salt, not sauce; how each feels is in Interaction craft.',
         `Build what you invented: the remembered moment of each page you named in your plan, the hand-overs between parts and every state, using the moves and craft of ${direction.name} (recipe/design.md → What ${direction.name} is known for).`,
         'Add reduced-motion variants, then run the visual QA checklist against this recipe.',
       ],
@@ -1173,6 +1182,9 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
         `Type: display scales with clamp() — ${type.display.size}; re-break headlines manually on mobile.`,
         `Grid: ${layout.grid}; ${layout.gutters}.`,
         'Touch targets ≥ 44px; primary action reachable with a thumb.',
+        'First screens are min-height 100svh, never 100vh (it runs under the phone’s URL bar); a full-height layer — the phone menu, a sheet — is 100dvh.',
+        'Fields are 16px or larger on phones, so iOS never zooms the page on focus; zoom is never disabled.',
+        `The viewport export sets viewportFit: 'cover' and themeColor ${colors.background} (the colour at the top of the page); fixed bars pad with env(safe-area-inset-*).`,
       ],
       accessibility: [
         'Semantic landmarks (header, nav, main, footer) and one h1 per page.',

@@ -532,6 +532,61 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     from (`sectionClips`), a whole look or quality plays that site; a part from an unrecorded site is drawn in the
     owner's brand.
 
+50. **Interaction craft in every package** (2026-10-08, the user sent Emil Kowalski's skills — github.com/emilkowalski/skills,
+    MIT — to read, adapt and add to the engine). Sites came out right in their picks but each builder chose its own
+    curves, presses and phone fixes. Now (`src/features/build-packages/craft.ts`, one source):
+    - **tokens.css** ships strong curves (`--ease-out`, `--ease-in-out`, `--ease-drawer`, overriding Tailwind's own so
+      `ease-out` in a class gets them), the look's section entrance as `--ease-entrance` when it is a CSS curve, and UI
+      times (`--duration-press` 140ms … `--duration-sheet` 450ms).
+    - **Interaction craft** — a Claude Code skill (`interaction-craft`, shipped always, also to still sites) and a Cursor
+      rule: decide in order (how often seen → purpose → cheapest tool → transform/opacity → curve and time → interruption
+      and exit), every control's press, popovers from their trigger, reduced motion gentler not gone, a phone baseline
+      (svh first screens, 16px fields, `viewportFit: 'cover'` + `themeColor` = the page ground, safe-area padding, no tap
+      flash, native snap), the worst case (longest copy-deck words +40%, a long email, one and zero items, a missing
+      photo, 320px and 200% zoom, a fix table), a Never-ship table. It ends with Emil Kowalski's MIT notice.
+    - **The recipe** (all tools): the state-feedback pattern presses at 0.97 and gates hover; the UI kit opens and closes
+      on the tokens; responsive rules add svh/dvh, 16px fields and the viewport export.
+    - **Definition of done**: three craft lines (feel, motion ingredients, worst case), the phone line and a gentler
+      reduced-motion line. Two shipped parts entered from `scale(0)` (Cursor piece, Sticker orbit hero) — now 0.9 + fade.
+    - Taken from the set: emil-design-eng, animate (+ recipes), review-animations, mobile-native, break-ui, apple-design;
+      not: Swift, Expo, Sonner's own guide, prototype, pick-ui-library (our stack is fixed: shadcn, Motion, sonner).
+    check.ts: every seed's QA carries the craft lines; no pattern or signature asks for `transition: all`, `scale(0)` or
+    ease-in; every adapter's tokens.css has the curves and times; the skill carries its notice; no shipped piece or section
+    enters from `scale(0)`.
+
+51. **Seasoning: smooth loaders, micro-interactions, parallax — salt, not sauce** (2026-10-08, the user: use these like
+    salt; and fix everything that goes to the models). Every recipe now has a **Seasoning** section (`seasoning` in
+    `craft.ts`, in `recipeSections`, so every tool's recipe document carries it; Claude Code's `recipe/motion.md` too):
+    - **Smooth loaders**: pictures fade into space held by their ratio (never a spinner over a photo), `loading.tsx`
+      skeletons in the site's tones, a waiting button keeps its width (spinner after 300ms, kept 500ms, a tick at the
+      end), the poster before a film, next/font so nothing reflows; no full-screen loader unless the Preloader was picked.
+    - **Micro-interactions — the site's whole set**: press and hover in the look family's own voice (`MICRO`: quiet =
+      colour only, bold = drops into its shadow, organic = soft spring…), plus only what the site has — sending a form,
+      adding to the cart, the phone menu's icon, copying an email, tabular numbers. "Nothing else gets its own trick."
+    - **Parallax by dose** (`PARALLAX`, by motion level): still none; subtle one picture on the whole site, 4–6%;
+      dynamic up to two bands a page, 6–10%; immersive where the recipe places depth, else the dynamic dose. Only
+      pictures move, in an overflow-hidden frame at 1.1; never `background-attachment: fixed`; phones half; reduced
+      motion none. The `parallax-drift` pattern says the same.
+    Everything that goes to a model was brought in line: the definition of done has a Seasoning line; the build sequence
+    has a Season step; the motion-system skill points to it (and allows clip-path); Cursor's motion rule carries it;
+    **Lovable** gets `interaction-craft.md`, a short Feel/Seasoning paragraph in its knowledge (`craftBrief`, the
+    knowledge stays under 10k — check.ts) and a "Season and finish" prompt; **v0** attaches `interaction-craft.md`,
+    names it in the prompt and adds a follow-up; **own-code** ships `interaction-craft.md`. check.ts: every seed × every
+    tool carries both; a still site gets no parallax.
+
+52. **A site lends only what carries its design** (2026-10-08, the user: someone building from inspiration looks for what
+    shapes a site's design and feel, not its FAQ; the engine must still give what matters but nobody picks). A site's
+    + offers its whole look, its qualities (colours, lettering, first screen, movement), its navigation and footer, its
+    effects, and only its **signature parts** (`SIGNATURE_PARTS` in `features/library/collection.ts`): Featured Work,
+    Case Study, Gallery, Lookbook, Collection, Product Highlight, Product Grid, Manifesto, Editorial Story, Timeline,
+    Chapters, Menu, Schedule, Listen — how it shows its work, products, story and place. FAQ, Newsletter, Location,
+    Contact / CTA band / Donate, Pricing, Trust, Specs, Integrations, Categories, the buy box, Reservation, Journal,
+    Article, Clients, Stats, Press, Testimonials, Process, How it works, Services, Features, Curriculum, Intro, About
+    and Team are no longer offered: the kind of site and the sentence give them, drawn in the look's design. A taken part
+    only ever replaces another signature part of its job — never a booking, the address, prices or questions (check.ts,
+    every kind of site). Parts taken before stay valid. Later, a sections shelf in the Library follows the same rule, and
+    OpusKit shows elements with its own photos, films and clean components as it grows.
+
 ## 5. Open
 
 1. ~~Retiring the kit~~ — done (decision 31). Shape, menu and footer look, movement and behaviours are now the engine's

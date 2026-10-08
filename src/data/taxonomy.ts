@@ -506,7 +506,7 @@ export const directions: Record<DirectionId, Direction> = {
     principles: ['Objective structure', 'Hierarchy through size and position', 'Motion only to clarify'],
     do: ['Use a visible 12-column rhythm', 'Set big numbers and short labels', 'Use one signal color'],
     avoid: ['Soft shadows', 'Ornament', 'Script or decorative fonts'],
-    defaults: { palette: 'signal-white', typography: 'grid-discipline', layout: 'grid', lead: 'typography', motion: 'subtle' },
+    defaults: { palette: 'signal-white', typography: 'grid-discipline', layout: 'grid', lead: 'typography', motion: 'still' }, // functional motion only: the one look still by nature, so the flow can reach a still site (#22)
     layoutLocked: 'grid',
     palettes: ['signal-white', 'hazard-yellow', 'klein-field', 'wet-concrete', 'signal-orange', 'paper-cobalt'], typography: ['grid-discipline', 'loud-and-clear', 'data-sheet', 'wide-spec', 'plain-giant', 'tall-order'],
     tags: ['bold', 'swiss', 'grid'],

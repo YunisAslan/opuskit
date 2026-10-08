@@ -1,0 +1,3 @@
+:HL["/live/raster-school/_next/static/chunks/0y5oc4gmq89wl.css","style"]
+:HL["/live/raster-school/_next/static/media/ZalandoSans_Variable_latin-s.p.3c6myte020k6m.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"tree":{"name":"","param":null,"prefetchHints":4180,"slots":{"children":{"name":"enrol","param":null,"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"uVMNutM52k71lcLJ8oCh0"}

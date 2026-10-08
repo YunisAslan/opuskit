@@ -1,0 +1,140 @@
+{
+  "opuskit": 1,
+  "recipe": "swiss-modern",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "swiss-modern",
+    "brief": {
+      "name": "Raster School",
+      "offer": "A six-week evening course in typographic design: grids, lettering and a poster of your own at the end. Twelve seats a cohort, in our studio or online.",
+      "goal": "apply"
+    },
+    "purpose": "course",
+    "direction": "swiss-modern",
+    "characters": [
+      "technical"
+    ],
+    "lead": "typography",
+    "motion": "still",
+    "layout": "grid",
+    "palette": "klein-field",
+    "typography": "grid-discipline",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "have",
+    "concept": "off",
+    "sectionVariants": [
+      {
+        "page": "oq6ywwqg",
+        "index": 1,
+        "variant": "giant"
+      },
+      {
+        "page": "oq6ywwqg",
+        "index": 2,
+        "variant": "columns"
+      },
+      {
+        "page": "oq6ywwqg",
+        "index": 3,
+        "variant": "list"
+      },
+      {
+        "page": "oq6ywwqg",
+        "index": 5,
+        "variant": "cards"
+      }
+    ],
+    "signatures": [],
+    "pages": [
+      {
+        "id": "oq6ywwqg",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "manifesto",
+          "process",
+          "team",
+          "testimonials",
+          "pricing",
+          "schedule",
+          "faq",
+          "contact-cta"
+        ]
+      },
+      {
+        "id": "18wfh0wo",
+        "type": "features",
+        "label": "Curriculum",
+        "purpose": "Explain what the product does with concrete, specific evidence, not adjectives.",
+        "sections": [
+          "curriculum",
+          "process",
+          "faq"
+        ]
+      },
+      {
+        "id": "45k4i6wp",
+        "type": "pricing",
+        "label": "Enrol",
+        "purpose": "Remove the final uncertainty before signing up.",
+        "sections": [
+          "pricing",
+          "faq",
+          "testimonials"
+        ]
+      },
+      {
+        "id": "jl5wb94n",
+        "type": "about",
+        "label": "Instructor",
+        "purpose": "Put a human face and point of view on the work; build trust.",
+        "sections": [
+          "about",
+          "stats",
+          "testimonials"
+        ]
+      },
+      {
+        "id": "i40vdwq7",
+        "type": "faq",
+        "label": "FAQ",
+        "purpose": "Answer the questions that would otherwise stall a decision.",
+        "sections": [
+          "faq"
+        ]
+      }
+    ],
+    "target": "not-sure",
+    "taken": [
+      {
+        "site": "example:night-shift",
+        "kind": "section",
+        "id": "process"
+      },
+      {
+        "site": "example:night-shift",
+        "kind": "section",
+        "id": "pricing"
+      },
+      {
+        "site": "example:sela-mor",
+        "kind": "section",
+        "id": "schedule"
+      },
+      {
+        "site": "example:brasshand",
+        "kind": "section",
+        "id": "manifesto"
+      },
+      {
+        "site": "example:brasshand",
+        "kind": "section",
+        "id": "team"
+      }
+    ],
+    "nav": "floating-pill"
+  }
+}

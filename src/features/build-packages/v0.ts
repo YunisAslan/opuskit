@@ -6,6 +6,7 @@ import { purposes } from '@/data/taxonomy'
 import { recipeSections as S, recipeToMarkdown } from '@/features/recipes/markdown'
 import type { BuildPackageAdapter, UniversalRecipe } from '@/types/domain'
 import { assertComplete, assetManifest, manifestJson, tokensCss, visualQa } from './shared'
+import { craftGuide } from './craft'
 
 function prompt(r: UniversalRecipe) {
   const t = r.visualSystem.typography
@@ -36,6 +37,7 @@ Visitors come to ${p.hint.toLowerCase()}. They should feel: ${r.creativeDirectio
 - Layout: ${r.layoutSystem.name}. ${r.layoutSystem.container}. ${r.layoutSystem.columns}. Section spacing ${r.layoutSystem.sectionSpacing}.
 - Hero: ${r.media.hero.name} — ${r.media.hero.composition}
 - Motion: ${r.motion.level.name}. ${r.motion.principle} Respect prefers-reduced-motion.
+- Feel: the attached interaction-craft.md — every control answers the press, hover only where a pointer can hover, the tokens.css curves and times, first screens 100svh, fields ≥ 16px. Season with smooth loaders, a few micro-interactions and parallax only as recipe.md → Seasoning doses them: salt, not sauce.
 - Copy tone: ${r.contentDirection.tone}. Headline examples: ${r.contentDirection.headlineExamples.map((h) => `"${h}"`).join(', ')}.
 - Do: ${r.creativeDirection.do.join('; ')}.
 - Don't: ${r.creativeDirection.avoid.join('; ')}; no shadcn default look, no gradients, no generic SaaS cards.
@@ -60,13 +62,14 @@ export const v0Adapter: BuildPackageAdapter = {
       files: [
         { path: 'PROMPT.md', content: prompt(r) + '\n' },
         { path: 'INSTRUCTION.md', content: `# v0 Instruction\n\nAdd via the + menu → Instructions. Toggle it on for this chat.\n\n**Title:** ${r.title} design rules\n\n**Rule:**\nKeep what the attached recipe.md fixes: only its colors and fonts, its pages and section order, the facts in its copy. Design the rest yourself, from its Room to invent and What this style is known for. Render media through <MediaAsset/>. Never add gradients, glassmorphism, generic cards or stock SaaS sections. Every animation needs a prefers-reduced-motion fallback.\n` },
-        { path: 'FOLLOW-UPS.md', content: `# Follow-up prompts (send one at a time)\n\n1. "Make every section responsive. Mobile is its own composition: ${r.implementation.responsive.slice(0, 3).join(' ')}"\n2. "Add motion: ${r.motion.patterns.filter((p) => p.id !== 'state-feedback').map((p) => `${p.name} (${p.behavior})`).join('; ') || 'hover and focus states only'}. Each must respect prefers-reduced-motion."\n${r.signatures.length ? `3. "Add these signature moments exactly where placed: ${r.signatures.map((x) => `${x.name} on ${x.where} — ${x.experience} ${x.implementation} Mobile: ${x.mobile}`).join(' ')} Respect prefers-reduced-motion."\n\n` : ''}${r.signatures.length ? 4 : 3}. "Review against this checklist and fix deviations: ${visualQa(r).slice(0, 6).join(' ')}"\n\nUse Design Mode for small visual tweaks instead of prompting.\n` },
+        { path: 'FOLLOW-UPS.md', content: `# Follow-up prompts (send one at a time)\n\n1. "Make every section responsive. Mobile is its own composition: ${r.implementation.responsive.slice(0, 3).join(' ')}"\n2. "Add motion: ${r.motion.patterns.filter((p) => p.id !== 'state-feedback').map((p) => `${p.name} (${p.behavior})`).join('; ') || 'hover and focus states only'}. Each must respect prefers-reduced-motion."\n${r.signatures.length ? `3. "Add these signature moments exactly where placed: ${r.signatures.map((x) => `${x.name} on ${x.where} — ${x.experience} ${x.implementation} Mobile: ${x.mobile}`).join(' ')} Respect prefers-reduced-motion."\n\n` : ''}${r.signatures.length ? 4 : 3}. "Season every page as attachments recipe.md → Seasoning and interaction-craft.md say: smooth loaders, this site's few micro-interactions the same way everywhere, parallax only in its dose — salt, not sauce. Then feed every part the worst case from interaction-craft.md and fix what breaks."\n${r.signatures.length ? 5 : 4}. "Review against this checklist and fix deviations: ${visualQa(r).slice(0, 6).join(' ')}"\n\nUse Design Mode for small visual tweaks instead of prompting.\n` },
         { path: 'attachments/tokens.css', content: tokensCss(r) },
         { path: 'attachments/recipe.md', content: recipeToMarkdown(r) },
         { path: 'attachments/manifest.json', content: manifestJson(r) },
+        { path: 'attachments/interaction-craft.md', content: craftGuide(r) },
         { path: 'references.md', content: S.references(r) + '\n' },
       ],
-      instructions: `1. In v0, add INSTRUCTION.md as an Instruction (+ menu → Instructions) and toggle it on.\n2. Start a new chat. Attach the three files in attachments/ (tokens.css, recipe.md, manifest.json) and any real images you have.\n3. Paste PROMPT.md as your message.\n4. Send the prompts in FOLLOW-UPS.md one at a time.`,
+      instructions: `1. In v0, add INSTRUCTION.md as an Instruction (+ menu → Instructions) and toggle it on.\n2. Start a new chat. Attach the four files in attachments/ (tokens.css, recipe.md, manifest.json, interaction-craft.md) and any real images you have.\n3. Paste PROMPT.md as your message.\n4. Send the prompts in FOLLOW-UPS.md one at a time.`,
     }
   },
 }

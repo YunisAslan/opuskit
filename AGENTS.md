@@ -2,7 +2,7 @@
 
 Next.js 16 (App Router) + TypeScript + Tailwind v4. Version-matched Next.js docs live in `node_modules/next/dist/docs/` — read them instead of relying on memory.
 
-**Start here: `docs/HANDOFF.md`** — where the work stands, what's next, and the user's working agreements.
+**Start here: `docs/HANDOFF.md`** — where the work stands, what's next, and the user's working agreements. A scheduled, unattended session (the night run that builds the next example sites) follows `docs/NIGHT-RUN.md`.
 
 Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discover → Collect → Brand → Compose → Recipe → Build). Examples: `docs/plan-examples.md` — how each is made and what is open; read it before touching examples and keep its Progress table current. Research: `docs/research/`.
 
@@ -16,10 +16,14 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
   remembered moment per page (decision 32); never write "do not invent / do not add" into a package. Each look's
   knowledge — what its best sites are known for — is `src/data/look-knowledge.ts` (moves, craft, sparks, traps, seen);
   add to it what a new build or study teaches, with its source in `seen`.
+  How every control, state and movement feels — press, hover, open/close, curves and times, reduced motion, phones,
+  worst-case content — is `build-packages/craft.ts` (adapted from Emil Kowalski's skills, MIT; decision 50): its tokens
+  ship in tokens.css, its guide as the `interaction-craft` skill (a file for Lovable, v0, own code), its checks in verification. Loaders,
+  micro-interactions and parallax are seasoning — salt, not sauce — dosed per recipe (`seasoning`, decision 51).
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
 - The flow is the way to make a site (`docs/plan-library.md`, decisions 35–39): `/library`, browsing with no steps (the +
   on a site opens everything it has to take: its whole look, one quality — colours, lettering, first screen, movement —
-  its parts, its effects); Build my site starts three steps: `/studio/you` (name, sentence, kind — only the owner's) →
+  its signature parts only — `SIGNATURE_PARTS`, decision 52, the engine gives the rest — its effects); Build my site starts three steps: `/studio/you` (name, sentence, kind — only the owner's) →
   `/studio/direction` → recipe. Direction (decision 39): Make it yours on top (every look, colour and lettering,
   `studio/LookPicker.tsx`, with Your brand beside it — name, sentence, button, palette, exact; decisions 40, 43), the start is the first mix of `directionsFor` in
   `features/library/inspire.ts` (what was taken by name is in it, none a copy; the packs are not shown — decision 42);
@@ -98,15 +102,15 @@ Each example is registered in `src/data/examples.ts` (title/summary — copy fro
 Its clips: `clip` (10–15 s, first screen + scroll) and `sectionClips` (3–5 s per section, the section standing still and framed
 on it — never the page scrolling past; `examples/{slug}/public/media/clips/{sectionId}.mp4`)
 feed "a site like this" (`src/features/kit/closest.ts`); an old example carries `legacy: true` and is never offered there.
-Its card on `/examples` shows `public/examples/{slug}.jpg` — a 1440×900 JPEG screenshot of its live homepage, taken
+Its card (the Library, the landing) shows `public/examples/{slug}.jpg` — a 1440×900 JPEG screenshot of its live homepage, taken
 once the hero video has real frames (a black first frame makes a blank card). After replacing one, clear
 `.next/dev/cache/images` or the dev server keeps serving the old one.
 
 Its media has exactly one copy on disk: `public/examples/{slug}` is a **symlink** to
 `examples/{slug}/public` (`ln -s ../../examples/{slug}/public public/examples/{slug}`), never a copy.
-`/examples/{slug}` embeds the real hero straight from that path — a `hero` in `src/data/examples.ts`
-is either `{ kind: 'video', src, poster }` or, for a recipe whose lead isn't video (3D, product, etc.),
-`{ kind: 'image', src }` pointing at whatever real still the site itself uses as its fallback/poster.
+Its page is `/library/sites/example/{slug}` (the old `/examples` pages were retired 2026-10-08 and redirect there). A `hero`
+in `src/data/examples.ts` is either `{ kind: 'video', src, poster }` or, for a recipe whose lead isn't video (3D, product,
+etc.), `{ kind: 'image', src }` pointing at whatever real still the site itself uses as its fallback/poster.
 
 For an actual "visit the site" link (`livePath`), `public/live/{slug}/` holds a real static export
 of the site's **code only** — its own `media/` folder is excluded, and any hardcoded `"/media/...`
