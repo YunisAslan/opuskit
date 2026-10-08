@@ -16,7 +16,7 @@ import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { examples } from '@/data/examples'
 import { directions, motionLevels, purposes } from '@/data/taxonomy'
 import { palettes, typography } from '@/data/ingredients'
-import { TRAITS, TRAIT_IDS, siteTraits, type Trait } from '@/features/library/inspire'
+import { TRAITS, TRAIT_IDS, purposeFrom, siteTraits, type Trait } from '@/features/library/inspire'
 import { heroName } from '@/components/HeroPreview'
 import { HeroPreview } from '@/components/HeroPreview'
 import { lookOf } from '@/components/ProductVisual'
@@ -26,9 +26,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { behaviours, pieces } from '@/data/pieces'
 import { specToPlan } from '@/features/kit/plan'
 import { composeRecipe } from '@/features/recipes/engine'
-import { readCollection, updateCollection, useCollection } from '@/lib/collection'
+import { adoptPlan, readCollection, updateCollection, useCollection } from '@/lib/collection'
 import { readPlan, usePlan } from '@/lib/kit'
-import { KEYS, get } from '@/lib/store'
+import { KEYS, get, useHydrated } from '@/lib/store'
 import type { KitPlan, LayoutId, MediaPlacement, PurposeId, SectionTone } from '@/types/domain'
 
 export type Look = ReturnType<typeof lookOf> & { plan: KitPlan; world: ReturnType<typeof worldFor>; brand?: string; layout?: LayoutId }
@@ -136,7 +136,7 @@ export function CollectButton({ item, label, quiet, className = '' }: { item: Co
   )
 }
 
-/** Collection → building (decision 35): first the owner's own words (You), then the directions made from what they liked. */
+/** Collection → building (decision 35): first the owner's own words (You), then Make it yours, started from what they liked. */
 export function useToBuild() {
   const router = useRouter()
   return () => {
@@ -186,7 +186,7 @@ export function CollectionSheet() {
   const remove = (i: CollectionItem) => { const before = readCollection(); updateCollection((x) => removeItem(x, itemKey(i))); toast(`Removed: ${itemName(i)}`, { action: { label: 'Undo', onClick: () => updateCollection(() => before) } }) }
   const clear = () => { const before = readCollection(); updateCollection((x) => ({ ...x, items: [] })); toast('Collection cleared', { action: { label: 'Undo', onClick: () => updateCollection(() => before) } }) }
   // What Build will make, in one line.
-  const summary = `${c.name?.trim() || 'Your site'}${c.purpose ? ` · ${purposes[c.purpose].name}` : ''} — three directions from ${n} ${n === 1 ? 'thing' : 'things'} you like`
+  const summary = `${c.name?.trim() || 'Your site'}${c.purpose ? ` · ${purposes[c.purpose].name}` : ''} — made from ${n} ${n === 1 ? 'thing' : 'things'} you like`
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       {/* The pictures sit beside the button, not inside it: a drawn part holds buttons of its own, which can't nest. */}
@@ -255,22 +255,42 @@ export function CollectionSheet() {
   )
 }
 
-/** Making a site, in three steps (decisions 35, 37) — numbered, the ones behind you are links back. The Library before
- *  them is browsing, not a step. */
+/** Making a site, in three steps (decisions 35, 37). Each step is a ruled cell like the header's; the way walked so
+ *  far is underlined in the signal colour. Any step can be opened at any time, except one there is nothing for yet:
+ *  Direction wants a name and a kind of site, the Recipe a recipe. The Library before them is browsing, not a step. */
 const STEPS = [['You', '/studio/you'], ['Direction', '/studio/direction'], ['Recipe', '']] as const
 export type Step = (typeof STEPS)[number][0]
-export function Steps({ at }: { at: Step }) {
+export function Steps({ at, onRecipe }: { at: Step; onRecipe?: () => void }) {
   const n = STEPS.findIndex(([s]) => s === at)
+  const c = useCollection(), plan = usePlan(), ready = useHydrated()
+  // A plan being built with an empty You (opened before decision 44): You takes its words, the plan is kept.
+  useEffect(() => { if (ready && !c.name?.trim() && plan.via === 'studio' && plan.name?.trim() && plan.pages.length) adoptPlan(plan, plan.name) }, [ready, c.name, plan])
+  const recipe = plan.via === 'studio' && plan.fromId ? `/result/${plan.fromId}` : undefined
+  const open: Record<Step, string | undefined> = {
+    You: '/studio/you',
+    Direction: c.name?.trim() && (c.purpose ?? purposeFrom(c.about)) ? '/studio/direction' : undefined,
+    Recipe: recipe,
+  }
+  const why: Record<Step, string> = { You: '', Direction: 'Give your site a name and say what it is first', Recipe: 'Pick a direction first — then your recipe is here' }
   return (
-    <ol className="flex min-w-0 items-center gap-1 text-sm sm:gap-1.5" aria-label="Steps">
-      {STEPS.map(([s, href], i) => {
-        const dot = <span className={`grid size-6 shrink-0 place-items-center rounded-full text-xs tabular-nums ${i === n ? 'bg-ink text-paper' : i < n ? 'bg-ink/10 text-ink' : 'border border-line text-muted'}`}>{i + 1}</span>
+    <ol className="flex h-full min-w-0 border-l border-line" aria-label="Steps">
+      {STEPS.map(([s], i) => {
+        const here = i === n, walked = i <= n, href = ready ? open[s] : undefined
+        const body = (
+          <>
+            <span className={`label tabular-nums ${here ? 'text-pencil' : 'text-muted'}`}>0{i + 1}</span>
+            <span className={`hidden text-sm sm:inline ${here ? 'text-ink' : href ? 'text-ink-2' : 'text-muted'}`}>{s}</span>
+            {/* The tick's place is kept on every step, so no cell changes size from step to step. */}
+            <Check size={13} strokeWidth={2.2} className={`ml-auto hidden text-muted sm:block ${i < n && href ? '' : 'invisible'}`} aria-hidden />
+          </>
+        )
+        const cell = `relative flex h-full w-12 items-center justify-center gap-2.5 transition-colors sm:w-44 sm:justify-start sm:px-5 ${walked ? 'after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-pencil' : ''}`
         return (
-          <li key={s} className="flex items-center gap-1.5">
-            {i > 0 && <span className={`hidden h-px w-3 sm:block md:w-6 ${i <= n ? 'bg-ink/40' : 'bg-line'}`} aria-hidden />}
-            {i < n && href
-              ? <Link href={href} className="group flex items-center gap-1.5 text-ink-2 hover:text-ink">{dot}<span className="ulink hidden sm:inline">{s}</span></Link>
-              : <span aria-current={i === n ? 'step' : undefined} className={`flex items-center gap-1.5 ${i === n ? 'font-medium text-ink' : 'text-muted'}`}>{dot}<span className={i === n ? '' : 'hidden sm:inline'}>{s}</span></span>}
+          <li key={s} className="h-full border-r border-line">
+            {here ? <span aria-current="step" className={`${cell} bg-white`}>{body}</span>
+              : !href ? <span aria-disabled title={why[s]} className={`${cell} cursor-not-allowed opacity-60`}>{body}</span>
+              : s === 'Recipe' && onRecipe ? <button type="button" onClick={onRecipe} className={`${cell} hover:bg-paper-2`}>{body}</button>
+              : <Link href={href} className={`${cell} hover:bg-paper-2`}>{body}</Link>}
           </li>
         )
       })}
@@ -278,22 +298,21 @@ export function Steps({ at }: { at: Step }) {
   )
 }
 
-/** The bar under the site's header while building: back to the Library, the steps, and Next. */
-export const FLOW_BAR = 'h-14' // 56px: sticky things below it sit at top-[7.5rem] (header 64 + bar 56)
-export function FlowBar({ at, next }: { at: Step; next?: ReactNode }) {
+/** The bar under the site's header while building: the steps, and Next. `onRecipe` saves the plan as the recipe first,
+ *  so the Recipe step always opens what was just picked. */
+export const FLOW_BAR = 'h-14' // 56px + its line: sticky things below it sit at top-[113px] (header 56 + 1, bar 56)
+export function FlowBar({ at, next, onRecipe }: { at: Step; next?: ReactNode; onRecipe?: () => void }) {
   return (
-    <div className={`sticky top-16 z-30 border-b border-line bg-paper/95 backdrop-blur-sm ${FLOW_BAR}`}>
-      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-3 px-5 md:px-8">
-        <div className="flex min-w-0 items-center gap-4">
-          <Steps at={at} />
-        </div>
+    <div className={`sticky top-14 z-30 border-b border-line bg-paper/95 backdrop-blur-sm ${FLOW_BAR}`}>
+      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-3 pr-5 md:pr-8">
+        <Steps at={at} onRecipe={onRecipe} />
         <div className="flex shrink-0 items-center gap-2">{next}</div>
       </div>
     </div>
   )
 }
 
-/** The other way in: nothing collected — start from your own words; the directions come from your kind of site. */
+/** The other way in: nothing collected — start from your own words; the start comes from your kind of site. */
 export function StartBlank({ className = '' }: { className?: string }) {
   return <Link href="/studio/you" className={`inline-flex items-center gap-1.5 text-sm text-ink-2 underline decoration-line underline-offset-4 hover:text-ink hover:decoration-ink ${className}`}>Or start with your own words</Link>
 }

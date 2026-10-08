@@ -13,7 +13,10 @@ const nextConfig: NextConfig = {
       { source: '/kit', destination: '/studio/open', permanent: false },
       { source: '/kit/:path*', destination: '/library', permanent: false },
       { source: '/create', destination: '/library', permanent: false },
-      { source: '/studio', destination: '/studio/pages', permanent: false },
+      { source: '/studio', destination: '/studio/direction', permanent: false },
+      // Retired 2026-10-08 (decision 39): pages come from the kind of site and the sentence.
+      { source: '/studio/pages', destination: '/studio/direction', permanent: false },
+      { source: '/studio/brand', destination: '/studio/direction', permanent: false },
       { source: '/recipe/:slug', destination: '/studio/open?from=seed::slug', permanent: false },
       { source: '/:page(explore|resources)', destination: '/library', permanent: false },
       { source: '/:page(pricing|login|signup|account)', destination: '/', permanent: false },

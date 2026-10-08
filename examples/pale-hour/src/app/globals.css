@@ -1,0 +1,124 @@
+@import "../styles/tokens.css";
+
+/* shadcn/ui theme (recipe/ui.md) — hex values so the controls and the recipe tokens always match. */
+:root {
+  --background: #DAD8DB; --foreground: #0D0D0F;
+  --card: #E9E8EA; --card-foreground: #0D0D0F; --popover: #E9E8EA; --popover-foreground: #0D0D0F;
+  --primary: #0D0D0F; --primary-foreground: #DAD8DB; --secondary: #CDCBCF; --secondary-foreground: #0D0D0F;
+  --muted: #E9E8EA; --muted-foreground: #4A484D; --accent: #CDCBCF; --accent-foreground: #0D0D0F;
+  --border: #C0BEC3; --input: #4A484D; --ring: #0D0D0F; --radius: 0px;
+
+  /* Motion — one page easing everywhere, one for small state feedback */
+  --ease-page: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --header-h: 104px;
+  --header-h-compact: 64px;
+}
+
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h-compact) + 24px); }
+body { font-size: var(--type-body-size); line-height: var(--type-body-leading); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+::selection { background: var(--color-accent); color: var(--inv-text); }
+img { -webkit-user-drag: none; }
+
+/* Focus: no rings. Links and buttons get an underline or a background change; fields darken their border. */
+:focus { outline: none; }
+:where(a, button, [role="button"], [role="tab"], summary):focus-visible { outline: none; text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 0.3em; }
+.focus-fill:focus-visible { background: var(--color-secondary); }
+
+/* A plain underline that arrives on hover — the site's link behaviour */
+.link { text-decoration-line: underline; text-decoration-color: transparent; text-decoration-thickness: 1px; text-underline-offset: 0.3em; transition: text-decoration-color 160ms ease-out; }
+.link:hover, .link:focus-visible, .link[aria-current="page"] { text-decoration-color: currentColor; }
+.link-on { text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 0.3em; transition: text-decoration-color 160ms ease-out; }
+.link-on:hover, .link-on:focus-visible { text-decoration-color: transparent; }
+
+/* Museum label: artist, title in italic, year, medium, size */
+.label-title { font-style: italic; }
+
+/* The hero's pale wash — the ground colour over the photograph wherever words sit (see Hero.tsx) */
+.hero-wash {
+  --w: var(--color-background);
+  background:
+    linear-gradient(to bottom, color-mix(in oklab, var(--w) 72%, transparent) 0, transparent 9rem),
+    linear-gradient(to top, color-mix(in oklab, var(--w) 82%, transparent) 0%, color-mix(in oklab, var(--w) 70%, transparent) 50%, transparent 78%);
+}
+@media (min-width: 768px) {
+  .hero-wash {
+    background:
+      linear-gradient(to bottom, color-mix(in oklab, var(--w) 72%, transparent) 0, transparent 9rem),
+      radial-gradient(ellipse 105% 105% at 0% 100%, color-mix(in oklab, var(--w) 78%, transparent) 0%, color-mix(in oklab, var(--w) 66%, transparent) 62%, transparent 100%),
+      linear-gradient(to top, color-mix(in oklab, var(--w) 70%, transparent) 0%, color-mix(in oklab, var(--w) 52%, transparent) 26%, transparent 44%);
+  }
+}
+
+/* ——— Clip reveal ———
+   <Reveal> marks its wrapper with data-in once it enters the viewport; everything inside reads that one flag.
+   .rv       a block that unmasks upward (frame first)
+   .rv-img   a picture frame that opens like a curtain, its picture settling from 1.15
+   .rv-text  a line of words that follows, 70ms apart via --i */
+[data-reveal] .rv, [data-reveal].rv {
+  clip-path: inset(100% -12% -12% -12%); translate: 0 1.5rem;
+  transition: clip-path 850ms var(--ease-page), translate 850ms var(--ease-page);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+[data-reveal] .rv-img { clip-path: inset(100% 0 0 0); transition: clip-path 1100ms var(--ease-page); transition-delay: calc(var(--i, 0) * 60ms); }
+[data-reveal] .rv-img > * { scale: 1.15; transition: scale 1100ms var(--ease-page); transition-delay: calc(var(--i, 0) * 60ms); }
+[data-reveal] .rv-text { opacity: 0; translate: 0 0.75em; transition: opacity 700ms var(--ease-page), translate 800ms var(--ease-page); transition-delay: calc(120ms + var(--i, 0) * 70ms); }
+[data-reveal][data-in] .rv, [data-reveal][data-in].rv { clip-path: inset(-12% -12% -12% -12%); translate: 0 0; }
+[data-reveal][data-in] .rv-img { clip-path: inset(0 0 0 0); }
+[data-reveal][data-in] .rv-img > * { scale: 1; }
+[data-reveal][data-in] .rv-text { opacity: 1; translate: 0 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] .rv, [data-reveal].rv, [data-reveal] .rv-img, [data-reveal] .rv-text {
+    clip-path: none; translate: none; opacity: 0; transition: opacity 200ms linear; transition-delay: 0ms;
+  }
+  [data-reveal] .rv-img > * { scale: none; transition: none; }
+  [data-reveal][data-in] .rv, [data-reveal][data-in].rv, [data-reveal][data-in] .rv-img, [data-reveal][data-in] .rv-text { opacity: 1; }
+}
+
+/* Page titles: the cut-out headline, run by CSS from the first paint (TextEffect trigger="load") */
+.cut-in { animation: cut-in 900ms var(--ease-page) both; }
+@keyframes cut-in { from { translate: 0 105%; } }
+@media (prefers-reduced-motion: reduce) { .cut-in { animation: none; } }
+
+/* A picture on a page's first screen opens with the first paint (CSS), not after hydration — the same curtain */
+.rv-now { animation: img-open 1100ms var(--ease-page) 150ms both; }
+.rv-now > * { animation: img-settle 1100ms var(--ease-page) 150ms both; }
+@keyframes img-open { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes img-settle { from { scale: 1.15; } }
+@media (prefers-reduced-motion: reduce) {
+  .rv-now { animation: fade-in 200ms linear both; }
+  .rv-now > * { animation: none; }
+}
+
+/* ——— The hour line (Visit): bars draw from the left a day at a time, then the now line drops in ——— */
+[data-reveal] .hl-bar { scale: 0 1; transform-origin: left; transition: scale 900ms var(--ease-page); transition-delay: calc(250ms + var(--i, 0) * 60ms); }
+[data-reveal] .hl-now { scale: 1 0; transform-origin: bottom; transition: scale 700ms var(--ease-page) 900ms; }
+[data-reveal][data-in] .hl-bar, [data-reveal][data-in] .hl-now { scale: 1 1; }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] .hl-bar, [data-reveal] .hl-now { scale: none; opacity: 0; transition: opacity 200ms linear; }
+  [data-reveal][data-in] .hl-bar, [data-reveal][data-in] .hl-now { opacity: 1; }
+}
+
+/* ——— Page transition (View Transitions API through React <ViewTransition>) ——— */
+::view-transition-old(.page) { animation: 260ms var(--ease-page) both page-out; }
+::view-transition-new(.page) { animation: 480ms var(--ease-page) 120ms both page-in; }
+::view-transition-group(.morph) { animation-duration: 560ms; animation-timing-function: var(--ease-page); }
+@keyframes page-out { to { opacity: 0; } }
+@keyframes page-in { from { opacity: 0; transform: translateY(24px); } }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* Radix open / close, kept to opacity and transform */
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes sheet-in-left { from { transform: translateX(-100%); } }
+@keyframes sheet-out-left { to { transform: translateX(-100%); } }
+@keyframes sheet-in-right { from { transform: translateX(100%); } }
+@keyframes sheet-out-right { to { transform: translateX(100%); } }
+@keyframes accordion-down { from { height: 0; } to { height: var(--radix-accordion-content-height); } }
+@keyframes accordion-up { from { height: var(--radix-accordion-content-height); } to { height: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  [data-state] { animation-duration: 1ms !important; }
+}

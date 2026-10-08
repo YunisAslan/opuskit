@@ -68,14 +68,3 @@ export const closestLook = (spec: Fit) => exactLook(spec) ?? closestSite(spec)
 // Option tiles show any real site that has the very thing — the reader is browsing, not matching their whole site.
 /** A ready section on any real site, the closest feel first. */
 export const anySection = (spec: Fit, section: SectionId) => best(spec, (e) => e.sectionClips?.[section], same, 0)
-/** A real site built with this very design of a section — Pages shows it as proof of where the design can go, never as
- *  the owner's site. A design with no clip on any site shows nothing. */
-const designs = new Map<string, Set<string>>()
-const designsOn = (slug: string) => {
-  if (!designs.has(slug)) designs.set(slug, new Set(composeRecipe(specs[slug]).pages.flatMap((p) => p.sections.map((s) => `${s.id}:${s.variant?.id ?? ''}`))))
-  return designs.get(slug)!
-}
-export const sectionDesign = (spec: Fit, section: SectionId, variant?: string) =>
-  best(spec, (e) => (designsOn(e.slug).has(`${section}:${variant ?? ''}`) ? e.sectionClips?.[section] : undefined), same, 0)
-/** A first screen: a real site that opens with that very one. */
-export const heroSite = (spec: Fit, hero: HeroId) => best(spec, (e) => (specs[e.slug].hero === hero ? e.clip : undefined), same, 0)

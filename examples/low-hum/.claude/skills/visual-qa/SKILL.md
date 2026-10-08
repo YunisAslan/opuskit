@@ -1,0 +1,51 @@
+---
+name: visual-qa
+description: Compares the implemented site against the Low Hum — Cheeky Retro Seventies Restaurant Site recipe and lists deviations. Use after finishing a section or page, before declaring work done, or when asked to review the design.
+---
+
+# Visual QA
+
+Run the dev server, open each page (use a browser/screenshot tool if available), and compare against the recipe. Report deviations as a list: section → expected → actual → fix.
+
+## Checklist
+- [ ] Background is #2A1A14; no other page background colors are introduced.
+- [ ] Display text uses Gloock 400; body uses Figtree; no other families appear.
+- [ ] Accent #A8E0CF covers < 5% of any viewport.
+- [ ] Pages: Home · Menu · Reservations — every page shares the same navbar and footer.
+- [ ] Footer “Say hello”: A large headline invitation (“Let’s talk”, “Book a table”) with the email/phone as display-size links, address and hours beside it, then one small row of links, copyright and legal.
+- [ ] Home section order: Hero → Intro → Menu → Schedule → Reservation.
+- [ ] Menu section order: Menu → Gallery → Reservation.
+- [ ] Reservations section order: Reservation → Location → FAQ.
+- [ ] Hero matches "Full-bleed photo with depth": 100svh full-bleed photograph, headline anchored bottom-left, image slightly larger than viewport (scale 1.1) to allow drift.
+- [ ] Controls and forms use shadcn/ui restyled to the recipe tokens and shape (from: button, sheet, sonner, calendar, popover, select, form, label, tabs, input, textarea, dialog, carousel, accordion) — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover; every form says where it goes (an email the visitor sends, or the owner's service) and none fakes a sent message.
+- [ ] Sections with reference code in src/components/sections/ keep its design (real copy and media, no placeholder text left) and are fitted into this site: tokens only, the site’s type sizes and spacing, the code edited wherever its defaults disagree. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.
+- [ ] Kit piece "Prints on a desk" (<DragPhotos/> from src/components/pieces/DragPhotos.tsx) is used on Menu → Gallery: it does what the owner picked it for, and its size, place and the type around it follow the site.
+- [ ] Kit piece "Words that arrive" (<TextEffect/> from src/components/pieces/TextEffect.tsx) is used on Every page — the h1, plus at most two section headings per page (not every heading): it does what the owner picked it for, and its size, place and the type around it follow the site.
+- [ ] One system: things of one kind look alike everywhere — menu links, footer links, labels and button text share one face, width and size step; headings of one level share one size.
+- [ ] Every row lines up: the items of one row (the menu’s logo, links and button; a card’s title and meta) share one vertical centre or baseline — none sits higher because of padding it brought along.
+- [ ] Nothing looks pasted in: no part keeps a size, padding, width or font from its reference code that its neighbours do not share.
+- [ ] Locked items are as the owner chose them: palette, lettering, pages and their part order, each part’s design, menu, footer, shape, first screen, the copy’s facts and the owner’s files (recipe/design.md → Room to invent).
+- [ ] The site reads as Retro Seventies beyond its tokens: at least three of the style’s moves are in it, and none of its traps (recipe/design.md → What Retro Seventies is known for).
+- [ ] Every page has one remembered moment; each one the builder designed is named in the final reply, belongs to this owner (their words, pictures or trade) and has a mobile and a reduced-motion version.
+- [ ] Every page passes the award checklist in the recipe (one idea, one remembered moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).
+- [ ] Menu → Gallery: photos shown as "Even grid", every picture visible as the layout intends.
+- [ ] Layout: Text in 6–8 central columns; media spans 10–12; section spacing clamp(88px, 11vw, 152px) between sections (--section-y).
+- [ ] Shape “Soft”: buttons 8px, cards 12px, media 12px radius (rounded-button / rounded-card / rounded-media) — Small, consistent radii; never mix sharp and rounded.
+- [ ] Menu “Centered logo”: Symmetric bar: links left, logo centred, secondary links and the action right; generous height at the top that shrinks after scrolling.
+- [ ] Absent: Cold greys.
+- [ ] Absent: Sharp techy details.
+- [ ] Absent: Tiny type.
+- [ ] Absent: A cream or beige page ground with a clay/terracotta accent.
+- [ ] Absent: Small uppercase, letter-spaced monospace labels above every heading.
+- [ ] Absent: Numbered markers (01 / 02) on content that is not a real sequence.
+- [ ] Absent: Meta strings joined with middle dots or spaced em dashes, and "→" appended to links.
+- [ ] Absent: One italic or coloured accent word inside an otherwise plain headline.
+- [ ] Absent: Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe's fonts.
+- [ ] Absent: Text in mix-blend-difference (or any blend mode) over a photo — its colours turn random; text on a picture sits on a scrim or a solid block.
+- [ ] Absent: Effects nobody picked: no text effect, hover, cursor or scroll trick beyond the recipe's motion system and Your Kit.
+- [ ] Mobile (390px): no horizontal scroll, headlines re-broken intentionally, touch targets ≥ 44px.
+- [ ] prefers-reduced-motion: every animation has its documented alternative.
+- [ ] Every media element is rendered through the asset config layer; temporary assets are listed in the manifest.
+- [ ] Lighthouse on mobile: LCP < 2.5s, CLS < 0.1.
+
+Do not mark work complete while any item fails. Fix, then re-check.

@@ -61,7 +61,7 @@ export function TakeList({ site, cols = 'sm:grid-cols-2 lg:grid-cols-3', noLook 
   const look: CollectionItem = { kind: 'site', site }
   return (
     <div className="space-y-10">
-      {!noLook && <Group title="Its whole look" line="Colours, lettering, corners, menu and footer together — mixed into your directions with whatever else you like.">
+      {!noLook && <Group title="Its whole look" line="Colours, lettering, corners, menu and footer together — mixed into your site with whatever else you like.">
         <ul className="grid gap-x-5 gap-y-6 sm:grid-cols-2"><Take item={look} title={directions[spec.direction].name} sub="The whole look" picture={<TakenPicture item={look} auto />} /></ul>
       </Group>}
       <Group title="Just one thing" line="Only this quality comes along. Your directions mix it with the rest.">

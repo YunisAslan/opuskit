@@ -1,8 +1,10 @@
 'use client'
-// A first screen as it would look in the plan's style — used by Design → First screen and by the first row in Pages.
+// A first screen as it would look in the plan's style, in the owner's words — used by Direction and Brand.
 import { SectionPreview } from '@/components/SectionPreview'
 import { SitePreview, previewFromDirection } from '@/components/SitePreview'
 import { examples } from '@/data/examples'
+import { goals } from '@/data/taxonomy'
+import { inferGoal } from '@/features/kit/plan'
 import { EFFECTS } from '@/data/patterns'
 import type { HeroId, KitPlan } from '@/types/domain'
 import { lookOf } from './ProductVisual'
@@ -16,5 +18,11 @@ export function HeroPreview({ plan, id }: { plan: KitPlan; id?: HeroId }) {
   const look = lookOf(plan)
   const e = EFFECTS.find((x) => x.hero === id)
   if (e?.hero === 'orbit-stickers') return <SectionPreview id="orbit-hero" colors={look.colors} type={look.type} shape={look.shape} chapters={look.chapters} className="aspect-[16/10]" />
-  return <SitePreview {...previewFromDirection(look.d.id, { colors: look.colors, type: look.type, lead: e?.lead, motion: e?.motion, title: plan.name || 'Your headline', brand: plan.name || undefined, videoSrc: e?.hero.startsWith('scroll-video') ? CLIP : undefined })} />
+  return <SitePreview {...previewFromDirection(look.d.id, { colors: look.colors, type: look.type, lead: e?.lead, motion: e?.motion, title: plan.name || 'Your headline', brand: plan.name || undefined, ...ownWords(plan), videoSrc: e?.hero.startsWith('scroll-video') ? CLIP : undefined })} />
+}
+
+/** The owner's sentence, their pages as the menu and their main action — so a first screen speaks for their site. */
+function ownWords(plan: KitPlan) {
+  const nav = plan.pages.filter((p) => !['home', 'cart', 'product-detail'].includes(p.type) && p.sections.length).slice(0, 3).map((p) => p.label)
+  return { line: plan.about?.trim() || undefined, nav: nav.length ? nav : undefined, cta: plan.pages.length ? goals[inferGoal(plan)].cta[0] : undefined }
 }

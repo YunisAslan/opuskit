@@ -44,6 +44,64 @@ export type ExampleProject = {
 
 export const examples: ExampleProject[] = [
   {
+    slug: 'pale-hour',
+    title: 'Pale Hour, photography gallery and bookshop',
+    summary: 'A photography gallery and bookshop in an old print works. Three exhibitions a year, talks on Thursdays, photobooks to take home.',
+    mood: ['Quiet', 'Editorial', 'Light'],
+    // Its first screen is a photo with depth: the still is that photo itself.
+    hero: { kind: 'image', src: '/examples/pale-hour/media/hero.jpg' },
+    livePath: '/live/pale-hour',
+    // Parts taken from Sela Mor, Fieldhouse and Slow Atlas, then You → Direction (Gallery or museum, decision 46), built
+    // by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
+    choices: [
+      { label: 'Making', value: 'Event / wedding' },
+      { label: 'Name', value: 'Pale Hour' },
+      { label: 'Visitors should', value: 'Visit in person' },
+      { label: 'Style', value: 'Art Editorial' },
+      { label: 'First screen', value: 'Full-bleed photo with depth' },
+      { label: 'Movement', value: 'Dynamic' },
+      { label: 'Colors', value: 'Gallery Grey' },
+      { label: 'Lettering', value: 'Cut Glass' },
+      { label: 'Layout', value: 'Editorial' },
+      { label: 'Shape', value: 'Sharp' },
+      { label: 'Menu', value: 'Centered logo' },
+      { label: 'Footer', value: 'Signature columns' },
+      { label: 'Big idea', value: 'None' },
+      { label: 'Pages', value: 'Home, Exhibitions, Visit, About' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Photos are from Unsplash (credits in media-src/SOURCES.md); the gallery, its artists, exhibitions, people, address and talks are made up, and seats are kept by email — none is taken.',
+  },
+  {
+    slug: 'low-hum',
+    title: 'Low Hum — listening bar, small plates until late',
+    summary: 'A listening bar with ten thousand records, a hand-built sound system and small plates until late.',
+    mood: ['Warm', 'Retro', 'Low-lit'],
+    // Its first screen is a photo with depth: the still is that photo itself.
+    hero: { kind: 'image', src: '/examples/low-hum/media/hero.jpg' },
+    livePath: '/live/low-hum',
+    // The first site made through You → Direction (no Pages screen), parts taken from Fennwood, Lowfield Nights and
+    // Inkwell & Moth, then built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'Restaurant' },
+      { label: 'Name', value: 'Low Hum' },
+      { label: 'Visitors should', value: 'Book or reserve' },
+      { label: 'Style', value: 'Retro Seventies' },
+      { label: 'First screen', value: 'Full-bleed photo with depth' },
+      { label: 'Movement', value: 'Dynamic' },
+      { label: 'Colors', value: 'Espresso' },
+      { label: 'Lettering', value: 'Soft Seventies' },
+      { label: 'Layout', value: 'Balanced' },
+      { label: 'Shape', value: 'Soft' },
+      { label: 'Menu', value: 'Centered logo' },
+      { label: 'Footer', value: 'Say hello' },
+      { label: 'Big idea', value: 'None' },
+      { label: 'Pages', value: 'Home, Menu, Reservations' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Photos are from Unsplash (credits in media-src/SOURCES.md); the bar, its address, menu, prices and programme are made up, and bookings open the visitor\'s email app — none is taken.',
+  },
+  {
     slug: 'halden',
     title: 'Halden, wood-fired sauna and cold sea',
     summary: 'A wood-fired sauna and cold-sea bathhouse on a northern coast. Heat, salt water and the long quiet in between.',

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Archivo, Geist, Geist_Mono } from 'next/font/google'
+import { ClickSpark } from '@/components/ClickSpark'
 import { Footer, Header } from '@/components/SiteChrome'
 import { THEME_SCRIPT } from '@/components/ThemeToggle'
 import { Toaster } from '@/components/ui/sonner'
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main id="main">{children}</main>
           <Footer />
           <Toaster position="top-center" offset={76} />
+          <ClickSpark />
         </TooltipProvider>
       </body>
     </html>

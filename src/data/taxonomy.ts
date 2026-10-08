@@ -208,6 +208,11 @@ export const purposes: Record<PurposeId, Purpose> = {
       { type: 'pricing', label: 'Tickets', tier: 'recommended', sections: ['pricing', 'faq'] },
       { type: 'locations', label: 'Venue', tier: 'recommended', sections: ['location', 'faq'] },
       { type: 'partners', label: 'Sponsors', tier: 'recommended', sections: ['clients', 'cta-band'] },
+    ] }, { id: 'gallery', name: 'Gallery or museum', hint: 'Exhibitions, a programme, visiting', pages: [
+      { type: 'home', label: 'Home', tier: 'recommended', sections: ['hero', 'intro', 'featured-work', 'schedule', 'newsletter'] },
+      { type: 'work', label: 'Exhibitions', tier: 'recommended', sections: ['featured-work', 'gallery'] },
+      { type: 'locations', label: 'Visit', tier: 'recommended', sections: ['location', 'schedule', 'faq'] },
+      { type: 'about', label: 'About', tier: 'recommended', sections: ['about', 'team'] },
     ] }],
   },
   nonprofit: {

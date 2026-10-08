@@ -3,7 +3,7 @@
 // so the same component works as a thumbnail, a kit preview or a recipe hero.
 
 import type { CSSProperties } from 'react'
-import { directions } from '@/data/taxonomy'
+import { directions, goals } from '@/data/taxonomy'
 import { palettes, typography } from '@/data/ingredients'
 import { img, type ImageKey } from '@/data/images'
 import type { DirectionId, LayoutId, LeadId, MotionLevel, PaletteColors, TypographyPairing, UniversalRecipe } from '@/types/domain'
@@ -23,6 +23,10 @@ export type PreviewProps = {
   noMedia?: boolean
   /** A real video (e.g. the user's upload) to play in place of the stock still. */
   videoSrc?: string
+  /** The owner's own sentence, menu and main action, in place of the sample ones. */
+  line?: string
+  nav?: string[]
+  cta?: string
 }
 
 export function previewFromDirection(id: DirectionId, over: Partial<PreviewProps> = {}): PreviewProps {
@@ -35,8 +39,11 @@ export function previewFromDirection(id: DirectionId, over: Partial<PreviewProps
 
 export function previewFromRecipe(r: UniversalRecipe, over: Partial<PreviewProps> = {}): PreviewProps {
   const colors = Object.fromEntries(r.visualSystem.palette.tokens.map((t) => [t.role, t.hex])) as PaletteColors
-  const s = r.metadata.spec
-  return { colors, type: r.visualSystem.typography, layout: r.layoutSystem.id, lead: s.lead, motion: s.motion, image: r.metadata.image, title: r.contentDirection.headlineExamples[0], ...over }
+  const s = r.metadata.spec, b = s.brief
+  // A recipe with the owner's words speaks in them: their sentence, their pages as the menu, their main action.
+  const nav = b ? s.pages.filter((x) => !['home', 'cart', 'product-detail'].includes(x.type) && x.sections.length).slice(0, 3).map((x) => x.label) : []
+  return { colors, type: r.visualSystem.typography, layout: r.layoutSystem.id, lead: s.lead, motion: s.motion, image: r.metadata.image, title: b?.name?.trim() || r.contentDirection.headlineExamples[0], brand: b?.name?.trim() || undefined,
+    line: b?.offer?.trim() || undefined, nav: nav.length ? nav : undefined, cta: b?.goal ? goals[b.goal].cta[0] : undefined, ...over }
 }
 
 const font = (f: TypographyPairing['display']): CSSProperties => ({
@@ -68,28 +75,29 @@ export function SitePreview(p: PreviewProps) {
       {/* nav */}
       <div className="flex items-center justify-between" style={{ padding: '3cqw 4cqw', fontSize: '1.5cqw', color: fg, ...util }}>
         <span style={{ ...font(p.type.heading), fontSize: '2cqw', textTransform: 'none', letterSpacing: '-0.01em' }}>{brand}</span>
-        <span className="flex" style={{ gap: '3cqw', opacity: 0.8 }}><span>Work</span><span>About</span><span>Contact</span></span>
+        <span className="flex" style={{ gap: '3cqw', opacity: 0.8 }}>{(p.nav ?? ['Work', 'About', 'Contact']).map((x) => <span key={x}>{x}</span>)}</span>
       </div>
 
       {p.layout === 'balanced' && (
         <div className="flex flex-col items-center text-center" style={{ padding: '2cqw 8cqw 0' }}>
           <Title p={p} style={{ ...display, fontSize: '6.4cqw', maxWidth: '70cqw' }} />
-          <p style={{ ...body, fontSize: '1.6cqw', color: c.muted, marginTop: '1.6cqw' }}>Crafted slowly, made to last.</p>
-          <Button c={c} util={util} />
-          <div className="w-full overflow-hidden" style={{ marginTop: '3cqw', height: '26cqw', borderRadius: '.6cqw' }}>{media}</div>
+          <p style={{ ...body, fontSize: '1.6cqw', color: c.muted, marginTop: '1.6cqw', maxWidth: '56cqw' }}>{p.line ?? 'Crafted slowly, made to last.'}</p>
+          <Button c={c} util={util} label={p.cta} />
+          {/* Words lead: the first screen is the type itself, no picture box under it. */}
+          {p.lead !== 'typography' && <div className="w-full overflow-hidden" style={{ marginTop: '3cqw', height: '26cqw', borderRadius: '.6cqw' }}>{media}</div>}
         </div>
       )}
 
       {p.layout === 'editorial' && (
-        <div className="grid" style={{ gridTemplateColumns: '7fr 5fr', gap: '3cqw', padding: '2cqw 4cqw 0' }}>
+        <div className="grid" style={{ gridTemplateColumns: p.lead === 'typography' ? '1fr' : '7fr 5fr', gap: '3cqw', padding: '2cqw 4cqw 0', minHeight: p.lead === 'typography' ? '48cqw' : undefined }}>
           <div className="flex flex-col justify-between">
             <span style={{ ...util, fontSize: '1.3cqw', color: c.muted }}>The autumn issue</span>
             <Title p={p} style={{ ...display, fontSize: '8cqw' }} />
             <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '2cqw', ...body, fontSize: '1.35cqw', color: c.muted, lineHeight: 1.5 }}>
-              <p>An index of spaces, objects and the people who make them.</p><p>Photographed in natural light across four seasons.</p>
+              {p.line ? <p style={{ gridColumn: 'span 2', maxWidth: '44cqw' }}>{p.line}</p> : <><p>An index of spaces, objects and the people who make them.</p><p>Photographed in natural light across four seasons.</p></>}
             </div>
           </div>
-          <div className="overflow-hidden" style={{ height: '48cqw' }}>{media}</div>
+          {p.lead !== 'typography' && <div className="overflow-hidden" style={{ height: '48cqw' }}>{media}</div>}
         </div>
       )}
 
@@ -98,7 +106,7 @@ export function SitePreview(p: PreviewProps) {
           <div className="absolute overflow-hidden" style={{ right: '4cqw', top: '1cqw', width: '44cqw', height: '48cqw' }}>{media}</div>
           <div className="absolute" style={{ left: '6cqw', bottom: '5cqw', maxWidth: '38cqw' }}>
             <Title p={p} style={{ ...display, fontSize: '4.6cqw' }} />
-            <p style={{ ...body, fontSize: '1.35cqw', color: c.muted, marginTop: '1.6cqw', lineHeight: 1.7 }}>A quiet place for considered things.</p>
+            <p style={{ ...body, fontSize: '1.35cqw', color: c.muted, marginTop: '1.6cqw', lineHeight: 1.7 }}>{p.line ?? 'A quiet place for considered things.'}</p>
           </div>
           <span className="absolute" style={{ left: '6cqw', top: '4cqw', ...util, fontSize: '1.2cqw', color: c.muted }}>Est. 2014</span>
         </div>
@@ -144,8 +152,8 @@ function Title({ p, style }: { p: PreviewProps; style: CSSProperties }) {
   return <h3 className="sp-title" style={{ margin: 0, textWrap: 'balance', ...style }}>{p.title}</h3>
 }
 
-function Button({ c, util }: { c: PaletteColors; util: CSSProperties }) {
-  return <span style={{ ...util, marginTop: '2cqw', fontSize: '1.3cqw', padding: '1cqw 2.4cqw', background: c.primary, color: c.background, borderRadius: '99cqw' }}>Book a visit</span>
+function Button({ c, util, label = 'Book a visit' }: { c: PaletteColors; util: CSSProperties; label?: string }) {
+  return <span style={{ ...util, marginTop: '2cqw', fontSize: '1.3cqw', padding: '1cqw 2.4cqw', background: c.primary, color: c.background, borderRadius: '99cqw' }}>{label}</span>
 }
 
 function Media(p: PreviewProps) {
@@ -156,7 +164,7 @@ function Media(p: PreviewProps) {
   if (p.lead === 'typography') {
     return (
       <div className="flex h-full w-full items-end overflow-hidden" style={{ background: c.surface, padding: '1.5cqw' }}>
-        <span style={{ ...font(p.type.display), fontSize: '22cqw', lineHeight: 0.75, color: c.accent }}>Aa</span>
+        <span style={{ ...font(p.type.display), fontSize: '22cqw', lineHeight: 0.75, color: c.accent }}>{p.brand?.trim()[0] ?? 'Aa'}</span>
       </div>
     )
   }

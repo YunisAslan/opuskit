@@ -1,18 +1,21 @@
 'use client'
 // Make it yours: the look, the colours and the lettering, one list at a time under tabs that name each pick (decision
-// 29). On Direction under the three directions (decision 36), and on Brand for a recipe opened from elsewhere. What fits
+// 29). On Direction (Make it yours, decisions 36, 39), and on Brand for a recipe opened from elsewhere. What fits
 // leads; a colour or lettering seen on a site the owner took from says so ("From Fennwood"), and the Library is one link
 // away — taking from real sites stays the way in.
-import { Check } from 'lucide-react'
+import { Check, LayoutGrid } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { useGoogleFonts } from '@/components/FontLoader'
 import { LazyMount } from '@/components/LazyMount'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { Chip } from '@/components/ui'
 import { palettes, typography } from '@/data/ingredients'
-import { directions, families } from '@/data/taxonomy'
+import { directions, families, purposes } from '@/data/taxonomy'
+import { lookCredit, lookImages, lookImg } from '@/data/look-images'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { planToSpec, setStyle } from '@/features/kit/plan'
 import { allSites, lookChoices, siteName, siteSpec, type SiteRef } from '@/features/library/collection'
 import { siteTraits } from '@/features/library/inspire'
@@ -25,7 +28,7 @@ import { SERIF_FAMILIES } from '@/lib/type-tokens'
 import type { DirectionId, FamilyId, KitPlan, PaletteId, TypographyId } from '@/types/domain'
 import { usePlanLook } from './shared'
 
-const FIRST = 8
+const FIRST = 12
 const ALL_TYPE = Object.keys(typography) as TypographyId[]
 const ALL_COLOURS = Object.keys(palettes) as PaletteId[]
 const ALL_LOOKS = Object.keys(directions) as DirectionId[]
@@ -50,6 +53,7 @@ export function LookPicker({ every }: { every?: boolean }) {
   const [fam, setFam] = useState<'all' | FamilyId>('all')
   const [nLooks, setNLooks] = useState(6)
   const [tab, setTab] = useState<'look' | 'colours' | 'lettering'>()
+  const [showLook, setShowLook] = useState<DirectionId>()
   // Each list's order is set once (the pick then, what fits, the rest): picking never moves a tile.
   const typeOrder = useRef<TypographyId[]>(null), colourOrder = useRef<PaletteId[]>(null), lookOrder = useRef<DirectionId[]>(null)
   typeOrder.current ??= [...new Set([look.type.id, ...look.d.typography, ...ALL_TYPE])]
@@ -75,7 +79,9 @@ export function LookPicker({ every }: { every?: boolean }) {
   for (const r of [...allSites].sort((a, b) => Number(!!exampleOf(b)?.clip) - Number(!!exampleOf(a)?.clip))) if (exampleOf(r) && !builtIn.has(siteSpec(r)!.direction)) builtIn.set(siteSpec(r)!.direction, r)
   const inLook = (id: DirectionId): KitPlan => {
     const site = lookChoices(c).map((r) => siteSpec(r)!).find((x) => x.direction === id)
-    return FOLLOWS_LOOK.reduce((n, k) => setStyle(n, k, site?.[k] === 'off' ? 'off' : site?.[k]), setStyle(plan, 'direction', id))
+    // Colours or lettering taken by name stay with any look (decision 39); the rest follows the new look.
+    const named = new Set(c.items.flatMap((i) => (i.kind === 'like' ? [i.what === 'colours' ? 'palette' : i.what === 'lettering' ? 'typography' : ''] : [])))
+    return FOLLOWS_LOOK.filter((k) => !named.has(k)).reduce((n, k) => setStyle(n, k, site?.[k] === 'off' ? 'off' : site?.[k]), setStyle(plan, 'direction', id))
   }
   const at = tab === 'look' && !lookChoice ? 'colours' : tab ?? (lookChoice ? 'look' : 'colours')
   const pickLook = (id: DirectionId) => {
@@ -88,7 +94,7 @@ export function LookPicker({ every }: { every?: boolean }) {
 
   return (
     <div className="min-w-0">
-      <div role="tablist" aria-label="Make it yours" className="sticky top-[7.5rem] z-10 bg-paper pb-4">
+      <div role="tablist" aria-label="Make it yours" className="pb-4">
         <div className={`grid gap-1 rounded-[3px] bg-paper-2 p-1 ${lookChoice ? 'grid-cols-3' : 'grid-cols-2'}`}>
           {([...(lookChoice ? [['look', 'Look', look.d.name]] : []), ['colours', 'Colours', palettes[spec.palette].name], ['lettering', 'Lettering', look.type.name]] as const).map(([k, name, now]) => (
             <button key={k} type="button" role="tab" aria-selected={at === k} onClick={() => setTab(k as typeof at)}
@@ -101,20 +107,32 @@ export function LookPicker({ every }: { every?: boolean }) {
       </div>
 
       {at === 'look' && (
-        <List label="Look" note={lookChoice === 'theirs' ? 'Your sites come in different looks — which one is yours?' : 'Shapes your parts, corners, menu, footer and movement — and brings its colours and lettering.'}
+        <List label="Look" note={lookChoice === 'theirs' ? 'Your sites come in different looks — which one is yours?' : undefined}
           filters={lookChoice === 'all' && (['all', ...FAMILIES] as const).map((f) => <Chip small key={f} active={fam === f} onClick={() => { setFam(f); setNLooks(6) }}>{f === 'all' ? 'All' : families[f].name}</Chip>)}
           shown={lookChoice === 'theirs' ? looks.length : Math.min(nLooks, looks.length)} total={looks.length} onMore={() => setNLooks(Infinity)} wide>
           {looks.slice(0, lookChoice === 'theirs' ? undefined : nLooks).map((id) => (
-            <Tile key={id} on={look.d.id === id} onPick={() => pickLook(id)} label={directions[id].name} sub={seenOn('direction', id) ?? (kindLooks.has(id) ? 'Fits your site' : builtIn.has(id) ? `As built: ${siteName(builtIn.get(id)!)}` : undefined)}>
+            <div key={id} className="relative" data-look-tile title={lookCredit(id)}>
+            <Tile on={look.d.id === id} onPick={() => pickLook(id)} label={directions[id].name} sub={seenOn('direction', id) ?? (kindLooks.has(id) ? 'Fits your site' : builtIn.has(id) ? `As built: ${siteName(builtIn.get(id)!)}` : undefined)}>
               <span className="pointer-events-none block" aria-hidden>
-                {builtIn.has(id)
+                {/* A mood photo anyone reads as the style; without one, a site built in it, else the owner's site in it. */}
+                {lookImg(id)
+                  ? <LookPicture id={id} clip={builtIn.has(id) ? exampleOf(builtIn.get(id)!)?.clip : undefined} />
+                  : builtIn.has(id)
                   ? <SiteThumb site={builtIn.get(id)!} auto />
                   : <LazyMount className="aspect-[16/10] overflow-hidden"><SitePreview {...previewFromRecipe(composeRecipe(planToSpec(look.d.id === id ? plan : inLook(id))), plan.name ? { title: plan.name, brand: plan.name } : {})} /></LazyMount>}
               </span>
             </Tile>
+            {!!sitesIn(id).length && (
+              <button type="button" onClick={() => setShowLook(id)} aria-label={`Sites built in ${directions[id].name}`} title="Sites built in this look"
+                className="absolute right-1.5 top-1.5 flex h-7 items-center gap-1 rounded-[3px] bg-paper/90 px-2 text-xs text-ink backdrop-blur-sm transition-colors hover:bg-ink hover:text-paper">
+                <LayoutGrid size={13} aria-hidden /><span className="tabular-nums">{sitesIn(id).length}</span>
+              </button>
+            )}
+            </div>
           ))}
         </List>
       )}
+      <LookSites id={showLook} onClose={() => setShowLook(undefined)} onUse={(id) => { pickLook(id); setShowLook(undefined) }} using={look.d.id} />
 
       {at === 'colours' && (
         <List label="Colours" filters={(['all', 'light', 'dark'] as const).map((t) => <Chip small key={t} active={tone === t} onClick={() => { setTone(t); setNColours(FIRST) }}>{t === 'all' ? 'All' : t === 'light' ? 'Light' : 'Dark'}</Chip>)}
@@ -147,7 +165,6 @@ export function LookPicker({ every }: { every?: boolean }) {
           })}
         </List>
       )}
-      <p className="mt-6 text-sm text-muted">Saw something you like on a real site? <Link href="/library" className="link text-ink-2">Take it in the Library</Link> — it joins your directions.</p>
     </div>
   )
 }
@@ -168,9 +185,70 @@ function List({ label, note, filters, shown, total, onMore, wide, children }: { 
   )
 }
 
+/** A look's tile picture: its photo; on hover, the clip of a site built in that look plays over it (decision 41). */
+function LookPicture({ id, clip }: { id: DirectionId; clip?: string }) {
+  const video = useRef<HTMLVideoElement>(null)
+  const [playing, setPlaying] = useState(false)
+  // The picture takes no pointer (the tile's button does): hover is read from the whole tile, keyboard focus too.
+  useEffect(() => {
+    const v = video.current, tile = v?.closest('[data-look-tile]')
+    if (!v || !tile) return
+    const play = () => { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) v.play().catch(() => {}) }
+    const stop = () => { v.pause(); setPlaying(false) }
+    const on: [string, () => void][] = [['mouseenter', play], ['mouseleave', stop], ['focusin', play], ['focusout', stop]]
+    on.forEach(([e, f]) => tile.addEventListener(e, f))
+    return () => on.forEach(([e, f]) => tile.removeEventListener(e, f))
+  }, [clip])
+  return (
+    <span className="relative block aspect-[16/10] overflow-hidden bg-paper-2">
+      <Image src={lookImg(id)!} alt="" fill sizes="(min-width: 1024px) 16rem, 50vw" className="object-cover" />
+      {clip && <video ref={video} src={clip} muted loop playsInline preload="none" aria-hidden onPlaying={() => setPlaying(true)}
+        className={`absolute inset-0 size-full object-cover transition-opacity duration-300 ${playing ? 'opacity-100' : 'opacity-0'}`} />}
+    </span>
+  )
+}
+
+/** Every site OpusKit has built or planned in a look, the built ones first. */
+const sitesIn = (id: DirectionId) => allSites.filter((r) => siteSpec(r)?.direction === id).sort((a, b) => Number(!!exampleOf(b)) - Number(!!exampleOf(a)))
+
+/** A look, large: the sites made in it, playing — what it can become, never the owner's site. Use this look picks it. */
+function LookSites({ id, onClose, onUse, using }: { id?: DirectionId; onClose: () => void; onUse: (id: DirectionId) => void; using: DirectionId }) {
+  const d = id && directions[id]
+  return (
+    <Dialog open={!!id} onOpenChange={(o) => { if (!o) onClose() }}>
+      <DialogContent className="max-h-[88vh] overflow-y-auto rounded-[4px] p-0 sm:max-w-5xl">
+        {d && <>
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-line px-6 py-5 pr-14">
+            <div>
+              <p className="label text-muted">Look · {sitesIn(d.id).length} {sitesIn(d.id).length === 1 ? 'site' : 'sites'} made in it</p>
+              <DialogTitle className="display mt-1 text-[clamp(1.6rem,2.6vw,2.2rem)]">{d.name}</DialogTitle>
+              <DialogDescription className="mt-1 text-sm text-ink-2">{d.line}. Your site takes the look, not these sites.</DialogDescription>
+            </div>
+            <button type="button" onClick={() => onUse(d.id)} disabled={using === d.id} className="btn btn-ink btn-sm disabled:opacity-50">{using === d.id ? <><Check size={14} aria-hidden />Your look</> : 'Use this look'}</button>
+          </div>
+          <ul className="grid gap-5 p-6 sm:grid-cols-2">
+            {sitesIn(d.id).map((r) => (
+              <li key={r}>
+                <Link href={`/library/sites/${r.replace(':', '/')}`} className="group block">
+                  <span className="block overflow-hidden border border-line"><SiteThumb site={r} auto /></span>
+                  <span className="mt-2 flex items-baseline justify-between gap-3">
+                    <span className="ulink font-medium">{siteName(r)}</span>
+                    <span className="text-xs text-muted">{purposes[siteSpec(r)!.purpose].name}{exampleOf(r) ? '' : ' · planned'}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          {lookImages[d.id] && <p className="border-t border-line px-6 py-3 text-xs text-muted"><a href={lookImages[d.id]!.page} target="_blank" rel="noreferrer" className="link">{lookCredit(d.id)}</a></p>}
+        </>}
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 function Tile({ on, onPick, label, sub, children }: { on: boolean; onPick: () => void; label: string; sub?: string; children: React.ReactNode }) {
   return (
-    <button type="button" role="radio" aria-checked={on} onClick={onPick} className={`overflow-hidden rounded-[3px] border bg-white text-left ${on ? 'border-pencil ring-2 ring-pencil' : 'border-line hover:border-ink'}`}>
+    <button type="button" role="radio" aria-checked={on} onClick={onPick} className={`block h-full w-full overflow-hidden rounded-[3px] border bg-white text-left ${on ? 'border-pencil ring-2 ring-pencil' : 'border-line hover:border-ink'}`}>
       {children}
       <span className="flex items-start justify-between gap-2 border-t border-line px-2.5 py-1.5">
         <span className="min-w-0"><span className="block truncate text-[13px] font-medium">{label}</span>{sub && <span className="block truncate text-[11px] text-pencil">{sub}</span>}</span>

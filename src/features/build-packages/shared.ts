@@ -135,6 +135,8 @@ export function visualQa(r: UniversalRecipe): string[] {
     'Mobile (390px): no horizontal scroll, headlines re-broken intentionally, touch targets ≥ 44px.',
     'prefers-reduced-motion: every animation has its documented alternative.',
     'Every media element is rendered through the asset config layer; temporary assets are listed in the manifest.',
+    // Pale Hour (2026-10-08): hand-written /_next/image?url=… addresses broke its static export.
+    'Every picture goes through next/image (or its getImageProps for a plain <img>, a srcSet or a CSS background) — never a hand-written /_next/image?url=… address, which only exists on a running Next server; the site also works as a static export.',
     r.metadata.spec.lead === 'video' ? 'Lighthouse on mobile: LCP < 2.5s with the poster still as the LCP element, CLS < 0.1.' : 'Lighthouse on mobile: LCP < 2.5s, CLS < 0.1.',
   ]
 }

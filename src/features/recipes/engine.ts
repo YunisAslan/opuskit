@@ -12,7 +12,7 @@ import { resources } from '@/data/resources'
 import { lookKnowledge } from '@/data/look-knowledge'
 import { contrast, contrastLabel, isHex, oklab } from '@/lib/color'
 import { FRAMES } from '@/lib/frame'
-import type {
+import type { TakenPart,
   Shot, InspirationReference,
   AssetCreationPath, AssetRequirement, ChromeId, ConceptId, RecipeConcept, FooterStyle, AssetSpec, BehaviourId, Brief, BuildTarget, DirectionId, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern, ImagePresentationId, ImageryPlan, PieceId, RecipePiece,
   FamilyId, GoalId, LeadId, LayoutId, MediaPlacement, MotionPattern, FooterStyleId, SectionTone, MotionLevel, NavStyleId, ShapeStyle, UiKit, SignaturePattern, PageBlueprint, PageSection, ShapeId, SignatureMoment, PageSpec, PageTypeId, PaletteColors, PaletteId, PurposeId, RecipeSeed, RecipeSpec, SectionId, TypographyId, UniversalRecipe,
@@ -108,9 +108,16 @@ function placePieces(spec: RecipeSpec, pages: PageBlueprint[], signatures: Signa
 }
 
 /** Keeps a spec coherent after any change (kit or Remix). Only dependent decisions move. */
+const TAKEN_KINDS = ['site', 'like', 'section', 'hero', 'menu', 'footer', 'effect']
+export const cleanTaken = (x: unknown): TakenPart[] | undefined => {
+  const t = Array.isArray(x) ? x.filter((i): i is TakenPart => !!i && typeof i.site === 'string' && /^(example|seed):[a-z0-9-]{1,60}$/.test(i.site) && TAKEN_KINDS.includes(i.kind) && typeof i.id === 'string') : []
+  return t.length ? t : undefined
+}
+
 export function normalizeSpec(spec: RecipeSpec): RecipeSpec {
   const next = { ...spec, characters: spec.characters.slice(0, 2), brief: cleanBrief(spec.brief) }
   if (!next.brief) delete next.brief
+  if (next.taken !== undefined) { const t = cleanTaken(next.taken); if (t) next.taken = t; else delete next.taken }
   if (next.hero && !heroOptions(next.lead, next.motion).some((h) => h.id === next.hero)) delete next.hero
   const hero = resolveHero(next)
   if (hero.forcesLayout) next.layout = hero.forcesLayout

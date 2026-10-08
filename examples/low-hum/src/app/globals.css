@@ -1,0 +1,112 @@
+@import "../styles/tokens.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* shadcn/ui names that do not collide with the recipe tokens. The recipe's own --color-background / primary /
+   secondary / muted / accent / border stay as tokens.css sets them; the ui components were restyled to use those. */
+@theme inline {
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --ease-hum: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* shadcn theme — recipe/ui.md, hex values so the components and the tokens always match */
+:root {
+  --background: #2A1A14; --foreground: #F5EAE2;
+  --card: #3A2820; --card-foreground: #F5EAE2; --popover: #3A2820; --popover-foreground: #F5EAE2;
+  --primary: #F5EAE2; --primary-foreground: #2A1A14; --secondary: #4A342A; --secondary-foreground: #F5EAE2;
+  --muted: #3A2820; --muted-foreground: #C9B2A4; --accent: #4A342A; --accent-foreground: #F5EAE2;
+  --border: #54403A; --input: #C9B2A4; --ring: #F5EAE2; --radius: 12px;
+  --destructive: #FF7A6B;
+  --ease-hum: cubic-bezier(0.65, 0, 0.35, 1);
+  --nav-h: 96px;
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
+  body { min-height: 100svh; overflow-x: clip; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  ::selection { background: var(--color-accent); color: var(--color-background); }
+  :focus { outline: none; }
+  :focus-visible { outline: none; }
+  [id] { scroll-margin-top: 88px; }
+}
+
+/* The retro display voice: fat, squat, tight, lowercase phrases */
+@utility type-poster {
+  font-family: var(--font-display), serif;
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+/* Links: a plain underline that arrives on hover or keyboard focus, never a ring */
+@utility link-hum {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition: text-decoration-color 160ms ease-out, color 160ms ease-out;
+  &:hover, &[aria-current="page"] { text-decoration-color: currentColor; }
+  /* keyboard focus: a thick mint underline — clearly not a hover, never a ring */
+  &:focus-visible { text-decoration-color: var(--color-accent); text-decoration-thickness: 3px; text-underline-offset: 0.26em; }
+}
+
+/* Keyboard focus, in the house signal colour (mint — on cream bands the accent token turns espresso, so it still
+   contrasts). Controls fill with it; fields draw a two-pixel mint edge inside their border. No outer ring, no glow.
+   Focus outranks every other state (hover, active side, chosen day, invalid), hence !important. */
+@utility focus-fill {
+  &:focus-visible { background-color: var(--color-accent) !important; color: var(--color-background) !important; border-color: var(--color-accent) !important; }
+}
+@utility focus-field {
+  &:focus-visible, &[data-state="open"] { border-color: var(--color-accent) !important; box-shadow: inset 0 0 0 1px var(--color-accent); }
+}
+
+/* Two-tone checker band — the gate into the footer */
+@utility checker {
+  background-color: var(--color-background);
+  background-image:
+    conic-gradient(var(--color-secondary) 0 25%, transparent 0 50%, var(--color-secondary) 0 75%, transparent 0);
+  background-size: 48px 48px;
+}
+
+/* ---------- Motion ---------- */
+
+/* Image clip reveal — the curtain */
+.clip-reveal { clip-path: inset(100% 0 0 0); }
+.clip-reveal > .clip-inner { transform: scale(1.15); }
+.clip-reveal.is-in { clip-path: inset(0 0 0 0); transition: clip-path 1100ms var(--ease-hum); }
+.clip-reveal.is-in > .clip-inner { transform: scale(1); transition: transform 1100ms var(--ease-hum); }
+
+/* Parallax drift (CSS scroll-driven where supported; MediaAsset falls back to Motion) */
+@supports (animation-timeline: view()) {
+  .drift { animation: drift linear both; animation-timeline: view(); }
+}
+@keyframes drift { from { transform: translateY(-9%) scale(1.18); } to { transform: translateY(9%) scale(1.18); } }
+
+/* Page transition — crossfade, with named elements morphing */
+::view-transition-old(root) { animation: 260ms var(--ease-hum) both vt-out; }
+::view-transition-new(root) { animation: 420ms var(--ease-hum) 80ms both vt-in; }
+::view-transition-group(*) { animation-duration: 520ms; animation-timing-function: var(--ease-hum); }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(12px); } }
+
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .clip-reveal, .clip-reveal.is-in { clip-path: none; opacity: 0; transition: opacity 200ms ease-out; }
+  .clip-reveal.is-in { opacity: 1; }
+  .clip-reveal > .clip-inner, .clip-reveal.is-in > .clip-inner { transform: none; transition: none; }
+  .drift { animation: none !important; transform: none !important; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; }
+}

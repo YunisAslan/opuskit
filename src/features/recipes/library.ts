@@ -13,11 +13,9 @@ export type SavedItem = { ref: string; savedAt: number }
 
 const NO_GENS: Generations = {}
 const NO_SAVED: SavedItem[] = []
-const NO_RECENT: string[] = []
 
 export const useGenerations = () => useStored(KEYS.generations, NO_GENS)
 export const useSaved = () => useStored(KEYS.saved, NO_SAVED)
-export const useRecent = () => useStored(KEYS.recent, NO_RECENT)
 
 export function saveGeneration(spec: RecipeSpec, id = crypto.randomUUID().slice(0, 8)) {
   const all = get(KEYS.generations, NO_GENS)
@@ -38,8 +36,3 @@ export function toggleSaved(ref: string) {
   write(KEYS.saved, saved.some((s) => s.ref === ref) ? saved.filter((s) => s.ref !== ref) : [{ ref, savedAt: Date.now() }, ...saved])
 }
 
-export function markRecent(ref: string) {
-  const recent = get(KEYS.recent, NO_RECENT)
-  if (recent[0] === ref) return
-  write(KEYS.recent, [ref, ...recent.filter((r) => r !== ref)].slice(0, 8))
-}

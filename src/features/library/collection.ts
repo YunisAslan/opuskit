@@ -3,6 +3,7 @@
 // plan (Compose): a site in it is the start, every part and effect lands where it fits, the engine fills the rest.
 // Pure (no storage, no React), so check.ts tests it.
 
+import type { OfferId } from './inspire'
 import exampleSpecs from '@/data/example-specs.generated.json'
 import { examples } from '@/data/examples'
 import { EFFECTS, footerStyles, navStyles, pageTypes, sections } from '@/data/patterns'
@@ -10,10 +11,10 @@ import { MAX_HEAVY_PIECES, behaviourOf, behaviours, pieces } from '@/data/pieces
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { sectionVariants } from '@/data/section-variants'
 import { goals, purposes } from '@/data/taxonomy'
-import { EMPTY_PLAN, addSuggested, effectOn, onChrome, pageSuggestions, piecesFor, replaceSection, sectionGroups, setBehaviour, setHero, setSectionVariant, setStyle, specToPlan, start, toggleSitePiece, togglePiece } from '@/features/kit/plan'
+import { CLOSING, EMPTY_PLAN, addSuggested, moveSection, effectOn, onChrome, pageSuggestions, piecesFor, replaceSection, sectionGroups, setBehaviour, setHero, setSectionVariant, setStyle, specToPlan, start, toggleSitePiece, togglePiece } from '@/features/kit/plan'
 import { composeRecipe, isValidSpec, specFromSeed } from '@/features/recipes/engine'
-import { TRAITS, TRAIT_IDS, type Trait } from './inspire'
-import type { GoalId, DirectionId, FooterStyleId, HeroId, KitPlan, NavStyleId, PageTypeId, PieceId, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
+import { TRAITS, TRAIT_IDS, starterFrom, type Trait } from './inspire'
+import type { TakenPart, GoalId, DirectionId, FooterStyleId, HeroId, KitPlan, NavStyleId, PageTypeId, PieceId, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
 
 /** A site is `example:{slug}` (built, real) or `seed:{slug}` (a recipe drawn by the engine) — the kit's own `from` ids. */
 export type SiteRef = `example:${string}` | `seed:${string}`
@@ -28,6 +29,8 @@ export type CollectionItem =
   | { kind: 'like'; what: Trait; site: SiteRef }
 
 export type Collection = { items: CollectionItem[]; purpose?: PurposeId; name?: string; about?: string; look?: SiteRef
+  /** The answer picked to "What are you making?" — a kind can sit in two (a spa is a service and a place). */
+  offer?: OfferId
   /** What visitors should do (You): the main action, forms and buttons follow it. */
   goal?: GoalId
   /** "Home like Sela Mor": a page kind that follows one collected site instead of the blend. */
@@ -38,6 +41,8 @@ export const EMPTY_COLLECTION: Collection = { items: [] }
  *  the Collection, each shown as it was taken, even in the same design. A page still gets the part once (`applyItems`). */
 const fromOf = (i: CollectionItem) => ('from' in i && i.from ? `@${i.from}` : '')
 export const itemKey = (i: CollectionItem) => (i.kind === 'site' ? `site:${i.site}` : i.kind === 'like' ? `like:${i.what}:${i.site}` : i.kind === 'section' ? `section:${i.id}:${i.variant ?? ''}${fromOf(i)}` : `${i.kind}:${i.id}${fromOf(i)}`)
+/** What Direction composes from: when it is unchanged, the plan made from it (or opened into it) is kept as it is. */
+export const collectionSig = (c: Collection) => JSON.stringify([c.items.map(itemKey), c.purpose, c.about])
 export const hasItem = (c: Collection, i: CollectionItem) => c.items.some((x) => itemKey(x) === itemKey(i))
 export const toggleItem = (c: Collection, i: CollectionItem): Collection =>
   hasItem(c, i) ? { ...c, items: c.items.filter((x) => itemKey(x) !== itemKey(i)) } : { ...c, items: [...c.items, i] }
@@ -78,6 +83,37 @@ export function itemName(i: CollectionItem): string {
     case 'effect': return `${pieces[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}`
     case 'like': return `${TRAITS[i.what].name} · ${siteName(i.site)}`
   }
+}
+
+/** The Collection's picks as the recipe keeps them (decision 45): each with the site it came from. */
+export const takenOf = (items: CollectionItem[]): TakenPart[] => items.flatMap((i): TakenPart[] => {
+  const site = i.kind === 'site' || i.kind === 'like' ? i.site : i.from
+  return site ? [{ site, kind: i.kind, id: i.kind === 'site' ? '' : i.kind === 'like' ? i.what : i.id }] : []
+})
+
+/** One pick in words: "whole look", "colours", "Menu", "Words that arrive". */
+export function takenName(t: TakenPart): string {
+  switch (t.kind) {
+    case 'site': return 'whole look'
+    case 'like': return TRAITS[t.id as Trait]?.name.toLowerCase() ?? t.id
+    case 'section': return sections[t.id as SectionId]?.name ?? t.id
+    case 'effect': return pieces[t.id as PieceId]?.name ?? t.id
+    case 'hero': return EFFECTS.find((e) => e.hero === t.id)?.name ?? 'first screen'
+    default: return t.kind
+  }
+}
+
+/** The picks grouped by the site they came from, in the order taken. */
+export function takenBySite(t: TakenPart[]): { site: SiteRef; parts: TakenPart[] }[] {
+  const by = new Map<SiteRef, TakenPart[]>()
+  for (const x of t) by.set(x.site as SiteRef, [...(by.get(x.site as SiteRef) ?? []), x])
+  return [...by].map(([site, parts]) => ({ site, parts }))
+}
+
+/** What was taken, by the site it came from: "Fennwood’s first screen, Menu and Reservation". */
+export function takenFrom(t: TakenPart[]): string[] {
+  const list = (xs: string[]) => (xs.length > 1 ? `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}` : xs[0])
+  return takenBySite(t).map(({ site, parts }) => { const n = siteName(site); return `${n}${n.endsWith('s') ? '’' : '’s'} ${list(parts.map(takenName))}` })
 }
 
 // ─── Quiet notes: rules that suggest, never block ───────────────────────────
@@ -157,10 +193,6 @@ function sitePages(ref: SiteRef) {
 }
 /** The site's page of this kind (its first page stands in for a home page). */
 const pageLikeOf = (ref: SiteRef, type: PageTypeId) => { const ps = sitePages(ref); return ps.find((p) => p.type === type) ?? (type === 'home' ? ps[0] : undefined) }
-/** The parts of a site's page of this kind, in its designs (for "From QUM · Home" on Pages). */
-export const sitePageParts = (ref: SiteRef, type: PageTypeId) => (pageLikeOf(ref, type)?.parts ?? []).filter((x) => x.id !== 'hero')
-/** Which collected sites have a page like this one — for the "Like" switch on Pages. */
-export const sitesWithPage = (c: Collection, type: PageTypeId) => lookChoices(c).filter((r) => !!pageLikeOf(r, type))
 
 const newKey = () => Math.random().toString(36).slice(2, 10)
 const sameJob = (a: SectionId, b: SectionId) => a === b || (!NOT_SWAPPED.has(a) && !NOT_SWAPPED.has(b) && jobIds(a).includes(b))
@@ -213,7 +245,7 @@ export function collectionToPlan(c: Collection): Composed {
   let plan: KitPlan = firstSpec ? { ...specToPlan(firstSpec), fromId: undefined } : lookFor(purpose) ? setStyle(EMPTY_PLAN, 'direction', lookFor(purpose)) : EMPTY_PLAN
   const own = sites.length === 1 && firstSpec?.purpose === purpose
   if (own) plan = { ...plan, pages: plan.pages.map((p) => ({ ...p, sections: p.sections.map((x) => ({ ...x, from: first })) })) }
-  else plan = start(plan, purpose ?? null)
+  else plan = start(plan, purpose ?? null, starterFrom(purpose, c.about))
   plan = { ...plan, purpose: purpose ?? plan.purpose, name: c.name?.trim() || undefined, about: c.about?.trim() || undefined, goal: undefined }
   if (!own) for (const pg of plan.pages) {
     const like = c.like?.[pg.type]
@@ -253,7 +285,13 @@ export function applyItems(plan: KitPlan, items: CollectionItem[], replace: bool
       let k = replace ? page.sections.find((x) => x.id === i.id && !collected.has(x.key))?.key : undefined
       if (!k && replace && !NOT_SWAPPED.has(i.id)) {
         const same = page.sections.find((x) => job.includes(x.id) && !NOT_SWAPPED.has(x.id) && !collected.has(x.key))
-        if (same) { plan = replaceSection(plan, page.id, same.key, i.id); k = same.key }
+        if (same) {
+          plan = replaceSection(plan, page.id, same.key, i.id); k = same.key
+          // A part that replaced one after the page's closing part moves above it (a booking stays last; a page led by one keeps it first).
+          for (let s = plan.pages.find((p) => p.id === page.id)!.sections, at = s.findIndex((x) => x.key === k); !CLOSING.includes(i.id) && at > 1 && CLOSING.includes(s[at - 1].id); at--) {
+            plan = moveSection(plan, page.id, k, -1); s = plan.pages.find((p) => p.id === page.id)!.sections
+          }
+        }
       }
       if (!k) {
         const before = new Set(page.sections.map((x) => x.key))
@@ -321,6 +359,7 @@ export function cleanCollection(x: unknown): Collection {
     about: typeof c.about === 'string' ? c.about.slice(0, 160) : undefined,
     look: site(c.look) ? c.look : undefined,
     goal: typeof c.goal === 'string' && Object.hasOwn(goals, c.goal) ? c.goal : undefined,
+    ...(typeof c.offer === 'string' ? { offer: c.offer as OfferId } : {}),
     like: c.like && typeof c.like === 'object' ? Object.fromEntries(Object.entries(c.like).filter(([k, v]) => Object.hasOwn(pageTypes, k) && site(v))) as Collection['like'] : undefined,
   }
 }

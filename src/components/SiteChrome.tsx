@@ -56,7 +56,7 @@ export function Header() {
 }
 
 const COLUMNS: [string, [string, string][]][] = [
-  ['Make', [['/library', 'Library'], ['/studio/you', 'Your site'], ['/studio/direction', 'Directions']]],
+  ['Make', [['/library', 'Library'], ['/studio/you', 'Your site'], ['/studio/direction', 'Make it yours']]],
   ['See', [['/examples', 'Examples'], ['/#how', 'How it works'], ['/#package', 'The Build Package']]],
   ['Yours', [['/saved', 'Saved recipes']]],
 ]

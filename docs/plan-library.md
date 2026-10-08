@@ -439,6 +439,99 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     the sentence, which also names the exact kind inside the one picked (`kindFor`). What visitors should do is read from the pages (`inferGoal`); `Collection.goal` can carry an
     owner's pick if one is ever asked.
 
+39. **Direction: Make it yours, then ready packs; no Pages screen** (2026-10-08, the user, after reviewing Direction).
+    - **Make it yours is on top**: the look, colours and lettering (`LookPicker`) with the owner's site drawn live beside
+      it. Under it, **Ready packs**: the three directions as small cards (first screen, "Pack B", its look, three colour
+      dots, no other words); a click fills the picker above. Pages are not shown on Direction (the user: not needed).
+    - **What was taken by name is in every pack** (a site's colours, its lettering…); only what rode along with a whole
+      look rotates. Since colours and lettering are then often shared, the three looks differ in family *and* layout,
+      and a first screen one pack opens with is not repeated by another when there is another to take.
+    - **Previews speak for the owner's site**: their sentence, their pages as the menu, their main action on the button;
+      a words-led first screen has no picture box. The photos stay the look's stand-ins (they carry its feel).
+    - **Pages is retired** (`/studio/pages` redirects to Direction; `/studio/open` always opens Brand). Arranging pages
+      and parts was a designer's job (Mara, decision 35). Pages come from the kind of site and the sentence
+      (`pagesFromWords` in `inspire.ts`: "sold to order / on Etsy / by appointment" drops the cart and checkout;
+      "workshops / classes" adds that page; "journal" adds a journal); anything more is a sentence to the AI tool after
+      the build. The recipe page links only what can still be changed: the look, colours and lettering.
+
+40. **Direction shows the brand, not the site** (2026-10-08, the user: the owner takes parts and we build a site in
+    their brand; examples on Direction should be small and say "inspired by" — dropped later, decision 43 — while the font and colours they picked
+    should be shown at least roughly). Beside the picker (first on phones), **Your brand** (`BrandCard`): the name in
+    the display face, the sentence in the body face, the main action in the button shape, a link in the accent and the
+    palette strip — the one exact thing on the page. Under it, **Inspired by**: the sites taken from, small, with "Your
+    site takes from these. It won't look like them." The packs stay small cards. No site mock at full size on Direction:
+    the whole site is seen in the build. Picking a new look keeps colours and lettering taken by name; using a pack can
+    be undone.
+
+41. **A look is shown by a mood photo; its sites open large** (2026-10-08, the user: tiles should be general pictures
+    anyone understands, with an icon that opens a big modal of the sites made in that look). Each look's tile in Make
+    it yours shows one photo of the style itself (`lookImages` in `src/data/look-images.ts`: a brutalist building, a zen
+    room, a neon street — Unsplash License, chosen with the connector), not a screenshot of a site. A small grid icon
+    with a count (only on looks that have sites) opens `LookSites`: every site built or planned in that look, built
+    ones playing, each linking to its Library page, with "Use this look". A look without a photo falls back to a site
+    built in it, then to the owner's site drawn in it.
+
+42. **No ready packs on Direction** (2026-10-08, the user: not needed). Direction is Make it yours alone (picker, Your
+    brand). `directionsFor` still writes the start — its first mix, picked silently — so what was taken
+    by name is in it; the other two mixes are no longer shown.
+
+43. **No Inspired by on Direction** (2026-10-08, the user: not needed). The right column is Your brand alone, sticky;
+    the sites taken from are named in the line under the title ("From X's whole look…").
+
+44. **No Brand screen: a finished recipe opens in Direction** (2026-10-08, the user: delete it, put Direction in its
+    place). `/studio/brand` (Adjust the look) did what Direction does, in an older design (a sample site and four
+    parts). An example's "Make it yours", a saved recipe's Continue and the recipe page's "Change the look" now open
+    Direction (`/studio/brand` redirects there). `openInStudio` writes the recipe's name, sentence and kind into You
+    and marks the plan as made from them (`collectionSig`, with `opened`), so Direction keeps it as it was built and
+    says "Opened from X". What was taken in the Library stays; taking more, or changing the sentence or kind, starts
+    again from it. A seed has no name: You asks for one, and the plan is kept.
+    A plan being built with an empty You (opened before this) is mended by the steps bar (`adoptPlan`): You takes
+    its words, Direction opens it as it is.
+
+45. **The recipe page follows the flow, in OpusKit's own look** (2026-10-08, the user: the recipe should show what
+    was taken from the Collection; keep the tabs, fit them to the new design). The recipe keeps what was taken
+    (`RecipeSpec.taken`, `TakenPart`: site + kind + id), written by Direction from the Collection, so it survives the
+    Collection being emptied. The page leads with the owner's name and sentence (the engine's long title stays in the
+    package). Tabs are ruled cells like the steps bar. Overview: **Your brand** (`components/BrandCard.tsx`, shared
+    with Direction), **What you took** (by site, with where each pick went), **Your choices** (a ruled grid; no big
+    idea or touches when there are none). Pages and Effects mark each taken part "from Fennwood". No full-size site
+    mock (decision 40). Saved shows each recipe as its brand; Recently viewed and Compare are gone.
+
+46. **A gallery is a gallery** (2026-10-08, found making Pale Hour). The sentence reader knew no galleries and only
+    the singular "exhibition", so "A place or an event" fell back to a restaurant (Menu, Reservations). Now
+    galleries, museums and exhibitions read as an event venue; the event kind has a second start, **Gallery or
+    museum** (Home, Exhibitions, Visit, About — `starterFrom` in `inspire.ts`), and its visitors come to visit
+    (`inferGoal`), so the main action is "Get directions", not "Book a table". A recipe can also be handed over in a
+    link: `/studio/open?recipe=<base64url spec>` saves it in the browser that opens it and shows it.
+
+47. **Three tabs on the recipe page** (2026-10-08, the user: six tabs are too many; pages need no list; never ask
+    for a logo). After Direction three things are left, one tab each: **Your site** (Your brand, What you took, one
+    ruled row of facts — Look, Colours, Lettering link back to Direction; First screen, Menu and the page names are
+    read from them — and the Effects with their demos), **Your files** (photos and films only — no logo slot: without
+    one the builder sets the name as a wordmark — then the shot list, "What each one shows", what else the site needs
+    and how to get it), **Build** (Room to invent, then the tool and the download). Design, Pages and Motion are gone
+    from the page: tokens, type scale, controls, layout, section plans and motion patterns are for the builder and
+    ship in the package and the copied recipe.
+
+48. **Pages are never shown; they are made well** (2026-10-08, the user: showing pages makes people want other ones
+    and feel boxed in — work them out behind the scenes and never leave anyone without the pages their picks need).
+    No page list or count anywhere the owner looks (the recipe's facts row has Movement instead; What you took says
+    "First screen" or "Every page", not page names; Saved's draft says "Continue where you left off"). Behind it,
+    `pagesFromWords` also adds a **Shop** for selling on the side (a bookshop, photobooks, prints for sale — not on a
+    shop), a **Menu** for food on a site that is not a restaurant (a hotel's restaurant, a gallery café), and
+    `reachable` gives any site with no way to reach its owner a Contact page. A side shop never makes "buy" the main
+    action (`inferGoal`). check.ts asserts each.
+
+49. **Your site shows the picks, and only the picks** (2026-10-08, the user: show nothing but look, colours and
+    lettering; show the parts and effects taken in one place, with filters). Your site is Your brand beside three
+    ruled cells — Look, Colours, Lettering, each back to Direction — and **What you took**: every pick in one grid,
+    drawn in the owner's brand (a part as its ready section, an effect as its live demo, a whole look or quality as
+    the site it came from), marked "from Sela Mor", with filters All · Parts · Effects · Looks & qualities (only the
+    kinds that are there). First screen, menu, movement and the separate Effects list are gone. Every card is live, not a
+    still: an effect is its working demo (move, click, drag), a part plays its seconds on the recorded site it came
+    from (`sectionClips`), a whole look or quality plays that site; a part from an unrecorded site is drawn in the
+    owner's brand.
+
 ## 5. Open
 
 1. ~~Retiring the kit~~ — done (decision 31). Shape, menu and footer look, movement and behaviours are now the engine's

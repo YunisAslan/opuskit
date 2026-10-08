@@ -1,39 +1,35 @@
 'use client'
-// The result page: one recipe, shown visually in tabs, with a fixed action bar.
-// The page shows what a person needs to judge and adjust the design; every detail (components, resources,
-// references, implementation, "why it works") still ships in full inside the Build Package and the copied recipe.
+// The recipe page (decision 47): three tabs for the three things left to do after Direction — see what the site will
+// be (Your site), add photos and films (Your files), take it to an AI tool (Build). Every detail for the builder
+// (tokens, type scale, controls, layout, motion patterns, section plans) ships in the Build Package and the copied
+// recipe, not on this page.
 
 import { PieceDemo } from '@/components/PieceDemo'
-import { Bookmark, BookmarkCheck, Check, Circle, Download, Pencil, Search, SlidersHorizontal, TriangleAlert, X } from 'lucide-react'
+import { Bookmark, BookmarkCheck, Check, Circle, Download, Pencil, Search, SlidersHorizontal, TriangleAlert } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useState, type ReactNode } from 'react'
-import { OptionDemo } from '@/components/OptionDemo'
-import { SectionPreview } from '@/components/SectionPreview'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { ToolIcon } from '@/components/ToolIcon'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
-import { TypeSpecimen } from '@/components/TypeSpecimen'
-import { CopyButton } from '@/components/ui'
-import { img } from '@/data/images'
 import { directions, purposes } from '@/data/taxonomy'
 import { resources } from '@/data/resources'
 import { adapters } from '@/features/build-packages'
 import { BuildTab, downloadPackage, useBuildPackage } from '@/features/build-packages/BuildPanel'
 import { MediaSlots, SLOTS } from '@/components/MediaSlots'
-import type { AssetId, BuildTarget, PageSection, PaletteColors, RecipeSpec, UniversalRecipe, UploadedAsset } from '@/types/domain'
-import { chromeNote, normalizeSpec } from './engine'
-import { markRecent, toggleSaved, useSaved } from './library'
-import { FlowBar } from '@/app/library/parts'
+import type { TakenPart, BuildTarget, PaletteColors, PieceId, RecipeSpec, SectionId, UniversalRecipe } from '@/types/domain'
+import { normalizeSpec } from './engine'
+import { toggleSaved, useSaved } from './library'
+import { FlowBar, SiteThumb, exampleOf } from '@/app/library/parts'
+import { BrandCard } from '@/components/BrandCard'
+import { siteName, takenName, type SiteRef } from '@/features/library/collection'
+import { SectionPreview, worldFor } from '@/components/SectionPreview'
+import { Chip, CopyButton } from '@/components/ui'
 import { recipeToMarkdown } from './markdown'
 
 const TABS = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'design', label: 'Design' },
-  { id: 'pages', label: 'Pages' },
+  { id: 'site', label: 'Your site' },
   { id: 'media', label: 'Your files' },
-  { id: 'motion', label: 'Motion' },
   { id: 'build', label: 'Build' },
 ] as const
 type TabId = (typeof TABS)[number]['id']
@@ -47,10 +43,10 @@ const STATUS: Record<string, { label: string; mark: typeof Check; cls: string }>
 }
 
 /** `studio`: this recipe is the one being built (its steps bar is on top); otherwise a Change first opens it in the
- *  building steps (/studio/open), so Brand and Pages edit this recipe. */
+ *  building steps (/studio/open), so Brand edits this recipe. */
 export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false }: { recipe: UniversalRecipe; recipeRef: string; onChange: (spec: RecipeSpec) => void; studio?: boolean }) {
   const saved = useSaved().some((s) => s.ref === recipeRef)
-  const [tab, setTab] = useState<TabId>('overview')
+  const [tab, setTab] = useState<TabId>('site')
   // The tool the user picked in the kit; none if they chose to decide later. We never pick one for them.
   const [target, setTarget] = useState<BuildTarget | null>(r.metadata.spec.target === 'not-sure' ? null : r.metadata.spec.target)
   const [zipping, setZipping] = useState(false)
@@ -59,14 +55,13 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false 
   const look = { colors, type: r.visualSystem.typography, shape: r.visualSystem.shape }
   const { pkg, error } = useBuildPackage(r, target, true)
   const [kind, key] = recipeRef.split(':')
-  // Every change happens in the building steps: Brand for the look, colours and lettering, Pages for everything else.
+  // The owner changes the look, colours and lettering (Direction); the rest is the engine's, read from them (decision 39).
   const editHref = (step?: string) => {
-    const to = ['direction', 'palette', 'typography', 'brand'].includes(step ?? '') ? 'brand' : 'pages'
-    return studio ? `/studio/${to}` : `/studio/open?from=${kind}:${key}&to=${to}`
+    if (step && !['direction', 'palette', 'typography', 'brand'].includes(step)) return undefined
+    return studio ? '/studio/direction' : `/studio/open?from=${kind}:${key}`
   }
 
-  useEffect(() => { markRecent(recipeRef) }, [recipeRef])
-  // Tab survives reloads and is linkable (#design).
+  // Tab survives reloads and is linkable (#media).
   useEffect(() => { const h = location.hash.slice(1) as TabId; if (TABS.some((t) => t.id === h)) setTab(h) }, [])
   const pick = (t: TabId) => { setTab(t); history.replaceState(null, '', `#${t}`) }
 
@@ -99,13 +94,15 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false 
     <>
     {studio && <FlowBar at="Recipe" next={<div className="flex items-center gap-2 [&_.ml-auto]:ml-0">{actions}</div>} />}
     <article className={`mx-auto max-w-[1440px] px-5 md:px-8 ${studio ? 'pb-24' : 'pb-40'}`}>
+      {/* The owner's own name and sentence; the engine's long title stays in the package. */}
       <header className="pt-10 lg:pt-14">
-        <p className="text-sm text-muted">{purposes[spec.purpose].name} · {directions[spec.direction].name} · {r.metadata.complexity} build</p>
-        <h1 className="display mt-3 max-w-4xl text-[clamp(2.2rem,4.6vw,4.2rem)]">{r.title}</h1>
-        <p className="prose-serif mt-4 line-clamp-2 max-w-2xl text-ink-2">{r.summary}</p>
+        <p className="label text-muted">Recipe · {purposes[spec.purpose].name} · {directions[spec.direction].name} · {r.visualSystem.palette.name} · {r.visualSystem.typography.name}</p>
+        <h1 className="display mt-4 max-w-5xl text-[clamp(2.6rem,6vw,5rem)]">{spec.brief?.name?.trim() || r.title}</h1>
+        <p className="mt-4 line-clamp-2 max-w-2xl text-lg text-ink-2">{spec.brief?.offer?.trim() || r.summary}</p>
       </header>
 
-      <div role="tablist" aria-label="Recipe" className={`sticky ${studio ? 'top-[7.5rem]' : 'top-16'} z-20 -mx-5 mt-8 flex gap-1 overflow-x-auto overflow-y-hidden bg-paper/95 px-5 shadow-[inset_0_-1px_0_var(--color-line)] backdrop-blur-sm [scrollbar-width:none] md:-mx-8 md:px-8`}
+      {/* Ruled cells like the steps bar (docs/design.md): the open tab on white, underlined in pencil. */}
+      <div role="tablist" aria-label="Recipe" className={`sticky ${studio ? 'top-[113px]' : 'top-[57px]'} z-20 -mx-5 mt-10 flex overflow-x-auto overflow-y-hidden border-y border-line bg-paper/95 backdrop-blur-sm [scrollbar-width:none] md:-mx-8`}
         onKeyDown={(e) => {
           const i = TABS.findIndex((t) => t.id === tab)
           const n = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : -1
@@ -113,26 +110,23 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false 
         }}>
         {TABS.map((t) => (
           <button key={t.id} id={`tab-${t.id}`} type="button" role="tab" aria-selected={tab === t.id} aria-controls={`panel-${t.id}`} tabIndex={tab === t.id ? 0 : -1}
-            onClick={() => pick(t.id)} className={`shrink-0 border-b-2 px-3 py-3.5 text-sm transition-colors ${tab === t.id ? 'border-ink text-ink' : 'border-transparent text-muted hover:text-ink'}`}>
+            onClick={() => pick(t.id)} className={`relative flex h-12 shrink-0 items-center border-r border-line px-5 text-sm transition-colors first:border-l md:first:ml-8 ${tab === t.id ? 'bg-white text-ink after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-pencil' : 'text-ink-2 hover:bg-paper-2 hover:text-ink'}`}>
             {t.label}
           </button>
         ))}
       </div>
 
       <section id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="pt-10">
-        {tab === 'overview' ? <Overview r={r} look={look} editHref={editHref} studio={studio} />
-          : tab === 'design' ? <Design r={r} look={look} colors={colors} editHref={editHref} />
-          : tab === 'pages' ? <Pages r={r} editHref={editHref} />
-          : tab === 'media' ? <Media r={r} spec={spec} update={update} editHref={editHref} />
-          : tab === 'motion' ? <Motion r={r} look={look} editHref={editHref} />
-          : <BuildTab recipe={r} target={target} onTarget={setTarget} pkg={pkg} error={error} />}
+        {tab === 'site' ? <YourSite r={r} look={look} editHref={editHref} />
+          : tab === 'media' ? <Media r={r} spec={spec} update={update} />
+          : <div className="space-y-16"><RoomToInvent r={r} /><BuildTab recipe={r} target={target} onTarget={setTarget} pkg={pkg} error={error} /></div>}
       </section>
 
       {/* One action bar, always in reach: in the Studio it is the steps bar on top, elsewhere fixed at the bottom. */}
       {!studio && (
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper/95 backdrop-blur-sm">
           <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-2 px-5 py-3 md:px-8">
-            <Link href={editHref('pages')} className="btn btn-line btn-sm inline-flex items-center gap-1.5"><SlidersHorizontal size={15} aria-hidden />Change it</Link>
+            <Link href={editHref()!} className="btn btn-line btn-sm inline-flex items-center gap-1.5"><SlidersHorizontal size={15} aria-hidden />Change it</Link>
             {actions}
           </div>
         </div>
@@ -144,242 +138,166 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false 
 }
 
 type Look = { colors: PaletteColors; type: UniversalRecipe['visualSystem']['typography']; shape: UniversalRecipe['visualSystem']['shape'] }
-type Edit = (step?: string) => string
+type Edit = (step?: string) => string | undefined
 
-const ChangeLink = ({ href, label = 'Change' }: { href: string; label?: string }) =>
+const ChangeLink = ({ href, label = 'Change' }: { href?: string; label?: string }) => href &&
   <Link href={href} className="link inline-flex items-center gap-1 text-sm"><Pencil size={13} aria-hidden />{label}</Link>
 
+/** A section's head, ruled like the landing's: the title, and on the right what can be done with it. */
 const Heading = ({ title, children }: { title: string; children?: ReactNode }) => (
-  <div className="flex flex-wrap items-baseline justify-between gap-3"><h2 className="text-2xl font-medium tracking-tight">{title}</h2>{children}</div>
+  <div className="flex flex-wrap items-end justify-between gap-3 border-b border-line pb-3"><h2 className="display text-[clamp(1.5rem,2.4vw,2rem)]">{title}</h2>{children}</div>
 )
 
-// ─── Overview: the site at a glance, every decision as a picture ─────────────
+/** "from Fennwood" — the mark on anything taken from a site in the Library. */
+const From = ({ site }: { site?: string }) => site ? <span className="label shrink-0 text-pencil">from {site}</span> : null
 
-function Overview({ r, look, editHref, studio }: { r: UniversalRecipe; look: Look; editHref: Edit; studio?: boolean }) {
-  const spec = r.metadata.spec
-  const name = spec.brief?.name?.trim()
-  const c = look.colors
-  const t = look.type
-  const tiles: { label: string; value: string; step: string; href?: string; visual: ReactNode }[] = [
-    { label: 'Style', value: directions[spec.direction].name, step: 'direction',
-      visual: <div className="flex h-full flex-col justify-end p-4" style={{ background: c.background, color: c.text }}><span style={{ fontFamily: `'${t.display.family}'`, fontWeight: t.display.weight, fontSize: '1.4rem', lineHeight: 1.05 }}>{r.creativeDirection.mood.slice(0, 3).join(' · ')}</span></div> },
-    { label: 'Colors', value: r.visualSystem.palette.name, step: 'palette',
-      visual: <div className="flex h-full">{r.visualSystem.palette.tokens.map((x) => <span key={x.role} className="flex-1" style={{ background: x.hex }} />)}</div> },
-    { label: 'Lettering', value: t.name, step: 'typography',
-      visual: <div className="flex h-full items-center justify-center" style={{ background: c.surface, color: c.text }}><span style={{ fontFamily: `'${t.display.family}'`, fontWeight: t.display.weight, fontSize: '3.4rem', lineHeight: 1 }}>Aa</span></div> },
-    { label: 'First screen', value: r.media.hero.name, step: 'lead',
-      // eslint-disable-next-line @next/next/no-img-element -- small decorative thumbnail
-      visual: <img src={img(r.metadata.image, 480)} alt="" className="h-full w-full object-cover" /> },
-    { label: 'Shape', value: r.visualSystem.shape.name, step: 'shape', visual: <OptionDemo id={`shape:${r.visualSystem.shape.id}`} {...look} /> },
-    { label: 'Menu', value: r.chrome.nav.name, step: 'nav', visual: <OptionDemo id={`nav:${r.chrome.nav.id}`} {...look} /> },
-    { label: 'Big idea', value: r.concept?.name ?? 'None', step: 'idea',
-      visual: <div className="flex h-full flex-col justify-end p-4" style={{ background: c.surface, color: c.text }}><span className="text-sm leading-snug">{r.concept?.line ?? 'No single idea — the look carries the site.'}</span></div> },
-    { label: 'Special touches', value: r.signatures.map((s) => s.name).join(', ') || 'None', step: 'touches',
-      visual: r.signatures[0] ? <OptionDemo id={`sig:${r.signatures[0].id}`} {...look} /> : <div className="h-full" style={{ background: c.surface }} /> },
-    ...(r.pieces.length ? [{ label: 'Your kit', value: r.pieces.map((p) => p.name).join(', '), step: 'kit', href: editHref('kit'),
-      visual: <PieceDemo id={r.pieces[0].id} colors={c} fonts={{ display: t.display.family, body: t.body.family, utility: t.utility.family }} className="!h-full" /> }] : []),
-    { label: 'Pages', value: `${r.pages.length} — ${r.pages.map((p) => p.label).join(', ')}`, step: 'pages',
-      visual: <div className="grid h-full grid-cols-3 gap-1.5 p-3" style={{ background: c.background }}>{r.pages.slice(0, 6).map((p) => <span key={p.id} className="flex items-end rounded p-1.5 text-[10px] leading-tight" style={{ background: c.surface, color: c.muted }}>{p.label}</span>)}</div> },
-  ]
-  return (
-    <div className="space-y-12">
-      <SitePreview {...previewFromRecipe(r, name ? { title: name, brand: name } : {})} className="rounded-[3px] border border-line" />
-      <div>
-        <Heading title="Your choices"><ChangeLink href={editHref()} label="Change" /></Heading>
-        <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {tiles.map((x) => (
-            <li key={x.label} className="choice group relative overflow-hidden">
-              {/* The visual is a sibling of the link (demos contain their own links); the link stretches over the card. */}
-              <div className="pointer-events-none aspect-[16/10] overflow-hidden border-b border-line" inert>{x.visual}</div>
-              <Link href={x.href ?? editHref(x.step)} className="block after:absolute after:inset-0" aria-label={`${x.label}: ${x.value}. Change`}>
-                <div className="flex items-start justify-between gap-2 p-3.5">
-                  <span className="min-w-0"><span className="block text-xs text-muted">{x.label}</span><span className="mt-0.5 block truncate font-medium">{x.value}</span></span>
-                  <Pencil size={14} className="mt-1 shrink-0 text-muted group-hover:text-ink" aria-hidden />
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
-}
+// ─── Your site: the brand, and everything taken for it ──────────────────────
 
-// ─── Design: colors, type, shape, menu, layout — shown, then explained in one line ─
-
-function Design({ r, look, colors, editHref }: { r: UniversalRecipe; look: Look; colors: PaletteColors; editHref: Edit }) {
-  const l = r.layoutSystem
+function YourSite({ r, look, editHref }: { r: UniversalRecipe; look: Look; editHref: Edit }) {
+  const spec = r.metadata.spec, c = look.colors, t = look.type
+  // Only what the owner picked in Direction (decision 49); everything else is read from it and never listed.
+  const facts: [string, string, string][] = [['Look', directions[spec.direction].name, 'direction'], ['Colours', r.visualSystem.palette.name, 'palette'], ['Lettering', t.name, 'typography']]
   return (
     <div className="space-y-16">
-      {/* What the package hands the builder beyond the picks: the look's best moves, and room to invent with them. */}
-      <div>
-        <Heading title={`Room to invent — ${r.style.look}`} />
-        <p className="mt-2 max-w-2xl text-sm text-ink-2">Everything you picked stays as you picked it. The rest the builder designs — like someone who knows {r.style.look}, from what its best sites do — and every page gets one moment people remember.</p>
-        <div className="mt-6 grid border border-line md:grid-cols-2">
-          {([['Known for', r.style.moves], ['Ideas for the moments', r.style.sparks]] as const).map(([name, xs], i) => (
-            <div key={name} className={`p-5 md:p-6 ${i ? 'border-t border-line md:border-l md:border-t-0' : ''}`}>
-              <p className="label">{name}</p>
-              <ul className="mt-4 space-y-2.5 text-sm text-ink-2">{xs.map((x) => <li key={x} className="flex gap-2.5"><span className="mt-[0.45em] size-1.5 shrink-0 bg-pencil" aria-hidden />{x}</li>)}</ul>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <Heading title={`Colors — ${r.visualSystem.palette.name}`}><ChangeLink href={editHref('palette')} /></Heading>
-        <p className="mt-2 max-w-2xl text-sm text-ink-2">{r.whyItWorks.palette}</p>
-        <div className="mt-6 grid gap-6 xl:grid-cols-2">
-          <PalettePreview colors={colors} recipe={r} />
-          <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {r.visualSystem.palette.tokens.map((x) => (
-              <li key={x.role}>
-                <button type="button" title={`Copy ${x.hex}`} onClick={() => { navigator.clipboard?.writeText(x.hex); toast(`Copied ${x.hex}`) }} className="w-full overflow-hidden rounded-lg border border-line text-left">
-                  <span className="block h-16" style={{ background: x.hex }} />
-                  <span className="block p-2 text-xs"><span className="block font-medium capitalize">{x.role}</span><span className="font-mono text-muted">{x.hex}</span></span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div>
-        <Heading title={`Lettering — ${r.visualSystem.typography.name}`}><ChangeLink href={editHref('typography')} /></Heading>
-        <p className="mt-2 max-w-2xl text-sm text-ink-2">{r.whyItWorks.typography}</p>
-        <div className="mt-6"><TypeSpecimen t={r.visualSystem.typography} colors={{ bg: colors.background, fg: colors.text, muted: colors.muted }} /></div>
-      </div>
-
-      <div className="grid gap-10 lg:grid-cols-2">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-start">
         <div>
-          <Heading title={`Shape — ${r.visualSystem.shape.name}`}><ChangeLink href={editHref('shape')} /></Heading>
-          <p className="mt-2 text-sm text-ink-2">{r.visualSystem.shape.rule}</p>
-          <OptionDemo id={`shape:${r.visualSystem.shape.id}`} {...look} className="mt-5 rounded-lg border border-line" />
+          <Heading title="Your brand"><ChangeLink href={editHref()} label="Change the look" /></Heading>
+          <div className="mt-6">
+            <BrandCard name={spec.brief?.name} about={spec.brief?.offer} cta={r.contentDirection.ctaExamples[0]} colors={c} type={t} button={r.visualSystem.shape.button}
+              caption={`${t.display.family}${t.body.family !== t.display.family ? ` + ${t.body.family}` : ''} — exactly as your site will use them.`} />
+          </div>
         </div>
-        <div>
-          <Heading title={`Menu — ${r.chrome.nav.name}`}><ChangeLink href={editHref('nav')} /></Heading>
-          <p className="mt-2 text-sm text-ink-2">{r.chrome.nav.line}</p>
-          <OptionDemo id={`nav:${r.chrome.nav.id}`} {...look} className="mt-5 rounded-lg border border-line" />
-        </div>
-        <div>
-          <Heading title={`Footer — ${r.chrome.footerStyle.name}`}><ChangeLink href={editHref('footer')} /></Heading>
-          <p className="mt-2 text-sm text-ink-2">{r.chrome.footerStyle.line}</p>
-          <SectionPreview id="footer" footer={r.chrome.footerStyle.id} {...look} brand={r.metadata.spec.brief?.name} auto className="mt-5 overflow-hidden rounded-lg border border-line" />
-        </div>
-      </div>
-
-      <div>
-        <Heading title="Controls & forms" />
-        <p className="mt-2 max-w-2xl text-sm text-ink-2">Every field, menu and button is a polished, accessible component (shadcn/ui), restyled to your colors and shape — never a plain browser default.</p>
-        <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,26rem)_1fr]">
-          <ControlsPreview colors={colors} r={r} />
-          <ul className="flex flex-wrap content-start gap-2">
-            {r.implementation.ui.components.map((c) => <li key={c.slug} title={c.where.join(', ')} className="rounded-[3px] border border-line bg-white px-3 py-1.5 text-sm">{c.name}</li>)}
-          </ul>
-        </div>
-      </div>
-
-      <div>
-        <Heading title={`Layout — ${l.name}`} />
-        <p className="mt-2 max-w-2xl text-sm text-ink-2">{l.why}</p>
-        <dl className="mt-5 grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2 xl:grid-cols-4">
-          {([['Width', l.container], ['Columns', l.columns], ['Space between sections', l.sectionSpacing], ['Photo shapes', l.mediaProportions]] as const).map(([k, v]) => (
-            <div key={k} className="border-t border-line pt-2"><dt className="text-muted">{k}</dt><dd className="mt-0.5">{v}</dd></div>
+        <dl className="border-l border-t border-line lg:mt-[3.75rem]">
+          {facts.map(([k, v, step]) => (
+            <Link key={k} href={editHref(step)!} className="group flex items-center justify-between gap-3 border-b border-r border-line bg-white px-5 py-4 transition-colors hover:bg-paper-2" aria-label={`${k}: ${v}. Change`}>
+              <span><dt className="label text-muted">{k}</dt><dd className="mt-1.5 text-lg">{v}</dd></span>
+              <Pencil size={15} className="shrink-0 text-muted group-hover:text-ink" aria-hidden />
+            </Link>
           ))}
         </dl>
       </div>
+      <Taken r={r} look={look} />
     </div>
   )
 }
 
-// ─── Pages: each page as its ordered sections; details on demand ─────────────
+type Kind = 'all' | 'parts' | 'effects' | 'qualities'
+const KIND_OF = (x: TakenPart): Exclude<Kind, 'all'> => (x.kind === 'effect' ? 'effects' : x.kind === 'section' || x.kind === 'menu' || x.kind === 'footer' ? 'parts' : 'qualities')
+const KIND_NAME: Record<Kind, string> = { all: 'All', parts: 'Parts', effects: 'Effects', qualities: 'Looks & qualities' }
+const KIND_ONE: Record<Exclude<Kind, 'all'>, string> = { parts: 'Part', effects: 'Effect', qualities: 'Look or quality' }
 
-function Pages({ r, editHref }: { r: UniversalRecipe; editHref: Edit }) {
+/** Everything taken in the Library, in one place (decision 49): each drawn in the owner's brand — a part as the ready
+ *  section, an effect as its live demo, a whole look or quality as the site it came from — filtered by kind. */
+function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
+  const taken = r.metadata.spec.taken ?? []
+  const [kind, setKind] = useState<Kind>('all')
+  const kinds = (['all', 'parts', 'effects', 'qualities'] as const).filter((k) => k === 'all' || taken.some((x) => KIND_OF(x) === k))
+  const shown = taken.filter((x) => kind === 'all' || KIND_OF(x) === kind)
+  const t = look.type, world = worldFor(r.metadata.spec.purpose), brand = r.metadata.spec.brief?.name
+  const part = (id: string) => r.pages.flatMap((p) => p.sections).find((s) => s.id === id)
+  // Live, not a still (the user, 2026-10-08): an effect is its working demo, in the owner's brand — move, click, drag;
+  // a part plays its few seconds on the real site it came from, when that site was recorded; a whole look or quality
+  // plays that site. Without a recording a part is drawn in the owner's brand.
+  const visual = (x: TakenPart) => {
+    const clip = exampleOf(x.site as SiteRef)?.sectionClips?.[(x.kind === 'menu' ? 'navbar' : x.kind === 'footer' ? 'footer' : x.id) as SectionId]
+    if (x.kind === 'effect') return <PieceDemo id={x.id as PieceId} colors={look.colors} fonts={{ display: t.display.family, body: t.body.family, utility: t.utility.family }} className="!h-full" />
+    if (clip && x.kind !== 'site' && x.kind !== 'like' && x.kind !== 'hero') return <LiveClip src={clip} />
+    if (x.kind === 'section') { const s = part(x.id); return <div className="size-full" inert><SectionPreview id={x.id as SectionId} variant={s?.variant?.id} tone={s?.tone} media={s?.media} colors={look.colors} type={t} shape={look.shape} world={world} brand={brand} className="h-full" /></div> }
+    if (x.kind === 'footer') return <div className="size-full" inert><SectionPreview id="footer" footer={r.chrome.footerStyle.id} colors={look.colors} type={t} shape={look.shape} world={world} brand={brand} className="h-full" /></div>
+    return <SiteThumb site={x.site as SiteRef} auto />
+  }
   return (
-    <div className="space-y-4">
-      <Heading title={`${r.pages.length} pages`}><ChangeLink href={editHref('pages')} label="Change pages" /></Heading>
-      <p className="max-w-2xl text-sm text-ink-2">Every page is planned section by section. Open a section to see exactly what goes in it.</p>
-      <div className="grid gap-4 pt-2 lg:grid-cols-2">
-        {r.pages.map((p) => <PageCard key={p.id} title={p.label} line={[p.purpose, chromeNote(p)].filter(Boolean).join(' ')} sections={p.sections} />)}
-        <PageCard title="On every page" line={`The menu and footer, shared across the site${r.pages.some((p) => p.hide) ? ' — except where a page says otherwise' : ''}.`} sections={[r.chrome.navbar, r.chrome.footer]} />
-      </div>
-    </div>
-  )
-}
-
-function PageCard({ title, line, sections }: { title: string; line: string; sections: PageSection[] }) {
-  return (
-    <div className="rounded-lg border border-line bg-white p-5">
-      <p className="font-medium">{title}</p>
-      <p className="mt-1 text-sm text-muted">{line}</p>
-      {sections.length > 0 && (
-        <Accordion type="multiple" className="mt-4 space-y-1.5">
-          {sections.map((s, i) => (
-            <AccordionItem key={`${s.id}-${i}`} value={`${s.id}-${i}`} className="rounded-md border border-line last:border-b">
-              <AccordionTrigger className="gap-3 px-3 py-2 text-sm hover:no-underline">
-                <span className="flex flex-1 gap-3"><span className="w-4 tabular-nums text-muted">{i + 1}</span>{s.name}</span>
-              </AccordionTrigger>
-              <AccordionContent>
-                <dl className="grid gap-2 px-3 pb-1 pl-10 text-sm">
-                  {([['What it does', s.purpose], ['Layout', s.composition], ['Content', s.content], ['On phones', s.responsive]] as const).map(([k, v]) => <div key={k}><dt className="text-muted">{k}</dt><dd>{v}</dd></div>)}
-                </dl>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      )}
-    </div>
-  )
-}
-
-// ─── Your files: upload or replace logo, photos, video right here ────────────
-
-function Media({ r, spec, update, editHref }: { r: UniversalRecipe; spec: RecipeSpec; update: (p: Partial<RecipeSpec>) => void; editHref: Edit }) {
-  const others = r.assetRequirements.filter((a) => !SLOTS.some((s) => s.asset === a.asset && s.show(spec)))
-  return (
-    <div className="space-y-14">
-      <div>
-        <Heading title="Your files" />
-        <p className="mt-2 max-w-2xl text-sm text-ink-2">Add or replace them here. They go straight into your build kit, at the exact paths the site uses. Files stay in this browser.</p>
-        <div className="mt-6"><MediaSlots spec={spec} onChange={update} /></div>
-        {r.media.imagery && (
-          <div className="mt-8 grid items-center gap-6 rounded-lg border border-line bg-white p-5 md:grid-cols-[18rem_1fr]">
-            <OptionDemo id={`photo:${r.media.imagery.presentation.id}`} colors={Object.fromEntries(r.visualSystem.palette.tokens.map((t) => [t.role, t.hex])) as PaletteColors} type={r.visualSystem.typography} shape={r.visualSystem.shape} className="rounded-md" />
-            <div>
-              <p className="text-sm text-muted">Photos are shown as</p>
-              <p className="mt-0.5 font-medium">{r.media.imagery.presentation.name}</p>
-              <p className="mt-1 text-sm text-ink-2">{r.media.imagery.presentation.line}</p>
-              <div className="mt-3"><ChangeLink href={editHref('photos')} /></div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div>
-        <Heading title="Everything else the site needs" />
-        <ul className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-          {others.map((a) => {
-            const st = STATUS[a.status]
-            return (
-              <li key={a.key} className="flex items-start gap-3 rounded-lg border border-line bg-white p-4">
-                <st.mark size={16} className={`mt-0.5 shrink-0 ${st.cls}`} aria-hidden />
-                <span className="min-w-0"><span className="block font-medium">{a.label}</span><span className={`block text-sm ${st.cls}`}>{st.label}</span><span className="mt-1 block text-xs text-muted">{a.specs}</span></span>
+    <div>
+      <Heading title="What you took"><Link href="/library" className="link inline-flex items-center gap-1 text-sm">Take more</Link></Heading>
+      {taken.length ? (
+        <>
+          {kinds.length > 2 && <div className="mt-5 flex flex-wrap gap-1.5">{kinds.map((k) => <Chip key={k} small active={kind === k} onClick={() => setKind(k)}>{KIND_NAME[k]}</Chip>)}</div>}
+          <ul className="mt-5 grid border-l border-t border-line sm:grid-cols-2 xl:grid-cols-3">
+            {shown.map((x) => (
+              <li key={`${x.kind}:${x.id}:${x.site}`} className="overflow-hidden border-b border-r border-line bg-white">
+                <div className="aspect-[16/10] overflow-hidden border-b border-line" style={{ background: look.colors.background }}>{visual(x)}</div>
+                <div className="flex items-baseline justify-between gap-3 px-4 py-3">
+                  <span className="min-w-0"><span className="label block text-muted">{KIND_ONE[KIND_OF(x)]}</span><span className="mt-1 block truncate first-letter:uppercase">{takenName(x)}</span></span>
+                  <From site={siteName(x.site as SiteRef)} />
+                </div>
               </li>
-            )
-          })}
-        </ul>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-muted">Effects work here — move, click, drag. Parts play on the site they came from where it was recorded, else drawn in your brand. Your site takes them; it won’t look like those sites.</p>
+        </>
+      ) : <p className="mt-6 border border-dashed border-line p-5 text-sm text-muted">Nothing was taken from a site — this recipe started from its kind of site.</p>}
+    </div>
+  )
+}
+
+/** A recording that plays while it is on screen, muted and looping; still with reduced motion. */
+function LiveClip({ src }: { src: string }) {
+  const ref = useRef<HTMLVideoElement>(null)
+  useEffect(() => {
+    const v = ref.current
+    if (!v || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const io = new IntersectionObserver(([x]) => { if (x.isIntersecting) v.play().catch(() => {}); else v.pause() }, { threshold: 0.25 })
+    io.observe(v)
+    return () => io.disconnect()
+  }, [])
+  return <video ref={ref} src={src} muted loop playsInline preload="metadata" aria-hidden className="size-full object-cover" />
+}
+
+// ─── Your files: photos and films, and what each one should show ────────────
+
+function Media({ r, spec, update }: { r: UniversalRecipe; spec: RecipeSpec; update: (p: Partial<RecipeSpec>) => void }) {
+  // The logo is never asked for: without one the builder sets the name as a wordmark in the display face.
+  const others = r.assetRequirements.filter((a) => a.asset !== 'logo' && !SLOTS.some((s) => s.asset === a.asset && s.show(spec)))
+  return (
+    <div className="space-y-16">
+      <div>
+        <Heading title="Your photos and films" />
+        <p className="mt-3 max-w-2xl text-sm text-ink-2">Add them here and they go straight into your build kit, at the exact paths the site uses. Files stay in this browser. Nothing yet? The build starts with temporary pictures of the same size, and yours replace them later.</p>
+        <div className="mt-6"><MediaSlots spec={spec} onChange={update} /></div>
       </div>
+
+      <div>
+        <Heading title="What each one shows" />
+        <p className="mt-3 max-w-2xl text-sm text-ink-2">The shot list your build follows — find, shoot or make exactly these.</p>
+        <div className="mt-6 border-l border-t border-line">
+          {r.media.shots.map((x) => (
+            <div key={x.key} className="grid gap-x-6 gap-y-1 border-b border-r border-line bg-white px-4 py-3.5 text-sm md:grid-cols-[14rem_minmax(0,1fr)_14rem]">
+              <p className="label text-muted">{x.where}</p>
+              <p className="text-ink first-letter:uppercase">{x.shows}</p>
+              <p className="text-muted md:text-right">{x.format}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {others.length > 0 && (
+        <div>
+          <Heading title="Everything else the site needs" />
+          <ul className="mt-6 grid border-l border-t border-line sm:grid-cols-2 xl:grid-cols-3">
+            {others.map((a) => {
+              const st = STATUS[a.status]
+              return (
+                <li key={a.key} className="flex items-start gap-3 border-b border-r border-line bg-white p-4">
+                  <st.mark size={16} className={`mt-0.5 shrink-0 ${st.cls}`} aria-hidden />
+                  <span className="min-w-0"><span className="block font-medium">{a.label}</span><span className={`block text-sm ${st.cls}`}>{st.label}</span><span className="mt-1 block text-xs text-muted">{a.specs}</span></span>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      )}
 
       {r.assetCreationPaths.length > 0 && (
         <div>
           <Heading title="How to get what's missing" />
-          <Accordion type="multiple" className="mt-5 space-y-2">
+          <Accordion type="multiple" className="mt-6 border-l border-t border-line">
             {r.assetCreationPaths.map((p) => (
-              <AccordionItem key={p.title} value={p.title} className="rounded-lg border border-line bg-white last:border-b">
+              <AccordionItem key={p.title} value={p.title} className="border-b border-r border-line bg-white">
                 <AccordionTrigger className="p-4 text-base font-medium hover:no-underline">{p.title}</AccordionTrigger>
                 <AccordionContent className="px-4 pb-5">
                   <ol className="list-decimal space-y-1 pl-5 text-sm">{p.steps.map((s) => <li key={s}>{s}</li>)}</ol>
                   {p.prompt && (
-                    <div className="mt-4 rounded-md bg-ink p-4 text-paper">
+                    <div className="mt-4 rounded-[3px] bg-ink p-4 text-paper">
                       <p className="font-mono text-xs leading-relaxed">{p.prompt}</p>
                       <CopyButton text={p.prompt} label="Copy prompt" className="mt-3 border-paper! text-paper" />
                     </div>
@@ -395,116 +313,22 @@ function Media({ r, spec, update, editHref }: { r: UniversalRecipe; spec: Recipe
   )
 }
 
-// ─── Motion: the feel, and the moments people remember ───────────────────────
+// ─── Build: what the builder keeps and what it makes, then the tool ─────────
 
-function Motion({ r, look, editHref }: { r: UniversalRecipe; look: Look; editHref: Edit }) {
+/** Decision 32 in plain words: the owner's picks are locked; the builder designs the rest like someone who knows the look. */
+function RoomToInvent({ r }: { r: UniversalRecipe }) {
   return (
-    <div className="space-y-14">
-      <div>
-        <Heading title={`Movement — ${r.motion.level.name}`}><ChangeLink href={editHref('motion')} /></Heading>
-        <p className="mt-2 max-w-2xl text-ink-2">{r.motion.principle}</p>
-        <ul className="mt-5 flex flex-wrap gap-2">{r.motion.patterns.map((p) => <li key={p.id} className="rounded-[3px] border border-line bg-white px-3 py-1.5 text-sm">{p.name}</li>)}</ul>
+    <div>
+      <Heading title={`Room to invent — ${r.style.look}`} />
+      <p className="mt-3 max-w-2xl text-sm text-ink-2">Everything you picked stays as you picked it. The rest the builder designs — like someone who knows {r.style.look}, from what its best sites do — and every page gets one moment people remember.</p>
+      <div className="mt-6 grid border border-line bg-white md:grid-cols-2">
+        {([['Known for', r.style.moves], ['Ideas for the moments', r.style.sparks]] as const).map(([name, xs], i) => (
+          <div key={name} className={`p-5 md:p-6 ${i ? 'border-t border-line md:border-l md:border-t-0' : ''}`}>
+            <p className="label">{name}</p>
+            <ul className="mt-4 space-y-2.5 text-sm text-ink-2">{xs.map((x) => <li key={x} className="flex gap-2.5"><span className="mt-[0.45em] size-1.5 shrink-0 bg-pencil" aria-hidden />{x}</li>)}</ul>
+          </div>
+        ))}
       </div>
-      {r.concept && (
-        <div>
-          <Heading title={`Big idea — ${r.concept.name}`}><ChangeLink href={editHref('idea')} /></Heading>
-          <p className="mt-2 max-w-2xl text-ink-2">{r.concept.line} {r.concept.why}</p>
-          <dl className="mt-5 grid max-w-4xl gap-4 text-sm md:grid-cols-2">
-            {([['What guides the scroll', r.concept.motif], ['How each part opens', r.concept.chapters], ['The moment people remember', r.concept.moment], ['How the site ends', r.concept.ending]] as const).map(([k, v]) => (
-              <div key={k} className="rounded-lg border border-line bg-white p-4"><dt className="text-xs text-muted">{k}</dt><dd className="mt-1 text-ink-2">{v}</dd></div>
-            ))}
-          </dl>
-        </div>
-      )}
-      <div>
-        <Heading title="Special touches"><ChangeLink href={editHref('touches')} /></Heading>
-        {r.signatures.length ? (
-          <ul className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {r.signatures.map((s) => (
-              <li key={s.id} className="overflow-hidden rounded-lg border border-line bg-white">
-                <OptionDemo id={`sig:${s.id}`} {...look} />
-                <div className="p-4">
-                  <p className="text-xs text-muted">{s.where}</p>
-                  <p className="mt-0.5 font-medium">{s.name}</p>
-                  <p className="mt-1.5 text-sm text-ink-2">{s.experience}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : <p className="mt-4 text-sm text-muted">None — this recipe keeps interaction deliberately quiet.</p>}
-      </div>
-      {r.pieces.length > 0 && (
-        <div>
-          <Heading title="Your kit"><ChangeLink href={editHref('pages')} /></Heading>
-          <p className="mt-2 max-w-2xl text-sm text-ink-2">Ready components — their code ships in your Build Package (src/components/pieces/), already in your colours and fonts.</p>
-          <ul className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {r.pieces.map((p) => (
-              <li key={p.id} className="overflow-hidden rounded-lg border border-line bg-white">
-                <PieceDemo id={p.id} colors={look.colors} fonts={{ display: look.type.display.family, body: look.type.body.family, utility: look.type.utility.family }} />
-                <div className="p-4">
-                  <p className="text-xs text-muted">{p.where}</p>
-                  <p className="mt-0.5 font-medium">{p.name}</p>
-                  <p className="mt-1.5 text-sm text-ink-2">{p.line}</p>
-                  {p.issue && <p className="mt-2 text-sm text-warn">{p.issue}</p>}
-                  <p className="mt-2 text-xs text-muted">Adapted from {p.source.library} (MIT)</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {r.media.storytelling && (
-        <div>
-          <Heading title="How the film tells your story" />
-          <ol className="mt-4 max-w-3xl list-decimal space-y-1.5 pl-5 text-sm text-ink-2">{r.media.storytelling.map((x) => <li key={x}>{x}</li>)}</ol>
-        </div>
-      )}
-    </div>
-  )
-}
-
-/** The palette in context — a small UI rendered with the recipe's own colors. */
-function PalettePreview({ colors: c, recipe }: { colors: PaletteColors; recipe: UniversalRecipe }) {
-  const t = recipe.visualSystem.typography
-  const sh = recipe.visualSystem.shape
-  return (
-    <div className="overflow-hidden rounded-lg border border-line" style={{ background: c.background, color: c.text }}>
-      <div className="flex items-center justify-between px-5 py-3 text-xs" style={{ borderBottom: `1px solid ${c.border}`, fontFamily: `'${t.utility.family}'` }}><span>Studio</span><span style={{ color: c.muted }}>Work · About · <span style={{ color: c.accent }}>Contact</span></span></div>
-      <div className="p-5">
-        <p style={{ fontFamily: `'${t.display.family}'`, fontWeight: t.display.weight, fontSize: '2rem', lineHeight: 1, letterSpacing: t.display.letterSpacing }}>{recipe.contentDirection.headlineExamples[0]}</p>
-        <p className="mt-3 text-sm" style={{ color: c.muted, fontFamily: `'${t.body.family}'` }}>Secondary text uses the muted role. Links use the <span style={{ color: c.accent }}>accent</span>, sparingly.</p>
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          <div className="p-3 text-sm" style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: sh.card }}>Surface card</div>
-          <div className="p-3 text-sm" style={{ background: c.secondary, borderRadius: sh.card }}>Secondary</div>
-        </div>
-        <div className="mt-4 flex gap-2 text-sm"><span className="px-4 py-2" style={{ background: c.primary, color: c.background, borderRadius: sh.button }}>Primary action</span><span className="px-4 py-2" style={{ border: `1px solid ${c.border}`, borderRadius: sh.button }}>Secondary</span></div>
-      </div>
-    </div>
-  )
-}
-
-/** A tiny form in the recipe's own colors and shape: how its selects, date picker and toggles will look. */
-function ControlsPreview({ colors: c, r }: { colors: PaletteColors; r: UniversalRecipe }) {
-  const sh = r.visualSystem.shape
-  const t = r.visualSystem.typography
-  const field = { background: c.surface, border: `1px solid ${c.muted}`, borderRadius: sh.button === '999px' ? '999px' : sh.card, color: c.text }
-  return (
-    <div aria-hidden className="space-y-3 rounded-lg border border-line p-5 text-sm" style={{ background: c.background, color: c.text, fontFamily: `'${t.body.family}'` }}>
-      <div className="grid grid-cols-2 gap-3">
-        <div><p className="mb-1 text-xs" style={{ color: c.muted }}>Date</p><div className="flex items-center justify-between px-3 py-2" style={field}><span>Fri 12 Oct</span><span style={{ color: c.muted }}>▾</span></div></div>
-        <div><p className="mb-1 text-xs" style={{ color: c.muted }}>Guests</p><div className="flex items-center justify-between px-3 py-2" style={field}><span>2 people</span><span style={{ color: c.muted }}>▾</span></div></div>
-      </div>
-      <div className="p-3" style={{ ...field, borderRadius: sh.card }}>
-        <div className="grid grid-cols-7 gap-1 text-center text-xs">
-          {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => <span key={i} style={{ color: c.muted }}>{d}</span>)}
-          {[...Array(14)].map((_, i) => <span key={i} className="py-1" style={i === 11 ? { background: c.primary, color: c.background, borderRadius: sh.button === '0px' ? 0 : '999px' } : undefined}>{i + 1}</span>)}
-        </div>
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="flex items-center gap-2"><span className="grid h-4 w-4 place-items-center text-[10px]" style={{ background: c.primary, color: c.background, borderRadius: sh.button === '0px' ? 0 : 4 }}>✓</span>Window seat</span>
-        <span className="flex items-center gap-2">Reminders<span className="relative h-5 w-9 rounded-full" style={{ background: c.primary }}><span className="absolute right-0.5 top-0.5 h-4 w-4 rounded-full" style={{ background: c.background }} /></span></span>
-      </div>
-      <div className="flex justify-center px-4 py-2.5" style={{ background: c.primary, color: c.background, borderRadius: sh.button }}>{r.contentDirection.ctaExamples[0]}</div>
     </div>
   )
 }

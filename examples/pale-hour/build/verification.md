@@ -1,0 +1,48 @@
+# Verification
+
+The build is done when every item passes.
+
+- [ ] Background is #DAD8DB; no other page background colors are introduced.
+- [ ] Display text uses Prata 400; body uses Public Sans; no other families appear.
+- [ ] Accent #D93208 covers < 5% of any viewport.
+- [ ] Pages: Home · Exhibitions · Visit · About — every page shares the same navbar and footer.
+- [ ] Footer “Signature columns”: Dark band (text colour as ground): the logo large on the left (5 of 12 columns), 2–3 link columns with headings, then a hairline and one row: copyright left, legal links right.
+- [ ] Home section order: Hero → Intro → Featured Work → Schedule → Journal.
+- [ ] Exhibitions section order: Featured Work → Gallery.
+- [ ] Visit section order: Location → Schedule → FAQ.
+- [ ] About section order: About → Team.
+- [ ] Hero matches "Full-bleed photo with depth": 100svh full-bleed photograph, headline anchored bottom-left, image slightly larger than viewport (scale 1.1) to allow drift.
+- [ ] Controls and forms use shadcn/ui restyled to the recipe tokens and shape (from: button, sheet, sonner, tabs, card, badge, dialog, carousel, accordion) — no unstyled native select, date input or checkbox anywhere; every form says where it goes (an email the visitor sends, or the owner's service) and none fakes a sent message.
+- [ ] Sections with reference code in src/components/sections/ keep its design (real copy and media, no placeholder text left) and are fitted into this site: tokens only, the site’s type sizes and spacing, the code edited wherever its defaults disagree. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.
+- [ ] Kit piece "Photos follow the cursor" (<ImageTrail/> from src/components/pieces/ImageTrail.tsx) is used on Home → Hero: it does what the owner picked it for, and its size, place and the type around it follow the site.
+- [ ] Kit piece "Tap to open large" (<Lightbox/> from src/components/pieces/Lightbox.tsx) is used on Home → Featured Work; Exhibitions → Gallery (its photo layout): it does what the owner picked it for, and its size, place and the type around it follow the site.
+- [ ] Kit piece "Cut-out headline" (<TextEffect/> from src/components/pieces/TextEffect.tsx) is used on Every page — the h1, plus at most two section headings per page (not every heading): it does what the owner picked it for, and its size, place and the type around it follow the site.
+- [ ] One system: things of one kind look alike everywhere — menu links, footer links, labels and button text share one face, width and size step; headings of one level share one size.
+- [ ] Every row lines up: the items of one row (the menu’s logo, links and button; a card’s title and meta) share one vertical centre or baseline — none sits higher because of padding it brought along.
+- [ ] Nothing looks pasted in: no part keeps a size, padding, width or font from its reference code that its neighbours do not share.
+- [ ] Locked items are as the owner chose them: palette, lettering, pages and their part order, each part’s design, menu, footer, shape, first screen, the copy’s facts and the owner’s files (recipe/design.md → Room to invent).
+- [ ] The site reads as Art Editorial beyond its tokens: at least three of the style’s moves are in it, and none of its traps (recipe/design.md → What Art Editorial is known for).
+- [ ] Every page has one remembered moment; each one the builder designed is named in the final reply, belongs to this owner (their words, pictures or trade) and has a mobile and a reduced-motion version.
+- [ ] Every page passes the award checklist in the recipe (one idea, one remembered moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).
+- [ ] Home → Featured Work: photos shown as "Photo story", every picture visible as the layout intends.
+- [ ] Exhibitions → Featured Work: photos shown as "Photo story", every picture visible as the layout intends.
+- [ ] Exhibitions → Gallery: photos shown as "Gallery wall", every picture visible as the layout intends.
+- [ ] Layout: Headlines 8 columns, body 5 columns max (~65ch), captions in the rail; section spacing clamp(104px, 13vw, 196px) between sections (--section-y).
+- [ ] Shape “Sharp”: buttons 0px, cards 0px, media 0px radius (rounded-button / rounded-card / rounded-media) — No rounded corners anywhere; structure comes from lines and space.
+- [ ] Menu “Centered logo”: Symmetric bar: links left, logo centred, secondary links and the action right; generous height at the top that shrinks after scrolling.
+- [ ] Absent: Hover effects that distort artwork.
+- [ ] Absent: Heavy UI chrome.
+- [ ] Absent: Autoplaying carousels.
+- [ ] Absent: A cream or beige page ground with a clay/terracotta accent.
+- [ ] Absent: A near-black ground with one acid-green or orange accent, or tinted charcoal standing in for black.
+- [ ] Absent: Small uppercase, letter-spaced monospace labels above every heading.
+- [ ] Absent: Numbered markers (01 / 02) on content that is not a real sequence.
+- [ ] Absent: Meta strings joined with middle dots or spaced em dashes, and "→" appended to links.
+- [ ] Absent: One italic or coloured accent word inside an otherwise plain headline.
+- [ ] Absent: Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe's fonts.
+- [ ] Absent: Text in mix-blend-difference (or any blend mode) over a photo — its colours turn random; text on a picture sits on a scrim or a solid block.
+- [ ] Absent: Effects nobody picked: no text effect, hover, cursor or scroll trick beyond the recipe's motion system and Your Kit.
+- [ ] Mobile (390px): no horizontal scroll, headlines re-broken intentionally, touch targets ≥ 44px.
+- [ ] prefers-reduced-motion: every animation has its documented alternative.
+- [ ] Every media element is rendered through the asset config layer; temporary assets are listed in the manifest.
+- [ ] Lighthouse on mobile: LCP < 2.5s, CLS < 0.1.

@@ -1,10 +1,6 @@
 'use client'
 import { useState, type ReactNode } from 'react'
 
-export function Swatches({ colors, size = 'h-3.5 w-3.5' }: { colors: string[]; size?: string }) {
-  return <span className="mt-1 flex gap-1">{colors.map((c, i) => <span key={i} className={`${size} rounded-full ring-1 ring-black/10`} style={{ background: c }} />)}</span>
-}
-
 export function CopyButton({ text, label = 'Copy', className = '' }: { text: string | (() => string); label?: string; className?: string }) {
   const [done, setDone] = useState(false)
   return (

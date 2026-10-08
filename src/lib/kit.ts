@@ -16,9 +16,3 @@ export function usePlan(): KitPlan {
 }
 
 /** What is in the plan — for the bag badge and tooltip. */
-export function planSummary(p: KitPlan) {
-  const sections = p.pages.reduce((n, pg) => n + pg.sections.filter((s) => s.id !== 'hero').length, 0)
-  const pieces = p.pages.reduce((n, pg) => n + pg.sections.reduce((m, s) => m + s.pieces.length, 0), 0)
-  const effects = pieces + (p.sitePieces ?? []).length
-  return { pages: p.pages.length, sections, pieces: effects, count: sections + effects }
-}

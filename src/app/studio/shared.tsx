@@ -1,6 +1,5 @@
 'use client'
 // Shared by the Studio's Pages and Style steps: the plan's look, a page drawn top to bottom, and the way on to the recipe.
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { useGoogleFonts } from '@/components/FontLoader'
@@ -53,9 +52,10 @@ export function useToRecipe() {
 
 /** A step's frame: the steps bar on top (back is a step link, Next on the right), then the title and the step. */
 export function StepFrame({ at, title, next, children }: { at: Step; title: ReactNode; next: ReactNode; children: ReactNode }) {
+  const toRecipe = useToRecipe()
   return (
     <>
-      <FlowBar at={at} next={next} />
+      <FlowBar at={at} next={next} onRecipe={toRecipe} />
       <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-10 md:px-8 md:pt-12">
         {title}
         {children}
@@ -64,16 +64,3 @@ export function StepFrame({ at, title, next, children }: { at: Step; title: Reac
   )
 }
 
-/** Brand and Pages adjust a picked direction; without one, the way is to start with your own words. */
-export function NeedsStudio() {
-  return (
-    <div className="mx-auto max-w-[1440px] px-5 pb-24 pt-14 md:px-8">
-      <h1 className="display text-[clamp(2.2rem,5vw,4rem)]">Start with your site.</h1>
-      <p className="mt-4 text-lg text-ink-2">Take what you like from real sites in the Library, then Build my site.</p>
-      <div className="mt-8 flex flex-wrap items-center gap-3"><Link href="/library" className="btn btn-ink">Open the Library</Link><Link href="/studio/you" className="btn btn-line">Start with your own words</Link></div>
-    </div>
-  )
-}
-
-/** Brand and Pages are fine-tuning of the direction picked: the way back is one link. */
-export const BackToDirections = () => <Link href="/studio/direction" className="group mb-5 inline-flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink"><span aria-hidden>←</span><span className="ulink">Back to the three directions</span></Link>

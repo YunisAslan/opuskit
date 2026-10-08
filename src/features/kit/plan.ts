@@ -11,7 +11,7 @@ import { accentSets, palettes, typography } from '@/data/ingredients'
 import { EFFECTS, concepts, footerStyles, heroes, imagePresentations, navStyles, pageTypes, sections, shapeStyles } from '@/data/patterns'
 import { behaviourOf, behaviours, isMoment, pieces } from '@/data/pieces'
 import { directions, goals, motionLevels, purposes } from '@/data/taxonomy'
-import { PHOTO_SECTIONS, defaultPagesFor, isValidSpec, normalizeSpec, recommendSectionPhotos, resolveHero, recommendPalette } from '@/features/recipes/engine'
+import { PHOTO_SECTIONS, cleanTaken, defaultPagesFor, isValidSpec, normalizeSpec, recommendSectionPhotos, resolveHero, recommendPalette } from '@/features/recipes/engine'
 import type { BehaviourId, ChromeId, GoalId, DirectionId, ImagePresentationId, KitPlan, MediaPlan, MotionLevel, PageSpec, PageTypeId, PieceId, PlanPage, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
 
 export const EMPTY_PLAN: KitPlan = { pages: [] }
@@ -40,13 +40,6 @@ export const sectionGroups: { name: string; job: string; line: string; ids: Sect
 
 /** A section's job on the page, in plain words ("Show your work"); sections doing the same job can replace each other. */
 export const jobOf = (id: SectionId) => sectionGroups.find((g) => g.ids.includes(id))?.job ?? sections[id].name
-
-export const pageGroups: { name: string; ids: PageTypeId[] }[] = [
-  { name: 'Main pages', ids: ['home', 'about', 'work', 'project', 'services', 'contact', 'journal', 'article', 'gallery', 'team', 'testimonials', 'press', 'careers', 'donate', 'listen'] },
-  { name: 'Selling', ids: ['shop', 'collections', 'product-detail', 'cart', 'checkout', 'account', 'pricing', 'features', 'comparison', 'size-guide', 'shipping-returns', 'gift-cards', 'wholesale'] },
-  { name: 'Hospitality & events', ids: ['menu', 'reservations', 'order-online', 'catering', 'locations'] },
-  { name: 'Help & legal', ids: ['faq', 'newsletter', 'sign-in', 'sign-up', 'privacy-policy', 'terms-of-service', 'cookie-policy', 'accessibility', 'not-found'] },
-]
 
 /** What each kind of page is usually made of, in reading order — used to start a new page and to suggest what to add.
  *  Pages with none (sign-in, legal, 404…) are standard pages written for you; they need no sections. */
@@ -105,7 +98,7 @@ export function libraryFor(type: PageTypeId): { name: string; job: string; ids: 
 }
 /** A page with no sections of its own and no suggestions is a standard page (sign-in, legal, 404) written for you. */
 export const isStandardPage = (type: PageTypeId) => !pageTypes[type].sections.length && !pageSuggestions[type]?.length
-const CLOSING: SectionId[] = ['faq', 'contact-cta']
+export const CLOSING: SectionId[] = ['faq', 'contact-cta', 'reservation', 'newsletter']
 
 /** Suggestions for one page: what it usually has, marked with whether it's already there. */
 export const suggestionsFor = (page: PlanPage) => (pageSuggestions[page.type] ?? []).map((id) => ({ id, added: page.sections.some((s) => s.id === id) }))
@@ -192,15 +185,8 @@ const mapPage = (plan: KitPlan, pageId: string, f: (p: PlanPage) => PlanPage): K
 
 export const addPage = (plan: KitPlan, type: PageTypeId, label?: string): { plan: KitPlan; id: string } => { const p = newPage(type, label); return { plan: { ...plan, pages: [...plan.pages, p] }, id: p.id } }
 export const removePage = (plan: KitPlan, pageId: string): KitPlan => ({ ...plan, pages: plan.pages.filter((p) => p.id !== pageId) })
-export const renamePage = (plan: KitPlan, pageId: string, label: string) => mapPage(plan, pageId, (p) => ({ ...p, label }))
 /** What the page is for, in the owner's words — the recipe hands it to the builder as the page's brief. */
 export const setPagePurpose = (plan: KitPlan, pageId: string, purpose: string) => mapPage(plan, pageId, (p) => ({ ...p, purpose: purpose.slice(0, 400) }))
-export function movePage(plan: KitPlan, pageId: string, by: -1 | 1): KitPlan {
-  const i = plan.pages.findIndex((p) => p.id === pageId), j = i + by
-  if (i < 0 || j < 0 || j >= plan.pages.length) return plan
-  const pages = [...plan.pages];[pages[i], pages[j]] = [pages[j], pages[i]]
-  return { ...plan, pages }
-}
 
 /** Inserts a section at `at` (0 = top of the page). Any part goes anywhere — a film or image can sit mid-page too. */
 export const addSection = (plan: KitPlan, pageId: string, id: SectionId, at: number) =>
@@ -350,11 +336,13 @@ export function inferGoal(plan: KitPlan): GoalId {
   const has = (...xs: string[]) => xs.some((x) => parts.has(x as SectionId) || pages.has(x as PageTypeId))
   const purpose = inferPurpose(plan)
   if (has('donate')) return 'donate'
-  if (has('product-buy', 'product-grid', 'cart', 'checkout', 'shop')) return 'buy'
+  // A shop page on a site that is not a shop (a gallery's bookshop) is a side door, not the main action.
+  if (has('product-buy', 'cart', 'checkout') || (has('product-grid', 'shop') && ['ecommerce', 'fashion', 'product'].includes(purpose))) return 'buy'
   if (has('reservation', 'reservations')) return 'book'
   if (has('sign-up') || (has('pricing') && purpose === 'saas')) return 'signup'
   if (has('curriculum', 'careers')) return 'apply'
   if (has('location') && (purpose === 'restaurant' || purpose === 'hotel')) return 'visit'
+  if (purpose === 'event' && has('work') && has('locations')) return 'visit' // a gallery: exhibitions and a visit, no RSVP
   return GOAL_OF[purpose] ?? (has('contact-cta', 'contact') ? 'contact' : 'explore')
 }
 
@@ -390,6 +378,7 @@ export function planToSpec(plan: KitPlan): RecipeSpec {
     signatures: same?.signatures ?? [], // what you see is what you get: no touches the user did not place
     pieces: [...new Set(placements.map((x) => x.piece))], piecePlacements: placements,
     pages, target: plan.target ?? 'not-sure',
+    ...((plan.taken ?? from?.taken)?.length ? { taken: plan.taken ?? from?.taken } : {}),
   })
 }
 
@@ -439,6 +428,7 @@ export function cleanPlan(x: unknown): KitPlan {
     concept: p.concept === 'off' ? 'off' : known(p.concept, concepts),
     sitePieces: siteFrom(p.sitePieces, pages),
     from: isValidSpec(p.from) ? p.from : undefined, fromId: typeof p.fromId === 'string' ? p.fromId : undefined,
+    taken: cleanTaken(p.taken),
     ...(p.via === 'studio' ? { via: 'studio' as const } : {}),
     ...(p.blank ? { blank: true as const } : {}),
   }
@@ -459,7 +449,7 @@ export function specToPlan(spec: RecipeSpec, fromId?: string): KitPlan {
   return cleanPlan({
     name: spec.brief?.name, about: spec.brief?.offer, goal: spec.brief?.goal, photoNote: spec.brief?.photos, purpose: spec.purpose, direction: spec.direction, palette: spec.palette, typography: spec.typography,
     shape: spec.shape, nav: spec.nav, footer: spec.footer, imagePresentation: spec.imagePresentation, rotation: spec.rotation, concept: spec.concept, hero: spec.hero,
-    motion: spec.motion, sitePieces, pages, target: spec.target, from: spec, fromId, uploads: spec.uploads, assets: spec.assets, mediaPlan: spec.mediaPlan,
+    motion: spec.motion, sitePieces, pages, target: spec.target, from: spec, fromId, taken: spec.taken, uploads: spec.uploads, assets: spec.assets, mediaPlan: spec.mediaPlan,
   })
 }
 

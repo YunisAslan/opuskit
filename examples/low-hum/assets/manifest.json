@@ -1,0 +1,89 @@
+{
+  "recipe": "warm-editorial-hospitality",
+  "title": "Low Hum — Cheeky Retro Seventies Restaurant Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon. Until the owner’s own exists: the name set as a wordmark in the display face, and its first letter as the favicon — no invented symbol to throw away later",
+      "temporary": "Wordmark \"low hum\" set in Gloock (src/components/site/Logo.tsx) and the letter \"L\" as favicon (src/app/icon.svg) until the owner's logo exists."
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "find",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Gloock, Figtree (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "create",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "mobileHeroCrop": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "Owner-supplied photo set (credits in media-src/SOURCES.md)",
+      "replaceWith": "user-owned-images",
+      "usage": "Hero on small screens",
+      "specs": "1 file · 4:5 · 1600×2000 — 4:5 crop of the hero with focal point centred",
+      "files": [
+        "public/media/mobileHeroCrop.jpg"
+      ]
+    },
+    "hero": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Owner-supplied photo set (credits in media-src/SOURCES.md)",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · First screen — Full-bleed photo with depth",
+      "specs": "1 file · 16:9 · 2800×1575 — The opening picture of Low Hum: the place, the thing it makes or the person, at its best light, with calm space where the headline sits",
+      "files": [
+        "public/media/hero.jpg"
+      ]
+    },
+    "gallery": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Owner-supplied photo set (credits in media-src/SOURCES.md)",
+      "replaceWith": "user-owned-images",
+      "usage": "Menu · Gallery",
+      "specs": "8 files · 3:2 · 2400×1600 — the place and what it makes, as a set: wide views, close details, people at work — one light, one grade",
+      "files": [
+        "public/media/gallery-1.jpg",
+        "public/media/gallery-2.jpg",
+        "public/media/gallery-3.jpg",
+        "public/media/gallery-4.jpg",
+        "public/media/gallery-5.jpg",
+        "public/media/gallery-6.jpg",
+        "public/media/gallery-7.jpg",
+        "public/media/gallery-8.jpg"
+      ]
+    },
+    "location": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Owner-supplied photo set (credits in media-src/SOURCES.md)",
+      "replaceWith": "user-owned-images",
+      "usage": "Reservations · Location",
+      "specs": "1 file · 4:5 · 1920×2400 — the way in as visitors arrive — the door, the street, the path",
+      "files": [
+        "public/media/location.jpg"
+      ]
+    }
+  }
+}

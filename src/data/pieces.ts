@@ -19,21 +19,6 @@ const LIVELY: MotionLevel[] = ['dynamic', 'immersive']
 const ALL: MotionLevel[] = ['still', 'subtle', 'dynamic', 'immersive']
 const M = ['motion']
 
-export const pieceSlots: Record<PieceSlot, { name: string; line: string }> = {
-  headline: { name: 'Headlines', line: 'How the big words arrive' },
-  label: { name: 'Labels & links', line: 'Small type that reacts' },
-  statement: { name: 'Statements', line: 'One paragraph that carries the point' },
-  numbers: { name: 'Numbers', line: 'Figures, dates, times' },
-  photos: { name: 'Photos', line: 'How a set of images is shown' },
-  scroll: { name: 'Scroll', line: 'What scrolling does' },
-  pointer: { name: 'Pointer', line: 'What the cursor does' },
-  background: { name: 'Backgrounds', line: 'Texture and structure behind content' },
-  video: { name: 'Video', line: 'How a film is played' },
-  button: { name: 'Buttons', line: 'How the main action behaves' },
-  decor: { name: 'Stickers', line: 'Brand marks stuck onto a section' },
-  open: { name: 'Opening photos', line: 'What tapping a photo does' },
-  site: { name: 'Whole site', line: 'Page transitions, cursor, notices' },
-}
 
 export const pieces: Record<PieceId, Piece> = {
   'text-effect': {

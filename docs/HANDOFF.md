@@ -1,11 +1,45 @@
 # Handoff — where the work is and how to continue
 
-Last updated 2026-10-07 (evening). Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
+Last updated 2026-10-08. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
 Keep this file current: update "Now" and "Next" whenever a step finishes.
 
 Talk to the user in Azerbaijani; code, docs and commits in English.
 
-## Now (2026-10-07, end of day — all of today's flow work is NOT committed yet)
+## Now (2026-10-08 — committed and pushed; 2026-10-07's flow is in `e7e0220`)
+
+- **Direction reworked, Pages retired** (decision 39): Make it yours on top, three small ready packs under it (taken-by-name
+  qualities in all three; looks differ in family and layout); no pages list (the user: not needed, keep packs plain). `/studio/pages` is gone (redirects to
+  Direction); pages come from the kind of site and the sentence (`pagesFromWords`). Previews use the owner's sentence,
+  menu and main action. You lost its A/B/C letters and "Read from your sentence"; inputs got side padding.
+- **Direction shows the brand, not the site** (decision 40): Your brand card (exact type and colours) beside the
+  picker (Inspired by was dropped, decision 43); no full-size site mock. You's offer pick now sticks (`Collection.offer`).
+- **Ready packs removed from Direction** (decision 42); the start is `directionsFor`'s first mix. Hover on a look
+  plays a clip of a site built in it (8 looks have one).
+- **Looks shown by mood photos** (decision 41): 41 Unsplash photos in `src/data/look-images.ts` (check.ts asserts one
+  per look); a grid icon with a count opens `LookSites` (sites made in that look). Steps bar redesigned (ruled cells,
+  fixed widths, any step open except one with nothing yet; `docs/design.md`).
+- **#19 Low Hum built** — the first example made through the new flow (Library → You → Direction → Recipe), built by an
+  isolated `claude -p` session, 11 Unsplash photos, registered and live at `/live/low-hum` (`examples/low-hum/BUILD-LOG.md`).
+  The walk-through fixed: stale "three directions / three ways" copy everywhere; Direction's "From …" line names every
+  taken part (`takenFrom`); a taken part that replaced one never lands below the page's booking (`CLOSING` + move,
+  check.ts); the recipe preview speaks in the owner's words (`previewFromRecipe` reads the brief).
+- **Brand screen removed** (decision 44): `/studio/open`, Saved's Continue and the recipe's "Change the look" open
+  Direction with the recipe kept as built ("Opened from Low Hum"); `/studio/brand` redirects.
+- **#21 Pale Hour built** — a photography gallery and bookshop (Art Editorial), through the flow, isolated `claude -p`,
+  23 Unsplash photos, live at `/live/pale-hour` (`examples/pale-hour/BUILD-LOG.md`). Making it fixed galleries
+  (decision 46) and taught the package a rule: never a hand-written `/_next/image` address (static export).
+  Never start the isolated session from inside the repo — move the project out first.
+- **Your site = brand + Look/Colours/Lettering + What you took** (decision 49): picks in one filtered grid.
+- **Pages never shown, made well** (decision 48): no page list/count in the UI; `pagesFromWords` adds Shop / Menu
+  from the sentence and `reachable` a Contact page when a site has no way to reach its owner.
+- **Recipe page: three tabs** (decision 47) — Your site, Your files (no logo), Build; Design/Pages/Motion gone.
+- **Recipe page redone** (decision 45): the owner's name on top, ruled tabs, Overview = Your brand + What you took
+  (`spec.taken`, kept on the recipe) + Your choices; Pages/Effects say "from Fennwood". Saved: brands only, no Recently
+  viewed or Compare.
+- **Click spark** on OpusKit itself (`components/ClickSpark.tsx`, own code — the user asked for React Bits' effect, not its code).
+- The user on the logic (2026-10-08): the flow stays (Library → You → Direction → Recipe); now it is about making it
+  stronger, not changing it again. You is final.
+
 
 - **The flow, as it stands** (`docs/plan-library.md` decisions 33–38; the user: "leave it like this for now"):
   1. **Library** (`/library`) — pure browsing, no steps bar. Title "Take what you like." and one line; Kind / Feel
@@ -22,8 +56,8 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   5. **Direction** (`/studio/direction`): the site three ways (`directionsFor`: no direction takes more than two of
      look, colours, lettering, first screen from one site — check.ts), each saying what it took from where; then
      **Make it yours** (every look, colour, lettering — `studio/LookPicker.tsx` — with a live preview; changes marked
-     "your pick"); then "What your site will have" (pages) and **Adjust pages** (the old Pages screen).
-  6. Brand (`/studio/brand`) is now only for a recipe opened from an example or a saved recipe (same `LookPicker`).
+     "your pick"); then "What your site will have" (pages). *Superseded 2026-10-08 by decision 39.*
+  6. Brand is gone (decision 44): a recipe opened from an example or a saved one opens in Direction, kept as built.
 - **Pages as a plan** (decision 34, prototype): parts drawn as storyboard frames (body text as bars, photos as crossed
   blocks, `.sketch`), Says / Shows under each, proof clips in the chooser, Plan | Sample. Pages is now the optional
   "Adjust pages"; its toolbox still shows source colours.
@@ -61,21 +95,23 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   (Modern Heritage) and #18 **Maison Vey** (Luxury Editorial, built in an isolated `claude -p` session) are built,
   registered and live (2026-10-07), and so is #20 **Halden** (Dark Cinematic; the user's film, scroll-scrubbed). Next:
   #19 **Low Hum**.
-- **Nineteen example sites** are built, registered and live; clips for #11–#18 and #20 wait for the user's screen recordings
+- **Twenty-one example sites** are built, registered and live; clips for #11–#21 wait for the user's screen recordings
   (`docs/plan-examples.md` §4).
 - `examples/yunisaslanov/` (the first site through the Library, `docs/review-yunisaslanov.md`; moved from the repo root 2026-10-07, not registered as an example) was committed in `4fcda78`
   including `public/media/yourPhotos.jpeg`, the owner's own photo. It stays (the user, 2026-10-07) — don't ask again.
 
 ## Next
 
-1. **Continue the flow review with the user** (they said "we continue tomorrow"): start from where they left it — You is
-   final for now; next likely Direction and the Recipe page. Commit only when they ask.
-2. Rerun the Mara persona bot on the new flow (browser helper pattern: a persistent Playwright context driven over HTTP
-   from the scratchpad; the bot never reads the repo) and compare with the first run.
-3. Known gaps: sample content in previews is another site's (a shop shows clothes, a stand-in room photo); the
-   recipe page itself has not been reviewed in the new flow; Direction's previews use stand-in photos.
-4. #19 Low Hum (Retro Seventies; photos by Claude) — on hold while the flow changes; first test of decisions 30 and 32.
-5. Open points in `docs/plan-library.md` §5.
+1. **Next example site** — the user: raise the level of every site. Pick a look no example has yet
+   (`docs/plan-examples.md`), make the recipe through the flow, send it to the user's browser by link
+   (`/studio/open?recipe=…`) to approve, then build isolated (outside the repo) and register.
+2. **Clips** for #11–#21: the user's screen recordings of the live exports (Low Hum and Pale Hour are new).
+3. **Feed back from the builds** (decision 33, ask first): Low Hum's wavy section edges, sticky mobile "Book" button,
+   shrinking menu bar and mint focus style; Pale Hour's floor-plan index, live opening-hours line and museum-order
+   captions. Pale Hour has no Shop page (built before decision 48) — ask the builder only if the user wants it.
+4. Known gaps: "Event / wedding" is the kind's name even for a gallery (renaming breaks older examples' `choices`);
+   older recipes and examples have no `taken`, so What you took is empty for them.
+5. Rerun the Mara persona bot on the new flow and compare with the first run. Open points in `docs/plan-library.md` §5.
 
 ## Working agreements (from the user)
 
@@ -100,7 +136,7 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 
 ## Environment notes
 
-- OpusKit's dev server runs on `:3001`; an example's own dev server on another port (3011, 3012, …).
+- OpusKit's dev server runs on `:3000` (the user's); an example's own dev server on another port (3020, 3021, …).
 - Playwright: `npx -y playwright install chromium` once, then require `playwright` from a scratch folder. Pexels and the
   Unsplash website now block automated browsers (a human check): use the Unsplash connector for photos.
 - Before the first `npm install`/build inside any example, check its `next.config.ts` has the `turbopack.root` pin

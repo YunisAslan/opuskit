@@ -1,22 +1,19 @@
 'use client'
-import { Checkbox } from '@/components/ui/checkbox'
+// Saved: the site being built, then the recipes kept in this browser — each shown as its brand (decision 40).
 import Link from 'next/link'
-import { useState } from 'react'
-import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
-import { PageIntro, Swatches } from '@/components/ui'
-import { resolveRef, toggleSaved, useGenerations, useRecent, useSaved } from '@/features/recipes/library'
-import { planSummary, usePlan } from '@/lib/kit'
+import { useGoogleFonts } from '@/components/FontLoader'
+import { PageIntro } from '@/components/ui'
+import { directions, purposes } from '@/data/taxonomy'
+import { resolveRef, toggleSaved, useGenerations, useSaved } from '@/features/recipes/library'
+import { usePlan } from '@/lib/kit'
 import { useHydrated } from '@/lib/store'
 import type { UniversalRecipe } from '@/types/domain'
 
 export default function SavedPage() {
   const gens = useGenerations()
   const saved = useSaved().map((s) => ({ ref: s.ref, hit: resolveRef(s.ref, gens) })).filter((x) => x.hit)
-  const recent = useRecent().map((ref) => ({ ref, hit: resolveRef(ref, gens) })).filter((x) => x.hit)
-  const [compare, setCompare] = useState<string[]>([])
   const hydrated = useHydrated()
-  const plan = usePlan(), draft = planSummary(plan)
-  const pair = compare.map((ref) => saved.find((s) => s.ref === ref)?.hit?.recipe).filter(Boolean) as UniversalRecipe[]
+  const plan = usePlan()
 
   if (!hydrated) return <div className="min-h-screen" />
   return (
@@ -25,67 +22,49 @@ export default function SavedPage() {
       <div className="mx-auto max-w-[1440px] px-5 pb-24 md:px-8">
         {/* The site being built — one draft, kept until it becomes a recipe. */}
         {plan.pages.length > 0 && (
-          <Link href="/studio/pages" className="choice mb-10 flex flex-wrap items-center justify-between gap-3 p-5">
-            <span><span className="block text-xs uppercase tracking-wider text-muted">Site in progress</span>
-              <span className="mt-1 block text-lg font-medium">{plan.name || 'Untitled site'}</span>
-              <span className="block text-sm text-muted">{draft.pages} page{draft.pages === 1 ? '' : 's'} · {draft.sections} section{draft.sections === 1 ? '' : 's'}{draft.pieces ? ` · ${draft.pieces} effect${draft.pieces === 1 ? '' : 's'}` : ''}</span></span>
+          <Link href="/studio/direction" className="mb-10 flex flex-wrap items-center justify-between gap-3 border border-line bg-white p-5 transition-colors hover:bg-paper-2">
+            <span><span className="label block text-muted">Site in progress</span>
+              <span className="mt-1.5 block text-lg">{plan.name || 'Untitled site'}</span>
+              <span className="block text-sm text-muted">Continue where you left off.</span></span>
             <span className="btn btn-ink btn-sm">Continue</span>
           </Link>
         )}
         {saved.length === 0 ? (
           <div className="border-t border-line py-20">
-            <p className="text-2xl tracking-tight">Nothing saved yet.</p>
-            <p className="mt-2 text-ink-2">A recipe you save from its page shows up here.</p>
+            <p className="display text-3xl">Nothing saved yet.</p>
+            <p className="mt-3 text-ink-2">A recipe you save from its page shows up here.</p>
             <Link href="/library" className="btn btn-ink mt-6">Open the Library</Link>
           </div>
         ) : (
-          <>
-            <p className="text-sm text-muted">Select two recipes to compare them side by side.</p>
-            <ul className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {saved.map(({ ref, hit }) => (
-                <li key={ref}>
-                  <Link href={hit!.href} className="group block"><SitePreview {...previewFromRecipe(hit!.recipe)} className="rounded-lg border border-line" /><p className="mt-3 text-lg font-medium group-hover:text-pencil">{hit!.recipe.title}</p></Link>
-                  <div className="mt-2 flex gap-4 text-sm">
-                    <label className="flex cursor-pointer items-center gap-2"><Checkbox checked={compare.includes(ref)} onCheckedChange={(v) => setCompare(v === true ? [...compare, ref].slice(-2) : compare.filter((c) => c !== ref))} />Compare</label>
-                    <button type="button" className="link" onClick={() => toggleSaved(ref)}>Remove</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            {pair.length === 2 && <Compare a={pair[0]} b={pair[1]} />}
-          </>
-        )}
-
-        {recent.length > 0 && (
-          <section className="mt-20" aria-labelledby="recent">
-            <h2 id="recent" className="border-t border-ink pt-3 text-2xl font-medium tracking-tight">Recently viewed</h2>
-            <ul className="mt-4 divide-y divide-line">
-              {recent.map(({ ref, hit }) => <li key={ref}><Link href={hit!.href} className="flex justify-between py-3 hover:text-pencil"><span>{hit!.recipe.title}</span><span className="text-sm text-muted">{ref.startsWith('gen:') ? 'Your recipe' : 'Curated'}</span></Link></li>)}
-            </ul>
-          </section>
+          <ul className="grid border-l border-t border-line md:grid-cols-2 xl:grid-cols-3">
+            {saved.map(({ ref, hit }) => (
+              <li key={ref} className="group relative border-b border-r border-line bg-white">
+                <Link href={hit!.href} className="block after:absolute after:inset-0" aria-label={`Open ${hit!.recipe.metadata.spec.brief?.name || hit!.recipe.title}`}><Brand r={hit!.recipe} /></Link>
+                <div className="flex items-center justify-between gap-3 border-t border-line px-4 py-3">
+                  <span className="label truncate text-muted">{purposes[hit!.recipe.metadata.spec.purpose].name} · {directions[hit!.recipe.metadata.spec.direction].name}</span>
+                  <button type="button" className="link relative z-10 text-sm" onClick={() => toggleSaved(ref)}>Remove</button>
+                </div>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </>
   )
 }
 
-function Compare({ a, b }: { a: UniversalRecipe; b: UniversalRecipe }) {
-  const rows: [string, (r: UniversalRecipe) => React.ReactNode][] = [
-    ['Mood', (r) => r.creativeDirection.mood.join(', ')],
-    ['Palette', (r) => <><span>{r.visualSystem.palette.name}</span><Swatches colors={r.visualSystem.palette.tokens.map((t) => t.hex)} /></>],
-    ['Typography', (r) => `${r.visualSystem.typography.display.family} + ${r.visualSystem.typography.body.family}`],
-    ['Layout', (r) => r.layoutSystem.name],
-    ['Hero', (r) => r.media.hero.name],
-    ['Motion', (r) => `${r.motion.level.name} — ${r.motion.libraries.join(', ')}`],
-    ['Required assets', (r) => r.assetRequirements.filter((x) => x.level === 'required').map((x) => x.label).join(', ')],
-    ['Complexity', (r) => r.metadata.complexity],
-  ]
+/** A saved recipe as its brand: the name in its display face, the sentence, the palette. */
+function Brand({ r }: { r: UniversalRecipe }) {
+  const t = r.visualSystem.typography, spec = r.metadata.spec
+  const c = Object.fromEntries(r.visualSystem.palette.tokens.map((x) => [x.role, x.hex])) as Record<string, string>
+  useGoogleFonts(t.googleFamilies)
   return (
-    <section className="mt-14 overflow-x-auto" aria-label="Comparison">
-      <table className="w-full min-w-[40rem] text-sm">
-        <thead><tr className="text-left"><th className="w-40" /><th className="pb-3 text-lg font-medium">{a.title}</th><th className="pb-3 text-lg font-medium">{b.title}</th></tr></thead>
-        <tbody>{rows.map(([k, f]) => <tr key={k} className="border-t border-line align-top"><th className="py-3 pr-4 text-left font-normal text-muted">{k}</th><td className="py-3 pr-4">{f(a)}</td><td className="py-3">{f(b)}</td></tr>)}</tbody>
-      </table>
-    </section>
+    <div className="flex aspect-[16/10] flex-col justify-between overflow-hidden p-6" style={{ background: c.background, color: c.text }}>
+      <div>
+        <p className="text-[2.2rem] leading-none" style={{ fontFamily: `'${t.display.family}'`, fontWeight: t.display.weight, letterSpacing: t.display.letterSpacing, fontStyle: t.display.italic ? 'italic' : undefined, textTransform: t.display.uppercase ? 'uppercase' : undefined }}>{spec.brief?.name || r.title}</p>
+        <p className="mt-3 line-clamp-2 max-w-[38ch] text-sm" style={{ fontFamily: `'${t.body.family}'`, color: c.muted }}>{spec.brief?.offer || r.summary}</p>
+      </div>
+      <div className="flex" aria-hidden>{(['background', 'surface', 'text', 'primary', 'accent'] as const).map((k) => <span key={k} className="h-5 flex-1" style={{ background: c[k], outline: `1px solid ${c.border}` }} />)}</div>
+    </div>
   )
 }

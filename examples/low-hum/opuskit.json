@@ -1,0 +1,83 @@
+{
+  "opuskit": 1,
+  "recipe": "warm-editorial-hospitality",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.",
+  "spec": {
+    "base": "warm-editorial-hospitality",
+    "brief": {
+      "name": "Low Hum",
+      "offer": "A listening bar with ten thousand records, a hand-built sound system and small plates until late.",
+      "goal": "book"
+    },
+    "purpose": "restaurant",
+    "direction": "retro-seventies",
+    "characters": [
+      "cheeky"
+    ],
+    "lead": "photography",
+    "motion": "dynamic",
+    "hero": "parallax-photo",
+    "layout": "balanced",
+    "palette": "espresso",
+    "typography": "soft-seventies",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "have",
+    "concept": "off",
+    "signatures": [],
+    "pieces": [
+      "drag-photos",
+      "text-effect"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "drag-photos",
+        "page": "nsfrzio7",
+        "index": 1
+      },
+      {
+        "piece": "text-effect",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "5i142a6n",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "intro",
+          "menu",
+          "schedule",
+          "reservation"
+        ]
+      },
+      {
+        "id": "nsfrzio7",
+        "type": "menu",
+        "label": "Menu",
+        "purpose": "Let guests decide what they want before they arrive.",
+        "sections": [
+          "menu",
+          "gallery",
+          "reservation"
+        ]
+      },
+      {
+        "id": "95e5zbmc",
+        "type": "reservations",
+        "label": "Reservations",
+        "purpose": "Convert interest into a booking with minimal friction.",
+        "sections": [
+          "reservation",
+          "location",
+          "faq"
+        ]
+      }
+    ],
+    "target": "not-sure"
+  }
+}

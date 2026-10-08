@@ -17,35 +17,36 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
   knowledge — what its best sites are known for — is `src/data/look-knowledge.ts` (moves, craft, sparks, traps, seen);
   add to it what a new build or study teaches, with its source in `seen`.
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
-- The flow is the way to make a site (`docs/plan-library.md`, decisions 35–37): `/library`, browsing with no steps (the +
+- The flow is the way to make a site (`docs/plan-library.md`, decisions 35–39): `/library`, browsing with no steps (the +
   on a site opens everything it has to take: its whole look, one quality — colours, lettering, first screen, movement —
   its parts, its effects); Build my site starts three steps: `/studio/you` (name, sentence, kind — only the owner's) →
-  `/studio/direction` (three mixes, `directionsFor` in `features/library/inspire.ts`, none a copy) → recipe.
-  Direction ends with Make it yours (every look, colour and lettering, `studio/LookPicker.tsx`, drawn live — decision
-  36). `/studio/pages` is the optional "Adjust pages"; `/studio/brand` adjusts a recipe opened from an example or a
-  saved one. Older notes below on Brand and Pages still describe those screens. Discover is browsing (no steps); the Collection is a cart in the site header (`CollectionSheet`, its
-  Build my site starts building); Brand, Pages and the recipe share one steps bar (`FlowBar`) — both in
-  `src/app/library/parts.tsx`. Logic `src/features/library/collection.ts`, storage `src/lib/collection.ts`; plans made there
-  carry `via: 'studio'`. Brand picks the look (each drawn as your own site), colours and lettering. Pages shows everything the build will get: each part in the design the engine picks, and the
-  site-wide behaviours under "On every page"; such plans get no big idea (decision 21). Anything on Pages is changed in one chooser that
-  opens from what is clicked (`Chooser`, decision 23); the left column is the toolbox (Parts | Effects, with On every
-  page), the right one the pages (decision 24).
+  `/studio/direction` → recipe. Direction (decision 39): Make it yours on top (every look, colour and lettering,
+  `studio/LookPicker.tsx`, with Your brand beside it — name, sentence, button, palette, exact; decisions 40, 43), the start is the first mix of `directionsFor` in
+  `features/library/inspire.ts` (what was taken by name is in it, none a copy; the packs are not shown — decision 42);
+  pages are not shown. There is no Pages screen: pages come from the kind of
+  site and the sentence (`pagesFromWords` — "to order" drops the cart, "workshops" adds a page); anything more is asked
+  of the AI tool after the build. A recipe opened from an example or a saved one opens in Direction too, kept as it
+  was built (decision 44; there is no Brand screen). The
+  Collection is a cart in the site header (`CollectionSheet`, its Build my site starts building); the steps share one
+  bar (`FlowBar`) — both in `src/app/library/parts.tsx`. Logic `src/features/library/collection.ts`, storage
+  `src/lib/collection.ts`; plans made there carry `via: 'studio'` and get no big idea (decision 21).
 - The kit was retired 2026-10-07 (with accounts, pricing/paywall, explore, resources and `/recipe/{slug}`). Every recipe
-  opens in the studio: `/studio/open?from=seed:{slug}|gen:{id}|example:{slug}&to=brand|pages` (`openInStudio` in
+  opens in the studio: `/studio/open?from=seed:{slug}|gen:{id}|example:{slug}` → Direction (`openInStudio` in
   `src/lib/collection.ts`, `specToPlan`; an example's recipe is rebuilt from its `choices` by `specFromChoices`); `/kit`
-  redirects there (`next.config.ts`). The plan model Brand and Pages edit is still `KitPlan` in `src/features/kit/plan.ts`
+  redirects there (`next.config.ts`). The plan model the studio edits is still `KitPlan` in `src/features/kit/plan.ts`
   (pure, tested in check.ts; storage `src/lib/kit.ts`); what the studio doesn't edit rides along in `plan.from`, and a plan
-  opened from a saved recipe updates that recipe. The recipe page (`/result/[id]`) is always unlocked.
+  opened from a saved recipe updates that recipe. The recipe page (`/result/[id]`) is always unlocked; it shows the owner's
+  name, Your brand and What you took (`spec.taken`, decision 45).
 - OpusKit's own look — read `docs/design.md` before changing the landing, the chrome or any screen's look: tokens
   (stone, ink, hairline, one orange; dark mode), Archivo / Geist / Geist Mono, the ruled frame and its crosses, nav and
   buttons, hover language, the landing's sections, what the user approved and rejected.
 - Ready sections: every content section (all but navbar, hero, footer) is a component in `src/sections/`, listed in
   `src/data/blocks.ts`, shipped to `src/components/sections/` for the sections a recipe uses. OpusKit-written, tokens only
   (`--color-*`, `--radius-*`, `type-display|heading|body|utility` from `src/lib/type-tokens.ts`), content through props,
-  no import beyond `react`. Brand and Pages render them for real with sample content (`SectionPreview`), dressed as one of six
+  no import beyond `react`. Direction and the recipe page render them for real with sample content (`SectionPreview`), dressed as one of six
   worlds (studio, food, shop, product, software, event — `worldFor(purpose)`) so a café sees cups and a shop sees products.
   Many come in several designs (a `variant` prop; `src/data/section-variants.ts` — the engine picks one per look family,
-  the owner can pick another in Pages → Other designs; check.ts asserts each design exists in the code). Two section ids
+  or a design taken from a site in the Library; check.ts asserts each design exists in the code). Two section ids
   may share one component (Steps, NameWall, Statement) with different default designs.
   In a Build Package sections and pieces are references, not parts to paste: the builder keeps their design and
   behaviour and fits them into one site (`ONE_SYSTEM` in `build-packages/shared.ts`, decision 22).
@@ -96,7 +97,7 @@ Each example is registered in `src/data/examples.ts` (title/summary — copy fro
 `<title>`/meta description, not the abstract recipe doc, since a build often renames the brand).
 Its clips: `clip` (10–15 s, first screen + scroll) and `sectionClips` (3–5 s per section, the section standing still and framed
 on it — never the page scrolling past; `examples/{slug}/public/media/clips/{sectionId}.mp4`)
-feed "a site like this" in Pages (`src/features/kit/closest.ts`); an old example carries `legacy: true` and is never offered there.
+feed "a site like this" (`src/features/kit/closest.ts`); an old example carries `legacy: true` and is never offered there.
 Its card on `/examples` shows `public/examples/{slug}.jpg` — a 1440×900 JPEG screenshot of its live homepage, taken
 once the hero video has real frames (a black first frame makes a blank card). After replacing one, clear
 `.next/dev/cache/images` or the dev server keeps serving the old one.

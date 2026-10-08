@@ -21,7 +21,7 @@ const short = (title: string) => title.split(/[,:—]/)[0].trim()
 const STEPS = [
   { n: '01', where: 'Library', title: 'Take what you like', text: 'Browse built, working sites. Take a whole look, or only its colours, lettering, first screen, a part or an effect.', href: '/library', cta: 'Open the Library' },
   { n: '02', where: 'You', title: 'Say what your site is', text: 'Its name, one sentence and its kind. That decides its pages and parts — only you do.', href: '/studio/you', cta: 'Start with your words' },
-  { n: '03', where: 'Direction', title: 'See it three ways', text: 'Your words in three mixes of what you took — none a copy of any site. Pick one, then change any look, colour or lettering.', href: '/studio/direction', cta: 'See the directions' },
+  { n: '03', where: 'Direction', title: 'Make it yours', text: 'What you took, mixed into your brand — none a copy of any site. Change any look, colour or lettering and see your brand change with it.', href: '/studio/direction', cta: 'Make it yours' },
   { n: '04', where: 'Recipe', title: 'Download, then build', text: 'A Build Package for your AI tool: the recipe, ready-made sections, the pictures each part needs and the checks it must pass.', href: '/library', cta: 'Start a site' },
 ]
 

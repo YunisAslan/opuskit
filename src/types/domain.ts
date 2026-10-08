@@ -326,6 +326,11 @@ export type Piece = {
  * A site planned from the showcase (/kit): everything the user took off the shelves, in order — no questions asked.
  * Unset choices fall back to the chosen look's tested defaults. planToSpec (features/kit/plan.ts) turns it into a RecipeSpec.
  */
+/** One thing taken from a site in the Library (decision 45): its whole look (`site`), one quality (`like`, id = the
+ *  trait), a part (`section`, `menu`, `footer`), a first screen (`hero`) or an effect. Kept on the recipe, so it still
+ *  says where each pick came from once the Collection is emptied. */
+export type TakenPart = { site: string; kind: 'site' | 'like' | 'section' | 'hero' | 'menu' | 'footer' | 'effect'; id: string }
+
 export type KitPlan = {
   name?: string
   /** One sentence on what the site is — becomes the brief's offer. */
@@ -354,6 +359,8 @@ export type KitPlan = {
   from?: RecipeSpec
   /** The saved recipe it was opened from: Create updates that one instead of making a copy. */
   fromId?: string
+  /** What was taken in the Library to make it (decision 45). */
+  taken?: TakenPart[]
   /** Made in the Library's Studio (Pages → Style), not in the kit: the recipe page leads back there. */
   via?: 'studio'
   /** Started blank (the kind of site's own pages): no collected site is its start, for its look or its photo. */
@@ -492,6 +499,8 @@ export type Brief = { name?: string; offer?: string; goal?: GoalId; /** Anything
 export type RecipeSpec = {
   base: string
   brief?: Brief
+  /** What was taken in the Library to make it (decision 45). */
+  taken?: TakenPart[]
   purpose: PurposeId
   direction: DirectionId
   characters: CharacterId[]

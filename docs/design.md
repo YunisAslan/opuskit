@@ -79,6 +79,17 @@ The shadcn variables (`--background`, `--card`, `--border`, …) read these toke
   - When the Collection is empty, a full-height ink "Start a site" block sits at the right. Once it has items, the
     Collection button and Build my site take its place.
   - Header cells are ruled: logo | nav | tools.
+- **Steps bar** (`FlowBar` / `Steps` in `library/parts.tsx`, under the header, sticky at `top-14`): each step a ruled
+  cell like the header's (mono number + name); the current one on a `white` surface, the way walked underlined 2px in
+  `pencil`, done steps ticked. Hover fills `paper-2`. Every step opens at any time except one there is nothing for yet
+  (Direction without a name and kind, Recipe without a recipe) — shown faded with a reason on hover. Sticky things under
+  it sit at `top-[113px]` (header 57 + bar 56). On Direction only the right column (Your brand) is sticky; the picker's
+  tabs scroll with the lists.
+- **Recipe page tabs** (`RecipeDocument.tsx`; three — Your site, Your files, Build, decision 47): the same ruled cells as the steps bar, but names only — tabs are not steps, so no
+  numbers (the user, 2026-10-08); the open tab on `white` with a 2px `pencil` underline, hover `paper-2`). Section heads are `.display` titles over a hairline;
+  grids of cards are ruled per cell (`border-l border-t` on the grid, `border-r border-b` on each cell — never a
+  `gap-px bg-line` fill, which shows grey where a row is short). A pick taken from a site is marked `from Fennwood`
+  in a pencil `.label`.
 - Library and studio controls are shadcn/ui (see AGENTS.md). Corners are 2–4px everywhere; no pills. Round only for
   dots, toggles, avatars and step numbers.
 
@@ -142,7 +153,10 @@ Every number and picture on the landing is real (`examples.ts`, the engine). Kee
   - turns of pictures;
   - hover moves;
   - the theme circle;
-  - one shader band.
+  - one shader band;
+  - the click spark (`components/ClickSpark.tsx`, mounted once in the root layout): eight short pencil strokes burst
+    from every click and fade in ~0.4 s. OpusKit's own code (the user asked for React Bits' Click Spark, not its
+    code); none under reduced motion.
 - Every animation has a `prefers-reduced-motion` version (globals.css switches the ticker, travel and take-turns
   off).
 - WebGL only where it is quiet and cheap. Use the existing pieces in `src/pieces/` (Paper Shaders, Apache-2.0) before

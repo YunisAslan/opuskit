@@ -1,4 +1,220 @@
 {
+ "pale-hour": {
+  "base": "art-direction-studio",
+  "brief": {
+   "name": "Pale Hour",
+   "offer": "A photography gallery and bookshop in an old print works: three exhibitions a year, talks on Thursdays, photobooks to take home.",
+   "goal": "visit"
+  },
+  "purpose": "event",
+  "direction": "art-editorial",
+  "characters": [
+   "sophisticated"
+  ],
+  "lead": "photography",
+  "motion": "dynamic",
+  "layout": "editorial",
+  "palette": "gallery-grey",
+  "typography": "cut-glass",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "concept": "off",
+  "sectionVariants": [
+   {
+    "page": "9r3cpt7y",
+    "index": 2,
+    "variant": "grid"
+   }
+  ],
+  "signatures": [],
+  "pieces": [
+   "image-trail",
+   "lightbox",
+   "cut-reveal"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "image-trail",
+    "page": "p1",
+    "index": 0
+   },
+   {
+    "piece": "lightbox",
+    "page": "p1",
+    "index": 2
+   },
+   {
+    "piece": "cut-reveal",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "intro",
+     "featured-work",
+     "schedule",
+     "journal"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "work",
+    "label": "Exhibitions",
+    "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+    "sections": [
+     "featured-work",
+     "gallery"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "locations",
+    "label": "Visit",
+    "purpose": "Help visitors find and choose the right location.",
+    "sections": [
+     "location",
+     "schedule",
+     "faq"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "team"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "taken": [
+   {
+    "site": "example:sela-mor",
+    "kind": "section",
+    "id": "featured-work"
+   },
+   {
+    "site": "example:sela-mor",
+    "kind": "section",
+    "id": "schedule"
+   },
+   {
+    "site": "example:sela-mor",
+    "kind": "effect",
+    "id": "image-trail"
+   },
+   {
+    "site": "example:fieldhouse",
+    "kind": "section",
+    "id": "gallery"
+   },
+   {
+    "site": "example:fieldhouse",
+    "kind": "effect",
+    "id": "lightbox"
+   },
+   {
+    "site": "example:slow-atlas",
+    "kind": "section",
+    "id": "journal"
+   },
+   {
+    "site": "example:slow-atlas",
+    "kind": "effect",
+    "id": "cut-reveal"
+   }
+  ],
+  "footer": "signature"
+ },
+ "low-hum": {
+  "base": "warm-editorial-hospitality",
+  "brief": {
+   "name": "Low Hum",
+   "offer": "A listening bar with ten thousand records, a hand-built sound system and small plates until late.",
+   "goal": "book"
+  },
+  "purpose": "restaurant",
+  "direction": "retro-seventies",
+  "characters": [
+   "cheeky"
+  ],
+  "lead": "photography",
+  "motion": "dynamic",
+  "hero": "parallax-photo",
+  "layout": "balanced",
+  "palette": "espresso",
+  "typography": "soft-seventies",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "concept": "off",
+  "signatures": [],
+  "pieces": [
+   "drag-photos",
+   "text-effect"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "drag-photos",
+    "page": "p2",
+    "index": 1
+   },
+   {
+    "piece": "text-effect",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "intro",
+     "menu",
+     "schedule",
+     "reservation"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "menu",
+    "label": "Menu",
+    "purpose": "Let guests decide what they want before they arrive.",
+    "sections": [
+     "menu",
+     "gallery",
+     "reservation"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "reservations",
+    "label": "Reservations",
+    "purpose": "Convert interest into a booking with minimal friction.",
+    "sections": [
+     "reservation",
+     "location",
+     "faq"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "footer": "contact"
+ },
  "halden": {
   "base": "cinematic-editorial",
   "brief": {

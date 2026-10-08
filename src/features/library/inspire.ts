@@ -5,9 +5,9 @@
 // from one site, so none is a copy of what inspired it. Pure, so check.ts tests it.
 
 import { directions, families, purposes } from '@/data/taxonomy'
-import { EMPTY_PLAN, planToSpec, setHero, setStyle, specToPlan, start } from '@/features/kit/plan'
+import { EMPTY_PLAN, addPage, planToSpec, removePage, setHero, setStyle, specToPlan, start } from '@/features/kit/plan'
 import { resolveHero } from '@/features/recipes/engine'
-import type { DirectionId, GoalId, HeroId, KitPlan, MotionLevel, PaletteId, PurposeId, RecipeSpec, TypographyId } from '@/types/domain'
+import type { DirectionId, GoalId, HeroId, KitPlan, MotionLevel, PageTypeId, PaletteId, PurposeId, RecipeSpec, TypographyId } from '@/types/domain'
 import { allSites, applyItems, lookFor, siteName, siteSpec, type Collection, type SiteRef } from './collection'
 
 // ─── Qualities ──────────────────────────────────────────────────────────────
@@ -48,7 +48,7 @@ const WORDS: [PurposeId, RegExp][] = [
   ['product', /\b(device|gadget|keyboard|speaker|hardware|app for|one product)\b/i],
   ['saas', /\b(software|saas|platform|app|tool for|dashboard|api)\b/i],
   ['course', /\b(course|classes|lessons|workshops?|teach(ing)?|school|tutor)\b/i],
-  ['event', /\b(festival|wedding|conference|event|gig|concert|exhibition)\b/i],
+  ['event', /\b(festivals?|weddings?|conferences?|events?|gigs?|concerts?|exhibitions?|galler(y|ies)|museums?)\b/i],
   ['nonprofit', /\b(charity|non-?profit|foundation|volunteers?|donat|cause)\b/i],
   ['real-estate', /\b(real estate|property|properties|apartments|homes for sale|lettings)\b/i],
   ['blog', /\b(blog|magazine|journal|newsletter|writing|essays)\b/i],
@@ -57,6 +57,9 @@ const WORDS: [PurposeId, RegExp][] = [
   ['portfolio', /\b(portfolio|photographer|illustrator|designer|artist|my work)\b/i],
   ['personal-brand', /\b(coach|consultant|speaker|author|freelance)\b/i],
 ]
+/** A kind's own start when the sentence names it — a gallery or museum is an event venue with exhibitions, not a festival. */
+export const starterFrom = (p?: PurposeId | null, text?: string) => (p === 'event' && /\b(galler(y|ies)|museums?|exhibitions?)\b/i.test(text ?? '') ? 'gallery' : undefined)
+
 export function purposeFrom(text?: string): PurposeId | undefined {
   if (!text?.trim()) return undefined
   const hits = WORDS.map(([p, re]) => [p, (text.match(new RegExp(re.source, 'gi')) ?? []).length] as const).filter(([, n]) => n > 0)
@@ -78,10 +81,46 @@ export const OFFERS = {
 } as const satisfies Record<string, { name: string; line: string; kinds: readonly PurposeId[]; goals: readonly GoalId[] }>
 export type OfferId = keyof typeof OFFERS
 export const OFFER_IDS = Object.keys(OFFERS) as OfferId[]
-/** The offer a kind of site sits in (its first). */
-export const offerOf = (p?: PurposeId): OfferId | undefined => (p ? OFFER_IDS.find((o) => (OFFERS[o].kinds as readonly PurposeId[]).includes(p)) : undefined)
+/** The offer a kind of site sits in: the one picked, if the kind is in it, else its first. */
+export const offerOf = (p?: PurposeId, picked?: OfferId): OfferId | undefined => (p ? (picked && (OFFERS[picked]?.kinds as readonly PurposeId[] | undefined)?.includes(p) ? picked : OFFER_IDS.find((o) => (OFFERS[o].kinds as readonly PurposeId[]).includes(p))) : undefined)
 /** The kind of site for an offer: the one the sentence names, if it is in this offer, else the offer's first. */
 export const kindFor = (o: OfferId, text?: string): PurposeId => { const g = purposeFrom(text); return g && (OFFERS[o].kinds as readonly PurposeId[]).includes(g) ? g : OFFERS[o].kinds[0] }
+
+// ─── Pages, read from the same sentence (decision 39) ───────────────────────
+
+/** The few page changes a sentence says plainly — there is no Pages screen; anything else the owner asks their AI tool
+ *  for after the build. Selling elsewhere or to order drops the cart; workshops and a journal get their own page. */
+const PAGE_WORDS: { re: RegExp; drop?: PageTypeId[]; add?: { type: PageTypeId; label: (m: string) => string; unless?: PurposeId[] } }[] = [
+  { re: /\b(etsy|commissions?|made to order|to order|by appointment|enquir(e|y|ies)|wholesale|stockists?)\b/i, drop: ['cart', 'checkout', 'account'] },
+  { re: /\b(workshops?|classes|lessons)\b/i, add: { type: 'services', label: (m) => { const w = m.toLowerCase().replace(/^workshop$/, 'workshops'); return w[0].toUpperCase() + w.slice(1) }, unless: ['course'] } },
+  { re: /\b(journal|blog|essays|notes from)\b/i, add: { type: 'journal', label: () => 'Journal', unless: ['blog'] } },
+  // Selling on the side (a gallery's bookshop, a studio's prints): a Shop page, without making the site a shop.
+  { re: /\b(book ?shop|online shop|web ?shop|shop online|photobooks?|prints for sale|editions for sale|merch)\b/i, add: { type: 'shop', label: () => 'Shop', unless: ['ecommerce', 'fashion', 'product'] } },
+  // Food where food is not the site (a hotel's restaurant, a gallery café): a Menu page.
+  { re: /\b(restaurant|caf[eé]|kitchen|small plates|tasting menu|bar)\b/i, add: { type: 'menu', label: () => 'Menu', unless: ['restaurant'] } },
+]
+export function pagesFromWords(plan: KitPlan, text?: string): KitPlan {
+  if (!text?.trim()) return reachable(plan)
+  for (const w of PAGE_WORDS) {
+    const m = text.match(w.re)
+    if (!m) continue
+    if (w.drop) plan = plan.pages.filter((p) => w.drop!.includes(p.type)).reduce((x, p) => removePage(x, p.id), plan)
+    if (w.add && !plan.pages.some((p) => p.type === w.add!.type) && !(plan.purpose && w.add.unless?.includes(plan.purpose))) {
+      // A new page goes before Contact, so the site still ends on its way to get in touch.
+      const added = addPage(plan, w.add.type, w.add.label(m[1])).plan, page = added.pages.at(-1)!
+      const at = added.pages.findIndex((p) => p.type === 'contact')
+      plan = at < 0 ? added : { ...added, pages: [...added.pages.slice(0, at), page, ...added.pages.slice(at, -1)] }
+    }
+  }
+  return reachable(plan)
+}
+
+/** Every site keeps a way to reach its owner: a booking, an address or a contact part; else it gets a Contact page. */
+export function reachable(plan: KitPlan): KitPlan {
+  const ways: string[] = ['contact', 'reservations', 'locations', 'contact-cta', 'reservation', 'location', 'newsletter', 'donate']
+  const has = plan.pages.some((p) => ways.includes(p.type) || p.sections.some((s) => ways.includes(s.id)))
+  return has || !plan.pages.length ? plan : addPage(plan, 'contact', 'Contact').plan
+}
 
 // ─── Three directions ───────────────────────────────────────────────────────
 
@@ -91,26 +130,35 @@ export type Direction = { plan: KitPlan; took: Took[] }
 const CORE = 2 // the most of look, colours, lettering and first screen one site may give one direction
 
 /** Three directions for the owner's site: their kind's pages and their words, in mixes of what they liked. Each leads
- *  with a different look (a liked site's, else close relatives, else the looks OpusKit's sites of their kind use); each
- *  quality comes from a liked site or the look's own, rotating so the three differ; picked parts and effects join all. */
+ *  with a different look (a liked site's, one close relative, then looks of other families); a quality taken by name is
+ *  in all three, the rest come from a liked site or the look's own, rotating so the three differ; picked parts and
+ *  effects join all. */
 export function directionsFor(c: Collection): Direction[] {
   const purpose = c.purpose
   const liked = (what: Trait) => c.items.flatMap((i) => (i.kind === 'like' && i.what === what ? [i.site] : []))
   const whole = c.items.flatMap((i) => (i.kind === 'site' ? [i.site] : []))
   // A quality asked for by name comes before one that rides along with a whole look.
   const sources = (what: Trait) => [...new Set([...liked(what), ...whole])].filter((r) => siteTraits(r))
-  // The looks to lead with: liked sites' looks, then their relatives, then looks of the owner's kind, then the kind's default.
+  // The looks to lead with: liked sites' looks; then one close relative (near what they liked); then looks from other
+  // families, the owner's kind first, so the three are three roads, not one road three times; the kind's default last.
   const leads: { d: DirectionId; site?: SiteRef }[] = []
   const lead = (d: DirectionId, site?: SiteRef) => { if (!leads.some((x) => x.d === d)) leads.push({ d, site }) }
   for (const r of whole) lead(siteTraits(r)!.direction, r)
-  for (const x of [...leads]) for (const f of directions[x.d].families) for (const d of families[f].directions) lead(d as DirectionId)
-  for (const r of allSites) { const t = siteTraits(r); if (t && t.spec.purpose === purpose) lead(t.direction) }
+  const near = leads.flatMap((x) => directions[x.d].families.flatMap((f) => families[f].directions as DirectionId[]))
+  const ofKind = allSites.flatMap((r) => { const t = siteTraits(r); return t && t.spec.purpose === purpose ? [t.direction] : [] })
   const own = lookFor(purpose) ?? 'scandinavian-minimal'
-  lead(own)
-  for (const d of Object.keys(directions) as DirectionId[]) lead(d)
+  const rest = [...ofKind, own, ...(Object.keys(directions) as DirectionId[])]
+  if (near.find((d) => !leads.some((x) => x.d === d))) lead(near.find((d) => !leads.some((x) => x.d === d))!)
+  // What is taken by name is in all three, so the looks must differ in build too: another family and another layout.
+  const used = () => ({ f: new Set(leads.flatMap((x) => directions[x.d].families)), l: new Set(leads.map((x) => directions[x.d].defaults.layout)) })
+  for (const d of rest) if (leads.length < 3 && !directions[d].families.some((f) => used().f.has(f)) && !used().l.has(directions[d].defaults.layout)) lead(d)
+  for (const d of [...near, ...rest]) if (leads.length < 3 && !used().l.has(directions[d].defaults.layout)) lead(d)
+  for (const d of [...near, ...rest]) lead(d)
 
+  const opened = new Set<HeroId>()
   return leads.slice(0, 3).map(({ d, site }, i) => {
-    let plan = start(setStyle(EMPTY_PLAN, 'direction', d), purpose ?? null)
+    let plan = start(setStyle(EMPTY_PLAN, 'direction', d), purpose ?? null, starterFrom(purpose, c.about))
+    plan = pagesFromWords(plan, c.about)
     plan = { ...plan, name: c.name?.trim() || undefined, about: c.about?.trim() || undefined, ...(c.goal ? { goal: c.goal } : {}) }
     const gave = new Map<SiteRef, number>()
     const give = (r: SiteRef) => gave.set(r, (gave.get(r) ?? 0) + 1)
@@ -122,14 +170,19 @@ export function directionsFor(c: Collection): Direction[] {
       give(site)
     }
     TRAIT_IDS.forEach((what, n) => {
-      const xs = sources(what)
-      // Rotate through the liked sites and the look's own (index xs.length), so three directions differ.
-      const order = [...xs.keys(), xs.length].map((_, k) => (i + n + k) % (xs.length + 1))
+      // A quality taken by name is in every direction (rotating only among the sites it was named from); one that only
+      // rides along with a whole look rotates with the look's own, so the three differ in what was not asked for.
+      const named = liked(what).filter((r) => siteTraits(r))
+      const xs = named.length ? named : sources(what)
+      const own = named.length ? [] : [xs.length]
+      const order = [...xs.keys(), ...own].map((_, k) => (i + n + k) % (xs.length + own.length))
       const k = order.find((k) => k === xs.length || what === 'motion' || (gave.get(xs[k]) ?? 0) < CORE)
-      const pick = k === undefined || k === xs.length ? undefined : xs[k]
+      let pick = k === undefined || k === xs.length ? undefined : xs[k]
+      // Three packs, few sources: a first screen another pack already opens with gives way to the look's own.
+      if (what === 'opening' && !named.length && pick && opened.has(siteTraits(pick)!.hero)) pick = undefined
       if (!pick) {
         // The look's own — but never by chance the very colours or lettering of a site that inspired it.
-        const seen = new Set(xs.map((r) => (what === 'colours' ? siteTraits(r)!.palette : siteTraits(r)!.typography) as string))
+        const seen = new Set(sources(what).map((r) => (what === 'colours' ? siteTraits(r)!.palette : siteTraits(r)!.typography) as string))
         if (what === 'colours') { const alt = directions[d].palettes.find((x) => !seen.has(x)); if (alt) plan = setStyle(plan, 'palette', alt) }
         if (what === 'lettering') { const alt = directions[d].typography.find((x) => !seen.has(x)); if (alt) plan = setStyle(plan, 'typography', alt) }
         took.push({ what }); return
@@ -137,7 +190,7 @@ export function directionsFor(c: Collection): Direction[] {
       const t = siteTraits(pick)!
       if (what === 'colours') plan = setStyle(plan, 'palette', t.palette)
       if (what === 'lettering') plan = setStyle(plan, 'typography', t.typography)
-      if (what === 'opening') plan = setHero(plan, t.hero)
+      if (what === 'opening') { plan = setHero(plan, t.hero); opened.add(t.hero) }
       if (what === 'motion') plan = { ...plan, motion: t.motion }
       if (what !== 'motion') give(pick)
       took.push({ what, site: pick })

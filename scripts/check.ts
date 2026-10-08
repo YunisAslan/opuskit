@@ -17,6 +17,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { inferGoal, heroTitle, libraryFor, removeSection, toggleChrome, behaviourPick, isPhotoSection, sectionPhotos, setBehaviour, setSectionPhotos, setSectionVariant, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, effectOn, effectWhere, starters, setHero, setPartHero, heroOf, setStyle, start, togglePiece } from '../src/features/kit/plan'
 import { resources } from '../src/data/resources'
 import { directions, families, goals, purposes } from '../src/data/taxonomy'
+import { lookImages } from '../src/data/look-images'
 import { adapters } from '../src/features/build-packages'
 import { visualQa } from '../src/features/build-packages/shared'
 import { pageTypes } from '../src/data/patterns'
@@ -26,8 +27,8 @@ import exampleSpecs from '../src/data/example-specs.generated.json'
 import { closestChrome, closestPiece, closestSection, closestSite } from '../src/features/kit/closest'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
-import { allSites, applyItems, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection, type SiteRef } from '../src/features/library/collection'
-import { OFFERS, OFFER_IDS, directionsFor, offerOf, purposeFrom, siteTraits } from '../src/features/library/inspire'
+import { allSites, applyItems, takenFrom, takenOf, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection, type SiteRef } from '../src/features/library/collection'
+import { OFFERS, OFFER_IDS, directionsFor, kindFor, offerOf, pagesFromWords, purposeFrom, siteTraits } from '../src/features/library/inspire'
 import { COLOUR_WORDS, SHAPE_WORDS, TYPE_WORDS, recommendSectionPhotos, cleanPieces, defaultPagesFor, pieceIssues, composeRecipe, isValidSpec, rankPalettes, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
 assert.equal(recipeSeeds.length, 10, 'exactly 10 seed recipes')
@@ -737,6 +738,7 @@ const main = async () => {
     assert.equal(purposeFrom('Small-batch tableware, thrown and glazed by hand in my studio.'), 'ecommerce', 'a maker who sells is a shop, read from the sentence')
     assert.equal(purposeFrom('A wood-fired bakery and café by the harbour'), 'restaurant')
     for (const p of Object.keys(purposes) as (keyof typeof purposes)[]) if (p !== 'other') assert.ok(offerOf(p), `"What do you offer?" covers every kind of site (${p})`)
+    for (const o of OFFER_IDS) assert.equal(offerOf(kindFor(o), o), o, `picking ${o} keeps ${o} picked, even when its kind sits in another answer too`)
     for (const o of OFFER_IDS) for (const g of OFFERS[o].goals) assert.ok(goals[g], `${o} offers a known goal (${g})`)
     assert.equal(directionsFor({ items: [], purpose: 'ecommerce', goal: 'visit', name: 'Lind' })[0].plan.goal, 'visit', 'what visitors should do reaches the plan')
     for (const sites of [['example:fennwood'], ['example:fennwood', 'example:qum'], ['example:halden', 'example:maison-vey', 'example:fieldhouse']] as SiteRef[][]) {
@@ -752,6 +754,51 @@ const main = async () => {
         }
       }
     }
+    for (const d of Object.keys(directions) as (keyof typeof directions)[]) assert.ok(lookImages[d], `every look has its mood photo (${d}, decision 41)`)
+    { // Pages read from the sentence (decision 39): no Pages screen, so the sentence says what plainly changes them.
+      const shop = start(EMPTY_PLAN, 'ecommerce'), types = (pl: typeof shop) => pl.pages.map((p) => p.type)
+      assert.ok(types(shop).includes('cart'), 'a shop has a cart')
+      assert.ok(!types(pagesFromWords(shop, 'Hand-thrown bowls, sold on Etsy and to order.')).some((t) => t === 'cart' || t === 'checkout'), 'selling elsewhere drops the cart and checkout')
+      const ws = pagesFromWords(start(EMPTY_PLAN, 'portfolio'), 'A ceramics studio with weekend workshops and a journal.')
+      assert.ok(ws.pages.some((p) => p.type === 'services' && p.label === 'Workshops'), 'workshops get their own page, named so')
+      assert.ok(types(ws).includes('journal'), 'a journal gets its page')
+      const ci = types(ws).indexOf('contact')
+      assert.ok(ci < 0 || ci > types(ws).indexOf('journal'), 'a new page goes before Contact')
+      assert.equal(purposeFrom('A photography gallery and bookshop: three exhibitions a year, talks on Thursdays.'), 'event', 'a gallery with exhibitions is an event venue, not a restaurant')
+      assert.deepEqual(directionsFor({ items: [], purpose: 'event', name: 'Pale Hour', about: 'A photography gallery: three exhibitions a year.' })[0].plan.pages.map((p) => p.label), ['Home', 'Exhibitions', 'Visit', 'About'], 'and gets a gallery’s pages')
+      assert.equal(inferGoal(directionsFor({ items: [], purpose: 'event', name: 'Pale Hour', about: 'A photography gallery: three exhibitions a year.' })[0].plan), 'visit', 'whose visitors come to visit, not to RSVP')
+      { // Pages are never shown (decision 48): what the sentence asks for is there, and nothing is left without them.
+        const ph = directionsFor({ items: [], purpose: 'event', name: 'Pale Hour', about: 'A photography gallery and bookshop: three exhibitions a year, photobooks to take home.' })[0].plan
+        assert.ok(types(ph).includes('shop') && inferGoal(ph) === 'visit', 'a gallery’s bookshop gets a Shop page and stays a place to visit')
+        assert.ok(types(directionsFor({ items: [], purpose: 'hotel', name: 'Arden', about: 'A small hotel by the sea with a restaurant and twelve rooms.' })[0].plan).includes('menu'), 'a hotel with a restaurant gets its Menu')
+        assert.ok(!types(directionsFor({ items: [], purpose: 'restaurant', name: 'Low Hum', about: 'A listening bar with small plates until late.' })[0].plan).includes('shop'), 'a bar gets no Shop')
+        const ways = ['contact', 'reservations', 'locations', 'contact-cta', 'reservation', 'location', 'newsletter', 'donate']
+        for (const p of Object.keys(purposes).filter((k) => k !== 'other') as (keyof typeof purposes)[]) {
+          const pl = directionsFor({ items: [], purpose: p, name: 'X', about: 'Something.' })[0].plan
+          assert.ok(pl.pages.some((g) => ways.includes(g.type) || g.sections.some((s) => ways.includes(s.id))), `${p}: every site keeps a way to reach its owner`)
+        } }
+      assert.equal(pagesFromWords(shop, 'Small-batch tableware.'), shop, 'a sentence that says nothing about pages changes nothing') }
+    { // What was taken rides on the recipe (decision 45): Direction writes it, the spec keeps it, a plan opened back has it.
+      const col: Collection = { items: [{ kind: 'like', what: 'opening', site: 'example:fennwood' }, { kind: 'section', id: 'menu', from: 'example:fennwood' }, { kind: 'effect', id: 'text-effect', from: 'example:lowfield-nights' }], purpose: 'restaurant', name: 'Low Hum' }
+      const taken = takenOf(col.items), spec = planToSpec({ ...directionsFor(col)[0].plan, taken })
+      assert.deepEqual(spec.taken, taken, 'the recipe keeps what was taken')
+      assert.deepEqual(specToPlan(spec).taken, taken, 'and a plan opened from it has it again')
+      assert.deepEqual(takenFrom(taken), ['Fennwood’s first screen and Menu', 'Lowfield Nights’ Words that arrive'], 'in words, by site') }
+    { // A taken part that replaces one never lands after the page's booking (Low Hum: Schedule after Reservation).
+      const col: Collection = { items: [{ kind: 'section', id: 'menu', from: 'example:fennwood' }, { kind: 'section', id: 'reservation', from: 'example:fennwood' }, { kind: 'section', id: 'schedule', from: 'example:lowfield-nights' }], purpose: 'restaurant', name: 'Low Hum' }
+      const home = directionsFor(col)[0].plan.pages[0].sections.map((x) => x.id)
+      assert.ok(home.indexOf('schedule') < home.indexOf('reservation'), `the booking stays last on Home (${home})`) }
+    { // A quality taken by name is in every direction; the three looks are not one family three times (decision 39).
+      const col: Collection = { items: [{ kind: 'site', site: 'example:sela-mor' }, { kind: 'like', what: 'colours', site: 'example:fennwood' }, { kind: 'like', what: 'lettering', site: 'example:maison-vey' }], purpose: 'ecommerce', name: 'Lind' }
+      const dirs = directionsFor(col), fw = siteTraits('example:fennwood')!, mv = siteTraits('example:maison-vey')!
+      for (const d of dirs) {
+        const sp = planToSpec(d.plan)
+        assert.equal(sp.palette, fw.palette, 'colours taken by name are in every direction')
+        assert.equal(sp.typography, mv.typography, 'lettering taken by name is in every direction')
+      }
+      const fams = dirs.map((d) => new Set(directions[d.plan.direction!].families))
+      assert.ok(!fams[0].size || ![...fams[0]].some((f) => fams[1].has(f) && fams[2].has(f)), 'the three looks do not all share one family')
+      assert.equal(new Set(dirs.map((d) => directions[d.plan.direction!].defaults.layout)).size, 3, 'with colours and lettering shared, the three packs differ in layout') }
     { const col: Collection = { items: [{ kind: 'site', site: 'example:qum' }, { kind: 'section', id: 'faq' }, { kind: 'effect', id: 'cut-reveal' }, { kind: 'site', site: 'example:hane' }] }
       const pl = collectionToPlan(col).plan, where = placement(pl, col)
       assert.ok(!where.waiting.some((i) => i.kind !== 'site'), 'parts and effects are on the pages')

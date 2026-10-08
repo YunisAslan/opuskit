@@ -11,7 +11,7 @@ export type MediaPatch = { uploads: UploadedAsset[]; assets: AssetId[]; mediaPla
 type Slot = { asset: AssetId; label: string; line: string; accept: string; many: boolean; show: (s: RecipeSpec) => boolean }
 
 export const SLOTS: Slot[] = [
-  { asset: 'logo', label: 'Logo', line: 'SVG or PNG. Used in the menu, footer and browser tab.', accept: 'image/*,.svg', many: false, show: () => true },
+  // No logo slot: it is never asked for — without one the builder sets the name as a wordmark (decision 47).
   { asset: 'video', label: 'First-screen video', line: 'The film on your first screen. Send the original export, not a web copy.', accept: 'video/*', many: false, show: (s) => s.lead === 'video' },
   { asset: '3d', label: '3D scene', line: 'GLB or GLTF for your first screen.', accept: '.glb,.gltf', many: false, show: (s) => s.lead === '3d' },
   { asset: 'product-photos', label: 'Product photos', line: 'Front, three-quarter and a detail of each product.', accept: 'image/*', many: true, show: (s) => s.lead === 'product' || s.purpose === 'ecommerce' || s.purpose === 'product' },
