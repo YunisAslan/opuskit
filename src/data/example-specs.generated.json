@@ -1,4 +1,294 @@
 {
+ "pip-kiln": {
+  "base": "typography-first",
+  "brief": {
+   "name": "Pip & Kiln",
+   "offer": "Bright glazed mugs, plates and vases from a two-person pottery, sold in our online shop. Saturday workshops at the wheel.",
+   "goal": "buy"
+  },
+  "purpose": "ecommerce",
+  "direction": "playful-pop",
+  "characters": [
+   "cheeky"
+  ],
+  "lead": "product",
+  "motion": "dynamic",
+  "layout": "experimental",
+  "palette": "butter-cup",
+  "typography": "bubble-pop",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "concept": "off",
+  "sectionVariants": [
+   {
+    "page": "rerq7kdx",
+    "index": 4,
+    "variant": "giant"
+   }
+  ],
+  "signatures": [],
+  "pieces": [
+   "drag-photos",
+   "wavy-link"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "drag-photos",
+    "page": "p6",
+    "index": 2
+   },
+   {
+    "piece": "wavy-link",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "categories",
+     "product-grid",
+     "collection",
+     "manifesto",
+     "testimonials",
+     "trust",
+     "newsletter"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "shop",
+    "label": "Shop",
+    "purpose": "Let visitors browse and choose confidently.",
+    "sections": [
+     "product-grid",
+     "product-highlight",
+     "collection",
+     "faq"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "product-detail",
+    "label": "Product",
+    "purpose": "Show one product in full: gallery, price, variants, add-to-cart, and related items.",
+    "sections": [
+     "product-buy",
+     "product-highlight",
+     "testimonials",
+     "faq",
+     "product-grid"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "cart",
+    "label": "Cart",
+    "purpose": "Let visitors review and adjust their selection before checkout.",
+    "sections": [
+     "product-grid"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "checkout",
+    "label": "Checkout",
+    "purpose": "Collect payment and shipping with as little friction as possible.",
+    "sections": []
+   },
+   {
+    "id": "p6",
+    "type": "services",
+    "label": "Workshops",
+    "purpose": "Make the offer and the way of working clear enough to remove hesitation.",
+    "sections": [
+     "services",
+     "schedule",
+     "gallery",
+     "pricing",
+     "reservation",
+     "faq"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "taken": [
+   {
+    "site": "example:maison-vey",
+    "kind": "section",
+    "id": "product-grid"
+   },
+   {
+    "site": "example:maison-vey",
+    "kind": "section",
+    "id": "collection"
+   },
+   {
+    "site": "example:maison-vey",
+    "kind": "section",
+    "id": "product-highlight"
+   },
+   {
+    "site": "example:sticky-weather",
+    "kind": "section",
+    "id": "manifesto"
+   },
+   {
+    "site": "example:sticky-weather",
+    "kind": "effect",
+    "id": "wavy-link"
+   },
+   {
+    "site": "example:inkwell-moth",
+    "kind": "effect",
+    "id": "drag-photos"
+   }
+  ],
+  "footer": "signature"
+ },
+ "kelp-line": {
+  "base": "japanese-quiet-minimal",
+  "brief": {
+   "name": "Kelp Line",
+   "offer": "Volunteers replanting kelp forests on a cold northern coast: dives, beach days and a count of every plant in the water.",
+   "goal": "donate"
+  },
+  "purpose": "nonprofit",
+  "direction": "coastal-calm",
+  "characters": [
+   "warm"
+  ],
+  "lead": "photography",
+  "motion": "subtle",
+  "layout": "editorial",
+  "palette": "bottle-green",
+  "typography": "letterpress-modern",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "concept": "off",
+  "signatures": [],
+  "pieces": [
+   "lightbox"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "lightbox",
+    "page": "p1",
+    "index": 4
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "timeline",
+     "stats",
+     "services",
+     "editorial-story",
+     "cta-band",
+     "journal",
+     "newsletter"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "about",
+    "label": "Our mission",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "editorial-story",
+     "team",
+     "stats"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "services",
+    "label": "Programs",
+    "purpose": "Make the offer and the way of working clear enough to remove hesitation.",
+    "sections": [
+     "services",
+     "process",
+     "stats",
+     "cta-band"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "testimonials",
+    "label": "Stories",
+    "purpose": "Let real clients or customers make the case, in their own words.",
+    "sections": [
+     "testimonials",
+     "editorial-story",
+     "gallery"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "donate",
+    "label": "Donate",
+    "purpose": "Turn a visitor into a donor: preset gifts that each say what they pay for, once or monthly, where the money goes, and a short form that hands off to payment.",
+    "sections": [
+     "donate",
+     "trust",
+     "faq"
+    ]
+   },
+   {
+    "id": "p6",
+    "type": "contact",
+    "label": "Contact",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "schedule",
+     "contact-cta",
+     "location"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "taken": [
+   {
+    "site": "example:kur-delta-watch",
+    "kind": "section",
+    "id": "timeline"
+   },
+   {
+    "site": "example:kur-delta-watch",
+    "kind": "section",
+    "id": "editorial-story"
+   },
+   {
+    "site": "example:lowfield-nights",
+    "kind": "section",
+    "id": "schedule"
+   },
+   {
+    "site": "example:velmira",
+    "kind": "section",
+    "id": "gallery"
+   },
+   {
+    "site": "example:velmira",
+    "kind": "effect",
+    "id": "lightbox"
+   }
+  ],
+  "footer": "line"
+ },
  "raster-school": {
   "base": "swiss-modern",
   "brief": {

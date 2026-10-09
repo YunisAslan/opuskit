@@ -49,7 +49,7 @@ its `examples.ts` entry; grep for `/examples/{slug}` (kit sample photos use some
 
 ## 4. The built sites — what is open
 
-All twenty-two are built, registered and live. Open:
+All twenty-four are built, registered and live (Kelp Line and Pip & Kiln still with temporary pictures). Open:
 - **Clips for #11–#21** (Inkwell & Moth, Kür Delta Watch, Night Shift, Aster House, Sela Mor, QUM, Fieldhouse, Maison Vey, Low Hum, Halden, Pale Hour, Raster School):
   waiting for the user's screen recordings.
 - **Re-recordings** (section clips that are a held still frame because the recording never stopped on them; ~4 s
@@ -112,6 +112,21 @@ Still open for later: Victorian, Surrealism, Synthwave, Y2K Chrome, Pixel Art, M
 Swiss Editorial, Fashion Editorial, Raw Editorial, Art Direction, Immersive Portfolio, Conceptual Sketch, Cyberpunk,
 Warm Hospitality — and the kinds with one example (real estate, personal brand, clinic, blog, SaaS).
 
+## 5c. Next sites (#26–#29, proposed by the night run 2026-10-09) — waiting for the user's approval
+
+Written by the night run when §5b ran out (#25 Ninth Row waits for the user's film). Same rules as §5b: a look no
+example has yet, a kind with only one example, one engine test each; photos by Claude (no film or sound needed, so a
+night run can build them once approved). Nothing here is built until the user approves the batch.
+
+| # | Site | Kind | Look (new) · motion · lead | Media | Engine test |
+|---|---|---|---|---|---|
+| 26 | **Tidewell Physio** — a sports physiotherapy clinic for rowers and climbers by a harbour; three practitioners | Clinic | Soft Pastel · subtle · photography | ~12 photos (Claude): treatment rooms, hands on a shoulder, a rowing boat at dawn, practitioners | **Appointments**: a practitioner and a time slot, prices per treatment, what insurance covers; worst case — no slots this week, a practitioner on leave, a long treatment name; is a physio read as a clinic, not a spa (decision on Halden)? |
+| 27 | **Hollis & Daughters** — a small estate agent selling restored Victorian terraced houses | Real estate | Victorian · subtle · photography | ~24 photos (Claude): façades, staircases, fireplaces, street views | **Listings**: filters, a page per house with its own photo set (per-item shots), Sold / Under offer states, a floor-plan block, a viewing request; one house in a filter, none in another |
+| 28 | **Ines Varga** — a freelance cartographer drawing illustrated maps for towns, trails and books | Personal brand | Conceptual Sketch · dynamic · illustration | drawn work the builder makes (no stock), ~4 photos (Claude): desk, hands, inks | An **illustration lead**: does the shot list ask for drawings, not photos? A commissions form with a brief and a budget, a work index, sketches drawn in the page's own line |
+| 29 | **Tally House** — an app for shared flats: bills, chores and the shopping list in one place | SaaS | Y2K Chrome · immersive · product | app screens the builder draws (no stock), ~4 photos (Claude): a shared kitchen | **Pricing** monthly/yearly with a feature table, app screens as product shots, sign-up and log-in states, integrations; the **immersive** dose without a film |
+
+Order: 26 → 27 → 28 → 29. Concepts are invented and international (no Azerbaijan theming, no real brands or logos).
+
 ## 6. Progress
 
 | # | Site | Recipe | Media | Build | Registered | Clips |
@@ -129,6 +144,7 @@ Warm Hospitality — and the kinds with one example (real estate, personal brand
 | 20 | Halden | ✓ via the Library (blank → Health & wellness; Dark Cinematic · Charcoal Signal · Opening Credits; Home: Film on the first screen, Services, How It Works, Gallery, Testimonials (Wall), Pricing, Location, Reservation · The baths · Visit · FAQ · Sign In · Sign Up; Smooth scroll + Scroll progress, both by the user) — saved 2026-10-07 | ✓ the user's film (drone over fog, 4K) via `prepare-video.sh`; 21 photos (Unsplash connector) | ✓ Prompt 1 + Prompt 2 (scene map fitted to the film) in an isolated `claude -p` session; reviewed 1440 + 390 | ✓ live at `/live/halden` (click-through checked), `npm run check` ✓ | waiting for recording |
 | 21 | Pale Hour | ✓ the flow: parts from Sela Mor (Featured Work, Schedule, Photos follow the cursor), Fieldhouse (Gallery, Tap to open large), Slow Atlas (Journal, Cut-out headline); A place or an event → Gallery or museum (decision 46); Art Editorial · Gallery Grey · Cut Glass; Home · Exhibitions · Visit · About — approved 2026-10-08 | ✓ 23 photos (Unsplash connector, `media-src/SOURCES.md`) | ✓ Prompt 1 + Prompt 2 (photos, readable first screen, no real brand) + Prompt 3 (no hand-written `/_next/image`, for the static export) in an isolated `claude -p` session; reviewed 1440 + 390 | ✓ live at `/live/pale-hour` (click-through checked), `npm run check` ✓ | waiting for recording |
 | 22 | Raster School | ✓ the flow: parts from Night Shift (Process, Pricing), Sela Mor (Schedule), Brasshand (Manifesto, Team); Course / education; Swiss Modern · Klein Field · Grid Discipline · **still**; Home · Curriculum · Enrol · Instructor · FAQ — approved 2026-10-08 | ✓ 5 photos (Unsplash connector, `media-src/SOURCES.md`) | ✓ Prompt 1 + Prompt 2 (photos, alts, caption) in an isolated `claude -p` session; reviewed 1440 + 390; Engine lessons 1–7 in its BUILD-LOG | ✓ live at `/live/raster-school` (click-through checked), `npm run check` ✓ | waiting for recording |
-| 23 | Kelp Line | planned (§5b) | | | | |
-| 24 | Pip & Kiln | planned (§5b) | | | | |
-| 25 | Ninth Row | planned (§5b) | | | | |
+| 23 | Kelp Line | ✓ the flow (night run 2026-10-09): parts from Kür Delta Watch (Timeline, Editorial Story), Lowfield Nights (Schedule), Velmira (Gallery, Tap to open large); Nonprofit / cause; Coastal Calm · Bottle Green · Letterpress Modern · subtle; Home · Our mission · Programs · Stories · Donate · Contact — **not approved yet** (link in its BUILD-LOG) | 21 photos picked (Unsplash connector, `media-src/SOURCES.md`); **not in yet** — the cloud blocks the downloads: `media-src/fetch.sh`, then Prompt 3 | ✓ Prompt 1 + Prompt 2 (one picture per story) in an isolated `claude -p` session; reviewed 1440 + 390; Engine lessons 1–7 in its BUILD-LOG | ✓ live at `/live/kelp-line` (click-through checked), `npm run check` ✓ — with temporary pictures | waiting for photos, then recording |
+| 24 | Pip & Kiln | ✓ the flow (night run 2026-10-09): parts from Maison Vey (Product Grid, Collection, Product Highlight), Sticky Weather (Manifesto, Wavy underline), Inkwell & Moth (Prints on a desk); E-commerce; Playful Pop · Butter Yellow · Bubble Pop · dynamic; Home · Shop · Product · Cart · Checkout · Workshops — **not approved yet** (link in its BUILD-LOG) | photos picked (Unsplash connector, `media-src/SOURCES.md`); **not in yet** — `media-src/fetch.sh`, then Prompt 2; per-product sets are the owner's shoot | ✓ Prompt 1 in an isolated `claude -p` session, no fix round; reviewed 1440 + 390 and the shop walked through; Engine lessons 1–5 in its BUILD-LOG | ✓ live at `/live/pip-kiln` (click-through checked), `npm run check` ✓ — with temporary pictures | waiting for photos, then recording |
+| 25 | Ninth Row | waiting for the user's film (§5b; skipped by the night run 2026-10-09) | | | | |
+| 26–29 | Tidewell Physio, Hollis & Daughters, Ines Varga, Tally House | proposed (§5c), waiting for the user's approval | | | | |

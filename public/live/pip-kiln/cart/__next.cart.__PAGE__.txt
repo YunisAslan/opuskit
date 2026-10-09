@@ -1,0 +1,22 @@
+1:"$Sreact.fragment"
+2:I[96616,["/live/pip-kiln/_next/static/chunks/2jm159ykggmrc.js","/live/pip-kiln/_next/static/chunks/3k_49068eybmx.js","/live/pip-kiln/_next/static/chunks/3d87cmjd0xy-p.js","/live/pip-kiln/_next/static/chunks/3-ul4s477uduu.js","/live/pip-kiln/_next/static/chunks/0y1l7_u06-4vn.js","/live/pip-kiln/_next/static/chunks/0iavkx_rqcqu7.js"],"Bag"]
+3:I[13247,["/live/pip-kiln/_next/static/chunks/2jm159ykggmrc.js","/live/pip-kiln/_next/static/chunks/3k_49068eybmx.js","/live/pip-kiln/_next/static/chunks/3d87cmjd0xy-p.js","/live/pip-kiln/_next/static/chunks/3-ul4s477uduu.js","/live/pip-kiln/_next/static/chunks/0y1l7_u06-4vn.js","/live/pip-kiln/_next/static/chunks/0iavkx_rqcqu7.js"],"CartGrid"]
+4:I[97367,["/live/pip-kiln/_next/static/chunks/2jm159ykggmrc.js","/live/pip-kiln/_next/static/chunks/3k_49068eybmx.js","/live/pip-kiln/_next/static/chunks/3d87cmjd0xy-p.js","/live/pip-kiln/_next/static/chunks/3-ul4s477uduu.js","/live/pip-kiln/_next/static/chunks/0y1l7_u06-4vn.js"],"OutletBoundary"]
+5:"$Sreact.suspense"
+9:I[97367,["/live/pip-kiln/_next/static/chunks/2jm159ykggmrc.js","/live/pip-kiln/_next/static/chunks/3k_49068eybmx.js","/live/pip-kiln/_next/static/chunks/3d87cmjd0xy-p.js","/live/pip-kiln/_next/static/chunks/3-ul4s477uduu.js","/live/pip-kiln/_next/static/chunks/0y1l7_u06-4vn.js"],"ViewportBoundary"]
+a:I[97367,["/live/pip-kiln/_next/static/chunks/2jm159ykggmrc.js","/live/pip-kiln/_next/static/chunks/3k_49068eybmx.js","/live/pip-kiln/_next/static/chunks/3d87cmjd0xy-p.js","/live/pip-kiln/_next/static/chunks/3-ul4s477uduu.js","/live/pip-kiln/_next/static/chunks/0y1l7_u06-4vn.js"],"MetadataBoundary"]
+b:I[27201,["/live/pip-kiln/_next/static/chunks/2jm159ykggmrc.js","/live/pip-kiln/_next/static/chunks/3k_49068eybmx.js","/live/pip-kiln/_next/static/chunks/3d87cmjd0xy-p.js","/live/pip-kiln/_next/static/chunks/3-ul4s477uduu.js","/live/pip-kiln/_next/static/chunks/0y1l7_u06-4vn.js"],"IconMark"]
+d:I[39756,["/live/pip-kiln/_next/static/chunks/2jm159ykggmrc.js","/live/pip-kiln/_next/static/chunks/3k_49068eybmx.js","/live/pip-kiln/_next/static/chunks/3d87cmjd0xy-p.js","/live/pip-kiln/_next/static/chunks/3-ul4s477uduu.js","/live/pip-kiln/_next/static/chunks/0y1l7_u06-4vn.js"],"default"]
+e:I[37457,["/live/pip-kiln/_next/static/chunks/2jm159ykggmrc.js","/live/pip-kiln/_next/static/chunks/3k_49068eybmx.js","/live/pip-kiln/_next/static/chunks/3d87cmjd0xy-p.js","/live/pip-kiln/_next/static/chunks/3-ul4s477uduu.js","/live/pip-kiln/_next/static/chunks/0y1l7_u06-4vn.js"],"default"]
+8:X
+10:X
+10:C
+0:{"buildId":"9KIEZ_6ZuNng8gwuAgl8g","data":[{"rsc":["$","$1","c",{"children":[[["$","$L2",null,{}],["$","$L3",null,{}]],[["$","script","script-0",{"src":"/live/pip-kiln/_next/static/chunks/0iavkx_rqcqu7.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"isPartial":"$@7","staleTime":"$8","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$L9",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","2",{"name":"theme-color","content":"#FFDE47"}]]}],["$","div",null,{"hidden":true,"children":["$","$La",null,{"children":["$","$5",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Your bag — Pip & Kiln"}],["$","meta","1",{"name":"description","content":"Bright glazed mugs, plates and vases, thrown and glazed by two people. Buy them here, or come and make your own on a Saturday at the wheel."}],["$","link","2",{"rel":"icon","href":"/live/pip-kiln/icon.svg?icon.1wn5yrfnxz4xi.svg","sizes":"any","type":"image/svg+xml"}],["$","$Lb","3",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":"$@c","staleTime":"$8","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Ld",null,{"parallelRouterKey":"children","template":["$","$Le",null,{}]}]]}],"isPartial":"$@f","staleTime":"$8","varyParams":"$10"}],"isUpgradeableISRFallback":false,"a":"$@11","rootVaryParams":null,"needsRuntimeRequest":"$@12"}
+6:null
+12:true
+8:300
+8:C
+11:0
+c:"$undefined"
+f:"$undefined"
+7:"$undefined"

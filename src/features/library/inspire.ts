@@ -5,9 +5,9 @@
 // from one site, so none is a copy of what inspired it. Pure, so check.ts tests it.
 
 import { directions, families, purposes } from '@/data/taxonomy'
-import { EMPTY_PLAN, addPage, planToSpec, removePage, setHero, setStyle, specToPlan, start } from '@/features/kit/plan'
+import { EMPTY_PLAN, addPage, addSection, planToSpec, removePage, setHero, setStyle, specToPlan, start } from '@/features/kit/plan'
 import { resolveHero } from '@/features/recipes/engine'
-import type { DirectionId, GoalId, HeroId, KitPlan, MotionLevel, PageTypeId, PaletteId, PurposeId, RecipeSpec, TypographyId } from '@/types/domain'
+import type { DirectionId, GoalId, HeroId, KitPlan, MotionLevel, PageTypeId, PaletteId, PurposeId, RecipeSpec, SectionId, TypographyId } from '@/types/domain'
 import { allSites, applyItems, lookFor, siteName, siteSpec, type Collection, type SiteRef } from './collection'
 
 // ─── Qualities ──────────────────────────────────────────────────────────────
@@ -91,9 +91,11 @@ export const kindFor = (o: OfferId, text?: string): PurposeId => { const g = pur
 
 /** The few page changes a sentence says plainly — there is no Pages screen; anything else the owner asks their AI tool
  *  for after the build. Selling elsewhere or to order drops the cart; workshops and a journal get their own page. */
-const PAGE_WORDS: { re: RegExp; drop?: PageTypeId[]; add?: { type: PageTypeId; label: (m: string) => string; unless?: PurposeId[] } }[] = [
+const PAGE_WORDS: { re: RegExp; drop?: PageTypeId[]; add?: { type: PageTypeId; label: (m: string) => string; unless?: PurposeId[]; /** The page's own parts, when its type's defaults don't do its job. */ sections?: SectionId[] } }[] = [
   { re: /\b(etsy|commissions?|made to order|to order|by appointment|enquir(e|y|ies)|wholesale|stockists?)\b/i, drop: ['cart', 'checkout', 'account'] },
-  { re: /\b(workshops?|classes|lessons)\b/i, add: { type: 'services', label: (m) => { const w = m.toLowerCase().replace(/^workshop$/, 'workshops'); return w[0].toUpperCase() + w.slice(1) }, unless: ['course'] } },
+  { re: /\b(workshops?|classes|lessons)\b/i, add: { type: 'services', label: (m) => { const w = m.toLowerCase().replace(/^workshop$/, 'workshops'); return w[0].toUpperCase() + w.slice(1) }, unless: ['course'],
+    // A workshop is booked: what you make, the dates, a look at one, the price of a seat, the booking, questions (Pip & Kiln).
+    sections: ['services', 'schedule', 'gallery', 'pricing', 'reservation', 'faq'] } },
   { re: /\b(journal|blog|essays|notes from)\b/i, add: { type: 'journal', label: () => 'Journal', unless: ['blog'] } },
   // Selling on the side (a gallery's bookshop, a studio's prints): a Shop page, without making the site a shop.
   { re: /\b(book ?shop|online shop|web ?shop|shop online|photobooks?|prints for sale|editions for sale|merch)\b/i, add: { type: 'shop', label: () => 'Shop', unless: ['ecommerce', 'fashion', 'product'] } },
@@ -108,7 +110,9 @@ export function pagesFromWords(plan: KitPlan, text?: string): KitPlan {
     if (w.drop) plan = plan.pages.filter((p) => w.drop!.includes(p.type)).reduce((x, p) => removePage(x, p.id), plan)
     if (w.add && !plan.pages.some((p) => p.type === w.add!.type) && !(plan.purpose && w.add.unless?.includes(plan.purpose))) {
       // A new page goes before Contact, so the site still ends on its way to get in touch.
-      const added = addPage(plan, w.add.type, w.add.label(m[1])).plan, page = added.pages.at(-1)!
+      let added = addPage(plan, w.add.type, w.add.label(m[1])).plan
+      if (w.add.sections) { const pid = added.pages.at(-1)!.id; added = { ...added, pages: added.pages.map((p) => (p.id === pid ? { ...p, sections: [] } : p)) }; w.add.sections.forEach((id, i) => { added = addSection(added, pid, id, i) }) }
+      const page = added.pages.at(-1)!
       const at = added.pages.findIndex((p) => p.type === 'contact')
       plan = at < 0 ? added : { ...added, pages: [...added.pages.slice(0, at), page, ...added.pages.slice(at, -1)] }
     }

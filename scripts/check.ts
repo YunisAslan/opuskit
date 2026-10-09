@@ -965,6 +965,35 @@ const main = async () => {
     for (const src of [...Object.values(pieceSource), ...Object.values(blockSource), ...Object.values(heroSource)]) assert.ok(!/scale: 0[ ,}]|transition:\s*all|transition-all/.test(src!), 'no shipped piece or section enters from scale(0) or transitions all')
   }
 
+  // Kelp Line (#23): a story told on three pages had one picture for all three — each page's story gets its own file;
+  // and the UI table listed the Donate page twice ("Donate, Donate — Donate").
+  {
+    const spec = JSON.parse(readFileSync('examples/kelp-line/opuskit.json', 'utf8')).spec
+    const r = composeRecipe(spec), stories = r.media.shots.filter((x) => /EditorialStory$/.test(x.key))
+    assert.equal(stories.length, 3, 'three Editorial Stories, three pictures')
+    assert.equal(new Set(stories.map((x) => x.key)).size, 3, 'each story has its own key')
+    for (const c of r.implementation.ui.components) assert.equal(new Set(c.where).size, c.where.length, `${c.slug}: each place once`)
+    assert.ok(!r.implementation.ui.components.some((c) => c.where.includes('Donate — Donate')), 'a part named like its page is listed as the page')
+    assert.ok(r.assetRequirements.some((a) => a.asset === 'logo' && /icon\.svg/.test(a.specs)), 'the favicon is a file, not a generated route')
+  }
+
+  // Pip & Kiln (#24): a shop's "Saturday workshops" page could not be booked (Services + Process only), and a taken
+  // effect no part could carry (Prints on a desk on a shop without a gallery) vanished without a word.
+  {
+    const { pagesFromWords } = await import('../src/features/library/inspire')
+    const { applyItems } = await import('../src/features/library/collection')
+    const words = 'Bright glazed mugs, plates and vases from a two-person pottery, sold in our online shop. Saturday workshops at the wheel.'
+    const shop = pagesFromWords(start(EMPTY_PLAN, 'ecommerce'), words)
+    const ws = shop.pages.find((p) => p.label === 'Workshops')
+    assert.ok(ws, 'workshops in the sentence add a Workshops page')
+    for (const id of ['schedule', 'pricing', 'reservation'] as const) assert.ok(ws!.sections.some((x) => x.id === id), `a workshop page has its ${id}`)
+    assert.equal(inferGoal(shop), 'buy', 'a shop with workshops still sells first')
+    const bare = start(EMPTY_PLAN, 'ecommerce')
+    const r = applyItems(bare, [{ kind: 'effect', id: 'drag-photos', from: 'example:inkwell-moth' }], true)
+    assert.deepEqual(r.unplaced, [], 'a taken effect is never dropped')
+    assert.ok(r.plan.pages.some((p) => p.sections.some((x) => x.pieces.includes('drag-photos'))), 'it brings a part that carries it')
+  }
+
   // Decision 52: a site lends only the parts that carry its design, and a taken part never replaces what the kind of
   // site needs (a booking, the address, prices, questions…) — those are the engine's, picked or not.
   {

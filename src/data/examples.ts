@@ -44,6 +44,66 @@ export type ExampleProject = {
 
 export const examples: ExampleProject[] = [
   {
+    slug: 'pip-kiln',
+    title: 'Pip & Kiln — bright mugs, plates and vases',
+    summary: 'Bright glazed mugs, plates and vases, thrown and glazed by two people. Buy them here, or come and make your own on a Saturday at the wheel.',
+    mood: ['Playful', 'Bright', 'Cheeky'],
+    // The night run of 2026-10-09 built it with temporary pictures (the photos are picked; see media-src/SOURCES.md):
+    // the hero still is the site's own first screen until they are in.
+    hero: { kind: 'image', src: '/examples/pip-kiln/media/poster.jpg' },
+    livePath: '/live/pip-kiln',
+    // Parts taken from Maison Vey, Sticky Weather and Inkwell & Moth, then You → Direction (Playful Pop, Butter Yellow),
+    // built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
+    choices: [
+      { label: 'Making', value: 'E-commerce' },
+      { label: 'Name', value: 'Pip & Kiln' },
+      { label: 'Visitors should', value: 'Buy something' },
+      { label: 'Style', value: 'Playful Pop' },
+      { label: 'First screen', value: 'Product stage' },
+      { label: 'Movement', value: 'Dynamic' },
+      { label: 'Colors', value: 'Butter Yellow' },
+      { label: 'Lettering', value: 'Bubble Pop' },
+      { label: 'Layout', value: 'Experimental' },
+      { label: 'Shape', value: 'Pill' },
+      { label: 'Menu', value: 'Classic bar' },
+      { label: 'Footer', value: 'Signature columns' },
+      { label: 'Big idea', value: 'None' },
+      { label: 'Pages', value: 'Home, Shop, Product, Cart, Checkout, Workshops' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'The pottery, its pieces, prices, stock and workshops are made up, and the bag, checkout and bookings open the visitor’s own email — nothing is sold. Its pictures are still the temporary ones the build made; the real photos are picked (media-src/SOURCES.md).',
+  },
+  {
+    slug: 'kelp-line',
+    title: 'Kelp Line: kelp forests, replanted by volunteers',
+    summary: 'Volunteers replanting kelp forests on a cold northern coast: dives, beach days and a count of every plant in the water.',
+    mood: ['Calm', 'Fresh', 'Hopeful'],
+    // The night run of 2026-10-09 built it with temporary pictures (the photos are picked; see media-src/SOURCES.md):
+    // the hero still is the site's own first screen until they are in.
+    hero: { kind: 'image', src: '/examples/kelp-line/media/poster.jpg' },
+    livePath: '/live/kelp-line',
+    // Parts taken from Kür Delta Watch, Lowfield Nights and Velmira, then You → Direction (Coastal Calm, Bottle Green),
+    // built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
+    choices: [
+      { label: 'Making', value: 'Nonprofit / cause' },
+      { label: 'Name', value: 'Kelp Line' },
+      { label: 'Visitors should', value: 'Donate or support' },
+      { label: 'Style', value: 'Coastal Calm' },
+      { label: 'First screen', value: 'Editorial image hero' },
+      { label: 'Movement', value: 'Subtle' },
+      { label: 'Colors', value: 'Bottle Green' },
+      { label: 'Lettering', value: 'Letterpress Modern' },
+      { label: 'Layout', value: 'Editorial' },
+      { label: 'Shape', value: 'Soft' },
+      { label: 'Menu', value: 'Floating pill' },
+      { label: 'Footer', value: 'One quiet line' },
+      { label: 'Big idea', value: 'None' },
+      { label: 'Pages', value: 'Home, Our mission, Programs, Stories, Donate, Contact' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'The charity, its people, counts, amounts and Skerra Bay are made up, and gifts and messages open the visitor’s own email — none is sent. Its pictures are still the temporary ones the build made; the real photos are picked (media-src/SOURCES.md).',
+  },
+  {
     slug: 'raster-school',
     title: 'Raster School, an evening course in typographic design',
     summary: 'A six-week evening course in typographic design: grids, lettering and a poster of your own at the end. Twelve seats a cohort, in the studio or online.',

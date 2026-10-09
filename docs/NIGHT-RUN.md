@@ -60,6 +60,12 @@ If an item needs the user's judgement, leave it alone and list it for the PR.
 - Photos come from the Unsplash connector, following the shot list (`recipe/media.md`). Use one grade for all of them.
   Note each source in `media-src/SOURCES.md`.
 - If the connector is not available, build with temporary pictures and leave the shot list for the morning.
+- In the cloud the network policy blocks `images.unsplash.com`: the connector searches, but only its 400px previews
+  (`small_s3`) download. Then pick the photos from the previews anyway (look at each one), build with temporary
+  pictures, and leave `media-src/fetch.sh` (download, crop, resize by key), `picks.json` (with alt text) and the photo
+  prompt in the BUILD-LOG for the morning (#23 Kelp Line).
+- A resumed `claude -p` round: run it with `--continue` from the project folder — in the cloud the session id it
+  reports can be the night run's own.
 - Never take photos from a website through a browser.
 - No real brands or logos. No Azerbaijan theming (`AGENTS.md`, `HANDOFF.md` working agreements).
 - Films and sound are the user's. Never source them yourself.
