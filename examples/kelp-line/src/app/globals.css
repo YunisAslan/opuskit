@@ -1,0 +1,163 @@
+@import "../styles/tokens.css";
+
+/* shadcn/ui theme (recipe/ui.md) — hex values, so shadcn pieces and the recipe tokens always match. */
+:root {
+  --background: #0F3F2E; --foreground: #EEF3EC;
+  --card: #1E4C3A; --card-foreground: #EEF3EC; --popover: #1E4C3A; --popover-foreground: #EEF3EC;
+  --primary: #EEF3EC; --primary-foreground: #0F3F2E; --secondary: #2A5A47; --secondary-foreground: #EEF3EC;
+  --muted: #1E4C3A; --muted-foreground: #A9C2B5; --accent: #2A5A47; --accent-foreground: #EEF3EC;
+  --border: #386652; --input: #A9C2B5; --ring: #EEF3EC; --radius: 12px;
+  /* the pill menu clears this much at the top of every first section */
+  --nav-clear: calc(16px + 56px + clamp(40px, 6vw, 88px));
+  /* frosted surfaces over pictures and the floating menu */
+  --frost: color-mix(in oklab, var(--color-surface) 78%, transparent);
+}
+
+/* ── Site type steps between the four roles: item titles and the hero, all from the same two faces ── */
+@utility type-title { font-family: var(--font-heading), serif; font-size: clamp(1.2rem, 1.6vw, 1.45rem); font-weight: 400; line-height: 1.25; letter-spacing: -0.005em; }
+@utility type-hero { font-family: var(--font-display), serif; font-size: clamp(2.2rem, 10.5vw, 3.4rem); @media (min-width: 768px) { font-size: clamp(3rem, 7.1vw, 6.4rem); } font-weight: 400; line-height: 0.98; letter-spacing: -0.025em; }
+@utility type-number { font-family: var(--font-heading), serif; font-size: clamp(1.6rem, 3vw, 2.6rem); font-weight: 400; line-height: 1; letter-spacing: -0.01em; font-variant-numeric: tabular-nums lining-nums; }
+@utility type-lead { font-family: var(--font-body), sans-serif; font-size: clamp(1.125rem, 1.4vw, 1.25rem); line-height: 1.55; }
+
+/* ── Page frame ── */
+@utility frame { margin-inline: auto; width: 100%; max-width: var(--container); }
+@utility section-pad { padding-inline: var(--gutter); padding-block: calc(var(--section-y) * 0.5); }
+@utility band-pad { padding-inline: var(--gutter); padding-block: calc(var(--section-y) * 0.42); }
+@utility first-pad { padding-top: var(--nav-clear); }
+
+html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; scroll-padding-top: 96px; }
+body { min-height: 100svh; font-size: var(--type-body-size); line-height: var(--type-body-leading); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+button, a, [role="button"] { touch-action: manipulation; }
+h1, h2, h3 { text-wrap: balance; overflow-wrap: anywhere; }
+p { text-wrap: pretty; }
+::selection { background: var(--color-accent); color: var(--color-background); }
+img { -webkit-user-drag: none; }
+
+/* Focus is shown without rings: a link underlines, a control changes its ground (recipe → Accessibility) */
+:where(a, button, [role="button"], input, textarea, [tabindex]):focus-visible { outline: none; }
+a:focus-visible { text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+
+/* ── Press: every button, link card and tile answers ── */
+@utility press {
+  transition-property: transform, background-color, color, border-color, opacity;
+  transition-duration: var(--duration-press), 150ms, 150ms, 150ms, 150ms;
+  transition-timing-function: var(--ease-out), ease, ease, ease, ease;
+  &:active { transform: scale(0.97); }
+}
+
+/* A quiet text link: the underline arrives on hover or focus */
+@utility link-quiet {
+  text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 4px;
+  text-decoration-color: transparent; transition: text-decoration-color 150ms ease, color 150ms ease;
+  @media (hover: hover) and (pointer: fine) { &:hover { text-decoration-color: currentColor; } }
+  &:focus-visible, &[aria-current="page"] { text-decoration-color: currentColor; }
+}
+@utility link-line {
+  text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 4px;
+  text-decoration-color: color-mix(in oklab, currentColor 45%, transparent); transition: text-decoration-color 150ms ease;
+  @media (hover: hover) and (pointer: fine) { &:hover { text-decoration-color: currentColor; } }
+  &:focus-visible { text-decoration-color: currentColor; }
+}
+
+/* ── Motion: soft fade, image clip reveal, line-by-line headline reveal (recipe/motion.md) ──
+   Hidden states apply only once JS has marked <html class="js">, so the site reads fully without script. */
+.js [data-fade] { opacity: 0; transition: opacity 900ms var(--ease-entrance); transition-delay: calc(var(--i, 0) * 90ms); }
+.js [data-fade][data-in] { opacity: 1; }
+
+.js [data-clip] { clip-path: inset(100% 0 0 0 round var(--radius-media)); transition: clip-path 1100ms cubic-bezier(0.65, 0, 0.35, 1); }
+.js [data-clip] [data-clip-inner] { transform: scale(1.15); transition: transform 1100ms cubic-bezier(0.65, 0, 0.35, 1); }
+.js [data-clip][data-in] { clip-path: inset(0 0 0 0 round var(--radius-media)); }
+.js [data-clip][data-in] [data-clip-inner] { transform: none; }
+/* the waterline: the picture opens from its horizon, both ways */
+.js [data-clip="horizon"] { clip-path: inset(50% 0 50% 0 round var(--radius-media)); transition-delay: 450ms; }
+.js [data-clip="horizon"] [data-clip-inner] { transition-delay: 450ms; }
+
+.line-mask { display: block; overflow-x: visible; overflow-y: clip; overflow-clip-margin: 0.12em; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+.js [data-lines] .line-in { display: block; transform: translateY(105%); transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1); transition-delay: calc(var(--l, 0) * 80ms); }
+.js [data-lines][data-in] .line-in { transform: none; }
+
+/* The first screen fades up once on load — CSS, so it runs while the page is still loading */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+.rise { animation: rise 600ms var(--ease-entrance) both; animation-delay: calc(var(--i, 0) * 80ms); }
+
+/* Pictures fade into the space held for them */
+.media-img { opacity: 0; transition: opacity 360ms var(--ease-out); }
+.media-img[data-loaded] { opacity: 1; }
+
+/* Page arrival: a short cross-fade, nothing slides */
+@keyframes page-in { from { opacity: 0; } }
+.page-in { animation: page-in 180ms ease-out both; }
+
+/* Loading skeleton: slow, linear, still under reduced motion */
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.skeleton { background: linear-gradient(90deg, var(--color-surface) 30%, var(--color-secondary) 50%, var(--color-surface) 70%) 0 0 / 200% 100%; animation: shimmer 1.6s linear infinite; }
+
+/* Radix enter / exit — popovers grow from their trigger, dialogs from the centre, sheets slide; exits leave the way they came */
+@keyframes pop-in { from { opacity: 0; transform: scale(0.95); } }
+@keyframes pop-out { to { opacity: 0; transform: scale(0.95); } }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes sheet-up { from { transform: translateY(100%); } }
+@keyframes sheet-down { to { transform: translateY(100%); } }
+@keyframes acc-down { from { height: 0; } to { height: var(--radix-accordion-content-height); } }
+@keyframes acc-up { from { height: var(--radix-accordion-content-height); } to { height: 0; } }
+@keyframes tick { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.anim-pop[data-state="open"] { animation: pop-in var(--duration-menu) var(--ease-out); }
+.anim-pop[data-state="closed"] { animation: pop-out 150ms var(--ease-out); }
+.anim-dialog[data-state="open"] { animation: pop-in var(--duration-dialog) var(--ease-out); }
+.anim-dialog[data-state="closed"] { animation: pop-out 180ms var(--ease-out); }
+.anim-overlay[data-state="open"] { animation: fade-in var(--duration-dialog) var(--ease-out); }
+.anim-overlay[data-state="closed"] { animation: fade-out 180ms var(--ease-out); }
+.anim-sheet[data-state="open"] { animation: sheet-up var(--duration-sheet) var(--ease-drawer); }
+.anim-sheet[data-state="closed"] { animation: sheet-down 300ms var(--ease-drawer); }
+.anim-acc[data-state="open"] { animation: acc-down 260ms var(--ease-out); }
+.anim-acc[data-state="closed"] { animation: acc-up 200ms var(--ease-out); }
+.tick-draw { stroke-dasharray: 24; animation: tick 200ms var(--ease-out) both; }
+.spinner { animation: spin 0.8s linear infinite; }
+
+/* ── Reduced motion: gentler, not gone ── */
+@media (prefers-reduced-motion: reduce) {
+  .js [data-fade] { transition-duration: 200ms; transition-delay: 0ms; }
+  .js [data-clip], .js [data-clip="horizon"] { clip-path: none; opacity: 0; transition: opacity 200ms ease; transition-delay: 0ms; }
+  .js [data-clip][data-in] { opacity: 1; }
+  .js [data-clip] [data-clip-inner] { transform: none; transition: none; }
+  .js [data-lines] .line-in { transform: none; transition: none; }
+  .rise { animation: fade-in 200ms ease both; }
+  .skeleton { animation: none; }
+  .press:active { transform: none; }
+  .anim-pop[data-state], .anim-dialog[data-state], .anim-sheet[data-state] { animation-name: fade-in; animation-duration: 150ms; }
+  .anim-pop[data-state="closed"], .anim-dialog[data-state="closed"], .anim-sheet[data-state="closed"] { animation-name: fade-out; }
+  .spinner { animation-duration: 1.6s; }
+  html { scroll-behavior: auto; }
+}
+
+/* Media frames hold their ratio before the picture arrives (phones may take their own crop) */
+@layer components {
+  .media-frame { aspect-ratio: var(--rm); }
+  @media (min-width: 768px) { .media-frame { aspect-ratio: var(--r); } }
+}
+
+/* Phone menu: the capsule shows only its first row until it opens; the clip opens downward like a sheet */
+@media (max-width: 767px) {
+  .nav-capsule { clip-path: inset(0 0 calc(100% - 56px) 0 round 28px); transition: clip-path var(--duration-sheet) var(--ease-drawer); }
+  .nav-capsule[data-open] { clip-path: inset(0 0 0 0 round 28px); border-color: var(--color-border); }
+  .nav-panel { max-height: calc(100dvh - 120px); overflow-y: auto; overscroll-behavior: contain; }
+  .nav-capsule:not([data-open]) .nav-panel { visibility: hidden; transition: visibility 0s linear var(--duration-sheet); }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .nav-capsule { transition-duration: 0ms; }
+  .nav-panel { transition: opacity 150ms ease; }
+  .nav-capsule:not([data-open]) .nav-panel { opacity: 0; }
+}
+
+/* Second display step: story titles and page titles (the hero alone is larger) */
+@utility type-display-2 { font-family: var(--font-display), serif; font-size: clamp(2rem, 9.4vw, 2.75rem); @media (min-width: 768px) { font-size: clamp(2.5rem, 4.9vw, 4.6rem); } font-weight: 400; line-height: 1.02; letter-spacing: -0.02em; }
+
+/* The waterline (Our mission): a hairline draws across, then the picture opens from it, sky up and sea down */
+.waterline { opacity: 0; }
+.js .waterline { opacity: 1; transform: scaleX(0); transition: transform 700ms var(--ease-out), opacity 500ms ease 1500ms; }
+.js [data-reveal][data-in] .waterline { transform: none; opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .js .waterline { display: none; } }
+html, body { overflow-x: clip; }

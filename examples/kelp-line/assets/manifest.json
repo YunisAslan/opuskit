@@ -1,0 +1,190 @@
+{
+  "recipe": "japanese-quiet-minimal",
+  "title": "Kelp Line — Warm Coastal Calm Foundation",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon. Until the owner’s own exists: the name set as a wordmark in the display face, and its first letter as the favicon — no invented symbol to throw away later",
+      "temporary": true,
+      "note": "Until the owner’s own logo exists: the name set as a wordmark in Hedvig Letters Serif (src/components/site/Logo.tsx) and its first letter as the favicon (src/app/icon.svg)."
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Hedvig Letters Serif, Hedvig Letters Sans (Google Fonts)",
+      "note": "Loaded from Google Fonts through next/font."
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "temporary": true,
+      "note": "Written in src/content/site.ts. Lines marked [P] are invented placeholders (place, names, counts, dates, prices, quotes) for the owner to confirm."
+    },
+    "mobileHeroCrop": {
+      "required": false,
+      "level": "recommended",
+      "status": "temporary",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Hero on small screens",
+      "specs": "1 file · 4:5 · 1440×1800 — 4:5 or 9:16 crop with focal point centred",
+      "temporary": true,
+      "files": [
+        "public/media/mobileHeroCrop.jpg"
+      ],
+      "note": "Plain placeholder with the key in its corner, at the shot-list size and ratio. Replace the file(s) in public/media/ with the same name(s), then set status to have here and in src/config/assets.ts."
+    },
+    "hero": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · First screen — Editorial image hero",
+      "specs": "1 file · 4:5 · 1920×2400 — The opening picture of Kelp Line: the place, the thing it makes or the person, at its best light, with calm space where the headline sits",
+      "temporary": true,
+      "files": [
+        "public/media/hero.jpg"
+      ],
+      "note": "Plain placeholder with the key in its corner, at the shot-list size and ratio. Replace the file(s) in public/media/ with the same name(s), then set status to have here and in src/config/assets.ts."
+    },
+    "storyHome": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Editorial Story",
+      "specs": "1 file · 3:4 · 1800×2400 — seedlings on a line: hands lifting a seeded line out of the water",
+      "temporary": true,
+      "files": [
+        "public/media/storyHome.jpg"
+      ],
+      "note": "Plain placeholder with the key in its corner, at the shot-list size and ratio. Replace the file in public/media/ with the same name, then set status to have here and in src/config/assets.ts."
+    },
+    "storyMission": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Our mission · Editorial Story",
+      "specs": "1 file · 3:4 · 1800×2400 — the waterline: a wide view of the cold coast and the water over the reef",
+      "temporary": true,
+      "files": [
+        "public/media/storyMission.jpg"
+      ],
+      "note": "Plain placeholder with the key in its corner, at the shot-list size and ratio. Replace the file in public/media/ with the same name, then set status to have here and in src/config/assets.ts."
+    },
+    "storyStories": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Stories · Editorial Story",
+      "specs": "1 file · 3:4 · 1800×2400 — a Saturday on the north reef: divers in a small boat on a grey sea",
+      "temporary": true,
+      "files": [
+        "public/media/storyStories.jpg"
+      ],
+      "note": "Plain placeholder with the key in its corner, at the shot-list size and ratio. Replace the file in public/media/ with the same name, then set status to have here and in src/config/assets.ts."
+    },
+    "journal": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Journal",
+      "specs": "3 files · 3:2 · 2000×1333 — one picture per post, the one that opens it",
+      "temporary": true,
+      "files": [
+        "public/media/journal-1.jpg",
+        "public/media/journal-2.jpg",
+        "public/media/journal-3.jpg"
+      ],
+      "note": "Plain placeholder with the key in its corner, at the shot-list size and ratio. Replace the file(s) in public/media/ with the same name(s), then set status to have here and in src/config/assets.ts."
+    },
+    "about": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Our mission · About",
+      "specs": "1 file · 3:4 · 1800×2400 — a real portrait of the person or the team, in their own place",
+      "temporary": true,
+      "files": [
+        "public/media/about.jpg"
+      ],
+      "note": "Plain placeholder with the key in its corner, at the shot-list size and ratio. Replace the file(s) in public/media/ with the same name(s), then set status to have here and in src/config/assets.ts."
+    },
+    "team": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Our mission · Team",
+      "specs": "4 files · 3:4 · 1500×2000 — one portrait per person, in the same light and framing, ideally where they work",
+      "temporary": true,
+      "files": [
+        "public/media/team-1.jpg",
+        "public/media/team-2.jpg",
+        "public/media/team-3.jpg",
+        "public/media/team-4.jpg"
+      ],
+      "note": "Plain placeholder with the key in its corner, at the shot-list size and ratio. Replace the file(s) in public/media/ with the same name(s), then set status to have here and in src/config/assets.ts."
+    },
+    "gallery": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Stories · Gallery",
+      "specs": "8 files · 3:2 · 2400×1600 — the place and what it makes, as a set: wide views, close details, people at work — one light, one grade",
+      "temporary": true,
+      "files": [
+        "public/media/gallery-1.jpg",
+        "public/media/gallery-2.jpg",
+        "public/media/gallery-3.jpg",
+        "public/media/gallery-4.jpg",
+        "public/media/gallery-5.jpg",
+        "public/media/gallery-6.jpg",
+        "public/media/gallery-7.jpg",
+        "public/media/gallery-8.jpg"
+      ],
+      "note": "Plain placeholder with the key in its corner, at the shot-list size and ratio. Replace the file(s) in public/media/ with the same name(s), then set status to have here and in src/config/assets.ts."
+    },
+    "location": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Contact · Location",
+      "specs": "1 file · 3:4 · 1800×2400 — the way in as visitors arrive — the door, the street, the path",
+      "temporary": true,
+      "files": [
+        "public/media/location.jpg"
+      ],
+      "note": "Plain placeholder with the key in its corner, at the shot-list size and ratio. Replace the file(s) in public/media/ with the same name(s), then set status to have here and in src/config/assets.ts."
+    }
+  }
+}

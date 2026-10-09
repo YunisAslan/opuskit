@@ -44,6 +44,36 @@ export type ExampleProject = {
 
 export const examples: ExampleProject[] = [
   {
+    slug: 'kelp-line',
+    title: 'Kelp Line: kelp forests, replanted by volunteers',
+    summary: 'Volunteers replanting kelp forests on a cold northern coast: dives, beach days and a count of every plant in the water.',
+    mood: ['Calm', 'Fresh', 'Hopeful'],
+    // The night run of 2026-10-09 built it with temporary pictures (the photos are picked; see media-src/SOURCES.md):
+    // the hero still is the site's own first screen until they are in.
+    hero: { kind: 'image', src: '/examples/kelp-line/media/poster.jpg' },
+    livePath: '/live/kelp-line',
+    // Parts taken from Kür Delta Watch, Lowfield Nights and Velmira, then You → Direction (Coastal Calm, Bottle Green),
+    // built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
+    choices: [
+      { label: 'Making', value: 'Nonprofit / cause' },
+      { label: 'Name', value: 'Kelp Line' },
+      { label: 'Visitors should', value: 'Donate or support' },
+      { label: 'Style', value: 'Coastal Calm' },
+      { label: 'First screen', value: 'Editorial image hero' },
+      { label: 'Movement', value: 'Subtle' },
+      { label: 'Colors', value: 'Bottle Green' },
+      { label: 'Lettering', value: 'Letterpress Modern' },
+      { label: 'Layout', value: 'Editorial' },
+      { label: 'Shape', value: 'Soft' },
+      { label: 'Menu', value: 'Floating pill' },
+      { label: 'Footer', value: 'One quiet line' },
+      { label: 'Big idea', value: 'None' },
+      { label: 'Pages', value: 'Home, Our mission, Programs, Stories, Donate, Contact' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'The charity, its people, counts, amounts and Skerra Bay are made up, and gifts and messages open the visitor’s own email — none is sent. Its pictures are still the temporary ones the build made; the real photos are picked (media-src/SOURCES.md).',
+  },
+  {
     slug: 'raster-school',
     title: 'Raster School, an evening course in typographic design',
     summary: 'A six-week evening course in typographic design: grids, lettering and a poster of your own at the end. Twelve seats a cohort, in the studio or online.',

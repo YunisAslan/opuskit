@@ -5,7 +5,16 @@ Keep this file current: update "Now" and "Next" whenever a step finishes.
 
 Talk to the user in Azerbaijani; code, docs and commits in English.
 
-## Now (2026-10-08 — #22 Raster School and the work around it are not committed yet; earlier work committed and pushed; 2026-10-07's flow is in `e7e0220`)
+## Now (2026-10-09 — night run on `night/2026-10-09`, see its pull request)
+
+- **#23 Kelp Line built** by the night run — Nonprofit / cause · Coastal Calm · Bottle Green · Letterpress Modern ·
+  subtle, through the flow, isolated `claude -p`, live at `/live/kelp-line` **with temporary pictures**: the cloud
+  blocks Unsplash downloads, so the 21 photos are picked (`examples/kelp-line/media-src/`) and `fetch.sh` + Prompt 3
+  wait for the morning. Recipe not approved yet (link in its BUILD-LOG). Engine lessons fixed: one picture per page for
+  a story told on several pages, the favicon is a file (not a generated route), the UI table lists a page once.
+  Open: a taken Schedule lands on Contact on a cause (judgement).
+
+## Before (2026-10-08 — #22 Raster School and the work around it are not committed yet; earlier work committed and pushed; 2026-10-07's flow is in `e7e0220`)
 
 - **#22 Raster School built** — the first still site (Swiss Modern · Klein Field), the first package with Interaction
   craft and Seasoning, isolated `claude -p`, 5 Unsplash photos, live at `/live/raster-school`. Its Engine lessons (7, all
@@ -118,7 +127,7 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 
 ## Next
 
-1. **Next example sites #23–#25** (`docs/plan-examples.md` §5b): Kelp Line (Coastal Calm, donate), Pip & Kiln (Playful Pop, a whole shop),
+1. **Kelp Line's photos** (`examples/kelp-line/BUILD-LOG.md` §4), then the next example sites (`docs/plan-examples.md` §5b): Pip & Kiln (Playful Pop, a whole shop),
    Ninth Row (Film-inspired, the user's film). Each carries one engine test; after each build, Engine lessons are fixed
    in the engine before the next. Recipe through the flow → link to the user → isolated build → register.
 2. **Clips** for #11–#21: the user's screen recordings of the live exports (Low Hum and Pale Hour are new).

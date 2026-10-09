@@ -968,14 +968,13 @@ const main = async () => {
   // Kelp Line (#23): a story told on three pages had one picture for all three — each page's story gets its own file;
   // and the UI table listed the Donate page twice ("Donate, Donate — Donate").
   {
-    if (existsSync('examples/kelp-line/opuskit.json')) { // until the example is registered
-    const spec = JSON.parse(readFileSync('examples/kelp-line/opuskit.json', 'utf8'))
+    const spec = JSON.parse(readFileSync('examples/kelp-line/opuskit.json', 'utf8')).spec
     const r = composeRecipe(spec), stories = r.media.shots.filter((x) => /EditorialStory$/.test(x.key))
     assert.equal(stories.length, 3, 'three Editorial Stories, three pictures')
     assert.equal(new Set(stories.map((x) => x.key)).size, 3, 'each story has its own key')
     for (const c of r.implementation.ui.components) assert.equal(new Set(c.where).size, c.where.length, `${c.slug}: each place once`)
     assert.ok(!r.implementation.ui.components.some((c) => c.where.includes('Donate — Donate')), 'a part named like its page is listed as the page')
-    }
+    assert.ok(r.assetRequirements.some((a) => a.asset === 'logo' && /icon\.svg/.test(a.specs)), 'the favicon is a file, not a generated route')
   }
 
   // Decision 52: a site lends only the parts that carry its design, and a taken part never replaces what the kind of
