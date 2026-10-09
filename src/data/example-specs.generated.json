@@ -1,4 +1,157 @@
 {
+ "pip-kiln": {
+  "base": "typography-first",
+  "brief": {
+   "name": "Pip & Kiln",
+   "offer": "Bright glazed mugs, plates and vases from a two-person pottery, sold in our online shop. Saturday workshops at the wheel.",
+   "goal": "buy"
+  },
+  "purpose": "ecommerce",
+  "direction": "playful-pop",
+  "characters": [
+   "cheeky"
+  ],
+  "lead": "product",
+  "motion": "dynamic",
+  "layout": "experimental",
+  "palette": "butter-cup",
+  "typography": "bubble-pop",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "concept": "off",
+  "sectionVariants": [
+   {
+    "page": "rerq7kdx",
+    "index": 4,
+    "variant": "giant"
+   }
+  ],
+  "signatures": [],
+  "pieces": [
+   "drag-photos",
+   "wavy-link"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "drag-photos",
+    "page": "p6",
+    "index": 2
+   },
+   {
+    "piece": "wavy-link",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "categories",
+     "product-grid",
+     "collection",
+     "manifesto",
+     "testimonials",
+     "trust",
+     "newsletter"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "shop",
+    "label": "Shop",
+    "purpose": "Let visitors browse and choose confidently.",
+    "sections": [
+     "product-grid",
+     "product-highlight",
+     "collection",
+     "faq"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "product-detail",
+    "label": "Product",
+    "purpose": "Show one product in full: gallery, price, variants, add-to-cart, and related items.",
+    "sections": [
+     "product-buy",
+     "product-highlight",
+     "testimonials",
+     "faq",
+     "product-grid"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "cart",
+    "label": "Cart",
+    "purpose": "Let visitors review and adjust their selection before checkout.",
+    "sections": [
+     "product-grid"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "checkout",
+    "label": "Checkout",
+    "purpose": "Collect payment and shipping with as little friction as possible.",
+    "sections": []
+   },
+   {
+    "id": "p6",
+    "type": "services",
+    "label": "Workshops",
+    "purpose": "Make the offer and the way of working clear enough to remove hesitation.",
+    "sections": [
+     "services",
+     "schedule",
+     "gallery",
+     "pricing",
+     "reservation",
+     "faq"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "taken": [
+   {
+    "site": "example:maison-vey",
+    "kind": "section",
+    "id": "product-grid"
+   },
+   {
+    "site": "example:maison-vey",
+    "kind": "section",
+    "id": "collection"
+   },
+   {
+    "site": "example:maison-vey",
+    "kind": "section",
+    "id": "product-highlight"
+   },
+   {
+    "site": "example:sticky-weather",
+    "kind": "section",
+    "id": "manifesto"
+   },
+   {
+    "site": "example:sticky-weather",
+    "kind": "effect",
+    "id": "wavy-link"
+   },
+   {
+    "site": "example:inkwell-moth",
+    "kind": "effect",
+    "id": "drag-photos"
+   }
+  ],
+  "footer": "signature"
+ },
  "kelp-line": {
   "base": "japanese-quiet-minimal",
   "brief": {

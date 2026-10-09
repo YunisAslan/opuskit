@@ -1,0 +1,126 @@
+{
+  "recipe": "typography-first",
+  "title": "Pip & Kiln — Cheeky Playful Pop Store",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon. Until the owner’s own exists: the name set as a wordmark in the display face, and its first letter as the favicon — no invented symbol to throw away later. The favicon is a file (src/app/icon.svg, the letter as a path), never a generated icon route: one that fetches a font at build time breaks static hosting and builds without a network (Kelp Line)",
+      "temporary": "Wordmark set in Bagel Fat One (src/components/site/Logo.tsx) and the letter P as src/app/icon.svg until the owner’s own logo exists."
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "find",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Bagel Fat One, Epilogue (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "note": "Copy deck in src/content/. Lines marked PLACEHOLDER are invented facts (prices, quotes, times, contact) for the owner to confirm."
+    },
+    "turntableSequence": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Own photoshoot",
+      "replaceWith": "user-owned-product-photos",
+      "usage": "Scroll-rotating product",
+      "specs": "Fixed camera, 7.5–15° per frame"
+    },
+    "hero": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · First screen — Product stage",
+      "specs": "1 file · 4:5 · 1920×2400 — Pip & Kiln’s product alone, large and clean on a calm ground, from its best angle — with space where its name and price sit",
+      "temporary": "Plain placeholder made for the build: pale tone, the key written in its top-left corner, exact size and ratio from the shot list. Replace the file in public/media/ under the same name."
+    },
+    "categories": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Categories",
+      "specs": "4 files · 2:3 · 1333×2000 — one picture per category: its best piece",
+      "temporary": "Plain placeholder made for the build: pale tone, the key written in its top-left corner, exact size and ratio from the shot list. Replace the file in public/media/ under the same name."
+    },
+    "productGrid": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Product Grid; Shop · Product Grid; Product · Product Grid; Cart · Product Grid",
+      "specs": "6 files · 2:3 · 1333×2000 — each product alone on the same ground, from the same angle, in the same light",
+      "temporary": "Plain placeholder made for the build: pale tone, the key written in its top-left corner, exact size and ratio from the shot list. Replace the file in public/media/ under the same name."
+    },
+    "collection": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Collection; Shop · Collection",
+      "specs": "4 files · 2:3 · 1600×2400 — one picture per range: its best piece, all styled and lit the same way",
+      "temporary": "Plain placeholder made for the build: pale tone, the key written in its top-left corner, exact size and ratio from the shot list. Replace the file in public/media/ under the same name."
+    },
+    "productHighlight": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Shop · Product Highlight",
+      "specs": "1 file · 1:1 · 2400×2400 — the main product up close: in hand or in use, its material visible",
+      "temporary": "Plain placeholder made for the build: pale tone, the key written in its top-left corner, exact size and ratio from the shot list. Replace the file in public/media/ under the same name."
+    },
+    "productPageBuy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Product · Product buy box",
+      "specs": "3 files per product · 2:3 · 1333×2000 — the product from the front, at three-quarters and one close detail — the same ground and light as the grid",
+      "temporary": "Plain placeholder made for the build: pale tone, the key written in its top-left corner, exact size and ratio from the shot list. Replace the file in public/media/ under the same name.",
+      "files": "public/media/productPageBuy/{slug}-1…3.jpg for morning-person-mug, big-hug-mug, sunny-side-plate, second-helping-plate, show-off-vase, bud-buddy-vase"
+    },
+    "productPageHighlight": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Product · Product Highlight",
+      "specs": "1 file per product · 1:1 · 2400×2400 — the main product up close: in hand or in use, its material visible",
+      "temporary": "Plain placeholder made for the build: pale tone, the key written in its top-left corner, exact size and ratio from the shot list. Replace the file in public/media/ under the same name.",
+      "files": "public/media/productPageHighlight/{slug}-1.jpg for the same six slugs"
+    },
+    "gallery": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Workshops · Gallery",
+      "specs": "8 files · 3:2 · 2400×1600 — the place and what it makes, as a set: wide views, close details, people at work — one light, one grade",
+      "temporary": "Plain placeholder made for the build: pale tone, the key written in its top-left corner, exact size and ratio from the shot list. Replace the file in public/media/ under the same name."
+    }
+  }
+}
