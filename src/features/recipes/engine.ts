@@ -746,7 +746,8 @@ function uiKit(pages: PageBlueprint[], colors: PaletteColors, shape: ShapeStyle,
   for (const p of pages) {
     if (billed && (p.type === 'pricing' || p.sections.some((x) => x.id === 'pricing'))) ['tabs', 'switch'].forEach((slug) => add(slug, `${p.label} — monthly or yearly`))
     uiByPage[p.type]?.forEach((slug) => add(slug, p.label))
-    p.sections.forEach((sec) => uiBySection[sec.id]?.forEach((slug) => add(slug, `${p.label} — ${sec.name}`)))
+    // A part named like its page (Donate on Donate) is the page: listed once, never "Donate, Donate — Donate" (Kelp Line).
+    p.sections.forEach((sec) => uiBySection[sec.id]?.forEach((slug) => add(slug, sec.name.split(' — ')[0] === p.label ? p.label : `${p.label} — ${sec.name}`)))
   }
   const components = [...where].map(([slug, places]) => ({ slug, name: uiNames[slug] ?? slug, where: [...places] }))
   const radius = shape.button === '999px' ? '1rem' : shape.card
@@ -838,6 +839,8 @@ const VARIANT_SHOTS: Partial<Record<SectionId, Record<string, ShotSpec>>> = {
 const ITEM_PAGES: Partial<Record<PageTypeId, string>> = { 'product-detail': 'product', project: 'project', article: 'article' }
 /** Lists of the other items (more projects, related products): on an item page they show the same pictures as everywhere. */
 const LIST_SECTIONS = new Set<SectionId>(['featured-work', 'product-grid', 'collection', 'categories', 'journal', 'team'])
+/** Parts that tell one story per page: on several pages each gets its own picture, not one shared file. */
+const PER_PAGE_SHOTS = new Set<SectionId>(['editorial-story', 'case-study', 'about'])
 const sizeOf = (ratio: string, px: number) => { const [w, h] = ratio.split(':').map(Number); return w >= h ? `${px}×${Math.round((px * h) / w)}` : `${Math.round((px * w) / h)}×${px}` }
 
 /** How long the first screen's film is — one value per film hero, used by the shot list, the checklist, the hero's
@@ -1063,7 +1066,10 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
     const per = (LIST_SECTIONS.has(sid) ? undefined : ITEM_PAGES[p.type]) ?? sh.per
     // A per-item set is named for its page (productPageHighlight, projectPageGallery), never sharing a key with the same
     // part elsewhere on the site.
-    const key = camel(per ? `${per} page ${sid.replace(`${per}-`, '')}` : sid)
+    // A story told on several pages (Editorial Story on Home, Our mission and Stories) is a different story on each, so
+    // each page gets its own picture (homeEditorialStory…) — never one photo three times (Kelp Line, #23).
+    const own = !per && PER_PAGE_SHOTS.has(sid) && pages.filter((x) => x.sections.some((y) => y.id === sid)).length > 1
+    const key = camel(per ? `${per} page ${sid.replace(`${per}-`, '')}` : own ? `${p.label} ${sid}` : sid)
     const where = `${label}${sections[sid].name}`
     // The file takes the ratio its section crops to — the layout's card or media token, a band 21:9 — so nothing is cut.
     const r = sh.frame === 'card' || (sh.frame === 'media' && s.media === 'side') ? ratio(frame.ratioCard) : sh.frame === 'media' ? (s.media === 'full' && ['editorial-story', 'case-study'].includes(sid) ? '21:9' : ratio(frame.ratioMedia)) : sh.ratio

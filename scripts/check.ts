@@ -965,6 +965,19 @@ const main = async () => {
     for (const src of [...Object.values(pieceSource), ...Object.values(blockSource), ...Object.values(heroSource)]) assert.ok(!/scale: 0[ ,}]|transition:\s*all|transition-all/.test(src!), 'no shipped piece or section enters from scale(0) or transitions all')
   }
 
+  // Kelp Line (#23): a story told on three pages had one picture for all three — each page's story gets its own file;
+  // and the UI table listed the Donate page twice ("Donate, Donate — Donate").
+  {
+    if (existsSync('examples/kelp-line/opuskit.json')) { // until the example is registered
+    const spec = JSON.parse(readFileSync('examples/kelp-line/opuskit.json', 'utf8'))
+    const r = composeRecipe(spec), stories = r.media.shots.filter((x) => /EditorialStory$/.test(x.key))
+    assert.equal(stories.length, 3, 'three Editorial Stories, three pictures')
+    assert.equal(new Set(stories.map((x) => x.key)).size, 3, 'each story has its own key')
+    for (const c of r.implementation.ui.components) assert.equal(new Set(c.where).size, c.where.length, `${c.slug}: each place once`)
+    assert.ok(!r.implementation.ui.components.some((c) => c.where.includes('Donate — Donate')), 'a part named like its page is listed as the page')
+    }
+  }
+
   // Decision 52: a site lends only the parts that carry its design, and a taken part never replaces what the kind of
   // site needs (a booking, the address, prices, questions…) — those are the engine's, picked or not.
   {
