@@ -33,6 +33,8 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   and "Book tickets" (decision 54); a taken menu/footer survives a new look, verification's footer matches the layout,
   shot wording by kind, invented content never real films or people (decision 55).
 - Port 3000 is often taken by the user's other project; run OpusKit's dev server on 3001 when it is.
+- `other-model-examples/` (a Cursor-built comparison of Maison Vey's package, `refined-luxury-editorial-store-cursor`)
+  was removed by the user; it is in git history up to `a526afd`.
 
 ## Before (2026-10-08 — committed and pushed; 2026-10-07's flow is in `e7e0220`)
 
