@@ -313,7 +313,19 @@ export function applyItems(plan: KitPlan, items: CollectionItem[], replace: bool
     if (b && !behaviours[b].many) { plan = setBehaviour(plan, b, id); continue }
     if (b || pieces[id].slot === 'site' || onChrome(id)) { if (!(plan.sitePieces ?? []).includes(id)) plan = toggleSitePiece(plan, id); continue }
     const host = plan.pages.flatMap((p) => p.sections.map((x) => ({ p, x }))).find(({ x }) => x.pieces.includes(id) || piecesFor(x).includes(id))
-    if (!host) { unplaced.push(id); continue }
+    if (!host) {
+      // A taken effect never disappears: with no part to carry it, it brings the first part that can, on the page where
+      // that part usually sits (Pip & Kiln's Prints on a desk on a shop with no gallery).
+      const sec = pieces[id].sections.find((x) => x !== 'footer' && x !== 'navbar' && x !== 'hero')
+      const page = sec && (plan.pages.find((p) => pageSuggestions[p.type]?.includes(sec)) ?? plan.pages[0])
+      if (sec && page) {
+        const before = new Set(page.sections.map((x) => x.key))
+        plan = addSuggested(plan, page.id, sec)
+        const k = plan.pages.find((p) => p.id === page.id)!.sections.find((x) => !before.has(x.key))?.key
+        if (k) { plan = togglePiece(plan, page.id, k, id); added.push(k); continue }
+      }
+      unplaced.push(id); continue
+    }
     if (!host.x.pieces.includes(id)) plan = togglePiece(plan, host.p.id, host.x.key, id)
   }
   return { plan, unplaced, added }

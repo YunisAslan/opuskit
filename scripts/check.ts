@@ -977,6 +977,23 @@ const main = async () => {
     assert.ok(r.assetRequirements.some((a) => a.asset === 'logo' && /icon\.svg/.test(a.specs)), 'the favicon is a file, not a generated route')
   }
 
+  // Pip & Kiln (#24): a shop's "Saturday workshops" page could not be booked (Services + Process only), and a taken
+  // effect no part could carry (Prints on a desk on a shop without a gallery) vanished without a word.
+  {
+    const { pagesFromWords } = await import('../src/features/library/inspire')
+    const { applyItems } = await import('../src/features/library/collection')
+    const words = 'Bright glazed mugs, plates and vases from a two-person pottery, sold in our online shop. Saturday workshops at the wheel.'
+    const shop = pagesFromWords(start(EMPTY_PLAN, 'ecommerce'), words)
+    const ws = shop.pages.find((p) => p.label === 'Workshops')
+    assert.ok(ws, 'workshops in the sentence add a Workshops page')
+    for (const id of ['schedule', 'pricing', 'reservation'] as const) assert.ok(ws!.sections.some((x) => x.id === id), `a workshop page has its ${id}`)
+    assert.equal(inferGoal(shop), 'buy', 'a shop with workshops still sells first')
+    const bare = start(EMPTY_PLAN, 'ecommerce')
+    const r = applyItems(bare, [{ kind: 'effect', id: 'drag-photos', from: 'example:inkwell-moth' }], true)
+    assert.deepEqual(r.unplaced, [], 'a taken effect is never dropped')
+    assert.ok(r.plan.pages.some((p) => p.sections.some((x) => x.pieces.includes('drag-photos'))), 'it brings a part that carries it')
+  }
+
   // Decision 52: a site lends only the parts that carry its design, and a taken part never replaces what the kind of
   // site needs (a booking, the address, prices, questions…) — those are the engine's, picked or not.
   {
