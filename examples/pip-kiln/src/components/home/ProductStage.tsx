@@ -42,7 +42,7 @@ export function ProductStage() {
             <div aria-hidden className="absolute inset-[4%] rounded-full bg-(--color-surface)" />
             <div aria-hidden className="absolute inset-x-[16%] bottom-[9%] h-[7%] rounded-[50%] bg-(--color-secondary)" />
             <motion.div style={reduce ? undefined : { rotate, y, scale: lift }} className="absolute left-[23%] top-[15%] w-[54%] origin-bottom">
-              <MediaAsset id="hero" alt={`${p.name}, ${h.badge.toLowerCase()} Sunshine`} priority sizes="(min-width: 768px) 30vw, 54vw" className="rounded-(--radius-media)" />
+              <MediaAsset id="hero" priority sizes="(min-width: 768px) 30vw, 54vw" className="rounded-(--radius-media)" />
             </motion.div>
             <motion.div
               initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.6, rotate: -30 }}
@@ -75,7 +75,7 @@ export function ProductStage() {
       {/* Phones: the action stays at the bottom while the first screen is in view */}
       <div className="sticky bottom-0 z-20 -mx-(--gutter) mt-8 border-t border-(--color-text) bg-(--color-background) px-(--gutter) pb-[calc(12px+env(safe-area-inset-bottom,0px))] pt-3 md:hidden">
         <div className="flex items-center justify-between gap-4">
-          <p className="min-w-0"><span className="t-card block truncate">{p.name}</span><span className="type-caption tabular-nums text-(--color-muted)">{price(p.price)}</span></p>
+          <p className="min-w-0"><span className="t-card text-room block truncate">{p.name}</span><span className="type-caption tabular-nums text-(--color-muted)">{price(p.price)}</span></p>
           <Button onClick={() => add(p)} className="shrink-0 min-w-[9.5rem]">{added ? 'Added' : h.action}</Button>
         </div>
       </div>

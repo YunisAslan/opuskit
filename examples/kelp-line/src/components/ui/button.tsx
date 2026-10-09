@@ -6,7 +6,7 @@ import type { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
 
 export const buttonVariants = cva(
-  'type-utility press inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-(--radius-button) border disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0',
+  'type-utility press inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-(--radius-button) border disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {

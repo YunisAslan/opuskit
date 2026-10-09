@@ -44,7 +44,7 @@ body { font-family: var(--font-sans); background: var(--color-paper); text-rende
 [data-slot]:focus, [data-slot]:focus-visible { outline: none; box-shadow: none; }
 
 /* Browsers don't give <button> a pointer cursor by default — every clickable native element gets one here. */
-button:not(:disabled), summary, select, [role="option"]:not([aria-disabled="true"]), [role="menuitem"]:not([aria-disabled="true"]), label:has(input[type="checkbox"]), label:has(input[type="radio"]), label:has(input[type="file"]) { cursor: pointer; }
+button:not(:disabled), [role="button"]:not([aria-disabled="true"]), [role="tab"], summary, select, [role="option"]:not([aria-disabled="true"]), [role="menuitem"]:not([aria-disabled="true"]), label:has(input[type="checkbox"]), label:has(input[type="radio"]), label:has(input[type="file"]) { cursor: pointer; }
 button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 
 /* Recipe type roles for previews of ready pieces and sections (same block as every Build Package's tokens.css). */

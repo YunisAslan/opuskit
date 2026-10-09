@@ -7,13 +7,8 @@ import { NewsletterSection } from '@/components/sections/Newsletter'
 import { ServicesSection } from '@/components/sections/Services'
 import { StatsSection } from '@/components/sections/Stats'
 import { TimelineSection } from '@/components/sections/Timeline'
+import { asset } from '@/config/assets'
 import { home, site } from '@/content/site'
-
-const journalAlts = [
-  'Divers surfacing with counting slates over the north reef',
-  'A nursery tank of seeded lines in October',
-  'Volunteers winding twine on the beach',
-]
 
 export default function Home() {
   return (
@@ -28,14 +23,14 @@ export default function Home() {
         openLarge
         title={['A forest you cannot', 'see from the shore']}
         mobileTitle={['A forest', 'you cannot see', 'from the shore']}
-        alt={home.story.alt}
+        alt={asset('storyHome').alt}
         caption={home.story.caption}
         paragraphs={home.story.paragraphs}
         quote={home.story.quote}
         quoteBy={home.story.quoteBy}
       />
       <CtaBandSection tone="inverse" link={Link} text={home.ctaBand.text} action={home.ctaBand.action} note={home.ctaBand.note} />
-      <JournalSection link={Link} title={home.journal.title} entries={home.journal.entries.map((e, i) => ({ ...e, image: i, alt: journalAlts[i] }))} />
+      <JournalSection link={Link} title={home.journal.title} entries={home.journal.entries.map((e, i) => ({ ...e, image: i, alt: asset('journal', i).alt }))} />
       <NewsletterSection {...home.newsletter} to={site.email} />
     </>
   )

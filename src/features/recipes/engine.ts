@@ -1,7 +1,7 @@
 // Design Decision Engine: deterministic composition of curated ingredients into a Universal Recipe.
 // Same spec in → same recipe out. Remix = change one spec field and recompose.
 
-import { characters, directions, goals, leads, motionLevels, purposes } from '@/data/taxonomy'
+import { characters, ctaFor, directions, goals, leads, motionLevels, purposes } from '@/data/taxonomy'
 import { accentSets, colorRoles, layouts, palettes, typography } from '@/data/ingredients'
 import { GENERIC_TELLS, components, concepts, heroes, imagePresentations, media, motionPatterns, footerStyles, navStyles, pageTypes, sections, shapeStyles, signaturePatterns, UI_ALWAYS, uiByGoal, uiByPage, uiBySection, uiNames } from '@/data/patterns'
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
@@ -812,6 +812,10 @@ export function fitTells(lines: string[], colors: PaletteColors, fonts: string[]
 /** What each media part's picture shows — written for any business; the shot list adds whose. One row per part, sized to
  *  what its ready section takes (one image, a set, one per item): `n` files at `ratio`, `px` on the long edge. */
 type ShotSpec = { shows: string; ratio: string; px: number; n: number; per?: string; note?: string; /** The section crops to the layout's card or media ratio: the file takes that ratio, not `ratio`. */ frame?: 'card' | 'media' }
+/** Where a kind of site means something else by a part (a cinema's "work" is its programme), its picture says so. */
+const SHOTS_BY_PURPOSE: Partial<Record<PurposeId, Partial<Record<SectionId, Partial<ShotSpec>>>>> = {
+  event: { 'featured-work': { shows: 'one picture per strand of the programme — a series, a season, a recurring night — what being there feels like; never a still, poster or performer from a real film or show', note: 'one per strand' } },
+}
 const SHOTS: Partial<Record<SectionId, ShotSpec>> = {
   gallery: { shows: 'the place and what it makes, as a set: wide views, close details, people at work — one light, one grade', ratio: '3:2', px: 2400, n: 8, note: 'people and things may be 4:5' },
   'featured-work': { shows: 'one strong picture of each project — the real work itself, never a mock-up (the same photo leads its project page)', ratio: '3:2', px: 2400, n: 4, note: 'one per project', frame: 'card' },
@@ -1061,8 +1065,9 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
       return addShot(where, () => ({ key, where, kind: film ? 'film' : 'photo', shows: heroShows(h, film), count: 1, ratio, size: sizeOf(ratio, px),
         format: film ? filmFormat(h.id) : h.id === 'parallax-photo' ? 'min 2800px · 16:9 for desktop, plus a 4:5 crop for phones (Mobile hero crop)' : `1 photo · ${ratio} · ${sizeOf(ratio, px)}` }))
     }
-    const sh = (s.variant && VARIANT_SHOTS[sid]?.[s.variant.id]) || SHOTS[sid]
-    if (!sh) return
+    const base = (s.variant && VARIANT_SHOTS[sid]?.[s.variant.id]) || SHOTS[sid]
+    if (!base) return
+    const sh: ShotSpec = { ...base, ...SHOTS_BY_PURPOSE[spec.purpose]?.[sid] }
     const per = (LIST_SECTIONS.has(sid) ? undefined : ITEM_PAGES[p.type]) ?? sh.per
     // A per-item set is named for its page (productPageHighlight, projectPageGallery), never sharing a key with the same
     // part elsewhere on the site.
@@ -1142,11 +1147,11 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
       headlineExamples: seed.spec.purpose === spec.purpose ? seed.content.headlineExamples : PURPOSE_COPY[spec.purpose].headlines,
       paragraphLength: spec.lead === 'typography' ? '1–3 sentences; let headlines carry the page' : '2–4 sentences (40–80 words); never more than 65 characters per line',
       ctaStyle: goal ? `${goal.effect} ${purpose.ctaPattern}` : purpose.ctaPattern,
-      ctaExamples: (() => { const base = seed.spec.purpose === spec.purpose ? seed.content.ctaExamples : PURPOSE_COPY[spec.purpose].cta; return goal ? uniq([...goal.cta, ...base]).slice(0, 4) : base })(),
+      ctaExamples: (() => { const base = seed.spec.purpose === spec.purpose ? seed.content.ctaExamples : PURPOSE_COPY[spec.purpose].cta; return goal ? uniq([ctaFor(spec.purpose, goal.id), ...goal.cta, ...base]).slice(0, 4) : base })(),
       wordsToAvoid: WORDS_TO_AVOID,
       density: seed.content.density,
       source: brief.name || brief.offer
-        ? `Write from the owner's own words — ${[brief.name && `the name “${brief.name}”`, brief.offer && `“${brief.offer.replace(/\.$/, '')}.”`].filter(Boolean).join(' and ')} Every headline, line and claim grows from them: name what is really there — what is made, where, when, for whom. The headline and CTA examples are only the register, taken from another site: never reuse them. Anything you must invent (quotes, prices, names, numbers, dates) is marked in the copy deck as a placeholder for the owner to replace.`
+        ? `Write from the owner's own words — ${[brief.name && `the name “${brief.name}”`, brief.offer && `“${brief.offer.replace(/\.$/, '')}.”`].filter(Boolean).join(' and ')} Every headline, line and claim grows from them: name what is really there — what is made, where, when, for whom. The headline and CTA examples are only the register, taken from another site: never reuse them. Anything you must invent (quotes, prices, names, numbers, dates) is marked in the copy deck as a placeholder for the owner to replace — and is invented outright: never a real film, book, record, artwork, artist, brand or famous person standing in for the owner's own (Ninth Row, #25).`
         : 'Nothing from the owner yet: write plain, specific copy for this kind of site, and mark every invented fact (quotes, prices, names, numbers, dates) in the copy deck as a placeholder for the owner to replace.',
       copy,
     },

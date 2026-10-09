@@ -37,7 +37,8 @@ export function ProductBuySection({ p }: { p: Product }) {
   const reduce = useReduced()
   const sold = p.stock <= 0
   const max = Math.max(1, Math.min(p.stock, 10))
-  const shots = [0, 1, 2].map((i) => ({ i, alt: `${p.name} in ${glaze}, ${['from the front', 'at three-quarters', 'close up'][i]}` }))
+  // the front view is the real grid photo (its alt says what it shows); the other two are still temporary
+  const shots = [0, 1, 2].map((i) => ({ i, alt: i === 0 ? undefined : `${p.name} in ${glaze}, ${['from the front', 'at three-quarters', 'close up'][i]}` }))
 
   return (
     <section className="px-(--gutter) pb-(--section-y) pt-8 md:pt-10">
@@ -77,10 +78,11 @@ export function ProductBuySection({ p }: { p: Product }) {
           {/* The buy column */}
           <div className="md:sticky md:top-[calc(var(--nav-h)+24px)] md:col-span-5 md:self-start md:pl-[2vw]">
             <h1 className="type-display leading-[0.86] [font-size:clamp(2.8rem,5.4vw,5.2rem)]">{p.name}</h1>
-            <div aria-live="polite" className="mt-4 grid h-[2.6rem] overflow-hidden">
+            {/* the rolling nickname's window: one sticker line plus room for accents and descenders, cancelled by its margin */}
+            <div aria-live="polite" className="t-sticker mb-[-0.3em] mt-[calc(1rem-0.15em)] grid h-[1.4em] overflow-hidden pb-[0.3em] pt-[0.15em]">
               <AnimatePresence initial={false} mode="popLayout">
                 <motion.span key={glaze} className="t-sticker [grid-area:1/1] self-center"
-                  initial={reduce ? { opacity: 0 } : { y: '110%' }} animate={reduce ? { opacity: 1 } : { y: '0%' }} exit={reduce ? { opacity: 0 } : { y: '-110%' }}
+                  initial={reduce ? { opacity: 0 } : { y: '170%' }} animate={reduce ? { opacity: 1 } : { y: '0%' }} exit={reduce ? { opacity: 0 } : { y: '-170%' }}
                   transition={{ duration: reduce ? 0.15 : 0.35, ease: [0.22, 1, 0.36, 1] }}>
                   {p.nicknames[glaze]}
                 </motion.span>

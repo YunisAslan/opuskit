@@ -98,7 +98,6 @@ export const home = {
     quote: 'We do not need anyone to believe in the forest. We just need them to count it with us.',
     quoteBy: 'Ingrid Moss, co-founder', // [P]
     caption: 'Seedlings on a line, six weeks after seeding.', // [P]
-    alt: 'Hands lifting a seeded line of young kelp out of the water',
   },
   ctaBand: {
     text: 'Beach days start again on Sunday 2 November. No diving needed.', // [P]
@@ -131,7 +130,6 @@ export const mission = {
       'Kelp Line began with two divers, Ingrid Moss and Calum Reid, who grew up swimming in the forest off Skerra Bay and watched it go.', // [P]
     bio: 'Ingrid ran the dive school on the quay; Calum fixed boat engines and kept a fish tank in his kitchen. In 2019 they borrowed a shed, filled it with tanks and asked the town for help. Today more than two hundred volunteers dive, seed and count with us, and the reef is starting to look after itself.', // [P]
     caption: 'Ingrid and Calum on North Quay.', // [P]
-    alt: 'The two founders of Kelp Line standing on the quay in dry suits',
   },
   story: {
     title: 'Why we count every plant',
@@ -142,8 +140,7 @@ export const mission = {
     ],
     quote: 'A plant only counts if it is still there next autumn.',
     quoteBy: 'Tomas Lind, survey lead', // [P]
-    caption: 'The north reef from the surface, two years after planting.', // [P]
-    alt: 'A wide view of the sea over the replanted north reef',
+    caption: 'Surf on the rocks below the point, where the last wild kelp still holds on.', // [P]
   },
   team: {
     title: 'The people on the quay',
@@ -227,21 +224,20 @@ export const stories = {
     ],
     quote: 'Forty minutes, sixty plants, numb fingers. Best morning of the week.',
     quoteBy: 'Morag Duncan, volunteer diver', // [P]
-    caption: 'Clipping a seeded line to the reef at eight metres.', // [P]
-    alt: 'Divers in a small boat on a grey sea over the north reef',
+    caption: 'Half past eight, life jackets on, a flat grey sea all the way to the reef.', // [P]
   },
   gallery: {
     title: 'From the dive log',
     // the moment: each photo captioned like a logbook entry — date, depth, sea temperature as quiet numbers [P]
     photos: [
-      { alt: 'The north reef forest from above, kelp reaching the surface', caption: 'The north reef at slack water.', text: 'Six years after the first lines went in, the canopy reaches the surface on a low tide.', log: { date: '14 Aug 2026', depth: '0 m', temp: '13°C' } },
-      { alt: 'Hands sorting seeded twine on a trestle table on the beach', caption: 'Twine for the nursery.', text: 'Every metre of line is wound by hand on a beach day, ready for the spores.', log: { date: '2 Nov 2025', depth: 'Shore', temp: '10°C' } },
-      { alt: 'A diver counting kelp plants with a slate on the reef', caption: 'The count, plant by plant.', text: 'Alive, grown or gone. Each mark on the slate is one plant.', log: { date: '12 Sep 2026', depth: '8 m', temp: '12°C' } },
-      { alt: 'Close view of a young kelp blade with light coming through it', caption: 'One blade, one season.', text: 'A seedling a finger long in March is taller than a diver by August.', log: { date: '30 Jul 2026', depth: '6 m', temp: '13°C' } },
-      { alt: 'The nursery shed on the quay with tanks glowing in the evening', caption: 'Nursery evening.', text: 'Eleven tanks, kept cold and dim, carry the forest through the winter.', log: { date: '19 Feb 2026', depth: 'Shed', temp: '8°C' } },
-      { alt: 'The dive boat leaving the quay in early morning light', caption: 'Half past eight, every Saturday.', text: 'The boat goes whatever the sky is doing. The sea decides if we dive.', log: { date: '25 Apr 2026', depth: 'Quay', temp: '8°C' } },
-      { alt: 'A school class looking into a rock pool with a volunteer', caption: 'Shore school.', text: 'Most of the town’s children have now held a crab that lives in the kelp.', log: { date: '11 Jun 2026', depth: 'Shore', temp: '11°C' } },
-      { alt: 'Volunteers on the beach at dusk after a planting day', caption: 'After the last dive of spring.', text: 'Twenty-four divers, sixty volunteers, 7,800 plants in one season.', log: { date: '24 May 2026', depth: 'Shore', temp: '9°C' } },
+      { caption: 'The north reef at slack water.', text: 'Six years after the first lines went in, the canopy reaches the surface on a low tide.', log: { date: '14 Aug 2026', depth: '0 m', temp: '13°C' } },
+      { caption: 'Twine for the nursery.', text: 'Every metre of line is wound by hand on a beach day, ready for the spores.', log: { date: '2 Nov 2025', depth: 'Shore', temp: '10°C' } },
+      { caption: 'The count, plant by plant.', text: 'Alive, grown or gone. Each mark on the slate is one plant.', log: { date: '12 Sep 2026', depth: '8 m', temp: '12°C' } },
+      { caption: 'One blade, one season.', text: 'A seedling a finger long in March is taller than a diver by August.', log: { date: '30 Jul 2026', depth: '6 m', temp: '13°C' } },
+      { caption: 'Nursery evening.', text: 'Eleven tanks, kept cold and dim, carry the forest through the winter.', log: { date: '19 Feb 2026', depth: 'Shed', temp: '8°C' } },
+      { caption: 'Half past eight, every Saturday.', text: 'The boat goes whatever the sky is doing. The sea decides if we dive.', log: { date: '25 Apr 2026', depth: 'Quay', temp: '8°C' } },
+      { caption: 'Shore school.', text: 'Most of the town’s children have now held a crab that lives in the kelp.', log: { date: '11 Jun 2026', depth: 'Shore', temp: '11°C' } },
+      { caption: 'After the last dive of spring.', text: 'Twenty-four divers, sixty volunteers, 7,800 plants in one season.', log: { date: '24 May 2026', depth: 'Shore', temp: '9°C' } },
     ],
   },
 }
@@ -344,7 +340,6 @@ export const contact = {
     notes: 'The 52 bus stops at the harbour, five minutes’ walk. Park on Shore Road; the quay is for boats.', // [P]
     mapUrl: 'https://www.google.com/maps/search/?api=1&query=North+Quay+Skerra+Bay', // [P]
     caption: 'The slipway at North Quay, where every beach day starts.', // [P]
-    alt: 'The slipway and the boathouse door at North Quay',
   },
 }
 

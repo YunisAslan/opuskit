@@ -17,7 +17,7 @@ import { directions, families, purposes } from '@/data/taxonomy'
 import { lookCredit, lookImages, lookImg } from '@/data/look-images'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { planToSpec, setStyle } from '@/features/kit/plan'
-import { allSites, lookChoices, siteName, siteSpec, type SiteRef } from '@/features/library/collection'
+import { allSites, lookChoices, siteName, siteSpec, type SiteRef, keptByName } from '@/features/library/collection'
 import { siteTraits } from '@/features/library/inspire'
 import { composeRecipe, rankPalettes } from '@/features/recipes/engine'
 import { SiteThumb, exampleOf } from '@/app/library/parts'
@@ -80,7 +80,7 @@ export function LookPicker({ every }: { every?: boolean }) {
   const inLook = (id: DirectionId): KitPlan => {
     const site = lookChoices(c).map((r) => siteSpec(r)!).find((x) => x.direction === id)
     // Colours or lettering taken by name stay with any look (decision 39); the rest follows the new look.
-    const named = new Set(c.items.flatMap((i) => (i.kind === 'like' ? [i.what === 'colours' ? 'palette' : i.what === 'lettering' ? 'typography' : ''] : [])))
+    const named = keptByName(c.items)
     return FOLLOWS_LOOK.filter((k) => !named.has(k)).reduce((n, k) => setStyle(n, k, site?.[k] === 'off' ? 'off' : site?.[k]), setStyle(plan, 'direction', id))
   }
   const at = tab === 'look' && !lookChoice ? 'colours' : tab ?? (lookChoice ? 'look' : 'colours')

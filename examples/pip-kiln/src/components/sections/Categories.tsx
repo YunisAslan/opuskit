@@ -4,7 +4,7 @@ import { Cut } from '@/components/motion/Cut'
 import { SectionHead } from '@/components/parts/SectionHead'
 // OpusKit section — Categories: tiles that show the range at a glance — a picture, a name and how many are inside.
 // Pip & Kiln: four tall tiles, every other one dropped half a step so the row bounces; the count sits as a sticker.
-type Item = { name: string; href: string; index: number; alt: string; count: string }
+type Item = { name: string; href: string; index: number; alt?: string; count: string }
 
 export function CategoriesSection({ link: L = 'a', title, lines, items }: { link?: ElementType; title: string; lines: string[]; items: Item[] }) {
   return (

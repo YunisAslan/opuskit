@@ -137,7 +137,7 @@ into `media-src/`, crops and resizes into `public/media/`; needs ImageMagick), t
 (`claude -p --continue` from a copy of the project outside the repository), then replace the card and poster
 (`public/examples/kelp-line.jpg`, `public/media/poster.jpg`). The live export needs no rebuild (it reads the media).
 
-Prompt 3 (not sent yet):
+Prompt 3 (written by the night run; sent 2026-10-09 with two additions, below):
 
 ```
 My photos are in public/media/ now, under the same names. Update src/config/assets.ts and assets/manifest.json: status 'have' for every photo, no Temporary badge, centre crops again, and alt text from what each real photo shows (media-src/picks.json → alt, by key). The Stories story picture shows a small boat with people in life jackets on a calm grey sea: change its caption to match, in the site's voice. The Our mission picture shows surf over a dark shore rock fringed with kelp: check its caption too.
@@ -157,3 +157,30 @@ temporary pictures); `npm run examples`; live export at `/live/kelp-line` (media
 the icon route made static for the export build only, its link patched to `/live/kelp-line/icon`), checked by a
 click-through from the menu (every page renders, no broken images; only aborted link prefetches); `npm run check` ✓.
 Clips wait for the user's screen recording, after the photos.
+
+## 6. Photos and Prompt 3 (2026-10-09, on the user's machine)
+
+The cloud could not download from Unsplash; here it could. The 21 picked originals fetched into `media-src/` and fitted
+over the temporary files at their exact sizes (Python PIL — no ImageMagick here — the same crops as `fetch.sh`).
+The night run's session lives in the cloud, so Prompt 3 went to a **new** isolated session (`claude -p`, Claude Opus
+5.5, `--setting-sources project,local`, the project moved outside the repository first), with a first line saying the
+site is already built and two fixes the user asked for that day ("make sure these never happen again" — decision 53):
+
+```
+The site in this folder is already built from its Build Package (read CLAUDE.md first).
+
+My photos are in public/media/ now, under the same names. Update src/config/assets.ts and assets/manifest.json: status 'have' for every photo, no Temporary badge, centre crops again, and alt text from what each real photo shows (media-src/picks.json → alt, by key). The Stories story picture shows a small boat with people in life jackets on a calm grey sea: change its caption to match, in the site's voice. The Our mission picture shows surf over a dark shore rock fringed with kelp: check its caption too.
+
+Check every page with the photos at 1440 and 390, run the production build, and before your final reply stop any dev server you started — do not leave one running.
+
+Two more fixes that must hold everywhere on the site:
+1. No letter is ever cut. Line reveals (.line-mask or any overflow-hidden/clip box around text) and tight line-heights must leave room for descenders and accents: about 0.15em above and 0.3em below inside the mask, cancelled by the same negative margin. Check every heading in the display face with letters like g, y, p, j at 1440 and 390.
+2. Everything clickable shows the pointer cursor: buttons, tabs, toggles, menu items, cards and tiles with a click; disabled ones show not-allowed. Tailwind v4 gives buttons the arrow, so set it in the base styles.
+
+Rules for this session: work only inside this folder, never read or edit anything outside it. Port 3000 is taken: use port 3022 for the dev server. Never remove or change the turbopack.root line in next.config.ts.```
+
+Finished (53 turns, ~11 min, $2.05 reported): every photo marked real, alts read only from the asset layer, the two
+captions rewritten; the line-reveal mask got 0.2em above and 0.3em below (0.15em above still cut Hedvig's tall
+letters — the engine now says 0.2em); the pointer on every clickable thing, not-allowed on disabled ones. Moved back,
+live export rebuilt (the icon route made static for the export only, as before), click-through checked in a real
+browser (no failed requests, every button shows the pointer); card and poster replaced.

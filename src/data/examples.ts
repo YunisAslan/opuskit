@@ -44,6 +44,35 @@ export type ExampleProject = {
 
 export const examples: ExampleProject[] = [
   {
+    slug: 'ninth-row',
+    title: 'Ninth Row — arthouse cinema, a film every night',
+    summary: 'A 120-seat arthouse cinema. New and old films every night, a late-night series on Fridays, tickets for every screening.',
+    mood: ['Dark', 'Cinematic', 'Warm'],
+    // Its first screen is the owner's film, scroll-controlled: the still is that film's own poster.
+    hero: { kind: 'video', src: '/examples/ninth-row/media/heroVideo.mp4', poster: '/examples/ninth-row/media/posterImage.jpg' },
+    livePath: '/live/ninth-row',
+    // Halden's first screen, Lowfield Nights' Schedule, curtain and Big name footer; You → Direction (Cinema or theatre,
+    // decision 54); built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe.
+    choices: [
+      { label: 'Making', value: 'Event / wedding' },
+      { label: 'Name', value: 'Ninth Row' },
+      { label: 'Visitors should', value: 'Book or reserve' },
+      { label: 'Style', value: 'Film-inspired' },
+      { label: 'First screen', value: 'Scroll-controlled video' },
+      { label: 'Movement', value: 'Immersive' },
+      { label: 'Colors', value: 'Grading Suite' },
+      { label: 'Lettering', value: 'Tall Order' },
+      { label: 'Layout', value: 'Full-bleed' },
+      { label: 'Shape', value: 'Sharp' },
+      { label: 'Menu', value: 'Centered logo' },
+      { label: 'Footer', value: 'Big name' },
+      { label: 'Big idea', value: 'None' },
+      { label: 'Pages', value: 'Home, Programme, Tickets, Visit, About' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'The film is the user\'s own, made with Google Flow and prepared by the package\'s prepare-video.sh; photos are from Unsplash (credits in media-src/SOURCES.md); the cinema, its films, people, address and prices are made up, and tickets are booked by email — none is taken.',
+  },
+  {
     slug: 'pip-kiln',
     title: 'Pip & Kiln — bright mugs, plates and vases',
     summary: 'Bright glazed mugs, plates and vases, thrown and glazed by two people. Buy them here, or come and make your own on a Saturday at the wheel.',

@@ -6,7 +6,7 @@ import type { JSX } from 'react'
 
 function Letters({ text, from }: { text: string; from: number }) {
   return <>{[...text].map((ch, i) => (
-    <span key={i} className="inline-block overflow-hidden pb-[0.06em] align-bottom">
+    <span key={i} className="-mb-[0.3em] -mt-[0.2em] inline-block overflow-hidden pb-[0.3em] pt-[0.2em] align-bottom">
       <motion.span className="inline-block" variants={{ hidden: { y: '110%' }, shown: { y: 0 } }} transition={{ type: 'spring', stiffness: 200, damping: 24, delay: (from + i) * 0.025 }}>{ch === ' ' ? ' ' : ch}</motion.span>
     </span>
   ))}</>

@@ -119,7 +119,8 @@ export const craftBrief = (r: UniversalRecipe) =>
 
 /** Definition-of-done lines, in every package's verification list. */
 export const CRAFT_QA = [
-  'Feel: every button, link card and tappable tile answers the press (:active scale 0.97, --duration-press, --ease-out — or the look’s own press), and hover effects wait for a pointer that can hover: on a phone nothing stays hovered.',
+  'Feel: every button, link card and tappable tile answers the press (:active scale 0.97, --duration-press, --ease-out — or the look’s own press) and shows the pointer cursor (disabled: not-allowed), and hover effects wait for a pointer that can hover: on a phone nothing stays hovered.',
+  'Letters whole: no headline, label or masked line cuts a descender or an accent (g, y, p, j, Å) — check every line reveal, cut-out headline and rolling link in the display face at desktop and 390px.',
   'Motion ingredients: no `transition: all`; nothing enters from scale(0); no ease-in on anything that enters, exits or answers; menus, popovers and dialogs take ≤ 300ms on the tokens.css curves; popovers grow out of their trigger, dialogs from the centre; an exit leaves the way it came, never slower; scroll reveals play once.',
   'Worst case: with the longest real words in the copy deck and one about 40% longer, a long email, one item and zero items in every list and a missing photo, at 320px and at 200% browser zoom — nothing overflows, squashes, reads “1 items” or leaves a blank band; numbers that change hold their width (tabular figures, unless the face’s tabular set changes their look — a slashed zero, a typewriter set — then a fixed-width box).',
 ]
@@ -241,6 +242,9 @@ Wrap, truncate or clamp — per field: names and titles wrap (two lines is fine)
 | no reduced-motion version | a gentler one, not none |
 | everything arriving at once | 30–80ms stagger |
 | \`100vh\` first screens, fields under 16px, disabled zoom | \`100svh\`, 16px, zoom on |
+| a hover or swap that brings in a picture still temporary (a product’s second view) over a real one | the swap waits until that file is real; the real picture stays |
+| a button, tab, toggle or clickable tile with the arrow cursor | \`cursor: pointer\` — tokens.css gives it to buttons, tabs, options and labels; anything else clickable (a div with onClick, a card) gets it too, disabled gets \`not-allowed\` |
+| a text mask (line reveal, cut-out headline, rolling link, marquee) or a tight leading that cuts g, y, p, j or an accent | room inside the mask — about 0.2em above and 0.3em below, cancelled by the same negative margin — checked with "Ågypj" in the display face at its tightest line-height |
 
 ---
 Adapted from Emil Kowalski's skills — https://github.com/emilkowalski/skills. MIT License, Copyright (c) 2026 Emil Kowalski.

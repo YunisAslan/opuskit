@@ -85,6 +85,10 @@ export function itemName(i: CollectionItem): string {
   }
 }
 
+/** The site-wide choices taken by name, which a new look never replaces: colours and lettering, and a menu or footer
+ *  taken from a site (Ninth Row, #25: a new look silently replaced the taken Big name footer). */
+export const keptByName = (items: CollectionItem[]) => new Set(items.flatMap((i) => (i.kind === 'like' ? [i.what === 'colours' ? 'palette' : i.what === 'lettering' ? 'typography' : ''] : i.kind === 'menu' ? ['nav'] : i.kind === 'footer' ? ['footer'] : [])))
+
 /** The Collection's picks as the recipe keeps them (decision 45): each with the site it came from. */
 export const takenOf = (items: CollectionItem[]): TakenPart[] => items.flatMap((i): TakenPart[] => {
   const site = i.kind === 'site' || i.kind === 'like' ? i.site : i.from

@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge'
 import { price } from '@/lib/format'
 import { useReduced } from '@/lib/use-media'
 
-export type Piece = { name: string; price: number; index: number; alt: string; href: string }
+export type Piece = { name: string; price: number; index: number; alt?: string; href: string }
 
 export function CollectionSection({ link: L = Link, season, title, lines, text, action, pieces }: {
   link?: ElementType; season: string; title: string; lines: string[]; text: string; action: { label: string; href: string }; pieces: Piece[]

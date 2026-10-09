@@ -49,7 +49,7 @@ const WORDS: [PurposeId, RegExp][] = [
   ['product', /\b(device|gadget|keyboard|speaker|hardware|app for|one product)\b/i],
   ['saas', /\b(software|saas|platform|app|tool for|dashboard|api)\b/i],
   ['course', /\b(courses?|classes|lessons|workshops?|teach(ing)?|school|tutors?|cohorts?|curriculum|enrol(l|ment|ling)?|students?|academy|bootcamp|masterclass(es)?)\b/i],
-  ['event', /\b(festivals?|weddings?|conferences?|events?|gigs?|concerts?|exhibitions?|galler(y|ies)|museums?)\b/i],
+  ['event', /\b(festivals?|weddings?|conferences?|events?|gigs?|concerts?|exhibitions?|galler(y|ies)|museums?|cinemas?|screenings?|picture ?house|film club)\b/i],
   ['nonprofit', /\b(charity|non-?profit|foundation|volunteers?|donat|cause)\b/i],
   ['real-estate', /\b(real estate|property|properties|apartments|homes for sale|lettings)\b/i],
   ['blog', /\b(blog|magazine|journal|newsletter|writing|essays)\b/i],
@@ -59,7 +59,9 @@ const WORDS: [PurposeId, RegExp][] = [
   ['personal-brand', /\b(coach|consultant|speaker|author|freelance)\b/i],
 ]
 /** A kind's own start when the sentence names it — a gallery or museum is an event venue with exhibitions, not a festival. */
-export const starterFrom = (p?: PurposeId | null, text?: string) => (p === 'event' && /\b(galler(y|ies)|museums?|exhibitions?)\b/i.test(text ?? '') ? 'gallery' : undefined)
+export const starterFrom = (p?: PurposeId | null, text?: string) => (p !== 'event' ? undefined
+  : /\b(cinemas?|screenings?|picture ?house|film club)\b/i.test(text ?? '') ? 'cinema'
+  : /\b(galler(y|ies)|museums?|exhibitions?)\b/i.test(text ?? '') ? 'gallery' : undefined)
 
 export function purposeFrom(text?: string): PurposeId | undefined {
   if (!text?.trim()) return undefined

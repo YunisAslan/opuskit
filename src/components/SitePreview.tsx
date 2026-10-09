@@ -3,7 +3,7 @@
 // so the same component works as a thumbnail, a kit preview or a recipe hero.
 
 import type { CSSProperties } from 'react'
-import { directions, goals } from '@/data/taxonomy'
+import { ctaFor, directions } from '@/data/taxonomy'
 import { palettes, typography } from '@/data/ingredients'
 import { img, type ImageKey } from '@/data/images'
 import type { DirectionId, LayoutId, LeadId, MotionLevel, PaletteColors, TypographyPairing, UniversalRecipe } from '@/types/domain'
@@ -43,7 +43,7 @@ export function previewFromRecipe(r: UniversalRecipe, over: Partial<PreviewProps
   // A recipe with the owner's words speaks in them: their sentence, their pages as the menu, their main action.
   const nav = b ? s.pages.filter((x) => !['home', 'cart', 'product-detail'].includes(x.type) && x.sections.length).slice(0, 3).map((x) => x.label) : []
   return { colors, type: r.visualSystem.typography, layout: r.layoutSystem.id, lead: s.lead, motion: s.motion, image: r.metadata.image, title: b?.name?.trim() || r.contentDirection.headlineExamples[0], brand: b?.name?.trim() || undefined,
-    line: b?.offer?.trim() || undefined, nav: nav.length ? nav : undefined, cta: b?.goal ? goals[b.goal].cta[0] : undefined, ...over }
+    line: b?.offer?.trim() || undefined, nav: nav.length ? nav : undefined, cta: b?.goal ? ctaFor(s.purpose, b.goal) : undefined, ...over }
 }
 
 const font = (f: TypographyPairing['display']): CSSProperties => ({

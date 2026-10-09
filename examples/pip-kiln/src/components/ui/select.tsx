@@ -34,7 +34,7 @@ function SelectContent({ className, children, position = 'popper', ...props }: R
 function SelectItem({ className, children, ...props }: React.ComponentProps<typeof SelectPrimitive.Item>) {
   return (
     <SelectPrimitive.Item data-slot="select-item"
-      className={cn('type-body relative flex min-h-11 cursor-default select-none items-center rounded-(--radius-button) py-2 pl-4 pr-10 outline-none data-[highlighted]:bg-(--color-secondary) data-[disabled]:opacity-50', className)} {...props}>
+      className={cn('type-body relative flex min-h-11 cursor-pointer select-none items-center rounded-(--radius-button) py-2 pl-4 pr-10 outline-none data-[highlighted]:bg-(--color-secondary) data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50', className)} {...props}>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
       <span className="absolute right-4 grid size-4 place-items-center"><SelectPrimitive.ItemIndicator><Check className="size-4" strokeWidth={3} /></SelectPrimitive.ItemIndicator></span>
     </SelectPrimitive.Item>

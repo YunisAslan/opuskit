@@ -45,7 +45,7 @@ export function HeroSection({ link: L = 'a' }: { link?: ElementType }) {
         </div>
         <figure className="relative md:ml-auto md:w-[80%] lg:col-span-5 lg:col-start-8 lg:ml-0 lg:w-auto">
           <div className="rise" style={i(1)}>
-            <MediaAsset id="hero" mobile="mobileHeroCrop" ratio="4 / 5" preload sizes="(min-width: 1024px) 42vw, 100vw" alt="Kelp reaching the surface over the north reef at Skerra Bay" />
+            <MediaAsset id="hero" mobile="mobileHeroCrop" ratio="4 / 5" preload sizes="(min-width: 1024px) 42vw, 100vw" />
           </div>
           <CountCard className="relative z-10 mx-3 -mt-12 md:max-w-[340px] lg:absolute lg:max-w-none lg:bottom-10 lg:-left-[clamp(48px,6vw,96px)] lg:mx-0 lg:mt-0 lg:w-[min(300px,80%)]" />
           <figcaption className="type-caption mt-4 text-(--color-muted) lg:hidden">{h.caption}</figcaption>

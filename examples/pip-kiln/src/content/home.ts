@@ -57,7 +57,7 @@ export const home = {
   ],
   newsletter: {
     title: 'Want first dibs on the next batch?',
-    lines: ['First dibs', 'on the next batch?'],
+    lines: ['First dibs', 'on the next', 'batch?'],
     text: 'One short email a month: what came out of the kiln, which Saturdays have space, and the odd wonky second going cheap.',
     placeholder: 'you@example.com',
     button: 'Sign me up',

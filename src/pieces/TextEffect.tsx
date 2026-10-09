@@ -26,7 +26,7 @@ export function TextEffect({ children, as = 'h2', per = 'word', preset = 'slide'
       transition={reduce ? { duration: 0 } : { staggerChildren: per === 'word' ? (preset === 'cut' ? 0.07 : 0.06) : 0.025, delayChildren: delay }}> {/* same markup either way (hydration); reduced motion only drops the timing */}
       <span className="sr-only">{children}</span>
       {parts.map((p, i) => /^\s+$/.test(p) ? p /* plain spaces, so a wrapped line never starts indented */ : preset === 'cut' ? (
-        <span key={i} aria-hidden className="inline-flex overflow-hidden pb-[0.08em] align-bottom">
+        <span key={i} aria-hidden className="-mb-[0.3em] -mt-[0.2em] inline-flex overflow-hidden pb-[0.3em] pt-[0.2em] align-bottom">
           <motion.span className="inline-block whitespace-pre" variants={ITEM.cut} transition={timing}>{p}</motion.span>
         </span>
       ) : (

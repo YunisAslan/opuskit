@@ -13,7 +13,7 @@ import { site } from '@/content/site'
 export const metadata: Metadata = { title: 'Saturday workshops', description: 'Saturdays at the wheel: two potters, six wheels, and you leave with something you made.' }
 
 export default function WorkshopsPage() {
-  const photos = w.gallery.photos.map((p, i) => ({ index: i, alt: p.caption, caption: p.caption }))
+  const photos = w.gallery.photos.map((p, i) => ({ index: i, caption: p.caption }))
   return (
     <>
       <ServicesSection intro={w.intro} title={w.services.title} items={w.services.items} />

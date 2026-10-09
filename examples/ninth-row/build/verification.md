@@ -1,0 +1,55 @@
+# Verification
+
+The build is done when every item passes.
+
+- [ ] Background is #040404; no other page background colors are introduced.
+- [ ] Display text uses Sofia Sans Extra Condensed 700; body uses Sofia Sans; no other families appear.
+- [ ] Accent #E8A98C covers < 5% of any viewport.
+- [ ] Pages: Home · Programme · Tickets · Visit · About — every page shares the same navbar and footer.
+- [ ] Footer “Signature columns”: Dark band (text colour as ground): the logo large on the left (5 of 12 columns), 2–3 link columns with headings, then a hairline and one row: copyright left, legal links right.
+- [ ] Home section order: Hero → Intro → Schedule → Featured Work → Newsletter.
+- [ ] Programme section order: Schedule → Featured Work.
+- [ ] Tickets section order: Reservation → Pricing → FAQ.
+- [ ] Visit section order: Location → FAQ.
+- [ ] About section order: About → Team.
+- [ ] Hero matches "Scroll-controlled video": A pinned 100svh stage; the video's playhead is mapped to scroll progress over ~300vh. Type appears at chapter points.
+- [ ] Controls and forms use shadcn/ui restyled to the recipe tokens and shape (from: button, sheet, sonner, calendar, popover, select, form, label, input, textarea, card, badge, accordion, tabs) — no unstyled native select, date input or checkbox anywhere; the date field is a Calendar in a Popover; every form says where it goes (an email the visitor sends, or the owner's service) and none fakes a sent message.
+- [ ] Sections with reference code in src/components/sections/ keep its design (real copy and media, no placeholder text left) and are fitted into this site: tokens only, the site’s type sizes and spacing, the code edited wherever its defaults disagree. Pass the framework link as `link` (Next.js: `link={Link}` from next/link) so in-site links navigate client-side and respect basePath; without it they render plain <a>.
+- [ ] Kit piece "Smooth scroll" (<SmoothScroll/> from src/components/pieces/SmoothScroll.tsx) is used on Whole site — mount once in app/layout.tsx: it does what the owner picked it for, and its size, place and the type around it follow the site.
+- [ ] Kit piece "Curtain between pages" (<PageCurtain/> from src/components/pieces/PageCurtain.tsx) is used on Whole site — every internal link; mount once in app/layout.tsx: it does what the owner picked it for, and its size, place and the type around it follow the site.
+- [ ] One system: things of one kind look alike everywhere — menu links, footer links, labels and button text share one face, width and size step; headings of one level share one size.
+- [ ] Every row lines up: the items of one row (the menu’s logo, links and button; a card’s title and meta) share one vertical centre or baseline — none sits higher because of padding it brought along.
+- [ ] Nothing looks pasted in: no part keeps a size, padding, width or font from its reference code that its neighbours do not share.
+- [ ] Feel: every button, link card and tappable tile answers the press (:active scale 0.97, --duration-press, --ease-out — or the look’s own press) and shows the pointer cursor (disabled: not-allowed), and hover effects wait for a pointer that can hover: on a phone nothing stays hovered.
+- [ ] Letters whole: no headline, label or masked line cuts a descender or an accent (g, y, p, j, Å) — check every line reveal, cut-out headline and rolling link in the display face at desktop and 390px.
+- [ ] Motion ingredients: no `transition: all`; nothing enters from scale(0); no ease-in on anything that enters, exits or answers; menus, popovers and dialogs take ≤ 300ms on the tokens.css curves; popovers grow out of their trigger, dialogs from the centre; an exit leaves the way it came, never slower; scroll reveals play once.
+- [ ] Worst case: with the longest real words in the copy deck and one about 40% longer, a long email, one item and zero items in every list and a missing photo, at 320px and at 200% browser zoom — nothing overflows, squashes, reads “1 items” or leaves a blank band; numbers that change hold their width (tabular figures, unless the face’s tabular set changes their look — a slashed zero, a typewriter set — then a fixed-width box).
+- [ ] Seasoning, salt not sauce (recipe → Seasoning): pictures fade into space held for them and nothing pops or jumps while loading; a waiting button keeps its width and never flickers; the micro-interactions are this site’s small set, used the same way everywhere; parallax stays in its dose (where the recipe places depth, else up to two picture bands a page, 6–10%) and only ever moves pictures.
+- [ ] Locked items are as the owner chose them: palette, lettering, pages and their part order, each part’s design, menu, footer, shape, first screen, the copy’s facts and the owner’s files (recipe/design.md → Room to invent).
+- [ ] The site reads as Film-inspired beyond its tokens: at least three of the style’s moves are in it, and none of its traps (recipe/design.md → What Film-inspired is known for).
+- [ ] Every page has one remembered moment; each one the builder designed is named in the final reply, belongs to this owner (their words, pictures or trade) and has a mobile and a reduced-motion version.
+- [ ] Every page passes the award checklist in the recipe (one idea, one remembered moment per page, type scale contrast, motion choreography, mobile as its own composition, a designed ending).
+- [ ] Home → Featured Work: photos shown as "Photo story", every picture visible as the layout intends.
+- [ ] Programme → Featured Work: photos shown as "Photo story", every picture visible as the layout intends.
+- [ ] Video: public/media/scrubReadyEncode.mp4 and mobileVideoEncode.mp4 exist and were produced by prepare-video.sh (not raw browser uploads); the poster images (posterImage.jpg, posterMobile.jpg) exist and paint before the video; prepare-video.sh printed no ⚠.
+- [ ] Video sharpness: ffprobe shows heroVideo.mp4 ≥ 1920 px wide and mobileVideoEncode.mp4 ≥ 1080 px tall — if not, re-run prepare-video.sh (it sharpens small sources) rather than letting the browser stretch it.
+- [ ] Scroll film: forward, fast and backward scrolling move the video with the scroll; every scene message appears on its own scene, one at a time (desktop and 390px).
+- [ ] Layout: Overlay text in 5–6 columns at bottom-left; interstitial text centred in 8; section spacing clamp(96px, 12vw, 160px) between sections (--section-y).
+- [ ] Shape “Sharp”: buttons 0px, cards 0px, media 0px radius (rounded-button / rounded-card / rounded-media) — No rounded corners anywhere; structure comes from lines and space.
+- [ ] Menu “Centered logo”: Symmetric bar: links left, logo centred, secondary links and the action right; generous height at the top that shrinks after scrolling.
+- [ ] Absent: Heavy vintage filters.
+- [ ] Absent: Fake film UI (sprocket holes).
+- [ ] Absent: Cold, clinical palettes.
+- [ ] Absent: A cream or beige page ground with a clay/terracotta accent.
+- [ ] Absent: Small uppercase, letter-spaced monospace labels above every heading.
+- [ ] Absent: Numbered markers (01 / 02) on content that is not a real sequence.
+- [ ] Absent: Meta strings joined with middle dots or spaced em dashes, and "→" appended to links.
+- [ ] Absent: One italic or coloured accent word inside an otherwise plain headline.
+- [ ] Absent: Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe's fonts.
+- [ ] Absent: Text in mix-blend-difference (or any blend mode) over a photo — its colours turn random; text on a picture sits on a scrim or a solid block.
+- [ ] Absent: Effects nobody picked: no text effect, hover, cursor or scroll trick beyond the recipe's motion system and Your Kit.
+- [ ] Phone (390px): no horizontal scroll, headlines re-broken intentionally, touch targets ≥ 44px; the first screen uses svh (never vh); fields are ≥ 16px so focusing one never zooms the page, and zoom is never disabled; fixed bars clear the notch and home bar (viewportFit cover + env(safe-area-inset-*)); no grey flash on tap; theme-color is the colour at the top of the page.
+- [ ] prefers-reduced-motion: every animation has its documented alternative — gentler, not gone: movement becomes a short fade, colour changes that explain stay, nothing loops, pins or springs.
+- [ ] Every media element is rendered through the asset config layer; temporary assets are listed in the manifest. A hover, a swap or a gallery step never reveals a temporary picture over a real one: an effect that brings in a second picture (a product’s other view, a hover image) runs only once that file is real (status 'have') — until then the real picture stays.
+- [ ] Every picture goes through next/image (or its getImageProps for a plain <img>, a srcSet or a CSS background) — never a hand-written /_next/image?url=… address, which only exists on a running Next server; the site also works as a static export.
+- [ ] Lighthouse on mobile: LCP < 2.5s with the poster still as the LCP element, CLS < 0.1.

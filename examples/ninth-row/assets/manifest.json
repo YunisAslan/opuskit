@@ -1,0 +1,150 @@
+{
+  "recipe": "cinematic-editorial",
+  "title": "Ninth Row — Nocturne Film-inspired Event Site",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "wordmark set in Sofia Sans Extra Condensed; favicon src/app/icon.svg",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon. Until the owner’s own exists: the name set as a wordmark in the display face, and its first letter as the favicon — no invented symbol to throw away later. The favicon is a file (src/app/icon.svg, the letter as a path), never a generated icon route: one that fetches a font at build time breaks static hosting and builds without a network (Kelp Line)"
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "next/font/google (self-hosted at build)",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Sofia Sans Extra Condensed, Sofia Sans Condensed, Sofia Sans (Google Fonts)"
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "src/content/*.ts — every line marked PLACEHOLDER waits for the owner",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words"
+    },
+    "heroVideo": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "owner: media-src/projector-original.mp4 via scripts/prepare-video.sh",
+      "replaceWith": "user-owned-video",
+      "usage": "Hero (loop or scroll-controlled)",
+      "specs": "1920×1080 min, 10–20 s, one continuous move, not a loop, no text burned in"
+    },
+    "posterImage": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "owner: media-src/projector-original.mp4 via scripts/prepare-video.sh",
+      "replaceWith": "user-owned-images",
+      "usage": "Shown before video loads and on reduced motion",
+      "specs": "First frame of the video, same crop"
+    },
+    "mobileVideoEncode": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "owner: media-src/projector-original.mp4 via scripts/prepare-video.sh",
+      "replaceWith": "user-owned-video",
+      "usage": "Hero on small screens — made from the hero video by scripts/prepare-video.sh",
+      "specs": "1080×1920 (9:16), ≤ 3MB"
+    },
+    "secondaryVideo": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Pexels Videos / Coverr",
+      "replaceWith": "user-owned-video",
+      "usage": "Chapter transitions",
+      "specs": "Same grade as the hero"
+    },
+    "scrubReadyEncode": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "owner: media-src/projector-original.mp4 via scripts/prepare-video.sh",
+      "replaceWith": "user-owned-video",
+      "usage": "Scroll-controlled hero",
+      "specs": "Made by scripts/prepare-video.sh from the ORIGINAL file: CRF 20, keyframe every 6 frames, ≤ 1920 px"
+    },
+    "texture": {
+      "required": false,
+      "level": "optional",
+      "status": "optional",
+      "source": "Unsplash / Pexels",
+      "replaceWith": "user-owned-images",
+      "usage": "Subtle paper/grain overlay at ≤ 4% opacity",
+      "specs": "Seamless tile, 1024px, WebP"
+    },
+    "featuredWork": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "owner: photos listed with credits in media-src/SOURCES.md (Unsplash License)",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Featured Work; Programme · Featured Work",
+      "specs": "4 files · 3:2 · 2400×1600 — one strong picture of each project — the real work itself, never a mock-up (the same photo leads its project page)",
+      "files": [
+        "public/media/featuredWork-1.jpg",
+        "public/media/featuredWork-2.jpg",
+        "public/media/featuredWork-3.jpg",
+        "public/media/featuredWork-4.jpg"
+      ]
+    },
+    "location": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "owner: photos listed with credits in media-src/SOURCES.md (Unsplash License)",
+      "replaceWith": "user-owned-images",
+      "usage": "Visit · Location",
+      "specs": "1 file · 16:9 · 2400×1350 — the way in as visitors arrive — the door, the street, the path",
+      "files": [
+        "public/media/location.jpg"
+      ]
+    },
+    "about": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "owner: photos listed with credits in media-src/SOURCES.md (Unsplash License)",
+      "replaceWith": "user-owned-images",
+      "usage": "About · About",
+      "specs": "1 file · 16:9 · 2400×1350 — a real portrait of the person or the team, in their own place",
+      "files": [
+        "public/media/about.jpg"
+      ]
+    },
+    "team": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "owner: photos listed with credits in media-src/SOURCES.md (Unsplash License)",
+      "replaceWith": "user-owned-images",
+      "usage": "About · Team",
+      "specs": "4 files · 3:2 · 2000×1333 — one portrait per person, in the same light and framing, ideally where they work",
+      "files": [
+        "public/media/team-1.jpg",
+        "public/media/team-2.jpg",
+        "public/media/team-3.jpg",
+        "public/media/team-4.jpg"
+      ]
+    },
+    "posterMobile": {
+      "required": false,
+      "level": "recommended",
+      "status": "have",
+      "source": "owner: media-src/projector-original.mp4 via scripts/prepare-video.sh",
+      "replaceWith": "user-owned-images",
+      "usage": "Phone poster for the hero",
+      "specs": "1080×1920, first frame of the 9:16 encode"
+    }
+  }
+}

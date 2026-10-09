@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ViewTransition, type ElementType, type ReactNode } from 'react'
 import { Plus } from 'lucide-react'
 import { MediaAsset } from '@/components/media/MediaAsset'
+import { media } from '@/config/assets'
 import { Cut } from '@/components/motion/Cut'
 import { Badge } from '@/components/ui/badge'
 import { useAddToBag } from '@/components/parts/use-add-to-bag'
@@ -20,9 +21,12 @@ function Card({ p, L }: { p: Product; L: ElementType }) {
       <L href={`/shop/${p.slug}`} className="press focus-title group block">
         <ViewTransition name={`product-${p.slug}`} share="morph" default="none">
           <div className="relative overflow-hidden rounded-(--radius-media)">
-            <MediaAsset id="productGrid" index={p.photo - 1} alt={`${p.name}, Sunshine glaze`} sizes="(min-width: 1280px) 24vw, (min-width: 768px) 32vw, 48vw" className="rounded-(--radius-media)" />
-            <MediaAsset id="productPageBuy" index={1} product={p.slug} alt="" sizes="(min-width: 1280px) 24vw, (min-width: 768px) 32vw, 48vw"
-              className="!absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" ownRatio={false} />
+            <MediaAsset id="productGrid" index={p.photo - 1} sizes="(min-width: 1280px) 24vw, (min-width: 768px) 32vw, 48vw" className="rounded-(--radius-media)" />
+            {/* the second view on hover — held back while that file is still a placeholder */}
+            {!media('productPageBuy', { index: 1, product: p.slug }).temporary && (
+              <MediaAsset id="productPageBuy" index={1} product={p.slug} alt="" sizes="(min-width: 1280px) 24vw, (min-width: 768px) 32vw, 48vw"
+                className="!absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" ownRatio={false} />
+            )}
           </div>
         </ViewTransition>
         <div className="mt-4 flex items-start justify-between gap-3">

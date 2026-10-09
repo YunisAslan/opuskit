@@ -20,14 +20,14 @@ const types: ProductType[] = ['mugs', 'plates', 'vases']
 export default function Home() {
   const categories = [
     ...types.map((t, i) => ({
-      name: typeLabel[t], href: `/shop?type=${t}`, index: i, alt: `Our best ${typeLabel[t].toLowerCase().replace(/s$/, '')}`,
+      name: typeLabel[t], href: `/shop?type=${t}`, index: i,
       count: count(products.filter((p) => p.type === t).length, 'piece', 'pieces'),
     })),
-    { name: home.categories.workshop.name, href: '/workshops', index: 3, alt: 'A Saturday workshop at the wheel', count: count(workshops.pricing.plans.length, 'way to book', 'ways to book') },
+    { name: home.categories.workshop.name, href: '/workshops', index: 3, count: count(workshops.pricing.plans.length, 'way to book', 'ways to book') },
   ]
   const pieces = home.collection.pieces.map((slug, i) => {
     const p = productBySlug(slug)!
-    return { name: p.name, price: p.price, index: i, alt: `${p.name} in the new butter glaze`, href: `/shop/${p.slug}` }
+    return { name: p.name, price: p.price, index: i, href: `/shop/${p.slug}` }
   })
   return (
     <>

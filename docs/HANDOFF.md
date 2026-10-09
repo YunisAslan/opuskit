@@ -5,7 +5,7 @@ Keep this file current: update "Now" and "Next" whenever a step finishes.
 
 Talk to the user in Azerbaijani; code, docs and commits in English.
 
-## Now (2026-10-09 — night run on `night/2026-10-09`, see its pull request)
+## Night run (2026-10-09 — `night/2026-10-09`, merged; its open items were finished the same day, see Today)
 
 - **#23 Kelp Line built** by the night run — Nonprofit / cause · Coastal Calm · Bottle Green · Letterpress Modern ·
   subtle, through the flow, isolated `claude -p`, live at `/live/kelp-line` **with temporary pictures**: the cloud
@@ -18,10 +18,23 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   `/live/pip-kiln` with temporary pictures (photos picked, `fetch.sh`). Engine lessons fixed before it was built: a
   workshops page from the sentence can be booked (Schedule, Pricing, Reservation); a taken effect no part can carry
   brings its part instead of vanishing. Per-product photo sets are the owner's shoot.
-- **Queue:** #25 Ninth Row waits for the user's film; the night run proposed #26–#29 (`docs/plan-examples.md` §5c) —
+- **Queue:** #25 Ninth Row was built on 2026-10-09 with the user's film (see Today); the night run proposed #26–#29 (`docs/plan-examples.md` §5c) —
   approve or change them before the next night run.
 
-## Before (2026-10-08 — #22 Raster School and the work around it are not committed yet; earlier work committed and pushed; 2026-10-07's flow is in `e7e0220`)
+## Today (2026-10-09, on the user's machine — committed and pushed)
+
+- **Kelp Line and Pip & Kiln finished**: their picked photos fetched here (the cloud could not), fitted with Python PIL,
+  Pip & Kiln's six plate photos re-picked (no clean 2:3); each site's photo prompt sent to a **new** isolated session
+  (the night run's cloud session cannot be resumed here) with two added fixes; live exports, cards and posters rebuilt.
+- **Whole letters and the pointer on every button** (decision 53): tokens.css, the craft guide, the definition of done,
+  the line-reveal pattern and the pieces; a hover never reveals a placeholder over a real picture.
+- **#25 Ninth Row built** — the user's own film (Google Flow) on a scroll-controlled first screen, Film-inspired ·
+  Grading Suite · Tall Order, live at `/live/ninth-row`. Engine lessons: a cinema is an event venue with its own start
+  and "Book tickets" (decision 54); a taken menu/footer survives a new look, verification's footer matches the layout,
+  shot wording by kind, invented content never real films or people (decision 55).
+- Port 3000 is often taken by the user's other project; run OpusKit's dev server on 3001 when it is.
+
+## Before (2026-10-08 — committed and pushed; 2026-10-07's flow is in `e7e0220`)
 
 - **#22 Raster School built** — the first still site (Swiss Modern · Klein Field), the first package with Interaction
   craft and Seasoning, isolated `claude -p`, 5 Unsplash photos, live at `/live/raster-school`. Its Engine lessons (7, all
@@ -134,16 +147,17 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 
 ## Next
 
-1. **Kelp Line's and Pip & Kiln's photos** (each BUILD-LOG §4), the recipes' approval, then the next example sites: Ninth Row
-   (Film-inspired, the user's film) and the proposed #26–#29 (`docs/plan-examples.md` §5c). Each carries one engine test; after each build, Engine lessons are fixed
-   in the engine before the next. Recipe through the flow → link to the user → isolated build → register.
-2. **Clips** for #11–#21: the user's screen recordings of the live exports (Low Hum and Pale Hour are new).
-3. **Feed back from the builds** (decision 33, ask first): Low Hum's wavy section edges, sticky mobile "Book" button,
-   shrinking menu bar and mint focus style; Pale Hour's floor-plan index, live opening-hours line and museum-order
-   captions. Pale Hour has no Shop page (built before decision 48) — ask the builder only if the user wants it.
-4. Known gaps: "Event / wedding" is the kind's name even for a gallery (renaming breaks older examples' `choices`);
-   older recipes and examples have no `taken`, so What you took is empty for them.
-5. Rerun the Mara persona bot on the new flow and compare with the first run. Open points in `docs/plan-library.md` §5.
+1. **The next batch** (#26–#29, `docs/plan-examples.md` §5c — Tidewell Physio, Hollis & Daughters, Ines Varga, Tally
+   House): waiting for the user's approval. Each: recipe through the flow → link to the user → isolated build (outside
+   the repo, `claude -p`) → photos (Unsplash connector) → register; Engine lessons fixed before the next site.
+2. **Clips** for #11–#25: the user's screen recordings of the live exports (Low Hum, Pale Hour, Kelp Line, Pip & Kiln
+   and Ninth Row are new).
+3. **Pip & Kiln's copy vs its photos**: the builder listed where the product photos show other glazes and shapes than
+   the copy says — ask the user whether to fit the copy to the photos.
+4. **Feed back from the builds** (decision 33, ask first): Low Hum's wavy edges and sticky mobile button, Pale Hour's
+   floor-plan index, Ninth Row's seat plan and doors countdown.
+5. Known gaps: "Event / wedding" is the kind's name for galleries and cinemas too (renaming breaks older examples'
+   `choices`); older recipes have no `taken`.
 
 ## Night runs
 

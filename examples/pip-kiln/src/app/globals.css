@@ -17,6 +17,16 @@ html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%;
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 body { min-height: 100svh; display: flex; flex-direction: column; overflow-x: clip; }
 button, a, [role="button"], label { touch-action: manipulation; }
+/* Everything clickable shows the pointer (Tailwind v4's preflight leaves buttons on the arrow); disabled shows
+   not-allowed. In the base layer, so a utility (cursor-grab on the desk prints) still wins. */
+@layer base {
+  a[href], button, summary, select, label[for], label:has(> input, > button[role]),
+  input:is([type="checkbox"], [type="radio"], [type="submit"], [type="button"], [type="reset"], [type="file"], [type="range"]),
+  [role="button"], [role="tab"], [role="switch"], [role="checkbox"], [role="radio"], [role="option"],
+  [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], [data-slot$="-trigger"] { cursor: pointer; }
+  :disabled, :disabled + label, [aria-disabled="true"], [data-disabled]:not([data-disabled="false"]),
+  label:has(:disabled) { cursor: not-allowed; }
+}
 ::selection { background: var(--color-accent); color: var(--color-background); }
 [data-tone="inverse"] ::selection, .ink ::selection { background: var(--color-accent); color: var(--inv-bg); }
 :focus-visible { outline: none; }
@@ -83,10 +93,16 @@ img { -webkit-user-drag: none; }
 [data-cut="shown"] > :nth-child(n+7) { transition-delay: 240ms; }
 
 /* ---------- Line-by-line headline reveal ---------- */
-.line-mask { display: block; overflow: clip; padding-block: 0.1em 0.14em; margin-block: -0.1em -0.14em; }
+/* The mask leaves room for accents above (0.15em) and descenders below (0.3em) — g, y, p, j in the squat display face
+   reach well past its 0.84 line — and the same negative margin keeps the lines where they were. The hidden line drops
+   past that bottom room too, so no top edge peeks into it. */
+.line-mask { display: block; overflow: clip; padding-block: 0.15em 0.3em; margin-block: -0.15em -0.3em; }
 .line-mask > span { display: block; }
-[data-lines="hidden"] .line-mask > span { transform: translateY(105%); }
+[data-lines="hidden"] .line-mask > span { transform: translateY(calc(100% + 0.5em)); }
 [data-lines="shown"] .line-mask > span { transform: none; transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1); transition-delay: calc(var(--line, 0) * 80ms); }
+
+/* Any other clipping box around one line of text (truncate, a rolling label): the same room, cancelled the same way */
+@utility text-room { padding-block: 0.15em 0.3em; margin-block: -0.15em -0.3em; }
 
 /* ---------- Image clip reveal ---------- */
 [data-clip] { clip-path: inset(0); }

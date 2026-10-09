@@ -16,7 +16,7 @@ import { GENERATED, piecesSource } from './pieces-source'
 import { existsSync, readFileSync } from 'node:fs'
 import { inferGoal, heroTitle, libraryFor, removeSection, toggleChrome, behaviourPick, isPhotoSection, sectionPhotos, setBehaviour, setSectionPhotos, setSectionVariant, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, effectOn, effectWhere, starters, setHero, setPartHero, heroOf, setStyle, start, togglePiece } from '../src/features/kit/plan'
 import { resources } from '../src/data/resources'
-import { directions, families, goals, purposes } from '../src/data/taxonomy'
+import { ctaFor, directions, families, goals, purposes } from '../src/data/taxonomy'
 import { lookImages } from '../src/data/look-images'
 import { adapters } from '../src/features/build-packages'
 import { visualQa } from '../src/features/build-packages/shared'
@@ -27,7 +27,7 @@ import exampleSpecs from '../src/data/example-specs.generated.json'
 import { closestChrome, closestPiece, closestSection, closestSite } from '../src/features/kit/closest'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
-import { allSites, applyItems, takenFrom, takenOf, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection, type SiteRef } from '../src/features/library/collection'
+import { allSites, applyItems, keptByName, takenFrom, takenOf, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection, type SiteRef } from '../src/features/library/collection'
 import { OFFERS, OFFER_IDS, directionsFor, kindFor, offerOf, pagesFromWords, purposeFrom, siteTraits } from '../src/features/library/inspire'
 import { COLOUR_WORDS, SHAPE_WORDS, TYPE_WORDS, recommendSectionPhotos, cleanPieces, defaultPagesFor, pieceIssues, composeRecipe, isValidSpec, rankPalettes, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
@@ -767,6 +767,21 @@ const main = async () => {
       assert.equal(purposeFrom('A photography gallery and bookshop: three exhibitions a year, talks on Thursdays.'), 'event', 'a gallery with exhibitions is an event venue, not a restaurant')
       assert.deepEqual(directionsFor({ items: [], purpose: 'event', name: 'Pale Hour', about: 'A photography gallery: three exhibitions a year.' })[0].plan.pages.map((p) => p.label), ['Home', 'Exhibitions', 'Visit', 'About'], 'and gets a gallery’s pages')
       assert.equal(inferGoal(directionsFor({ items: [], purpose: 'event', name: 'Pale Hour', about: 'A photography gallery: three exhibitions a year.' })[0].plan), 'visit', 'whose visitors come to visit, not to RSVP')
+      { // Ninth Row (#25): a cinema was read as nothing ("A place or an event" then made it a restaurant) — now an event
+        // venue with its own start (Programme, Tickets, Visit) whose main action books tickets, not a table.
+        const about = 'A 120-seat arthouse cinema: new and old films every night, a late-night series on Fridays, tickets for every screening.'
+        assert.equal(purposeFrom(about), 'event', 'a cinema is an event venue')
+        const nr = directionsFor({ items: [], purpose: 'event', name: 'Ninth Row', about })[0].plan
+        assert.deepEqual(nr.pages.map((p) => p.label), ['Home', 'Programme', 'Tickets', 'Visit', 'About'], 'and gets a cinema’s pages')
+        assert.equal(ctaFor('event', inferGoal(nr)), 'Book tickets', 'whose main action books tickets')
+        assert.equal(ctaFor('restaurant', 'book'), 'Book a table', 'a restaurant still books a table')
+        assert.deepEqual([...keptByName([{ kind: 'footer', id: 'wordmark', from: 'example:lowfield-nights' }, { kind: 'menu', id: 'classic-bar', from: 'example:halden' }, { kind: 'like', what: 'colours', site: 'example:fennwood' }])].sort(), ['footer', 'nav', 'palette'], 'a new look keeps a taken menu and footer')
+        // Its build: Featured Work's picture asked for "each project", and the copy filled the programme with real films
+        // and famous directors — a cinema's pictures are its strands, and invented content is invented outright.
+        const nrr = composeRecipe(planToSpec(nr))
+        assert.ok(visualQa(nrr).some((l) => l.startsWith('Footer') && l.includes(nrr.chrome.footer.composition)), 'verification describes the footer the layout builds')
+        assert.match(nrr.media.shots.find((x) => x.where.includes('Featured Work'))!.shows, /strand of the programme/, 'a cinema’s Featured Work pictures its programme strands')
+        assert.match(JSON.stringify(nrr), /never a real film, book, record, artwork, artist, brand or famous person/, 'invented content is never a real film or a famous person') }
       { // Pages are never shown (decision 48): what the sentence asks for is there, and nothing is left without them.
         const ph = directionsFor({ items: [], purpose: 'event', name: 'Pale Hour', about: 'A photography gallery and bookshop: three exhibitions a year, photobooks to take home.' })[0].plan
         assert.ok(types(ph).includes('shop') && inferGoal(ph) === 'visit', 'a gallery’s bookshop gets a Shop page and stays a place to visit')
@@ -930,6 +945,8 @@ const main = async () => {
       const r = composeRecipe(specFromSeed(seed))
       const qa = visualQa(r).join('\n')
       assert.ok(/scale 0\.97/.test(qa) && /Worst case/.test(qa) && /svh/.test(qa) && /gentler, not gone/.test(qa), `${seed.slug}: QA checks feel, worst case, phone and reduced motion`)
+      assert.ok(/pointer cursor/.test(qa) && /Letters whole/.test(qa), `${seed.slug}: QA checks the pointer and whole letters`)
+      assert.ok(/never reveals a temporary picture/.test(qa), `${seed.slug}: QA says a hover never reveals a placeholder over a real picture`)
       for (const p of [...r.motion.patterns, ...r.signatures]) for (const v of Object.values(p)) if (typeof v === 'string') assert.ok(!/transition:\s*all|scale\(0\)|\bease-in\b(?!-out)/.test(v), `${seed.slug}: ${p.name} never asks for transition: all, scale(0) or ease-in`)
     }
     const r = composeRecipe(specFromSeed(recipeSeeds[0]))
@@ -937,6 +954,8 @@ const main = async () => {
       const tokens = (await a.generate(r)).files.find((f) => f.path.endsWith('tokens.css'))!.content
       assert.match(tokens, /--ease-out: cubic-bezier\(0\.23, 1, 0\.32, 1\)/, `${id}: tokens.css ships the strong curves`)
       assert.match(tokens, /--duration-menu: 200ms/, `${id}: tokens.css ships the UI times`)
+      // The user, 2026-10-09: buttons always show the hand (Tailwind v4 gives them the arrow).
+      assert.ok(tokens.includes('button:not(:disabled)') && /cursor: pointer/.test(tokens) && /cursor: not-allowed/.test(tokens), `${id}: tokens.css gives every clickable thing the pointer`)
     }
     const craft = (await adapters['claude-code'].generate(r)).files.find((f) => f.path === '.claude/skills/interaction-craft/SKILL.md')?.content ?? ''
     assert.ok(craft.includes('Copyright (c) 2026 Emil Kowalski') && craft.includes('Permission is hereby granted'), 'interaction-craft carries its MIT notice')
@@ -963,6 +982,8 @@ const main = async () => {
     assert.equal(purposeFrom('A six-week evening course in typographic design: grids, lettering and a poster of your own at the end. Twelve seats a cohort, in our studio or online.'), 'course', 'a course taught online is a course')
     assert.equal(purposeFrom('Hand-thrown mugs, sold in our online shop.'), 'ecommerce', 'an online shop still sells')
     for (const src of [...Object.values(pieceSource), ...Object.values(blockSource), ...Object.values(heroSource)]) assert.ok(!/scale: 0[ ,}]|transition:\s*all|transition-all/.test(src!), 'no shipped piece or section enters from scale(0) or transitions all')
+    // Pip & Kiln (#24): a line mask with 0.14em below cut Bagel Fat One's g and p — every shipped text mask keeps room for the letters.
+    for (const [file, src] of Object.entries(pieceSource)) for (const m of src!.matchAll(/className="([^"]*overflow-hidden[^"]*)"/g)) if (/align-bottom/.test(m[1])) assert.ok(/pb-\[0\.(2|3)\d*em\]/.test(m[1]), `${file}: a text mask keeps room for descenders (${m[1]})`)
   }
 
   // Kelp Line (#23): a story told on three pages had one picture for all three — each page's story gets its own file;

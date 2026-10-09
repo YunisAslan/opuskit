@@ -19,14 +19,15 @@ const halves = (t: string) => {
 const SPOTS = ['md:absolute md:left-0 md:top-[34%] md:-rotate-3', 'md:absolute md:right-0 md:top-[52%] md:rotate-2', 'md:absolute md:left-[6%] md:bottom-[10%] md:rotate-1', 'md:absolute md:right-[6%] md:top-[18%] md:-rotate-2']
 
 export function ProductHighlightSection({ name, lines, eyebrow, text, media, alt, details, action }: {
-  name: string; lines?: string[]; eyebrow?: string; text: string; media: { id: AssetKey; product?: string }; alt: string; details: { label: string; value: string }[]; action?: ReactNode
+  name: string; lines?: string[]; eyebrow?: string; text: string; media: { id: AssetKey; product?: string }; alt?: string; details: { label: string; value: string }[]; action?: ReactNode
 }) {
   return (
     <section className="px-(--gutter)">
       <div data-tone="surface" className="relative mx-auto max-w-(--container) overflow-hidden rounded-(--radius-card) px-(--gutter) py-[calc(var(--section-y)*0.6)] text-center">
         {eyebrow && <p className="t-action">{eyebrow}</p>}
         <Lines text={name} lines={lines ?? [name]} mobile={halves(name)} className="type-display relative z-10 mt-4 leading-[0.84] [font-size:clamp(3.2rem,11vw,11rem)]" />
-        <div className="relative mx-auto -mt-[3vw] max-w-6xl">
+        {/* the picture starts just under the name's descenders (a quarter of its size), so no letter hides behind it */}
+        <div className="relative mx-auto mt-[clamp(0.8rem,2.75vw,2.75rem)] max-w-6xl">
           <ClipReveal className="relative z-20 mx-auto w-[min(100%,34rem)] overflow-hidden rounded-(--radius-media)">
             <MediaAsset id={media.id} product={media.product} alt={alt} sizes="(min-width: 768px) 34rem, 90vw" />
           </ClipReveal>

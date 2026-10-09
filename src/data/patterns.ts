@@ -201,7 +201,7 @@ export const motionPatterns: MotionPattern[] = [
   {
     id: 'line-reveal', name: 'Line-by-line headline reveal', levels: ['subtle', 'dynamic', 'immersive'],
     purpose: 'Direct attention to headlines and set reading pace.',
-    trigger: 'Viewport entry, once', behavior: 'Each line masked (overflow hidden) and translated from 100% to 0, 80ms stagger.',
+    trigger: 'Viewport entry, once', behavior: 'Each line masked (overflow hidden) and translated from 100% to 0, 80ms stagger. The mask keeps room for the letters: about 0.2em above and 0.3em below inside it, cancelled by the same negative margin, so no descender or accent is cut.',
     duration: '700ms per line', easing: 'cubic-bezier(0.22, 1, 0.36, 1)', implementation: 'Split lines manually in markup (preferred for control) (one span per line or word); animate with Motion or CSS.', tech: 'motion',
     performance: 'Only transform; split into lines, not characters, for body-length text.', reducedMotion: 'Show lines immediately.',
   },

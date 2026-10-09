@@ -20,12 +20,12 @@ const DESK: Omit<DeskPhoto, 'src' | 'alt' | 'width' | 'height'>[] = [
   { x: '55%', y: '53%', w: '23%', rotate: 6 }, { x: '74%', y: '45%', w: '24%', rotate: -3 },
 ]
 
-export type Photo = { index: number; alt: string; caption: string }
+export type Photo = { index: number; alt?: string; caption: string }
 
 export function GallerySection({ title, lines, hint, view, viewLabel, photos }: { title: string; lines: string[]; hint: string; view: { desk: string; grid: string }; viewLabel: string; photos: Photo[] }) {
   const [mode, setMode] = useState<'desk' | 'grid'>('desk')
   const [open, setOpen] = useState<number | null>(null)
-  const desk: DeskPhoto[] = photos.map((p, i) => { const m = media('gallery', { index: p.index }); return { ...DESK[i % DESK.length], src: m.src, alt: p.alt, width: m.width, height: m.height } })
+  const desk: DeskPhoto[] = photos.map((p, i) => { const m = media('gallery', { index: p.index, alt: p.alt }); return { ...DESK[i % DESK.length], src: m.src, alt: m.alt, width: m.width, height: m.height } })
 
   const grid = (
     <ul className="focus-cards grid grid-cols-2 gap-x-(--gutter) gap-y-8 md:grid-cols-3 xl:grid-cols-4">

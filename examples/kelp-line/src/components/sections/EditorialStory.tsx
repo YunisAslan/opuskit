@@ -49,7 +49,7 @@ export function EditorialStorySection({ tone, media = 'side', title, mobileTitle
     <section data-tone={t} className="section-pad">
       <article className="frame">
         <figure data-reveal className="relative">
-          <MediaAsset id={image} alt={alt} ratio="21 / 9" mobileRatio="4 / 5" reveal="horizon" sizes="(min-width: 1440px) 1360px, 100vw" position="50% 45%" />
+          <MediaAsset id={image} alt={alt} ratio="21 / 9" mobileRatio="4 / 5" reveal="horizon" sizes="(min-width: 1440px) 1360px, 100vw" />
           <span aria-hidden className="waterline pointer-events-none absolute inset-x-0 top-1/2 h-px origin-left bg-(--color-text)" />
           {caption && <figcaption className="type-caption mt-3 text-(--color-muted)">{caption}</figcaption>}
         </figure>

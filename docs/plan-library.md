@@ -587,6 +587,35 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     every kind of site). Parts taken before stay valid. Later, a sections shelf in the Library follows the same rule, and
     OpusKit shows elements with its own photos, films and clean components as it grows.
 
+53. **Whole letters and the hand on every button** (2026-10-09, the user: make sure these never happen again). Pip &
+    Kiln's line reveal kept 0.14em under each masked line and cut Bagel Fat One's g and p; buttons showed the arrow
+    because Tailwind v4 no longer gives them a pointer. Now every package's tokens.css sets `cursor: pointer` on
+    buttons, tabs, options, menu items, summaries and labels and `not-allowed` on disabled ones (`POINTER_CSS`); the
+    interaction-craft guide's Never-ship table has both (a text mask keeps about 0.2em above and 0.3em below, cancelled
+    by negative margin, checked with "Ågypj" in the display face); the definition of done says "shows the pointer
+    cursor" and "Letters whole"; the line-reveal pattern says so; TextEffect and DuoHeadline masks give that room.
+    check.ts: every adapter's tokens.css has the pointer, every seed's QA both lines, no shipped line mask without room.
+    OpusKit's own UI adds tabs and `role="button"` to its pointer rule. Kelp Line's fix showed 0.15em above is too little for a tall face
+    (Hedvig) — the room above is 0.2em. And (the user, same day): a hover never shows a placeholder where a real
+    picture is — a swap to a second picture runs only once that file is real (the definition of done and Never ship).
+
+54. **A cinema is a cinema** (2026-10-09, Ninth Row's engine test — the answer to "is a cinema read as an event venue
+    (decision 46)?" was no). The sentence reader knew no cinema or screening, so "A place or an event" made it a
+    restaurant; as an event it got a festival's RSVP and "Book a table". Now cinemas, screenings, picture houses and
+    film clubs read as an event venue with a second start of their own, **Cinema or theatre** (Home, Programme,
+    Tickets, Visit, About — `starterFrom`), and the main action is said in the kind's own words: `ctaFor(purpose,
+    goal)` — an event books tickets, a restaurant still a table (taxonomy.ts; the engine's CTA examples and the
+    previews use it). check.ts.
+
+55. **Ninth Row's lessons** (2026-10-09, its build). (1) Picking a look in Direction replaced a footer taken from a site
+    (Lowfield Nights' Big name became Signature columns): a taken menu or footer is now kept like taken colours and
+    lettering (`keptByName`). (2) Verification said the footer was a dark band while layout.md put it on the page
+    ground (a dark palette): verification now describes the footer as the recipe builds it. (3) The shot list asked a
+    cinema for "one picture of each project": a kind of site can say what a part's pictures are (`SHOTS_BY_PURPOSE` —
+    an event's Featured Work is its programme strands, never a still from a real film). (4) The builder filled the
+    programme with real films and famous directors: the copy rules now say invented content is invented outright —
+    never a real film, book, record, artwork, artist, brand or famous person. check.ts for each.
+
 ## 5. Open
 
 1. ~~Retiring the kit~~ — done (decision 31). Shape, menu and footer look, movement and behaviours are now the engine's

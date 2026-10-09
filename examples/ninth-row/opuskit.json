@@ -1,0 +1,130 @@
+{
+  "opuskit": 1,
+  "recipe": "cinematic-editorial",
+  "note": "The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit. The footer was set to Big name (wordmark), as taken in the Library — a Direction bug had dropped it (decision 55).",
+  "spec": {
+    "base": "cinematic-editorial",
+    "brief": {
+      "name": "Ninth Row",
+      "offer": "A 120-seat arthouse cinema: new and old films every night, a late-night series on Fridays, tickets for every screening.",
+      "goal": "book"
+    },
+    "purpose": "event",
+    "direction": "film-inspired",
+    "characters": [
+      "mysterious"
+    ],
+    "lead": "video",
+    "motion": "immersive",
+    "hero": "scroll-video",
+    "layout": "full-bleed",
+    "palette": "grading-suite",
+    "typography": "tall-order",
+    "assets": [],
+    "uploads": [],
+    "mediaPlan": "temporary",
+    "concept": "off",
+    "signatures": [],
+    "pieces": [
+      "smooth-scroll",
+      "curtain-transition"
+    ],
+    "piecePlacements": [
+      {
+        "piece": "smooth-scroll",
+        "page": "*",
+        "index": -1
+      },
+      {
+        "piece": "curtain-transition",
+        "page": "*",
+        "index": -1
+      }
+    ],
+    "pages": [
+      {
+        "id": "j8ed8vi3",
+        "type": "home",
+        "label": "Home",
+        "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+        "sections": [
+          "hero",
+          "intro",
+          "schedule",
+          "featured-work",
+          "newsletter"
+        ]
+      },
+      {
+        "id": "4qhi5gh5",
+        "type": "work",
+        "label": "Programme",
+        "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+        "sections": [
+          "schedule",
+          "featured-work"
+        ]
+      },
+      {
+        "id": "hvd4msez",
+        "type": "reservations",
+        "label": "Tickets",
+        "purpose": "Convert interest into a booking with minimal friction.",
+        "sections": [
+          "reservation",
+          "pricing",
+          "faq"
+        ]
+      },
+      {
+        "id": "brmyhc01",
+        "type": "locations",
+        "label": "Visit",
+        "purpose": "Help visitors find and choose the right location.",
+        "sections": [
+          "location",
+          "faq"
+        ]
+      },
+      {
+        "id": "weao7ckj",
+        "type": "about",
+        "label": "About",
+        "purpose": "Put a human face and point of view on the work; build trust.",
+        "sections": [
+          "about",
+          "team"
+        ]
+      }
+    ],
+    "target": "not-sure",
+    "taken": [
+      {
+        "site": "example:halden",
+        "kind": "like",
+        "id": "opening"
+      },
+      {
+        "site": "example:halden",
+        "kind": "effect",
+        "id": "smooth-scroll"
+      },
+      {
+        "site": "example:lowfield-nights",
+        "kind": "section",
+        "id": "schedule"
+      },
+      {
+        "site": "example:lowfield-nights",
+        "kind": "effect",
+        "id": "curtain-transition"
+      },
+      {
+        "site": "example:lowfield-nights",
+        "kind": "footer",
+        "id": "wordmark"
+      }
+    ],
+    "footer": "wordmark"
+  }
+}

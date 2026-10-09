@@ -11,7 +11,7 @@ export function OpenLarge({ photos, index = 0, children }: { photos: LightboxPho
   const p = photos[index]
   return (
     <>
-      <button type="button" onClick={() => setOpen(index)} aria-label={`Open large: ${p.caption ?? p.alt}`} className="group press relative block w-full cursor-zoom-in rounded-(--radius-media) text-left active:scale-[0.99]">
+      <button type="button" onClick={() => setOpen(index)} aria-label={`Open large: ${p.caption ?? p.alt}`} className="group press relative block w-full cursor-pointer rounded-(--radius-media) text-left active:scale-[0.99]">
         {children}
         <span aria-hidden className="type-caption absolute bottom-3 right-3 flex items-center gap-2 rounded-(--radius-button) bg-(--frost) px-3 py-2 text-(--color-text) backdrop-blur-md transition-colors duration-150 group-hover:bg-(--color-background) group-focus-visible:bg-(--color-text) group-focus-visible:text-(--color-background)">
           <Expand className="size-3.5" strokeWidth={1.5} />Open large

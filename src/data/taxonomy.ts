@@ -213,6 +213,12 @@ export const purposes: Record<PurposeId, Purpose> = {
       { type: 'work', label: 'Exhibitions', tier: 'recommended', sections: ['featured-work', 'gallery'] },
       { type: 'locations', label: 'Visit', tier: 'recommended', sections: ['location', 'schedule', 'faq'] },
       { type: 'about', label: 'About', tier: 'recommended', sections: ['about', 'team'] },
+    ] }, { id: 'cinema', name: 'Cinema or theatre', hint: 'A programme, tickets, a seat', pages: [
+      { type: 'home', label: 'Home', tier: 'recommended', sections: ['hero', 'intro', 'schedule', 'featured-work', 'newsletter'] },
+      { type: 'work', label: 'Programme', tier: 'recommended', sections: ['schedule', 'featured-work'] },
+      { type: 'reservations', label: 'Tickets', tier: 'recommended', sections: ['reservation', 'pricing', 'faq'] },
+      { type: 'locations', label: 'Visit', tier: 'recommended', sections: ['location', 'faq'] },
+      { type: 'about', label: 'About', tier: 'recommended', sections: ['about', 'team'] },
     ] }],
   },
   nonprofit: {
@@ -950,3 +956,8 @@ export const goals: Record<GoalId, Goal> = {
   apply: { id: 'apply', name: 'Apply or enrol', line: 'Jobs, courses, programmes', effect: 'Requirements and deadlines come first, then a short step-by-step application form.', page: 'careers', cta: ['Apply now', 'Enrol', 'Check eligibility'] },
   download: { id: 'download', name: 'Download the app', line: 'iOS, Android, desktop', effect: 'App-store buttons in the hero and footer; screenshots show the app in use.', cta: ['Download the app', 'Get it on iOS', 'Get it on Android'] },
 }
+
+/** The main action in a kind of site's own words, where the goal's first is another kind's (a cinema books tickets,
+ *  not a table — Ninth Row, #25). */
+const GOAL_CTA: Partial<Record<PurposeId, Partial<Record<GoalId, string>>>> = { event: { book: 'Book tickets' } }
+export const ctaFor = (purpose: PurposeId | undefined, goal: GoalId) => (purpose && GOAL_CTA[purpose]?.[goal]) ?? goals[goal].cta[0]

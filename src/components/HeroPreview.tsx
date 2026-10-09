@@ -3,8 +3,8 @@
 import { SectionPreview } from '@/components/SectionPreview'
 import { SitePreview, previewFromDirection } from '@/components/SitePreview'
 import { examples } from '@/data/examples'
-import { goals } from '@/data/taxonomy'
-import { inferGoal } from '@/features/kit/plan'
+import { ctaFor } from '@/data/taxonomy'
+import { inferGoal, inferPurpose } from '@/features/kit/plan'
 import { EFFECTS } from '@/data/patterns'
 import type { HeroId, KitPlan } from '@/types/domain'
 import { lookOf } from './ProductVisual'
@@ -24,5 +24,5 @@ export function HeroPreview({ plan, id }: { plan: KitPlan; id?: HeroId }) {
 /** The owner's sentence, their pages as the menu and their main action — so a first screen speaks for their site. */
 function ownWords(plan: KitPlan) {
   const nav = plan.pages.filter((p) => !['home', 'cart', 'product-detail'].includes(p.type) && p.sections.length).slice(0, 3).map((p) => p.label)
-  return { line: plan.about?.trim() || undefined, nav: nav.length ? nav : undefined, cta: plan.pages.length ? goals[inferGoal(plan)].cta[0] : undefined }
+  return { line: plan.about?.trim() || undefined, nav: nav.length ? nav : undefined, cta: plan.pages.length ? ctaFor(inferPurpose(plan), inferGoal(plan)) : undefined }
 }

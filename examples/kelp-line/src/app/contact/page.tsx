@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { ContactCtaSection } from '@/components/sections/ContactCta'
 import { LocationSection } from '@/components/sections/Location'
 import { ScheduleSection } from '@/components/sections/Schedule'
+import { asset } from '@/config/assets'
 import { contact, site } from '@/content/site'
 
 export const metadata: Metadata = { title: 'Contact', description: 'When we are on the quay, how to reach us, and how to find the boathouse.' }
@@ -25,7 +26,7 @@ export default function Contact() {
         notes={contact.location.notes}
         mapUrl={contact.location.mapUrl}
         phone={site.phone}
-        alt={contact.location.alt}
+        alt={asset('location').alt}
         caption={contact.location.caption}
       />
     </>
