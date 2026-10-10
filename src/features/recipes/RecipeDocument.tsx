@@ -11,7 +11,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { ToolIcon } from '@/components/ToolIcon'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { directions, purposes } from '@/data/taxonomy'
+import { directions, kindName } from '@/data/taxonomy'
 import { adapters } from '@/features/build-packages'
 import { BuildTab, downloadPackage, useBuildPackage } from '@/features/build-packages/BuildPanel'
 import { MediaSlots } from '@/components/MediaSlots'
@@ -87,7 +87,7 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false 
     <article className={`mx-auto max-w-[1440px] px-5 md:px-8 ${studio ? 'pb-24' : 'pb-40'}`}>
       {/* The owner's own name and sentence; the engine's long title stays in the package. */}
       <header className="pt-10 lg:pt-14">
-        <p className="label text-muted">Recipe · {purposes[spec.purpose].name} · {directions[spec.direction].name} · {r.visualSystem.palette.name} · {r.visualSystem.typography.name}</p>
+        <p className="label text-muted">Recipe · {kindName(spec.purpose)} · {directions[spec.direction].name} · {r.visualSystem.palette.name} · {r.visualSystem.typography.name}</p>
         <h1 className="display mt-4 max-w-5xl text-[clamp(2.6rem,6vw,5rem)]">{spec.brief?.name?.trim() || r.title}</h1>
         <p className="mt-4 line-clamp-2 max-w-2xl text-lg text-ink-2">{spec.brief?.offer?.trim() || r.summary}</p>
       </header>

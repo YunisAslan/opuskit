@@ -12,7 +12,8 @@ import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { sectionVariants } from '@/data/section-variants'
 import { goals, purposes } from '@/data/taxonomy'
 import { CLOSING, EMPTY_PLAN, addSuggested, moveSection, effectOn, onChrome, pageSuggestions, piecesFor, replaceSection, sectionGroups, setBehaviour, setHero, setSectionVariant, setStyle, specToPlan, start, toggleSitePiece, togglePiece } from '@/features/studio/plan'
-import { composeRecipe, isValidSpec, specFromSeed } from '@/features/recipes/engine'
+import { composeRecipe, isValidSpec, resolveHero, specFromSeed } from '@/features/recipes/engine'
+import { TAKEABLES, TAKE_BY_KEY } from '@/data/takeables'
 import { TRAITS, TRAIT_IDS, starterFrom, type Trait } from './inspire'
 import type { TakenPart, GoalId, DirectionId, FooterStyleId, HeroId, StudioPlan, NavStyleId, PageTypeId, PieceId, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
 
@@ -44,8 +45,19 @@ export const itemKey = (i: CollectionItem) => (i.kind === 'site' ? `site:${i.sit
 /** What Direction composes from: when it is unchanged, the plan made from it (or opened into it) is kept as it is. */
 export const collectionSig = (c: Collection) => JSON.stringify([c.items.map(itemKey), c.purpose, c.about])
 export const hasItem = (c: Collection, i: CollectionItem) => c.items.some((x) => itemKey(x) === itemKey(i))
-export const toggleItem = (c: Collection, i: CollectionItem): Collection =>
-  hasItem(c, i) ? { ...c, items: c.items.filter((x) => itemKey(x) !== itemKey(i)) } : { ...c, items: [...c.items, i] }
+/** The other effects a site can only have instead of this one (one link hover, one main button, one page change, one
+ *  headline entrance — `behaviours` with `many: false`); none for an effect that sits beside others. */
+export function alternativesOf(id: PieceId): PieceId[] {
+  const b = behaviourOf(id)
+  return b && !behaviours[b].many ? behaviours[b].ids.filter((x) => x !== id) : []
+}
+/** Takes an item or puts it back. Taking an effect puts back the alternatives already taken: a site has one link hover,
+ *  so the Collection never holds two (the user, 2026-10-10 — cards stay apart, the take keeps the rule). */
+export const toggleItem = (c: Collection, i: CollectionItem): Collection => {
+  if (hasItem(c, i)) return { ...c, items: c.items.filter((x) => itemKey(x) !== itemKey(i)) }
+  const instead = i.kind === 'effect' ? new Set(alternativesOf(i.id)) : new Set<PieceId>()
+  return { ...c, items: [...c.items.filter((x) => !(x.kind === 'effect' && instead.has(x.id))), i] }
+}
 export const removeItem = (c: Collection, key: string): Collection => ({ ...c, items: c.items.filter((x) => itemKey(x) !== key) })
 
 // ─── Sites ──────────────────────────────────────────────────────────────────
@@ -73,7 +85,36 @@ export const sitesWith = (id: SectionId): SiteRef[] => allSites.filter((r) => r.
 
 // ─── Names, for cards, notes and the Collection page ────────────────────────
 
+/** The catalog key of a taken thing (src/data/takeables.ts) — what design it is, whichever site it came from. */
+export function takeKeyOf(i: CollectionItem): string | undefined {
+  switch (i.kind) {
+    case 'section': return `section:${i.id}${i.variant ? `/${i.variant}` : ''}`
+    case 'menu': return `nav:${i.id}`
+    case 'footer': return `footer:${i.id}`
+    case 'effect': return `effect:${i.id}`
+    case 'like': { const spec = i.what === 'opening' ? siteSpec(i.site) : undefined; return spec && `hero:${resolveHero(spec).id}` }
+    default: return undefined
+  }
+}
+
+/** Every design a site has to take, as catalog keys with the item that takes it: its first screen, menu, the parts that
+ *  carry its design (decision 52), footer and effects. Which of them its own page shows is the catalog's `bestOn`. */
+export function designsOf(ref: SiteRef): { key: string; item: CollectionItem }[] {
+  const spec = siteSpec(ref)
+  if (!spec) return []
+  const r = composeRecipe(spec), out = new Map<string, CollectionItem>()
+  const add = (item: CollectionItem) => { const k = takeKeyOf(item); if (k && !out.has(k)) out.set(k, item) }
+  add({ kind: 'like', what: 'opening', site: ref })
+  add({ kind: 'menu', id: r.chrome.nav.id, from: ref })
+  for (const p of r.pages) for (const x of p.sections) if (SIGNATURE_PARTS.has(x.id as SectionId)) add({ kind: 'section', id: x.id as SectionId, ...(x.variant ? { variant: x.variant.id } : {}), from: ref })
+  add({ kind: 'footer', id: r.chrome.footerStyle.id, from: ref })
+  for (const p of r.pieces) add({ kind: 'effect', id: p.id, from: ref })
+  return [...out].map(([key, item]) => ({ key, item }))
+}
+
 export function itemName(i: CollectionItem): string {
+  const named = TAKE_BY_KEY.get(takeKeyOf(i) ?? '')
+  if (named) return `${named.name} · ${siteName(i.kind === 'like' ? i.site : 'from' in i && i.from ? i.from : ('' as SiteRef))}`.replace(/ · $/, '')
   switch (i.kind) {
     case 'site': return siteName(i.site)
     case 'section': { const v = i.variant && sectionVariants[i.id]?.options.find((o) => o.id === i.variant); return `${v ? `${sections[i.id].name} · ${v.name}` : sections[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}` }
@@ -97,6 +138,11 @@ export const takenOf = (items: CollectionItem[]): TakenPart[] => items.flatMap((
 
 /** One pick in words: "whole look", "colours", "Menu", "Words that arrive". */
 export function takenName(t: TakenPart): string {
+  // The catalog's name when the pick is one design (a section taken without its variant takes its first design's name).
+  const opening = t.kind === 'like' && t.id === 'opening' ? siteSpec(t.site as SiteRef) : undefined
+  const key = opening ? `hero:${resolveHero(opening).id}` : t.kind === 'menu' ? `nav:${t.id}` : t.kind === 'footer' || t.kind === 'effect' || t.kind === 'section' ? `${t.kind}:${t.id}` : undefined
+  const named = key && (TAKE_BY_KEY.get(key) ?? TAKEABLES.find((x) => x.key.startsWith(`${key}/`)))
+  if (named) return named.name
   switch (t.kind) {
     case 'site': return 'whole look'
     case 'like': return TRAITS[t.id as Trait]?.name.toLowerCase() ?? t.id

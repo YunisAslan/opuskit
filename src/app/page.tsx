@@ -5,7 +5,7 @@ import { ToolIcon } from '@/components/ToolIcon'
 import { ShaderDither } from '@/pieces/ShaderDither'
 import exampleSpecs from '@/data/example-specs.generated.json'
 import { examples } from '@/data/examples'
-import { directions, purposes } from '@/data/taxonomy'
+import { directions, kindName } from '@/data/taxonomy'
 import { adapters } from '@/features/build-packages'
 import { composeRecipe } from '@/features/recipes/engine'
 import type { PaletteColors, RecipeSpec } from '@/types/domain'
@@ -150,7 +150,7 @@ export default async function Home() {
                     <span className="font-medium"><span className="ulink">{short(e.title)}</span></span>
                     <span className="label shrink-0">{String(i + 1).padStart(2, '0')}</span>
                   </div>
-                  <p className="label mt-1.5">{s ? `${purposes[s.purpose].name} · ${directions[s.direction].name}` : e.mood.join(' · ')}</p>
+                  <p className="label mt-1.5">{s ? `${kindName(s.purpose)} · ${directions[s.direction].name}` : e.mood.join(' · ')}</p>
                 </Link>
               </li>
             )

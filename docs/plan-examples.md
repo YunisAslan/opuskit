@@ -60,13 +60,9 @@ All twenty-five are built, registered and live. Open:
 | Fennwood | intro, menu, gallery, reservation, location, faq, footer |
 | Sticky Weather | featured-work, manifesto, journal, contact-cta, about |
 | Hexmint | clients, feature-rows, feature-grid, integrations, testimonials, contact-cta, how-it-works |
-| Lowfield Nights | the home first screen (site clip), intro, schedule, team, location, reservation, menu, faq, footer |
-| Velmira | the home first screen (site clip), intro, feature-rows, journal, reservation, lookbook, gallery, location, faq, footer |
 | Slow Atlas | editorial-story, journal, categories |
-| Halvik | product-highlight, feature-rows, press, testimonials, pricing, trust, contact-cta, footer, feature-grid, how-it-works |
 | Hane | services, how-it-works, testimonials, pricing, reservation |
 | Brasshand | manifesto, case-study, clients, services, journal |
-| Saint Ashe | journal, newsletter, lookbook, editorial-story, team, product-grid, contact-cta, footer, about |
 
 ## 5. Next sites (#17–#20, 2026-10-06)
 
@@ -132,6 +128,12 @@ Order: 26 → 27 → 28 → 29. Concepts are invented and international (no Azer
 | # | Site | Recipe | Media | Build | Registered | Clips |
 |---|---|---|---|---|---|---|
 | 1–10 | Slow Atlas … Lowfield Nights | ✓ | ✓ | ✓ | ✓ | ✓ (re-recordings in §4) |
+
+Removed 2026-10-10 at the user's request, with everything that was theirs (code, media, live export, zip, card, catalog
+entries): Halvik, Velmira, Lowfield Nights, Saint Ashe. Their folders went to the macOS Trash
+(`opuskit-removed-2026-10-10`); earlier commits still hold them. Rows below that name them as a source of taken parts
+are history — those examples were built from them.
+
 | 11 | Inkwell & Moth | ✓ | ✓ | ✓ | ✓ live | waiting for recording |
 | 12 | Kür Delta Watch | ✓ | ✓ | ✓ | ✓ live | waiting for recording |
 | 13 | Night Shift | ✓ | ✓ | ✓ | ✓ live | waiting for recording |

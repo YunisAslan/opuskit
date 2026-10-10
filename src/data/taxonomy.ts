@@ -961,3 +961,25 @@ export const goals: Record<GoalId, Goal> = {
  *  not a table — Ninth Row, #25). */
 const GOAL_CTA: Partial<Record<PurposeId, Partial<Record<GoalId, string>>>> = { event: { book: 'Book tickets' } }
 export const ctaFor = (purpose: PurposeId | undefined, goal: GoalId) => (purpose && GOAL_CTA[purpose]?.[goal]) ?? goals[goal].cta[0]
+
+// Kinds of site as the plain names people know (the Library's Kind filter and every label of a site's kind) — SaaS, Portfolio, E-commerce stay apart; only kinds that mean nearly
+// the same thing share one name (the user, 2026-10-10: no "A & B" umbrellas). It is only a filter; every kind sits under
+// one name, and a name no site has is not offered.
+export const KIND_GROUPS: Record<string, { name: string; kinds: PurposeId[] }> = {
+  ecommerce: { name: 'E-commerce', kinds: ['ecommerce', 'fashion'] },
+  product: { name: 'Product', kinds: ['product'] },
+  saas: { name: 'SaaS', kinds: ['saas'] },
+  portfolio: { name: 'Portfolio', kinds: ['portfolio', 'personal-brand', 'experiment'] },
+  studio: { name: 'Studio', kinds: ['studio', 'agency'] },
+  restaurant: { name: 'Restaurant', kinds: ['restaurant'] },
+  hotel: { name: 'Hotel', kinds: ['hotel'] },
+  events: { name: 'Events', kinds: ['event'] },
+  wellness: { name: 'Wellness', kinds: ['spa', 'clinic'] },
+  education: { name: 'Education', kinds: ['course'] },
+  nonprofit: { name: 'Nonprofit', kinds: ['nonprofit'] },
+  realestate: { name: 'Real estate', kinds: ['real-estate'] },
+  blog: { name: 'Blog', kinds: ['blog'] },
+}
+/** A kind of site as it is shown: its plain name (Education, Studio, Wellness), the same everywhere — the data's own
+ *  names ("Course / education") stay for matching examples' recorded choices. */
+export const kindName = (p: PurposeId) => Object.values(KIND_GROUPS).find((g) => g.kinds.includes(p))?.name ?? purposes[p].name

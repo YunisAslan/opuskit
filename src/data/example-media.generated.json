@@ -340,6 +340,19 @@
    "/examples/sela-mor/media/gallery-8.jpg",
    "/examples/sela-mor/media/portrait.jpg",
    "/examples/sela-mor/media/stage.jpg",
+   "/examples/sela-mor/media/stills/about.jpg",
+   "/examples/sela-mor/media/stills/case-study.jpg",
+   "/examples/sela-mor/media/stills/clients.jpg",
+   "/examples/sela-mor/media/stills/contact-cta.jpg",
+   "/examples/sela-mor/media/stills/featured-work.jpg",
+   "/examples/sela-mor/media/stills/footer.jpg",
+   "/examples/sela-mor/media/stills/gallery.jpg",
+   "/examples/sela-mor/media/stills/hero.jpg",
+   "/examples/sela-mor/media/stills/intro.jpg",
+   "/examples/sela-mor/media/stills/navbar.jpg",
+   "/examples/sela-mor/media/stills/newsletter.jpg",
+   "/examples/sela-mor/media/stills/press.jpg",
+   "/examples/sela-mor/media/stills/schedule.jpg",
    "/examples/sela-mor/media/work-live.jpg",
    "/examples/sela-mor/media/work-machine.jpg",
    "/examples/sela-mor/media/work-rain.jpg",
@@ -411,73 +424,6 @@
    "/examples/inkwell-moth/media/studio.jpg"
   ],
   "films": []
- },
- "lowfield-nights": {
-  "photos": [
-   "/examples/lowfield-nights/media/artist-1.jpg",
-   "/examples/lowfield-nights/media/artist-2.jpg",
-   "/examples/lowfield-nights/media/artist-3.jpg",
-   "/examples/lowfield-nights/media/artist-4.jpg",
-   "/examples/lowfield-nights/media/location.jpg",
-   "/examples/lowfield-nights/media/venue-1.jpg",
-   "/examples/lowfield-nights/media/venue-2.jpg",
-   "/examples/lowfield-nights/media/venue-3.jpg",
-   "/examples/lowfield-nights/media/venue-4.jpg"
-  ],
-  "films": [
-   {
-    "src": "/examples/lowfield-nights/media/heroVideo.mp4",
-    "poster": "/examples/lowfield-nights/media/posterImage.jpg"
-   }
-  ]
- },
- "velmira": {
-  "photos": [
-   "/examples/velmira/media/arrival.jpg",
-   "/examples/velmira/media/bath.jpg",
-   "/examples/velmira/media/gallery-1.jpg",
-   "/examples/velmira/media/gallery-2.jpg",
-   "/examples/velmira/media/gallery-3.jpg",
-   "/examples/velmira/media/gallery-4.jpg",
-   "/examples/velmira/media/lake.jpg",
-   "/examples/velmira/media/room-1.jpg",
-   "/examples/velmira/media/room-2.jpg",
-   "/examples/velmira/media/room-3.jpg",
-   "/examples/velmira/media/sauna.jpg"
-  ],
-  "films": [
-   {
-    "src": "/examples/velmira/media/heroVideo.mp4",
-    "poster": "/examples/velmira/media/posterImage.jpg"
-   }
-  ]
- },
- "saint-ashe": {
-  "photos": [
-   "/examples/saint-ashe/media/detail.jpg",
-   "/examples/saint-ashe/media/look-1.jpg",
-   "/examples/saint-ashe/media/look-2.jpg",
-   "/examples/saint-ashe/media/look-3.jpg",
-   "/examples/saint-ashe/media/product-1.jpg",
-   "/examples/saint-ashe/media/product-2.jpg",
-   "/examples/saint-ashe/media/product-3.jpg",
-   "/examples/saint-ashe/media/product-4.jpg",
-   "/examples/saint-ashe/media/product-5.jpg",
-   "/examples/saint-ashe/media/product-6.jpg",
-   "/examples/saint-ashe/media/product-7.jpg",
-   "/examples/saint-ashe/media/product-8.jpg",
-   "/examples/saint-ashe/media/shop.jpg",
-   "/examples/saint-ashe/media/studio.jpg",
-   "/examples/saint-ashe/media/team-1.jpg",
-   "/examples/saint-ashe/media/team-2.jpg",
-   "/examples/saint-ashe/media/team-3.jpg"
-  ],
-  "films": [
-   {
-    "src": "/examples/saint-ashe/media/heroVideo.mp4",
-    "poster": "/examples/saint-ashe/media/posterImage.jpg"
-   }
-  ]
  },
  "fennwood": {
   "photos": [
@@ -564,35 +510,6 @@
    "/examples/hane/media/team-3-1600.webp",
    "/examples/hane/media/team-3-800.webp",
    "/examples/hane/media/team-3.jpg"
-  ],
-  "films": []
- },
- "halvik": {
-  "photos": [
-   "/examples/halvik/media/hero-1600.webp",
-   "/examples/halvik/media/hero-800.webp",
-   "/examples/halvik/media/hero-full.webp",
-   "/examples/halvik/media/hero.jpg",
-   "/examples/halvik/media/product-1600.webp",
-   "/examples/halvik/media/product-2-1600.webp",
-   "/examples/halvik/media/product-2-800.webp",
-   "/examples/halvik/media/product-2-full.webp",
-   "/examples/halvik/media/product-2.jpg",
-   "/examples/halvik/media/product-800.webp",
-   "/examples/halvik/media/product-full.webp",
-   "/examples/halvik/media/product.jpg",
-   "/examples/halvik/media/row-1-1600.webp",
-   "/examples/halvik/media/row-1-800.webp",
-   "/examples/halvik/media/row-1-full.webp",
-   "/examples/halvik/media/row-1.jpg",
-   "/examples/halvik/media/row-2-1600.webp",
-   "/examples/halvik/media/row-2-800.webp",
-   "/examples/halvik/media/row-2-full.webp",
-   "/examples/halvik/media/row-2.jpg",
-   "/examples/halvik/media/row-3-1600.webp",
-   "/examples/halvik/media/row-3-800.webp",
-   "/examples/halvik/media/row-3-full.webp",
-   "/examples/halvik/media/row-3.jpg"
   ],
   "films": []
  },

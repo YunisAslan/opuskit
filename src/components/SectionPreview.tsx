@@ -49,9 +49,9 @@ import { TrustSection } from '@/sections/Trust'
 import type { FooterStyleId, LayoutId, MediaPlacement, PaletteColors, PurposeId, SectionId, SectionTone, ShapeStyle, TypographyPairing } from '@/types/domain'
 
 // Real photos already on disk (example sites' media), one set per "world" so a preview looks like the user's kind of site.
-// Lowfield Nights: 0 hangar inside, 1 outdoor screening, 2 audience, 3 coast at dusk, 4 hangar outside.
-const ph = ['venue-1', 'venue-2', 'venue-3', 'venue-4', 'location'].map((n) => `/examples/lowfield-nights/media/${n}.jpg`)
-const players = ['artist-1', 'artist-2', 'artist-3', 'artist-4'].map((n) => `/examples/lowfield-nights/media/${n}.jpg`)
+// Ninth Row (a cinema): 0 the auditorium, 1 a lit marquee, 2 an audience at the screen, 3 the projector's beam, 4 the way in.
+const ph = ['featuredWork-4', 'featuredWork-1', 'featuredWork-3', 'about', 'location'].map((n) => `/examples/ninth-row/media/${n}.jpg`)
+const players = ['team-1', 'team-2', 'team-3', 'team-4'].map((n) => `/examples/ninth-row/media/${n}.jpg`)
 // Brasshand (a branding studio): 0 menu card, 1 posters, 2 coffee bags, 3 record sleeves, 4 wayfinding, 5 bakery window, 6 studio.
 const brand = ['work-1', 'work-2', 'work-3', 'work-4', 'work-5', 'work-6', 'studio'].map((n) => `/examples/brasshand/media/${n}.jpg`)
 const brandPeople = ['team-1', 'team-2', 'team-3'].map((n) => `/examples/brasshand/media/${n}.jpg`)
@@ -60,12 +60,15 @@ const app = ['render-invoices', 'render-expenses', 'render-books', 'render-close
 // Sticky Weather: colourful work for the sticker orbit.
 const sticky = ['work-1', 'work-2', 'work-3', 'work-4'].map((n) => `/examples/sticky-weather/media/${n}.jpg`)
 const fire = ['hero', 'dish-1', 'dish-2', 'dish-3', 'room-1', 'room-2', 'farm', 'location'].map((n) => `/examples/fennwood/media/${n}.jpg`)
-const kb = ['hero', 'product', 'product-2', 'row-1', 'row-2', 'row-3'].map((n) => `/examples/halvik/media/${n}.jpg`)
-// Halvik has no people: the product world's founders are two Unsplash portraits kept for the kit (credits in public/kit/SOURCES.md).
+// Qum (skincare): 0 the range, 1 the oil, 2 the cream, 3 hands at the ritual, 4 a serum, 5 salt crystals; its founders.
+const kb = ['hero', 'oil', 'cream', 'ritual-hands', 'serum-1', 'salt-crystals'].map((n) => `/examples/qum/media/${n}.jpg`)
+const makers = ['founder-1', 'founder-2', 'founder-3'].map((n) => `/examples/qum/media/${n}.jpg`)
+// Two Unsplash portraits kept for the kit, for a world whose photos have no people (credits in public/kit/SOURCES.md).
 const founders = ['founder-1', 'founder-2'].map((n) => `/kit/people/${n}.jpg`)
-// Saint Ashe: 0 look, 1 jacket, 2 tee, 3 coat, 4 trousers, 5 bag, 6 boots, 7 shop, 8 tall look, 9 turtleneck, 10 cap.
-const shop = ['look-1', 'product-2', 'product-3', 'product-1', 'product-4', 'product-6', 'product-5', 'shop', 'look-3', 'product-7', 'product-8'].map((n) => `/examples/saint-ashe/media/${n}.jpg`)
-const ashePeople = ['team-1', 'team-2', 'team-3'].map((n) => `/examples/saint-ashe/media/${n}.jpg`)
+// Maison Vey (a perfume house): 0 the scents together, 1 Night Ferry, 2 Orangery, 3 Salt Quay, 4 Fig Courtyard, 5 Reading Room,
+// 6 the discovery set, 7 the place, 8 a tall still life, 9 Salt Quay up close, 10 Fig Courtyard from the side.
+const shop = ['hero', 'product-night-ferry', 'product-orangery', 'product-salt-quay', 'product-fig-courtyard', 'product-reading-room', 'product-discovery-set', 'editorial-place', 'lifestyleImages', 'product-salt-quay-detail', 'product-fig-courtyard-angle'].map((n) => `/examples/maison-vey/media/${n}.jpg`)
+const shopPeople = ['/examples/maison-vey/media/about-portrait.jpg', '/kit/people/founder-1.jpg', '/kit/people/founder-2.jpg']
 
 /** The kind of site a preview is dressed as. */
 export type World = 'studio' | 'food' | 'shop' | 'product' | 'software' | 'event'
@@ -99,16 +102,16 @@ const FOOTER_INDEX = [['Studio', ['About', 'Team', 'Careers', 'Contact']], ['Wor
 const BUY: Record<World, { name: string; price: string; line: string; option: [string, string[]] }> = {
   studio: { name: 'Paper bag test, A2 print', price: '€45', line: 'Our test sheet, risograph-printed in two colours and signed by the three of us.', option: ['Size', ['A3', 'A2']] },
   food: { name: 'Wood-fire house blend', price: '€14', line: 'The coffee we pour after dinner — 250 g, roasted on Mondays.', option: ['Grind', ['Whole bean', 'Espresso', 'Filter']] },
-  shop: { name: 'Narikala coat', price: '€640', line: 'Boiled wool, cut long and straight, made in a small run in Tbilisi.', option: ['Colour', ['Oat', 'Ink', 'Moss']] },
-  product: { name: 'Halvik speaker', price: '€390', line: 'One room, one knob, a sound that fills it — no app to set up.', option: ['Finish', ['Chalk', 'Graphite']] },
+  shop: { name: 'Salt Quay', price: '€145', line: 'Sea air, wet stone and a little fig leaf — the harbour at six in the morning.', option: ['Size', ['50 ml', '100 ml']] },
+  product: { name: 'Salt face oil', price: '€38', line: 'Six oils and a pinch of lake salt — three drops, morning and night.', option: ['Size', ['15 ml', '30 ml']] },
   software: { name: 'Team plan', price: '€24 / month', line: 'Everything in Solo for up to ten people, billed once a month.', option: ['Billing', ['Monthly', 'Yearly']] },
   event: { name: 'Weekend pass', price: '€120', line: 'Both days, every stage, and the boat to the island on Sunday.', option: ['Day', ['Weekend', 'Saturday', 'Sunday']] },
 }
 const SPECS: Record<World, [string, [string, string][]]> = {
   studio: ['The project', [['Client', 'Salt & Ember'], ['Place', 'Lisbon'], ['Year', '2025'], ['Role', 'Name, identity, menus'], ['Team', 'Three people'], ['Length', 'Six weeks']]],
   food: ['The room', [['Seats', '40'], ['Counter', '12 seats'], ['Private room', 'Up to 14'], ['Kitchen', 'Wood fire'], ['Open', 'Tue–Sat, 18:00'], ['Dress', 'As you are']]],
-  shop: ['Details', [['Fabric', '100% boiled wool'], ['Lining', 'Cupro'], ['Fit', 'Long, straight'], ['Length', '112 cm in size M'], ['Made in', 'Tbilisi'], ['Care', 'Dry clean']]],
-  product: ['Specs', [['Size', '18 × 18 × 21 cm'], ['Weight', '2.1 kg'], ['Drivers', 'One 4" woofer, two tweeters'], ['Battery', '14 hours'], ['Connect', 'Bluetooth 5.3, line in'], ['In the box', 'Speaker, cable, a card']]],
+  shop: ['Details', [['Size', '50 ml'], ['Strength', 'Eau de parfum'], ['Notes', 'Salt, stone, fig leaf'], ['Lasts', 'Six to eight hours'], ['Made', 'By hand, 200 a batch'], ['Bottle', 'Refillable glass']]],
+  product: ['Specs', [['Size', '30 ml'], ['Skin', 'Dry to normal'], ['Key', 'Lake salt, saffron'], ['Scent', 'None added'], ['Lasts', 'About two months'], ['Made in', 'Small batches']]],
   software: ['Limits', [['People', 'Up to 10'], ['Projects', 'Unlimited'], ['Storage', '200 GB'], ['History', '1 year'], ['Support', 'Within a day'], ['Data', 'Stored in the EU']]],
   event: ['The venue', [['Capacity', '1,200'], ['Stages', 'Three'], ['Doors', '16:00'], ['Last boat', '01:30'], ['Access', 'Step-free'], ['Age', 'All ages']]],
 }
@@ -174,64 +177,64 @@ const W: Record<World, Copy> = {
     timelineTitle: 'Fourteen years at the fire', timeline: [['2012', 'A wood oven in a barn', 'Bread on Saturdays, for the village.'], ['2016', 'The first dinner service', 'Six tables, one menu, what the farms sent.'], ['2020', 'Moved to the old forge', 'A longer table and a bigger fire.'], ['2025', 'A kitchen garden of our own', 'Half the vegetables now walk forty metres.']],
   },
   shop: {
-    img: shop, people: ashePeople, label: 'Saint Ashe', statement: 'Black clothing cut in small runs in Tbilisi: heavy cotton, waxed wool and leather that ages with you.', body: 'Twenty-two pieces a season, forty of each. When a run sells out, it’s gone.',
-    manifesto: 'Buy black once, wear it for years.', attribution: 'Stitched inside every label',
-    work: 'This season', projects: [['The Narikala coat', 'Autumn · Outerwear'], ['The Sololaki rider', 'All year · Leather'], ['The slouch boot', 'Autumn · Shoes']],
-    caseTitle: 'How a coat is cut', facts: [['Wool', 'Waxed, Italy'], ['Run', '40 pieces'], ['Cut', 'In Tbilisi']], story: ['We start from one cloth and cut around it.', 'Every seam is worn for a month before it ships.', 'Then we make forty and stop.'],
-    offer: 'Shop by', services: [['Outerwear', 'Coats and leather, runs of 40'], ['Clothing', 'Heavy tees, knits, trousers'], ['Shoes', 'Boots resoled for life'], ['Bags', 'Leather that ages well']],
-    process: [{ name: 'Order', text: 'Pick your size.', duration: '2 min' }, { name: 'We pack', text: 'In black paper, by hand.', duration: '1 day' }, { name: 'Delivered', text: 'Tracked, plastic-free.', duration: '3 days' }],
-    howTitle: 'Find your size in three steps', how: [{ name: 'Measure one thing', text: 'Your chest, over a T-shirt.' }, { name: 'Match the chart', text: 'Between two? Go up.' }, { name: 'Free returns', text: 'For 30 days.' }],
-    aboutStatement: 'Three of us, one cutting table and a wardrobe that was all black anyway.', bio: 'The workshop still makes everything in runs of forty, a short walk from the shop.',
-    galleryTitle: 'Autumn 2026', editorial: { title: 'Cut close, worn loose', caption: 'The first coat, on Kote Afkhazi Street', paragraphs: ['We wanted one coat that would last ten winters.', 'So we cut it ourselves, and then twenty-one more pieces.'] },
-    clientsTitle: 'As seen in', clients: ['Night Edition', 'Black Paper', 'Cut & Sewn', 'Old Town Notes', 'Slow Wardrobe', 'Tbilisi Weekly', 'The Fitting', 'Second Skin'],
-    featuresTitle: 'Every piece', features: [{ name: 'Small runs', text: '40 pieces, then it’s gone.' }, { name: 'Repair for life', text: 'Send it back, we fix it.' }, { name: 'Plastic-free', text: 'Black paper and string.' }],
-    pricingTitle: 'Shipping', plans: [['Georgia', '€0', 'over €200', ['2–3 days', 'Tracked']], ['Europe', '€25', 'order', ['4–6 days', 'Tracked']], ['Express', '€40', 'order', ['Next day', 'Tracked', 'Before noon']]],
-    faq: [['How do sizes run?', 'Loose by design; between two, go down.'], ['Can I return it?', 'Free, within 30 days.'], ['Do you restock?', 'Rarely — each run is its own.']],
-    journal: [['Wax that remembers where you sat', '2 May', 'Materials'], ['Twelve weeks on one machine', '18 Apr', 'Workshop'], ['Autumn run, first look', '3 Apr', 'New']],
-    cta: ['Get the next run', 'first?', 'Join the letter'],
-    quotes: [['The coat I reach for every single day.', 'Nino K.', 'Bought the Narikala coat'], ['They resoled my boots after three years, free.', 'Giorgi D.', 'Customer'], ['Small runs, done properly.', 'Cut & Sewn', 'Review']],
-    team: [['Nino', 'Cutting', 'Starts from the cloth.'], ['Levan', 'Sewing', 'Wears every seam first.'], ['Tamar', 'Shop', 'Packs in black paper.'], ['Saba', 'Repairs', 'Fixes it for life.']],
-    stats: [['40', 'Pieces per run'], ['14', 'Runs sold out'], ['30', 'Day free returns'], ['0', 'Plastic in the box']], statsNote: 'Since the first run, autumn 2021.',
-    where: { title: 'Visit the shop', address: '14 Kote Afkhazi Street\nTbilisi', hours: ['Thu–Sat, 12:00–20:00'], notes: 'Try everything on; the workshop is upstairs.' },
-    rowsTitle: 'Made to be kept', rows: [['Small runs', 'Forty pieces, then we stop. Nothing sits in a warehouse waiting for a sale.', 3, 'Shop the current run'], ['Repair for life', 'Send any piece back, any year. We fix zips, seams and soles for free.', 6, 'How repairs work'], ['Plastic-free', 'Black paper, string and a handwritten note. That’s the whole box.', 5]],
-    news: ['Get the next run first', 'Runs sell out in days. The letter hears about each one a week before everyone else.', 'Join the letter', 'One letter a month.'],
-    catsTitle: 'Shop by category', cats: [['Outerwear', '6 pieces', 3], ['Shoes', '3 pieces', 6], ['Bags', '4 pieces', 5], ['Trousers', '4 pieces', 4]],
-    press: [['Night Edition', 'Small runs, cut properly, in Tbilisi.'], ['Black Paper', 'The heaviest tee we tested this year.'], ['Slow Wardrobe', 'Clothes that ask to be worn for a decade.']], awards: ['Outerwear design prize, 2025'],
-    band: ['Free shipping in Georgia over €200, this week.', 'Shop the run', 'Ends Sunday at midnight.'],
-    trust: [['Free shipping', 'In Georgia over €200.'], ['Free returns', 'Within 30 days.'], ['Repair for life', 'Send it back, we fix it.'], ['Plastic-free', 'Black paper only.']],
-    scheduleTitle: 'The autumn run', days: [['Week one', [['Mon', 'The letter gets first look', 'A week before everyone.'], ['Thu', 'Run opens', '12:00, Tbilisi time.']]], ['Week two', [['Sat', 'Workshop open day', 'Try everything on.'], ['Sun', 'Last sizes', 'Whatever comes back from returns.']]]],
-    toolsTitle: 'Pay and ship your way', toolsText: 'Checkout takes the cards and wallets you use; parcels go tracked.', tools: ['Cards', 'Wallet pay', 'Pay in three', 'Gift cards', 'Tracked courier', 'Pickup points', 'Collect in Tbilisi', 'Returns label', 'Repairs by post'],
-    timelineTitle: 'Run by run', timeline: [['2019', 'Twelve coats, one colour', 'Cut in a Tbilisi flat, sold in a week.'], ['2021', 'The workshop on Leselidze', 'Our own cutting table and two machines.'], ['2023', 'Boots, then bags', 'Leather from a tannery we can visit.'], ['2026', 'The autumn run', 'Black, as always — in small numbers.']],
+    img: shop, people: shopPeople, label: 'Maison Vey', statement: 'Five scents made by hand, each one a single place at a single hour.', body: 'Two hundred bottles a batch. When a batch is gone, the next one takes a season.',
+    manifesto: 'One place, one hour, one bottle.', attribution: 'Written on every box',
+    work: 'The scents', projects: [['Salt Quay', 'The harbour at six'], ['Night Ferry', 'The crossing at midnight'], ['Orangery', 'A glasshouse at noon']],
+    caseTitle: 'How a scent is made', facts: [['Notes', 'Salt, stone, fig leaf'], ['Batch', '200 bottles'], ['Rest', 'Six weeks']], story: ['We start from one place and one hour.', 'Every draft is worn for a month before it is kept.', 'Then we make two hundred and stop.'],
+    offer: 'Shop by', services: [['Scents', 'Five, in 50 and 100 ml'], ['Discovery set', 'All five, small'], ['Refills', 'The same bottle, again'], ['Gifts', 'Wrapped by hand']],
+    process: [{ name: 'Order', text: 'Pick your scent.', duration: '2 min' }, { name: 'We pack', text: 'In paper, by hand.', duration: '1 day' }, { name: 'Delivered', text: 'Tracked, plastic-free.', duration: '3 days' }],
+    howTitle: 'Find your scent in three steps', how: [{ name: 'Try the set', text: 'All five, small.' }, { name: 'Wear one a day', text: 'Five days, five places.' }, { name: 'Keep the set’s price', text: 'Off your first bottle.' }],
+    aboutStatement: 'One nose, one small room and five places we kept going back to.', bio: 'Everything is still mixed, rested and filled by hand, in batches of two hundred.',
+    galleryTitle: 'The five places', editorial: { title: 'A harbour at six in the morning', caption: 'Salt Quay, the first one we kept', paragraphs: ['We wanted to bottle one hour we kept going back to.', 'It took forty drafts, and then four more places.'] },
+    clientsTitle: 'As seen in', clients: ['Night Edition', 'Paper Nose', 'Base Notes', 'Old Town Notes', 'Slow Home', 'The Shelf', 'Fieldnotes', 'Second Skin'],
+    featuresTitle: 'Every bottle', features: [{ name: 'Small batches', text: '200 bottles, then a season.' }, { name: 'Refillable', text: 'Keep the glass.' }, { name: 'Plastic-free', text: 'Paper and string.' }],
+    pricingTitle: 'Shipping', plans: [['Home', '€0', 'over €100', ['2–3 days', 'Tracked']], ['Europe', '€15', 'order', ['4–6 days', 'Tracked']], ['Express', '€30', 'order', ['Next day', 'Tracked', 'Before noon']]],
+    faq: [['How long does it last on skin?', 'Six to eight hours, longer on clothes.'], ['Can I return it?', 'Unopened, within 30 days.'], ['Do you restock?', 'Each scent, once a season.']],
+    journal: [['Why fig leaf smells green', '2 May', 'Materials'], ['Six weeks of rest', '18 Apr', 'Workshop'], ['Night Ferry, first look', '3 Apr', 'New']],
+    cta: ['Get the next batch', 'first?', 'Join the letter'],
+    quotes: [['It smells exactly like the harbour I grew up by.', 'Clara K.', 'Wears Salt Quay'], ['I refilled the same bottle three times.', 'Jonas D.', 'Customer'], ['Small batches, done properly.', 'Paper Nose', 'Review']],
+    team: [['Vey', 'The nose', 'Starts from a place.'], ['Anna', 'Studio', 'Fills every bottle.'], ['Leo', 'Shop', 'Wraps by hand.']],
+    stats: [['5', 'Scents'], ['200', 'Bottles a batch'], ['30', 'Day returns'], ['0', 'Plastic in the box']], statsNote: 'Since the first batch, autumn 2021.',
+    where: { title: 'Visit the studio', address: '14 Rope Walk\nOld Harbour', hours: ['Thu–Sat, 12:00–19:00'], notes: 'Try all five; the workshop is upstairs.' },
+    rowsTitle: 'Made to be kept', rows: [['Small batches', 'Two hundred bottles, then we stop. Nothing sits in a warehouse waiting for a sale.', 3, 'Shop this batch'], ['Refill for life', 'Bring or send the bottle back; we fill it again for less.', 6, 'How refills work'], ['Plastic-free', 'Paper, string and a handwritten note. That’s the whole box.', 5]],
+    news: ['Get the next batch first', 'Batches sell out in days. The letter hears about each one a week before everyone else.', 'Join the letter', 'One letter a month.'],
+    catsTitle: 'Shop by place', cats: [['Salt Quay', 'The harbour', 3], ['Discovery set', 'All five', 6], ['Reading Room', 'A library', 5], ['Fig Courtyard', 'A garden', 4]],
+    press: [['Night Edition', 'Five places, each one exactly right.'], ['Paper Nose', 'The quietest scent we tried this year.'], ['Slow Home', 'Perfume that asks to be kept for a decade.']], awards: ['Independent perfume prize, 2025'],
+    band: ['Free shipping over €100, this week.', 'Shop the batch', 'Ends Sunday at midnight.'],
+    trust: [['Free shipping', 'Over €100.'], ['Free returns', 'Unopened, 30 days.'], ['Refills', 'The same bottle, again.'], ['Plastic-free', 'Paper only.']],
+    scheduleTitle: 'The autumn batch', days: [['Week one', [['Mon', 'The letter gets first look', 'A week before everyone.'], ['Thu', 'Batch opens', '12:00.']]], ['Week two', [['Sat', 'Studio open day', 'Try all five.'], ['Sun', 'Last bottles', 'Whatever is left.']]]],
+    toolsTitle: 'Pay and ship your way', toolsText: 'Checkout takes the cards and wallets you use; parcels go tracked.', tools: ['Cards', 'Wallet pay', 'Pay in three', 'Gift cards', 'Tracked courier', 'Pickup points', 'Collect at the studio', 'Returns label', 'Refills by post'],
+    timelineTitle: 'Batch by batch', timeline: [['2021', 'Salt Quay, one batch', 'Two hundred bottles, sold from a table.'], ['2022', 'Night Ferry', 'The second place.'], ['2024', 'The discovery set', 'All five, small.'], ['2026', 'Refills', 'The same bottle, filled again.']],
   },
   product: {
-    img: kb, people: founders, label: 'Halvik', statement: 'A compact mechanical keyboard in a powder-coated aluminium case, made to stay on your desk.', body: '65% layout, hot-swap switches and a matching dial pad. Ships in five days.',
-    manifesto: 'Fewer keys, better ones.', attribution: 'Printed inside every case',
-    work: 'How it’s made', projects: [['Machined from one block', 'Step 1'], ['Powder-coated by hand', 'Step 2'], ['Built and tested', 'Step 3']],
-    caseTitle: 'Eleven months on one case', facts: [['Case', 'Aluminium'], ['Layout', '65%, 67 keys'], ['Weight', '1.6 kg']], story: ['The first case rang like a bell.', 'A gasket mount and a cork base made it quiet.', 'We kept the shape and changed everything inside it.'],
-    offer: 'Why it works', services: [['Hot-swap', 'Change switches without solder'], ['Gasket mount', 'A softer, quieter press'], ['Aluminium case', 'Heavy enough to stay put'], ['The Dial', 'Three knobs for volume, zoom and scroll']],
-    process: [{ name: 'Machine', text: 'One block of aluminium.', duration: '3 h' }, { name: 'Coat', text: 'Powder, then the oven.', duration: '1 day' }, { name: 'Build', text: 'Switches, keys, a test.', duration: '40 min' }],
-    howTitle: 'From box to desk in three steps', how: [{ name: 'Unbox', text: 'Keyboard, cable, keycap puller.' }, { name: 'Plug in', text: 'USB-C, no driver needed.' }, { name: 'Make it yours', text: 'Swap switches whenever you like.' }],
-    aboutStatement: 'Ines and Karl wanted one keyboard that would last ten years.', bio: 'Two engineers, a borrowed lathe and forty prototypes later, there was Halvik.',
-    galleryTitle: 'On real desks', editorial: { title: 'Forty prototypes and a borrowed lathe', caption: 'Prototype 31, the first quiet one', paragraphs: ['The first thirty rang, rattled or both.', 'Number 31 sounded like a pencil on paper, and we stopped there.'] },
-    clientsTitle: 'Sold at', clients: ['Keyroom', 'Plinth Supply', 'Typewell', 'Northdesk', 'Low Profile Co.', 'Switchyard', 'Halftone Desk', 'Quietkey'],
-    featuresTitle: 'In every box', features: [{ name: '67 keys', text: 'Arrows and a few extras.' }, { name: 'Hot-swap', text: 'Any 3- or 5-pin switch.' }, { name: 'USB-C', text: 'A detachable braided cable.' }],
-    pricingTitle: 'Buy', plans: [['Barebones', '$159', 'case and plate', ['Bring your own switches', 'Free shipping']], ['Halvik 65', '$219', 'ready to type', ['Switches and keycaps', 'Free shipping']], ['With the Dial', '$279', 'keyboard + pad', ['Three-knob dial pad', 'Free shipping', 'Save $9']]],
-    faq: [['Does it work with a Mac?', 'Yes — Mac, Windows and Linux, no driver.'], ['Can I change the switches?', 'Any 3- or 5-pin switch, no solder.'], ['How fast does it ship?', 'In five days, tracked.']],
-    journal: [['Prototype 31', '2 May', 'Story'], ['Why gasket mounts are quieter', '18 Apr', 'Build'], ['New: the Dial', '3 Apr', 'News']],
-    cta: ['Ten years', 'on one keyboard?', 'Add to bag'],
-    quotes: [['It sounds like a pencil on paper.', 'Nina R.', 'Writer'], ['The only keyboard I haven’t replaced.', 'Tom B.', 'Developer'], ['Heavy, quiet and exactly the right size.', 'Keyroom', 'Stockist']],
-    team: [['Ines', 'Co-founder', 'Designs the case.'], ['Karl', 'Co-founder', 'Tunes the sound.'], ['Aida', 'Support', 'Answers within a day.'], ['Sam', 'Workshop', 'Builds every board.']],
-    stats: [['67', 'Keys'], ['1.6 kg', 'Weight'], ['5', 'Days to ship'], ['10 yr', 'Warranty']], statsNote: 'Halvik 65 with switches and keycaps.',
-    where: { title: 'Workshop', address: 'Unit 4, Canal Yard\nLondon', hours: ['Sat, 10:00–16:00'], notes: 'Try every switch before you buy.' },
-    rowsTitle: 'What’s in the case', rows: [['The typing angle', 'A six-degree tilt built into the case, so your wrists stay flat without feet.', 3, 'See the profile'], ['The Dial', 'A small pad with three knobs for volume, zoom and scroll. With the keyboard or on its own.', 4], ['Hot-swap switches', 'Pull a switch out, push another in. No solder, no tools beyond the puller in the box.', 5, 'Read the guide']],
-    news: ['First look at new keycaps', 'Hear about new keycap sets and restocks before anyone else.', 'Subscribe', 'About once a month.'],
-    catsTitle: 'Find your setup', cats: [['Halvik 65', 'Keyboard', 1], ['The Dial', 'Dial pad', 4], ['Keycaps', '4 sets', 2], ['Switches', '6 kinds', 5]],
-    press: [['Typewell Weekly', 'The quietest 65% we tested this year.'], ['Desk Notes', 'Built like it will outlast the desk.'], ['Low Profile', 'A keyboard that asks for nothing.']], awards: ['Product design prize, 2025', 'Best new keyboard, 2024'],
+    img: kb, people: makers, label: 'Saltmoor', statement: 'Skincare from lake salt and saffron, made in small batches and nothing else added.', body: 'Six products, one routine, refills by post.',
+    manifesto: 'Fewer jars, better ones.', attribution: 'Printed inside every box',
+    work: 'How it’s made', projects: [['Salt from the lake', 'Step 1'], ['Saffron, steeped for a week', 'Step 2'], ['Mixed and filled by hand', 'Step 3']],
+    caseTitle: 'Two years on one oil', facts: [['Oils', 'Six'], ['Salt', 'Raked by hand'], ['Batch', '200 bottles']], story: ['The first oil smelled of the kitchen.', 'Saffron and a week of patience fixed it.', 'We kept the bottle and changed everything inside it.'],
+    offer: 'Why it works', services: [['Lake salt', 'Minerals the skin keeps'], ['Saffron', 'Steeped, never extracted'], ['No scent', 'Nothing added to smell nice'], ['Refills', 'By post, in paper']],
+    process: [{ name: 'Rake', text: 'Salt from the lake shore.', duration: '1 day' }, { name: 'Steep', text: 'Saffron in warm oil.', duration: '7 days' }, { name: 'Fill', text: 'By hand, then a label.', duration: '2 h' }],
+    howTitle: 'Your routine in three steps', how: [{ name: 'Cleanse', text: 'The salt balm, at night.' }, { name: 'Treat', text: 'Three drops of serum.' }, { name: 'Seal', text: 'The oil, morning and night.' }],
+    aboutStatement: 'Lena and Omar wanted one routine that would fit on a shelf.', bio: 'A chemist, a farmer and forty test batches later, there was Saltmoor.',
+    galleryTitle: 'On real shelves', editorial: { title: 'Forty batches and a saffron field', caption: 'Batch 31, the first one we kept', paragraphs: ['The first thirty were too heavy, too sharp or both.', 'Number 31 sank in in a minute, and we stopped there.'] },
+    clientsTitle: 'Sold at', clients: ['Shelf & Sink', 'Plinth Supply', 'The Apothecary', 'Northroom', 'Low Tide Bath', 'Saltyard', 'Halftone Home', 'Quiet Shop'],
+    featuresTitle: 'In every box', features: [{ name: 'Glass bottle', text: 'Kept and refilled.' }, { name: 'Paper refill', text: 'By post, every two months.' }, { name: 'A card', text: 'The routine, in four lines.' }],
+    pricingTitle: 'Buy', plans: [['The oil', '€38', '30 ml', ['Free shipping', 'Glass bottle']], ['The routine', '€96', 'four products', ['Balm, serum, cream, oil', 'Free shipping']], ['Refills', '€80', 'every two months', ['All four, in paper', 'Free shipping', 'Save €16']]],
+    faq: [['Is it for sensitive skin?', 'Yes — no scent and nothing added.'], ['How long does a bottle last?', 'About two months, morning and night.'], ['How fast does it ship?', 'In three days, tracked.']],
+    journal: [['Batch 31', '2 May', 'Story'], ['Why lake salt', '18 Apr', 'Ingredients'], ['New: the toner', '3 Apr', 'News']],
+    cta: ['One routine', 'on one shelf?', 'Add to bag'],
+    quotes: [['My skin stopped asking for more.', 'Nina R.', 'Customer'], ['The only oil I have bought twice.', 'Tom B.', 'Customer'], ['Plain, honest and it works.', 'Shelf & Sink', 'Stockist']],
+    team: [['Lena', 'Co-founder', 'Writes every formula.'], ['Omar', 'Co-founder', 'Grows the saffron.'], ['Mira', 'Support', 'Answers within a day.']],
+    stats: [['6', 'Products'], ['0', 'Added scents'], ['3', 'Days to ship'], ['200', 'Bottles a batch']], statsNote: 'The routine, in its first year.',
+    where: { title: 'Workshop', address: 'Unit 4, Canal Yard\nLondon', hours: ['Sat, 10:00–16:00'], notes: 'Try everything before you buy.' },
+    rowsTitle: 'What’s in the bottle', rows: [['The ritual', 'Three drops warmed in the hands, pressed in — no rubbing.', 3, 'See the routine'], ['The serum', 'Saffron steeped for a week in a light oil, for the evening.', 4], ['Lake salt', 'Raked by hand, dried in the sun, ground into the balm.', 5, 'Read the story']],
+    news: ['First look at new batches', 'Hear about new batches and restocks before anyone else.', 'Subscribe', 'About once a month.'],
+    catsTitle: 'Find your routine', cats: [['Face oil', 'Oil', 1], ['Serum', 'Saffron', 4], ['Cream', 'Day', 2], ['Salt balm', 'Cleanser', 5]],
+    press: [['Shelf Weekly', 'The quietest routine we tried this year.'], ['Skin Notes', 'Short list, long results.'], ['Low Tide', 'A routine that asks for nothing.']], awards: ['Clean beauty prize, 2025', 'Best new oil, 2024'],
     band: ['Free shipping on every order this week.', 'Add to bag', 'Ends Sunday at midnight.'],
-    trust: [['Free shipping', 'Tracked, five days.'], ['30-day returns', 'Use it, then decide.'], ['10-year warranty', 'On the case and plate.'], ['Spare parts', 'Every part sold on its own.']],
-    scheduleTitle: 'Summer workshop days', days: [['June', [['Sat 7', 'London', 'Workshop, 10:00–16:00.'], ['Sat 21', 'Bristol', 'Harbour market.']]], ['July', [['Sat 5', 'Manchester', 'Northern Quarter.'], ['Sat 19', 'Leeds', 'Kirkgate market.']]]],
-    toolsTitle: 'Works with your setup', toolsText: 'Plug in and type; remap any key in the browser, no app to install.', tools: ['macOS', 'Windows', 'Linux', 'iPadOS', 'ChromeOS', 'Browser remapping', 'Open firmware', 'USB-C', 'Bluetooth adapter'],
-    timelineTitle: 'From a sketch to your desk', timeline: [['2021', 'The first case, milled by hand', 'Six weeks for one keyboard.'], ['2022', 'Hot-swap sockets', 'Change a switch without a soldering iron.'], ['2024', 'The Dial', 'A knob for volume, zoom and timelines.'], ['2026', 'Halvik 65, second run', 'Fern green, powder-coated, built to stay.']],
+    trust: [['Free shipping', 'Tracked, three days.'], ['30-day returns', 'Use it, then decide.'], ['Refills', 'By post, in paper.'], ['No scent', 'Nothing added.']],
+    scheduleTitle: 'Summer market days', days: [['June', [['Sat 7', 'London', 'Workshop, 10:00–16:00.'], ['Sat 21', 'Bristol', 'Harbour market.']]], ['July', [['Sat 5', 'Manchester', 'Northern Quarter.'], ['Sat 19', 'Leeds', 'Kirkgate market.']]]],
+    toolsTitle: 'Find yours', toolsText: 'Answer four questions about your skin and get one routine, no account needed.', tools: ['Skin quiz', 'Refill plan', 'Gift box', 'Travel sizes', 'Paper refills', 'Glass returns', 'Patch test kit', 'Stockists', 'Gift cards'],
+    timelineTitle: 'From a kitchen to your shelf', timeline: [['2021', 'The first oil, in a kitchen', 'Six weeks for one bottle.'], ['2022', 'Saffron', 'Steeped, never extracted.'], ['2024', 'The salt balm', 'Raked from the lake by hand.'], ['2026', 'Refills', 'By post, in paper, every two months.']],
   },
   software: {
     img: app, label: 'Ledger', statement: 'Close your books in one click — invoices, receipts and VAT, done while you work.', body: 'For studios and small teams. Connects to your bank in two minutes.',
@@ -264,34 +267,34 @@ const W: Record<World, Copy> = {
     timelineTitle: 'How it grew', timeline: [['2020', 'Built for our own studio', 'Invoices in a spreadsheet had to go.'], ['2022', 'The first hundred studios', 'Bank feeds and receipts by email.'], ['2024', 'One-click quarter close', 'Books ready for the accountant in minutes.'], ['2026', 'Payroll, built in', 'One place for every number a studio has.']],
   },
   event: {
-    img: ph, people: players, label: 'Lowfield Nights', statement: 'Three nights of silent films with live scores, in a hangar the airfield forgot. Entry free with an RSVP.', body: '12–14 June 2027, the north coast. Doors at 19:00, the film at 20:30.',
+    img: ph, people: players, label: 'Long Reel', statement: 'Three nights of silent films with live scores, in a picture house that closed in 1981. Entry free with an RSVP.', body: '12–14 June 2027, the harbour. Doors at 19:00, the film at 20:30.',
     manifesto: 'One film a night, scored in the room.', attribution: 'The first programme, 2024',
     work: 'The programme', projects: [['Opening night', 'Saturday · 20:30'], ['Under the sky', 'Sunday · 22:30'], ['Last light', 'Monday · 22:30']],
-    caseTitle: 'The first night, 2026', facts: [['Seats', '220'], ['Film', 'Silent, 1927'], ['Score', 'Written for the room']], story: ['The hangar doors stayed open to the sea.', 'The score was played once and never recorded.', 'Everyone walked to the shore together after.'],
-    offer: 'The nights', services: [['Films', 'One silent film a night'], ['Scores', 'Written for the hangar, played live'], ['Shuttle', 'From the city, twice a night'], ['Long table', 'Bread and tea before the film']],
+    caseTitle: 'The first night, 2026', facts: [['Seats', '220'], ['Film', 'Silent, 1927'], ['Score', 'Written for the room']], story: ['The doors stayed open to the street.', 'The score was played once and never recorded.', 'Everyone walked to the harbour together after.'],
+    offer: 'The nights', services: [['Films', 'One silent film a night'], ['Scores', 'Written for the room, played live'], ['Shuttle', 'From the city, twice a night'], ['Long table', 'Bread and tea before the film']],
     process: [{ name: 'RSVP', text: 'Tell us which night.', duration: '2 min' }, { name: 'Take the shuttle', text: 'Or drive and park at the gate.', duration: '40 min' }, { name: 'Arrive', text: 'Doors at 19:00.', duration: 'On the night' }],
     howTitle: 'Your night in three steps', how: [{ name: 'RSVP', text: 'Up to four seats.' }, { name: 'Book the shuttle', text: 'Or park at the gate.' }, { name: 'Bring a layer', text: 'The sea wind comes in late.' }],
-    aboutStatement: 'Three friends, one projector and a hangar nobody wanted.', bio: 'Every June since, the doors open for three nights and a score nobody has heard before.',
-    galleryTitle: 'Last June', editorial: { title: 'The score that was played once', caption: 'The second night, doors open to the sea', paragraphs: ['Each score is written for the hangar and its echo.', 'It is played once, on the night, and never recorded.'] },
-    clientsTitle: 'With thanks to', clients: ['Coast Film Club', 'Harbour Orchestra', 'Night Ferry', 'Old Airfield Trust', 'Shore Radio', 'Salt Print', 'Low Tide Press', 'Long Table Bakery'],
+    aboutStatement: 'Three friends, one projector and a cinema nobody wanted.', bio: 'Every June since, the doors open for three nights and a score nobody has heard before.',
+    galleryTitle: 'Last June', editorial: { title: 'The score that was played once', caption: 'The second night, a full house', paragraphs: ['Each score is written for the room and its echo.', 'It is played once, on the night, and never recorded.'] },
+    clientsTitle: 'With thanks to', clients: ['Coast Film Club', 'Harbour Orchestra', 'Night Ferry', 'Old Cinema Trust', 'Shore Radio', 'Salt Print', 'Low Tide Press', 'Long Table Bakery'],
     featuresTitle: 'Everything the night needs', features: [{ name: 'Seats by RSVP', text: 'No tickets, no queues.' }, { name: 'Shuttle from the city', text: 'Twice a night, both ways.' }, { name: 'A score for the room', text: 'Played once, live.' }],
     pricingTitle: 'Seats', plans: [['Bench', 'Free', 'night', ['RSVP needed', 'Bench seat']], ['Blanket', 'Free', 'night', ['Outdoor screening', 'Bring your own']], ['Long table', '€25', 'night', ['Supper before the film', 'Shuttle seat']]],
-    faq: [['Will it be cold?', 'The sea wind comes in late; bring a layer.'], ['Are the films subtitled?', 'They are silent; intertitles are read aloud.'], ['Can I bring children?', 'Yes, over eight.']],
-    journal: [['Why silent films', '2 May', 'Programme'], ['Meet the players', '18 Apr', 'People'], ['A short history of the hangar', '3 Apr', 'History']],
-    cta: ['Hold a seat', 'in the hangar?', 'RSVP now'],
-    quotes: [['The most beautiful night of my summer.', 'Aysel M.', 'Guest, 2026'], ['A score you will never hear again.', 'Farid H.', 'Guest'], ['Stay for the walk to the shore.', 'Shore Radio', 'Review']],
-    team: [['Kamran', 'Tar and tape loops', 'Scores from memory.'], ['Tural', 'Double bass', 'Plays it like a timetable.'], ['Ines', 'Piano and electronics', 'Writes for the echo.'], ['Nora', 'Voice and strings', 'Speaks for the film.']],
-    stats: [['3', 'Nights'], ['4', 'Films'], ['220', 'Seats a night'], ['1', 'Hangar']], statsNote: 'For the 2027 nights.',
-    where: { title: 'Getting there', address: 'Hangar 2, Lowfield airstrip\nNorth coast', hours: ['Doors 19:00', 'Film 20:30'], notes: 'Free shuttle from the city twice a night; park at the gate.' },
-    rowsTitle: 'Three nights in the hangar', rows: [['A film a night', 'One silent film each night, on a screen at the back of the hangar, doors open to the sea.', 0, 'See the programme'], ['Scored in the room', 'Each score is written for the hangar and played once, live.', 2], ['The walk to the shore', 'After the last night everyone walks to the water together.', 3, 'How to get there']],
+    faq: [['Will it be cold?', 'The old hall is cool; bring a layer.'], ['Are the films subtitled?', 'They are silent; intertitles are read aloud.'], ['Can I bring children?', 'Yes, over eight.']],
+    journal: [['Why silent films', '2 May', 'Programme'], ['Meet the players', '18 Apr', 'People'], ['A short history of the cinema', '3 Apr', 'History']],
+    cta: ['Hold a seat', 'in the old cinema?', 'RSVP now'],
+    quotes: [['The most beautiful night of my summer.', 'Ada M.', 'Guest, 2026'], ['A score you will never hear again.', 'Felix H.', 'Guest'], ['Stay for the walk to the harbour.', 'Shore Radio', 'Review']],
+    team: [['Kofi', 'Guitar and tape loops', 'Scores from memory.'], ['Theo', 'Double bass', 'Plays it like a timetable.'], ['Ines', 'Piano and electronics', 'Writes for the echo.'], ['Nora', 'Voice and strings', 'Speaks for the film.']],
+    stats: [['3', 'Nights'], ['4', 'Films'], ['220', 'Seats a night'], ['1', 'Screen']], statsNote: 'For the 2027 nights.',
+    where: { title: 'Getting there', address: 'The Regent, 4 Quay Street\nHarbour side', hours: ['Doors 19:00', 'Film 20:30'], notes: 'Free shuttle from the city twice a night; park at the gate.' },
+    rowsTitle: 'Three nights at the Regent', rows: [['A film a night', 'One silent film each night, on the old screen, from the old projector.', 0, 'See the programme'], ['Scored in the room', 'Each score is written for the room and played once, live.', 2], ['The walk to the harbour', 'After the last night everyone walks to the water together.', 3, 'How to get there']],
     news: ['Hear when RSVPs open', 'RSVPs open once a year. The list hears first, a week before anyone else.', 'Join the list', 'Three emails a year, all about the nights.'],
-    catsTitle: 'The nights', cats: [['Films', '4 films', 1], ['Scores', '4 players', 2], ['The hangar', '220 seats', 0], ['The shore', 'Last light', 3]],
-    press: [['Coast Film Club', 'The quietest, loudest night of the year.'], ['Shore Radio', 'A score written for a hangar and its echo.'], ['Salt Print', 'Worth the drive for the last night alone.']], awards: ['Event of the year, Salt Print 2026'],
+    catsTitle: 'The nights', cats: [['Films', '4 films', 1], ['Scores', '4 players', 2], ['The hall', '220 seats', 0], ['The beam', 'Last light', 3]],
+    press: [['Coast Film Club', 'The quietest, loudest night of the year.'], ['Shore Radio', 'A score written for a room and its echo.'], ['Salt Print', 'Worth the drive for the last night alone.']], awards: ['Event of the year, Salt Print 2026'],
     band: ['RSVPs close on 1 June.', 'RSVP now', 'Entry is free.'],
     trust: [['Seats by RSVP', 'No tickets, no queues.'], ['Free shuttle', 'Twice a night.'], ['Free parking', 'At the gate.'], ['Rain plan', 'Everything moves inside.']],
-    scheduleTitle: 'The programme', days: [['Saturday 12 June', [['19:00', 'Doors and the long table'], ['20:30', 'Opening film', 'With a live score.'], ['22:40', 'Night set on the apron']]], ['Sunday 13 June', [['19:00', 'Doors'], ['22:30', 'Under the sky', 'The outdoor screen.']]], ['Monday 14 June', [['20:30', 'The last film'], ['22:30', 'Last light', 'The walk to the shore.']]]],
+    scheduleTitle: 'The programme', days: [['Saturday 12 June', [['19:00', 'Doors and the long table'], ['20:30', 'Opening film', 'With a live score.'], ['22:40', 'Night set in the foyer']]], ['Sunday 13 June', [['19:00', 'Doors'], ['22:30', 'Under the sky', 'The outdoor screen.']]], ['Monday 14 June', [['20:30', 'The last film'], ['22:30', 'Last light', 'The walk to the harbour.']]]],
     toolsTitle: 'Plan the trip', toolsText: 'Your RSVP links straight to the shuttle, nearby stays and a calendar invite.', tools: ['Calendar invite', 'Shuttle seats', 'Nearby guesthouses', 'Taxi rank', 'Car hire', 'Bike racks', 'Accessible seating', 'Blankets on loan', 'Late shuttle'],
-    timelineTitle: 'Seven summers in the hangar', timeline: [['2019', 'One night, one film', 'Ninety people on borrowed chairs.'], ['2021', 'Three nights, live scores', 'A band under the screen.'], ['2024', 'The long table', 'Dinner before the first film.'], ['2027', '12–14 June', 'Four films, three nights, still free.']],
+    timelineTitle: 'Seven summers at the Regent', timeline: [['2019', 'One night, one film', 'Ninety people on borrowed chairs.'], ['2021', 'Three nights, live scores', 'A band under the screen.'], ['2024', 'The long table', 'Dinner before the first film.'], ['2027', '12–14 June', 'Four films, three nights, still free.']],
   },
 }
 const a = { href: '#', label: 'Book a visit' }
@@ -304,7 +307,7 @@ function sample(id: SectionId | 'orbit-hero', world: World, brand?: string, foot
   switch (id) {
     case 'orbit-hero': return <OrbitHeroSection eyebrow="What we do" loud="All" quiet="in motion" line="Brands, people, attention — we set them moving." items={[...STICKERS, ...sticky, ...STICKERS.slice(0, 3)].map((src, i) => ({ src, alt: '', size: src.endsWith('.svg') ? 130 : 110, tilt: [-8, 6, -4, 10, -6, 4][i % 6] }))} />
     case 'chapters': return <ColourChaptersSection chapters={w.services.slice(0, 2).map(([title, text], i) => ({ eyebrow: i ? 'No talk. All pictures.' : 'Hard story? Easily told.', title, text, media: { src: pick(i + 3), alt: '' }, sticker: { src: STICKERS[i * 3], alt: '' } }))} />
-    case 'footer': return <FooterSection variant={footer} brand={brand || 'Studio'} contact={[{ label: 'hello@example.com', href: '#' }, { label: '+994 12 345 67 89', href: '#' }]} logo={<span className={`type-display italic ${footer === "line" || footer === "contact" ? "[font-size:1.6rem]" : "[font-size:5rem]"}`}>{brand || "Studio"}</span>} columns={footer === 'index' ? FOOTER_INDEX : [{ title: 'Navigation', links: [{ label: 'About', href: '#' }, { label: 'Work', href: '#', current: true }, { label: 'Contact', href: '#' }] }, { title: 'Contact', links: [{ label: 'hello@example.com', href: '#' }] }]} legal={[{ label: 'Privacy', href: '#' }, { label: 'Terms', href: '#' }]} copyright={`© 2026 ${brand || 'Studio'}`} />
+    case 'footer': return <FooterSection variant={footer} brand={brand || 'Studio'} contact={[{ label: 'hello@example.com', href: '#' }, { label: '+44 20 7946 0018', href: '#' }]} logo={<span className={`type-display italic ${footer === "line" || footer === "contact" ? "[font-size:1.6rem]" : "[font-size:5rem]"}`}>{brand || "Studio"}</span>} columns={footer === 'index' ? FOOTER_INDEX : [{ title: 'Navigation', links: [{ label: 'About', href: '#' }, { label: 'Work', href: '#', current: true }, { label: 'Contact', href: '#' }] }, { title: 'Contact', links: [{ label: 'hello@example.com', href: '#' }] }]} legal={[{ label: 'Privacy', href: '#' }, { label: 'Terms', href: '#' }]} copyright={`© 2026 ${brand || 'Studio'}`} />
     case 'intro': return <StatementSection variant="lead" label={brand || w.label} statement={w.statement} body={w.body} />
     case 'manifesto': return <StatementSection variant="giant" statement={w.manifesto} attribution={w.attribution} />
     case 'featured-work': return <FeaturedWorkSection title={w.work} projects={w.projects.map(([title, meta], i) => ({ title, meta, image: pick(i + 1), alt: '', href: `#${i}` }))} />
@@ -322,18 +325,18 @@ function sample(id: SectionId | 'orbit-hero', world: World, brand?: string, foot
     // Sections that belong to one kind of site keep that site's content whatever the plan is.
     case 'menu': return <MenuSection title="This week" groups={[{ name: 'From the oven', items: [{ name: 'Oven bread', description: 'cultured butter, flaky salt', price: '5' }, { name: 'Embered vegetables', description: 'whipped feta, burnt honey', price: '12' }] }, { name: 'From the grill', items: [{ name: 'Whole fish', description: 'lemon, charred courgette', price: '28' }, { name: 'Lamb shoulder', description: 'white beans, salsa verde', price: '26' }] }]} note="The menu changes with the week." />
     // The project builds these controls from shadcn/ui; the preview shows their resting look.
-    case 'reservation': return <ReservationSection title="Book a table" text={world === 'food' ? 'Tables for up to six online; seven to twelve, please call.' : 'Seats by RSVP, one sitting a night.'} hours={w.where.hours} phone="+994 12 000 00 00" form={
+    case 'reservation': return <ReservationSection title="Book a table" text={world === 'food' ? 'Tables for up to six online; seven to twelve, please call.' : 'Seats by RSVP, one sitting a night.'} hours={w.where.hours} phone="+44 20 7946 0000" form={
       <div aria-hidden className="grid gap-4 sm:grid-cols-3">
         {[['Date', 'Pick a day'], ['Time', '19:00'], ['Guests', '2']].map(([l, v]) => <div key={l} className="type-utility">{l}<div className="type-body mt-1 rounded-(--radius-button) border border-(--color-border) bg-(--color-background) px-3 py-2.5 text-(--color-muted)">{v}</div></div>)}
         <div className="type-body rounded-(--radius-button) bg-(--color-primary) px-5 py-3 text-center text-(--color-background) sm:col-span-3">Find a table</div>
       </div>} />
     case 'location': return <LocationSection title={w.where.title} address={w.where.address} hours={w.where.hours} notes={w.where.notes} mapUrl="#" image={pick(0)} alt="" />
-    case 'collection': return <CollectionSection season="Autumn 2026" title="Ember" text="Twenty-two pieces in black, cut in runs of forty." image={shop[0]} alt="" pieces={[3, 1, 6].map((n, i) => ({ name: ['Narikala coat', 'Sololaki rider', 'Slouch boot'][i], price: ['€640', '€890', '€520'][i], image: shop[n], alt: '', href: `#${i}` }))} />
-    case 'lookbook': return <LookbookSection looks={[{ number: '01', image: shop[8], alt: '', detail: shop[3], pieces: 'Narikala coat, Vake trouser' }]} />
-    case 'product-grid': return <ProductGridSection title="Shop" products={[3, 1, 2, 4, 6, 5, 9, 10].map((n, i) => ({ name: ['Narikala coat', 'Sololaki rider', 'Heavy tee', 'Vake trouser', 'Slouch boot', 'Round bag', 'Rib turtleneck', 'Waxed cap'][i], price: `€${[640, 890, 85, 280, 520, 340, 190, 65][i]}`, image: shop[n], alt: '', href: `#${i}`, soldOut: i === 7 }))} />
+    case 'collection': return <CollectionSection season="Autumn 2026" title="Five places" text="Five scents, each one a single place at a single hour." image={shop[0]} alt="" pieces={[3, 1, 6].map((n, i) => ({ name: ['Salt Quay', 'Night Ferry', 'Discovery set'][i], price: ['€145', '€145', '€48'][i], image: shop[n], alt: '', href: `#${i}` }))} />
+    case 'lookbook': return <LookbookSection looks={[{ number: '01', image: shop[8], alt: '', detail: shop[3], pieces: 'Salt Quay, worn at six in the morning' }]} />
+    case 'product-grid': return <ProductGridSection title="Shop" products={[3, 1, 2, 4, 6, 5, 9, 10].map((n, i) => ({ name: ['Salt Quay', 'Night Ferry', 'Orangery', 'Fig Courtyard', 'Discovery set', 'Reading Room', 'Salt Quay, 100 ml', 'Fig Courtyard, 100 ml'][i], price: `€${[145, 145, 145, 145, 48, 145, 210, 210][i]}`, image: shop[n], alt: '', href: `#${i}`, soldOut: i === 7 }))} />
     case 'product-highlight': return world === 'product'
-      ? <ProductHighlightSection name="Halvik 65" text="A compact mechanical keyboard in a powder-coated aluminium case." image={kb[1]} alt="" details={[{ label: 'Layout', value: '65%' }, { label: 'Case', value: 'Aluminium' }, { label: 'Switches', value: 'Hot-swap' }]} action={{ label: 'Add to bag', href: '#' }} />
-      : <ProductHighlightSection name="Narikala coat" text="Waxed wool, cut in Tbilisi, one run of forty." image={shop[3]} alt="" details={[{ label: 'Wool', value: 'Waxed' }, { label: 'Run', value: '40' }, { label: 'Made in', value: 'Tbilisi' }]} action={{ label: 'Add to bag', href: '#' }} />
+      ? <ProductHighlightSection name="Salt face oil" text="Six oils and a pinch of lake salt, in a glass bottle you keep." image={kb[1]} alt="" details={[{ label: 'Size', value: '30 ml' }, { label: 'Key', value: 'Lake salt' }, { label: 'Scent', value: 'None' }]} action={{ label: 'Add to bag', href: '#' }} />
+      : <ProductHighlightSection name="Salt Quay" text="The harbour at six in the morning, made by hand in batches of two hundred." image={shop[3]} alt="" details={[{ label: 'Notes', value: 'Salt, stone, fig leaf' }, { label: 'Batch', value: '200' }, { label: 'Size', value: '50 ml' }]} action={{ label: 'Add to bag', href: '#' }} />
     case 'feature-grid': return <FeatureGridSection title={w.featuresTitle} features={w.features} />
     case 'pricing': return <PricingSection title={w.pricingTitle} plans={w.plans.map(([name, price, period, features], i) => ({ name, price, period, features, action: a, recommended: i === 1 }))} />
     case 'faq': return <FaqSection title="Questions">{w.faq.map(([q, ans], i) => (
@@ -375,11 +378,11 @@ function sample(id: SectionId | 'orbit-hero', world: World, brand?: string, foot
 
 /** `sketch` draws the part as a plan, not a promise (Pages, decision 34): headings and labels real, body text as bars,
  *  photos as marked blocks (`.sketch` in globals.css). */
-export function SectionPreview({ id, colors, type, shape, chapters, className, auto, maxHeight, width, world = 'studio', brand, footer, layout, tone, media, variant, sketch }: { id: SectionId | 'orbit-hero'; footer?: FooterStyleId; layout?: LayoutId; tone?: SectionTone; media?: MediaPlacement; variant?: string; colors: PaletteColors; type: TypographyPairing; shape: ShapeStyle; chapters?: readonly string[]; className?: string; auto?: boolean; maxHeight?: number; width?: number; world?: World; brand?: string; sketch?: boolean }) {
+export function SectionPreview({ id, colors, type, shape, chapters, className, auto, maxHeight, width, anchor, world = 'studio', brand, footer, layout, tone, media, variant, sketch }: { id: SectionId | 'orbit-hero'; footer?: FooterStyleId; layout?: LayoutId; tone?: SectionTone; media?: MediaPlacement; variant?: string; colors: PaletteColors; type: TypographyPairing; shape: ShapeStyle; chapters?: readonly string[]; className?: string; auto?: boolean; maxHeight?: number; width?: number; anchor?: 'top' | 'bottom'; world?: World; brand?: string; sketch?: boolean }) {
   useGoogleFonts(sketch ? [SKETCH_FONT] : [])
   const part = dress(sample(id, world, brand, footer), tone, media, variant)
   return (
-    <ScaledFrame className={className} auto={auto} maxHeight={maxHeight} width={width}>
+    <ScaledFrame className={className} auto={auto} maxHeight={maxHeight} width={width} anchor={anchor}>
       <TokenScope colors={colors} type={type} shape={shape} chapters={chapters} layout={layout}>{sketch ? <div className="sketch">{part}</div> : part}</TokenScope>
     </ScaledFrame>
   )

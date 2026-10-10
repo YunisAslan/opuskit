@@ -1,0 +1,58 @@
+{
+  "ambient-sound": {
+    "src": "/library/demos/ambient-sound.mp4",
+    "source": "151f8b11e7b0"
+  },
+  "blob-transition": {
+    "src": "/library/demos/blob-transition.mp4",
+    "source": "007917fe806c"
+  },
+  "brand-cursor": {
+    "src": "/library/demos/brand-cursor.mp4",
+    "source": "9120bf37da35"
+  },
+  "chapter-colours": {
+    "src": "/library/demos/chapter-colours.mp4",
+    "source": "b9c4d2450e8f"
+  },
+  "curtain-transition": {
+    "src": "/library/demos/curtain-transition.mp4",
+    "source": "d99128efcc75"
+  },
+  "drag-photos": {
+    "src": "/library/demos/drag-photos.mp4",
+    "source": "5f2aa47a9704"
+  },
+  "fade-transition": {
+    "src": "/library/demos/fade-transition.mp4",
+    "source": "f2c92c08792c"
+  },
+  "image-comparison": {
+    "src": "/library/demos/image-comparison.mp4",
+    "source": "f2616ea14e4b"
+  },
+  "image-trail": {
+    "src": "/library/demos/image-trail.mp4",
+    "source": "387c54817547"
+  },
+  "lightbox": {
+    "src": "/library/demos/lightbox.mp4",
+    "source": "30b9b53563ab"
+  },
+  "magnetic": {
+    "src": "/library/demos/magnetic.mp4",
+    "source": "d09b1cafd92b"
+  },
+  "scroll-progress": {
+    "src": "/library/demos/scroll-progress.mp4",
+    "source": "2abf9f79fbec"
+  },
+  "swap-button": {
+    "src": "/library/demos/swap-button.mp4",
+    "source": "7a914ee5e185"
+  },
+  "tilted-grid": {
+    "src": "/library/demos/tilted-grid.mp4",
+    "source": "96b9364d391a"
+  }
+}

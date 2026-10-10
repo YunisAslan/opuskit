@@ -1,52 +1,48 @@
 'use client'
-// Taking from a site (decision 35): the + on a site opens it large, with everything it has laid out to take — its whole
-// look, each of its qualities (colours, lettering, first screen, movement), its parts in their designs (menu, every
-// section, footer) and its effects. A tap takes one or puts it back. Only how it looks comes along: what the owner's
-// site is (its kind, pages, words) stays theirs. The site's own page shows the same list (`TakeList`).
+// Taking from a site (decision 35): the + on a site opens it large, with what it has to take in four groups — Style
+// (its whole look, its colours, its lettering), Sections (first screen, menu, the parts that carry its design, footer),
+// Moments (what happens on the page) and Touches (how it answers the hand). Each design shows once in the whole Library,
+// on the site that shows it best, under its own name (src/data/takeables.ts, decision 58). A tap takes one or puts it
+// back. Only how it looks comes along: what the owner's site is (its kind, pages, words) stays theirs. The site's own
+// page shows the same list (`TakeList`).
 import { Check, ExternalLink, Plus } from 'lucide-react'
 import { useMemo, useState, type ReactNode } from 'react'
 import { useGoogleFonts } from '@/components/FontLoader'
 import { LazyMount } from '@/components/LazyMount'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { palettes, typography } from '@/data/ingredients'
-import { sections } from '@/data/patterns'
-import { pieces } from '@/data/pieces'
 import { seedBySlug } from '@/data/recipes'
-import { directions, motionLevels, purposes } from '@/data/taxonomy'
-import { heroName } from '@/components/HeroPreview'
-import { jobOf, specToPlan } from '@/features/studio/plan'
-import { SIGNATURE_PARTS, hasItem, itemKey, siteName, siteSpec, toggleItem, type CollectionItem, type SiteRef } from '@/features/library/collection'
-import { TRAITS, TRAIT_IDS, siteTraits } from '@/features/library/inspire'
+import { directions, kindName } from '@/data/taxonomy'
+import { TAKEABLES, TAKE_BY_KEY, TAKE_CATEGORIES, type TakeGroup } from '@/data/takeables'
+import { specToPlan } from '@/features/studio/plan'
+import { designsOf, hasItem, itemKey, shelfSites, siteName, siteSpec, toggleItem, type CollectionItem, type SiteRef } from '@/features/library/collection'
+import { siteTraits } from '@/features/library/inspire'
 import { composeRecipe } from '@/features/recipes/engine'
 import { updateCollection, useCollection } from '@/lib/collection'
-import { SiteThumb, TakenPicture, exampleOf, siteLook } from './parts'
+import { SiteThumb, TakenPicture, exampleOf, siteLook, useCollect } from './parts'
 
-type Takeable = { item: CollectionItem; title: string; sub: string; picture: ReactNode }
+type Takeable = { item: CollectionItem; title: string; sub: string; picture: ReactNode; order?: number }
 
-/** Everything a site has to take, top of the site to the bottom, each drawn in the site's own look (with a few seconds
- *  of the real site beside a part where it was recorded). */
+/** The first shelf site with this palette or lettering shows it; the others don't repeat it. */
+const firstWith = (what: 'palette' | 'typography', id: string) => shelfSites.find((r) => siteTraits(r)?.[what] === id)
+
+/** What a site has to take: its style (its colours and lettering only where no earlier site shows the same), and the
+ *  designs the catalog shows on it, grouped and in category order — each drawn as the Collection will show it. */
 function useTakeables(site: SiteRef) {
   const e = exampleOf(site)
   const data = useMemo(() => {
     const spec = siteSpec(site)!, recipe = composeRecipe(spec), look = siteLook(site, specToPlan(spec), recipe.layoutSystem.id), t = siteTraits(site)!
-    // Drawn exactly as the Collection will show it once taken (`TakenPicture`).
     const drawn = (item: CollectionItem) => <TakenPicture item={item} />
-    const value = { colours: palettes[t.palette].name, lettering: typography[t.typography].name, opening: heroName(t.hero), motion: motionLevels[t.motion].name }
-    const qualities: Takeable[] = TRAIT_IDS.map((what) => ({ item: { kind: 'like', what, site }, title: TRAITS[what].name, sub: value[what],
-      picture: drawn({ kind: 'like', what, site }) }))
-    const parts: Takeable[] = [], seen = new Set<string>()
-    const push = (p: Takeable) => { const k = itemKey(p.item); if (!seen.has(k)) { seen.add(k); parts.push(p) } }
-    const nav: CollectionItem = { kind: 'menu', id: recipe.chrome.nav.id, from: site }
-    push({ item: nav, title: 'Navigation', sub: recipe.chrome.nav.name, picture: drawn(nav) })
-    for (const pg of recipe.pages) for (const s of pg.sections) {
-      if (!SIGNATURE_PARTS.has(s.id)) continue // only what carries the site's design (decision 52)
-      const item: CollectionItem = { kind: 'section', id: s.id, ...(s.variant ? { variant: s.variant.id } : {}), from: site }
-      push({ item, title: sections[s.id].name, sub: `${jobOf(s.id)}${s.variant ? ` · ${s.variant.name}` : ''} · ${pg.label}`, picture: drawn(item) })
+    const style: Takeable[] = []
+    if (firstWith('palette', t.palette) === site) style.push({ item: { kind: 'like', what: 'colours', site }, title: palettes[t.palette].name, sub: 'Colours', picture: drawn({ kind: 'like', what: 'colours', site }) })
+    if (firstWith('typography', t.typography) === site) style.push({ item: { kind: 'like', what: 'lettering', site }, title: typography[t.typography].name, sub: 'Lettering', picture: drawn({ kind: 'like', what: 'lettering', site }) })
+    const groups: Record<TakeGroup, Takeable[]> = { sections: [], moments: [], touches: [] }
+    for (const { key, item } of designsOf(site)) {
+      const x = TAKE_BY_KEY.get(key)
+      if (x && x.bestOn === site) groups[x.group].push({ item, title: x.name, sub: x.category, picture: drawn(item), order: TAKE_CATEGORIES[x.group].indexOf(x.category) })
     }
-    const foot: CollectionItem = { kind: 'footer', id: recipe.chrome.footerStyle.id, from: site }
-    push({ item: foot, title: 'Footer', sub: recipe.chrome.footerStyle.name, picture: drawn(foot) })
-    const effects: Takeable[] = recipe.pieces.map((p) => { const item: CollectionItem = { kind: 'effect', id: p.id, from: site }; return { item, title: pieces[p.id].name, sub: pieces[p.id].line, picture: drawn(item) } })
-    return { spec, recipe, look, t, qualities, parts, effects }
+    for (const g of Object.values(groups)) g.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    return { spec, recipe, look, t, style, groups }
   }, [site, e])
   useGoogleFonts(data.look.type.googleFamilies)
   return data
@@ -55,26 +51,29 @@ function useTakeables(site: SiteRef) {
 /** How many things the Collection holds from this site. */
 const takenFrom = (items: CollectionItem[], site: SiteRef) => items.filter((i) => (i.kind === 'site' || i.kind === 'like' ? i.site === site : 'from' in i && i.from === site)).length
 
-/** Everything to take from one site, in groups: its whole look, its qualities, its parts, its effects. */
+const GROUP_TEXT: Record<TakeGroup, [string, string]> = {
+  sections: ['Sections', 'Parts this site does best. Everything else your site needs is added for you.'],
+  moments: ['Moments', 'Things that happen on the page — on the part of yours that can carry them.'],
+  touches: ['Touches', 'How it answers the pointer: links, buttons, the cursor.'],
+}
+
+/** Everything to take from one site, in four groups: Style, Sections, Moments, Touches (an empty group is left out). */
 export function TakeList({ site, cols = 'sm:grid-cols-2 lg:grid-cols-3', noLook }: { site: SiteRef; cols?: string; /** The whole look is taken beside it (the dialog's left column). */ noLook?: boolean }) {
-  const { spec, qualities, parts, effects } = useTakeables(site)
+  const { spec, style, groups } = useTakeables(site)
   const look: CollectionItem = { kind: 'site', site }
   return (
     <div className="space-y-10">
-      {!noLook && <Group title="Its whole look" line="Colours, lettering, corners, menu and footer together — mixed into your site with whatever else you like.">
-        <ul className="grid gap-x-5 gap-y-6 sm:grid-cols-2"><Take item={look} title={directions[spec.direction].name} sub="The whole look" picture={<TakenPicture item={look} auto />} /></ul>
+      {(!noLook || !!style.length) && <Group title="Style" line="Its whole look, or only its colours or its lettering.">
+        <ul className={`grid gap-x-5 gap-y-6 ${cols}`}>
+          {!noLook && <Take item={look} title={directions[spec.direction].name} sub="The whole look" picture={<TakenPicture item={look} auto />} />}
+          {style.map((x) => <Take key={itemKey(x.item)} {...x} />)}
+        </ul>
       </Group>}
-      <Group title="Just one thing" line="Only this quality comes along. Your directions mix it with the rest.">
-        <ul className="grid grid-cols-2 gap-x-5 gap-y-6 lg:grid-cols-4">{qualities.map((x) => <Take key={itemKey(x.item)} {...x} />)}</ul>
-      </Group>
-      <Group title="Its parts" line="What gives it its character. Everything else your site needs is added for you.">
-        <ul className={`grid gap-x-5 gap-y-6 ${cols}`}>{parts.map((x) => <Take key={itemKey(x.item)} {...x} />)}</ul>
-      </Group>
-      {!!effects.length && (
-        <Group title="Its effects" line="Movement this site uses — on the part of yours that can carry it.">
-          <ul className={`grid gap-x-5 gap-y-6 ${cols}`}>{effects.map((x) => <Take key={itemKey(x.item)} {...x} />)}</ul>
+      {(Object.keys(GROUP_TEXT) as TakeGroup[]).filter((g) => groups[g].length).map((g) => (
+        <Group key={g} title={GROUP_TEXT[g][0]} line={GROUP_TEXT[g][1]}>
+          <ul className={`grid gap-x-5 gap-y-6 ${cols}`}>{groups[g].map((x) => <Take key={itemKey(x.item)} {...x} />)}</ul>
         </Group>
-      )}
+      ))}
     </div>
   )
 }
@@ -91,9 +90,28 @@ function Group({ title, line, children }: { title: string; line: string; childre
   )
 }
 
+/** Every card of one group across the whole Library, in category order — the Library's Sections / Moments / Touches
+ *  views. Each design on its `bestOn` site (src/data/takeables.ts). */
+export type Style = { site: SiteRef; item: CollectionItem }
+/** A design and the sites that have it (`styles`, its `bestOn` first) — shown as the sites it is used on. */
+export type CatalogCard = { item: CollectionItem; title: string; category: string; line: string; site: SiteRef; styles: Style[] }
+let bySite: Map<string, Style[]> | undefined
+const stylesOf = (key: string) => {
+  bySite ??= shelfSites.reduce((m, site) => { for (const d of designsOf(site)) m.set(d.key, [...(m.get(d.key) ?? []), { site, item: d.item }]); return m }, new Map<string, Style[]>())
+  return bySite.get(key) ?? []
+}
+const catalogs = new Map<TakeGroup, CatalogCard[]>()
+export function catalogOf(group: TakeGroup): CatalogCard[] {
+  if (!catalogs.has(group)) catalogs.set(group, TAKE_CATEGORIES[group].flatMap((category) => TAKEABLES.filter((x) => x.group === group && x.category === category).flatMap((x) => {
+    const all = stylesOf(x.key), main = all.find((y) => y.site === x.bestOn)
+    return main ? [{ item: main.item, title: x.name, category, line: x.line, site: x.bestOn, styles: [main, ...all.filter((y) => y !== main)] }] : []
+  })))
+  return catalogs.get(group)!
+}
+
 /** One thing to take: its picture, its name; a tap anywhere on it takes it or puts it back. */
 function Take({ item, title, sub, picture }: Takeable) {
-  const on = hasItem(useCollection(), item)
+  const { on, flip } = useCollect(item)
   return (
     <li className="group relative min-w-0">
       <div className={`relative overflow-hidden rounded-[3px] border bg-white transition-[border-color,box-shadow] ${on ? 'border-pencil ring-2 ring-pencil' : 'border-line group-hover:border-ink'}`}>
@@ -101,7 +119,7 @@ function Take({ item, title, sub, picture }: Takeable) {
         <span aria-hidden className={`absolute right-2 top-2 z-10 grid size-7 place-items-center rounded-full shadow-sm transition-colors ${on ? 'bg-pencil text-paper' : 'bg-white/90 text-ink group-hover:bg-ink group-hover:text-paper'}`}>{on ? <Check size={14} /> : <Plus size={15} />}</span>
       </div>
       {/* The picture can hold controls of its own (real site / your style), so the button sits beside it and covers the card. */}
-      <button type="button" aria-pressed={on} onClick={() => updateCollection((x) => toggleItem(x, item))} className="mt-2 block w-full text-left after:absolute after:inset-0">
+      <button type="button" aria-pressed={on} onClick={flip} className="mt-2 block w-full text-left after:absolute after:inset-0">
         <span className="block truncate text-sm font-medium">{title}</span>
         <span className="block truncate text-xs text-muted">{sub}</span>
       </button>
@@ -139,7 +157,7 @@ function TakeDialog({ site, onClose }: { site: SiteRef; onClose: () => void }) {
         <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-3.5 pr-14 md:px-6">
           <div className="min-w-0">
             <DialogTitle className="truncate text-xl font-medium tracking-tight">Take what you like from {siteName(site)}</DialogTitle>
-            <DialogDescription className="truncate text-sm text-muted">{purposes[spec.purpose].name} · {directions[spec.direction].name} — only how it looks comes along; your site stays yours.</DialogDescription>
+            <DialogDescription className="truncate text-sm text-muted">{kindName(spec.purpose)} · {directions[spec.direction].name} — only how it looks comes along; your site stays yours.</DialogDescription>
           </div>
         </div>
         <div className="grid min-h-0 flex-1 overflow-y-auto lg:grid-cols-[22rem_minmax(0,1fr)] lg:overflow-hidden">

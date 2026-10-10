@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useGoogleFonts } from '@/components/FontLoader'
 import { PageIntro } from '@/components/ui'
-import { directions, purposes } from '@/data/taxonomy'
+import { directions, kindName } from '@/data/taxonomy'
 import { resolveRef, toggleSaved, useGenerations, useSaved } from '@/features/recipes/library'
 import { usePlan } from '@/lib/plan'
 import { useHydrated } from '@/lib/store'
@@ -23,7 +23,7 @@ export default function SavedPage() {
       <div className="mx-auto max-w-[1440px] px-5 pb-24 md:px-8">
         {/* The site being built — one draft, kept until it becomes a recipe. */}
         {plan.pages.length > 0 && (
-          <Link href="/studio/direction" className="mb-10 flex flex-wrap items-center justify-between gap-3 border border-line bg-white p-5 transition-colors hover:bg-paper-2">
+          <Link href="/studio/you" className="mb-10 flex flex-wrap items-center justify-between gap-3 border border-line bg-white p-5 transition-colors hover:bg-paper-2">
             <span><span className="label block text-muted">Site in progress</span>
               <span className="mt-1.5 block text-lg">{plan.name || 'Untitled site'}</span>
               <span className="block text-sm text-muted">Continue where you left off.</span></span>
@@ -42,7 +42,7 @@ export default function SavedPage() {
               <li key={ref} className="group relative border-b border-r border-line bg-white">
                 <Link href={hit!.href} className="block after:absolute after:inset-0" aria-label={`Open ${hit!.recipe.metadata.spec.brief?.name || hit!.recipe.title}`}><Brand r={hit!.recipe} /></Link>
                 <div className="flex items-center justify-between gap-3 border-t border-line px-4 py-3">
-                  <span className="label truncate text-muted">{purposes[hit!.recipe.metadata.spec.purpose].name} · {directions[hit!.recipe.metadata.spec.direction].name}</span>
+                  <span className="label truncate text-muted">{kindName(hit!.recipe.metadata.spec.purpose)} · {directions[hit!.recipe.metadata.spec.direction].name}</span>
                   <button type="button" className="link relative z-10 text-sm" onClick={() => toggleSaved(ref)}>Remove</button>
                 </div>
               </li>

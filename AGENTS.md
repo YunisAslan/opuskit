@@ -24,8 +24,11 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
   micro-interactions and parallax are seasoning — salt, not sauce — dosed per recipe (`seasoning`, decision 51).
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
 - The flow is the way to make a site (`docs/plan-library.md`, decisions 35–39): `/library`, browsing with no steps (the +
-  on a site opens everything it has to take: its whole look, one quality — colours, lettering, first screen, movement —
-  its signature parts only — `SIGNATURE_PARTS`, decision 52, the engine gives the rest — its effects); Build my site starts three steps: `/studio/you` (name, sentence, kind — only the owner's) →
+  on a site opens what it has to take in four groups — Style (whole look, colours, lettering), Sections, Moments,
+  Touches. Each design shows once in the whole Library, on the site that shows it best, under a name that says which
+  one it is: the catalog `src/data/takeables.ts`, decision 58; a new example's or a new site's design fails check.ts
+  until it has its name, category and `bestOn`; the Library's tabs — Sites, Sections, Moments, Touches — show the
+  catalog itself); Build my site starts three steps: `/studio/you` (name, sentence, kind — only the owner's) →
   `/studio/direction` → recipe. Direction (decision 39): Make it yours on top (every look, colour and lettering,
   `studio/LookPicker.tsx`, with Your brand beside it — name, sentence, button, palette, exact; decisions 40, 43), the start is the first mix of `directionsFor` in
   `features/library/inspire.ts` (what was taken by name is in it, none a copy; the packs are not shown — decision 42);
@@ -106,6 +109,22 @@ Each example is registered in `src/data/examples.ts` (title/summary — copy fro
 Its clips: `clip` (10–15 s, first screen + scroll) and `sectionClips` (3–5 s per section, the section standing still and framed
 on it — never the page scrolling past; `examples/{slug}/public/media/clips/{sectionId}.mp4`)
 feed "a site like this" (`src/features/studio/closest.ts`); an old example carries `legacy: true` and is never offered there.
+Its `fullClip` (the whole landing page, top to footer) plays on its page and in "see it larger"; its `sectionStills`
+(`public/media/stills/{sectionId}.jpg`, the menu centred, the footer at the page's end) show a part where there is no
+clip — so a Library card is the site itself, never sample content. Clips are recorded with Cap (60 fps, the Mac's own
+cursor) in a laptop-shaped Chrome app window, never the whole screen; small things are zoomed onto and centred.
+**Before recording anything, read `docs/capture.md`** — the tools and every lesson learned (browser zoom not CSS zoom,
+the measured pointer, short loops, skipping welcomes, one dark ground).
+A piece that only moves when used (hover, drag, click, the page's scroll) shows in the Library as a clip of it being
+used: `node scripts/capture/demo-clips.mjs [id]` records it on `/library/demo/{id}` (standard theme) with Cap and a
+hand-like Mac pointer (`scripts/capture/mouse.py`: aimed moves, arcs, overshoot, no even speed) into
+`public/library/demos/`; `src/data/demo-clips.generated.json` keeps each piece's source hash and check.ts fails when a
+piece changed after its clip — record it again. Pieces that move by themselves (a headline, a loop) stay live.
+Sections are shown by what suits each (`shownPure` in `src/data/takeables.ts`): menus, footers, a programme, a food
+menu, a sentence, a line of years are drawn pure in the same dark standard theme (`pureLook`); first screens, work,
+products, photos and stories show their site — `scripts/capture/section-stills.mjs` (framed stills) and
+`scripts/capture/site-clips.mjs` (Cap clips of parts that move with the scroll), registered in the example's
+`sectionStills` / `sectionClips`.
 Its card (the Library, the landing) shows `public/examples/{slug}.jpg` — a 1440×900 JPEG screenshot of its live homepage, taken
 once the hero video has real frames (a black first frame makes a blank card). After replacing one, clear
 `.next/dev/cache/images` or the dev server keeps serving the old one.

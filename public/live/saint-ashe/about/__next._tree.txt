@@ -1,4 +1,0 @@
-:HL["/live/saint-ashe/_next/static/chunks/29txc4idckzgy.css","style"]
-:HL["/live/saint-ashe/_next/static/media/7ddd198311ba7843-s.p.3kq6k02b2ysv1.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/live/saint-ashe/_next/static/media/ae3274ea8a83d33d-s.p.2yja_vu-iyje4.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"about","param":null,"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"Qrd2s2enMIH7usbarKm7s"}

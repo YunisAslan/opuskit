@@ -1,6 +1,6 @@
 # Handoff — where the work is and how to continue
 
-Last updated 2026-10-10. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
+Last updated 2026-10-11. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
 Keep this file current: update "Now" and "Next" whenever a step finishes.
 
 Talk to the user in Azerbaijani; code, docs and commits in English.
@@ -21,7 +21,7 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 - **Queue:** #25 Ninth Row was built on 2026-10-09 with the user's film (see Today); the night run proposed #26–#29 (`docs/plan-examples.md` §5c) —
   approve or change them before the next night run.
 
-## Today (2026-10-10 — committed)
+## Today (2026-10-10 and 11)
 
 - **Engine review**: `composeRecipe` split — the shot list (`shotList`) and npm dependencies (`packageDeps`) are their
   own functions; all 35 recipes × 5 packages were byte-identical before and after.
@@ -49,6 +49,54 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   $1.36): MORNING across the screen, the Morning Person Mug (Raspberry) floating in front, pointer drift, a pinned
   scroll where the word leaves and the mug rolls upright, "Thrown on Tuesday. Glazed loud."; Add to bag adds the
   Raspberry glaze. Live export, card and poster rebuilt; click-through checked.
+- **Library: one design, one card** (decision 58, `src/data/takeables.ts`): Style · Sections · Moments · Touches; each
+  design once, on its `bestOn` site, under its own name; Movement gone. The Library has four views as tabs
+  (Sites · Sections · Moments · Touches — no Style tab, the user: not needed), each with a category filter, so a part is picked without opening a site; a card opened shows the design large, its
+  alternatives (another menu, another link hover — never the same design recoloured) and the sites it is used on. Kind and Feel filters pick one each; kinds are
+  13 plain names (E-commerce, Product, SaaS, Portfolio, Studio, Restaurant, Hotel, Events, Wellness, Education,
+  Nonprofit, Real estate, Blog — only near-duplicates share one: Fashion → E-commerce, Personal brand → Portfolio,
+  Agency → Studio, Spa + Clinic → Wellness). When the user sends a site to mine: build the thing as our own section
+  variant or piece, add its catalog entry (check.ts asks), show it once an example carries it. Candidate: Pip & Kiln's
+  "giant word, object in front" first screen (built in the example, not in the engine). Previews (captures, clips,
+  live components) come later.
+- **Real media in the Library, Sela Mor first** (2026-10-10): stills of every section (Playwright, framed after they
+  settle; the footer at the page's end; the menu centred) and clips recorded with **Cap** (`cap record --window`, 60 fps,
+  the Mac's own cursor, Chrome as a 1210×923 app window — never the whole screen, it once showed the desktop; window frame
+  and title bar trimmed; small things zoomed and centred): the site (12 s), the whole landing page (34 s, top to footer),
+  its first screen, its held proof, its magnetic button. Wired through `examples.ts` (`clip`, `fullClip`, `sectionClips`,
+  `sectionStills`, `pieceClips`, `signatureClips`); TakenPicture: clip → still → drawn. Library effects that a component
+  shows alone are live in OpusKit's standard theme (`standardLook`), centred; scroll/photo moments show the recording.
+  Capture tooling is now in `scripts/capture/` (see `docs/capture.md`). VS Code needs Screen Recording + Accessibility (granted).
+- **Library cards on one dark ground** (2026-10-10, the user picked it): every piece and pure part on OpusKit's dark
+  card ground `#18181B` (`OPUSKIT_DARK`), one set of clips for light and dark mode. Clips recorded at the browser's own
+  zoom (pixel ratio 3) with the pointer measured, so a dragged photo stays under the cursor; Cap's cursor smoothing off;
+  start and end close to the piece, still lead-ins cut.
+- **Recording guide: `docs/capture.md`** — how the Library's stills and clips are made and every lesson from making
+  them; read it before recording. Its scripts are in `scripts/capture/`.
+- **The Library offers only what is special** (2026-10-10/11, the user): not the basics any AI builder does unasked
+  (bar menus, grids of work, story columns, timelines, schedules, food menus, plain footers, a soft fade, a reading
+  line, a lightbox, smooth scroll, words arriving, an underline fill) nor near-twins — `NOT_OFFERED` in
+  `src/data/takeables.ts` (sites keep them, the engine builds them, check.ts counts them as named). Left: 12 sections
+  (5 first screens, 4 menus that open or move, 2 showcases, 3 footers — the user found one too few), 11 moments, 6 touches. Menus and the
+  footer are drawn pure on the dark ground; the rest show their site, moving ones as clips (`scripts/capture/`:
+  `demo-clips.mjs`, `site-clips.mjs`, `section-stills.mjs`, the shared pointer `hand.mjs` + `mouse.py`). Brasshand's
+  "index of big titles" was not on its site (its home holds one project at a time) — dropped.
+- **Four examples removed** (2026-10-10, the user): Halvik, Velmira, Lowfield Nights, Saint Ashe — code, media, live
+  export, zip, card, look-knowledge `seen`. Their folders are in the macOS Trash (`opuskit-removed-2026-10-10`), the
+  tracked files in git history. Sample worlds moved: product → Qum's photos (an invented skincare brand, Saltmoor),
+  event → Ninth Row's (the same film nights, now in an old cinema), shop → Maison Vey's (its five scents); the video
+  dialog demo plays Ninth Row's film. Catalog: centred menu now best on Fennwood, product highlight on Pip & Kiln;
+  four designs no remaining site shows left the Library (whole page over one film, film looping behind the headline,
+  lookbook, arrow that hops across the button — its clip stays recorded for when a site has it again). Kelp Line and
+  Ninth Row still record them as where their parts came from (history).
+- **Pieces shown being used** (2026-10-10, later): a piece that only moves on hover, drag, click or the page's scroll
+  plays a Cap clip of it being used on its Library card (16 pieces: the two buttons, the brand cursor, image trail,
+  before/after, prints on a desk, lightbox, sound, the three page changes, tilted grid, reading line, chapter colours).
+  Tooling is in the repo now: `scripts/capture/demo-clips.mjs` + `mouse.py` (a hand-like pointer — the user found an
+  even-speed one robotic), the stage `/library/demo/{id}`; check.ts fails when a piece changed after its clip. The page
+  change demos are a small clickable site (Work · Journal · About); the brand cursor has a zone to enter; the sound
+  demo plays Sela Mor's loop. Cards say what a thing does (its line) under the name, not its category. Its per-site
+  recorders are in `scripts/capture/` too (`site-clips.mjs`, `section-stills.mjs`). The user's reference (componentry.dev): one thing per card, large and centred, self-running loops.
 - **Build tab**: the tools first under "Pick the AI tool that will build your site", Room to invent after; "Download
   Build Package" everywhere the old "build kit" was.
 - **Your files redone**: one row per shot-list part (what it shows, its size, the owner's files) with Add yours and
@@ -193,8 +241,9 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 1. **The next batch** (#26–#29, `docs/plan-examples.md` §5c — Tidewell Physio, Hollis & Daughters, Ines Varga, Tally
    House): waiting for the user's approval. Each: recipe through the flow → link to the user → isolated build (outside
    the repo, `claude -p`) → photos (Unsplash connector) → register; Engine lessons fixed before the next site.
-2. **Clips** for #11–#25: the user's screen recordings of the live exports (Low Hum, Pale Hour, Kelp Line, Pip & Kiln
-   and Ninth Row are new).
+2. **Library media for every new site**: when a site is added, put its special ideas in the catalog (the rest in
+   `NOT_OFFERED`) and record them with `scripts/capture/` as `docs/capture.md` says. The user's own screen recordings
+   remain welcome for whole-site clips.
 3. **Pip & Kiln's copy vs its photos**: the builder listed where the product photos show other glazes and shapes than
    the copy says — ask the user whether to fit the copy to the photos.
 4. **Feed back from the builds** (decision 33, ask first): Low Hum's wavy edges and sticky mobile button, Pale Hour's

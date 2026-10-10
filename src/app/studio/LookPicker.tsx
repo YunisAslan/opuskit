@@ -13,7 +13,7 @@ import { LazyMount } from '@/components/LazyMount'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { Chip } from '@/components/ui'
 import { palettes, typography } from '@/data/ingredients'
-import { directions, families, purposes } from '@/data/taxonomy'
+import { directions, families, kindName } from '@/data/taxonomy'
 import { lookCredit, lookImages, lookImg } from '@/data/look-images'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { planToSpec, setStyle } from '@/features/studio/plan'
@@ -233,7 +233,7 @@ function LookSites({ id, onClose, onUse, using }: { id?: DirectionId; onClose: (
                   <span className="block overflow-hidden border border-line"><SiteThumb site={r} auto /></span>
                   <span className="mt-2 flex items-baseline justify-between gap-3">
                     <span className="ulink font-medium">{siteName(r)}</span>
-                    <span className="text-xs text-muted">{purposes[siteSpec(r)!.purpose].name}{exampleOf(r) ? '' : ' · planned'}</span>
+                    <span className="text-xs text-muted">{kindName(siteSpec(r)!.purpose)}{exampleOf(r) ? '' : ' · planned'}</span>
                   </span>
                 </Link>
               </li>

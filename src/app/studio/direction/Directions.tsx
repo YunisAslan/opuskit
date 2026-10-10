@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { palettes, typography } from '@/data/ingredients'
-import { purposes } from '@/data/taxonomy'
+import { kindName } from '@/data/taxonomy'
 import { collectionSig, takenFrom, takenOf } from '@/features/library/collection'
 import { directionsFor, purposeFrom } from '@/features/library/inspire'
 import { updateCollection, useCollection } from '@/lib/collection'
@@ -62,7 +62,7 @@ export function Directions() {
   return (
     <StepFrame at="Direction"
       title={<>
-        <p className="label mb-4">Step 2 · {c.name} · {purposes[c.purpose].name}</p>
+        <p className="label mb-4">Step 2 · {c.name} · {kindName(c.purpose)}</p>
         <h1 className="display text-[clamp(2.2rem,4vw,3.4rem)]">Make it yours.</h1>
         <p className="mt-3 max-w-[62ch] text-ink-2">Any look, any colours, any lettering. Your brand changes as you pick, exactly as your site will use it.</p>
         <p className="mt-3 text-sm text-muted">{opened ? <>Opened from {opened}, as it was built. </> : taken.length ? <>From {taken.join('; ')}. </> : 'Nothing taken yet, so this starts from your kind of site. '}<Link href="/library" className="link text-ink-2">{taken.length ? 'Take something else' : 'Find sites you like'}</Link></p>

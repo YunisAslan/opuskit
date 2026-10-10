@@ -1,4 +1,0 @@
-:HL["/live/halvik/_next/static/chunks/0z0s81pqobdkw.css","style"]
-:HL["/live/halvik/_next/static/media/58a134e9489d4308-s.p.16zifq7ruyhhb.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/live/halvik/_next/static/media/896ab7b170aff81a-s.p.2vi8hdio8poj8.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"contact","param":null,"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"LbaKqE6i5yoreBl1U_jTX"}

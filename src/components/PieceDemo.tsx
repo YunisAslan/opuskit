@@ -3,7 +3,7 @@
 // (or OpusKit's own when shown in the catalog). The same code a Build Package ships.
 
 import type { CSSProperties, ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { AmbientSound } from '@/pieces/AmbientSound'
 import { Grain } from '@/pieces/Grain'
 import { GridPattern } from '@/pieces/GridPattern'
@@ -50,11 +50,17 @@ import { LinkDemo } from './LinkDemo'
 const PHOTOS = [...[1, 2, 3, 4, 5, 6].map((n) => `/examples/brasshand/media/work-${n}.jpg`), ...[1, 2, 3, 4].map((n) => `/examples/sticky-weather/media/work-${n}.jpg`)].map((src) => ({ src, alt: 'Studio work: print, packaging and signage' }))
 export const STICKERS = ['burst', 'pill', 'badge', 'smile', 'wing', 'star'].map((n) => `/stickers/${n}.svg`)
 const CURSOR = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="28" height="32"><path d="M3 2 C 9 12, 14 20, 17 28 L 19.5 19.5 L 27 17.5 C 19 12, 10 6, 3 2 Z" fill="#0038FF" stroke="#111" stroke-width="2"/></svg>')}`
-const POSTER = '/examples/velmira/media/posterImage.jpg'
-const FILM = '/examples/velmira/media/heroVideo.mp4'
+const POSTER = '/examples/ninth-row/media/posterImage.jpg'
+const FILM = '/examples/ninth-row/media/heroVideo.mp4'
 
 type Fonts = { display: string; body: string; utility: string }
-const OPUSKIT: PaletteColors = { background: '#F5F0E6', surface: '#FFFFFF', text: '#151413', muted: '#6B665C', primary: '#151413', secondary: '#DCD5C7', accent: '#2E48D6', border: '#DCD5C7' }
+/** OpusKit's own standard theme (docs/design.md: stone, ink, hairline, one orange) — what a piece looks like before any
+ *  site's colours: the Library shows component-able effects this way, live and centred (the user, 2026-10-10). */
+export const OPUSKIT: PaletteColors = { background: '#FAFAF8', surface: '#EFEFEB', text: '#0E0E10', muted: '#66666C', primary: '#0E0E10', secondary: '#E5E5E0', accent: '#E0480F', border: '#D4D4CE' }
+/** Its dark mode (globals.css `.dark`, its card ground #18181B — a step off the dark page, a soft charcoal on the light
+ *  one; one set of clips for both modes): the Library shows every piece on it — rows of white cards tired the eye (the user,
+ *  2026-10-10). */
+export const OPUSKIT_DARK: PaletteColors = { background: '#18181B', surface: '#212125', text: '#ECECE6', muted: '#8F8F96', primary: '#ECECE6', secondary: '#2B2B30', accent: '#FF5C21', border: '#2B2B30' }
 
 const display = 'font-(family-name:--font-display) leading-[0.95] tracking-tight'
 const utility = 'font-(family-name:--font-utility) text-sm'
@@ -77,7 +83,7 @@ function demo(id: PieceId, c: PaletteColors): ReactNode {
     case 'image-trail': return <ImageTrail photos={PHOTOS.map((p) => p.src)} spacing={60} className="grid h-full w-full place-items-center"><p className={`${display} text-3xl`}>Move the cursor here</p></ImageTrail>
     case 'tilt': return <Tilt degrees={8}><img src={PHOTOS[4].src} alt="" className="h-40 w-32 object-cover" /></Tilt>
     case 'cursor-area': return <CursorArea label="View" className="h-40 w-64"><img src={PHOTOS[3].src} alt="" className="size-full object-cover" /></CursorArea>
-    case 'magnetic': return <Magnetic><span className="inline-block bg-(--color-text) px-6 py-3 text-(--color-background)">Start a project</span></Magnetic>
+    case 'magnetic': return <Magnetic><span className="inline-block cursor-pointer bg-(--color-text) px-6 py-3 text-(--color-background)">Start a project</span></Magnetic>
     case 'hover-highlight': return <LinkDemo piece="hover-highlight" colors={c} />
     case 'scroll-progress': return <div className="relative h-full w-full overflow-hidden"><div className="absolute inset-x-0 top-0 h-0.5 origin-left animate-[opuskit-fill_3s_ease-in-out_infinite] bg-(--color-accent)" /><style>{'@keyframes opuskit-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}'}</style><p className="p-6 text-(--color-muted)">A hairline fills across the top as the page is read.</p><span className="hidden"><ScrollProgress /></span></div>
     case 'velocity-band': return <VelocityBand text="Available for new work — " className={`${display} text-5xl`} />
@@ -101,11 +107,11 @@ function demo(id: PieceId, c: PaletteColors): ReactNode {
     case 'wavy-link': return <LinkDemo piece="wavy-link" colors={c} />
     case 'swap-button': return <SwapButton href="#demo" label="Tell us your story" />
     case 'stickers': return <div className="relative size-full"><p className={`${display} grid h-full place-items-center text-3xl`}>Throw a sticker</p><Stickers stickers={STICKERS.slice(0, 4).map((src, i) => ({ src, alt: '', x: ['6%', '70%', '14%', '74%'][i], y: ['8%', '10%', '58%', '56%'][i], w: '4.5rem', rotate: [-10, 8, 6, -6][i], depth: 0.5 }))} /></div>
-    case 'fade-transition': return <div className="relative size-full overflow-hidden"><p className="p-6 text-sm">Every internal link dims the page softly, then the next one fades in.</p><div className="absolute inset-0 animate-[opuskit-fade_2.4s_ease-in-out_infinite] bg-(--color-background)" /><style>{'@keyframes opuskit-fade{0%,15%{opacity:0}40%,55%{opacity:1}85%,100%{opacity:0}}'}</style></div>
-    case 'blob-transition': return <div className="relative size-full overflow-hidden"><div className="absolute inset-x-[-20%] top-[30%] h-[140%] animate-[opuskit-blob_2.4s_cubic-bezier(.76,0,.24,1)_infinite] rounded-t-[50%] bg-(--color-chapter-1,var(--color-accent))" /><style>{'@keyframes opuskit-blob{0%{transform:translateY(100%)}45%,55%{transform:translateY(-10%)}100%{transform:translateY(-160%)}}'}</style><p className="relative p-6 text-sm">Every internal link sweeps a blob over the page.</p></div>
-    case 'brand-cursor': return <div className="grid size-full place-items-center" style={{ cursor: `url("${CURSOR}") 3 2, auto` }}><p className="text-sm">Move the cursor here</p></div>
+    // A small site to click through: the change shows what it answers (a link pressed), not only the sweep.
+    case 'fade-transition': case 'blob-transition': case 'curtain-transition': return <PageChangeDemo kind={id} />
+    // A drawn zone, so the change shows: the ordinary arrow outside, the brand's own pointer inside.
+    case 'brand-cursor': return <div className="grid size-full place-items-center"><div className="grid h-36 w-60 place-items-center rounded-(--radius-md) border border-dashed border-(--color-border) bg-(--color-surface)" style={{ cursor: `url("${CURSOR}") 3 2, auto` }}><p className="text-sm text-(--color-muted)">Move the cursor here</p></div></div>
     case 'cookie-note': return <div className="relative size-full [&_[role=dialog]]:absolute [&_[role=dialog]]:bottom-3 [&_[role=dialog]]:right-3"><CookieNote text="We use cookies to see which films you watch — nothing else." storageKey="opuskit-demo-cookie" /></div>
-    case 'curtain-transition': return <div className="relative size-full overflow-hidden"><p className="p-6 text-sm">Every internal link raises a panel with the next page’s name.</p><div className="absolute inset-0 grid animate-[opuskit-curtain_2.4s_cubic-bezier(.76,0,.24,1)_infinite] place-items-center bg-(--color-text)"><p className={`${display} text-5xl text-(--color-background)`}>Journal</p></div><style>{'@keyframes opuskit-curtain{0%{transform:translateY(100%)}35%,60%{transform:translateY(0)}95%,100%{transform:translateY(-100%)}}'}</style></div>
     case 'preloader': return <PreloaderDemo />
     // Drawn, not the real piece: the real one covers and locks the whole page.
     case 'entry-gate': return <GateDemo />
@@ -114,7 +120,7 @@ function demo(id: PieceId, c: PaletteColors): ReactNode {
     case 'lightbox': return <LightboxDemo />
     // Not the real piece: it would smooth-scroll the whole OpusKit app.
     case 'smooth-scroll': return <div className="grid size-full grid-cols-2 gap-px bg-(--color-border)">{[['Step', 'steps(5)'], ['Glide', 'cubic-bezier(.22,1,.36,1)']].map(([l, ease]) => <div key={l} className="relative bg-(--color-background) p-5"><p className={utility}>{l}</p><span className="absolute left-1/2 top-12 size-3 rounded-full bg-(--color-accent)" style={{ animation: `opuskit-glide 2.4s ${ease} infinite alternate` }} /></div>)}<style>{'@keyframes opuskit-glide{to{transform:translateY(7rem)}}'}</style></div>
-    case 'ambient-sound': return <div className="relative grid size-full place-items-center [&>button]:absolute"><p className="text-sm text-(--color-muted)">The switch sits bottom-left on every page.</p><AmbientSound src="" /></div>
+    case 'ambient-sound': return <div className="relative grid size-full place-items-center [&>button]:absolute"><p className="text-sm text-(--color-muted)">The switch sits bottom-left on every page.</p><AmbientSound src="/examples/sela-mor/media/ambientSound.mp3" /></div>
     default: { const missing: never = id; return missing } // every piece needs a demo
   }
 }
@@ -153,6 +159,36 @@ function GateDemo() {
 }
 
 // Each item's colours taking the whole section, one after another (the real piece follows scroll).
+const PAGES = [['Work', 'Signs, labels and books for places that last.'], ['Journal', 'Notes from the bench, once a month.'], ['About', 'Two people and a press, since 2019.']] as const
+const SWEEP = {
+  'fade-transition': ['opuskit-fade 0.9s ease-in-out both', 'bg-(--color-background)', '@keyframes opuskit-fade{0%{opacity:0}45%,55%{opacity:1}100%{opacity:0}}'],
+  'blob-transition': ['opuskit-blob 1.2s cubic-bezier(.76,0,.24,1) both', 'inset-x-[-20%] top-[30%] h-[140%] rounded-t-[50%] bg-(--color-chapter-1,var(--color-accent))', '@keyframes opuskit-blob{0%{transform:translateY(100%)}45%,55%{transform:translateY(-10%)}100%{transform:translateY(-160%)}}'],
+  'curtain-transition': ['opuskit-curtain 1.3s cubic-bezier(.76,0,.24,1) both', 'grid place-items-center bg-(--color-text)', '@keyframes opuskit-curtain{0%{transform:translateY(100%)}35%,60%{transform:translateY(0)}95%,100%{transform:translateY(-100%)}}'],
+} as const
+/** Page changes, on a small site: a link pressed sweeps the page over and the next one comes in under it. Until the
+ *  pointer comes onto it, it moves on by itself, so a card nobody touches still shows the change. */
+function PageChangeDemo({ kind }: { kind: keyof typeof SWEEP }) {
+  const [page, setPage] = useState(0)
+  const [run, setRun] = useState<{ n: number; to: number } | null>(null)
+  const [touched, setTouched] = useState(false)
+  const [animation, look, css] = SWEEP[kind]
+  const go = (to: number) => { if (to === page || run) return; setRun({ n: Date.now(), to }); setTimeout(() => setPage(to), kind === 'fade-transition' ? 420 : 560) }
+  useEffect(() => { if (touched) return; const t = setInterval(() => go((page + 1) % 3), 3200); return () => clearInterval(t) })
+  return (
+    <div onPointerEnter={() => setTouched(true)} className="relative size-full overflow-hidden text-left">
+      <nav className={`relative flex gap-5 border-b border-(--color-border) px-5 py-3 ${utility}`}>
+        <span className="mr-auto font-semibold">Fold & Ink</span>
+        {PAGES.map(([name], i) => <button key={name} type="button" onClick={() => { setTouched(true); go(i) }} className={i === page ? 'underline underline-offset-4' : 'text-(--color-muted) hover:text-(--color-text)'}>{name}</button>)}
+      </nav>
+      <div className="px-5 pt-8"><p className={`${display} text-5xl`}>{PAGES[page][0]}</p><p className="mt-3 text-sm text-(--color-muted)">{PAGES[page][1]}</p></div>
+      {run && <div key={run.n} onAnimationEnd={() => setRun(null)} className={`pointer-events-none absolute ${kind === 'blob-transition' ? '' : 'inset-0'} ${look}`} style={{ animation }}>
+        {kind === 'curtain-transition' && <p className={`${display} text-5xl text-(--color-background)`}>{PAGES[run.to][0]}</p>}
+      </div>}
+      <style>{css}</style>
+    </div>
+  )
+}
+
 function ChaptersDemo() {
   const [n, setN] = useState(0)
   useEffect(() => { const t = setInterval(() => setN((v) => (v + 1) % 3), 1400); return () => clearInterval(t) }, [])
@@ -194,7 +230,24 @@ function LightboxDemo() {
 // These react to the page's own scroll: scroll past the card to see them move.
 const ON_SCROLL = new Set<PieceId>(['text-reveal', 'tilted-grid', 'sticky-cards', 'velocity-band'])
 
+/** Effects that play once when they come into view (a headline arriving, a board flipping): in a demo they replay every
+ *  few seconds while the card is on screen, so someone who looked a moment late still sees them (the user, 2026-10-10). */
+const ONCE = new Set<PieceId>(['text-effect', 'cut-reveal', 'split-flap', 'number-ticker', 'duo-headline'])
+function useReplay(on: boolean, every = 3600) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [round, setRound] = useState(0)
+  useEffect(() => {
+    if (!on || !ref.current || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    let t: ReturnType<typeof setInterval> | undefined
+    const io = new IntersectionObserver(([e]) => { clearInterval(t); if (e.isIntersecting) t = setInterval(() => setRound((r) => r + 1), every) })
+    io.observe(ref.current)
+    return () => { io.disconnect(); clearInterval(t) }
+  }, [on, every])
+  return { ref, round }
+}
+
 export function PieceDemo({ id, colors = OPUSKIT, fonts, chapters = ['#0038FF', '#FF77CD', '#FF5F04'], className }: { id: PieceId; colors?: PaletteColors; fonts?: Fonts; chapters?: readonly string[]; className?: string }) {
+  const { ref, round } = useReplay(ONCE.has(id))
   const vars = {
     ...Object.fromEntries(chapters.map((c, i) => [`--color-chapter-${i + 1}`, c])),
     '--color-background': colors.background, '--color-surface': colors.surface, '--color-text': colors.text, '--color-muted': colors.muted,
@@ -203,8 +256,8 @@ export function PieceDemo({ id, colors = OPUSKIT, fonts, chapters = ['#0038FF', 
     background: colors.background, color: colors.text,
   } as CSSProperties
   return (
-    <div className={`relative grid h-56 place-items-center overflow-hidden ${className ?? ''}`} style={vars}>
-      {demo(id, colors)}
+    <div ref={ref} className={`relative grid h-56 place-items-center overflow-hidden ${className ?? ''}`} style={vars}>
+      <Fragment key={round}>{demo(id, colors)}</Fragment>
       {ON_SCROLL.has(id) && <span className="pointer-events-none absolute bottom-2 right-3 text-xs opacity-60">moves as you scroll</span>}
     </div>
   )

@@ -9,12 +9,12 @@ import { toast } from 'sonner'
 import { useGoogleFonts } from '@/components/FontLoader'
 import { LinkDemo, type LinkPiece } from '@/components/LinkDemo'
 import { OptionDemo } from '@/components/OptionDemo'
-import { PieceDemo } from '@/components/PieceDemo'
+import { OPUSKIT_DARK, PieceDemo } from '@/components/PieceDemo'
 import { ScaledFrame } from '@/components/ScaledFrame'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { examples } from '@/data/examples'
-import { directions, motionLevels, purposes } from '@/data/taxonomy'
+import { directions, motionLevels, kindName } from '@/data/taxonomy'
 import { palettes, typography } from '@/data/ingredients'
 import { TRAITS, TRAIT_IDS, purposeFrom, siteTraits, type Trait } from '@/features/library/inspire'
 import { heroName } from '@/components/HeroPreview'
@@ -51,21 +51,39 @@ export function sampleLook(item: CollectionItem, kind?: PurposeId): Look {
   return looks.get(key)!
 }
 
+/** The standard theme: a neutral look in OpusKit's own colours, for effects shown as pure components (the Library's
+ *  Moments and Touches) — the same piece every site gets, before any site dresses it. */
+let standard: Look | undefined
+export function standardLook(): Look {
+  // One accent only — OpusKit's orange — where a piece reads a colour chapter (the hopping arrow's box).
+  standard ??= { ...sampleLook({ kind: 'effect', id: 'magnetic' }), colors: OPUSKIT_DARK, chapters: [OPUSKIT_DARK.accent, OPUSKIT_DARK.accent, OPUSKIT_DARK.accent] }
+  return standard
+}
+
+/** The standard theme dressed in the world of the site that shows a design best — a food menu with dishes, a programme
+ *  with screenings — for a section drawn pure. */
+export function pureLook(item: CollectionItem): Look {
+  const from = 'from' in item ? (item.from as SiteRef | undefined) : undefined
+  return { ...standardLook(), world: worldFor(from ? siteSpec(from)?.purpose : undefined) }
+}
+
 export const exampleOf = (ref: SiteRef) => (ref.startsWith('example:') ? examples.find((e) => `example:${e.slug}` === ref) : undefined)
 
 /** One item, drawn the way you would get it. Fixed 16:10, so a shelf reads as one grid. */
-export function ItemPreview(p: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement }; sketch?: boolean }) {
+export function ItemPreview(p: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement }; sketch?: boolean; /** Drawn pure in a catalog card: closer, so its words read. */ pure?: boolean }) {
   useGoogleFonts(p.look.type.googleFamilies)
   // On the look's own ground, so a part shorter than the frame doesn't end in a white band.
   return <div className="size-full" style={{ background: p.look.colors.background }}><Drawn {...p} /></div>
 }
-function Drawn({ item, look, rhythm, sketch }: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement }; sketch?: boolean }) {
+function Drawn({ item, look, rhythm, sketch, pure }: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement }; sketch?: boolean; pure?: boolean }) {
+  // A part drawn pure is laid out 900 wide, not 1280, so a card shows it larger; a footer sits at the card's foot.
+  const close = pure ? 900 : undefined
   const pv = { colors: look.colors, type: look.type, shape: look.shape, chapters: look.chapters, world: look.world, brand: look.brand, layout: look.layout, sketch }
   switch (item.kind) {
     case 'site': return <SiteThumb site={item.site} />
     case 'like': return <TraitPicture what={item.what} site={item.site} />
-    case 'section': return <SectionPreview id={item.id} variant={item.variant} {...pv} {...rhythm} className="aspect-[16/10]" />
-    case 'footer': return <SectionPreview id="footer" footer={item.id} {...pv} className="aspect-[16/10]" />
+    case 'section': return <SectionPreview id={item.id} variant={item.variant} {...pv} {...rhythm} width={close} className="aspect-[16/10]" />
+    case 'footer': return <SectionPreview id="footer" footer={item.id} {...pv} width={close} anchor={pure ? 'bottom' : undefined} className="aspect-[16/10]" />
     case 'hero': return <div className={`aspect-[16/10] overflow-hidden ${sketch ? 'sketch' : ''}`}><HeroPreview plan={look.plan} id={item.id} /></div>
     case 'menu': return <OptionDemo id={`nav:${item.id}`} colors={look.colors} type={look.type} shape={look.shape} />
     case 'effect':
@@ -95,7 +113,8 @@ export function SiteThumb({ site, auto }: { site: SiteRef; auto?: boolean }) {
     <div className="relative aspect-[16/10] overflow-hidden bg-paper-2" {...(auto ? {} : { onMouseEnter: play, onMouseLeave: () => video.current?.pause() })}>
       <Image src={`/examples/${e.slug}.jpg`} alt="" width={800} height={500} className="size-full object-cover object-top" />
       {/* Shown once it has frames, so the screenshot never blinks to black. */}
-      {e.clip && <video ref={video} src={e.clip} muted loop playsInline preload={auto ? 'metadata' : 'none'} aria-hidden onPlaying={() => setPlaying(true)}
+      {/* The whole landing page where it was recorded (the user, 2026-10-10: full, not the short loop), else the loop. */}
+      {(e.fullClip ?? e.clip) && <video ref={video} src={e.fullClip ?? e.clip} muted loop playsInline preload={auto ? 'metadata' : 'none'} aria-hidden onPlaying={() => setPlaying(true)}
         className={`absolute inset-0 size-full object-cover transition-opacity duration-300 ${auto ? (playing ? 'opacity-100' : 'opacity-0') : 'opacity-0 group-hover:opacity-100'}`} />}
     </div>
   )
@@ -108,6 +127,9 @@ export function useCollect(item: CollectionItem) {
     const before = readCollection(), after = toggleItem(before, item)
     updateCollection(() => after)
     if (on) return toast(`Removed: ${itemName(item)}`, { action: { label: 'Undo', onClick: () => updateCollection(() => before) } })
+    // Taking one of a set a site can only have one of (a link hover…) put back the one taken before: say which.
+    const gone = before.items.filter((x) => !after.items.some((y) => itemKey(y) === itemKey(x)))
+    if (gone.length) return toast(`${itemName(item)} replaced ${gone.map(itemName).join(', ')}`, { description: 'A site has only one of these.', action: { label: 'Undo', onClick: () => updateCollection(() => before) } })
     const had = new Set(notes(before).map((n) => n.text))
     const note = notes(after).find((n) => !had.has(n.text) && n.keys.includes(itemKey(item)))
     if (note) toast(note.text, { action: { label: 'Open', onClick: openCollection } })
@@ -141,8 +163,9 @@ export function useToBuild() {
   const router = useRouter()
   return () => {
     toast.dismiss() // browsing's notes stay behind with browsing
-    const c = readCollection()
-    router.push(c.name?.trim() && c.purpose ? '/studio/direction' : '/studio/you')
+    // Always the first step, filled with what is already known — never skipped to Direction because a name and a kind
+    // are remembered: after clearing the Collection the user landed on Direction without seeing You (2026-10-10).
+    router.push('/studio/you')
   }
 }
 /** Whether a site is being built from the Collection already (then the way on is "Continue building"). */
@@ -172,7 +195,7 @@ const GROUPS: [string, (i: CollectionItem) => boolean][] = [
 
 /** The Collection — the cart (2026-10-05): in the site's header on every page, the last things collected and their
  *  count (a small bump when something goes in). Opened: everything in it, the quiet notes, remove — and the one way
- *  from browsing to building, **Build my site**, which starts Pages → Style → Recipe. */
+ *  from browsing to building, **Build my site**, which starts You → Direction → Recipe. */
 export function CollectionSheet() {
   const c = useCollection()
   const toBuild = useToBuild(), buildLabel = useBuildLabel()
@@ -186,7 +209,7 @@ export function CollectionSheet() {
   const remove = (i: CollectionItem) => { const before = readCollection(); updateCollection((x) => removeItem(x, itemKey(i))); toast(`Removed: ${itemName(i)}`, { action: { label: 'Undo', onClick: () => updateCollection(() => before) } }) }
   const clear = () => { const before = readCollection(); updateCollection((x) => ({ ...x, items: [] })); toast('Collection cleared', { action: { label: 'Undo', onClick: () => updateCollection(() => before) } }) }
   // What Build will make, in one line.
-  const summary = `${c.name?.trim() || 'Your site'}${c.purpose ? ` · ${purposes[c.purpose].name}` : ''} — made from ${n} ${n === 1 ? 'thing' : 'things'} you like`
+  const summary = `${c.name?.trim() || 'Your site'}${c.purpose ? ` · ${kindName(c.purpose)}` : ''} — made from ${n} ${n === 1 ? 'thing' : 'things'} you like`
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       {/* The pictures sit beside the button, not inside it: a drawn part holds buttons of its own, which can't nest. */}
@@ -362,8 +385,8 @@ function clipOf(i: CollectionItem): string | undefined {
   const ref = i.kind === 'site' || i.kind === 'like' ? i.site : i.from, e = ref && exampleOf(ref)
   if (!e) return undefined
   switch (i.kind) {
-    case 'like': return i.what === 'opening' ? e.clip : undefined
-    case 'hero': return e.clip
+    case 'like': return i.what === 'opening' ? e.sectionClips?.hero ?? e.clip : undefined
+    case 'hero': return e.sectionClips?.hero ?? e.clip
     case 'menu': return e.sectionClips?.navbar
     case 'footer': return e.sectionClips?.footer
     case 'section': return e.sectionClips?.[i.id]
@@ -375,10 +398,26 @@ function clipOf(i: CollectionItem): string | undefined {
 /** One taken thing, drawn as it was taken: the site's recording of it where there is one, else drawn in that site's own
  *  look (its colours, lettering and the part's place on its page). The same picture in the take dialog, the Collection
  *  and the header, so what you took is what you see. */
+/** A still of the very part, on the site it came from (`sectionStills`) — the site itself where there is no clip of it. */
+function stillOf(i: CollectionItem): string | undefined {
+  const ref = i.kind === 'like' ? i.site : i.kind === 'site' ? undefined : i.from, e = ref && exampleOf(ref)
+  if (!e?.sectionStills) return undefined
+  switch (i.kind) {
+    case 'like': return i.what === 'opening' ? e.sectionStills.hero : undefined
+    case 'menu': return e.sectionStills.navbar
+    case 'footer': return e.sectionStills.footer
+    case 'section': return e.sectionStills[i.id]
+    default: return undefined
+  }
+}
+
 export function TakenPicture({ item, auto }: { item: CollectionItem; auto?: boolean }) {
   if (item.kind === 'site') return <SiteThumb site={item.site} auto={auto} />
   const clip = clipOf(item)
   if (clip) return <Clip src={clip} />
+  const still = stillOf(item)
+  // eslint-disable-next-line @next/next/no-img-element -- a captured still of the live site, already sized
+  if (still) return <img src={still} alt="" loading="lazy" className="pointer-events-none size-full object-cover object-top" />
   if (item.kind === 'like') return <TraitPicture what={item.what} site={item.site} />
   if (!item.from) return <div className="pointer-events-none size-full"><ItemPreview item={item} look={sampleLook(item)} /></div>
   const { look, recipe } = siteData(item.from as SiteRef)

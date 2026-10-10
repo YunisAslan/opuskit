@@ -639,6 +639,28 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     every palette and chapter colour: text, muted on surface, text on secondary, the button label, inverse and chapter
     text and muted.
 
+58. **One design, one card, a name that earns it** (2026-10-10, the user: the Library repeats itself, "Just one thing"
+    and "Effects" are not real groups, Movement says nothing; show only what is worth adding to a Collection, under a
+    title that does it justice; many sites will be sent to mine for new things). Measured: 293 cards over 25 sites,
+    118 distinct designs (Signature columns footer ×14, Gallery ×14, Movement 25 cards for 4 values). Now a catalog,
+    `src/data/takeables.ts`: one entry per design (`hero:` `nav:` `footer:` `section:id[/variant]` `effect:`) with a
+    group — Sections, Moments (what happens on the page), Touches (what answers the hand) — a category inside it, a
+    specific name ("Big name footer", "Floating pill menu", "Film that plays as you scroll") and `bestOn`, the one site
+    that shows it. The site's + shows Style (whole look; its colours and lettering only where no earlier site shows the
+    same), then only the designs the catalog puts on it. The test is "is it a real choice?", not "is it plain": every
+    menu (8), footer (5) and first screen (11) stays; parts whose versions are not worth choosing between (testimonials,
+    FAQ) never show (`SIGNATURE_PARTS`). Movement is gone (it comes with the look). Collection and recipe names read
+    the catalog too (`itemName`, `takenName`). check.ts: every design on the shelf has an entry, its `bestOn` has it,
+    names unique and never a bare category word. The Library itself has four views — Sites, Sections, Moments,
+    Touches (no Style view: colours and lettering come with a site; `catalogOf` in `library/SiteTake.tsx`): every
+    design once, as its `bestOn` site has it, a category filter, the + takes it. Opened: the design large, then its
+    alternatives — other designs of the same thing (another menu, another way to show work, another link hover), never
+    the same design recoloured on another site (the user) — then the sites it is used on, shown as the sites themselves
+    (their recording or screen), not their names. A one-of effect (a link hover, a main button, a page change, a
+    headline entrance — `behaviours` with `many: false`) keeps its own card, its modal shows the other ones ("Or another link hover — a site has one"), and
+    taking one puts back the one taken before (`toggleItem`, a toast with Undo) — the Collection never holds two. The view is kept in the address (`#sections`). Next
+    (later): real previews — captures, clips, live components.
+
 ## 5. Open
 
 1. ~~Retiring the kit~~ — done (decision 31). Shape, menu and footer look, movement and behaviours are now the engine's
