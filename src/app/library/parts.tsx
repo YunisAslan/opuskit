@@ -24,17 +24,17 @@ import { hasItem, itemKey, itemName, notes, removeItem, siteName, siteSpec, site
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { behaviours, pieces } from '@/data/pieces'
-import { specToPlan } from '@/features/kit/plan'
+import { specToPlan } from '@/features/studio/plan'
 import { composeRecipe } from '@/features/recipes/engine'
 import { adoptPlan, readCollection, updateCollection, useCollection } from '@/lib/collection'
-import { readPlan, usePlan } from '@/lib/kit'
+import { readPlan, usePlan } from '@/lib/plan'
 import { KEYS, get, useHydrated } from '@/lib/store'
-import type { KitPlan, LayoutId, MediaPlacement, PurposeId, SectionTone } from '@/types/domain'
+import type { StudioPlan, LayoutId, MediaPlacement, PurposeId, SectionTone } from '@/types/domain'
 
-export type Look = ReturnType<typeof lookOf> & { plan: KitPlan; world: ReturnType<typeof worldFor>; brand?: string; layout?: LayoutId }
+export type Look = ReturnType<typeof lookOf> & { plan: StudioPlan; world: ReturnType<typeof worldFor>; brand?: string; layout?: LayoutId }
 
 /** A site's own look, for its page and for the parts it shows on the shelves. */
-export function siteLook(ref: SiteRef, plan: KitPlan, layout?: LayoutId): Look {
+export function siteLook(ref: SiteRef, plan: StudioPlan, layout?: LayoutId): Look {
   return { ...lookOf(plan), plan, world: worldFor(siteSpec(ref)?.purpose), layout }
 }
 // Shelves are samples, never the visitor's own style (that is picked later): a part is drawn as on the first real site
@@ -45,7 +45,7 @@ export function sampleLook(item: CollectionItem, kind?: PurposeId): Look {
   const key = site ?? `plain:${kind ?? ''}`
   if (!looks.has(key)) {
     const spec = site && siteSpec(site)
-    const plan: KitPlan = spec ? specToPlan(spec) : { pages: [], purpose: kind }
+    const plan: StudioPlan = spec ? specToPlan(spec) : { pages: [], purpose: kind }
     looks.set(key, spec ? siteLook(site, plan) : { ...lookOf(plan), plan, world: worldFor(kind) })
   }
   return looks.get(key)!
@@ -146,7 +146,7 @@ export function useToBuild() {
   }
 }
 /** Whether a site is being built from the Collection already (then the way on is "Continue building"). */
-export const isBuilding = (plan: KitPlan) => plan.via === 'studio' && plan.pages.length > 0
+export const isBuilding = (plan: StudioPlan) => plan.via === 'studio' && plan.pages.length > 0
 /** "Build my site" the first time, "Continue building" after. */
 export function useBuildLabel() {
   return isBuilding(usePlan()) ? 'Continue building' : 'Build my site'

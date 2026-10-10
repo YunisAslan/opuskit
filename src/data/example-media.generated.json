@@ -1,0 +1,657 @@
+{
+ "ninth-row": {
+  "photos": [
+   "/examples/ninth-row/media/about.jpg",
+   "/examples/ninth-row/media/featuredWork-1.jpg",
+   "/examples/ninth-row/media/featuredWork-2.jpg",
+   "/examples/ninth-row/media/featuredWork-3.jpg",
+   "/examples/ninth-row/media/featuredWork-4.jpg",
+   "/examples/ninth-row/media/location.jpg",
+   "/examples/ninth-row/media/team-1.jpg",
+   "/examples/ninth-row/media/team-2.jpg",
+   "/examples/ninth-row/media/team-3.jpg",
+   "/examples/ninth-row/media/team-4.jpg"
+  ],
+  "films": [
+   {
+    "src": "/examples/ninth-row/media/heroVideo.mp4",
+    "poster": "/examples/ninth-row/media/posterImage.jpg"
+   }
+  ]
+ },
+ "pip-kiln": {
+  "photos": [
+   "/examples/pip-kiln/media/categories-1.jpg",
+   "/examples/pip-kiln/media/categories-2.jpg",
+   "/examples/pip-kiln/media/categories-3.jpg",
+   "/examples/pip-kiln/media/categories-4.jpg",
+   "/examples/pip-kiln/media/collection-1.jpg",
+   "/examples/pip-kiln/media/collection-2.jpg",
+   "/examples/pip-kiln/media/collection-3.jpg",
+   "/examples/pip-kiln/media/collection-4.jpg",
+   "/examples/pip-kiln/media/gallery-1.jpg",
+   "/examples/pip-kiln/media/gallery-2.jpg",
+   "/examples/pip-kiln/media/gallery-3.jpg",
+   "/examples/pip-kiln/media/gallery-4.jpg",
+   "/examples/pip-kiln/media/gallery-5.jpg",
+   "/examples/pip-kiln/media/gallery-6.jpg",
+   "/examples/pip-kiln/media/gallery-7.jpg",
+   "/examples/pip-kiln/media/gallery-8.jpg",
+   "/examples/pip-kiln/media/hero.jpg",
+   "/examples/pip-kiln/media/heroMug.webp",
+   "/examples/pip-kiln/media/productGrid-1.jpg",
+   "/examples/pip-kiln/media/productGrid-2.jpg",
+   "/examples/pip-kiln/media/productGrid-3.jpg",
+   "/examples/pip-kiln/media/productGrid-4.jpg",
+   "/examples/pip-kiln/media/productGrid-5.jpg",
+   "/examples/pip-kiln/media/productGrid-6.jpg",
+   "/examples/pip-kiln/media/productHighlight.jpg",
+   "/examples/pip-kiln/media/productPageBuy/big-hug-mug-1.jpg",
+   "/examples/pip-kiln/media/productPageBuy/big-hug-mug-2.jpg",
+   "/examples/pip-kiln/media/productPageBuy/big-hug-mug-3.jpg",
+   "/examples/pip-kiln/media/productPageBuy/bud-buddy-vase-1.jpg",
+   "/examples/pip-kiln/media/productPageBuy/bud-buddy-vase-2.jpg",
+   "/examples/pip-kiln/media/productPageBuy/bud-buddy-vase-3.jpg",
+   "/examples/pip-kiln/media/productPageBuy/morning-person-mug-1.jpg",
+   "/examples/pip-kiln/media/productPageBuy/morning-person-mug-2.jpg",
+   "/examples/pip-kiln/media/productPageBuy/morning-person-mug-3.jpg",
+   "/examples/pip-kiln/media/productPageBuy/second-helping-plate-1.jpg",
+   "/examples/pip-kiln/media/productPageBuy/second-helping-plate-2.jpg",
+   "/examples/pip-kiln/media/productPageBuy/second-helping-plate-3.jpg",
+   "/examples/pip-kiln/media/productPageBuy/show-off-vase-1.jpg",
+   "/examples/pip-kiln/media/productPageBuy/show-off-vase-2.jpg",
+   "/examples/pip-kiln/media/productPageBuy/show-off-vase-3.jpg",
+   "/examples/pip-kiln/media/productPageBuy/sunny-side-plate-1.jpg",
+   "/examples/pip-kiln/media/productPageBuy/sunny-side-plate-2.jpg",
+   "/examples/pip-kiln/media/productPageBuy/sunny-side-plate-3.jpg",
+   "/examples/pip-kiln/media/productPageHighlight/big-hug-mug-1.jpg",
+   "/examples/pip-kiln/media/productPageHighlight/bud-buddy-vase-1.jpg",
+   "/examples/pip-kiln/media/productPageHighlight/morning-person-mug-1.jpg",
+   "/examples/pip-kiln/media/productPageHighlight/second-helping-plate-1.jpg",
+   "/examples/pip-kiln/media/productPageHighlight/show-off-vase-1.jpg",
+   "/examples/pip-kiln/media/productPageHighlight/sunny-side-plate-1.jpg"
+  ],
+  "films": []
+ },
+ "kelp-line": {
+  "photos": [
+   "/examples/kelp-line/media/about.jpg",
+   "/examples/kelp-line/media/gallery-1.jpg",
+   "/examples/kelp-line/media/gallery-2.jpg",
+   "/examples/kelp-line/media/gallery-3.jpg",
+   "/examples/kelp-line/media/gallery-4.jpg",
+   "/examples/kelp-line/media/gallery-5.jpg",
+   "/examples/kelp-line/media/gallery-6.jpg",
+   "/examples/kelp-line/media/gallery-7.jpg",
+   "/examples/kelp-line/media/gallery-8.jpg",
+   "/examples/kelp-line/media/hero.jpg",
+   "/examples/kelp-line/media/journal-1.jpg",
+   "/examples/kelp-line/media/journal-2.jpg",
+   "/examples/kelp-line/media/journal-3.jpg",
+   "/examples/kelp-line/media/location.jpg",
+   "/examples/kelp-line/media/mobileHeroCrop.jpg",
+   "/examples/kelp-line/media/storyHome.jpg",
+   "/examples/kelp-line/media/storyMission.jpg",
+   "/examples/kelp-line/media/storyStories.jpg",
+   "/examples/kelp-line/media/team-1.jpg",
+   "/examples/kelp-line/media/team-2.jpg",
+   "/examples/kelp-line/media/team-3.jpg",
+   "/examples/kelp-line/media/team-4.jpg"
+  ],
+  "films": []
+ },
+ "raster-school": {
+  "photos": [
+   "/examples/raster-school/media/about.jpg",
+   "/examples/raster-school/media/team-1.jpg",
+   "/examples/raster-school/media/team-2.jpg",
+   "/examples/raster-school/media/team-3.jpg",
+   "/examples/raster-school/media/team-4.jpg"
+  ],
+  "films": []
+ },
+ "pale-hour": {
+  "photos": [
+   "/examples/pale-hour/media/about.jpg",
+   "/examples/pale-hour/media/featuredWork-1.jpg",
+   "/examples/pale-hour/media/featuredWork-2.jpg",
+   "/examples/pale-hour/media/featuredWork-3.jpg",
+   "/examples/pale-hour/media/featuredWork-4.jpg",
+   "/examples/pale-hour/media/gallery-1.jpg",
+   "/examples/pale-hour/media/gallery-2.jpg",
+   "/examples/pale-hour/media/gallery-3.jpg",
+   "/examples/pale-hour/media/gallery-4.jpg",
+   "/examples/pale-hour/media/gallery-5.jpg",
+   "/examples/pale-hour/media/gallery-6.jpg",
+   "/examples/pale-hour/media/gallery-7.jpg",
+   "/examples/pale-hour/media/gallery-8.jpg",
+   "/examples/pale-hour/media/hero.jpg",
+   "/examples/pale-hour/media/journal-1.jpg",
+   "/examples/pale-hour/media/journal-2.jpg",
+   "/examples/pale-hour/media/journal-3.jpg",
+   "/examples/pale-hour/media/location.jpg",
+   "/examples/pale-hour/media/mobileHeroCrop.jpg",
+   "/examples/pale-hour/media/team-1.jpg",
+   "/examples/pale-hour/media/team-2.jpg",
+   "/examples/pale-hour/media/team-3.jpg",
+   "/examples/pale-hour/media/team-4.jpg"
+  ],
+  "films": []
+ },
+ "low-hum": {
+  "photos": [
+   "/examples/low-hum/media/gallery-1.jpg",
+   "/examples/low-hum/media/gallery-2.jpg",
+   "/examples/low-hum/media/gallery-3.jpg",
+   "/examples/low-hum/media/gallery-4.jpg",
+   "/examples/low-hum/media/gallery-5.jpg",
+   "/examples/low-hum/media/gallery-6.jpg",
+   "/examples/low-hum/media/gallery-7.jpg",
+   "/examples/low-hum/media/gallery-8.jpg",
+   "/examples/low-hum/media/hero.jpg",
+   "/examples/low-hum/media/location.jpg",
+   "/examples/low-hum/media/mobileHeroCrop.jpg"
+  ],
+  "films": []
+ },
+ "halden": {
+  "photos": [
+   "/examples/halden/media/gallery1.jpg",
+   "/examples/halden/media/gallery2.jpg",
+   "/examples/halden/media/gallery3.jpg",
+   "/examples/halden/media/gallery4.jpg",
+   "/examples/halden/media/gallery5.jpg",
+   "/examples/halden/media/locationHomeArrival.jpg",
+   "/examples/halden/media/locationHomeInside.jpg",
+   "/examples/halden/media/locationVisitArrival.jpg",
+   "/examples/halden/media/locationVisitInside.jpg",
+   "/examples/halden/media/servicePrivate.jpg",
+   "/examples/halden/media/serviceQuiet.jpg",
+   "/examples/halden/media/serviceSauna.jpg",
+   "/examples/halden/media/serviceSea.jpg",
+   "/examples/halden/media/serviceSmoke.jpg",
+   "/examples/halden/media/serviceTubs.jpg",
+   "/examples/halden/media/stepArrive.jpg",
+   "/examples/halden/media/stepHeat.jpg",
+   "/examples/halden/media/stepRest.jpg",
+   "/examples/halden/media/stepSea.jpg",
+   "/examples/halden/media/supportingImages.jpg"
+  ],
+  "films": [
+   {
+    "src": "/examples/halden/media/heroVideo.mp4",
+    "poster": "/examples/halden/media/posterImage.jpg"
+   }
+  ]
+ },
+ "maison-vey": {
+  "photos": [
+   "/examples/maison-vey/media/about-portrait.jpg",
+   "/examples/maison-vey/media/collection-discovery-set.jpg",
+   "/examples/maison-vey/media/collection-fig-courtyard.jpg",
+   "/examples/maison-vey/media/collection-night-ferry.jpg",
+   "/examples/maison-vey/media/collection-orangery.jpg",
+   "/examples/maison-vey/media/collection-reading-room.jpg",
+   "/examples/maison-vey/media/collection-salt-quay.jpg",
+   "/examples/maison-vey/media/editorial-hands.jpg",
+   "/examples/maison-vey/media/editorial-place.jpg",
+   "/examples/maison-vey/media/hero-mobile.jpg",
+   "/examples/maison-vey/media/hero.jpg",
+   "/examples/maison-vey/media/highlight-salt-quay.jpg",
+   "/examples/maison-vey/media/lifestyleImages.jpg",
+   "/examples/maison-vey/media/product-discovery-set-angle.jpg",
+   "/examples/maison-vey/media/product-discovery-set-detail.jpg",
+   "/examples/maison-vey/media/product-discovery-set.jpg",
+   "/examples/maison-vey/media/product-fig-courtyard-angle.jpg",
+   "/examples/maison-vey/media/product-fig-courtyard-detail.jpg",
+   "/examples/maison-vey/media/product-fig-courtyard.jpg",
+   "/examples/maison-vey/media/product-night-ferry-angle.jpg",
+   "/examples/maison-vey/media/product-night-ferry-detail.jpg",
+   "/examples/maison-vey/media/product-night-ferry.jpg",
+   "/examples/maison-vey/media/product-orangery-angle.jpg",
+   "/examples/maison-vey/media/product-orangery-detail.jpg",
+   "/examples/maison-vey/media/product-orangery.jpg",
+   "/examples/maison-vey/media/product-reading-room-angle.jpg",
+   "/examples/maison-vey/media/product-reading-room-detail.jpg",
+   "/examples/maison-vey/media/product-reading-room.jpg",
+   "/examples/maison-vey/media/product-salt-quay-angle.jpg",
+   "/examples/maison-vey/media/product-salt-quay-detail.jpg",
+   "/examples/maison-vey/media/product-salt-quay.jpg",
+   "/examples/maison-vey/media/productPhotography.jpg",
+   "/examples/maison-vey/media/turntableSequence.jpg"
+  ],
+  "films": []
+ },
+ "fieldhouse": {
+  "photos": [
+   "/examples/fieldhouse/media/about-2.jpg",
+   "/examples/fieldhouse/media/about.jpg",
+   "/examples/fieldhouse/media/case-1.jpg",
+   "/examples/fieldhouse/media/case-2.jpg",
+   "/examples/fieldhouse/media/case-3.jpg",
+   "/examples/fieldhouse/media/case-4.jpg",
+   "/examples/fieldhouse/media/gallery-1.jpg",
+   "/examples/fieldhouse/media/gallery-10.jpg",
+   "/examples/fieldhouse/media/gallery-2.jpg",
+   "/examples/fieldhouse/media/gallery-3.jpg",
+   "/examples/fieldhouse/media/gallery-4.jpg",
+   "/examples/fieldhouse/media/gallery-5.jpg",
+   "/examples/fieldhouse/media/gallery-6.jpg",
+   "/examples/fieldhouse/media/gallery-7.jpg",
+   "/examples/fieldhouse/media/gallery-8.jpg",
+   "/examples/fieldhouse/media/gallery-9.jpg",
+   "/examples/fieldhouse/media/hero-mobile.jpg",
+   "/examples/fieldhouse/media/hero.jpg",
+   "/examples/fieldhouse/media/location-1.jpg",
+   "/examples/fieldhouse/media/location-2.jpg",
+   "/examples/fieldhouse/media/project-1.jpg",
+   "/examples/fieldhouse/media/project-2.jpg",
+   "/examples/fieldhouse/media/project-3.jpg",
+   "/examples/fieldhouse/media/project-4.jpg",
+   "/examples/fieldhouse/media/team-1.jpg",
+   "/examples/fieldhouse/media/team-2.jpg",
+   "/examples/fieldhouse/media/team-3.jpg",
+   "/examples/fieldhouse/media/team-4.jpg"
+  ],
+  "films": []
+ },
+ "qum": {
+  "photos": [
+   "/examples/qum/media/balm.jpg",
+   "/examples/qum/media/bathroom.jpg",
+   "/examples/qum/media/cleanser.jpg",
+   "/examples/qum/media/cream.jpg",
+   "/examples/qum/media/founder-1.jpg",
+   "/examples/qum/media/founder-2.jpg",
+   "/examples/qum/media/founder-3.jpg",
+   "/examples/qum/media/hero.jpg",
+   "/examples/qum/media/lab.jpg",
+   "/examples/qum/media/oil.jpg",
+   "/examples/qum/media/ritual-face.jpg",
+   "/examples/qum/media/ritual-hands.jpg",
+   "/examples/qum/media/saffron-close.jpg",
+   "/examples/qum/media/saffron-field.jpg",
+   "/examples/qum/media/salt-aerial.jpg",
+   "/examples/qum/media/salt-crystals.jpg",
+   "/examples/qum/media/salt-lake.jpg",
+   "/examples/qum/media/scrub.jpg",
+   "/examples/qum/media/serum-1.jpg",
+   "/examples/qum/media/serum-2.jpg",
+   "/examples/qum/media/serum-3.jpg",
+   "/examples/qum/media/serum-4.jpg",
+   "/examples/qum/media/toner.jpg"
+  ],
+  "films": []
+ },
+ "aster-house": {
+  "photos": [
+   "/examples/aster-house/media/architect.jpg",
+   "/examples/aster-house/media/cliff-1.jpg",
+   "/examples/aster-house/media/cliff-2.jpg",
+   "/examples/aster-house/media/detail-jug.jpg",
+   "/examples/aster-house/media/hour-afternoon.jpg",
+   "/examples/aster-house/media/hour-dawn.jpg",
+   "/examples/aster-house/media/hour-dusk.jpg",
+   "/examples/aster-house/media/hour-evening.jpg",
+   "/examples/aster-house/media/hour-morning.jpg",
+   "/examples/aster-house/media/hour-noon.jpg",
+   "/examples/aster-house/media/room-balcony.jpg",
+   "/examples/aster-house/media/room-bed.jpg",
+   "/examples/aster-house/media/stair.jpg",
+   "/examples/aster-house/media/terrace-pool.jpg",
+   "/examples/aster-house/media/terrace-stone.jpg"
+  ],
+  "films": [
+   {
+    "src": "/examples/aster-house/media/heroVideo.mp4",
+    "poster": "/examples/aster-house/media/posterImage.jpg"
+   }
+  ]
+ },
+ "night-shift": {
+  "photos": [
+   "/examples/night-shift/media/grade-1.jpg",
+   "/examples/night-shift/media/grade-2.jpg",
+   "/examples/night-shift/media/grade-3.jpg",
+   "/examples/night-shift/media/instructor.jpg",
+   "/examples/night-shift/media/log-1.jpg",
+   "/examples/night-shift/media/log-2.jpg",
+   "/examples/night-shift/media/log-3.jpg",
+   "/examples/night-shift/media/scope.jpg",
+   "/examples/night-shift/media/set-1.jpg",
+   "/examples/night-shift/media/set-2.jpg",
+   "/examples/night-shift/media/set-3.jpg",
+   "/examples/night-shift/media/student-1.jpg",
+   "/examples/night-shift/media/student-2.jpg",
+   "/examples/night-shift/media/suite.jpg"
+  ],
+  "films": []
+ },
+ "sela-mor": {
+  "photos": [
+   "/examples/sela-mor/media/field-recording.jpg",
+   "/examples/sela-mor/media/gallery-1.jpg",
+   "/examples/sela-mor/media/gallery-2.jpg",
+   "/examples/sela-mor/media/gallery-3.jpg",
+   "/examples/sela-mor/media/gallery-4.jpg",
+   "/examples/sela-mor/media/gallery-5.jpg",
+   "/examples/sela-mor/media/gallery-6.jpg",
+   "/examples/sela-mor/media/gallery-7.jpg",
+   "/examples/sela-mor/media/gallery-8.jpg",
+   "/examples/sela-mor/media/portrait.jpg",
+   "/examples/sela-mor/media/stage.jpg",
+   "/examples/sela-mor/media/work-live.jpg",
+   "/examples/sela-mor/media/work-machine.jpg",
+   "/examples/sela-mor/media/work-rain.jpg",
+   "/examples/sela-mor/media/work-room.jpg",
+   "/examples/sela-mor/media/work-wind.jpg"
+  ],
+  "films": [
+   {
+    "src": "/examples/sela-mor/media/heroVideo.mp4",
+    "poster": "/examples/sela-mor/media/posterImage.jpg"
+   }
+  ]
+ },
+ "kur-delta-watch": {
+  "photos": [
+   "/examples/kur-delta-watch/media/boat-1.jpg",
+   "/examples/kur-delta-watch/media/boat-2.jpg",
+   "/examples/kur-delta-watch/media/boat-3.jpg",
+   "/examples/kur-delta-watch/media/cleanup-1.jpg",
+   "/examples/kur-delta-watch/media/cleanup-2.jpg",
+   "/examples/kur-delta-watch/media/cleanup-3.jpg",
+   "/examples/kur-delta-watch/media/cleanup-4.jpg",
+   "/examples/kur-delta-watch/media/cleanup-5.jpg",
+   "/examples/kur-delta-watch/media/delta-1.jpg",
+   "/examples/kur-delta-watch/media/delta-2.jpg",
+   "/examples/kur-delta-watch/media/glove.jpg",
+   "/examples/kur-delta-watch/media/heron-1.jpg",
+   "/examples/kur-delta-watch/media/heron-2.jpg",
+   "/examples/kur-delta-watch/media/pelicans.jpg",
+   "/examples/kur-delta-watch/media/team-1.jpg",
+   "/examples/kur-delta-watch/media/team-2.jpg",
+   "/examples/kur-delta-watch/media/team-3.jpg",
+   "/examples/kur-delta-watch/media/volunteer-day.jpg",
+   "/examples/kur-delta-watch/media/water-test.jpg"
+  ],
+  "films": [
+   {
+    "src": "/examples/kur-delta-watch/media/heroVideo.mp4",
+    "poster": "/examples/kur-delta-watch/media/posterImage.jpg"
+   }
+  ]
+ },
+ "inkwell-moth": {
+  "photos": [
+   "/examples/inkwell-moth/media/book-koi.jpg",
+   "/examples/inkwell-moth/media/book-moths.jpg",
+   "/examples/inkwell-moth/media/book-rooster.jpg",
+   "/examples/inkwell-moth/media/book-sparrow.jpg",
+   "/examples/inkwell-moth/media/desk-1.jpg",
+   "/examples/inkwell-moth/media/desk-2.jpg",
+   "/examples/inkwell-moth/media/desk-3.jpg",
+   "/examples/inkwell-moth/media/desk-4.jpg",
+   "/examples/inkwell-moth/media/desk-5.jpg",
+   "/examples/inkwell-moth/media/moth-specimens.jpg",
+   "/examples/inkwell-moth/media/portrait.jpg",
+   "/examples/inkwell-moth/media/process-1.jpg",
+   "/examples/inkwell-moth/media/process-2.jpg",
+   "/examples/inkwell-moth/media/process-3.jpg",
+   "/examples/inkwell-moth/media/process-4.jpg",
+   "/examples/inkwell-moth/media/sheki.jpg",
+   "/examples/inkwell-moth/media/spread-1.jpg",
+   "/examples/inkwell-moth/media/spread-2.jpg",
+   "/examples/inkwell-moth/media/spread-3.jpg",
+   "/examples/inkwell-moth/media/spread-4.jpg",
+   "/examples/inkwell-moth/media/spread-5.jpg",
+   "/examples/inkwell-moth/media/spread-6.jpg",
+   "/examples/inkwell-moth/media/spread-7.jpg",
+   "/examples/inkwell-moth/media/spread-8.jpg",
+   "/examples/inkwell-moth/media/studio.jpg"
+  ],
+  "films": []
+ },
+ "lowfield-nights": {
+  "photos": [
+   "/examples/lowfield-nights/media/artist-1.jpg",
+   "/examples/lowfield-nights/media/artist-2.jpg",
+   "/examples/lowfield-nights/media/artist-3.jpg",
+   "/examples/lowfield-nights/media/artist-4.jpg",
+   "/examples/lowfield-nights/media/location.jpg",
+   "/examples/lowfield-nights/media/venue-1.jpg",
+   "/examples/lowfield-nights/media/venue-2.jpg",
+   "/examples/lowfield-nights/media/venue-3.jpg",
+   "/examples/lowfield-nights/media/venue-4.jpg"
+  ],
+  "films": [
+   {
+    "src": "/examples/lowfield-nights/media/heroVideo.mp4",
+    "poster": "/examples/lowfield-nights/media/posterImage.jpg"
+   }
+  ]
+ },
+ "velmira": {
+  "photos": [
+   "/examples/velmira/media/arrival.jpg",
+   "/examples/velmira/media/bath.jpg",
+   "/examples/velmira/media/gallery-1.jpg",
+   "/examples/velmira/media/gallery-2.jpg",
+   "/examples/velmira/media/gallery-3.jpg",
+   "/examples/velmira/media/gallery-4.jpg",
+   "/examples/velmira/media/lake.jpg",
+   "/examples/velmira/media/room-1.jpg",
+   "/examples/velmira/media/room-2.jpg",
+   "/examples/velmira/media/room-3.jpg",
+   "/examples/velmira/media/sauna.jpg"
+  ],
+  "films": [
+   {
+    "src": "/examples/velmira/media/heroVideo.mp4",
+    "poster": "/examples/velmira/media/posterImage.jpg"
+   }
+  ]
+ },
+ "saint-ashe": {
+  "photos": [
+   "/examples/saint-ashe/media/detail.jpg",
+   "/examples/saint-ashe/media/look-1.jpg",
+   "/examples/saint-ashe/media/look-2.jpg",
+   "/examples/saint-ashe/media/look-3.jpg",
+   "/examples/saint-ashe/media/product-1.jpg",
+   "/examples/saint-ashe/media/product-2.jpg",
+   "/examples/saint-ashe/media/product-3.jpg",
+   "/examples/saint-ashe/media/product-4.jpg",
+   "/examples/saint-ashe/media/product-5.jpg",
+   "/examples/saint-ashe/media/product-6.jpg",
+   "/examples/saint-ashe/media/product-7.jpg",
+   "/examples/saint-ashe/media/product-8.jpg",
+   "/examples/saint-ashe/media/shop.jpg",
+   "/examples/saint-ashe/media/studio.jpg",
+   "/examples/saint-ashe/media/team-1.jpg",
+   "/examples/saint-ashe/media/team-2.jpg",
+   "/examples/saint-ashe/media/team-3.jpg"
+  ],
+  "films": [
+   {
+    "src": "/examples/saint-ashe/media/heroVideo.mp4",
+    "poster": "/examples/saint-ashe/media/posterImage.jpg"
+   }
+  ]
+ },
+ "fennwood": {
+  "photos": [
+   "/examples/fennwood/media/dish-1-1080.webp",
+   "/examples/fennwood/media/dish-1-1600.webp",
+   "/examples/fennwood/media/dish-1-2400.webp",
+   "/examples/fennwood/media/dish-1-320.webp",
+   "/examples/fennwood/media/dish-1-640.webp",
+   "/examples/fennwood/media/dish-1.jpg",
+   "/examples/fennwood/media/dish-2-1080.webp",
+   "/examples/fennwood/media/dish-2-1600.webp",
+   "/examples/fennwood/media/dish-2-2400.webp",
+   "/examples/fennwood/media/dish-2-320.webp",
+   "/examples/fennwood/media/dish-2-640.webp",
+   "/examples/fennwood/media/dish-2.jpg",
+   "/examples/fennwood/media/dish-3-1080.webp",
+   "/examples/fennwood/media/dish-3-1600.webp",
+   "/examples/fennwood/media/dish-3-2400.webp",
+   "/examples/fennwood/media/dish-3-320.webp",
+   "/examples/fennwood/media/dish-3-640.webp",
+   "/examples/fennwood/media/dish-3.jpg",
+   "/examples/fennwood/media/farm-1080.webp",
+   "/examples/fennwood/media/farm-1600.webp",
+   "/examples/fennwood/media/farm-2400.webp",
+   "/examples/fennwood/media/farm-320.webp",
+   "/examples/fennwood/media/farm-640.webp",
+   "/examples/fennwood/media/farm.jpg",
+   "/examples/fennwood/media/hero-1080.webp",
+   "/examples/fennwood/media/hero-1600.webp",
+   "/examples/fennwood/media/hero-2400.webp",
+   "/examples/fennwood/media/hero-320.webp",
+   "/examples/fennwood/media/hero-640.webp",
+   "/examples/fennwood/media/hero-mobile-1080.webp",
+   "/examples/fennwood/media/hero-mobile-1600.webp",
+   "/examples/fennwood/media/hero-mobile-2400.webp",
+   "/examples/fennwood/media/hero-mobile-320.webp",
+   "/examples/fennwood/media/hero-mobile-640.webp",
+   "/examples/fennwood/media/hero-mobile.jpg",
+   "/examples/fennwood/media/hero.jpg",
+   "/examples/fennwood/media/location-1080.webp",
+   "/examples/fennwood/media/location-1600.webp",
+   "/examples/fennwood/media/location-2400.webp",
+   "/examples/fennwood/media/location-320.webp",
+   "/examples/fennwood/media/location-640.webp",
+   "/examples/fennwood/media/location.jpg",
+   "/examples/fennwood/media/room-1-1080.webp",
+   "/examples/fennwood/media/room-1-1600.webp",
+   "/examples/fennwood/media/room-1-2400.webp",
+   "/examples/fennwood/media/room-1-320.webp",
+   "/examples/fennwood/media/room-1-640.webp",
+   "/examples/fennwood/media/room-1.jpg",
+   "/examples/fennwood/media/room-2-1080.webp",
+   "/examples/fennwood/media/room-2-1600.webp",
+   "/examples/fennwood/media/room-2-2400.webp",
+   "/examples/fennwood/media/room-2-320.webp",
+   "/examples/fennwood/media/room-2-640.webp",
+   "/examples/fennwood/media/room-2.jpg"
+  ],
+  "films": []
+ },
+ "hane": {
+  "photos": [
+   "/examples/hane/media/hero-1600.webp",
+   "/examples/hane/media/hero-800.webp",
+   "/examples/hane/media/hero.jpg",
+   "/examples/hane/media/location-1600.webp",
+   "/examples/hane/media/location-800.webp",
+   "/examples/hane/media/location.jpg",
+   "/examples/hane/media/step-1-1600.webp",
+   "/examples/hane/media/step-1-800.webp",
+   "/examples/hane/media/step-1.jpg",
+   "/examples/hane/media/step-2-1600.webp",
+   "/examples/hane/media/step-2-800.webp",
+   "/examples/hane/media/step-2.jpg",
+   "/examples/hane/media/step-3-1600.webp",
+   "/examples/hane/media/step-3-800.webp",
+   "/examples/hane/media/step-3.jpg",
+   "/examples/hane/media/team-1-1600.webp",
+   "/examples/hane/media/team-1-800.webp",
+   "/examples/hane/media/team-1.jpg",
+   "/examples/hane/media/team-2-1600.webp",
+   "/examples/hane/media/team-2-800.webp",
+   "/examples/hane/media/team-2.jpg",
+   "/examples/hane/media/team-3-1600.webp",
+   "/examples/hane/media/team-3-800.webp",
+   "/examples/hane/media/team-3.jpg"
+  ],
+  "films": []
+ },
+ "halvik": {
+  "photos": [
+   "/examples/halvik/media/hero-1600.webp",
+   "/examples/halvik/media/hero-800.webp",
+   "/examples/halvik/media/hero-full.webp",
+   "/examples/halvik/media/hero.jpg",
+   "/examples/halvik/media/product-1600.webp",
+   "/examples/halvik/media/product-2-1600.webp",
+   "/examples/halvik/media/product-2-800.webp",
+   "/examples/halvik/media/product-2-full.webp",
+   "/examples/halvik/media/product-2.jpg",
+   "/examples/halvik/media/product-800.webp",
+   "/examples/halvik/media/product-full.webp",
+   "/examples/halvik/media/product.jpg",
+   "/examples/halvik/media/row-1-1600.webp",
+   "/examples/halvik/media/row-1-800.webp",
+   "/examples/halvik/media/row-1-full.webp",
+   "/examples/halvik/media/row-1.jpg",
+   "/examples/halvik/media/row-2-1600.webp",
+   "/examples/halvik/media/row-2-800.webp",
+   "/examples/halvik/media/row-2-full.webp",
+   "/examples/halvik/media/row-2.jpg",
+   "/examples/halvik/media/row-3-1600.webp",
+   "/examples/halvik/media/row-3-800.webp",
+   "/examples/halvik/media/row-3-full.webp",
+   "/examples/halvik/media/row-3.jpg"
+  ],
+  "films": []
+ },
+ "sticky-weather": {
+  "photos": [
+   "/examples/sticky-weather/media/studio-1.jpg",
+   "/examples/sticky-weather/media/studio-2.jpg",
+   "/examples/sticky-weather/media/studio-3.jpg",
+   "/examples/sticky-weather/media/studio-4.jpg",
+   "/examples/sticky-weather/media/studio-5.jpg",
+   "/examples/sticky-weather/media/team-1.jpg",
+   "/examples/sticky-weather/media/team-2.jpg",
+   "/examples/sticky-weather/media/team-3.jpg",
+   "/examples/sticky-weather/media/work-1.jpg",
+   "/examples/sticky-weather/media/work-2.jpg",
+   "/examples/sticky-weather/media/work-3.jpg",
+   "/examples/sticky-weather/media/work-4.jpg",
+   "/examples/sticky-weather/media/work-5.jpg",
+   "/examples/sticky-weather/media/work-6.jpg"
+  ],
+  "films": []
+ },
+ "hexmint": {
+  "photos": [
+   "/examples/hexmint/media/render-books.jpg",
+   "/examples/hexmint/media/render-close.jpg",
+   "/examples/hexmint/media/render-expenses.jpg",
+   "/examples/hexmint/media/render-invoices.jpg"
+  ],
+  "films": []
+ },
+ "brasshand": {
+  "photos": [
+   "/examples/brasshand/media/studio.jpg",
+   "/examples/brasshand/media/team-1.jpg",
+   "/examples/brasshand/media/team-2.jpg",
+   "/examples/brasshand/media/team-3.jpg",
+   "/examples/brasshand/media/work-1.jpg",
+   "/examples/brasshand/media/work-2.jpg",
+   "/examples/brasshand/media/work-3.jpg",
+   "/examples/brasshand/media/work-4.jpg",
+   "/examples/brasshand/media/work-5.jpg",
+   "/examples/brasshand/media/work-6.jpg"
+  ],
+  "films": []
+ },
+ "slow-atlas": {
+  "photos": [
+   "/examples/slow-atlas/media/article-1.jpg",
+   "/examples/slow-atlas/media/article-2.jpg",
+   "/examples/slow-atlas/media/article-3.jpg",
+   "/examples/slow-atlas/media/article-4.jpg",
+   "/examples/slow-atlas/media/article-5.jpg",
+   "/examples/slow-atlas/media/article-6.jpg",
+   "/examples/slow-atlas/media/story.avif",
+   "/examples/slow-atlas/media/team-1.jpg",
+   "/examples/slow-atlas/media/team-2.jpg",
+   "/examples/slow-atlas/media/team-3.jpg"
+  ],
+  "films": []
+ }
+}

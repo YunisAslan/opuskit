@@ -20,9 +20,11 @@ export async function downloadPackage(pkg: BuildPackage, recipe: UniversalRecipe
   }
   const missing = provided.filter((f) => !included.includes(f))
 
+  // A sample from a built example says so: it is the owner's to replace.
+  const sampleOf = (fileId: string) => recipe.metadata.spec.uploads?.find((u) => u.fileId === fileId)?.sample
   let readme = `# ${recipe.title} — ${adapters[pkg.target].name} Build Package\n\n${pkg.instructions}\n`
   readme += included.length
-    ? `\n## Your uploaded files\nIncluded in this package, at the paths ${'`'}src/config/assets.ts${'`'} already points to:\n${included.map((f) => `- ${f.zipPath} (from ${f.name})`).join('\n')}\n`
+    ? `\n## Your uploaded files\nIncluded in this package, at the paths ${'`'}src/config/assets.ts${'`'} already points to:\n${included.map((f) => `- ${f.zipPath} (${sampleOf(f.fileId) ? `a sample from ${sampleOf(f.fileId)}, the OpusKit example — replace it with your own when you have it` : `from ${f.name}`})`).join('\n')}\n`
     : `\nYou didn't attach any files during creation, so ${'`'}public/media/${'`'} only has placeholder paths — add your own files there before building.\n`
   if (missing.length) readme += `\n## Not included\nThese were attached during creation but the browser no longer has their bytes (cleared storage, or a different browser/device). Re-attach them, or add the files yourself at:\n${missing.map((f) => `- ${f.zipPath} (was: ${f.name})`).join('\n')}\n`
   files['OPUSKIT-README.md'] = strToU8(readme)
@@ -65,8 +67,6 @@ export function BuildTab({ recipe, target, onTarget, pkg, error }: { recipe: Uni
         ))}
       </div>
 
-      {!target && <p className="rounded-lg border border-dashed border-line p-8 text-center text-sm text-muted">Choose the tool you build with to see your kit — every tool gets the same recipe, written the way it understands best.</p>}
-
       {error && <p role="alert" className="rounded-lg border border-warn p-4 text-warn">We can&apos;t build a package from this recipe yet: {error}.</p>}
 
       {pkg && (
@@ -80,7 +80,7 @@ export function BuildTab({ recipe, target, onTarget, pkg, error }: { recipe: Uni
           </div>
 
           <div>
-            <p className="font-medium">Inside your build kit <span className="font-normal text-muted">· {pkg.files.length} files, plus your own uploads</span></p>
+            <p className="font-medium">Inside your Build Package <span className="font-normal text-muted">· {pkg.files.length} files, plus your own uploads</span></p>
             <div className="mt-4 grid gap-4 md:grid-cols-[18rem_1fr]">
               <ul className="max-h-[28rem] space-y-0.5 overflow-auto rounded-lg border border-line bg-white p-2 font-mono text-xs">
                 {pkg.files.map((f) => (

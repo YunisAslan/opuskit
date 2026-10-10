@@ -4,7 +4,7 @@
 
 import { recipeSections as S, usesWebgl, WEBGL_CHECKLIST } from '@/features/recipes/markdown'
 import type { BuildFile, BuildPackageAdapter, UniversalRecipe } from '@/types/domain'
-import { assertComplete, assetManifest, assetsConfigTs, flattenPages, frontmatter, manifestJson, tokensCss, visualQa, workingRules } from './shared'
+import { DETECTOR_QA, assertComplete, assetManifest, assetsConfigTs, detectorConfig, flattenPages, frontmatter, manifestJson, tokensCss, visualQa, workingRules } from './shared'
 import { needsVideo } from './video'
 import { CRAFT_DESCRIPTION, craftGuide } from './craft'
 
@@ -85,7 +85,8 @@ export const claudeCodeAdapter: BuildPackageAdapter = {
       { path: 'src/styles/tokens.css', content: tokensCss(r) },
       { path: 'src/config/assets.ts', content: assetsConfigTs(r) },
       { path: 'build/implementation-plan.md', content: `# Implementation plan\n\nWork through every step in order, in one pass — no pausing for review between steps. After each step, run the \`visual-qa\` skill on what you built, fix, and continue.\n\n${r.implementation.sequence.map((s, i) => `## Step ${i + 1}\n${s}`).join('\n\n')}\n\n${S.implementation(r)}\n` },
-      { path: 'build/verification.md', content: `# Verification\n\nThe build is done when every item passes.\n\n${visualQa(r).map((x) => `- [ ] ${x}`).join('\n')}\n` },
+      { path: 'build/verification.md', content: `# Verification\n\nThe build is done when every item passes.\n\n${[...visualQa(r), DETECTOR_QA].map((x) => `- [ ] ${x}`).join('\n')}\n` },
+      { path: '.impeccable/config.json', content: detectorConfig(r) },
     ]
     return {
       recipeId: r.id, target: 'claude-code', files, assets: assetManifest(r),

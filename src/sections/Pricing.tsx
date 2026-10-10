@@ -6,7 +6,7 @@ export type Plan = { name: string; price: string; period?: string; line?: string
 
 export function PricingSection({ tone, variant = 'cards', link: L = 'a', title, plans, note }: { tone?: 'ground' | 'surface' | 'inverse' | 'chapter'; variant?: 'cards' | 'table'; link?: ElementType; title: string; plans: Plan[]; note?: string }) {
   const t = tone === 'ground' ? undefined : tone
-  const button = (p: Plan, extra = '') => <L href={p.action.href} className={`type-body rounded-(--radius-button) px-5 py-3 text-center ${p.recommended ? 'bg-(--color-primary) text-(--color-background)' : 'border border-(--color-text)'} ${extra}`}>{p.action.label}</L>
+  const button = (p: Plan, extra = '') => <L href={p.action.href} className={`type-body rounded-(--radius-button) px-5 py-3 text-center ${p.recommended ? 'bg-(--color-primary) text-(--color-on-primary,var(--color-background))' : 'border border-(--color-text)'} ${extra}`}>{p.action.label}</L>
   return (
     <section data-tone={t} className="px-(--gutter) py-(--section-y)">
       <div className="mx-auto max-w-(--container)">

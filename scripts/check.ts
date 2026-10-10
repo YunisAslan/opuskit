@@ -3,8 +3,9 @@
 import assert from 'node:assert/strict'
 import type { DirectionId, PieceId, RecipeSpec, SectionId } from '../src/types/domain'
 import { spawnSync } from 'node:child_process'
-import { palettes, typography } from '../src/data/ingredients'
-import { contrast, deltaE, oklab } from '../src/lib/color'
+import { accentSets, palettes, typography } from '../src/data/ingredients'
+import { contrast, deltaE, oklab, readableOn } from '../src/lib/color'
+import { toneVars } from '../src/lib/frame'
 import { recipeSeeds } from '../src/data/recipes'
 import { concepts, heroes, imagePresentations, signaturePatterns } from '../src/data/patterns'
 import { behaviours, isMoment, pieces } from '../src/data/pieces'
@@ -14,17 +15,17 @@ import { sections } from '../src/data/patterns'
 import { TYPE_UTILITIES } from '../src/lib/type-tokens'
 import { GENERATED, piecesSource } from './pieces-source'
 import { existsSync, readFileSync } from 'node:fs'
-import { inferGoal, heroTitle, libraryFor, removeSection, toggleChrome, behaviourPick, isPhotoSection, sectionPhotos, setBehaviour, setSectionPhotos, setSectionVariant, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, effectOn, effectWhere, starters, setHero, setPartHero, heroOf, setStyle, start, togglePiece } from '../src/features/kit/plan'
+import { inferGoal, heroTitle, libraryFor, removeSection, toggleChrome, behaviourPick, isPhotoSection, sectionPhotos, setBehaviour, setSectionPhotos, setSectionVariant, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, effectOn, effectWhere, starters, setHero, setPartHero, heroOf, setStyle, start, togglePiece } from '../src/features/studio/plan'
 import { resources } from '../src/data/resources'
 import { ctaFor, directions, families, goals, purposes } from '../src/data/taxonomy'
 import { lookImages } from '../src/data/look-images'
 import { adapters } from '../src/features/build-packages'
-import { visualQa } from '../src/features/build-packages/shared'
+import { DETECTOR, visualQa } from '../src/features/build-packages/shared'
 import { pageTypes } from '../src/data/patterns'
 import { examples } from '../src/data/examples'
 import { sectionGuide } from '../src/data/section-guide'
 import exampleSpecs from '../src/data/example-specs.generated.json'
-import { closestChrome, closestPiece, closestSection, closestSite } from '../src/features/kit/closest'
+import { closestChrome, closestPiece, closestSection, closestSite } from '../src/features/studio/closest'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
 import { allSites, applyItems, keptByName, takenFrom, takenOf, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection, type SiteRef } from '../src/features/library/collection'
@@ -54,6 +55,16 @@ for (const p of pal) {
   assert.ok(contrast(p.colors.text, p.colors.background) >= 7, `${p.id}: text/bg ≥ 7:1`)
   assert.ok(contrast(p.colors.muted, p.colors.background) >= 4.5, `${p.id}: muted/bg ≥ 4.5:1`)
   assert.ok(contrast(p.colors.accent, p.colors.background) >= 3, `${p.id}: accent/bg ≥ 3:1`)
+  // Every pair the tokens ship reads as body text (AA) — tones, chapters and button labels are computed, the rest is data.
+  // Before: 30 of 42 palettes failed on a chapter section, 87 rotation chapters failed, Arcade's buttons read 2.9:1.
+  for (const [fg, bg, what] of [[p.colors.text, p.colors.surface, 'text/surface'], [p.colors.muted, p.colors.surface, 'muted/surface'], [p.colors.text, p.colors.secondary, 'text/secondary']] as const)
+    assert.ok(contrast(fg, bg) >= 4.5, `${p.id}: ${what} ≥ 4.5:1`)
+  assert.ok(contrast(readableOn(p.colors.primary, [p.colors.background, p.colors.text]), p.colors.primary) >= 4.5, `${p.id}: a primary button's label ≥ 4.5:1`)
+  for (const chapter of [undefined, ...Object.values(accentSets).flatMap((a) => a.colors)]) {
+    const t = toneVars(p.colors, chapter)
+    for (const [fg, bg, what] of [[t['--inv-text'], t['--inv-bg'], 'inverse text'], [t['--inv-muted'], t['--inv-bg'], 'inverse muted'], [t['--chap-text'], t['--chap-bg'], 'chapter text'], [t['--chap-muted'], t['--chap-bg'], 'chapter muted']])
+      assert.ok(contrast(fg, bg) >= 4.5, `${p.id}${chapter ? ` + ${chapter}` : ''}: ${what} ≥ 4.5:1`)
+  }
 }
 // Identity is ground + accent (award sites differ by accent, type and media, rarely by ground): two palettes collide
 // only when both are close. Grounds-only spacing pushed the library into the greyed middle (docs/research/2026-10-04-colour.md §6).
@@ -117,12 +128,22 @@ const main = async () => {
     const other = seed.spec.purpose === 'nonprofit' ? 'portfolio' : 'nonprofit'
     assert.deepEqual(composeRecipe({ ...specFromSeed(seed), purpose: other }).creativeDirection.visualPrinciples, directions[seed.spec.direction].principles, `${seed.slug}: its own voice stays with its own kind of site`)
   }
+  for (const d of Object.values(directions)) { // a seed's text density is written for its own look: a look of another family that shares it as a base gets its family's
+    const seed = recipeSeeds.find((x) => x.slug === d.baseRecipe)!
+    if (d.families[0] !== directions[seed.spec.direction].families[0]) assert.notEqual(composeRecipe({ ...specFromSeed(seed), direction: d.id }).contentDirection.density, seed.content.density, `${d.id}: no text density from ${seed.slug}'s look`)
+  }
   assert.ok(!/\b(\w+) \1\b/.test(composeRecipe({ ...specFromSeed(recipeSeeds[0]), direction: 'sticker-studio', purpose: 'studio' }).title), 'no doubled word in a composed title')
 
   // Claude Code only ships relevant skills.
   const still = composeRecipe(remix(specFromSeed(recipeSeeds[3]), { motion: 'still' }))
   const cc = await adapters['claude-code'].generate(still)
   assert.ok(!cc.files.some((f) => f.path.includes('motion-system')), 'no motion skill for still recipes')
+  // The detector checks a build, never the owner's picks: its config switches off only what the recipe chose.
+  const detector = (f: { files: { path: string; content: string }[] }) => JSON.parse(f.files.find((x) => x.path === '.impeccable/config.json')!.content).detector
+  assert.ok(cc.files.find((f) => f.path === 'build/verification.md')!.content.includes(DETECTOR), 'verification runs the detector')
+  assert.deepEqual(detector(cc).ignoreRules, [], 'a recipe with no italic display and no Endless row switches no check off')
+  const italic = composeRecipe({ ...specFromSeed(recipeSeeds[0]), typography: 'moonlit-italic', pieces: ['marquee'] })
+  for (const t of ['claude-code', 'cursor'] as const) assert.deepEqual(detector(await adapters[t].generate(italic)).ignoreRules, ['italic-serif-display', 'marquee'], `${t}: the owner's italic face and Endless row are never defects`)
   for (const f of cc.files.filter((f) => f.path.endsWith('SKILL.md'))) {
     const name = f.path.split('/')[2]
     assert.match(f.content, new RegExp(`^---\\nname: ${name}\\ndescription: .+\\n---`), `${name} frontmatter`)
@@ -920,6 +941,9 @@ const main = async () => {
   {
     const { lookKnowledge } = await import('../src/data/look-knowledge')
     const slugs = new Set(Object.keys(JSON.parse(readFileSync('src/data/example-specs.generated.json', 'utf8'))))
+    // Samples on Your files are the examples' real media: every one is there to fetch (npm run examples).
+    for (const [slug, m] of Object.entries(JSON.parse(readFileSync('src/data/example-media.generated.json', 'utf8')) as Record<string, { photos: string[]; films: { src: string; poster?: string }[] }>))
+      for (const f of [...m.photos, ...m.films.flatMap((x) => [x.src, x.poster ?? x.src])]) assert.ok(existsSync(`public${f}`), `${slug}: sample ${f} exists`)
     for (const id of Object.keys(directions) as DirectionId[]) {
       const k = lookKnowledge[id]
       assert.ok(k, `${id}: look knowledge`)

@@ -324,14 +324,14 @@ export type Piece = {
 }
 /**
  * A site planned from the showcase (/kit): everything the user took off the shelves, in order — no questions asked.
- * Unset choices fall back to the chosen look's tested defaults. planToSpec (features/kit/plan.ts) turns it into a RecipeSpec.
+ * Unset choices fall back to the chosen look's tested defaults. planToSpec (features/studio/plan.ts) turns it into a RecipeSpec.
  */
 /** One thing taken from a site in the Library (decision 45): its whole look (`site`), one quality (`like`, id = the
  *  trait), a part (`section`, `menu`, `footer`), a first screen (`hero`) or an effect. Kept on the recipe, so it still
  *  says where each pick came from once the Collection is emptied. */
 export type TakenPart = { site: string; kind: 'site' | 'like' | 'section' | 'hero' | 'menu' | 'footer' | 'effect'; id: string }
 
-export type KitPlan = {
+export type StudioPlan = {
   name?: string
   /** One sentence on what the site is — becomes the brief's offer. */
   about?: string
@@ -487,6 +487,8 @@ export type UploadedAsset = {
   fileId?: string
   /** The part it was added on, in words ("Home · Show your work") — the build puts it there. */
   place?: string
+  /** Taken from a built example as a sample (its name) — the owner's own file replaces it later. */
+  sample?: string
 }
 
 /** One page as the user has configured it in the kit. */

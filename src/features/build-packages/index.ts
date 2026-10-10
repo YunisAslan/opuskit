@@ -54,9 +54,9 @@ const withVideoScript = (a: BuildPackageAdapter): BuildPackageAdapter => ({
     const pkg0 = await a.generate(r)
     const kit = kitFiles(r)
     const secCount = kit.filter((f) => f.path.startsWith('src/components/sections/')).length
-    // opuskit.json: the exact recipe spec, so a site built from this package can be opened in the kit again as it is.
+    // opuskit.json: the exact recipe spec, so a site built from this package can be opened in the studio again as it is.
     const spec = { ...r.metadata.spec, uploads: r.metadata.spec.uploads?.map(({ fileId: _, ...u }) => u) }
-    pkg0.files.push({ path: 'opuskit.json', content: JSON.stringify({ opuskit: 1, recipe: r.id, note: 'The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the kit.', spec }, null, 2) + '\n' })
+    pkg0.files.push({ path: 'opuskit.json', content: JSON.stringify({ opuskit: 1, recipe: r.id, note: 'The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the studio.', spec }, null, 2) + '\n' })
     const pkg = kit.length ? { ...pkg0, files: [...pkg0.files, ...kit], instructions: `${pkg0.instructions}${secCount ? `\nReady sections: ${secCount} section component${secCount > 1 ? 's' : ''} in src/components/sections/ — the design of each part to start from: pass real copy and media as props, and fit each into the site.` : ''}${r.pieces.length ? `\nYour kit: ${r.pieces.length} ready component${r.pieces.length > 1 ? 's' : ''} in src/components/pieces/ (${r.pieces.map((p) => p.exportName).join(', ')}) — build on them, fitted to the site${r.pieces.some((p) => p.deps.length) ? `; run npm i ${[...new Set(r.pieces.flatMap((p) => p.deps))].join(' ')}` : ''}.` : ''}` } : pkg0
     if (!needsVideo(r)) return pkg
     return {

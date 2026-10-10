@@ -45,10 +45,10 @@ export async function deleteFile(id: string) {
 }
 
 /** Stores the bytes and returns the reference plus what we could read (size, duration). */
-export async function storeUpload(file: File, asset: AssetId): Promise<UploadedAsset> {
+export async function storeUpload(file: File, asset: AssetId, extra?: Pick<UploadedAsset, 'place' | 'sample'>): Promise<UploadedAsset> {
   const fileId = crypto.randomUUID().slice(0, 12)
   await putFile(fileId, file) // the actual bytes; UploadedAsset (below) only ever holds this reference, never the File itself
-  const base: UploadedAsset = { asset, name: file.name, kind: file.type.startsWith('video') ? 'video' : file.type.startsWith('image') ? 'image' : 'other', fileId }
+  const base: UploadedAsset = { asset, name: file.name, kind: file.type.startsWith('video') ? 'video' : file.type.startsWith('image') ? 'image' : 'other', fileId, ...extra }
   const url = URL.createObjectURL(file)
   try {
     if (base.kind === 'image') {
@@ -62,4 +62,10 @@ export async function storeUpload(file: File, asset: AssetId): Promise<UploadedA
     }
   } catch { /* unreadable → keep name + bytes, skip dimensions */ } finally { URL.revokeObjectURL(url) }
   return base
+}
+
+/** A built example's photo or film, fetched and kept like an upload — so it goes into the Build Package the same way. */
+export async function storeSample(url: string, asset: AssetId, extra: Pick<UploadedAsset, 'place' | 'sample'>): Promise<UploadedAsset> {
+  const blob = await (await fetch(url)).blob()
+  return storeUpload(new File([blob], url.split('/').pop()!, { type: blob.type }), asset, extra)
 }

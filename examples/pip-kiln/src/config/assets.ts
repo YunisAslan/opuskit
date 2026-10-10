@@ -39,6 +39,9 @@ export const assets = {
   // Home · First screen — Product stage
   hero: { src: "/media/hero.jpg", width: 1920, height: 2400, ratio: '4:5', status: 'have',
     alt: "A chunky butter-yellow mug with a black rim, full of milk, on a bright yellow ground with hard sunlight shadows and two eggs lying beside it." },
+  // Home · First screen — the mug cut out on a transparent ground, layered in front of the giant word
+  heroMug: { src: "/media/heroMug.webp", width: 1400, height: 1260, ratio: '10:9', status: 'have',
+    alt: "The Morning Person Mug in Raspberry: a raspberry glaze dripping over a sunflower-yellow rim" },
   // Home · Categories
   categories: { src: "/media/categories-1.jpg", files: ["/media/categories-1.jpg","/media/categories-2.jpg","/media/categories-3.jpg","/media/categories-4.jpg"], width: 1333, height: 2000, ratio: '2:3', status: 'have',
     alt: "one picture per category: its best piece",

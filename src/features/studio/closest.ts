@@ -1,5 +1,5 @@
-// The real site closest to what the kit has picked, so a few seconds of it can show "a site like this"
-// (docs/plan-examples.md §1). Pure: the kit and scripts/check.ts both call it.
+// The real site closest to what the studio has picked, so a few seconds of it can show "a site like this"
+// (docs/plan-examples.md §1). Pure: the studio and scripts/check.ts both call it.
 import exampleSpecs from '@/data/example-specs.generated.json'
 import { examples, type ExampleProject } from '@/data/examples'
 import { directions } from '@/data/taxonomy'
@@ -43,7 +43,7 @@ export const closestSite = (spec: Fit) =>
 export const closestSection = (spec: Fit, section: SectionId) =>
   best(spec, (e) => e.sectionClips?.[section], same, 2)
 
-// The kit's own defaults for a menu and footer nobody picked (same as PagesStep).
+// The studio's own defaults for a menu and footer nobody picked (same as PagesStep).
 const styleOf = (s: ChromeFit, part: 'navbar' | 'footer') =>
   part === 'navbar' ? s.nav ?? recommendedNav({ purpose: s.purpose, direction: s.direction }) : s.footer ?? recommendedFooter(s)
 

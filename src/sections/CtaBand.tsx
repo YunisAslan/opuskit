@@ -8,7 +8,7 @@ export function CtaBandSection({ tone, link: L = 'a', text, action, note }: { to
           <h2 className="type-heading text-balance [font-size:clamp(1.3rem,2.4vw,2rem)]">{text}</h2>
           {note && <p className="type-utility mt-2 text-(--color-muted)">{note}</p>}
         </div>
-        <L href={action.href} className="type-body shrink-0 self-start rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-(--color-background) md:self-auto">{action.label}</L>
+        <L href={action.href} className="type-body shrink-0 self-start rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-(--color-on-primary,var(--color-background)) md:self-auto">{action.label}</L>
       </div>
     </section>
   )

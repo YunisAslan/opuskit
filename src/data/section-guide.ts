@@ -1,6 +1,6 @@
 // Sections in plain words, for people who don't speak design: what each one looks like ("as a big project list") and
 // when it's the right pick. The kit's Pages step shows a page as parts with a job (see sectionGroups.job in
-// features/kit/plan.ts); these lines say how each part can look. Every grouped section needs an entry (check.ts).
+// features/studio/plan.ts); these lines say how each part can look. Every grouped section needs an entry (check.ts).
 import type { SectionId } from '@/types/domain'
 
 export const sectionGuide: Partial<Record<SectionId, { look: string; bestWhen: string }>> = {

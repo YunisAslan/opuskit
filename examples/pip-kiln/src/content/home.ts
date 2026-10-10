@@ -14,6 +14,11 @@ export const home = {
     secondary: 'See the whole shop',
     sticker: 'Thumb dip included',
     badge: 'New glaze',
+    // The giant word behind the mug (decorative — the h1 stays the headline)
+    word: 'MORNING',
+    // Arrives in the display face as the first screen scrolls away
+    after: 'Thrown on Tuesday. Glazed loud.', // PLACEHOLDER — confirm the day it's thrown
+    afterLines: ['Thrown on Tuesday.', 'Glazed loud.'], // PLACEHOLDER
   },
   categories: {
     title: 'Mug, plate or vase? Yes.',

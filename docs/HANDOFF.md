@@ -1,6 +1,6 @@
 # Handoff — where the work is and how to continue
 
-Last updated 2026-10-08. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
+Last updated 2026-10-10. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
 Keep this file current: update "Now" and "Next" whenever a step finishes.
 
 Talk to the user in Azerbaijani; code, docs and commits in English.
@@ -21,7 +21,48 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 - **Queue:** #25 Ninth Row was built on 2026-10-09 with the user's film (see Today); the night run proposed #26–#29 (`docs/plan-examples.md` §5c) —
   approve or change them before the next night run.
 
-## Today (2026-10-09, on the user's machine — committed and pushed)
+## Today (2026-10-10 — committed)
+
+- **Engine review**: `composeRecipe` split — the shot list (`shotList`) and npm dependencies (`packageDeps`) are their
+  own functions; all 35 recipes × 5 packages were byte-identical before and after.
+- **"Kit" names retired in code**: `features/kit/` → `features/studio/`, `lib/kit.ts` → `lib/plan.ts`, `KitPlan` →
+  `StudioPlan`; `opuskit.json`'s note says "the studio". Storage keys unchanged (`opuskit:plan`). "Your kit" in a
+  package still means its pieces.
+- **A look of another family than its base seed** (15 looks, e.g. Maximalism ← Art Direction) gets its family's text
+  density (`FAMILY_DENSITY`), not the seed's (check.ts). Headline/CTA examples still come from the base seed of the
+  same kind — the base seeds are cousins by design. The event headline example no longer names Sheki.
+- **Measured, no change**: every layout (6) and first screen (11) is used by the 25 examples, none by more than 6;
+  41 looks map to 15 layout × lead defaults; every look has its own principles/do/avoid and `lookKnowledge`. Big ideas
+  (6) only reach recipes outside the studio flow (decision 21).
+- **Contrast by construction** (decision 57): tone, chapter and button-label colours are computed to pass AA
+  (`readableOn`, `mutedOn`); new tokens `--color-on-primary`, `--color-chapter-N-text`; check.ts asserts every pair.
+  Built examples keep their colours until rebuilt.
+- **Signature picture: a still plus code, not a film** (tested with the user on Pip & Kiln). An AI film (Google Flow,
+  frames-to-video, start = end frame) loops cleanly and keeps the ground, but its object morphs (the glaze drips swim)
+  and it is 720p — the user: "videos are hard to get right; beautiful sites are possible without them". What works: one
+  Flow still → Real-ESRGAN 4× (`~/.cache/opuskit/realesrgan`) → rembg `birefnet-general` (isnet cut into the mug) →
+  a 160 KB WebP moved by code. Rules learned: a photo moves only in its own plane (a 3D pointer tilt read as a
+  cardboard cut-out) and is never relit (a WebGL light from a Depth Anything map looked fake — the photo carries its
+  own light); depth comes from layers — a giant word behind, the photo in front. **Not in the engine yet** — the user:
+  wait. A physics shelf (Matter.js, mugs to grab and throw) was tried and dropped: don't bring it back.
+- **#24 Pip & Kiln's first screen rebuilt that way** (Prompt 3 + 4 in its BUILD-LOG, isolated `claude -p`, 4.7 min,
+  $1.36): MORNING across the screen, the Morning Person Mug (Raspberry) floating in front, pointer drift, a pinned
+  scroll where the word leaves and the mug rolls upright, "Thrown on Tuesday. Glazed loud."; Add to bag adds the
+  Raspberry glaze. Live export, card and poster rebuilt; click-through checked.
+- **Build tab**: the tools first under "Pick the AI tool that will build your site", Room to invent after; "Download
+  Build Package" everywhere the old "build kit" was.
+- **Your files redone**: one row per shot-list part (what it shows, its size, the owner's files) with Add yours and
+  Samples — the examples' real photos (490) and films (8), the sites the owner took parts from first. A sample is
+  stored like an upload (`storeSample`, `UploadedAsset.sample`), so the package puts it at its path; the zip README
+  names it as a sample to replace. Removed from the tab: the status list (fonts, copy), the AI prompts.
+- **impeccable's detector in every Claude Code / Cursor package** (decision 56): verification runs
+  `npx -y impeccable@4.5.2 detect` on each running page; `.impeccable/config.json` spares the owner's picks. Five new
+  generic tells, more words to avoid, no skipped heading levels. Its audit of our live sites (home pages, 1440px):
+  Low Hum 1.4:1 text, Sticky Weather 1.6:1 and 4.1:1 plus a pulsing nav dot, Halvik 4.1:1, Kelp Line's muted text
+  grey on green (the palette's own `muted`), Brasshand's headline shows "Baku", Saint Ashe an image at opacity 0 —
+  the user set these aside (2026-10-10), as well as the five library faces on its overused lists — don't ask again.
+
+## Before (2026-10-09, on the user's machine — committed and pushed)
 
 - **Kelp Line and Pip & Kiln finished**: their picked photos fetched here (the cloud could not), fitted with Python PIL,
   Pip & Kiln's six plate photos re-picked (no clean 2:3); each site's photo prompt sent to a **new** isolated session
@@ -36,7 +77,7 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 - `other-model-examples/` (a Cursor-built comparison of Maison Vey's package, `refined-luxury-editorial-store-cursor`)
   was removed by the user; it is in git history up to `a526afd`.
 
-## Before (2026-10-08 — committed and pushed; 2026-10-07's flow is in `e7e0220`)
+## Earlier (2026-10-08 — committed and pushed; 2026-10-07's flow is in `e7e0220`)
 
 - **#22 Raster School built** — the first still site (Swiss Modern · Klein Field), the first package with Interaction
   craft and Seasoning, isolated `claude -p`, 5 Unsplash photos, live at `/live/raster-school`. Its Engine lessons (7, all
@@ -158,7 +199,10 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
    the copy says — ask the user whether to fit the copy to the photos.
 4. **Feed back from the builds** (decision 33, ask first): Low Hum's wavy edges and sticky mobile button, Pale Hour's
    floor-plan index, Ninth Row's seat plan and doors countdown.
-5. Known gaps: "Event / wedding" is the kind's name for galleries and cinemas too (renaming breaks older examples'
+5. **Signature picture in the engine** (when the user says so): the recipe writes the Flow still prompt from the
+   owner's words and the look, a `prepare-image` step upscales and cuts it out, the package hands over the layered
+   first screen with the plane-only motion rules (memory: photo-cutouts-stay-flat).
+6. Known gaps: "Event / wedding" is the kind's name for galleries and cinemas too (renaming breaks older examples'
    `choices`); older recipes have no `taken`.
 
 ## Night runs

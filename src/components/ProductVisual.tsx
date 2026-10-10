@@ -3,11 +3,11 @@
 import { accentSets, palettes, typography } from '@/data/ingredients'
 import { shapeStyles } from '@/data/patterns'
 import { directions } from '@/data/taxonomy'
-import { DEFAULT_LOOK, planToSpec } from '@/features/kit/plan'
+import { DEFAULT_LOOK, planToSpec } from '@/features/studio/plan'
 import { recommendedShape } from '@/features/recipes/engine'
-import type { KitPlan } from '@/types/domain'
+import type { StudioPlan } from '@/types/domain'
 
-export function lookOf(plan: KitPlan) {
+export function lookOf(plan: StudioPlan) {
   const d = directions[plan.direction ?? DEFAULT_LOOK]
   const colors = palettes[planToSpec(plan).palette].colors
   const type = typography[plan.typography ?? d.defaults.typography]

@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { use, useMemo } from 'react'
-import { updatePlan, usePlan } from '@/lib/kit'
+import { updatePlan, usePlan } from '@/lib/plan'
 import { composeRecipe, isValidSpec } from '@/features/recipes/engine'
 import { saveGeneration, useGenerations } from '@/features/recipes/library'
 import { RecipeDocument } from '@/features/recipes/RecipeDocument'

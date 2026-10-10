@@ -90,6 +90,11 @@ The shadcn variables (`--background`, `--card`, `--border`, …) read these toke
   grids of cards are ruled per cell (`border-l border-t` on the grid, `border-r border-b` on each cell — never a
   `gap-px bg-line` fill, which shows grey where a row is short). A pick taken from a site is marked `from Fennwood`
   in a pencil `.label`.
+- **Your files** (`MediaSlots.tsx`, 2026-10-10): one ruled row per picture or film the site needs (the shot list) —
+  the part on the left, what it shows, the owner's files, Add yours and Samples. Samples open a dialog like the
+  Library's: photos one site at a time (ruled site cells, the sites the owner took parts from first and marked
+  `taken`, the part's own pictures first), films all at once. A picked sample is ringed in pencil; its thumbnail
+  names the site. No status lists, no AI prompts, no fonts or copy on this tab.
 - Library and studio controls are shadcn/ui (see AGENTS.md). Corners are 2–4px everywhere; no pills. Round only for
   dots, toggles, avatars and step numbers.
 

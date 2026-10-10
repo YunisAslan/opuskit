@@ -50,6 +50,16 @@
       "specs": "1 file · 4:5 · 1920×2400 — Pip & Kiln’s product alone, large and clean on a calm ground, from its best angle — with space where its name and price sit",
       "note": "Cropped centred to the shot-list ratio; alt text per file in src/config/assets.ts, from media-src/picks.json."
     },
+    "heroMug": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Owner's photo in public/media/heroMug.webp",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · First screen — Product stage (cut-out layer in front of the giant word)",
+      "specs": "1 file · 10:9 · 1400×1260 WebP with a transparent background — the Morning Person Mug in its Raspberry glaze, cut out",
+      "alt": "The Morning Person Mug in Raspberry: a raspberry glaze dripping over a sunflower-yellow rim"
+    },
     "categories": {
       "required": true,
       "level": "required",

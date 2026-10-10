@@ -9,7 +9,7 @@
     "check": "tsx scripts/check.ts",
     "audit": "tsx scripts/choice-audit.ts",
     "typecheck": "tsc --noEmit",
-    "examples": "tsx scripts/example-specs.ts && tsx scripts/example-zips.ts",
+    "examples": "tsx scripts/example-specs.ts && tsx scripts/example-media.ts && tsx scripts/example-zips.ts",
     "pieces": "tsx scripts/pieces-source.ts"
   },
   "dependencies": {

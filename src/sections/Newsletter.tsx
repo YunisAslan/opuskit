@@ -12,7 +12,7 @@ export function NewsletterSection({ tone, title, text, placeholder, button, note
             <label className="type-utility flex-1 text-(--color-muted)">{label}
               <input required type="email" name="email" autoComplete="email" placeholder={placeholder} className="type-body mt-2 block w-full rounded-(--radius-button) border border-(--color-border) bg-(--color-surface) px-4 py-3 text-(--color-text) placeholder:text-(--color-muted)" />
             </label>
-            <button type="submit" className="type-body shrink-0 rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-(--color-background)">{button}</button>
+            <button type="submit" className="type-body shrink-0 rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-(--color-on-primary,var(--color-background))">{button}</button>
           </div>
           {note && <p className="type-utility mt-3 text-(--color-muted)">{note}</p>}
         </form>

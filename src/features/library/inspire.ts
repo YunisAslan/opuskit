@@ -5,9 +5,9 @@
 // from one site, so none is a copy of what inspired it. Pure, so check.ts tests it.
 
 import { directions, families, purposes } from '@/data/taxonomy'
-import { EMPTY_PLAN, addPage, addSection, planToSpec, removePage, setHero, setStyle, specToPlan, start } from '@/features/kit/plan'
+import { EMPTY_PLAN, addPage, addSection, planToSpec, removePage, setHero, setStyle, specToPlan, start } from '@/features/studio/plan'
 import { resolveHero } from '@/features/recipes/engine'
-import type { DirectionId, GoalId, HeroId, KitPlan, MotionLevel, PageTypeId, PaletteId, PurposeId, RecipeSpec, SectionId, TypographyId } from '@/types/domain'
+import type { DirectionId, GoalId, HeroId, StudioPlan, MotionLevel, PageTypeId, PaletteId, PurposeId, RecipeSpec, SectionId, TypographyId } from '@/types/domain'
 import { allSites, applyItems, lookFor, siteName, siteSpec, type Collection, type SiteRef } from './collection'
 
 // ─── Qualities ──────────────────────────────────────────────────────────────
@@ -104,7 +104,7 @@ const PAGE_WORDS: { re: RegExp; drop?: PageTypeId[]; add?: { type: PageTypeId; l
   // Food where food is not the site (a hotel's restaurant, a gallery café): a Menu page.
   { re: /\b(restaurant|caf[eé]|kitchen|small plates|tasting menu|bar)\b/i, add: { type: 'menu', label: () => 'Menu', unless: ['restaurant'] } },
 ]
-export function pagesFromWords(plan: KitPlan, text?: string): KitPlan {
+export function pagesFromWords(plan: StudioPlan, text?: string): StudioPlan {
   if (!text?.trim()) return reachable(plan)
   for (const w of PAGE_WORDS) {
     const m = text.match(w.re)
@@ -123,7 +123,7 @@ export function pagesFromWords(plan: KitPlan, text?: string): KitPlan {
 }
 
 /** Every site keeps a way to reach its owner: a booking, an address or a contact part; else it gets a Contact page. */
-export function reachable(plan: KitPlan): KitPlan {
+export function reachable(plan: StudioPlan): StudioPlan {
   const ways: string[] = ['contact', 'reservations', 'locations', 'contact-cta', 'reservation', 'location', 'newsletter', 'donate']
   const has = plan.pages.some((p) => ways.includes(p.type) || p.sections.some((s) => ways.includes(s.id)))
   return has || !plan.pages.length ? plan : addPage(plan, 'contact', 'Contact').plan
@@ -132,7 +132,7 @@ export function reachable(plan: KitPlan): KitPlan {
 // ─── Three directions ───────────────────────────────────────────────────────
 
 export type Took = { what: 'look' | Trait; site?: SiteRef }
-export type Direction = { plan: KitPlan; took: Took[] }
+export type Direction = { plan: StudioPlan; took: Took[] }
 
 const CORE = 2 // the most of look, colours, lettering and first screen one site may give one direction
 

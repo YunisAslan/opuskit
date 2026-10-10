@@ -100,7 +100,7 @@ export const examples: ExampleProject[] = [
       { label: 'Pages', value: 'Home, Shop, Product, Cart, Checkout, Workshops' },
       { label: 'Built with', value: 'Claude Code' },
     ],
-    note: 'The pottery, its pieces, prices, stock and workshops are made up, and the bag, checkout and bookings open the visitor’s own email — nothing is sold. Its pictures are still the temporary ones the build made; the real photos are picked (media-src/SOURCES.md).',
+    note: 'The pottery, its pieces, prices, stock and workshops are made up, and the bag, checkout and bookings open the visitor’s own email — nothing is sold. Its photos are Unsplash picks; its first-screen mug was made in Google Flow, cut out and moved by code (media-src/SOURCES.md).',
   },
   {
     slug: 'kelp-line',
@@ -130,7 +130,7 @@ export const examples: ExampleProject[] = [
       { label: 'Pages', value: 'Home, Our mission, Programs, Stories, Donate, Contact' },
       { label: 'Built with', value: 'Claude Code' },
     ],
-    note: 'The charity, its people, counts, amounts and Skerra Bay are made up, and gifts and messages open the visitor’s own email — none is sent. Its pictures are still the temporary ones the build made; the real photos are picked (media-src/SOURCES.md).',
+    note: 'The charity, its people, counts, amounts and Skerra Bay are made up, and gifts and messages open the visitor’s own email — none is sent. Its photos are Unsplash picks (media-src/SOURCES.md).',
   },
   {
     slug: 'raster-school',

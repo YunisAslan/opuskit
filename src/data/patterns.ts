@@ -535,6 +535,12 @@ export const GENERIC_TELLS = [
   'Falling back to Inter, Space Grotesk, Syne or Fraunces instead of the recipe\'s fonts',
   'Text in mix-blend-difference (or any blend mode) over a photo — its colours turn random; text on a picture sits on a scrim or a solid block',
   'Effects nobody picked: no text effect, hover, cursor or scroll trick beyond the recipe\'s motion system and Your Kit',
+  // From impeccable's detector (Paul Bakaus, Apache-2.0), in our words — the tells it finds most on machine-made pages.
+  'A small label in tracked capitals, or a chip, above the hero headline (an eyebrow); the headline stands alone',
+  'A coloured stripe down one side of a card, alert or list item (a pull quote\'s rule is fine); a card in a card; a grid of same-size icon tiles as the page\'s structure',
+  'A hairline border under a wide soft shadow (a ghost card), a zero-offset coloured glow, gradient-filled text',
+  'A pulsing dot or blinking caret pretending something is live, and a strip that scrolls forever when nobody picked one',
+  'Copy in a manufactured cadence: "Not a X. A Y.", "X. No Y.", "X. Just Y." — more than one on a site — or an em dash in every other sentence',
 ]
 
 // Signature moments: small, specific interactions that make a site memorable. Each lives on one section;

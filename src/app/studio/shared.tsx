@@ -7,15 +7,15 @@ import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { HeroPreview } from '@/components/HeroPreview'
 import { lookOf } from '@/components/ProductVisual'
 import { FlowBar, type Step } from '@/app/library/parts'
-import { heroOf, inferPurpose, planToSpec } from '@/features/kit/plan'
+import { heroOf, inferPurpose, planToSpec } from '@/features/studio/plan'
 import { composeRecipe, isValidSpec } from '@/features/recipes/engine'
 import { saveGeneration, type Generation } from '@/features/recipes/library'
-import { readPlan, updatePlan } from '@/lib/kit'
+import { readPlan, updatePlan } from '@/lib/plan'
 import { KEYS, get } from '@/lib/store'
-import type { KitPlan } from '@/types/domain'
+import type { StudioPlan } from '@/types/domain'
 
 /** Everything a preview of this plan is drawn with. */
-export function usePlanLook(plan: KitPlan) {
+export function usePlanLook(plan: StudioPlan) {
   const look = lookOf(plan)
   useGoogleFonts(look.type.googleFamilies)
   const spec = planToSpec(plan), recipe = composeRecipe(spec)
@@ -24,7 +24,7 @@ export function usePlanLook(plan: KitPlan) {
 }
 
 /** One page as the recipe will build it, top to bottom, in the plan's own colours and type. */
-export function PagePreview({ plan, pageId }: { plan: KitPlan; pageId: string }) {
+export function PagePreview({ plan, pageId }: { plan: StudioPlan; pageId: string }) {
   const { recipe, pv } = usePlanLook(plan)
   const page = plan.pages.find((p) => p.id === pageId), built = recipe.pages.find((p) => p.id === pageId)
   if (!page) return null
@@ -38,7 +38,7 @@ export function PagePreview({ plan, pageId }: { plan: KitPlan; pageId: string })
   )
 }
 
-/** Saves the plan as a recipe (or updates the one it made before) and opens it — the same as the kit's step 3. */
+/** Saves the plan as a recipe (or updates the one it made before) and opens it — the recipe step. */
 export function useToRecipe() {
   const router = useRouter()
   return () => {

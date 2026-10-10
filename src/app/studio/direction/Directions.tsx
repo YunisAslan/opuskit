@@ -13,12 +13,12 @@ import { purposes } from '@/data/taxonomy'
 import { collectionSig, takenFrom, takenOf } from '@/features/library/collection'
 import { directionsFor, purposeFrom } from '@/features/library/inspire'
 import { updateCollection, useCollection } from '@/lib/collection'
-import { readPlan, updatePlan, usePlan, writePlan } from '@/lib/kit'
+import { readPlan, updatePlan, usePlan, writePlan } from '@/lib/plan'
 import { KEYS, get, useHydrated, write } from '@/lib/store'
 import { BrandCard } from '@/components/BrandCard'
 import { LookPicker } from '../LookPicker'
 import { StepFrame, usePlanLook, useToRecipe } from '../shared'
-import type { KitPlan } from '@/types/domain'
+import type { StudioPlan } from '@/types/domain'
 
 /** The mix in use for these words and likes; `opened` names a finished recipe opened into them instead (decision 44). */
 type Picked = { sig: string; pick: number; opened?: string }
@@ -80,7 +80,7 @@ export function Directions() {
 }
 
 /** The brand exactly as the build will use it (decision 40). */
-function YourBrand({ plan }: { plan: KitPlan }) {
+function YourBrand({ plan }: { plan: StudioPlan }) {
   const { look, spec } = usePlanLook(plan)
   const t = look.type
   return (

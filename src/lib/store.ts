@@ -48,7 +48,6 @@ export const KEYS = {
   saved: 'opuskit:saved',
   entitlements: 'opuskit:entitlements',
   user: 'opuskit:user',
-  kit: 'opuskit:kit', // retired 2026-09-29: pieces-only kit, migrated into plan
   plan: 'opuskit:plan',
   collection: 'opuskit:collection',
   composed: 'opuskit:composed', // the Collection the Studio's plan was last built from

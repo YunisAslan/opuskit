@@ -16,16 +16,16 @@ import { palettes, typography } from '@/data/ingredients'
 import { directions, families, purposes } from '@/data/taxonomy'
 import { lookCredit, lookImages, lookImg } from '@/data/look-images'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
-import { planToSpec, setStyle } from '@/features/kit/plan'
+import { planToSpec, setStyle } from '@/features/studio/plan'
 import { allSites, lookChoices, siteName, siteSpec, type SiteRef, keptByName } from '@/features/library/collection'
 import { siteTraits } from '@/features/library/inspire'
 import { composeRecipe, rankPalettes } from '@/features/recipes/engine'
 import { SiteThumb, exampleOf } from '@/app/library/parts'
 import { useCollection } from '@/lib/collection'
-import { readPlan, updatePlan, usePlan, writePlan } from '@/lib/kit'
+import { readPlan, updatePlan, usePlan, writePlan } from '@/lib/plan'
 import { luminance } from '@/lib/color'
 import { SERIF_FAMILIES } from '@/lib/type-tokens'
-import type { DirectionId, FamilyId, KitPlan, PaletteId, TypographyId } from '@/types/domain'
+import type { DirectionId, FamilyId, StudioPlan, PaletteId, TypographyId } from '@/types/domain'
 import { usePlanLook } from './shared'
 
 const FIRST = 12
@@ -77,7 +77,7 @@ export function LookPicker({ every }: { every?: boolean }) {
   // A look OpusKit has built a site in shows that site playing; any other is drawn as the owner's site in it.
   const builtIn = new Map<DirectionId, SiteRef>()
   for (const r of [...allSites].sort((a, b) => Number(!!exampleOf(b)?.clip) - Number(!!exampleOf(a)?.clip))) if (exampleOf(r) && !builtIn.has(siteSpec(r)!.direction)) builtIn.set(siteSpec(r)!.direction, r)
-  const inLook = (id: DirectionId): KitPlan => {
+  const inLook = (id: DirectionId): StudioPlan => {
     const site = lookChoices(c).map((r) => siteSpec(r)!).find((x) => x.direction === id)
     // Colours or lettering taken by name stay with any look (decision 39); the rest follows the new look.
     const named = keptByName(c.items)

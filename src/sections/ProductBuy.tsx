@@ -55,8 +55,8 @@ export function ProductBuySection({ tone, variant = 'sticky', link: L = 'a', nam
               <button type="button" aria-label="One more" onClick={() => setQty((q) => q + 1)} className="px-4 py-3">+</button>
             </div>
             {onAction
-              ? <button type="button" onClick={() => onAction(qty, option?.values[pick])} className="type-body flex-1 rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-center text-(--color-background)">{action.label}</button>
-              : <L href={action.href} className="type-body flex-1 rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-center text-(--color-background)">{action.label}</L>}
+              ? <button type="button" onClick={() => onAction(qty, option?.values[pick])} className="type-body flex-1 rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-center text-(--color-on-primary,var(--color-background))">{action.label}</button>
+              : <L href={action.href} className="type-body flex-1 rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-center text-(--color-on-primary,var(--color-background))">{action.label}</L>}
           </div>
           {note && <p className="type-utility mt-3 text-(--color-muted)">{note}</p>}
           {details.length > 0 && (

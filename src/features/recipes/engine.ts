@@ -10,8 +10,8 @@ import { blockFor, heroBlocks } from '@/data/blocks'
 import { sectionVariants, variantFor } from '@/data/section-variants'
 import { resources } from '@/data/resources'
 import { lookKnowledge } from '@/data/look-knowledge'
-import { contrast, contrastLabel, isHex, oklab } from '@/lib/color'
-import { FRAMES } from '@/lib/frame'
+import { contrast, contrastLabel, isHex, oklab, readableOn } from '@/lib/color'
+import { FRAMES, type Frame } from '@/lib/frame'
 import type { TakenPart,
   Shot, InspirationReference,
   AssetCreationPath, AssetRequirement, ChromeId, ConceptId, RecipeConcept, FooterStyle, AssetSpec, BehaviourId, Brief, BuildTarget, DirectionId, ColorRole, ColorToken, ComponentId, HeroId, HeroPattern, ImagePresentationId, ImageryPlan, PieceId, RecipePiece,
@@ -210,7 +210,7 @@ const sameCore = (a: RecipeSeed['spec'], b: RecipeSpec) =>
 
 const TEXTURED = new Set(['japanese-minimal', 'organic-modern', 'film-inspired', 'raw-editorial', 'warm-hospitality'])
 
-const WORDS_TO_AVOID = ['Elevate your brand', 'The future of…', 'Seamless experiences', 'Unlock your potential', 'Built for modern teams', 'Cutting-edge', 'Revolutionary', 'World-class']
+const WORDS_TO_AVOID = ['Elevate your brand', 'The future of…', 'Seamless experiences', 'Unlock your potential', 'Built for modern teams', 'Cutting-edge', 'Revolutionary', 'World-class', 'Empower', 'Supercharge', 'Unleash', 'Harness the power', 'Best-in-class', 'Industry-leading', 'Next-generation', 'Game-changer', 'Future-proof', 'Trusted by leading…']
 
 function paletteTokens(colors: PaletteColors, usage: Partial<Record<ColorRole, string>>): ColorToken[] {
   const bg = colors.background
@@ -755,7 +755,7 @@ function uiKit(pages: PageBlueprint[], colors: PaletteColors, shape: ShapeStyle,
     ':root {',
     `  --background: ${colors.background}; --foreground: ${colors.text};`,
     `  --card: ${colors.surface}; --card-foreground: ${colors.text}; --popover: ${colors.surface}; --popover-foreground: ${colors.text};`,
-    `  --primary: ${colors.primary}; --primary-foreground: ${colors.background}; --secondary: ${colors.secondary}; --secondary-foreground: ${colors.text};`,
+    `  --primary: ${colors.primary}; --primary-foreground: ${readableOn(colors.primary, [colors.background, colors.text])}; --secondary: ${colors.secondary}; --secondary-foreground: ${colors.text};`,
     `  --muted: ${colors.surface}; --muted-foreground: ${colors.muted}; --accent: ${colors.secondary}; --accent-foreground: ${colors.text};`,
     `  --border: ${colors.border}; --input: ${colors.muted}; --ring: ${colors.text}; --radius: ${radius};`,
     '}',
@@ -845,6 +845,8 @@ const ITEM_PAGES: Partial<Record<PageTypeId, string>> = { 'product-detail': 'pro
 const LIST_SECTIONS = new Set<SectionId>(['featured-work', 'product-grid', 'collection', 'categories', 'journal', 'team'])
 /** Parts that tell one story per page: on several pages each gets its own picture, not one shared file. */
 const PER_PAGE_SHOTS = new Set<SectionId>(['editorial-story', 'case-study', 'about'])
+/** "4 / 5" (a CSS token) → "4:5" (a file ratio). */
+const ratio = (r: string) => r.replace(/\s*\/\s*/, ':')
 const sizeOf = (ratio: string, px: number) => { const [w, h] = ratio.split(':').map(Number); return w >= h ? `${px}×${Math.round((px * h) / w)}` : `${Math.round((px * w) / h)}×${px}` }
 
 /** How long the first screen's film is — one value per film hero, used by the shot list, the checklist, the hero's
@@ -935,7 +937,7 @@ const PURPOSE_COPY: Record<PurposeId, { headlines: string[]; cta: string[] }> = 
   experiment: { headlines: ['Scroll to play', 'Everything here moves', 'An experiment in type'], cta: ['Keep exploring', 'Start'] },
   other: { headlines: ['What we do, in one line', 'Why it matters', 'How to get started'], cta: ['Get in touch', 'Learn more'] },
   blog: { headlines: ['The case for slower design', 'This week: three essays', 'Read the archive'], cta: ['Subscribe', 'Read the latest'] },
-  event: { headlines: ['14 June, Sheki', 'Join us', 'The day, hour by hour'], cta: ['RSVP', 'See the schedule'] },
+  event: { headlines: ['14 June, by the harbour', 'Join us', 'The day, hour by hour'], cta: ['RSVP', 'See the schedule'] },
   nonprofit: { headlines: ['Every village deserves a library', '312 libraries built so far', 'Where your gift goes'], cta: ['Donate', 'Volunteer with us'] },
   'real-estate': { headlines: ['Homes by the sea', 'New this month', 'Viewings this weekend'], cta: ['Book a viewing', 'See all listings'] },
   hotel: { headlines: ['Nine rooms above the olive groves', 'Stay a while', 'Slow mornings, long dinners'], cta: ['Check availability', 'See the rooms'] },
@@ -944,7 +946,77 @@ const PURPOSE_COPY: Record<PurposeId, { headlines: string[]; cta: string[] }> = 
   spa: { headlines: ['Heat first, then the sea', 'Two hours, nothing else to do', 'Open from first light'], cta: ['Book a visit', 'See the prices'] },
 }
 
+/** How much text a look carries when its base seed is from another family: a seed's density is written for its own
+ *  look (Maximalism must not inherit Art Direction's, Pixel Art Typography First's). */
+const FAMILY_DENSITY: Record<FamilyId, string> = {
+  quiet: 'Low — one idea per screen, a few lines beside each picture',
+  editorial: 'Low to medium — pictures lead; captions and short essays carry the rest',
+  cinematic: 'Low — media carries meaning; text sets context in 1–2 lines',
+  minimal: 'Low — only what is needed, in short plain lines',
+  bold: 'Low word count, high visual weight — headlines carry the page',
+  raw: 'High but structured — modules keep it scannable',
+  organic: 'Low to medium — warm, plain sentences, practical facts complete',
+  experimental: 'Varies by section on purpose — short loud lines, then quiet stretches',
+  futuristic: 'Medium — structured in modules, precise labels',
+}
+
 const TECH_LABEL = { css: 'CSS (transitions, scroll-driven animations)', motion: 'Motion', lenis: 'Lenis', three: 'React Three Fiber + drei' } as const
+
+/** The shot list: which picture or film the site needs, once each — a part on several pages (the product grid on Home,
+ *  Shop and Cart) is one set of files; a part on a page that repeats per item (each product, each project) is one set
+ *  per item. The asset layer and the checklist are built from it, so all three agree (Fieldhouse, Maison Vey, Halden). */
+function shotList(spec: RecipeSpec, pages: PageBlueprint[], hero: HeroPattern, frame: Frame, who: string): Shot[] {
+  const shotMap = new Map<string, Shot>()
+  const addShot = (where: string, make: () => Shot) => { const x = make(), had = shotMap.get(x.key); if (had) had.where += `; ${where}`; else shotMap.set(x.key, x) }
+  const heroShows = (h: HeroPattern, film: boolean) => film
+    ? `${who} in one continuous move: the place at its best light, with calm space where the headline sits`
+    : h.id === 'product-stage' ? `${who}’s product alone, large and clean on a calm ground, from its best angle — with space where its name and price sit`
+      : `The opening picture of ${who}: the place, the thing it makes or the person, at its best light, with calm space where the headline sits`
+  pages.forEach((p, pi) => p.sections.forEach((s, i) => {
+    const label = pages.length > 1 ? `${p.label} · ` : ''
+    const sid = s.id as SectionId
+    if (sid === 'hero') {
+      const band = spec.heroBands?.find((x) => x.page === p.id && x.index === i)
+      const h = band ? heroes[band.hero] : i === 0 || pi === 0 ? hero : undefined
+      if (!h) return
+      const film = band ? h.leads.includes('video') : spec.lead === 'video'
+      if (!film && !(band ? h.leads.includes('photography') : ['photography', 'product'].includes(spec.lead))) return
+      const where = `${label}${i === 0 ? 'First screen' : 'Film band'} — ${h.name}`
+      const key = band && band.hero !== hero.id ? camel(`${p.label} band ${film ? 'video' : 'image'}`) : film ? 'heroVideo' : 'hero'
+      const ratio = h.id === 'parallax-photo' || film ? '16:9' : '4:5', px = h.id === 'parallax-photo' ? 2800 : film ? 1920 : 2400
+      return addShot(where, () => ({ key, where, kind: film ? 'film' : 'photo', shows: heroShows(h, film), count: 1, ratio, size: sizeOf(ratio, px),
+        format: film ? filmFormat(h.id) : h.id === 'parallax-photo' ? 'min 2800px · 16:9 for desktop, plus a 4:5 crop for phones (Mobile hero crop)' : `1 photo · ${ratio} · ${sizeOf(ratio, px)}` }))
+    }
+    const base = (s.variant && VARIANT_SHOTS[sid]?.[s.variant.id]) || SHOTS[sid]
+    if (!base) return
+    const sh: ShotSpec = { ...base, ...SHOTS_BY_PURPOSE[spec.purpose]?.[sid] }
+    const per = (LIST_SECTIONS.has(sid) ? undefined : ITEM_PAGES[p.type]) ?? sh.per
+    // A per-item set is named for its page (productPageHighlight, projectPageGallery), never sharing a key with the same
+    // part elsewhere on the site.
+    // A story told on several pages (Editorial Story on Home, Our mission and Stories) is a different story on each, so
+    // each page gets its own picture (homeEditorialStory…) — never one photo three times (Kelp Line, #23).
+    const own = !per && PER_PAGE_SHOTS.has(sid) && pages.filter((x) => x.sections.some((y) => y.id === sid)).length > 1
+    const key = camel(per ? `${per} page ${sid.replace(`${per}-`, '')}` : own ? `${p.label} ${sid}` : sid)
+    const where = `${label}${sections[sid].name}`
+    // The file takes the ratio its section crops to — the layout's card or media token, a band 21:9 — so nothing is cut.
+    const r = sh.frame === 'card' || (sh.frame === 'media' && s.media === 'side') ? ratio(frame.ratioCard) : sh.frame === 'media' ? (s.media === 'full' && ['editorial-story', 'case-study'].includes(sid) ? '21:9' : ratio(frame.ratioMedia)) : sh.ratio
+    addShot(where, () => ({ key, where, kind: 'photo', shows: sh.shows, count: sh.n, ratio: r, size: sizeOf(r, sh.px), ...(per ? { per } : {}),
+      format: `${sh.n} photo${sh.n > 1 ? 's' : ''}${per ? ` per ${per}` : ''}${sh.note ? ` (${sh.note})` : ''} · ${r} · ${sizeOf(r, sh.px)}` }))
+  }))
+  return [...shotMap.values()]
+}
+
+/** The npm packages a recipe's code needs: Motion for its patterns and pieces, the pieces' own dependencies, Lenis for
+ *  smooth scroll, Three.js for a 3D lead. */
+function packageDeps(techs: MotionPattern['tech'][], kit: RecipePiece[], heroId: HeroId): { name: string; why: string }[] {
+  const deps: { name: string; why: string }[] = []
+  if (techs.includes('motion') || kit.some((k) => k.deps.includes('motion')) || heroBlocks[heroId]) deps.push({ name: 'motion', why: kit.length ? 'Viewport reveals, hover and layout animations — and the kit pieces in src/components/pieces/' : 'Viewport reveals, hover and layout animations in React' })
+  if (kit.some((k) => k.deps.includes('@paper-design/shaders-react'))) deps.push({ name: '@paper-design/shaders-react', why: 'GPU backgrounds used by your kit (Apache-2.0)' })
+  if (kit.some((k) => k.deps.includes('lenis'))) deps.push({ name: 'lenis', why: 'Smooth scroll for the SmoothScroll kit piece (MIT; mouse and trackpad only)' })
+  else if (techs.includes('lenis')) deps.push({ name: 'lenis', why: 'Smooth scroll on desktop; Motion useScroll reads the scroll it keeps' })
+  if (techs.includes('three')) deps.push({ name: 'three', why: 'WebGL renderer' }, { name: '@react-three/fiber', why: 'Declarative Three.js in React' }, { name: '@react-three/drei', why: 'Loaders, controls and helpers (useGLTF, Environment)' })
+  return deps
+}
 
 export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const spec = normalizeSpec(input)
@@ -955,7 +1027,6 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const type = typography[spec.typography]
   const layout = layouts[spec.layout]
   const frame = FRAMES[spec.layout]
-  const ratio = (r: string) => r.replace(/\s*\/\s*/, ':')
   const motion = motionLevels[spec.motion]
   const hero = resolveHero(spec)
   const lead = media[spec.lead]
@@ -1041,47 +1112,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const who = brief.name ?? 'the business'
   // The copy deck: what every part of every page says, written before any layout, from the owner's own words.
   const copy = pages.map((p) => ({ page: p.label, brief: p.purpose, parts: [...(PAGE_COPY[p.type] ?? []), ...p.sections.map((s) => ({ part: s.name.split(' — ')[0], says: `${s.purpose}. ${s.content}.`.replace(/\.\./g, '.') }))] }))
-  // The shot list: which picture or film the site needs, once each — a part on several pages (the product grid on Home,
-  // Shop and Cart) is one set of files; a part on a page that repeats per item (each product, each project) is one set
-  // per item. The asset layer and the checklist are built from it, so all three agree (Fieldhouse, Maison Vey, Halden).
-  const shotMap = new Map<string, Shot>()
-  const addShot = (where: string, make: () => Shot) => { const x = make(), had = shotMap.get(x.key); if (had) had.where += `; ${where}`; else shotMap.set(x.key, x) }
-  const heroShows = (h: HeroPattern, film: boolean) => film
-    ? `${who} in one continuous move: the place at its best light, with calm space where the headline sits`
-    : h.id === 'product-stage' ? `${who}’s product alone, large and clean on a calm ground, from its best angle — with space where its name and price sit`
-      : `The opening picture of ${who}: the place, the thing it makes or the person, at its best light, with calm space where the headline sits`
-  pages.forEach((p, pi) => p.sections.forEach((s, i) => {
-    const label = pages.length > 1 ? `${p.label} · ` : ''
-    const sid = s.id as SectionId
-    if (sid === 'hero') {
-      const band = spec.heroBands?.find((x) => x.page === p.id && x.index === i)
-      const h = band ? heroes[band.hero] : i === 0 || pi === 0 ? hero : undefined
-      if (!h) return
-      const film = band ? h.leads.includes('video') : spec.lead === 'video'
-      if (!film && !(band ? h.leads.includes('photography') : ['photography', 'product'].includes(spec.lead))) return
-      const where = `${label}${i === 0 ? 'First screen' : 'Film band'} — ${h.name}`
-      const key = band && band.hero !== hero.id ? camel(`${p.label} band ${film ? 'video' : 'image'}`) : film ? 'heroVideo' : 'hero'
-      const ratio = h.id === 'parallax-photo' || film ? '16:9' : '4:5', px = h.id === 'parallax-photo' ? 2800 : film ? 1920 : 2400
-      return addShot(where, () => ({ key, where, kind: film ? 'film' : 'photo', shows: heroShows(h, film), count: 1, ratio, size: sizeOf(ratio, px),
-        format: film ? filmFormat(h.id) : h.id === 'parallax-photo' ? 'min 2800px · 16:9 for desktop, plus a 4:5 crop for phones (Mobile hero crop)' : `1 photo · ${ratio} · ${sizeOf(ratio, px)}` }))
-    }
-    const base = (s.variant && VARIANT_SHOTS[sid]?.[s.variant.id]) || SHOTS[sid]
-    if (!base) return
-    const sh: ShotSpec = { ...base, ...SHOTS_BY_PURPOSE[spec.purpose]?.[sid] }
-    const per = (LIST_SECTIONS.has(sid) ? undefined : ITEM_PAGES[p.type]) ?? sh.per
-    // A per-item set is named for its page (productPageHighlight, projectPageGallery), never sharing a key with the same
-    // part elsewhere on the site.
-    // A story told on several pages (Editorial Story on Home, Our mission and Stories) is a different story on each, so
-    // each page gets its own picture (homeEditorialStory…) — never one photo three times (Kelp Line, #23).
-    const own = !per && PER_PAGE_SHOTS.has(sid) && pages.filter((x) => x.sections.some((y) => y.id === sid)).length > 1
-    const key = camel(per ? `${per} page ${sid.replace(`${per}-`, '')}` : own ? `${p.label} ${sid}` : sid)
-    const where = `${label}${sections[sid].name}`
-    // The file takes the ratio its section crops to — the layout's card or media token, a band 21:9 — so nothing is cut.
-    const r = sh.frame === 'card' || (sh.frame === 'media' && s.media === 'side') ? ratio(frame.ratioCard) : sh.frame === 'media' ? (s.media === 'full' && ['editorial-story', 'case-study'].includes(sid) ? '21:9' : ratio(frame.ratioMedia)) : sh.ratio
-    addShot(where, () => ({ key, where, kind: 'photo', shows: sh.shows, count: sh.n, ratio: r, size: sizeOf(r, sh.px), ...(per ? { per } : {}),
-      format: `${sh.n} photo${sh.n > 1 ? 's' : ''}${per ? ` per ${per}` : ''}${sh.note ? ` (${sh.note})` : ''} · ${r} · ${sizeOf(r, sh.px)}` }))
-  }))
-  const shots = [...shotMap.values()]
+  const shots = shotList(spec, pages, hero, frame, who)
   const kit = placePieces(spec, pages, signatures)
 
   // Menu, footer, first screen and closing CTA are defined by the chosen patterns (chrome, hero, ready sections) — listing
@@ -1090,12 +1121,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   const CHROME: ComponentId[] = ['Navigation', 'Hero', 'CTA', 'Footer', 'SectionHeader']
   const componentIds = uniq<ComponentId>([...purpose.components.filter((c) => !CHROME.includes(c)), 'MediaAsset'])
 
-  const deps: { name: string; why: string }[] = []
-  if (techs.includes('motion') || kit.some((k) => k.deps.includes('motion')) || heroBlocks[hero.id]) deps.push({ name: 'motion', why: kit.length ? 'Viewport reveals, hover and layout animations — and the kit pieces in src/components/pieces/' : 'Viewport reveals, hover and layout animations in React' })
-  if (kit.some((k) => k.deps.includes('@paper-design/shaders-react'))) deps.push({ name: '@paper-design/shaders-react', why: 'GPU backgrounds used by your kit (Apache-2.0)' })
-  if (kit.some((k) => k.deps.includes('lenis'))) deps.push({ name: 'lenis', why: 'Smooth scroll for the SmoothScroll kit piece (MIT; mouse and trackpad only)' })
-  else if (techs.includes('lenis')) deps.push({ name: 'lenis', why: 'Smooth scroll on desktop; Motion useScroll reads the scroll it keeps' })
-  if (techs.includes('three')) deps.push({ name: 'three', why: 'WebGL renderer' }, { name: '@react-three/fiber', why: 'Declarative Three.js in React' }, { name: '@react-three/drei', why: 'Loaders, controls and helpers (useGLTF, Environment)' })
+  const deps = packageDeps(techs, kit, hero.id)
 
   const heading = `${type.display.family} / ${type.body.family}`
   const keep = seedVoice
@@ -1149,7 +1175,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
       ctaStyle: goal ? `${goal.effect} ${purpose.ctaPattern}` : purpose.ctaPattern,
       ctaExamples: (() => { const base = seed.spec.purpose === spec.purpose ? seed.content.ctaExamples : PURPOSE_COPY[spec.purpose].cta; return goal ? uniq([ctaFor(spec.purpose, goal.id), ...goal.cta, ...base]).slice(0, 4) : base })(),
       wordsToAvoid: WORDS_TO_AVOID,
-      density: seed.content.density,
+      density: directions[seed.spec.direction].families[0] === fam ? seed.content.density : FAMILY_DENSITY[fam],
       source: brief.name || brief.offer
         ? `Write from the owner's own words — ${[brief.name && `the name “${brief.name}”`, brief.offer && `“${brief.offer.replace(/\.$/, '')}.”`].filter(Boolean).join(' and ')} Every headline, line and claim grows from them: name what is really there — what is made, where, when, for whom. The headline and CTA examples are only the register, taken from another site: never reuse them. Anything you must invent (quotes, prices, names, numbers, dates) is marked in the copy deck as a placeholder for the owner to replace — and is invented outright: never a real film, book, record, artwork, artist, brand or famous person standing in for the owner's own (Ninth Row, #25).`
         : 'Nothing from the owner yet: write plain, specific copy for this kind of site, and mark every invented fact (quotes, prices, names, numbers, dates) in the copy deck as a placeholder for the owner to replace.',

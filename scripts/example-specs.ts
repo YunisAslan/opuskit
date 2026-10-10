@@ -8,7 +8,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { examples } from '../src/data/examples'
 import { layouts, palettes } from '../src/data/ingredients'
 import { footerStyles, heroes, navStyles, pageTypes, sections, shapeStyles } from '../src/data/patterns'
-import { specFromChoices } from '../src/features/kit/plan'
+import { specFromChoices } from '../src/features/studio/plan'
 import { isValidSpec, normalizeSpec } from '../src/features/recipes/engine'
 import type { PageSpec, PaletteColors, RecipeSpec, SectionId } from '../src/types/domain'
 

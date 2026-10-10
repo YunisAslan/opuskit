@@ -5,18 +5,16 @@
 // recipe, not on this page.
 
 import { PieceDemo } from '@/components/PieceDemo'
-import { Bookmark, BookmarkCheck, Check, Circle, Download, Pencil, Search, SlidersHorizontal, TriangleAlert } from 'lucide-react'
+import { Bookmark, BookmarkCheck, Download, Pencil, SlidersHorizontal } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { ToolIcon } from '@/components/ToolIcon'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
 import { directions, purposes } from '@/data/taxonomy'
-import { resources } from '@/data/resources'
 import { adapters } from '@/features/build-packages'
 import { BuildTab, downloadPackage, useBuildPackage } from '@/features/build-packages/BuildPanel'
-import { MediaSlots, SLOTS } from '@/components/MediaSlots'
+import { MediaSlots } from '@/components/MediaSlots'
 import type { TakenPart, BuildTarget, PaletteColors, PieceId, RecipeSpec, SectionId, UniversalRecipe } from '@/types/domain'
 import { normalizeSpec } from './engine'
 import { toggleSaved, useSaved } from './library'
@@ -35,20 +33,12 @@ const TABS = [
 ] as const
 type TabId = (typeof TABS)[number]['id']
 
-const STATUS: Record<string, { label: string; mark: typeof Check; cls: string }> = {
-  have: { label: 'Ready', mark: Check, cls: 'text-ink' },
-  create: { label: 'To create', mark: Pencil, cls: 'text-pencil' },
-  find: { label: 'To find', mark: Search, cls: 'text-ink-2' },
-  temporary: { label: 'Placeholder for now', mark: TriangleAlert, cls: 'text-warn' },
-  optional: { label: 'Optional', mark: Circle, cls: 'text-muted' },
-}
-
 /** `studio`: this recipe is the one being built (its steps bar is on top); otherwise a Change first opens it in the
  *  building steps (/studio/open), so Brand edits this recipe. */
 export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false }: { recipe: UniversalRecipe; recipeRef: string; onChange: (spec: RecipeSpec) => void; studio?: boolean }) {
   const saved = useSaved().some((s) => s.ref === recipeRef)
   const [tab, setTab] = useState<TabId>('site')
-  // The tool the user picked in the kit; none if they chose to decide later. We never pick one for them.
+  // The tool the user picked; none if they chose to decide later. We never pick one for them.
   const [target, setTarget] = useState<BuildTarget | null>(r.metadata.spec.target === 'not-sure' ? null : r.metadata.spec.target)
   const [zipping, setZipping] = useState(false)
   const spec = r.metadata.spec
@@ -85,7 +75,7 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false 
             </Select>
             <button type="button" disabled={!pkg || zipping} className={`btn btn-ink inline-flex items-center gap-2 disabled:opacity-50 ${studio ? 'btn-sm' : ''}`}
               onClick={async () => { if (!pkg) return; setZipping(true); try { await downloadPackage(pkg, r) } finally { setZipping(false) } }}>
-              <Download size={16} aria-hidden />{zipping ? 'Preparing…' : 'Download build kit'}
+              <Download size={16} aria-hidden />{zipping ? 'Preparing…' : 'Download Build Package'}
             </button>
       </div>
     </>
@@ -119,8 +109,15 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false 
 
       <section id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="pt-10">
         {tab === 'site' ? <YourSite r={r} look={look} editHref={editHref} />
-          : tab === 'media' ? <Media r={r} spec={spec} update={update} />
-          : <div className="space-y-16"><RoomToInvent r={r} /><BuildTab recipe={r} target={target} onTarget={setTarget} pkg={pkg} error={error} /></div>}
+          : tab === 'media' ? <Media r={r} update={update} />
+          : <div className="space-y-16">
+              <div>
+                <Heading title="Pick the AI tool that will build your site" />
+                <p className="mt-3 max-w-2xl text-sm text-ink-2">You get one package made for that tool: the same site, written in the files and words it reads best.</p>
+                <div className="mt-6"><BuildTab recipe={r} target={target} onTarget={setTarget} pkg={pkg} error={error} /></div>
+              </div>
+              <RoomToInvent r={r} />
+            </div>}
       </section>
 
       {/* One action bar, always in reach: in the Studio it is the steps bar on top, elsewhere fixed at the bottom. */}
@@ -245,72 +242,15 @@ function LiveClip({ src }: { src: string }) {
   return <video ref={ref} src={src} muted loop playsInline preload="metadata" aria-hidden className="size-full object-cover" />
 }
 
-// ─── Your files: photos and films, and what each one should show ────────────
+// ─── Your files: one row per picture or film the site needs ─────────────────
 
-function Media({ r, spec, update }: { r: UniversalRecipe; spec: RecipeSpec; update: (p: Partial<RecipeSpec>) => void }) {
+function Media({ r, update }: { r: UniversalRecipe; update: (p: Partial<RecipeSpec>) => void }) {
   // The logo is never asked for: without one the builder sets the name as a wordmark in the display face.
-  const others = r.assetRequirements.filter((a) => a.asset !== 'logo' && !SLOTS.some((s) => s.asset === a.asset && s.show(spec)))
   return (
-    <div className="space-y-16">
-      <div>
-        <Heading title="Your photos and films" />
-        <p className="mt-3 max-w-2xl text-sm text-ink-2">Add them here and they go straight into your build kit, at the exact paths the site uses. Files stay in this browser. Nothing yet? The build starts with temporary pictures of the same size, and yours replace them later.</p>
-        <div className="mt-6"><MediaSlots spec={spec} onChange={update} /></div>
-      </div>
-
-      <div>
-        <Heading title="What each one shows" />
-        <p className="mt-3 max-w-2xl text-sm text-ink-2">The shot list your build follows — find, shoot or make exactly these.</p>
-        <div className="mt-6 border-l border-t border-line">
-          {r.media.shots.map((x) => (
-            <div key={x.key} className="grid gap-x-6 gap-y-1 border-b border-r border-line bg-white px-4 py-3.5 text-sm md:grid-cols-[14rem_minmax(0,1fr)_14rem]">
-              <p className="label text-muted">{x.where}</p>
-              <p className="text-ink first-letter:uppercase">{x.shows}</p>
-              <p className="text-muted md:text-right">{x.format}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {others.length > 0 && (
-        <div>
-          <Heading title="Everything else the site needs" />
-          <ul className="mt-6 grid border-l border-t border-line sm:grid-cols-2 xl:grid-cols-3">
-            {others.map((a) => {
-              const st = STATUS[a.status]
-              return (
-                <li key={a.key} className="flex items-start gap-3 border-b border-r border-line bg-white p-4">
-                  <st.mark size={16} className={`mt-0.5 shrink-0 ${st.cls}`} aria-hidden />
-                  <span className="min-w-0"><span className="block font-medium">{a.label}</span><span className={`block text-sm ${st.cls}`}>{st.label}</span><span className="mt-1 block text-xs text-muted">{a.specs}</span></span>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-      )}
-
-      {r.assetCreationPaths.length > 0 && (
-        <div>
-          <Heading title="How to get what's missing" />
-          <Accordion type="multiple" className="mt-6 border-l border-t border-line">
-            {r.assetCreationPaths.map((p) => (
-              <AccordionItem key={p.title} value={p.title} className="border-b border-r border-line bg-white">
-                <AccordionTrigger className="p-4 text-base font-medium hover:no-underline">{p.title}</AccordionTrigger>
-                <AccordionContent className="px-4 pb-5">
-                  <ol className="list-decimal space-y-1 pl-5 text-sm">{p.steps.map((s) => <li key={s}>{s}</li>)}</ol>
-                  {p.prompt && (
-                    <div className="mt-4 rounded-[3px] bg-ink p-4 text-paper">
-                      <p className="font-mono text-xs leading-relaxed">{p.prompt}</p>
-                      <CopyButton text={p.prompt} label="Copy prompt" className="mt-3 border-paper! text-paper" />
-                    </div>
-                  )}
-                  <p className="mt-4 text-sm text-muted">Use: {p.tools.map((id) => resources.find((x) => x.id === id)).filter(Boolean).map((x, i) => <span key={x!.id}>{i > 0 && ', '}<a className="link text-ink" href={x!.url} target="_blank" rel="noreferrer">{x!.name}</a></span>)}</p>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      )}
+    <div>
+      <Heading title="Your photos and films" />
+      <p className="mt-3 max-w-2xl text-sm text-ink-2">Each part of your site, and the picture it needs. Add your own, or start with a sample from a site built with OpusKit — the Build Package puts each file where it goes. Files stay in this browser.</p>
+      <div className="mt-6"><MediaSlots r={r} onChange={update} /></div>
     </div>
   )
 }

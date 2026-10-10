@@ -18,7 +18,9 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
   add to it what a new build or study teaches, with its source in `seen`.
   How every control, state and movement feels — press, hover, open/close, curves and times, reduced motion, phones,
   worst-case content — is `build-packages/craft.ts` (adapted from Emil Kowalski's skills, MIT; decision 50): its tokens
-  ship in tokens.css, its guide as the `interaction-craft` skill (a file for Lovable, v0, own code), its checks in verification. Loaders,
+  ship in tokens.css, its guide as the `interaction-craft` skill (a file for Lovable, v0, own code), its checks in verification. Claude Code and Cursor packages
+  also run impeccable's detector (Apache-2.0, run as an outside tool, pinned) on every page, sparing the owner's picks
+  (`DETECTOR_QA`, `detectorConfig` in `build-packages/shared.ts`; decision 56). Loaders,
   micro-interactions and parallax are seasoning — salt, not sauce — dosed per recipe (`seasoning`, decision 51).
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
 - The flow is the way to make a site (`docs/plan-library.md`, decisions 35–39): `/library`, browsing with no steps (the +
@@ -37,8 +39,8 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
 - The kit was retired 2026-10-07 (with accounts, pricing/paywall, explore, resources and `/recipe/{slug}`). Every recipe
   opens in the studio: `/studio/open?from=seed:{slug}|gen:{id}|example:{slug}` → Direction (`openInStudio` in
   `src/lib/collection.ts`, `specToPlan`; an example's recipe is rebuilt from its `choices` by `specFromChoices`); `/kit`
-  redirects there (`next.config.ts`). The plan model the studio edits is still `KitPlan` in `src/features/kit/plan.ts`
-  (pure, tested in check.ts; storage `src/lib/kit.ts`); what the studio doesn't edit rides along in `plan.from`, and a plan
+  redirects there (`next.config.ts`). The plan model the studio edits is `StudioPlan` in `src/features/studio/plan.ts`
+  (pure, tested in check.ts; storage `src/lib/plan.ts`); what the studio doesn't edit rides along in `plan.from`, and a plan
   opened from a saved recipe updates that recipe. The recipe page (`/result/[id]`) is always unlocked; it shows the owner's
   name, Your brand and What you took (`spec.taken`, decision 45).
 - OpusKit's own look — read `docs/design.md` before changing the landing, the chrome or any screen's look: tokens
@@ -93,6 +95,8 @@ After adding or changing an example, run `npm run examples`. It writes:
   Read from the example's `opuskit.json` (every Build Package ships one — keep it, it's committed with the example), or,
   for older examples without it, rebuilt from its `choices` plus its own `recipe/layout.md` (pages, sections, first
   screen, layout, shape, menu). `npm run check` composes each spec and asserts it matches that layout.md.
+- `src/data/example-media.generated.json` — its real photos and its film (`heroVideo.mp4`), offered as samples on the
+  recipe page's Your files tab (`components/MediaSlots.tsx`; clips, posters and PNGs left out).
 - `public/downloads/{slug}.zip` ("Copy the code") — the real code with same-size placeholder photos, videos left out and
   listed in `MEDIA.md`, no env files.
 Record `choices` with the exact option names.
@@ -101,7 +105,7 @@ Each example is registered in `src/data/examples.ts` (title/summary — copy fro
 `<title>`/meta description, not the abstract recipe doc, since a build often renames the brand).
 Its clips: `clip` (10–15 s, first screen + scroll) and `sectionClips` (3–5 s per section, the section standing still and framed
 on it — never the page scrolling past; `examples/{slug}/public/media/clips/{sectionId}.mp4`)
-feed "a site like this" (`src/features/kit/closest.ts`); an old example carries `legacy: true` and is never offered there.
+feed "a site like this" (`src/features/studio/closest.ts`); an old example carries `legacy: true` and is never offered there.
 Its card (the Library, the landing) shows `public/examples/{slug}.jpg` — a 1440×900 JPEG screenshot of its live homepage, taken
 once the hero video has real frames (a black first frame makes a blank card). After replacing one, clear
 `.next/dev/cache/images` or the dev server keeps serving the old one.

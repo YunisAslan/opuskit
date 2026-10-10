@@ -1,4 +1,4 @@
-// The kit plan — a site built in three steps:
+// The studio plan — a site built in three steps:
 //   1. Style  — the same on every page (look, movement, big idea, colours, lettering, shape, menu, behaviour)
 //   2. Pages  — page by page, top to bottom: sections, each with its look, its photo layout (photo sections) and its moments
 //   3. Recipe — the recipe and Build Package for a tool
@@ -12,9 +12,9 @@ import { EFFECTS, concepts, footerStyles, heroes, imagePresentations, navStyles,
 import { behaviourOf, behaviours, isMoment, pieces } from '@/data/pieces'
 import { directions, goals, motionLevels, purposes } from '@/data/taxonomy'
 import { PHOTO_SECTIONS, cleanTaken, defaultPagesFor, isValidSpec, normalizeSpec, recommendSectionPhotos, resolveHero, recommendPalette } from '@/features/recipes/engine'
-import type { BehaviourId, ChromeId, GoalId, DirectionId, ImagePresentationId, KitPlan, MediaPlan, MotionLevel, PageSpec, PageTypeId, PieceId, PlanPage, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
+import type { BehaviourId, ChromeId, GoalId, DirectionId, ImagePresentationId, StudioPlan, MediaPlan, MotionLevel, PageSpec, PageTypeId, PieceId, PlanPage, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
 
-export const EMPTY_PLAN: KitPlan = { pages: [] }
+export const EMPTY_PLAN: StudioPlan = { pages: [] }
 export const DEFAULT_LOOK: DirectionId = 'swiss-editorial'
 const LEVEL: MotionLevel[] = ['still', 'subtle', 'dynamic', 'immersive']
 
@@ -104,7 +104,7 @@ export const CLOSING: SectionId[] = ['faq', 'contact-cta', 'reservation', 'newsl
 export const suggestionsFor = (page: PlanPage) => (pageSuggestions[page.type] ?? []).map((id) => ({ id, added: page.sections.some((s) => s.id === id) }))
 
 /** Adds a suggested section where it reads right: before the closing sections (FAQ, contact) unless it is one of them. */
-export function addSuggested(plan: KitPlan, pageId: string, id: SectionId): KitPlan {
+export function addSuggested(plan: StudioPlan, pageId: string, id: SectionId): StudioPlan {
   const page = plan.pages.find((p) => p.id === pageId)
   if (!page) return plan
   const closing = CLOSING.includes(id) ? -1 : page.sections.findIndex((s) => CLOSING.includes(s.id))
@@ -112,7 +112,7 @@ export function addSuggested(plan: KitPlan, pageId: string, id: SectionId): KitP
 }
 
 /** Pages this kind of site usually has that the plan doesn't yet (recommended first). */
-export function missingPages(plan: KitPlan): { type: PageTypeId; label: string; recommended: boolean }[] {
+export function missingPages(plan: StudioPlan): { type: PageTypeId; label: string; recommended: boolean }[] {
   const purpose = purposes[inferPurpose(plan)]
   const have = new Set(plan.pages.map((p) => p.type))
   return purpose.pages.filter((p) => !have.has(p.type)).map((p) => ({ type: p.type, label: p.label, recommended: p.tier === 'recommended' }))
@@ -135,23 +135,23 @@ export function piecesFor(section: PlanSection): PieceId[] {
 
 export const isPhotoSection = (id: SectionId) => PHOTO_SECTIONS.includes(id)
 /** How this section shows its photos: the owner's pick, else the recommendation for it. */
-export function sectionPhotos(plan: KitPlan, s: PlanSection): { id: ImagePresentationId; recommended: ImagePresentationId; chosen: boolean } {
+export function sectionPhotos(plan: StudioPlan, s: PlanSection): { id: ImagePresentationId; recommended: ImagePresentationId; chosen: boolean } {
   const recommended = recommendSectionPhotos(planToSpec(plan), s.id)
   return { id: s.photos ?? recommended, recommended, chosen: !!s.photos }
 }
 /** Picks how one photo section shows its photos (undefined = back to the recommendation). */
-export const setSectionPhotos = (plan: KitPlan, pageId: string, k: string, id: ImagePresentationId | undefined) =>
+export const setSectionPhotos = (plan: StudioPlan, pageId: string, k: string, id: ImagePresentationId | undefined) =>
   mapPage(plan, pageId, (p) => ({ ...p, sections: p.sections.map((s) => { if (s.key !== k) return s; const n = { ...s, photos: id }; if (!id) delete n.photos; return n }) }))
 /** Picks the design of one multi-design section (undefined = back to the look's own). */
-export const setSectionVariant = (plan: KitPlan, pageId: string, k: string, id: string | undefined) =>
+export const setSectionVariant = (plan: StudioPlan, pageId: string, k: string, id: string | undefined) =>
   mapPage(plan, pageId, (p) => ({ ...p, sections: p.sections.map((s) => { if (s.key !== k) return s; const n = { ...s, variant: id }; if (!id) delete n.variant; return n }) }))
 
 // ─── Behaviour, site-wide ───────────────────────────────────────────────────
 
 /** The piece chosen for a behaviour (headlines, links, buttons), or undefined for none. */
-export const behaviourPick = (plan: KitPlan, b: BehaviourId) => behaviours[b].ids.find((id) => (plan.sitePieces ?? []).includes(id))
+export const behaviourPick = (plan: StudioPlan, b: BehaviourId) => behaviours[b].ids.find((id) => (plan.sitePieces ?? []).includes(id))
 /** Sets one behaviour (one piece per behaviour; `site` extras are toggled instead). */
-export function setBehaviour(plan: KitPlan, b: BehaviourId, id: PieceId | undefined): KitPlan {
+export function setBehaviour(plan: StudioPlan, b: BehaviourId, id: PieceId | undefined): StudioPlan {
   const rest = (plan.sitePieces ?? []).filter((x) => !behaviours[b].ids.includes(x))
   return { ...plan, sitePieces: id ? [...rest, id] : rest }
 }
@@ -166,7 +166,7 @@ const newPage = (type: PageTypeId, label = pageTypes[type].name): PlanPage => {
 }
 
 /** A starter replaces the pages (the style stays); `null` = start blank with just a Home page. */
-export function start(plan: KitPlan, purpose: PurposeId | null, starter?: string): KitPlan {
+export function start(plan: StudioPlan, purpose: PurposeId | null, starter?: string): StudioPlan {
   if (!purpose) return { ...plan, purpose: undefined, pages: [newPage('home')] }
   // Every page arrives filled: one with nothing listed gets what that kind of page usually starts with.
   return { ...plan, purpose, pages: defaultPagesFor(purpose, starter).map((p) => ({ id: key(), type: p.type, label: p.label, purpose: p.purpose, sections: (p.sections.length ? p.sections : newPage(p.type).sections.map((s) => s.id)).map(inst) })) }
@@ -175,24 +175,24 @@ export function start(plan: KitPlan, purpose: PurposeId | null, starter?: string
 export type StyleKey = 'direction' | 'palette' | 'typography' | 'shape' | 'nav' | 'footer' | 'rotation' | 'motion' | 'concept'
 /** Sets (or, with undefined, clears back to the look's default) one site-wide choice. A new look keeps every choice the
  *  user made (colours, lettering, shape…); only what they never picked follows the new look. */
-export function setStyle(plan: KitPlan, k: StyleKey, v: string | undefined): KitPlan {
-  const next = { ...plan, [k]: v } as KitPlan
+export function setStyle(plan: StudioPlan, k: StyleKey, v: string | undefined): StudioPlan {
+  const next = { ...plan, [k]: v } as StudioPlan
   if (v === undefined) delete next[k]
   return next
 }
 
-const mapPage = (plan: KitPlan, pageId: string, f: (p: PlanPage) => PlanPage): KitPlan => ({ ...plan, pages: plan.pages.map((p) => (p.id === pageId ? f(p) : p)) })
+const mapPage = (plan: StudioPlan, pageId: string, f: (p: PlanPage) => PlanPage): StudioPlan => ({ ...plan, pages: plan.pages.map((p) => (p.id === pageId ? f(p) : p)) })
 
-export const addPage = (plan: KitPlan, type: PageTypeId, label?: string): { plan: KitPlan; id: string } => { const p = newPage(type, label); return { plan: { ...plan, pages: [...plan.pages, p] }, id: p.id } }
-export const removePage = (plan: KitPlan, pageId: string): KitPlan => ({ ...plan, pages: plan.pages.filter((p) => p.id !== pageId) })
+export const addPage = (plan: StudioPlan, type: PageTypeId, label?: string): { plan: StudioPlan; id: string } => { const p = newPage(type, label); return { plan: { ...plan, pages: [...plan.pages, p] }, id: p.id } }
+export const removePage = (plan: StudioPlan, pageId: string): StudioPlan => ({ ...plan, pages: plan.pages.filter((p) => p.id !== pageId) })
 /** What the page is for, in the owner's words — the recipe hands it to the builder as the page's brief. */
-export const setPagePurpose = (plan: KitPlan, pageId: string, purpose: string) => mapPage(plan, pageId, (p) => ({ ...p, purpose: purpose.slice(0, 400) }))
+export const setPagePurpose = (plan: StudioPlan, pageId: string, purpose: string) => mapPage(plan, pageId, (p) => ({ ...p, purpose: purpose.slice(0, 400) }))
 
 /** Inserts a section at `at` (0 = top of the page). Any part goes anywhere — a film or image can sit mid-page too. */
-export const addSection = (plan: KitPlan, pageId: string, id: SectionId, at: number) =>
+export const addSection = (plan: StudioPlan, pageId: string, id: SectionId, at: number) =>
   mapPage(plan, pageId, (p) => { const s = [...p.sections]; s.splice(Math.max(0, at), 0, inst(id)); return { ...p, sections: s } })
-export const removeSection = (plan: KitPlan, pageId: string, k: string) => mapPage(plan, pageId, (p) => ({ ...p, sections: p.sections.filter((s) => s.key !== k) }))
-export function moveSection(plan: KitPlan, pageId: string, k: string, by: -1 | 1): KitPlan {
+export const removeSection = (plan: StudioPlan, pageId: string, k: string) => mapPage(plan, pageId, (p) => ({ ...p, sections: p.sections.filter((s) => s.key !== k) }))
+export function moveSection(plan: StudioPlan, pageId: string, k: string, by: -1 | 1): StudioPlan {
   return mapPage(plan, pageId, (p) => {
     const i = p.sections.findIndex((s) => s.key === k), j = i + by
     if (i < 0 || j < 0 || j >= p.sections.length) return p
@@ -201,7 +201,7 @@ export function moveSection(plan: KitPlan, pageId: string, k: string, by: -1 | 1
   })
 }
 /** Drops a section at position `to` (drag and drop). Every part moves, the first screen too. */
-export function placeSection(plan: KitPlan, pageId: string, k: string, to: number): KitPlan {
+export function placeSection(plan: StudioPlan, pageId: string, k: string, to: number): StudioPlan {
   return mapPage(plan, pageId, (p) => {
     const from = p.sections.findIndex((s) => s.key === k)
     if (from < 0) return p
@@ -212,19 +212,19 @@ export function placeSection(plan: KitPlan, pageId: string, k: string, to: numbe
   })
 }
 /** Shows or leaves out the menu or the footer on one page (they stay the same on every page that shows them). */
-export const toggleChrome = (plan: KitPlan, pageId: string, c: ChromeId) => mapPage(plan, pageId, (p) => {
+export const toggleChrome = (plan: StudioPlan, pageId: string, c: ChromeId) => mapPage(plan, pageId, (p) => {
   const hide = p.hide?.includes(c) ? p.hide.filter((x) => x !== c) : [...(p.hide ?? []), c]
   const { hide: _, ...rest } = p
   return hide.length ? { ...rest, hide } : rest
 })
 /** Attaches a piece to one section (replacing a piece that does the same job there), or detaches it. */
-export function togglePiece(plan: KitPlan, pageId: string, k: string, piece: PieceId): KitPlan {
+export function togglePiece(plan: StudioPlan, pageId: string, k: string, piece: PieceId): StudioPlan {
   return mapPage(plan, pageId, (p) => ({ ...p, sections: p.sections.map((s) => s.key !== k ? s : s.pieces.includes(piece)
     ? { ...s, pieces: s.pieces.filter((x) => x !== piece) }
     : { ...s, pieces: [...s.pieces.filter((x) => pieces[x].slot !== pieces[piece].slot), piece] }) }))
 }
 /** Turns a whole-site piece (transition, cursor, cookie note) on or off. */
-export function toggleSitePiece(plan: KitPlan, piece: PieceId): KitPlan {
+export function toggleSitePiece(plan: StudioPlan, piece: PieceId): StudioPlan {
   const cur = plan.sitePieces ?? []
   return { ...plan, sitePieces: cur.includes(piece) ? cur.filter((x) => x !== piece) : [...cur, piece] }
 }
@@ -234,20 +234,20 @@ export const sitePieceIds = (Object.keys(pieces) as PieceId[]).filter((id) => pi
 
 /** Picks what the big film/image part shows (the same wherever it sits). Where it sits is the user's: top, mid-page,
  *  any page — it is only added (top of the first page) when the site has none at all. */
-export function setHero(plan: KitPlan, hero: KitPlan['hero']): KitPlan {
+export function setHero(plan: StudioPlan, hero: StudioPlan['hero']): StudioPlan {
   const next = { ...plan, hero }
   const first = next.pages[0]
   if (hero && first && !next.pages.some((p) => p.sections.some((s) => s.id === 'hero'))) next.pages = [{ ...first, sections: [inst('hero'), ...first.sections] }, ...next.pages.slice(1)]
   return next
 }
 /** What one film/image part shows: its own pick, else the site's first screen. */
-export const heroOf = (plan: KitPlan, s: PlanSection): KitPlan['hero'] => s.hero ?? plan.hero
+export const heroOf = (plan: StudioPlan, s: PlanSection): StudioPlan['hero'] => s.hero ?? plan.hero
 
 /** Picks what one film/image part shows, and only that one. The site's first film/image part is its first screen —
  *  it sets the media and movement (`setHero`); every other part then keeps what it showed before. */
-export function setPartHero(plan: KitPlan, pageId: string, k: string, hero: KitPlan['hero']): KitPlan {
+export function setPartHero(plan: StudioPlan, pageId: string, k: string, hero: StudioPlan['hero']): StudioPlan {
   const all = plan.pages.flatMap((p) => p.sections.filter((s) => s.id === 'hero'))
-  const map = (f: (s: PlanSection) => PlanSection): KitPlan => ({ ...plan, pages: plan.pages.map((p) => ({ ...p, sections: p.sections.map((s) => (s.id === 'hero' ? f(s) : s)) })) })
+  const map = (f: (s: PlanSection) => PlanSection): StudioPlan => ({ ...plan, pages: plan.pages.map((p) => ({ ...p, sections: p.sections.map((s) => (s.id === 'hero' ? f(s) : s)) })) })
   if (all[0]?.key === k) {
     const was = plan.hero ?? resolveHero(planToSpec(plan)).id
     return setHero(map((s) => (s.key === k ? (({ hero: _, ...rest }) => rest)(s) : { ...s, hero: s.hero ?? was })), hero)
@@ -268,7 +268,7 @@ export function swapOptions(page: PlanPage, id: SectionId): { job: SectionId[]; 
 
 /** Replaces one section in place. Its moments stay when the new section can carry them, else they are turned off —
  *  a moment never wanders to another section. Its photo layout stays when the new section shows photos too. */
-export function replaceSection(plan: KitPlan, pageId: string, k: string, id: SectionId): KitPlan {
+export function replaceSection(plan: StudioPlan, pageId: string, k: string, id: SectionId): StudioPlan {
   const old = plan.pages.find((p) => p.id === pageId)?.sections.find((s) => s.key === k)
   if (!old) return plan
   const keep = old.pieces.filter((x) => pieces[x].sections.includes(id))
@@ -276,7 +276,7 @@ export function replaceSection(plan: KitPlan, pageId: string, k: string, id: Sec
 }
 
 /** A page back to what that kind of page usually has — its sections and its brief. Its moments go with the old sections. */
-export function resetPage(plan: KitPlan, pageId: string): KitPlan {
+export function resetPage(plan: StudioPlan, pageId: string): StudioPlan {
   const page = plan.pages.find((p) => p.id === pageId)
   if (!page) return plan
   // What this kind of site starts that page with, else what that kind of page usually has.
@@ -286,21 +286,21 @@ export function resetPage(plan: KitPlan, pageId: string): KitPlan {
 }
 
 /** Swaps the pages for a kind of site's usual ones; style, brief, files and behaviours stay (moments go with the old pages). */
-export function usualPages(plan: KitPlan, purpose: PurposeId): KitPlan {
+export function usualPages(plan: StudioPlan, purpose: PurposeId): StudioPlan {
   return setHero(start(plan, purpose), plan.hero)
 }
 
 /** Whether a piece is on anywhere — as a behaviour or as a moment on some section. */
-export const effectOn = (plan: KitPlan, id: PieceId) => (plan.sitePieces ?? []).includes(id) || plan.pages.some((p) => p.sections.some((s) => s.pieces.includes(id)))
+export const effectOn = (plan: StudioPlan, id: PieceId) => (plan.sitePieces ?? []).includes(id) || plan.pages.some((p) => p.sections.some((s) => s.pieces.includes(id)))
 
 /** Where a piece sits, in words ("Home · Intro", "Every page"), or null when it's off. */
-export function effectWhere(plan: KitPlan, id: PieceId): string | null {
+export function effectWhere(plan: StudioPlan, id: PieceId): string | null {
   if ((plan.sitePieces ?? []).includes(id)) return behaviourOf(id) || pieces[id].slot === 'site' ? 'Every page' : 'Menu & footer, every page'
   for (const p of plan.pages) for (const s of p.sections) if (s.pieces.includes(id)) return `${p.label} · ${s.id === 'hero' ? heroTitle(p, s) : sections[s.id].name}`
   return null
 }
 
-export function removeEffect(plan: KitPlan, id: PieceId): KitPlan {
+export function removeEffect(plan: StudioPlan, id: PieceId): StudioPlan {
   return { ...plan, sitePieces: (plan.sitePieces ?? []).filter((x) => x !== id), pages: plan.pages.map((p) => ({ ...p, sections: p.sections.map((s) => ({ ...s, pieces: s.pieces.filter((x) => x !== id) })) })) }
 }
 
@@ -318,7 +318,7 @@ const BY_PAGE: [PurposeId, PageTypeId[]][] = [
 ]
 
 /** What kind of site the pages describe, when no starter says so. */
-export function inferPurpose(plan: KitPlan): PurposeId {
+export function inferPurpose(plan: StudioPlan): PurposeId {
   if (plan.purpose) return plan.purpose
   const types = new Set(plan.pages.map((p) => p.type))
   return BY_PAGE.find(([, ts]) => ts.some((t) => types.has(t)))?.[0] ?? 'other'
@@ -331,7 +331,7 @@ const GOAL_OF: Partial<Record<PurposeId, GoalId>> = {
 }
 /** What visitors should do, read from what the site has (the owner never has to say): its parts and pages first —
  *  a donate part means donate, a buy box or a cart means buy, a booking part means book — then its kind. */
-export function inferGoal(plan: KitPlan): GoalId {
+export function inferGoal(plan: StudioPlan): GoalId {
   const parts = new Set(plan.pages.flatMap((p) => p.sections.map((s) => s.id))), pages = new Set(plan.pages.map((p) => p.type))
   const has = (...xs: string[]) => xs.some((x) => parts.has(x as SectionId) || pages.has(x as PageTypeId))
   const purpose = inferPurpose(plan)
@@ -346,9 +346,9 @@ export function inferGoal(plan: KitPlan): GoalId {
   return GOAL_OF[purpose] ?? (has('contact-cta', 'contact') ? 'contact' : 'explore')
 }
 
-export function planToSpec(plan: KitPlan): RecipeSpec {
+export function planToSpec(plan: StudioPlan): RecipeSpec {
   const dir = directions[plan.direction ?? DEFAULT_LOOK]
-  // Opened from a recipe: keep what the kit can't edit. Voice, layout, lead and touches only while its look is unchanged.
+  // Opened from a recipe: keep what the studio can't edit. Voice, layout, lead and touches only while its look is unchanged.
   const from = plan.from, same = from?.direction === dir.id ? from : undefined
   const purpose = inferPurpose(plan)
   const effect = EFFECTS.find((e) => e.hero === plan.hero)
@@ -395,9 +395,9 @@ function siteFrom(raw: unknown, pages: PlanPage[]): PieceId[] | undefined {
 }
 
 /** Trust boundary: plans come back from localStorage (including the older flat format). Unknown ids are dropped, never guessed. */
-export function cleanPlan(x: unknown): KitPlan {
+export function cleanPlan(x: unknown): StudioPlan {
   if (!x || typeof x !== 'object') return EMPTY_PLAN
-  const p = x as Partial<KitPlan> & { pieces?: unknown }
+  const p = x as Partial<StudioPlan> & { pieces?: unknown }
   const known = <T extends string>(v: unknown, kb: object) => (typeof v === 'string' && Object.hasOwn(kb, v) ? (v as T) : undefined)
   const pages: PlanPage[] = Array.isArray(p.pages) ? p.pages.filter((pg) => !!pg && typeof pg.id === 'string' && Object.hasOwn(pageTypes, pg.type) && Array.isArray(pg.sections)).map((pg) => ({
     id: pg.id, type: pg.type, label: typeof pg.label === 'string' ? pg.label.slice(0, 60) : pageTypes[pg.type].name, purpose: typeof pg.purpose === 'string' ? pg.purpose : pageTypes[pg.type].defaultPurpose,
@@ -434,8 +434,8 @@ export function cleanPlan(x: unknown): KitPlan {
   }
 }
 
-/** Customise: a recipe back into a kit plan. Every piece gets a place — the one it was given, else the first section that suits it. */
-export function specToPlan(spec: RecipeSpec, fromId?: string): KitPlan {
+/** Customise: a recipe back into a studio plan. Every piece gets a place — the one it was given, else the first section that suits it. */
+export function specToPlan(spec: RecipeSpec, fromId?: string): StudioPlan {
   // A placement pointing at a page or section that isn't there counts as unplaced, so the piece still finds a home.
   const placed = (spec.piecePlacements ?? []).filter((x) => x.page === '*' || spec.pages.find((p) => p.id === x.page)?.sections[x.index])
   const pages: PlanPage[] = spec.pages.map((p) => ({ id: p.id, type: p.type, label: p.label, purpose: p.purpose, hide: p.hide,
