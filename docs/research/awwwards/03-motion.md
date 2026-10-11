@@ -37,7 +37,7 @@ blurred giant word passing behind (Dragonfly).
 - `letters-assemble` — letters that gather into a sentence, GSAP scrub with an even ease (a front-loaded curve
   finished half the gathering in the first fifth of the scroll); moment `letters-gather`.
 
-## Open (for the user)
+## Decided
 
-- Smooth scroll is on 63% of these winners but is an extra the owner has to pick in OpusKit. Make it the default for
-  dynamic and immersive recipes?
+- Smooth scroll (63% of these winners) is now the default for dynamic and immersive recipes (the user, 2026-10-11);
+  still and subtle ones get it only when the owner picks it.

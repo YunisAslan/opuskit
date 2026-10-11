@@ -96,6 +96,8 @@ function placePieces(spec: RecipeSpec, pages: PageBlueprint[], signatures: Signa
     if (id) fromPhotos.set(id, [...(fromPhotos.get(id) ?? []), pieceCatalog[id].slot === 'site' ? `${WHERE.site} (the “${m.name}” moment, ${m.where})` : `${m.where} (the “${m.name}” moment)`])
   }
   // A 3D first screen brings the ready ModelStage piece.
+  // Moving recipes glide (the user, 2026-10-11: 63% of the Awwwards scroll winners use Lenis): smooth scroll by default.
+  if (spec.motion === 'dynamic' || spec.motion === 'immersive') fromPhotos.set('smooth-scroll', [...(fromPhotos.get('smooth-scroll') ?? []), WHERE.site])
   if (heroId === 'webgl-scene') fromPhotos.set('model-stage', [...(fromPhotos.get('model-stage') ?? []), 'Home → First screen (the 3D scene)'])
   const ids = uniq([...(spec.pieces ?? []), ...fromPhotos.keys()])
   return ids.map((id) => {
@@ -485,7 +487,7 @@ function pickResources(spec: RecipeSpec, textured: boolean): string[] {
   }
   ids.push(...byLead[spec.lead])
   if (spec.motion !== 'still') ids.push('motion')
-  if (spec.motion === 'immersive' || spec.pieces?.includes('smooth-scroll')) ids.push('lenis')
+  if (spec.motion === 'dynamic' || spec.motion === 'immersive' || spec.pieces?.includes('smooth-scroll')) ids.push('lenis')
   if (textured) ids.push('texturelabs', 'ambientcg')
   const imagery = imageryPlan(spec)
   if (imagery) ids.push(...imagery.presentation.resources)

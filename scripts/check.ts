@@ -361,6 +361,9 @@ const main = async () => {
     assert.ok(!new RegExp(`@/lib/utils|from ['"](?!react|motion/react|@paper-design/shaders-react|next/navigation${own})[^'"]+['"]`).test(src), `${p.id}: no imports beyond react, motion, Paper Shaders, next/navigation (and Lenis, GSAP or three, when listed)`)
     assert.ok(/reactbits|aceternity|hover\.dev/.test(p.source.url) === false, `${p.id}: never from a library that forbids redistribution`)
   }
+  // Moving recipes get smooth scroll by default (the user, 2026-10-11); calm ones only when picked.
+  assert.ok(composeRecipe({ ...vspec, motion: 'dynamic' }).pieces.some((p) => p.id === 'smooth-scroll'), 'a dynamic recipe glides')
+  assert.ok(!composeRecipe({ ...vspec, motion: 'subtle', pieces: [] }).pieces.some((p) => p.id === 'smooth-scroll'), 'a subtle recipe does not, unless picked')
   // A piece that needs GSAP brings it into the package's dependencies (allowed since 2026-10-11).
   assert.ok(composeRecipe({ ...vspec, pieces: ['scroll-story'] }).implementation.dependencies.some((d) => d.name === 'gsap'), 'a GSAP piece lists gsap')
   assert.deepEqual(cleanPieces(['text-effect', 'text-loop', 'marquee', 'nope']), ['text-loop', 'marquee'], 'one piece per slot, later pick wins, unknown dropped')
@@ -436,8 +439,8 @@ const main = async () => {
   assert.equal(fromPlan.pages[0].sections[0].id, 'hero', 'the first screen tops the first page')
   assert.equal(fromPlan.pages[1].sections[1]?.id, 'gallery', 'a section lands where it was inserted, and moves')
   assert.ok(fromPlan.pages.some((p) => p.type === 'faq'), 'added pages are in the recipe')
-  assert.deepEqual(fromPlan.pieces.map((p) => p.id).sort(), ['cut-reveal', 'shader-grain'], 'one piece per job per section')
-  assert.ok(fromPlan.pieces.every((p) => p.where.startsWith(`${home.label} → Hero`)), 'pieces are placed on the section they were attached to')
+  assert.deepEqual(fromPlan.pieces.map((p) => p.id).filter((id) => id !== 'smooth-scroll').sort(), ['cut-reveal', 'shader-grain'], 'one piece per job per section') // smooth scroll is the moving recipe's default, site-wide
+  assert.ok(fromPlan.pieces.filter((p) => p.id !== 'smooth-scroll').every((p) => p.where.startsWith(`${home.label} → Hero`)), 'pieces are placed on the section they were attached to')
   // Touches come only from what the kit shows: the big idea (Design → Big idea, recommended until changed) — never extras.
   assert.ok(fromPlan.concept && fromPlan.signatures.every((x) => concepts[fromPlan.concept!.id].signatures.includes(x.id)), 'a kit recipe gets only its big idea’s touches')
   assert.equal(composeRecipe(planToSpec(setStyle(plan, 'concept', 'off'))).signatures.length, 0, 'no big idea, no touches')
