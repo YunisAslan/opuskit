@@ -108,8 +108,9 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   Batch 6 — more section designs: Product grid (`editorial` — the first product across two columns and rows;
   `shelf` — a ruled list, names large), Feature grid (`rows`, `bento`), CTA band (`line`, `loud` — an inverse band;
   inside data-tone="inverse" the light colour is --color-text). Case study, editorial story, about and location
-  already vary through `media`. Still one design: trust, menu, collection, categories, timeline, lookbook,
-  article, curriculum, donate, listen. Next: designs for the next most used single-design sections (location's facts, editorial-story, case-study).
+  already vary through `media`. Then Menu (`card` — a printed card; `list` — dishes large), Trust (`statement`,
+  `inline`), Timeline (`years` — the years huge, no line), Categories (`words` — names huge on rules). Still one
+  design: collection (its own full-screen picture), lookbook, article, curriculum, donate, listen. Next: designs for the next most used single-design sections (location's facts, editorial-story, case-study).
 - **Every site has a video now** (2026-10-11): the 14 without one got `clip` (site.mp4, ~12 s) and `fullClip`
   (full.mp4, top to footer) from `site-clips.mjs`; cards and site pages play them. The six older ones (Fennwood, Hane,
   Sticky Weather, Hexmint, Brasshand, Slow Atlas) still have only the user's short clip. "A site like this" now breaks

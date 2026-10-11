@@ -34,7 +34,7 @@ export function specFromLayout(base: RecipeSpec, md: string): RecipeSpec {
 }
 
 /** Sections that had one design until a date; every example built before then has that one. */
-const BUILT_BEFORE: Partial<Record<SectionId, string>> = { journal: 'cards', newsletter: 'split', faq: 'side', schedule: 'columns', reservation: 'side', 'product-grid': 'grid', 'feature-grid': 'cells', 'cta-band': 'card' } // until 2026-10-11
+const BUILT_BEFORE: Partial<Record<SectionId, string>> = { journal: 'cards', newsletter: 'split', faq: 'side', schedule: 'columns', reservation: 'side', 'product-grid': 'grid', 'feature-grid': 'cells', 'cta-band': 'card', menu: 'columns', trust: 'row', timeline: 'line', categories: 'tiles' } // until 2026-10-11
 
 const out: Record<string, RecipeSpec> = {}
 for (const e of examples) {

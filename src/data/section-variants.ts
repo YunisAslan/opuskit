@@ -92,6 +92,22 @@ export const sectionVariants: Partial<Record<SectionId, Designs>> = {
     options: [v('card', 'A quiet box', 'The line and the action in a box on the surface colour.'), v('line', 'Between two rules', 'The line large between two rules, the action an underlined link.'), v('loud', 'A loud band', 'A full-width band in the ink colour, the line huge.')],
     byFamily: { editorial: 'line', minimal: 'line', quiet: 'line', bold: 'loud', raw: 'loud', experimental: 'loud', cinematic: 'loud' },
   },
+  menu: {
+    options: [v('columns', 'Two columns', 'The groups side by side, a dotted line to each price.'), v('card', 'A printed card', 'One narrow centred column, each dish over its line and price.'), v('list', 'Dishes said loudly', 'Each dish large on its own rule, the price at the end, the group at the side.')],
+    byFamily: { quiet: 'card', organic: 'card', editorial: 'card', bold: 'list', raw: 'list', futuristic: 'list', experimental: 'list' },
+  },
+  trust: {
+    options: [v('row', 'A quiet row', 'The promises in one ruled row, a short accent line over each.'), v('statement', 'Promises said loudly', 'Each promise’s title large, its line under it, two to a row.'), v('inline', 'One compact band', 'Title and line run together in the small face, in one band.')],
+    byFamily: { bold: 'statement', raw: 'statement', cinematic: 'statement', minimal: 'inline', quiet: 'inline' },
+  },
+  timeline: {
+    options: [v('line', 'Along a line', 'The steps along a hairline beside the heading.'), v('years', 'Years set huge', 'No line: each year huge, its step beside it.')],
+    byFamily: { bold: 'years', raw: 'years', cinematic: 'years', experimental: 'years', futuristic: 'years' },
+  },
+  categories: {
+    options: [v('tiles', 'Picture tiles', 'A picture over each category’s name.'), v('words', 'Names set huge', 'No pictures: each name huge on its own rule, its count beside it.')],
+    byFamily: { bold: 'words', raw: 'words', editorial: 'words', minimal: 'words', experimental: 'words' },
+  },
   journal: {
     options: [v('cards', 'Pictures over titles', 'Three entries side by side, a picture over each.'), v('index', 'A contents page', 'No pictures: each title large on its own rule, the date beside it.'), v('lead', 'The newest leads', 'The newest entry large with its picture, the next ones listed beside it.')],
     byFamily: { editorial: 'index', minimal: 'index', raw: 'index', futuristic: 'index', cinematic: 'lead', bold: 'lead' },

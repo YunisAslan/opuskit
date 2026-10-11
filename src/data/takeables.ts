@@ -21,7 +21,7 @@ export const NOT_OFFERED = new Set([
   'hero:type-statement', 'hero:parallax-photo', 'hero:editorial-image', 'hero:product-stage',
   'nav:classic-bar', 'nav:centered-logo', 'nav:floating-pill', 'nav:split-pill',
   'section:featured-work/staggered', 'section:featured-work/grid', 'section:featured-work/index', 'section:case-study', 'section:product-grid', 'section:product-grid/grid', 'section:product-grid/editorial', 'section:product-grid/shelf', 'section:collection',
-  'section:gallery', 'section:editorial-story', 'section:manifesto/giant', 'section:timeline', 'section:schedule', 'section:schedule/columns', 'section:schedule/timeline', 'section:schedule/cards', 'section:menu',
+  'section:gallery', 'section:editorial-story', 'section:manifesto/giant', 'section:timeline', 'section:timeline/line', 'section:timeline/years', 'section:schedule', 'section:schedule/columns', 'section:schedule/timeline', 'section:schedule/cards', 'section:menu', 'section:menu/columns', 'section:menu/card', 'section:menu/list',
   'footer:contact', 'footer:signature',
   'effect:fade-transition', 'effect:text-effect', 'effect:smooth-scroll', 'effect:scroll-progress', 'effect:lightbox', 'effect:underline-fill', 'effect:model-stage',
 ])

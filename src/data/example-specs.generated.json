@@ -185,8 +185,18 @@
    },
    {
     "page": "p1",
+    "index": 1,
+    "variant": "tiles"
+   },
+   {
+    "page": "p1",
     "index": 2,
     "variant": "grid"
+   },
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "row"
    },
    {
     "page": "p1",
@@ -498,6 +508,11 @@
   "sectionVariants": [
    {
     "page": "p1",
+    "index": 1,
+    "variant": "line"
+   },
+   {
+    "page": "p1",
     "index": 5,
     "variant": "card"
    },
@@ -515,6 +530,11 @@
     "page": "p3",
     "index": 3,
     "variant": "card"
+   },
+   {
+    "page": "p5",
+    "index": 1,
+    "variant": "row"
    },
    {
     "page": "p5",
@@ -927,6 +947,11 @@
   "sectionVariants": [
    {
     "page": "p1",
+    "index": 2,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
     "index": 3,
     "variant": "columns"
    },
@@ -934,6 +959,11 @@
     "page": "p1",
     "index": 4,
     "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "columns"
    },
    {
     "page": "p2",
@@ -1197,6 +1227,11 @@
     "page": "p1",
     "index": 1,
     "variant": "grid"
+   },
+   {
+    "page": "p1",
+    "index": 5,
+    "variant": "row"
    },
    {
     "page": "p1",
@@ -1481,8 +1516,18 @@
    },
    {
     "page": "p2",
+    "index": 0,
+    "variant": "tiles"
+   },
+   {
+    "page": "p2",
     "index": 1,
     "variant": "grid"
+   },
+   {
+    "page": "p2",
+    "index": 2,
+    "variant": "row"
    },
    {
     "page": "p3",
@@ -1498,6 +1543,11 @@
     "page": "p4",
     "index": 0,
     "variant": "grid"
+   },
+   {
+    "page": "p6",
+    "index": 2,
+    "variant": "line"
    },
    {
     "page": "p7",
@@ -2066,6 +2116,11 @@
   "sectionVariants": [
    {
     "page": "p1",
+    "index": 4,
+    "variant": "line"
+   },
+   {
+    "page": "p1",
     "index": 6,
     "variant": "card"
    },
@@ -2078,6 +2133,11 @@
     "page": "p1",
     "index": 8,
     "variant": "split"
+   },
+   {
+    "page": "p5",
+    "index": 1,
+    "variant": "row"
    },
    {
     "page": "p5",
@@ -2288,8 +2348,18 @@
   "sectionVariants": [
    {
     "page": "p1",
+    "index": 2,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
     "index": 3,
     "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "columns"
    },
    {
     "page": "p2",
@@ -2953,6 +3023,11 @@
     "page": "p1",
     "index": 2,
     "variant": "cards"
+   },
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "tiles"
    },
    {
     "page": "p1",
