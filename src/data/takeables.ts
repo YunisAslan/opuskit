@@ -4,10 +4,11 @@
 // not worth choosing between (every testimonials or FAQ section — `SIGNATURE_PARTS` in features/library/collection.ts).
 //
 // A design is keyed by what builds it: `hero:{HeroId}`, `nav:{NavStyleId}`, `footer:{FooterStyleId}`,
-// `section:{SectionId}` or `section:{SectionId}/{variant}`, `effect:{PieceId}`. check.ts fails when a site in the
+// `section:{SectionId}` or `section:{SectionId}/{variant}`, `effect:{PieceId}`, `idea:{id}` (site-ideas.ts). check.ts fails when a site in the
 // Library has a design missing here — so every new example (or a new thing brought in from a site the user sends)
 // gets its name, its category and the site that shows it best before it can be taken.
 import type { SiteRef } from '@/features/library/collection'
+import { SITE_IDEAS } from './site-ideas'
 
 export type TakeGroup = 'sections' | 'moments' | 'touches'
 export type TakeEntry = { key: string; group: TakeGroup; category: string; name: string; line: string; bestOn: SiteRef }
@@ -20,7 +21,7 @@ export const NOT_OFFERED = new Set([
   'hero:type-statement', 'hero:parallax-photo', 'hero:editorial-image', 'hero:product-stage',
   'nav:classic-bar', 'nav:centered-logo', 'nav:floating-pill', 'nav:split-pill',
   'section:featured-work/staggered', 'section:featured-work/grid', 'section:featured-work/index', 'section:case-study', 'section:product-grid', 'section:collection',
-  'section:gallery', 'section:editorial-story', 'section:manifesto/giant', 'section:timeline', 'section:schedule', 'section:menu',
+  'section:gallery', 'section:editorial-story', 'section:manifesto/giant', 'section:timeline', 'section:schedule', 'section:schedule/columns', 'section:schedule/timeline', 'section:schedule/cards', 'section:menu',
   'footer:contact', 'footer:signature',
   'effect:fade-transition', 'effect:text-effect', 'effect:smooth-scroll', 'effect:scroll-progress', 'effect:lightbox', 'effect:underline-fill',
 ])
@@ -31,7 +32,7 @@ export const shownPure = (key: string) => key.startsWith('nav:') || key.startsWi
 /** Categories in the order they are shown inside their group. */
 export const TAKE_CATEGORIES: Record<TakeGroup, string[]> = {
   sections: ['First screen', 'Menu', 'Showcase', 'Footer'],
-  moments: ['Welcome', 'Page change', 'Headline', 'Scroll', 'Photos', 'Sound'],
+  moments: ['Welcome', 'Page change', 'Headline', 'Scroll', 'Photos', 'Shop', 'Forms', 'Sound'],
   // Scrambling labels are a link hover too (one of the one-of links): they sit with the links, not in a group of their own.
   touches: ['Link', 'Button', 'Cursor'],
 }
@@ -73,6 +74,7 @@ export const TAKEABLES: TakeEntry[] = [
   m('effect:pinned-stage', 'Scroll', 'Section held while you scroll', 'A section stays still while scrolling moves it through its steps.', 'sela-mor'),
   m('effect:tilted-grid', 'Scroll', 'Photo grid that stands up as you scroll', 'A dense grid of photos lies tilted, then stands up flat.', 'inkwell-moth'),
   m('effect:chapter-colours', 'Scroll', 'Colours that change with each item', 'As each item reaches the middle, the whole section takes its colours.', 'inkwell-moth'),
+  m('effect:side-scroll', 'Photos', 'A wall of pictures you walk past', 'The section holds still while scrolling down moves its pictures sideways.', 'maison-vey'),
   m('effect:drag-photos', 'Photos', 'Prints on a desk', 'Photos scattered like prints; visitors pick one up and move it.', 'inkwell-moth'),
   m('effect:image-trail', 'Photos', 'Photos follow the cursor', 'Moving across a section leaves a short trail of photos.', 'pale-hour'),
   m('effect:image-comparison', 'Photos', 'Before and after slider', 'Drag a divider across two photos of the same view.', 'night-shift'),
@@ -85,6 +87,8 @@ export const TAKEABLES: TakeEntry[] = [
   t('effect:magnetic', 'Button', 'Button that pulls to the cursor', 'The main button leans toward the pointer when it comes near.', 'sela-mor'),
   t('effect:brand-cursor', 'Cursor', 'A cursor drawn in your brand', 'The arrow on your site becomes your own drawn pointer — in your colours, or your mark.', 'sticky-weather'),
   t('effect:text-scramble', 'Link', 'Links that scramble into place', 'A link’s letters scramble and settle into its word on hover.', 'hexmint'),
+  // ─── Ideas a built site invented for itself (src/data/site-ideas.ts) ───
+  ...SITE_IDEAS.map((x): TakeEntry => ({ key: `idea:${x.id}`, group: x.group, category: x.category, name: x.name, line: x.line, bestOn: `example:${x.site}` as SiteRef })),
 ]
 
 export const TAKE_BY_KEY = new Map(TAKEABLES.map((x) => [x.key, x]))

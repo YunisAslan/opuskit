@@ -19,7 +19,7 @@ import { designsOf, hasItem, itemKey, shelfSites, siteName, siteSpec, toggleItem
 import { siteTraits } from '@/features/library/inspire'
 import { composeRecipe } from '@/features/recipes/engine'
 import { updateCollection, useCollection } from '@/lib/collection'
-import { SiteThumb, TakenPicture, exampleOf, siteLook, useCollect } from './parts'
+import { CopyPromptSquare, SiteThumb, TakenPicture, exampleOf, siteLook, useCollect } from './parts'
 
 type Takeable = { item: CollectionItem; title: string; sub: string; picture: ReactNode; order?: number }
 
@@ -116,7 +116,10 @@ function Take({ item, title, sub, picture }: Takeable) {
     <li className="group relative min-w-0">
       <div className={`relative overflow-hidden rounded-[3px] border bg-white transition-[border-color,box-shadow] ${on ? 'border-pencil ring-2 ring-pencil' : 'border-line group-hover:border-ink'}`}>
         <LazyMount className="aspect-[16/10] overflow-hidden">{picture}</LazyMount>
-        <span aria-hidden className={`absolute right-2 top-2 z-10 grid size-7 place-items-center rounded-full shadow-sm transition-colors ${on ? 'bg-pencil text-paper' : 'bg-white/90 text-ink group-hover:bg-ink group-hover:text-paper'}`}>{on ? <Check size={14} /> : <Plus size={15} />}</span>
+        <CopyPromptSquare item={item} title={title} className="absolute right-12 top-2" />
+        {/* The mark only shows the state; the click is the card's own button, which covers the whole card — so the mark
+            lets clicks through (it once sat above that button and swallowed them: the + did nothing). */}
+        <span aria-hidden className={`pointer-events-none absolute right-2 top-2 z-10 grid size-8 place-items-center rounded-[3px] border transition-colors ${on ? 'border-pencil bg-pencil text-paper' : 'border-line bg-white text-ink group-hover:border-ink group-hover:bg-ink group-hover:text-paper'}`}>{on ? <Check size={15} strokeWidth={2.4} /> : <Plus size={15} />}</span>
       </div>
       {/* The picture can hold controls of its own (real site / your style), so the button sits beside it and covers the card. */}
       <button type="button" aria-pressed={on} onClick={flip} className="mt-2 block w-full text-left after:absolute after:inset-0">
@@ -128,17 +131,19 @@ function Take({ item, title, sub, picture }: Takeable) {
 }
 
 /** The + on a site: opens it large, everything it has laid out to take. */
-export function LikeButton({ site, label, className = '' }: { site: SiteRef; label?: string; className?: string }) {
+export function LikeButton({ site, label, tool, className = '' }: { site: SiteRef; label?: string; /** In a card's tool strip (Library.tsx). */ tool?: boolean; className?: string }) {
   const c = useCollection()
   const [open, setOpen] = useState(false)
   const n = takenFrom(c.items, site)
   return (
     <>
       <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen(true) }} aria-label={n ? `${n} taken from ${siteName(site)} — open it` : `Take something from ${siteName(site)}`} title="Take what you like"
-        className={label
-          ? `inline-flex h-12 shrink-0 items-center gap-2 rounded-[3px] px-5 text-sm font-medium transition-colors ${n ? 'bg-ink text-paper hover:bg-ink-2' : 'border border-line bg-white hover:border-ink'} ${className}`
+        className={tool
+          ? `grid size-8 place-items-center rounded-[3px] border transition-[background-color,color,border-color,scale] duration-[140ms] ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] ${n ? 'border-pencil bg-pencil text-paper' : 'border-line text-ink [@media(hover:hover)]:hover:border-ink [@media(hover:hover)]:hover:bg-ink [@media(hover:hover)]:hover:text-paper'} ${className}`
+          : label
+          ? `btn btn-ink shrink-0 transition-[background-color,scale] duration-[140ms] ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] ${className}`
           : `grid size-8 shrink-0 place-items-center rounded-full shadow-sm backdrop-blur-sm transition-colors ${n ? 'bg-ink text-paper' : 'bg-white/90 text-ink hover:bg-white'} ${className}`}>
-        {n ? (label ? <><Check size={15} aria-hidden />{n} taken</> : <span className="text-[12px] font-semibold tabular-nums">{n}</span>) : <><Plus size={15} aria-hidden />{label}</>}
+        {tool ? (n ? <span className="font-mono text-[12px] font-semibold tabular-nums">{n}</span> : <Plus size={15} aria-hidden />) : n ? (label ? <><Check size={15} aria-hidden />{n} taken</> : <span className="text-[12px] font-semibold tabular-nums">{n}</span>) : <><Plus size={15} aria-hidden />{label}</>}
       </button>
       {open && <TakeDialog site={site} onClose={() => setOpen(false)} />}
     </>
@@ -163,7 +168,7 @@ function TakeDialog({ site, onClose }: { site: SiteRef; onClose: () => void }) {
         <div className="grid min-h-0 flex-1 overflow-y-auto lg:grid-cols-[22rem_minmax(0,1fr)] lg:overflow-hidden">
           {/* The site itself, large, on the left (on phones, on top) — and taking its whole look is right under it. */}
           <aside className="border-b border-line p-5 md:p-6 lg:overflow-y-auto lg:border-b-0 lg:border-r">
-            <div className={`overflow-hidden rounded-[3px] border transition-[border-color,box-shadow] ${whole ? 'border-pencil ring-2 ring-pencil' : 'border-line'}`}><SiteThumb site={site} auto /></div>
+            <div className={`relative overflow-hidden rounded-[3px] border transition-[border-color,box-shadow] ${whole ? 'border-pencil ring-2 ring-pencil' : 'border-line'}`}><SiteThumb site={site} auto /><CopyPromptSquare item={look} title={`${siteName(site)}’s whole look`} className="absolute right-2 top-2" /></div>
             <button type="button" aria-pressed={whole} onClick={() => updateCollection((x) => toggleItem(x, look))}
               className={`mt-3 flex w-full items-center justify-between gap-3 rounded-[3px] border px-4 py-3 text-left transition-colors ${whole ? 'border-pencil bg-pencil text-paper' : 'border-ink bg-white hover:bg-ink hover:text-paper'}`}>
               <span><span className="block text-sm font-medium">{whole ? 'Its whole look is taken' : 'Take its whole look'}</span><span className="block text-xs opacity-75">{directions[spec.direction].name} — colours, lettering, corners, menu, footer</span></span>

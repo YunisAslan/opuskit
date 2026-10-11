@@ -9,6 +9,8 @@ import { OPUSKIT_DARK as OPUSKIT, PieceDemo } from '@/components/PieceDemo'
 import { pieces } from '@/data/pieces'
 import { ChapterColours } from '@/pieces/ChapterColours'
 import { ScrollProgress } from '@/pieces/ScrollProgress'
+import { ScrollStory } from '@/pieces/ScrollStory'
+import { SideScroll } from '@/pieces/SideScroll'
 import { TiltedGrid } from '@/pieces/TiltedGrid'
 import type { PieceId } from '@/types/domain'
 
@@ -22,6 +24,7 @@ const Text = ({ n = 3 }: { n?: number }) => (
     {Array.from({ length: n }, (_, i) => <p key={i}>We work slowly and on few things at once: a shop sign, a run of labels, a book for a bakery that has baked the same loaf for forty years. Every job starts with a walk round the place it is for.</p>)}
   </div>
 )
+const STORY = [['The walk', 1], ['The sketch', 4], ['The proof', 7], ['The sign', 2]] as const
 const CHAPTERS = [[OPUSKIT.accent, OPUSKIT.background, 'The rooster', 0], [OPUSKIT.text, OPUSKIT.background, 'Nine koi', 4], ['#2B2B30', OPUSKIT.text, 'The moths', 7]] as const
 
 // OpusKit's own header, footer and click sparks, and Next's dev badge, stay out of the clip.
@@ -30,6 +33,16 @@ const CHROME_OFF = <style>{'header.sticky, #main ~ footer, #main ~ canvas, nextj
 /** The pages for pieces that follow the page's scroll. */
 const SCROLLED: Partial<Record<PieceId, () => React.ReactNode>> = {
   'tilted-grid': () => <><Text n={2} /><div className="h-[45vh]" /><div data-target><TiltedGrid photos={[...PHOTOS, ...PHOTOS].slice(0, 15)} columns={5} className="mx-auto max-w-5xl px-6" /></div><div className="h-[70vh]" /></>,
+  'side-scroll': () => (
+    <><Text n={2} />
+      <div data-target><SideScroll label="Work">{PHOTOS.slice(0, 8).map((p) => <img key={p.src} src={p.src} alt="" className="h-[60vh] w-auto" />)}</SideScroll></div>
+      <div className="h-[15vh]" /></>
+  ),
+  'scroll-story': () => (
+    <><Text n={1} />
+      <div data-target className="mx-auto max-w-5xl px-6"><ScrollStory chapters={STORY.map(([title, k]) => ({ src: PHOTOS[k].src, alt: '', body: <><h3 className="text-5xl">{title}</h3><p className="mt-4 text-lg text-(--color-muted)">Every job starts with a walk round the place it is for, and ends when the owner stops noticing it.</p></> }))} /></div>
+      <Text n={1} /></>
+  ),
   'scroll-progress': () => <><ScrollProgress className="h-1" /><h1 className="px-6 pt-24 text-center text-5xl">A loaf for forty years</h1><Text n={14} /></>,
   'chapter-colours': () => (
     <><Text n={2} />

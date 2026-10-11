@@ -56,6 +56,7 @@ export const CLIPS = {
   'tilted-grid': { from: 0.9, scroll: [{ to: 'el:[data-target]', ms: 3600 }] },
   'scroll-progress': { scroll: [{ to: 'end', ms: 6000 }] },
   'chapter-colours': { from: 0.15, scroll: [{ to: 'end', ms: 8000 }] },
+  'side-scroll': { from: 0.75, scroll: [{ to: 'end', ms: 7000 }] },
 }
 
 const cap = (...args) => {
@@ -63,11 +64,12 @@ const cap = (...args) => {
   if (r.status !== 0) throw new Error(`cap ${args.join(' ')} → ${r.status}\n${r.stdout}\n${r.stderr}`)
   try { return [JSON.parse(r.stdout)] } catch { return r.stdout.trim().split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l) } catch { return { raw: l } } }) }
 }
-const { mouse, stop } = startHand()
+const { mouse, within, stop } = startHand()
 const glide = (page, to, ms) => page.evaluate(([to, ms]) => new Promise((done) => {
   const end = to === 'end' ? document.documentElement.scrollHeight - innerHeight
     : to.startsWith?.('el:') ? (() => { const r = document.querySelector(to.slice(3)).getBoundingClientRect(); return r.top + scrollY + r.height / 2 - innerHeight / 2 })() : to
-  const from = scrollY, t0 = performance.now(), ease = (t) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2)
+  // One even speed with a short soft start and stop — never slow then fast (docs/capture.md).
+  const from = scrollY, t0 = performance.now(), r = Math.min(0.25, 400 / ms), ease = (t) => (t < r ? (t * t) / (2 * r) : t > 1 - r ? 1 - r - ((1 - t) * (1 - t)) / (2 * r) : r / 2 + (t - r)) / (1 - r)
   const step = (now) => { const t = Math.min(1, (now - t0) / ms); scrollTo(0, from + (end - from) * ease(t)); t < 1 ? requestAnimationFrame(step) : done() }
   requestAnimationFrame(step)
 }), [to, ms])
@@ -80,7 +82,7 @@ const sourceHash = (id) => {
 async function record(id) {
   const c = CLIPS[id], url = `http://localhost:3000/library/demo/${id}`
   const tmp = fs.mkdtempSync(`${os.tmpdir()}/opuskit-demo-`)
-  await mouse([[1460, 940]], 0.1) // the pointer out of the way while the window opens
+  await mouse([[420, 260]], 0.1) // the pointer out of the way while the window opens — never near a screen corner (hot corners)
   // A laptop-shaped app window (no tabs, no address bar, no automation bar), muted. A piece on its own is shown large by
   // the browser's own zoom (a pixel ratio of 3), never by CSS zoom or a transform: those leave the pointer and the page
   // in different pixels, so a dragged photo drifted from the cursor (the user, 2026-10-10). A scrolled page: 1.68.
@@ -89,7 +91,7 @@ async function record(id) {
   const p = b.pages()[0] ?? await b.newPage()
   await p.goto(url, { waitUntil: 'networkidle' }); await sleep(2000)
   const geo = await p.evaluate(() => ({ w: innerWidth, h: innerHeight, sx: screenX, sy: screenY, top: outerHeight - innerHeight }))
-  const { X, Y } = await screenOf(p, mouse)
+  const { X, Y } = await screenOf(p, mouse, within)
   if (c.from != null) { await p.evaluate((f) => scrollTo(0, document.querySelector('[data-target]').getBoundingClientRect().top + scrollY - innerHeight * f), c.from); await sleep(800) }
   const origin = c.at ? await p.evaluate(c.at) : null
   const stage = c.scroll || c.wide ? null : await p.evaluate(() => { const r = document.querySelector('[data-demo]').getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height } })

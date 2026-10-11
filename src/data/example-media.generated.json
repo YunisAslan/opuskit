@@ -69,7 +69,8 @@
    "/examples/pip-kiln/media/productPageHighlight/morning-person-mug-1.jpg",
    "/examples/pip-kiln/media/productPageHighlight/second-helping-plate-1.jpg",
    "/examples/pip-kiln/media/productPageHighlight/show-off-vase-1.jpg",
-   "/examples/pip-kiln/media/productPageHighlight/sunny-side-plate-1.jpg"
+   "/examples/pip-kiln/media/productPageHighlight/sunny-side-plate-1.jpg",
+   "/examples/pip-kiln/media/stills/product-highlight.jpg"
   ],
   "films": []
  },
@@ -131,6 +132,7 @@
    "/examples/pale-hour/media/journal-3.jpg",
    "/examples/pale-hour/media/location.jpg",
    "/examples/pale-hour/media/mobileHeroCrop.jpg",
+   "/examples/pale-hour/media/stills/featured-work.jpg",
    "/examples/pale-hour/media/team-1.jpg",
    "/examples/pale-hour/media/team-2.jpg",
    "/examples/pale-hour/media/team-3.jpg",
@@ -218,6 +220,8 @@
    "/examples/maison-vey/media/product-salt-quay-detail.jpg",
    "/examples/maison-vey/media/product-salt-quay.jpg",
    "/examples/maison-vey/media/productPhotography.jpg",
+   "/examples/maison-vey/media/stills/collection.jpg",
+   "/examples/maison-vey/media/stills/product-grid.jpg",
    "/examples/maison-vey/media/turntableSequence.jpg"
   ],
   "films": []
@@ -248,6 +252,8 @@
    "/examples/fieldhouse/media/project-2.jpg",
    "/examples/fieldhouse/media/project-3.jpg",
    "/examples/fieldhouse/media/project-4.jpg",
+   "/examples/fieldhouse/media/stills/case-study.jpg",
+   "/examples/fieldhouse/media/stills/gallery.jpg",
    "/examples/fieldhouse/media/team-1.jpg",
    "/examples/fieldhouse/media/team-2.jpg",
    "/examples/fieldhouse/media/team-3.jpg",

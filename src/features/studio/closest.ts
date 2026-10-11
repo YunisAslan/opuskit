@@ -35,9 +35,9 @@ function best(spec: Fit, clipOf: (e: ExampleProject) => string | undefined, scor
     .sort((a, b) => b.score - a.score)[0]
 }
 
-/** Whole site: first-screen group 3 + movement 2 + feel 1. Below 5 (first screen and movement both alike) shows nothing. */
+/** Whole site: first-screen group 3 + movement 2 + feel 1, the very same look breaking a tie. Below 5 (first screen and movement both alike) shows nothing. */
 export const closestSite = (spec: Fit) =>
-  best(spec, (e) => e.clip, (a, b) => (a.hero === b.hero ? 3 : 0) + (a.motion === b.motion ? 2 : 0) + (a.family === b.family ? 1 : 0), 5)
+  best(spec, (e) => e.clip, (a, b) => (a.hero === b.hero ? 3 : 0) + (a.motion === b.motion ? 2 : 0) + (a.family === b.family ? 1 : 0) + (a.look === b.look ? 0.5 : 0), 5)
 
 /** One part: the same ready section on a real site, moving the same way (movement 2 + feel 1). */
 export const closestSection = (spec: Fit, section: SectionId) =>

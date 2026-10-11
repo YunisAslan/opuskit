@@ -4,6 +4,7 @@
 // (tokens, type scale, controls, layout, motion patterns, section plans) ships in the Build Package and the copied
 // recipe, not on this page.
 
+import { IDEA_BY_ID, ideaClip } from '@/data/site-ideas'
 import { PieceDemo } from '@/components/PieceDemo'
 import { Bookmark, BookmarkCheck, Download, Pencil, SlidersHorizontal } from 'lucide-react'
 import Link from 'next/link'
@@ -18,10 +19,13 @@ import { MediaSlots } from '@/components/MediaSlots'
 import type { TakenPart, BuildTarget, PaletteColors, PieceId, RecipeSpec, SectionId, UniversalRecipe } from '@/types/domain'
 import { normalizeSpec } from './engine'
 import { toggleSaved, useSaved } from './library'
-import { FlowBar, SiteThumb, exampleOf } from '@/app/library/parts'
+import { CopyPromptSquare, FlowBar, SiteThumb, TakeSquare, exampleOf } from '@/app/library/parts'
+import { CardPicture } from '@/app/library/Library'
 import { BrandCard } from '@/components/BrandCard'
 import { useGoogleFonts } from '@/components/FontLoader'
-import { siteName, takenName, type SiteRef } from '@/features/library/collection'
+import { siteName, siteSpec, takeKeyOf, takenName, type CollectionItem, type SiteRef } from '@/features/library/collection'
+import { TAKE_BY_KEY } from '@/data/takeables'
+import { TRAITS, type Trait } from '@/features/library/inspire'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { Chip, CopyButton } from '@/components/ui'
 import { recipeToMarkdown } from './markdown'
@@ -181,7 +185,7 @@ function YourSite({ r, look, editHref }: { r: UniversalRecipe; look: Look; editH
 }
 
 type Kind = 'all' | 'parts' | 'effects' | 'qualities'
-const KIND_OF = (x: TakenPart): Exclude<Kind, 'all'> => (x.kind === 'effect' ? 'effects' : x.kind === 'section' || x.kind === 'menu' || x.kind === 'footer' ? 'parts' : 'qualities')
+const KIND_OF = (x: TakenPart): Exclude<Kind, 'all'> => (x.kind === 'effect' || x.kind === 'idea' ? 'effects' : x.kind === 'section' || x.kind === 'menu' || x.kind === 'footer' ? 'parts' : 'qualities')
 const KIND_NAME: Record<Kind, string> = { all: 'All', parts: 'Parts', effects: 'Effects', qualities: 'Looks & qualities' }
 const KIND_ONE: Record<Exclude<Kind, 'all'>, string> = { parts: 'Part', effects: 'Effect', qualities: 'Look or quality' }
 
@@ -199,6 +203,7 @@ function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
   // plays that site. Without a recording a part is drawn in the owner's brand.
   const visual = (x: TakenPart) => {
     const clip = exampleOf(x.site as SiteRef)?.sectionClips?.[(x.kind === 'menu' ? 'navbar' : x.kind === 'footer' ? 'footer' : x.id) as SectionId]
+    if (x.kind === 'idea') { const i = IDEA_BY_ID.get(x.id); if (i) return <LiveClip src={ideaClip(i)} /> }
     if (x.kind === 'effect') return <PieceDemo id={x.id as PieceId} colors={look.colors} fonts={{ display: t.display.family, body: t.body.family, utility: t.utility.family }} className="!h-full" />
     if (clip && x.kind !== 'site' && x.kind !== 'like' && x.kind !== 'hero') return <LiveClip src={clip} />
     if (x.kind === 'section') { const s = part(x.id); return <div className="size-full" inert><SectionPreview id={x.id as SectionId} variant={s?.variant?.id} tone={s?.tone} media={s?.media} colors={look.colors} type={t} shape={look.shape} world={world} brand={brand} className="h-full" /></div> }
@@ -211,22 +216,48 @@ function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
       {taken.length ? (
         <>
           {kinds.length > 2 && <div className="mt-5 flex flex-wrap gap-1.5">{kinds.map((k) => <Chip key={k} small active={kind === k} onClick={() => setKind(k)}>{KIND_NAME[k]}</Chip>)}</div>}
-          <ul className="mt-5 grid border-l border-t border-line sm:grid-cols-2 xl:grid-cols-3">
-            {shown.map((x) => (
-              <li key={`${x.kind}:${x.id}:${x.site}`} className="overflow-hidden border-b border-r border-line bg-white">
-                <div className="aspect-[16/10] overflow-hidden border-b border-line" style={{ background: look.colors.background }}>{visual(x)}</div>
-                <div className="flex items-baseline justify-between gap-3 px-4 py-3">
-                  <span className="min-w-0"><span className="label block text-muted">{KIND_ONE[KIND_OF(x)]}</span><span className="mt-1 block truncate first-letter:uppercase">{takenName(x)}</span></span>
-                  <From site={siteName(x.site as SiteRef)} />
-                </div>
+          {/* The Library's own card (docs/design.md, Library cards): what it is and where it came from in the head, the
+              thing itself, its name and what it does, then copy it as a prompt and take it again — the + shows whether it
+              is in the Collection now, for the next site. */}
+          <ul className="mt-5 grid gap-x-6 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
+            {shown.map((x) => { const item = itemOf(x), named = TAKE_BY_KEY.get(takeKeyOf(item) ?? ''); return (
+              <li key={`${x.kind}:${x.id}:${x.site}`} className="min-w-0">
+                <article className="overflow-hidden rounded-[3px] border border-line bg-white">
+                  <div className="flex h-10 items-center justify-between gap-3 border-b border-line px-3 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
+                    <span className="truncate">{KIND_ONE[KIND_OF(x)]}</span><span className="shrink-0">{siteName(x.site as SiteRef)}</span>
+                  </div>
+                  {/* As the Library showed it when it was taken (the user, 2026-10-11): the same picture as its Library card —
+                      its recording, the live piece on the dark card ground, the site's own capture. A pick from a site no
+                      longer on the shelf has nothing to show there, so it is drawn in the owner's brand. */}
+                  <div className="aspect-[16/10] overflow-hidden border-b border-line" style={{ background: siteSpec(x.site as SiteRef) ? '#18181B' : look.colors.background }}>
+                    {siteSpec(x.site as SiteRef) ? <CardPicture item={item} category={named?.category ?? ''} /> : visual(x)}
+                  </div>
+                  <div className="flex items-start gap-3 px-3 pb-3.5 pt-3">
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[15px] font-medium tracking-tight first-letter:uppercase">{takenName(x)}</span>
+                      <span className="mt-1 line-clamp-2 min-h-[2lh] text-xs leading-relaxed text-muted">{named?.line ?? (x.kind === 'like' ? TRAITS[x.id as Trait]?.line : x.kind === 'site' ? 'Its colours, lettering, corners, menu and footer' : '')}</span>
+                    </span>
+                    <span className="flex shrink-0 gap-1.5"><CopyPromptSquare item={item} title={takenName(x)} className="relative" />{siteSpec(x.site as SiteRef) && <TakeSquare item={item} className="relative" />}</span>
+                  </div>
+                </article>
               </li>
-            ))}
+            ) })}
           </ul>
           <p className="mt-2 text-xs text-muted">Effects work here — move, click, drag. Parts play on the site they came from where it was recorded, else drawn in your brand. Your site takes them; it won’t look like those sites.</p>
         </>
       ) : <p className="mt-6 border border-dashed border-line p-5 text-sm text-muted">Nothing was taken from a site — this recipe started from its kind of site.</p>}
     </div>
   )
+}
+
+/** A pick kept on the recipe, as the Collection item that takes it again. */
+const itemOf = (x: TakenPart): CollectionItem => {
+  const site = x.site as SiteRef
+  switch (x.kind) {
+    case 'site': return { kind: 'site', site }
+    case 'like': return { kind: 'like', what: x.id as Trait, site }
+    default: return { kind: x.kind, id: x.id, from: site } as CollectionItem
+  }
 }
 
 /** A recording that plays while it is on screen, muted and looping; still with reduced motion. */

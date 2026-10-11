@@ -6,7 +6,11 @@
 // filtered by one kind and one feel — then Sections, Moments and Touches: every card of the catalog
 // (src/data/takeables.ts) once, filtered by its category, each marked with the site it comes from. The view is kept in
 // the address (#sections), so coming back from a site keeps it.
-import { Check, Maximize2, Plus } from 'lucide-react'
+import { IDEA_BY_ID, ideaClip } from '@/data/site-ideas'
+import { ArrowUpRight, Check, Copy, Plus } from 'lucide-react'
+import { toast } from 'sonner'
+import { promptFor } from '@/features/library/prompt'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import Link from 'next/link'
 import { motion } from 'motion/react'
 import { useEffect, useState, type ReactNode } from 'react'
@@ -21,7 +25,7 @@ import { useCollection } from '@/lib/collection'
 import { useHydrated } from '@/lib/store'
 import type { FamilyId, PurposeId } from '@/types/domain'
 import DEMO_CLIPS from '@/data/demo-clips.generated.json'
-import { Clip, ItemPreview, SiteThumb, StartBlank, TakenPicture, exampleOf, pureLook, standardLook, useCollect } from './parts'
+import { Clip, CopyPromptSquare, TakeSquare, ItemPreview, SiteThumb, StartBlank, TakenPicture, clipOf, exampleOf, pureLook, standardLook, useCollect } from './parts'
 import { LikeButton, catalogOf, type CatalogCard } from './SiteTake'
 import { TAKE_CATEGORIES, shownPure, type TakeGroup } from '@/data/takeables'
 
@@ -124,6 +128,7 @@ function Catalog({ group }: { group: TakeGroup }) {
  *  on another site — then the sites it is used on, as the sites themselves, not their names (the user, 2026-10-10). */
 function Part({ card: x }: { card: CatalogCard }) {
   const [open, setOpen] = useState(false)
+  const { on } = useCollect(x.item)
   // Alternatives: for an effect, the ones a site can only have instead of it (a link hover among link hovers); for a
   // section, the other designs of its category (another menu, another way to show work).
   const others = x.item.kind === 'effect' ? alternativesOf(x.item.id) : []
@@ -133,35 +138,47 @@ function Part({ card: x }: { card: CatalogCard }) {
   const altTitle = x.item.kind === 'effect' ? `Or another ${ONE_OF[behaviourOf(x.item.id)!] ?? 'one'} — a site has one` : ANOTHER[x.category] ?? `Or another ${x.category.toLowerCase()}`
   return (
     <li className="group relative min-w-0">
-      {/* The picture can hold controls of its own (a demo's buttons), so it is never inside a button: the name's button
-          covers the whole card instead (as in the site's own list). */}
-      <TakeFrame item={x.item}><CardPicture item={x.item} category={x.category} /></TakeFrame>
-      <button type="button" onClick={() => setOpen(true)} aria-label={`${x.title} — see it`} className="mt-2 block w-full text-left after:absolute after:inset-0">
-        <span className="block truncate text-sm font-medium">{x.title}</span>
-        <span className="block truncate text-xs text-muted">{x.line}</span>
-      </button>
-      <TakePlus item={x.item} title={x.title} />
+      {/* A ruled cell (docs/design.md): a head bar — its shelf, and the site it comes from or "Taken" — the design
+          playing on the dark card ground, then its name and what it does. The picture can hold controls of its own (a
+          demo's buttons), so the card opens from the name's button, which covers the whole cell; the tools sit above it. */}
+      <article className={`relative overflow-hidden rounded-[3px] border bg-white transition-[border-color,translate,box-shadow] duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_18px_36px_-24px_rgb(0_0_0/.55)] ${on ? 'border-pencil' : 'border-line group-hover:border-ink'}`}>
+        <CardHead label={x.category} info={on ? <span className="flex items-center gap-1.5 text-pencil"><span className="size-1.5 rounded-full bg-pencil" aria-hidden />Taken</span> : siteName(x.site)} />
+        <div className="relative border-b border-line bg-[#18181B]">
+          <LazyMount className="aspect-[16/10] overflow-hidden"><div className="size-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"><CardPicture item={x.item} category={x.category} /></div></LazyMount>
+        </div>
+        <div className="flex items-start gap-3 px-3 pb-3.5 pt-3">
+          <button type="button" onClick={() => setOpen(true)} aria-label={`${x.title} — open`} className="block min-w-0 flex-1 text-left after:absolute after:inset-0">
+            <span className="block truncate text-[15px] font-medium tracking-tight">{x.title}</span>
+            <span className="mt-1 line-clamp-2 min-h-[2lh] text-xs leading-relaxed text-muted">{x.line}</span>
+          </button>
+          <div className="relative z-10 flex shrink-0 gap-1.5">
+            <CopyPrompt card={x} />
+            <TakeSquare item={x.item} className="relative" />
+          </div>
+        </div>
+      </article>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="flex max-h-[92vh] w-[min(96vw,80rem)] max-w-none flex-col gap-0 overflow-hidden p-0 sm:max-w-none">
-          <div className="border-b border-line px-5 py-3.5 pr-14 md:px-6">
-            <DialogTitle className="truncate text-xl font-medium tracking-tight">{x.title}</DialogTitle>
-            <DialogDescription className="text-sm text-muted">{x.line}</DialogDescription>
+          <div className="flex items-center justify-between gap-4 border-b border-line py-3.5 pl-5 pr-14 md:pl-6">
+            <div className="min-w-0">
+              <DialogTitle className="truncate text-xl font-medium tracking-tight">{x.title}</DialogTitle>
+              <DialogDescription className="truncate text-sm text-muted">{x.line}</DialogDescription>
+            </div>
+            <ToolRow card={x} />
           </div>
           <div className="min-h-0 flex-1 space-y-10 overflow-y-auto p-5 md:p-6 [scrollbar-color:var(--color-line)_transparent] [scrollbar-width:thin]">
-            {/* The design top left, large; its alternatives around it — beside it, then below (the user, 2026-10-10). */}
-            <section aria-label="Alternatives">
+            {/* One place for a card (the user, 2026-10-11): the design top left and large — its recording with controls,
+                or the live part — and around it the others a site could have instead, beside it and then below; then
+                the sites it is used on. */}
+            <section aria-label={alts.length ? 'The design and its alternatives' : 'The design'}>
               {alts.length > 0 && <h3 className="label mb-4 text-muted">{altTitle}</h3>}
               <ul className="grid grid-flow-dense gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <li className={`relative ${alts.length ? 'sm:col-span-2 sm:row-span-2' : 'sm:col-span-2 lg:col-start-2'}`}>
-                  <TakeFrame item={x.item}><CardPicture item={x.item} category={x.category} /></TakeFrame>
-                  <p className="mt-2 truncate text-sm font-medium">{x.title}</p>
-                  <TakePlus item={x.item} title={x.title} />
-                </li>
+                <li className={alts.length ? 'sm:col-span-2 sm:row-span-2' : 'sm:col-span-2 lg:col-span-4'}><Large card={x} /></li>
                 {alts.map((y) => (
                   <li key={y.title} className="relative">
                     <TakeFrame item={y.item}><CardPicture item={y.item} category={y.category} /></TakeFrame>
                     <p className="mt-2 truncate text-sm font-medium">{y.title}</p>
-                    <TakePlus item={y.item} title={y.title} />
+                    <div className="absolute right-2 top-2 z-10 flex gap-1.5"><CopyPromptSquare item={y.item} title={y.title} className="relative" /><TakePlus item={y.item} title={y.title} /></div>
                   </li>
                 ))}
               </ul>
@@ -186,6 +203,119 @@ function Part({ card: x }: { card: CatalogCard }) {
   )
 }
 
+/** Copy a design as a prompt for any AI builder (features/library/prompt.ts); says so, and shows it for a moment. */
+function useCopyPrompt(card: CatalogCard) {
+  const [done, setDone] = useState(false)
+  const copy = async () => {
+    const key = takeKeyOf(card.item)
+    if (!key) return
+    try { await navigator.clipboard.writeText(promptFor(key)) } catch { return toast('Could not copy — your browser blocked the clipboard.') }
+    setDone(true); setTimeout(() => setDone(false), 1600)
+    toast(`Copied “${card.title}” as a prompt`, { description: 'Paste it into Claude, Lovable, v0 or Cursor.' })
+  }
+  return { done, copy }
+}
+
+// Press and hover by OpusKit's own interaction craft (build-packages/craft.ts): a press answers at once — scale 0.97,
+// 140ms, the out curve — and hover fills only where a pointer can hover. Mono caps are written out here, not `.label`:
+// that class sits outside Tailwind's layers, so its muted colour beat every hover colour (pale text on ink).
+const PRESS = 'transition-[background-color,color,scale] duration-[140ms] ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]'
+const MONO = 'font-mono text-[11px] font-medium uppercase tracking-[0.12em]'
+
+/** A card's head bar (a ruled cell's head, docs/design.md): its label left, what it is from (or "Taken") right. */
+function CardHead({ label, info }: { label: ReactNode; info: ReactNode }) {
+  return (
+    <div className="flex h-10 items-center justify-between gap-3 border-b border-line px-3">
+      <span className={`${MONO} min-w-0 truncate text-muted`}>{label}</span>
+      <span className={`${MONO} shrink-0 text-muted`}>{info}</span>
+    </div>
+  )
+}
+
+/** A card's small square control: a hairline square, its name on hover (a tooltip), a press that answers. */
+const SQUARE = `grid size-8 place-items-center rounded-[3px] border ${PRESS}`
+function Square({ label, className, onClick, pressed, children }: { label: string; className: string; onClick: () => void; pressed?: boolean; children: ReactNode }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button type="button" onClick={onClick} aria-label={label} aria-pressed={pressed} className={`${SQUARE} ${className}`}>{children}</button>
+      </TooltipTrigger>
+      <TooltipContent side="top">{label}</TooltipContent>
+    </Tooltip>
+  )
+}
+
+/** Copy it as a prompt: the square ticks in pencil for a moment. */
+function CopyPrompt({ card }: { card: CatalogCard }) {
+  const { done, copy } = useCopyPrompt(card)
+  return (
+    <Square label={done ? 'Copied' : 'Copy as a prompt'} onClick={copy}
+      className={`border-line ${done ? 'text-pencil' : 'text-ink-2 [@media(hover:hover)]:hover:border-ink [@media(hover:hover)]:hover:text-ink'}`}>
+      {done ? <Check size={14} aria-hidden /> : <Copy size={14} aria-hidden />}
+    </Square>
+  )
+}
+
+
+/** The same tools in a dialog's head: copy as a prompt, take. */
+function ToolRow({ card, children }: { card: CatalogCard; children?: ReactNode }) {
+  const { on, flip } = useCollect(card.item)
+  const { done, copy } = useCopyPrompt(card)
+  return (
+    <div className="flex shrink-0 items-center gap-2">
+      {children}
+      <button type="button" onClick={copy} className={`btn btn-line btn-sm ${PRESS}`}>{done ? <Check size={14} aria-hidden /> : <Copy size={14} aria-hidden />}{done ? 'Copied' : 'Copy as prompt'}</button>
+      <button type="button" aria-pressed={on} onClick={flip} className={`btn btn-sm ${PRESS} ${on ? 'border border-pencil text-pencil hover:bg-paper-2' : 'btn-ink'}`}>{on ? <Check size={14} aria-hidden /> : <Plus size={14} aria-hidden />}{on ? 'Taken' : 'Take'}</button>
+    </div>
+  )
+}
+
+/** The design large, inside its card's dialog: the recording with its controls, or the live part at full size. */
+function Large({ card: x }: { card: CatalogCard }) {
+  const clip = clipFor(x.item, x.category)
+  return (
+    <div className="overflow-hidden rounded-[3px] border border-line bg-[#18181B]">
+      {clip
+        ? <video src={clip} muted loop playsInline autoPlay controls className="block aspect-[16/10] max-h-[62vh] w-full object-contain" />
+        : <div className="mx-auto aspect-[16/10] max-h-[62vh] w-full"><CardPicture item={x.item} category={x.category} /></div>}
+    </div>
+  )
+}
+
+/** A site as a Library card (the Sites tab, and a look's sites in Direction): the same ruled cell as a catalog card —
+ *  kind and look in the head, the site playing, its name and what it is, visit ↗ and take. The card opens its page. */
+export function SiteCard({ site: ref }: { site: SiteRef }) {
+  const spec = siteSpec(ref)!, name = siteName(ref)
+  return (
+<li className="group relative min-w-0">
+      {/* The same ruled cell as a catalog card: kind and look in the head, the site playing, its name and what it is. */}
+      <article className="relative overflow-hidden rounded-[3px] border border-line bg-white transition-[border-color,translate,box-shadow] duration-300 group-hover:-translate-y-1 group-hover:border-ink group-hover:shadow-[0_18px_36px_-24px_rgb(0_0_0/.55)]">
+        <CardHead label={kindName(spec.purpose)} info={directions[spec.direction].name} />
+        <div className="relative border-b border-line">
+          <LazyMount className="aspect-[16/10] overflow-hidden"><div className="size-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"><SiteThumb site={ref} auto /></div></LazyMount>
+        </div>
+        <div className="flex items-start gap-3 px-3 pb-3.5 pt-3">
+          <Link href={`/library/sites/${ref.replace(':', '/')}`} className="block min-w-0 flex-1 after:absolute after:inset-0">
+            <h2 className="truncate text-[15px] font-medium tracking-tight">{name}</h2>
+            <p className="mt-1 line-clamp-2 min-h-[2lh] text-xs leading-relaxed text-muted">{exampleOf(ref)?.summary}</p>
+          </Link>
+          <div className="relative z-10 flex shrink-0 gap-1.5">
+            {exampleOf(ref)?.livePath && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <a href={exampleOf(ref)!.livePath} target="_blank" rel="noreferrer" aria-label={`Visit ${name}`} className={`${SQUARE} border-line text-ink-2 [@media(hover:hover)]:hover:border-ink [@media(hover:hover)]:hover:text-ink`}><ArrowUpRight size={15} aria-hidden /></a>
+                </TooltipTrigger>
+                <TooltipContent side="top">Visit the site</TooltipContent>
+              </Tooltip>
+            )}
+            <LikeButton site={ref} tool />
+          </div>
+        </div>
+      </article>
+    </li>
+  )
+}
+
 /** "Or another link hover": what each set of one-of effects is called. */
 const ONE_OF: Partial<Record<BehaviourId, string>> = { links: 'link hover', buttons: 'main button', transitions: 'page change', headlines: 'headline entrance' }
 /** A section's alternatives, said plainly; a site has one first screen, one menu, one footer. */
@@ -202,8 +332,20 @@ const SITE_MOMENTS = new Set(['Scroll', 'Photos'])
 // A menu is a component too: all eight drawn the same way, in the standard theme, so they compare side by side.
 // A piece that only moves when used (hovered, dragged, clicked, scrolled past) plays a clip of it being used, the Mac's
 // own cursor doing it (scripts/capture/demo-clips.mjs): standing still it says nothing (the user, 2026-10-10).
-const CardPicture = ({ item, category }: { item: CollectionItem; category: string }) => {
+/** The recording a card plays, if it plays one (else it shows a live part): the same choice as CardPicture. */
+function clipFor(item: CollectionItem, category: string): string | undefined {
+  if (item.kind === 'idea') { const x = IDEA_BY_ID.get(item.id); return x && ideaClip(x) }
   const key = takeKeyOf(item)
+  if (key && shownPure(key)) return undefined
+  if (item.kind === 'effect') {
+    const site = SITE_MOMENTS.has(category) ? exampleOf(item.from as SiteRef)?.pieceClips?.[item.id] : undefined
+    return site ?? (DEMO_CLIPS as Record<string, { src: string }>)[item.id]?.src
+  }
+  return clipOf(item)
+}
+export const CardPicture = ({ item, category }: { item: CollectionItem; category: string }) => {
+  const key = takeKeyOf(item)
+  if (item.kind === 'idea') { const x = IDEA_BY_ID.get(item.id); if (x) return <Clip src={ideaClip(x)} /> }
   if (key && shownPure(key)) return <div className="pointer-events-none size-full"><ItemPreview item={item} look={pureLook(item)} pure /></div>
   const site = item.kind === 'effect' && SITE_MOMENTS.has(category) && exampleOf(item.from as SiteRef)?.pieceClips?.[item.id]
   const used = item.kind === 'effect' && !site && (DEMO_CLIPS as Record<string, { src: string }>)[item.id]
@@ -228,7 +370,7 @@ function TakePlus({ item, title }: { item: CollectionItem; title: string }) {
   const { on, flip } = useCollect(item)
   return (
     <button type="button" aria-pressed={on} onClick={flip} aria-label={on ? `Put back ${title}` : `Take ${title}`}
-      className={`absolute right-2 top-2 z-10 grid size-7 place-items-center rounded-full shadow-sm transition-colors ${on ? 'bg-pencil text-paper' : 'bg-white/90 text-ink hover:bg-ink hover:text-paper'}`}>{on ? <Check size={14} aria-hidden /> : <Plus size={15} aria-hidden />}</button>
+      className={`grid size-8 place-items-center rounded-[3px] border border-line transition-colors ${on ? 'border-pencil bg-pencil text-paper' : 'bg-white text-ink hover:bg-ink hover:text-paper'}`}>{on ? <Check size={14} aria-hidden /> : <Plus size={15} aria-hidden />}</button>
   )
 }
 
@@ -239,50 +381,8 @@ function Sites({ kinds, feel, onClear }: { kinds: PurposeId[]; feel: FamilyId | 
   if (!list.length) return <div className="py-20 text-center"><p className="text-xl">Nothing matches all of that.</p><button type="button" className="link mt-3" onClick={onClear}>Clear filters</button></div>
   return (
     <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {list.map((s) => (
-        <li key={s.ref} className="group relative">
-          <Link href={`/library/sites/${s.ref.replace(':', '/')}`} className="block">
-            <div className="overflow-hidden rounded-lg border border-line transition-[border-color,translate,box-shadow] duration-300 group-hover:-translate-y-1 group-hover:border-ink group-hover:shadow-[0_16px_32px_-20px_rgb(0_0_0/.45)]"><LazyMount className="aspect-[16/10]"><SiteThumb site={s.ref} auto /></LazyMount></div>
-            <h2 className="mt-3 text-lg font-medium tracking-tight group-hover:text-pencil">{s.name}</h2>
-            <p className="mt-0.5 text-sm text-muted">{kindName(s.spec.purpose)} · {directions[s.spec.direction].name}</p>
-          </Link>
-          <div className="absolute right-2.5 top-2.5 flex gap-1.5">
-            <Expand site={s} />
-            <LikeButton site={s.ref} />
-          </div>
-        </li>
-      ))}
+      {list.map((s) => <SiteCard key={s.ref} site={s.ref} />)}
     </ul>
   )
 }
 
-/** The site large: its recording with controls, or — for a site not recorded yet — the live site itself. */
-function Expand({ site: s }: { site: (typeof SITES)[number] }) {
-  const [open, setOpen] = useState(false)
-  const e = exampleOf(s.ref)
-  return (
-    <>
-      <button type="button" onClick={() => setOpen(true)} title="See it larger" aria-label={`See ${s.name} larger`}
-        className="grid size-8 place-items-center rounded-full bg-white/90 text-ink shadow-sm backdrop-blur-sm transition-colors hover:bg-white"><Maximize2 size={14} aria-hidden /></button>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="flex w-[min(94vw,72rem)] max-w-none flex-col gap-0 overflow-hidden p-0 sm:max-w-none">
-          <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-3 pr-14">
-            <div className="min-w-0">
-              <DialogTitle className="truncate text-lg font-medium tracking-tight">{s.name}</DialogTitle>
-              <DialogDescription className="text-sm text-muted">{kindName(s.spec.purpose)} · {directions[s.spec.direction].name}</DialogDescription>
-            </div>
-            <div className="flex shrink-0 items-center gap-2">
-              <Link href={`/library/sites/${s.ref.replace(':', '/')}`} className="hidden h-9 items-center rounded-[3px] px-3.5 text-sm text-ink-2 hover:bg-paper-2 hover:text-ink sm:inline-flex">See its parts</Link>
-              <LikeButton site={s.ref} label="I like…" className="h-9 px-3.5" />
-            </div>
-          </div>
-          {/* The whole landing page where it was recorded, else the short loop. */}
-          {e?.fullClip ?? e?.clip
-            ? <video src={e.fullClip ?? e.clip} poster={`/examples/${e.slug}.jpg`} muted loop playsInline autoPlay controls className="block max-h-[78vh] w-full bg-black object-contain" />
-            : e?.livePath ? <iframe src={e.livePath} title={`${s.name}, the live site`} className="block h-[78vh] w-full bg-white" />
-            : <SiteThumb site={s.ref} />}
-        </DialogContent>
-      </Dialog>
-    </>
-  )
-}

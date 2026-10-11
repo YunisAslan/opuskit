@@ -68,6 +68,26 @@ export const sectionVariants: Partial<Record<SectionId, Designs>> = {
     options: [v('table', 'Line by line', 'One ruled line per fact, name and value.'), v('grid', 'Big values', 'Each fact in a cell, the value large.')],
     byFamily: { bold: 'grid', futuristic: 'grid', experimental: 'grid' },
   },
+  faq: {
+    options: [v('side', 'Beside the title', 'The title on the left, the questions in a narrow column beside it.'), v('centered', 'One quiet column', 'The title over one narrow, centred column.'), v('stacked', 'Said loudly', 'The title large across the top, the questions full width and set large.')],
+    byFamily: { quiet: 'centered', organic: 'centered', minimal: 'centered', bold: 'stacked', raw: 'stacked', experimental: 'stacked', futuristic: 'stacked' },
+  },
+  schedule: {
+    options: [v('columns', 'Days side by side', 'Each day a column of times and events.'), v('timeline', 'A departure board', 'One long list, the times set large, each day a heading at the side.'), v('cards', 'A card per day', 'Each day its own card on the surface colour.')],
+    byFamily: { bold: 'timeline', raw: 'timeline', futuristic: 'timeline', cinematic: 'timeline', experimental: 'timeline', organic: 'cards', quiet: 'cards' },
+  },
+  reservation: {
+    options: [v('side', 'Form beside', 'The invitation and hours on the left, the form on a card beside them.'), v('centered', 'Centred', 'The invitation centred over the form, the hours and phone under it.'), v('ledger', 'A ledger', 'The title large, the hours and phone as ruled lines, the form open beside them.')],
+    byFamily: { quiet: 'centered', minimal: 'centered', organic: 'centered', editorial: 'ledger', bold: 'ledger', raw: 'ledger', cinematic: 'ledger' },
+  },
+  journal: {
+    options: [v('cards', 'Pictures over titles', 'Three entries side by side, a picture over each.'), v('index', 'A contents page', 'No pictures: each title large on its own rule, the date beside it.'), v('lead', 'The newest leads', 'The newest entry large with its picture, the next ones listed beside it.')],
+    byFamily: { editorial: 'index', minimal: 'index', raw: 'index', futuristic: 'index', cinematic: 'lead', bold: 'lead' },
+  },
+  newsletter: {
+    options: [v('split', 'Reason and field', 'Why to subscribe on the left, the field and button on the right.'), v('giant', 'Said loudly', 'The title huge across the page, the field one ruled line under it.'), v('card', 'A small card', 'A calm card in the middle, everything centred.')],
+    byFamily: { bold: 'giant', raw: 'giant', experimental: 'giant', editorial: 'giant', quiet: 'card', organic: 'card' },
+  },
   'contact-cta': {
     options: [v('statement', 'Big invitation', 'The headline huge, one button and the email.'), v('write', 'A letter to fill in', 'The sentence is the form: name, what about, email.'), v('details', 'Ways to reach you', 'The headline left, email, phone and address large on the right.')],
     byFamily: { experimental: 'write', organic: 'write', editorial: 'details', quiet: 'details' },

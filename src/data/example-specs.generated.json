@@ -122,7 +122,39 @@
     "id": "wordmark"
    }
   ],
-  "footer": "wordmark"
+  "footer": "wordmark",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 2,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 4,
+    "variant": "split"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "columns"
+   },
+   {
+    "page": "p3",
+    "index": 0,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p4",
+    "index": 1,
+    "variant": "side"
+   }
+  ]
  },
  "pip-kiln": {
   "base": "typography-first",
@@ -150,6 +182,36 @@
     "page": "rerq7kdx",
     "index": 4,
     "variant": "giant"
+   },
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "split"
+   },
+   {
+    "page": "p2",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p6",
+    "index": 1,
+    "variant": "columns"
+   },
+   {
+    "page": "p6",
+    "index": 4,
+    "variant": "side"
+   },
+   {
+    "page": "p6",
+    "index": 5,
+    "variant": "side"
    }
   ],
   "signatures": [],
@@ -412,7 +474,29 @@
     "id": "lightbox"
    }
   ],
-  "footer": "line"
+  "footer": "line",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "cards"
+   },
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "split"
+   },
+   {
+    "page": "p5",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p6",
+    "index": 0,
+    "variant": "columns"
+   }
+  ]
  },
  "raster-school": {
   "base": "swiss-modern",
@@ -455,6 +539,31 @@
     "page": "oq6ywwqg",
     "index": 5,
     "variant": "cards"
+   },
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 1,
+    "variant": "side"
+   },
+   {
+    "page": "p5",
+    "index": 0,
+    "variant": "side"
    }
   ],
   "signatures": [],
@@ -576,6 +685,26 @@
     "page": "9r3cpt7y",
     "index": 2,
     "variant": "grid"
+   },
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 4,
+    "variant": "cards"
+   },
+   {
+    "page": "p3",
+    "index": 1,
+    "variant": "columns"
+   },
+   {
+    "page": "p3",
+    "index": 2,
+    "variant": "side"
    }
   ],
   "signatures": [],
@@ -764,7 +893,34 @@
    }
   ],
   "target": "not-sure",
-  "footer": "contact"
+  "footer": "contact",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 4,
+    "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 0,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 2,
+    "variant": "side"
+   }
+  ]
  },
  "halden": {
   "base": "cinematic-editorial",
@@ -793,6 +949,31 @@
     "page": "danhs2i2",
     "index": 4,
     "variant": "wall"
+   },
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 0,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "side"
    }
   ],
   "signatures": [],
@@ -980,7 +1161,24 @@
    }
   ],
   "target": "not-sure",
-  "footer": "signature"
+  "footer": "signature",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "split"
+   },
+   {
+    "page": "p2",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 3,
+    "variant": "side"
+   }
+  ]
  },
  "fieldhouse": {
   "base": "luxury-fashion",
@@ -1214,7 +1412,49 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "cards"
+   },
+   {
+    "page": "p1",
+    "index": 8,
+    "variant": "split"
+   },
+   {
+    "page": "p3",
+    "index": 4,
+    "variant": "side"
+   },
+   {
+    "page": "p7",
+    "index": 0,
+    "variant": "cards"
+   },
+   {
+    "page": "p7",
+    "index": 1,
+    "variant": "split"
+   },
+   {
+    "page": "p8",
+    "index": 1,
+    "variant": "cards"
+   },
+   {
+    "page": "p8",
+    "index": 2,
+    "variant": "split"
+   },
+   {
+    "page": "p9",
+    "index": 0,
+    "variant": "side"
+   }
+  ]
  },
  "aster-house": {
   "base": "swiss-modern",
@@ -1315,7 +1555,14 @@
    "secondary": "#C0A57A",
    "accent": "#1E3A8A",
    "border": "#B39A70"
-  }
+  },
+  "sectionVariants": [
+   {
+    "page": "p2",
+    "index": 2,
+    "variant": "side"
+   }
+  ]
  },
  "night-shift": {
   "base": "digital-futurism",
@@ -1424,7 +1671,29 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 1,
+    "variant": "side"
+   },
+   {
+    "page": "p5",
+    "index": 0,
+    "variant": "side"
+   }
+  ]
  },
  "sela-mor": {
   "base": "typography-first",
@@ -1559,7 +1828,29 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 4,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "split"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "columns"
+   },
+   {
+    "page": "p4",
+    "index": 1,
+    "variant": "split"
+   }
+  ]
  },
  "kur-delta-watch": {
   "base": "neo-brutalist-commerce",
@@ -1681,7 +1972,24 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "cards"
+   },
+   {
+    "page": "p1",
+    "index": 8,
+    "variant": "split"
+   },
+   {
+    "page": "p5",
+    "index": 2,
+    "variant": "side"
+   }
+  ]
  },
  "inkwell-moth": {
   "base": "art-direction-studio",
@@ -1788,7 +2096,14 @@
    "secondary": "#EADFAA",
    "accent": "#C8323C",
    "border": "#E4D9A0"
-  }
+  },
+  "sectionVariants": [
+   {
+    "page": "p4",
+    "index": 1,
+    "variant": "side"
+   }
+  ]
  },
  "fennwood": {
   "base": "organic-modern",
@@ -1874,7 +2189,29 @@
    "secondary": "#F5BC6E",
    "accent": "#4F5E12",
    "border": "#E5B06A"
-  }
+  },
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 0,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 2,
+    "variant": "side"
+   }
+  ]
  },
  "hane": {
   "base": "japanese-quiet-minimal",
@@ -1979,7 +2316,34 @@
    "secondary": "#E5BDAF",
    "accent": "#A3123A",
    "border": "#D8B5A8"
-  }
+  },
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "side"
+   },
+   {
+    "page": "p4",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p5",
+    "index": 0,
+    "variant": "side"
+   }
+  ]
  },
  "sticky-weather": {
   "base": "typography-first",
@@ -2099,7 +2463,14 @@
    }
   ],
   "target": "not-sure",
-  "footer": "signature"
+  "footer": "signature",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "cards"
+   }
+  ]
  },
  "hexmint": {
   "base": "digital-futurism",
@@ -2207,7 +2578,19 @@
    }
   ],
   "target": "not-sure",
-  "footer": "signature"
+  "footer": "signature",
+  "sectionVariants": [
+   {
+    "page": "p3",
+    "index": 1,
+    "variant": "side"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "side"
+   }
+  ]
  },
  "brasshand": {
   "base": "typography-first",
@@ -2336,7 +2719,24 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 5,
+    "variant": "cards"
+   },
+   {
+    "page": "p3",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p5",
+    "index": 2,
+    "variant": "side"
+   }
+  ]
  },
  "slow-atlas": {
   "base": "swiss-modern",
@@ -2442,6 +2842,43 @@
    }
   ],
   "target": "not-sure",
-  "footer": "signature"
+  "footer": "signature",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 2,
+    "variant": "cards"
+   },
+   {
+    "page": "p1",
+    "index": 4,
+    "variant": "split"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "cards"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "split"
+   },
+   {
+    "page": "p4",
+    "index": 1,
+    "variant": "cards"
+   },
+   {
+    "page": "p5",
+    "index": 1,
+    "variant": "cards"
+   },
+   {
+    "page": "p5",
+    "index": 2,
+    "variant": "split"
+   }
+  ]
  }
 }

@@ -32,6 +32,7 @@ import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
 import { allSites, alternativesOf, applyItems, designsOf, toggleItem, keptByName, shelfSites, takenFrom, takenOf, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection, type SiteRef } from '../src/features/library/collection'
 import { GENERIC_NAMES, NOT_OFFERED, TAKEABLES, TAKE_CATEGORIES } from '../src/data/takeables'
+import { SITE_IDEAS, ideaClip } from '../src/data/site-ideas'
 import { OFFERS, OFFER_IDS, directionsFor, kindFor, offerOf, pagesFromWords, purposeFrom, siteTraits } from '../src/features/library/inspire'
 import { COLOUR_WORDS, SHAPE_WORDS, TYPE_WORDS, recommendSectionPhotos, cleanPieces, defaultPagesFor, pieceIssues, composeRecipe, isValidSpec, rankPalettes, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
@@ -300,6 +301,20 @@ const main = async () => {
   assert.equal(briefed.contentDirection.ctaExamples[0], goals.book.cta[0], 'goal sets the primary CTA')
   assert.match(recipeToMarkdown(briefed), /Oak & Awl: Leather goods\./, 'offer reaches the markdown')
   // Video recipes ship scripts/prepare-video.sh (valid bash); others don't.
+  // A site's idea (src/data/site-ideas.ts): its code and its clip are on disk, its site has it, and a recipe that took it
+  // ships IDEAS.md and the code as a reference, in every tool's package.
+  for (const x of SITE_IDEAS) {
+    assert.ok(existsSync(`examples/${x.site}/${x.file}`), `idea ${x.id}: its code examples/${x.site}/${x.file} is there`)
+    assert.ok(existsSync(`public${ideaClip(x)}`), `idea ${x.id}: its clip ${ideaClip(x)} is recorded (node scripts/capture/site-clips.mjs ${x.site}:idea-${x.id})`)
+    assert.ok(designsOf(`example:${x.site}` as SiteRef).some((d) => d.key === `idea:${x.id}`), `idea ${x.id}: its site offers it`)
+  }
+  if (SITE_IDEAS.length) {
+    const x = SITE_IDEAS[0], took = composeRecipe({ ...specFromSeed(recipeSeeds[0]), taken: [{ site: `example:${x.site}`, kind: 'idea', id: x.id }] })
+    for (const t of Object.keys(adapters) as (keyof typeof adapters)[]) {
+      const files = (await adapters[t].generate(took)).files.map((f) => f.path)
+      assert.ok(files.includes('IDEAS.md') && files.includes(`reference/ideas/${x.id}.tsx`), `${t}: a taken idea ships IDEAS.md and its reference code`)
+    }
+  }
   const vid = await adapters['claude-code'].generate(composeRecipe(specFromSeed(recipeSeeds[1])))
   const sh = vid.files.find((f) => f.path === 'scripts/prepare-video.sh')
   assert.ok(sh && /-crf CRF -g 6/.test(sh.content) && /fit_budget/.test(sh.content), 'video recipe ships prepare-video.sh (budget-fitted, short GOP for scrubbing)')
@@ -338,10 +353,12 @@ const main = async () => {
     assert.match(src, new RegExp(p.source.license), `${p.id}: source file carries its ${p.source.license} attribution`)
     assert.match(src, new RegExp(`export function ${p.exportName}\\b`), `${p.id}: exports ${p.exportName}`)
     // Lenis (MIT) only in a piece that lists it as a dependency, so its package says to install it.
-    const own = p.deps.includes('lenis') ? '|lenis' : ''
-    assert.ok(!new RegExp(`@/lib/utils|from ['"](?!react|motion/react|@paper-design/shaders-react|next/navigation${own})[^'"]+['"]`).test(src), `${p.id}: no imports beyond react, motion, Paper Shaders, next/navigation (and Lenis, when listed)`)
+    const own = p.deps.includes('lenis') ? '|lenis' : p.deps.includes('gsap') ? '|gsap|gsap/ScrollTrigger' : ''
+    assert.ok(!new RegExp(`@/lib/utils|from ['"](?!react|motion/react|@paper-design/shaders-react|next/navigation${own})[^'"]+['"]`).test(src), `${p.id}: no imports beyond react, motion, Paper Shaders, next/navigation (and Lenis or GSAP, when listed)`)
     assert.ok(/reactbits|aceternity|hover\.dev/.test(p.source.url) === false, `${p.id}: never from a library that forbids redistribution`)
   }
+  // A piece that needs GSAP brings it into the package's dependencies (allowed since 2026-10-11).
+  assert.ok(composeRecipe({ ...vspec, pieces: ['scroll-story'] }).implementation.dependencies.some((d) => d.name === 'gsap'), 'a GSAP piece lists gsap')
   assert.deepEqual(cleanPieces(['text-effect', 'text-loop', 'marquee', 'nope']), ['text-loop', 'marquee'], 'one piece per slot, later pick wins, unknown dropped')
   const kitted = composeRecipe({ ...vspec, pieces: ['text-effect', 'number-ticker', 'ring-carousel', 'image-field' as never] })
   assert.equal(kitted.pieces.filter((p) => ['text-effect', 'number-ticker', 'ring-carousel', 'image-field'].includes(p.id)).length, 3, 'photo slot keeps one piece') // a big-idea moment may add its own piece
@@ -423,11 +440,6 @@ const main = async () => {
   assert.equal(composeRecipe(planToSpec(setStyle(plan, 'concept', 'live-console'))).concept?.id, 'live-console', 'a picked big idea is kept')
   assert.equal(specToPlan(composeRecipe(planToSpec(setStyle(plan, 'concept', 'off'))).metadata.spec).concept, 'off', 'Customise keeps the big idea')
   assert.equal(composeRecipe({ ...planToSpec(setStyle(plan, 'concept', 'playful-way-in')), motion: 'subtle' }).concept?.id !== 'playful-way-in', true, 'a big idea that needs more movement falls back to the recommendation')
-  // Recipes follow the owner's picks: no GSAP guidance anywhere (licence), and seed rules name colour roles, not hues.
-  for (const a of Object.values(adapters)) {
-    const all = (await a.generate(shopFilm)).files.map((f) => f.content).join('').replace(/No GSAP[^.]*\./g, '')
-    assert.ok(!/gsap|scrolltrigger/i.test(all), `${a.id}: no GSAP guidance`)
-  }
   // Ready sections never ship the generic tells the recipe forbids: "→" after links, middle-dot joins, 01/02 markers.
   for (const [id, src] of Object.entries(blockSource)) assert.ok(!/→| · |padStart\(2, '0'\)/.test(src!), `${id}: ready section ships a generic tell`)
   // Controls are the project's shadcn/ui parts: a ready section never ships a plain browser control or disclosure.
@@ -986,7 +998,7 @@ const main = async () => {
       assert.ok(k, `${id}: look knowledge`)
       assert.ok(k.moves.length >= 3 && k.craft.length >= 2 && k.sparks.length >= 2 && k.traps.length >= 1 && k.seen.length >= 1, `${id}: knowledge has moves, craft, sparks, traps, seen`)
       for (const x of k.seen.filter((x) => x.startsWith('example:'))) assert.ok(slugs.has(x.slice(8)), `${id}: ${x} is a built example`)
-      for (const x of [...k.moves, ...k.craft, ...k.sparks, ...k.traps]) assert.ok(!/\bGSAP\b|React Bits|Aceternity/i.test(x), `${id}: knowledge never needs a forbidden library — ${x}`)
+      for (const x of [...k.moves, ...k.craft, ...k.sparks, ...k.traps]) assert.ok(!/React Bits|Aceternity/i.test(x), `${id}: knowledge never needs a forbidden library — ${x}`)
     }
     for (const seed of recipeSeeds.slice(0, 4)) {
       const r = composeRecipe(specFromSeed(seed))

@@ -14,6 +14,7 @@ import { goals, purposes } from '@/data/taxonomy'
 import { CLOSING, EMPTY_PLAN, addSuggested, moveSection, effectOn, onChrome, pageSuggestions, piecesFor, replaceSection, sectionGroups, setBehaviour, setHero, setSectionVariant, setStyle, specToPlan, start, toggleSitePiece, togglePiece } from '@/features/studio/plan'
 import { composeRecipe, isValidSpec, resolveHero, specFromSeed } from '@/features/recipes/engine'
 import { TAKEABLES, TAKE_BY_KEY } from '@/data/takeables'
+import { IDEA_BY_ID, SITE_IDEAS } from '@/data/site-ideas'
 import { TRAITS, TRAIT_IDS, starterFrom, type Trait } from './inspire'
 import type { TakenPart, GoalId, DirectionId, FooterStyleId, HeroId, StudioPlan, NavStyleId, PageTypeId, PieceId, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
 
@@ -26,6 +27,8 @@ export type CollectionItem =
   | { kind: 'menu'; id: NavStyleId; from?: SiteRef }
   | { kind: 'footer'; id: FooterStyleId; from?: SiteRef }
   | { kind: 'effect'; id: PieceId; from?: SiteRef }
+  /** A site's own invention (src/data/site-ideas.ts), taken as an idea to make again. */
+  | { kind: 'idea'; id: string; from?: SiteRef }
   /** One quality of a site (decision 35): its colours, lettering, first screen or movement — not the site. */
   | { kind: 'like'; what: Trait; site: SiteRef }
 
@@ -71,7 +74,8 @@ export function siteSpec(ref: SiteRef): RecipeSpec | undefined {
 }
 export function siteName(ref: SiteRef): string {
   const [kind, slug] = ref.split(':')
-  return (kind === 'example' ? examples.find((e) => e.slug === slug)?.title.split(/ [—|:] |, |: /)[0] : seedBySlug[slug]?.title) ?? slug
+  // A site no longer on the shelf (an example removed since a recipe took from it) is named from its slug: Lowfield Nights.
+  return (kind === 'example' ? examples.find((e) => e.slug === slug)?.title.split(/ [—|:] |, |: /)[0] : seedBySlug[slug]?.title) ?? slug.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ')
 }
 /** Every site on the shelf: the built ones first (proof), then the recipes. */
 export const allSites: SiteRef[] = [
@@ -92,6 +96,7 @@ export function takeKeyOf(i: CollectionItem): string | undefined {
     case 'menu': return `nav:${i.id}`
     case 'footer': return `footer:${i.id}`
     case 'effect': return `effect:${i.id}`
+    case 'idea': return `idea:${i.id}`
     case 'like': { const spec = i.what === 'opening' ? siteSpec(i.site) : undefined; return spec && `hero:${resolveHero(spec).id}` }
     default: return undefined
   }
@@ -109,6 +114,7 @@ export function designsOf(ref: SiteRef): { key: string; item: CollectionItem }[]
   for (const p of r.pages) for (const x of p.sections) if (SIGNATURE_PARTS.has(x.id as SectionId)) add({ kind: 'section', id: x.id as SectionId, ...(x.variant ? { variant: x.variant.id } : {}), from: ref })
   add({ kind: 'footer', id: r.chrome.footerStyle.id, from: ref })
   for (const p of r.pieces) add({ kind: 'effect', id: p.id, from: ref })
+  for (const x of SITE_IDEAS) if (`example:${x.site}` === ref) add({ kind: 'idea', id: x.id, from: ref })
   return [...out].map(([key, item]) => ({ key, item }))
 }
 
@@ -121,6 +127,7 @@ export function itemName(i: CollectionItem): string {
     case 'hero': return EFFECTS.find((e) => e.hero === i.id)?.name ?? i.id
     case 'menu': return `Navigation · ${navStyles[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}`
     case 'footer': return `Footer · ${footerStyles[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}`
+    case 'idea': return `${IDEA_BY_ID.get(i.id)?.name ?? i.id}${i.from ? ` · ${siteName(i.from)}` : ''}`
     case 'effect': return `${pieces[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}`
     case 'like': return `${TRAITS[i.what].name} · ${siteName(i.site)}`
   }
@@ -140,7 +147,7 @@ export const takenOf = (items: CollectionItem[]): TakenPart[] => items.flatMap((
 export function takenName(t: TakenPart): string {
   // The catalog's name when the pick is one design (a section taken without its variant takes its first design's name).
   const opening = t.kind === 'like' && t.id === 'opening' ? siteSpec(t.site as SiteRef) : undefined
-  const key = opening ? `hero:${resolveHero(opening).id}` : t.kind === 'menu' ? `nav:${t.id}` : t.kind === 'footer' || t.kind === 'effect' || t.kind === 'section' ? `${t.kind}:${t.id}` : undefined
+  const key = opening ? `hero:${resolveHero(opening).id}` : t.kind === 'menu' ? `nav:${t.id}` : t.kind === 'footer' || t.kind === 'effect' || t.kind === 'section' || t.kind === 'idea' ? `${t.kind}:${t.id}` : undefined
   const named = key && (TAKE_BY_KEY.get(key) ?? TAKEABLES.find((x) => x.key.startsWith(`${key}/`)))
   if (named) return named.name
   switch (t.kind) {
@@ -358,6 +365,8 @@ export function applyItems(plan: StudioPlan, items: CollectionItem[], replace: b
       if (k) { collected.add(k); added.push(k); if (i.variant) plan = setSectionVariant(plan, page.id, k, i.variant) }
       continue
     }
+    // A site's idea changes no page: it rides in `taken`, and the package asks for it with its code as a reference.
+    if (i.kind === 'idea') continue
     // Effects: a behaviour or a whole-site extra is site-wide; a moment goes on the first part that can carry it.
     const id = i.id, b = behaviourOf(id)
     if (b && !behaviours[b].many) { plan = setBehaviour(plan, b, id); continue }

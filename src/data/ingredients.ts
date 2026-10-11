@@ -115,6 +115,12 @@ export const palettes: Record<PaletteId, Palette> = {
     usage: { accent: 'Accent equals ink — emphasis comes from scale and weight, not colour' },
     why: 'The one true monochrome: #000 and #FFF, not tinted charcoal. With no colour to lean on, typography and media carry everything — the purest stage for film.',
   },
+  'white-box': {
+    id: 'white-box', name: 'White Box', line: 'Paper grey, pure black, nothing else', dark: false, tags: ['minimal', 'monochrome', 'editorial'],
+    colors: { background: '#EDEDED', surface: '#FFFFFF', text: '#000000', muted: '#575757', primary: '#000000', secondary: '#E6E6E6', accent: '#000000', border: '#D4D4D4' },
+    usage: { accent: 'Accent equals ink — emphasis comes from scale, weight and the photographs, not colour' },
+    why: 'Black Box in daylight. 37 of 88 recent Awwwards Sites of the Day are greyscale only and 38 are a near-black and a near-white (docs/research/awwwards/01-winners.md): the interface stays black and white and the work brings the colour.',
+  },
   espresso: {
     id: 'espresso', name: 'Espresso', line: 'Deep coffee brown, mint note', dark: true, tags: ['luxury', 'hospitality', 'organic'],
     colors: { background: '#2A1A14', surface: '#3A2820', text: '#F5EAE2', muted: '#C9B2A4', primary: '#F5EAE2', secondary: '#4A342A', accent: '#A8E0CF', border: '#54403A' },

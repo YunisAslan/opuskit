@@ -341,7 +341,7 @@ function sample(id: SectionId | 'orbit-hero', world: World, brand?: string, foot
     case 'pricing': return <PricingSection title={w.pricingTitle} plans={w.plans.map(([name, price, period, features], i) => ({ name, price, period, features, action: a, recommended: i === 1 }))} />
     case 'faq': return <FaqSection title="Questions">{w.faq.map(([q, ans], i) => (
       <div key={q} className="border-b border-(--color-border)">
-        <p className="type-heading flex items-center justify-between gap-6 py-5 [font-size:clamp(1.05rem,1.5vw,1.25rem)]">{q}<span aria-hidden className="text-(--color-muted)">{i ? '+' : '−'}</span></p>
+        <p data-slot="accordion-trigger" className="type-heading flex items-center justify-between gap-6 py-5 [font-size:clamp(1.05rem,1.5vw,1.25rem)]">{q}<span aria-hidden className="text-(--color-muted)">{i ? '+' : '−'}</span></p>
         {i === 0 && <p className="type-body max-w-[62ch] pb-6 text-(--color-muted)">{ans}</p>}
       </div>))}</FaqSection>
     case 'journal': return <JournalSection title="Journal" entries={w.journal.map(([title, date, category], i) => ({ title, date, category, href: `#${i}`, image: pick(i + 2), alt: '' }))} />

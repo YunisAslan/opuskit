@@ -71,6 +71,41 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   card ground `#18181B` (`OPUSKIT_DARK`), one set of clips for light and dark mode. Clips recorded at the browser's own
   zoom (pixel ratio 3) with the pointer measured, so a dragged photo stays under the cursor; Cap's cursor smoothing off;
   start and end close to the piece, still lead-ins cut.
+- **Learning from Awwwards** (2026-10-11, the user: OpusKit's goal is sites at Awwwards level): part by part, plan in
+  `docs/research/awwwards/PLAN.md`. Part 1 done — the 93 latest Sites of the Day as data (`data/sotd.json`,
+  `scripts/research/awwwards-sotd.mjs`), findings in `01-winners.md`: usability is where winners score lowest; 44% use
+  3D (our biggest gap); 42% are black-and-white palettes; 11% design their 404. Applied (the user said yes): White Box palette; `JURY_QA` in craft.ts (designed 404,
+  semantics/meta, keyboard/focus, speed) in all five packages; **GSAP is allowed** (the user, 2026-10-11 — AGENTS.md).
+- **Growing the ingredients** (2026-10-11, the user: more components, sections and variety for better sites), batch by
+  batch from what winners do that OpusKit had only in words. Batch 1 — three pieces: `side-scroll` (a sideways wall,
+  GSAP pin + scrub; now the piece of the Sideways strip photo layout and the sideways-gallery moment, so Pip & Kiln and
+  Maison Vey carry it — Library card on Maison Vey with its demo clip), `scroll-story` (chapters beside one held
+  picture that wipes per chapter, GSAP scrub; the new signature moment `story-beside-picture`), `proximity-type`
+  (letters swell near the pointer; variable faces). A piece reaches the Library only once a built site shows it —
+  scroll-story and proximity-type wait for a night-run site to use them.
+  Batch 2 — the engine's moments that had only words now bring ready code: nine signature moments linked to pieces
+  that already existed (image trail, stacking cards, velocity ribbon, reading highlight, tilt cards, counting numbers,
+  word rotate, before/after, letters near the cursor → proximity-type), and five new pieces: `photo-dome` (CSS 3D
+  sphere of photos to drag; the Photo dome layout), `pixel-swap` (pixel dissolve), `spotlight` (flashlight),
+  `hover-preview` (list with its photo at the pointer; the hover-reveal layout), `ripple-image` (plain WebGL ripple
+  under the pointer — the first WebGL piece; new moment `ripple-photos`). WebGL pieces never call loseContext on
+  cleanup: React strict mode remounts and gets the same lost context.
+  Batch 3 — section designs, which reach every studio site (the engine picks one per look family): the most used
+  single-design sections got two more each — Journal `index` (a contents page, titles large on rules) and `lead` (the
+  newest large, the rest beside it); Newsletter `giant` (title huge, the field one ruled line) and `card`. Built
+  examples keep the design they were built in: `BUILT_BEFORE` in `scripts/example-specs.ts` pins it (add a section
+  there whenever a single-design section gets new designs). Then FAQ (`centered`, `stacked` — styles the shadcn
+  trigger through `data-slot`), Schedule (`timeline` — times large like a departure board, `cards`; kept out of the
+  Library like the plain schedule) and Reservation (`centered`, `ledger`).
+  Batch 4 — page changes: `photo-morph` (the clicked thumbnail grows into the next page's picture — React 19.3's
+  `<ViewTransition>`, no library; its CSS ships as a hoisted `<style href precedence>`; new moment
+  `picture-becomes-page`) and `shutter-transition` (bars drop and lift; a fourth choice for Between pages). Tested
+  together on two real pages: the morphing picture flies above the shutter, as intended. Next: a real 3D piece
+  (three); designs for the next most used single-design sections (location's facts, editorial-story, case-study).
+- **Every site has a video now** (2026-10-11): the 14 without one got `clip` (site.mp4, ~12 s) and `fullClip`
+  (full.mp4, top to footer) from `site-clips.mjs`; cards and site pages play them. The six older ones (Fennwood, Hane,
+  Sticky Weather, Hexmint, Brasshand, Slow Atlas) still have only the user's short clip. "A site like this" now breaks
+  a tie by the very same look (with more sites clipped, Halden and another film site tied).
 - **Recording guide: `docs/capture.md`** — how the Library's stills and clips are made and every lesson from making
   them; read it before recording. Its scripts are in `scripts/capture/`.
 - **The Library offers only what is special** (2026-10-10/11, the user): not the basics any AI builder does unasked

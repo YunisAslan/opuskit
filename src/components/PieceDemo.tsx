@@ -3,7 +3,7 @@
 // (or OpusKit's own when shown in the catalog). The same code a Build Package ships.
 
 import type { CSSProperties, ReactNode } from 'react'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, startTransition, useEffect, useRef, useState } from 'react'
 import { AmbientSound } from '@/pieces/AmbientSound'
 import { Grain } from '@/pieces/Grain'
 import { GridPattern } from '@/pieces/GridPattern'
@@ -43,6 +43,15 @@ import { DuoHeadline } from '@/pieces/DuoHeadline'
 import { Stickers } from '@/pieces/Stickers'
 import { SwapButton } from '@/pieces/SwapButton'
 import { Lightbox } from '@/pieces/Lightbox'
+import { ProximityType } from '@/pieces/ProximityType'
+import { PhotoDome } from '@/pieces/PhotoDome'
+import { PixelSwap } from '@/pieces/PixelSwap'
+import { Spotlight } from '@/pieces/Spotlight'
+import { HoverPreview } from '@/pieces/HoverPreview'
+import { RippleImage } from '@/pieces/RippleImage'
+import { PhotoMorph } from '@/pieces/PhotoMorph'
+import { ScrollStory } from '@/pieces/ScrollStory'
+import { SideScroll } from '@/pieces/SideScroll'
 import type { PaletteColors, PieceId } from '@/types/domain'
 import { LinkDemo } from './LinkDemo'
 
@@ -95,6 +104,14 @@ function demo(id: PieceId, c: PaletteColors): ReactNode {
     case 'media-between-text': return <MediaBetweenText before="Made by" after="hand" src={PHOTOS[3].src} alt="" width="7rem" className={`${display} text-5xl`} />
     case 'cut-reveal': return <TextEffect as="p" preset="cut" className={`${display} px-6 text-center text-5xl`}>Made by hand</TextEffect>
     case 'pinned-stage': return <PinnedDemo />
+    case 'side-scroll': return <SideWallDemo />
+    case 'ripple-image': return <RippleImage src={PHOTOS[6].src} alt="" className="size-full" />
+    case 'photo-dome': return <PhotoDome photos={PHOTOS} radius={300} tile={[110, 80]} className="h-full!" />
+    case 'pixel-swap': return <PixelSwap front={PHOTOS[0]} back={PHOTOS[1]} className="aspect-[4/5] w-44" />
+    case 'spotlight': return <Spotlight radius="70px" className="size-full"><img src={PHOTOS[3].src} alt="" className="size-full object-cover" /><p className={`${display} absolute inset-0 grid place-items-center text-5xl text-white`}>After dark</p></Spotlight>
+    case 'hover-preview': return <HoverPreview photos={PHOTOS.slice(0, 4)} className="w-full px-8">{['Shop sign', 'Labels', 'A bakery book', 'Posters'].map((t, i) => <p key={t} className={`${display} flex justify-between border-b border-(--color-border) py-2 text-2xl`}><span>{t}</span><span className={`${utility} text-(--color-muted)`}>{2021 + i}</span></p>)}</HoverPreview>
+    case 'scroll-story': return <StoryDemo />
+    case 'proximity-type': return <ProximityType className={`${display} text-7xl`} from={200} to={900} radius={140}>Halden</ProximityType>
     case 'underline-fill': return <LinkDemo piece="underline-fill" colors={c} />
     case 'parallax-floating': return <ParallaxFloating className="size-full" photos={[{ ...PHOTOS[0], x: '6%', y: '10%', w: '22%', depth: 1.5 }, { ...PHOTOS[4], x: '72%', y: '8%', w: '20%', depth: 0.8 }, { ...PHOTOS[6], x: '10%', y: '62%', w: '18%', depth: 1 }, { ...PHOTOS[2], x: '70%', y: '60%', w: '22%', depth: 2 }]}><p className={`${display} text-3xl`}>Move the cursor</p></ParallaxFloating>
     case 'drag-photos': return <DragPhotos className="size-full" photos={[0, 3, 5, 7].map((k, i) => ({ ...PHOTOS[k], x: `${8 + i * 21}%`, y: `${14 + (i % 2) * 22}%`, w: '26%', rotate: [-5, 3, -2, 6][i] }))} />
@@ -108,7 +125,8 @@ function demo(id: PieceId, c: PaletteColors): ReactNode {
     case 'swap-button': return <SwapButton href="#demo" label="Tell us your story" />
     case 'stickers': return <div className="relative size-full"><p className={`${display} grid h-full place-items-center text-3xl`}>Throw a sticker</p><Stickers stickers={STICKERS.slice(0, 4).map((src, i) => ({ src, alt: '', x: ['6%', '70%', '14%', '74%'][i], y: ['8%', '10%', '58%', '56%'][i], w: '4.5rem', rotate: [-10, 8, 6, -6][i], depth: 0.5 }))} /></div>
     // A small site to click through: the change shows what it answers (a link pressed), not only the sweep.
-    case 'fade-transition': case 'blob-transition': case 'curtain-transition': return <PageChangeDemo kind={id} />
+    case 'photo-morph': return <MorphDemo />
+    case 'fade-transition': case 'blob-transition': case 'curtain-transition': case 'shutter-transition': return <PageChangeDemo kind={id} />
     // A drawn zone, so the change shows: the ordinary arrow outside, the brand's own pointer inside.
     case 'brand-cursor': return <div className="grid size-full place-items-center"><div className="grid h-36 w-60 place-items-center rounded-(--radius-md) border border-dashed border-(--color-border) bg-(--color-surface)" style={{ cursor: `url("${CURSOR}") 3 2, auto` }}><p className="text-sm text-(--color-muted)">Move the cursor here</p></div></div>
     case 'cookie-note': return <div className="relative size-full [&_[role=dialog]]:absolute [&_[role=dialog]]:bottom-3 [&_[role=dialog]]:right-3"><CookieNote text="We use cookies to see which films you watch — nothing else." storageKey="opuskit-demo-cookie" /></div>
@@ -163,6 +181,7 @@ const PAGES = [['Work', 'Signs, labels and books for places that last.'], ['Jour
 const SWEEP = {
   'fade-transition': ['opuskit-fade 0.9s ease-in-out both', 'bg-(--color-background)', '@keyframes opuskit-fade{0%{opacity:0}45%,55%{opacity:1}100%{opacity:0}}'],
   'blob-transition': ['opuskit-blob 1.2s cubic-bezier(.76,0,.24,1) both', 'inset-x-[-20%] top-[30%] h-[140%] rounded-t-[50%] bg-(--color-chapter-1,var(--color-accent))', '@keyframes opuskit-blob{0%{transform:translateY(100%)}45%,55%{transform:translateY(-10%)}100%{transform:translateY(-160%)}}'],
+  'shutter-transition': ['opuskit-shutter 1.1s cubic-bezier(.76,0,.24,1) both', 'bg-[repeating-linear-gradient(90deg,var(--color-text)_0_19%,transparent_19%_20%)]', '@keyframes opuskit-shutter{0%{transform:scaleY(0);transform-origin:bottom}40%{transform:scaleY(1);transform-origin:bottom}60%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(0);transform-origin:top}}'],
   'curtain-transition': ['opuskit-curtain 1.3s cubic-bezier(.76,0,.24,1) both', 'grid place-items-center bg-(--color-text)', '@keyframes opuskit-curtain{0%{transform:translateY(100%)}35%,60%{transform:translateY(0)}95%,100%{transform:translateY(-100%)}}'],
 } as const
 /** Page changes, on a small site: a link pressed sweeps the page over and the next one comes in under it. Until the
@@ -185,6 +204,24 @@ function PageChangeDemo({ kind }: { kind: keyof typeof SWEEP }) {
         {kind === 'curtain-transition' && <p className={`${display} text-5xl text-(--color-background)`}>{PAGES[run.to][0]}</p>}
       </div>}
       <style>{css}</style>
+    </div>
+  )
+}
+
+// A small list and its item page, switched in a transition so React's <ViewTransition> morphs the picture.
+function MorphDemo() {
+  const [open, setOpen] = useState<number | null>(null)
+  const go = (i: number | null) => startTransition(() => setOpen(i))
+  useEffect(() => { const t = setTimeout(() => go(open === null ? 1 : null), 2200); return () => clearTimeout(t) }, [open])
+  if (open !== null) return (
+    <button type="button" onClick={() => go(null)} className="grid size-full grid-cols-[3fr_2fr] items-end gap-4 p-4 text-left">
+      <PhotoMorph name={`demo-${open}`}><img src={PHOTOS[open].src} alt="" className="h-full w-full object-cover" /></PhotoMorph>
+      <span><span className={`${display} block text-3xl`}>Project {open + 1}</span><span className={`${utility} text-(--color-muted)`}>Back</span></span>
+    </button>
+  )
+  return (
+    <div className="grid size-full grid-cols-3 content-center gap-3 p-6">
+      {[0, 1, 2].map((i) => <button key={i} type="button" onClick={() => go(i)}><PhotoMorph name={`demo-${i}`}><img src={PHOTOS[i].src} alt="" className="aspect-[3/4] w-full object-cover" /></PhotoMorph></button>)}
     </div>
   )
 }
@@ -212,6 +249,34 @@ function PinnedDemo() {
       <div className="relative h-36 overflow-hidden">{PHOTOS.slice(0, 4).map((p, k) => <img key={p.src} src={p.src} alt="" className="absolute inset-0 h-full w-full object-cover transition-all duration-500" style={{ opacity: k === i ? 1 : 0, transform: `translateY(${k === i ? 0 : k < i ? -16 : 16}px)` }} />)}</div>
       <div className="flex items-center gap-3 font-(family-name:--font-utility) text-xs text-(--color-muted)"><span className="relative h-px flex-1 bg-(--color-border)"><span className="absolute inset-y-0 left-0 bg-(--color-text) transition-all duration-500" style={{ width: `${((i + 1) / 4) * 100}%` }} /></span><span className="tabular-nums">{i + 1} of 4</span></div>
       <span className="hidden"><PinnedStage steps={[]} /></span>
+    </div>
+  )
+}
+
+// The two scroll pieces pin to the page's own scroll, so in a small stage they are shown by a loop of what they do;
+// the Library's clip records the real one on a page (app/library/demo/[id]).
+function SideWallDemo() {
+  const [i, setI] = useState(0)
+  useEffect(() => { const t = setInterval(() => setI((x) => (x + 1) % 4), 1400); return () => clearInterval(t) }, [])
+  return (
+    <div className="w-full overflow-hidden px-6">
+      <div className="flex gap-3 transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]" style={{ transform: `translateX(-${i * 136}px)` }}>
+        {PHOTOS.slice(0, 7).map((p) => <img key={p.src} src={p.src} alt="" className="h-40 w-32 shrink-0 object-cover" />)}
+      </div>
+      <span className="hidden"><SideScroll>{[]}</SideScroll></span>
+    </div>
+  )
+}
+
+function StoryDemo() {
+  const [i, setI] = useState(0)
+  useEffect(() => { const t = setInterval(() => setI((x) => (x + 1) % 3), 1600); return () => clearInterval(t) }, [])
+  const words = ['The clay', 'The wheel', 'The kiln']
+  return (
+    <div className="grid w-80 grid-cols-2 items-center gap-4">
+      <div className="space-y-3">{words.map((w, k) => <p key={w} className={`${display} text-2xl transition-opacity duration-500`} style={{ opacity: k === i ? 1 : 0.3 }}>{w}</p>)}</div>
+      <div className="relative h-40 overflow-hidden">{PHOTOS.slice(0, 3).map((p, k) => <img key={p.src} src={p.src} alt="" className="absolute inset-0 size-full object-cover transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" style={{ zIndex: k, clipPath: k <= i ? 'inset(0 0 0 0)' : 'inset(100% 0 0 0)' }} />)}</div>
+      <span className="hidden"><ScrollStory chapters={[]} /></span>
     </div>
   )
 }

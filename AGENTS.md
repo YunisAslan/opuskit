@@ -65,9 +65,10 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
   Sources live in `src/pieces/` (type-checked with OpusKit), metadata in `src/data/pieces.ts`; run `npm run pieces` after editing a piece or a section (it bundles both).
   Adapt only from MIT libraries (Motion Primitives, Magic UI, Cult UI, Animata, Componentry, Fancy Components) or depend on
   Apache-2.0 ones (Paper Shaders) — never React Bits, Aceternity or Hover.dev (their terms forbid redistributing
-  components), and nothing that needs GSAP (its free licence excludes Webflow-competing tools). Tokens only
+  components). GSAP is allowed (the user, 2026-10-11: "lisenziyanı boş ver" — 56% of recent Awwwards winners use it;
+  its free licence excludes Webflow-competing tools, a risk the user took). Tokens only
   (`--color-*`, `--font-*`), a reduced-motion version, no import beyond `react`/`motion`/`@paper-design/shaders-react`
-  (plus `lenis`, MIT, in a piece that lists it in `deps` — SmoothScroll).
+  (plus `lenis`, MIT, and `gsap`, in a piece that lists it in `deps`).
 - `npm run check` composes every seed recipe and every adapter and asserts completeness — and distinctiveness: two palettes ≥ 0.06 ΔE_OK apart in ground (or, if closer, clearly different accents), no greyed mid-tone ground, neutral ink, no cream-band or clay-accent clusters, no AI-default fonts, each family in ≤ 2 pairings, no two seeds sharing a palette or pairing. Add to the library only what passes.
 
 ## Example projects

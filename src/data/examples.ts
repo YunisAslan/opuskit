@@ -57,6 +57,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is the owner's film, scroll-controlled: the still is that film's own poster.
     hero: { kind: 'video', src: '/examples/ninth-row/media/heroVideo.mp4', poster: '/examples/ninth-row/media/posterImage.jpg' },
     livePath: '/live/ninth-row',
+    clip: '/examples/ninth-row/media/clips/site.mp4', fullClip: '/examples/ninth-row/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Halden's first screen, Lowfield Nights' Schedule, curtain and Big name footer; You → Direction (Cinema or theatre,
     // decision 54); built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe.
     // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
@@ -89,6 +90,7 @@ export const examples: ExampleProject[] = [
     // the hero still is the site's own first screen until they are in.
     hero: { kind: 'image', src: '/examples/pip-kiln/media/poster.jpg' },
     livePath: '/live/pip-kiln',
+    clip: '/examples/pip-kiln/media/clips/site.mp4', fullClip: '/examples/pip-kiln/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Parts taken from Maison Vey, Sticky Weather and Inkwell & Moth, then You → Direction (Playful Pop, Butter Yellow),
     // built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
     // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
@@ -121,6 +123,7 @@ export const examples: ExampleProject[] = [
     // the hero still is the site's own first screen until they are in.
     hero: { kind: 'image', src: '/examples/kelp-line/media/poster.jpg' },
     livePath: '/live/kelp-line',
+    clip: '/examples/kelp-line/media/clips/site.mp4', fullClip: '/examples/kelp-line/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Parts taken from Kür Delta Watch, Lowfield Nights and Velmira, then You → Direction (Coastal Calm, Bottle Green),
     // built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
     choices: [
@@ -150,6 +153,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is type, not media: the hero still is the site's own first screen.
     hero: { kind: 'image', src: '/examples/raster-school/media/poster.jpg' },
     livePath: '/live/raster-school',
+    clip: '/examples/raster-school/media/clips/site.mp4', fullClip: '/examples/raster-school/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Parts taken from Night Shift, Sela Mor and Brasshand, then You → Direction (Swiss Modern, the first still site),
     // built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
     choices: [
@@ -179,6 +183,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is a photo with depth: the still is that photo itself.
     hero: { kind: 'image', src: '/examples/pale-hour/media/hero.jpg' },
     livePath: '/live/pale-hour',
+    clip: '/examples/pale-hour/media/clips/site.mp4', fullClip: '/examples/pale-hour/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Parts taken from Sela Mor, Fieldhouse and Slow Atlas, then You → Direction (Gallery or museum, decision 46), built
     // by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
     // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
@@ -210,6 +215,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is a photo with depth: the still is that photo itself.
     hero: { kind: 'image', src: '/examples/low-hum/media/hero.jpg' },
     livePath: '/live/low-hum',
+    clip: '/examples/low-hum/media/clips/site.mp4', fullClip: '/examples/low-hum/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // The first site made through You → Direction (no Pages screen), parts taken from Fennwood, Lowfield Nights and
     // Inkwell & Moth, then built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe.
     choices: [
@@ -239,6 +245,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is a scroll-scrubbed film over a sea of fog: the still is that film's own poster.
     hero: { kind: 'video', src: '/examples/halden/media/heroVideo.mp4', poster: '/examples/halden/media/posterImage.jpg' },
     livePath: '/live/halden',
+    clip: '/examples/halden/media/clips/site.mp4', fullClip: '/examples/halden/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the Library (blank start), then built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe.
     // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
     sectionClips: { hero: '/examples/halden/media/clips/hero.mp4' },
@@ -269,6 +276,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is a product photo: the still is that photo itself.
     hero: { kind: 'image', src: '/examples/maison-vey/media/hero.jpg' },
     livePath: '/live/maison-vey',
+    clip: '/examples/maison-vey/media/clips/site.mp4', fullClip: '/examples/maison-vey/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the Library (blank start), then built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe.
     // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
     sectionStills: { 'product-grid': '/examples/maison-vey/media/stills/product-grid.jpg', collection: '/examples/maison-vey/media/stills/collection.jpg' },
@@ -299,6 +307,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is a full-bleed photo: the still is that photo itself.
     hero: { kind: 'image', src: '/examples/fieldhouse/media/hero.jpg' },
     livePath: '/live/fieldhouse',
+    clip: '/examples/fieldhouse/media/clips/site.mp4', fullClip: '/examples/fieldhouse/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the Library (blank start), then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
     sectionClips: { hero: '/examples/fieldhouse/media/clips/hero.mp4' },
@@ -330,6 +339,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is an editorial photo: the still is that photo itself.
     hero: { kind: 'image', src: '/examples/qum/media/hero.jpg' },
     livePath: '/live/qum',
+    clip: '/examples/qum/media/clips/site.mp4', fullClip: '/examples/qum/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'E-commerce' },
@@ -358,6 +368,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is a scroll-scrubbed walk through the show house: the still is that film's own poster.
     hero: { kind: 'video', src: '/examples/aster-house/media/heroVideo.mp4', poster: '/examples/aster-house/media/posterImage.jpg' },
     livePath: '/live/aster-house',
+    clip: '/examples/aster-house/media/clips/site.mp4', fullClip: '/examples/aster-house/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Real estate' },
@@ -385,6 +396,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is a 3D grading console built in code: the hero still is the poster rendered from that scene.
     hero: { kind: 'image', src: '/examples/night-shift/media/console-poster.jpg' },
     livePath: '/live/night-shift',
+    clip: '/examples/night-shift/media/clips/site.mp4', fullClip: '/examples/night-shift/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Course / education' },
@@ -446,6 +458,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is type; the river film is a band mid-page, not the hero — the still is the site's own poster of it.
     hero: { kind: 'image', src: '/examples/kur-delta-watch/media/posterImage.jpg' },
     livePath: '/live/kur-delta-watch',
+    clip: '/examples/kur-delta-watch/media/clips/site.mp4', fullClip: '/examples/kur-delta-watch/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Nonprofit / cause' },
@@ -473,6 +486,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is a drawing made in code: the hero still is the site's own first screen, after the tracing paper.
     hero: { kind: 'image', src: '/examples/inkwell-moth/media/poster.jpg' },
     livePath: '/live/inkwell-moth',
+    clip: '/examples/inkwell-moth/media/clips/site.mp4', fullClip: '/examples/inkwell-moth/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     // The Library's own capture of its first screen (scripts/capture/site-clips.mjs).
     sectionClips: { hero: '/examples/inkwell-moth/media/clips/hero.mp4' },

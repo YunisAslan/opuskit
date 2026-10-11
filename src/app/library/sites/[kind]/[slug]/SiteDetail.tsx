@@ -41,7 +41,7 @@ export function SiteDetail({ site }: { site: SiteRef }) {
           <p className="mt-4 text-sm text-muted">{directions[spec.direction].name} · {recipe.visualSystem.palette.name} · {look.type.name} · {motionLevels[spec.motion].name} motion</p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <LikeButton site={site} label="I like this site" />
-            {e && <a href={e.livePath} target="_blank" rel="noreferrer" className="btn btn-line btn-sm inline-flex items-center gap-1.5"><ExternalLink size={14} aria-hidden />Visit the live site</a>}
+            {e && <a href={e.livePath} target="_blank" rel="noreferrer" className="btn btn-line transition-[background-color,color,scale] duration-[140ms] ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]"><ExternalLink size={14} aria-hidden />Visit the live site</a>}
           </div>
         </div>
         {/* The whole landing page, recorded top to footer, where there is one; else the site's thumbnail. */}

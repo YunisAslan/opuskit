@@ -1,5 +1,7 @@
 import { recipeSections as S, recipeToMarkdown } from '@/features/recipes/markdown'
-import { blockSource, heroSource, pieceSource } from '@/data/pieces-source.generated'
+import { blockSource, heroSource, ideaSource, pieceSource } from '@/data/pieces-source.generated'
+import { IDEA_BY_ID } from '@/data/site-ideas'
+import { examples } from '@/data/examples'
 import type { BuildFile, BuildPackageAdapter, BuildTarget, UniversalRecipe } from '@/types/domain'
 import { claudeCodeAdapter } from './claude-code'
 import { cursorAdapter } from './cursor'
@@ -47,17 +49,38 @@ export function kitFiles(r: UniversalRecipe): BuildFile[] {
   ]
 }
 
+// Ideas taken from built sites (src/data/site-ideas.ts): IDEAS.md says what each is and where it goes, and the site's
+// own code comes along as a reference — the idea to make again in this site's look and words, never its text or names.
+export function ideaFiles(r: UniversalRecipe): BuildFile[] {
+  const ideas = (r.metadata.spec.taken ?? []).filter((t) => t.kind === 'idea').map((t) => IDEA_BY_ID.get(t.id)).filter((x) => !!x)
+  if (!ideas.length) return []
+  const siteName = (slug: string) => examples.find((e) => e.slug === slug)?.title.split(/ [—|:] |, /)[0] ?? slug
+  const doc = `# Ideas taken from built sites
+
+The owner took these from sites in the OpusKit Library. Each is one site's own invention: make the same idea for this
+site — its own look, words, colours and content — as one of its remembered moments. The code beside it is that site's,
+a reference for how it works (structure, timing, phones, reduced motion); never copy its words, names, colours or images.
+
+${ideas.map((x) => `## ${x.name}
+
+From ${siteName(x.site)} (${x.page}). ${x.line}
+
+Reference: \`reference/ideas/${x.id}.tsx\`. Put it where it does the same job here; if this site has no such page, on the page closest to it.
+`).join('\n')}`
+  return [{ path: 'IDEAS.md', content: doc }, ...ideas.map((x) => ({ path: `reference/ideas/${x.id}.tsx`, content: ideaSource[x.id] }))]
+}
+
 // Every package whose recipe needs a video also gets scripts/prepare-video.sh — added here once, for every tool.
 const withVideoScript = (a: BuildPackageAdapter): BuildPackageAdapter => ({
   ...a,
   async generate(r) {
     const pkg0 = await a.generate(r)
-    const kit = kitFiles(r)
+    const kit = [...kitFiles(r), ...ideaFiles(r)]
     const secCount = kit.filter((f) => f.path.startsWith('src/components/sections/')).length
     // opuskit.json: the exact recipe spec, so a site built from this package can be opened in the studio again as it is.
     const spec = { ...r.metadata.spec, uploads: r.metadata.spec.uploads?.map(({ fileId: _, ...u }) => u) }
     pkg0.files.push({ path: 'opuskit.json', content: JSON.stringify({ opuskit: 1, recipe: r.id, note: 'The OpusKit recipe this site was built from. Keep it: OpusKit reads it to open the site in the studio.', spec }, null, 2) + '\n' })
-    const pkg = kit.length ? { ...pkg0, files: [...pkg0.files, ...kit], instructions: `${pkg0.instructions}${secCount ? `\nReady sections: ${secCount} section component${secCount > 1 ? 's' : ''} in src/components/sections/ — the design of each part to start from: pass real copy and media as props, and fit each into the site.` : ''}${r.pieces.length ? `\nYour kit: ${r.pieces.length} ready component${r.pieces.length > 1 ? 's' : ''} in src/components/pieces/ (${r.pieces.map((p) => p.exportName).join(', ')}) — build on them, fitted to the site${r.pieces.some((p) => p.deps.length) ? `; run npm i ${[...new Set(r.pieces.flatMap((p) => p.deps))].join(' ')}` : ''}.` : ''}` } : pkg0
+    const pkg = kit.length ? { ...pkg0, files: [...pkg0.files, ...kit], instructions: `${pkg0.instructions}${secCount ? `\nReady sections: ${secCount} section component${secCount > 1 ? 's' : ''} in src/components/sections/ — the design of each part to start from: pass real copy and media as props, and fit each into the site.` : ''}${r.pieces.length ? `\nYour kit: ${r.pieces.length} ready component${r.pieces.length > 1 ? 's' : ''} in src/components/pieces/ (${r.pieces.map((p) => p.exportName).join(', ')}) — build on them, fitted to the site${r.pieces.some((p) => p.deps.length) ? `; run npm i ${[...new Set(r.pieces.flatMap((p) => p.deps))].join(' ')}` : ''}.` : ''}${kit.some((f) => f.path === 'IDEAS.md') ? '\nIdeas taken from built sites: IDEAS.md — make each one for this site, in its own look and words (their code is in reference/ideas/, a reference only).' : ''}` } : pkg0
     if (!needsVideo(r)) return pkg
     return {
       ...pkg,

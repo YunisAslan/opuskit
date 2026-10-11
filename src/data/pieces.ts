@@ -1,7 +1,7 @@
 // Pieces — the kit. Ready components users collect ("add to my kit") and every Build Package then ships as real code
 // in src/components/pieces/. Each one is adapted from an MIT-licensed library (never React Bits, Aceternity or Hover.dev,
 // whose terms forbid redistributing their components), restyled to the recipe tokens (--color-*, --font-*), with a
-// reduced-motion version and no dependency beyond `motion` (Paper Shaders and Lenis where a piece lists them). The source files live in src/pieces/ and are type-checked with OpusKit.
+// reduced-motion version and no dependency beyond `motion` (Paper Shaders, Lenis or GSAP where a piece lists them). The source files live in src/pieces/ and are type-checked with OpusKit.
 
 import type { BehaviourId, MotionLevel, Piece, PieceId, PieceSlot } from '@/types/domain'
 
@@ -18,6 +18,7 @@ const MOVING: MotionLevel[] = ['subtle', 'dynamic', 'immersive']
 const LIVELY: MotionLevel[] = ['dynamic', 'immersive']
 const ALL: MotionLevel[] = ['still', 'subtle', 'dynamic', 'immersive']
 const M = ['motion']
+const G = ['gsap']
 
 
 export const pieces: Record<PieceId, Piece> = {
@@ -321,6 +322,69 @@ export const pieces: Record<PieceId, Piece> = {
     usage: 'const [open, setOpen] = useState<number | null>(null)\n// each photo: <button onClick={() => setOpen(i)}>…</button>\n<Lightbox photos={photos} index={open} onIndex={setOpen} />',
     rules: ['Every photo opens from a real <button> with the photo’s caption or alt as its name.', 'Captions travel with the photo into the viewer.'],
   },
+  // From the Awwwards study (docs/research/awwwards/01-winners.md): scroll-told stories, sideways walls and type that
+  // answers the pointer are what winners do most that OpusKit had only in words. GSAP where it pins and scrubs best.
+  'side-scroll': {
+    id: 'side-scroll', name: 'A wall of pictures you walk past', line: 'The section holds still while scrolling down moves its row of pictures sideways, then the page carries on.', slot: 'photos', source: OK,
+    file: 'SideScroll.tsx', exportName: 'SideScroll', deps: G, levels: LIVELY, heavy: true, sections: ['gallery', 'lookbook', 'featured-work', 'collection'],
+    usage: '<SideScroll label="Rooms">\n  {rooms.map((r) => <figure key={r.src} className="w-[60vw] md:w-[42vw]"><img src={r.src} alt={r.alt} className="aspect-[4/3] w-full object-cover" /><figcaption>{r.name}</figcaption></figure>)}\n</SideScroll>',
+    rules: ['4–10 items of one height, widths from their own pictures; a caption under each.', 'Once per page — it is the page’s walk, not a carousel.', 'Phones and reduced motion get the swipe row it already has; never pin there.'],
+  },
+  'scroll-story': {
+    id: 'scroll-story', name: 'A story told beside one held picture', line: 'Chapters scroll by on one side; the picture beside them stays, and each chapter’s picture wipes up over the last as it arrives.', slot: 'scroll', source: OK,
+    file: 'ScrollStory.tsx', exportName: 'ScrollStory', deps: G, levels: LIVELY, sections: ['editorial-story', 'about', 'process', 'how-it-works', 'chapters', 'case-study', 'product-highlight'],
+    usage: '<ScrollStory chapters={[\n  { src: "/media/clay.jpg", alt: "Wet clay on the wheel", body: <><h3>The clay</h3><p>…</p></> },\n  …\n]} />',
+    rules: ['3–6 chapters, each a heading and 1–3 sentences — a story with an order, not a list of features.', 'One picture per chapter, all in one grade, each showing that chapter’s moment.', 'Once on the site.'],
+  },
+  'proximity-type': {
+    id: 'proximity-type', name: 'Letters that swell near the pointer', line: 'In a word set large, the letters nearest the pointer grow heavy and the rest stay light.', slot: 'pointer', source: OK,
+    file: 'ProximityType.tsx', exportName: 'ProximityType', deps: [], levels: MOVING, sections: ['hero', 'footer', 'contact-cta', 'manifesto'],
+    usage: '<ProximityType as="h1" from={300} to={900} className="font-(family-name:--font-display) text-[18vw] leading-none">Halden</ProximityType>',
+    rules: ['Only with a display face that has a weight axis (a variable Google Font), loaded with its whole weight range.', 'One word or the brand name, set huge; once on the site.', 'Touch and reduced motion keep the resting weight — the word must read well at it.'],
+  },
+  // Batch 2 (2026-10-11): moments the engine described only in words, now ready code.
+  'photo-dome': {
+    id: 'photo-dome', name: 'A dome of photos to turn', line: 'Visitors look into a sphere of photos and drag to turn it; a click opens one large.', slot: 'photos', source: OK,
+    file: 'PhotoDome.tsx', exportName: 'PhotoDome', deps: [], levels: LIVELY, heavy: true, sections: ['gallery', 'collection', 'featured-work'],
+    usage: '<PhotoDome photos={photos} className="h-[85svh]" />',
+    rules: ['12+ photos of one grade; they repeat round the dome.', 'Give it most of a screen and a one-line hint (“Drag to look around”) in the utility face.', 'Once on the site.'],
+  },
+  'pixel-swap': {
+    id: 'pixel-swap', name: 'Photos that dissolve in pixels', line: 'On hover a photo breaks into blocks that clear onto a second photo.', slot: 'pointer', source: OK,
+    file: 'PixelSwap.tsx', exportName: 'PixelSwap', deps: [], levels: LIVELY, sections: ['featured-work', 'gallery', 'collection', 'product-grid'],
+    usage: '<PixelSwap front={{ src: p.cover, alt: p.title }} back={{ src: p.detail, alt: `${p.title}, detail` }} className="aspect-[4/5]" />',
+    rules: ['Two real photos of the same thing (the whole and a detail, before and after) — never a random second picture.', 'On one grid of thumbnails; the rest of the site stays smooth.'],
+  },
+  spotlight: {
+    id: 'spotlight', name: 'A flashlight over a dark scene', line: 'The section lies almost dark; the pointer lights a soft circle that shows what is beneath.', slot: 'pointer', source: OK,
+    file: 'Spotlight.tsx', exportName: 'Spotlight', deps: [], levels: LIVELY, sections: ['hero', 'manifesto', 'contact-cta'],
+    usage: '<Spotlight className="h-svh">\n  <img src="/media/hero.jpg" alt="…" className="size-full object-cover" />\n  <h1 className="absolute …">…</h1>\n</Spotlight>',
+    rules: ['Only on a dark site or a dark section; the unlit part keeps a hint of the scene.', 'The words that matter are readable in the light’s first place (the middle) — never only findable by searching.'],
+  },
+  'hover-preview': {
+    id: 'hover-preview', name: 'A list that shows its photo at the pointer', line: 'A clean list of names; hovering one brings its photo beside the pointer.', slot: 'photos', source: OK,
+    file: 'HoverPreview.tsx', exportName: 'HoverPreview', deps: [], levels: ALL, sections: ['featured-work', 'collection', 'product-grid', 'journal', 'menu'],
+    usage: '<HoverPreview photos={projects.map((p) => ({ src: p.cover, alt: p.title }))}>\n  {projects.map((p) => <Link key={p.slug} href={`/work/${p.slug}`} className="flex justify-between border-b py-5 text-4xl"><span>{p.title}</span><span>{p.year}</span></Link>)}\n</HoverPreview>',
+    rules: ['Rows are set large in the display face, with one fact each (year, price, place).', 'Every row is a real link or line on its own; the photo only adds.'],
+  },
+  'ripple-image': {
+    id: 'ripple-image', name: 'A photo that ripples under the pointer', line: 'Moving across a photo sends rings through it with a faint colour split, settling within a second.', slot: 'pointer', source: OK,
+    file: 'RippleImage.tsx', exportName: 'RippleImage', deps: [], levels: LIVELY, sections: ['hero', 'featured-work', 'gallery', 'product-highlight', 'about'],
+    usage: '<RippleImage src="/media/hero.jpg" alt="…" className="h-svh w-full" />',
+    rules: ['On one or two large photos — the first screen or a lead project — never on every thumbnail.', 'Photos with texture and light (water, fabric, skin, sky) carry it best; flat graphics do not.'],
+  },
+  'photo-morph': {
+    id: 'photo-morph', name: 'A picture that becomes the next page', line: 'The clicked thumbnail grows into the large picture of the page it opens, and shrinks back on Back.', slot: 'open', source: OK,
+    file: 'PhotoMorph.tsx', exportName: 'PhotoMorph', deps: [], levels: MOVING, sections: ['featured-work', 'collection', 'product-grid', 'journal', 'gallery'],
+    usage: '// the list:  <Link href={`/work/${p.slug}`}><PhotoMorph name={p.slug}><img src={p.cover} alt={p.title} /></PhotoMorph></Link>\n// the page:  <PhotoMorph name={p.slug}><img src={p.cover} alt={p.title} className="aspect-[3/2] w-full object-cover" /></PhotoMorph>',
+    rules: ['The same picture on both pages, wrapped with the same name; each name once per page.', 'Works with any page transition the site has; keep the transition’s cover off the picture (it should be seen moving).', 'Prefetched pages morph; a page that shows a loading state first simply fades in.'],
+  },
+  'shutter-transition': {
+    id: 'shutter-transition', name: 'Shutter between pages', line: 'Vertical bars drop over the page one after another, then lift away onto the next page.', slot: 'site', source: OK,
+    file: 'PageShutter.tsx', exportName: 'PageShutter', deps: M, levels: MOVING, sections: [],
+    usage: '// app/layout.tsx, inside <body>:\n<PageShutter bars={5} />',
+    rules: ['Mount once in the root layout; it handles every internal link.', 'Under 800 ms in all; 4–7 bars, in the ink colour or the accent.'],
+  },
 }
 
 export const MAX_HEAVY_PIECES = 2
@@ -331,7 +395,7 @@ export const behaviours: Record<BehaviourId, { name: string; line: string; ids: 
   headlines: { name: 'Headlines', line: 'How every big heading arrives', ids: ['text-effect', 'cut-reveal', 'duo-headline'], many: false, none: 'Headings simply appear' },
   links: { name: 'Links', line: 'What menu, footer and text links do on hover', ids: ['text-roll', 'scribble-link', 'wavy-link', 'underline-fill', 'text-scramble', 'hover-highlight'], many: false, none: 'A plain underline on hover' },
   buttons: { name: 'Main button', line: 'How the main action of each page responds', ids: ['magnetic', 'swap-button'], many: false, none: 'The button just changes colour' },
-  transitions: { name: 'Between pages', line: 'What happens when visitors go to another page', ids: ['fade-transition', 'curtain-transition', 'blob-transition'], many: false, none: 'The next page simply appears' },
+  transitions: { name: 'Between pages', line: 'What happens when visitors go to another page', ids: ['fade-transition', 'curtain-transition', 'blob-transition', 'shutter-transition'], many: false, none: 'The next page simply appears' },
   site: { name: 'Whole site', line: 'Extras across every page — pick any', ids: ['entry-gate', 'preloader', 'smooth-scroll', 'ambient-sound', 'brand-cursor', 'cookie-note', 'scroll-progress', 'grain'], many: true },
 }
 export const behaviourOf = (id: PieceId): BehaviourId | undefined => (Object.keys(behaviours) as BehaviourId[]).find((b) => behaviours[b].ids.includes(id))

@@ -108,7 +108,7 @@ function placePieces(spec: RecipeSpec, pages: PageBlueprint[], signatures: Signa
 }
 
 /** Keeps a spec coherent after any change (kit or Remix). Only dependent decisions move. */
-const TAKEN_KINDS = ['site', 'like', 'section', 'hero', 'menu', 'footer', 'effect']
+const TAKEN_KINDS = ['site', 'like', 'section', 'hero', 'menu', 'footer', 'effect', 'idea']
 export const cleanTaken = (x: unknown): TakenPart[] | undefined => {
   const t = Array.isArray(x) ? x.filter((i): i is TakenPart => !!i && typeof i.site === 'string' && /^(example|seed):[a-z0-9-]{1,60}$/.test(i.site) && TAKEN_KINDS.includes(i.kind) && typeof i.id === 'string') : []
   return t.length ? t : undefined
@@ -669,13 +669,13 @@ const PURPOSE_PALETTES: Partial<Record<PurposeId, PaletteId[]>> = {
   restaurant: ['limestone', 'warm-black', 'espresso', 'olive-grove', 'oxblood-room', 'apricot-hall'],
   hotel: ['limestone', 'warm-black', 'espresso', 'olive-grove', 'oxblood-room'],
   'real-estate': ['signal-white', 'limestone', 'gallery-grey', 'warm-black'],
-  fashion: ['black-box', 'signal-white', 'paper-cobalt', 'bubblegum', 'grape-soda'],
+  fashion: ['black-box', 'white-box', 'signal-white', 'paper-cobalt', 'bubblegum', 'grape-soda'],
   ecommerce: ['signal-white', 'paper-cobalt', 'limestone', 'black-box'],
   saas: ['paper-cobalt', 'wet-concrete', 'console-lilac', 'night-market'],
   product: ['paper-cobalt', 'wet-concrete', 'console-lilac', 'night-market'],
-  studio: ['charcoal-signal', 'gallery-grey', 'black-box', 'klein-field', 'grape-soda'],
-  agency: ['charcoal-signal', 'gallery-grey', 'black-box', 'klein-field', 'grape-soda'],
-  portfolio: ['charcoal-signal', 'gallery-grey', 'black-box', 'klein-field', 'grape-soda'],
+  studio: ['charcoal-signal', 'gallery-grey', 'white-box', 'black-box', 'klein-field', 'grape-soda'],
+  agency: ['charcoal-signal', 'gallery-grey', 'white-box', 'black-box', 'klein-field', 'grape-soda'],
+  portfolio: ['charcoal-signal', 'gallery-grey', 'white-box', 'black-box', 'klein-field', 'grape-soda'],
   event: ['black-box', 'charcoal-signal', 'grading-suite', 'midnight-chapters', 'hazard-yellow'],
   nonprofit: ['sage-white', 'signal-white', 'paper-cobalt', 'mint-fresh'],
   clinic: ['sage-white', 'signal-white', 'paper-cobalt', 'mint-fresh'],
@@ -1012,6 +1012,7 @@ function packageDeps(techs: MotionPattern['tech'][], kit: RecipePiece[], heroId:
   const deps: { name: string; why: string }[] = []
   if (techs.includes('motion') || kit.some((k) => k.deps.includes('motion')) || heroBlocks[heroId]) deps.push({ name: 'motion', why: kit.length ? 'Viewport reveals, hover and layout animations — and the kit pieces in src/components/pieces/' : 'Viewport reveals, hover and layout animations in React' })
   if (kit.some((k) => k.deps.includes('@paper-design/shaders-react'))) deps.push({ name: '@paper-design/shaders-react', why: 'GPU backgrounds used by your kit (Apache-2.0)' })
+  if (kit.some((k) => k.deps.includes('gsap'))) deps.push({ name: 'gsap', why: `Pins and scrubs ${kit.filter((k) => k.deps.includes('gsap')).map((k) => `“${k.name}”`).join(' and ')} (ScrollTrigger; GSAP’s own standard licence)` })
   if (kit.some((k) => k.deps.includes('lenis'))) deps.push({ name: 'lenis', why: 'Smooth scroll for the SmoothScroll kit piece (MIT; mouse and trackpad only)' })
   else if (techs.includes('lenis')) deps.push({ name: 'lenis', why: 'Smooth scroll on desktop; Motion useScroll reads the scroll it keeps' })
   if (techs.includes('three')) deps.push({ name: 'three', why: 'WebGL renderer' }, { name: '@react-three/fiber', why: 'Declarative Three.js in React' }, { name: '@react-three/drei', why: 'Loaders, controls and helpers (useGLTF, Environment)' })

@@ -117,8 +117,18 @@ export const saltQa = (r: UniversalRecipe) =>
 export const craftBrief = (r: UniversalRecipe) =>
   `Feel: every pressable scales to 0.97 while pressed (140ms, cubic-bezier(0.23, 1, 0.32, 1)); hover only where a pointer can hover; nothing enters from scale(0) or with ease-in; menus, popovers and dialogs ≤ 300ms, popovers out of their trigger; reduced motion is gentler, not gone. Phones: first screens 100svh, fields ≥ 16px, zoom never disabled. Seasoning, salt not sauce: pictures fade into reserved space, the site's few micro-interactions (${MICRO[r.metadata.familyIds[0]]}) everywhere the same, parallax ${PARALLAX_SHORT[r.motion.level.id]}. Full guide: interaction-craft.md.`
 
+// What the Awwwards jury marks — usability is where its winners score lowest (docs/research/awwwards/01-winners.md);
+// these lines make it OpusKit's edge. In every package: the verification list and the interaction-craft guide.
+export const JURY_QA = [
+  '404: the site has its own not-found page (app/not-found) and it is one of the site’s remembered moments — the site’s voice and look at full strength, one small surprise from the brand, and the two ways on most people want (home and the main action). Award sites design theirs.',
+  'Semantics and meta: header, nav, main and footer landmarks; buttons are buttons and links are links; every image has alt (alt="" when it only decorates); every page has its own title, description and Open Graph image, the html has its lang, the site its favicon.',
+  'Keyboard and focus: everything works by keyboard in reading order with a visible focus; a skip link to the content; a menu, sheet or dialog traps focus while open and returns it on close; anything that moves or plays on its own can be paused.',
+  'Speed: the first screen’s picture or poster loads first (priority / fetchpriority=high), everything below loads lazily; every image has its size, so nothing jumps as it loads; fonts load with display swap; films, 3D and loops pause off screen and in a hidden tab.',
+]
+
 /** Definition-of-done lines, in every package's verification list. */
 export const CRAFT_QA = [
+  ...JURY_QA,
   'Feel: every button, link card and tappable tile answers the press (:active scale 0.97, --duration-press, --ease-out — or the look’s own press) and shows the pointer cursor (disabled: not-allowed), and hover effects wait for a pointer that can hover: on a phone nothing stays hovered.',
   'Letters whole: no headline, label or masked line cuts a descender or an accent (g, y, p, j, Å) — check every line reveal, cut-out headline and rolling link in the display face at desktop and 390px.',
   'Motion ingredients: no `transition: all`; nothing enters from scale(0); no ease-in on anything that enters, exits or answers; menus, popovers and dialogs take ≤ 300ms on the tokens.css curves; popovers grow out of their trigger, dialogs from the centre; an exit leaves the way it came, never slower; scroll reveals play once.',
@@ -223,6 +233,9 @@ Look at 320px, 390px and 1440px, and at 200% browser zoom.
 | A heading split mid-word | \`overflow-wrap: anywhere\`, never \`break-all\`; \`text-wrap: balance\` on headings |
 
 Wrap, truncate or clamp — per field: names and titles wrap (two lines is fine); secondary details truncate at the end with the full text reachable; card previews use \`line-clamp\`; prices, dates and anything compared are never cut.
+
+## What the jury looks for
+${JURY_QA.map((l) => `- ${l}`).join('\n')}
 
 ## Before a part is done
 - Play each animation 3–5× slower (DevTools → Animations): it grows from the right place, its properties move together, no two states show at once.

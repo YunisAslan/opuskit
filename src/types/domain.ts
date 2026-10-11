@@ -32,7 +32,7 @@ export type LayoutId = 'balanced' | 'editorial' | 'asymmetric' | 'grid' | 'full-
 export type PaletteId =
   | 'apricot-hall' | 'yerba-leaf' | 'console-lilac' | 'limestone' | 'graphite-sand' | 'olive-grove' | 'lido-blue' | 'bubblegum' | 'mulberry' | 'mustard' | 'midnight-chapters'
   | 'signal-white' | 'wet-concrete' | 'legal-pad' | 'pink-plaster' | 'klein-field'
-  | 'hazard-yellow' | 'bottle-green' | 'night-ink' | 'plum-velvet' | 'oxblood-room' | 'black-box'
+  | 'hazard-yellow' | 'bottle-green' | 'night-ink' | 'plum-velvet' | 'oxblood-room' | 'black-box' | 'white-box'
   | 'grading-suite' | 'espresso' | 'lavender-haze' | 'cherry-red' | 'mint-fresh' | 'chrome-silver' | 'electric-lime'
   | 'butter-cup' | 'cobalt-sky' | 'studio-aqua'
   | 'neon-sunset' | 'night-market' | 'arcade'
@@ -305,7 +305,7 @@ export type PieceId =
   | 'grid-pattern' | 'grain' | 'magnet-lines' | 'video-dialog'
   | 'media-between-text' | 'parallax-floating' | 'cut-reveal' | 'underline-fill' | 'drag-photos' | 'text-along-path' | 'shader-grain' | 'shader-dither'
   | 'duo-headline' | 'scribble-link' | 'wavy-link' | 'swap-button' | 'stickers' | 'blob-transition' | 'brand-cursor' | 'cookie-note'
-  | 'curtain-transition' | 'preloader' | 'smooth-scroll' | 'ambient-sound' | 'fade-transition' | 'entry-gate' | 'chapter-colours' | 'lightbox' | 'pinned-stage'
+  | 'curtain-transition' | 'preloader' | 'smooth-scroll' | 'ambient-sound' | 'fade-transition' | 'entry-gate' | 'chapter-colours' | 'lightbox' | 'pinned-stage' | 'side-scroll' | 'scroll-story' | 'proximity-type' | 'photo-dome' | 'pixel-swap' | 'spotlight' | 'hover-preview' | 'ripple-image' | 'photo-morph' | 'shutter-transition'
 /** Where a piece lives on the page. A kit holds at most one piece per slot, so the site keeps one voice. */
 /** 'site' pieces work across the whole site (page transition, cursor, cookie notice) and are chosen in the Design step. */
 export type PieceSlot = 'headline' | 'label' | 'statement' | 'numbers' | 'photos' | 'scroll' | 'pointer' | 'background' | 'video' | 'button' | 'decor' | 'open' | 'site'
@@ -327,9 +327,10 @@ export type Piece = {
  * Unset choices fall back to the chosen look's tested defaults. planToSpec (features/studio/plan.ts) turns it into a RecipeSpec.
  */
 /** One thing taken from a site in the Library (decision 45): its whole look (`site`), one quality (`like`, id = the
- *  trait), a part (`section`, `menu`, `footer`), a first screen (`hero`) or an effect. Kept on the recipe, so it still
+ *  trait), a part (`section`, `menu`, `footer`), a first screen (`hero`), an effect or a site's own idea (`idea`,
+ *  src/data/site-ideas.ts — the package ships its code as a reference). Kept on the recipe, so it still
  *  says where each pick came from once the Collection is emptied. */
-export type TakenPart = { site: string; kind: 'site' | 'like' | 'section' | 'hero' | 'menu' | 'footer' | 'effect'; id: string }
+export type TakenPart = { site: string; kind: 'site' | 'like' | 'section' | 'hero' | 'menu' | 'footer' | 'effect' | 'idea'; id: string }
 
 export type StudioPlan = {
   name?: string

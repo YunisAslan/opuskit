@@ -316,6 +316,7 @@ export const imagePresentations: Record<ImagePresentationId, ImagePresentation> 
     composition: 'Full-width list of titles in the display face with year/category in the utility face; the photo appears in a fixed-size frame (4:5) that follows the cursor or sits in a side column.',
     behavior: 'Photo fades and scales in (200–300 ms) on hover/focus, follows the pointer with light lag; keyboard focus shows it too.',
     responsive: 'Touch has no hover: show each photo as a small thumbnail at the start of its row.',
+    piece: 'hover-preview',
     components: [{ name: 'Codrops — hover reveal demos', url: 'https://tympanus.net/codrops/?s=hover+reveal' }], resources: ['codrops'],
   },
   // ── moving ──
@@ -324,6 +325,7 @@ export const imagePresentations: Record<ImagePresentationId, ImagePresentation> 
     composition: 'One row of large photos at a shared height (60–70 vh), native widths, generous gutters; a caption under each in the utility face — no running count.',
     behavior: 'Desktop: pinned section, vertical scroll translates the row horizontally (sticky frame + Motion useScroll → useTransform on x, or CSS scroll-driven animation). Reduced motion: native horizontal scroll with snap.',
     responsive: 'Mobile: native swipe carousel with scroll-snap — no pinning.',
+    piece: 'side-scroll',
     components: [], resources: ['motion'],
   },
   'swipe-carousel': {
@@ -384,6 +386,7 @@ export const imagePresentations: Record<ImagePresentationId, ImagePresentation> 
     composition: 'Photos mapped on the inside of a sphere, uniform tile size, background in the palette ground.',
     behavior: 'Drag rotates the dome with inertia; clicking a photo flies it forward into a focused view.',
     responsive: 'Touch drag works; smaller tile count on mobile; reduced motion = masonry gallery.',
+    piece: 'photo-dome',
     components: [], resources: [],
   },
   'liquid-glass': {
@@ -547,7 +550,7 @@ export const GENERIC_TELLS = [
 // the engine picks 2–4 per recipe that fit its sections, motion level and style — never more than one per section.
 export const signaturePatterns: SignaturePattern[] = [
   {
-    id: 'hover-preview-list', name: 'List with a floating preview', sections: ['product-grid', 'collection', 'featured-work', 'journal', 'menu'],
+    id: 'hover-preview-list', piece: 'hover-preview', name: 'List with a floating preview', sections: ['product-grid', 'collection', 'featured-work', 'journal', 'menu'],
     levels: ['still', 'subtle', 'dynamic', 'immersive'], fits: ['ecommerce', 'fashion', 'portfolio', 'agency', 'studio', 'restaurant', 'editorial', 'minimal', 'raw', 'swiss'],
     experience: 'Items are a clean typographic list (name, price or year). Hovering a row makes its photo appear beside the cursor and follow it smoothly; moving to the next row swaps the photo.',
     implementation: 'One absolutely positioned preview (aspect 4:5, ~14rem) inside the list container; pointermove sets a target, a rAF lerp (0.15) moves it with transform only; crossfade the image on row change; hide when the pointer leaves the list.',
@@ -572,7 +575,7 @@ export const signaturePatterns: SignaturePattern[] = [
     reducedMotion: 'Colour or underline change only.',
   },
   {
-    id: 'image-trail', name: 'Image trail behind the cursor', sections: ['hero', 'gallery'],
+    id: 'image-trail', piece: 'image-trail', name: 'Image trail behind the cursor', sections: ['hero', 'gallery'],
     levels: ['dynamic', 'immersive'], fits: ['fashion', 'portfolio', 'studio', 'experiment', 'experimental', 'art', 'playful', 'pop'],
     experience: 'Moving the mouse across the first screen leaves a trail of photos that appear and fade behind it — playful, and it shows off lots of work at once.',
     implementation: 'Pool of 8–12 preloaded images; spawn the next one every ~80px of pointer travel at the pointer position, scale 0.8→1 and fade out over 900ms; recycle nodes, never create new ones.',
@@ -587,10 +590,11 @@ export const signaturePatterns: SignaturePattern[] = [
     implementation: 'A tall outer block with a sticky frame; Motion useScroll on the block maps progress to translateX of the track (useTransform 0 → −(track width − viewport), smoothed with useSpring). Images lazy-load one ahead.',
     mobile: 'Native horizontal swipe with scroll-snap instead of pinning.',
     reducedMotion: 'Plain horizontal scroll-snap row.',
+    piece: 'side-scroll',
     components: [],
   },
   {
-    id: 'stacking-cards', name: 'Cards that stack as you scroll', sections: ['process', 'services', 'feature-grid', 'how-it-works'],
+    id: 'stacking-cards', piece: 'sticky-cards', name: 'Cards that stack as you scroll', sections: ['process', 'services', 'feature-grid', 'how-it-works'],
     levels: ['dynamic', 'immersive'], fits: ['saas', 'agency', 'product', 'studio', 'bento', 'minimal', 'technical', 'futuristic'],
     experience: 'Each step or service slides up and stacks on top of the previous one, which shrinks slightly behind it — a clear story told one card at a time.',
     implementation: 'Cards are position: sticky with increasing top offsets; as the next card arrives, scale the previous one to 0.94 and dim it via a scroll-linked timeline (or CSS animation-timeline: view()).',
@@ -599,7 +603,7 @@ export const signaturePatterns: SignaturePattern[] = [
     components: [{ name: 'Componentry — Sticky Scroll Cards', url: 'https://componentry.dev/docs/components/sticky-scroll-cards' }],
   },
   {
-    id: 'velocity-marquee', name: 'Ribbon that reacts to scrolling', sections: ['clients', 'manifesto'],
+    id: 'velocity-marquee', piece: 'velocity-band', name: 'Ribbon that reacts to scrolling', sections: ['clients', 'manifesto'],
     levels: ['subtle', 'dynamic', 'immersive'], fits: ['agency', 'studio', 'bold', 'raw', 'playful', 'pop', 'fashion', 'experimental'],
     experience: 'A band of big words or client names drifts sideways, speeds up while you scroll and reverses when you scroll back up.',
     implementation: 'Duplicate the content for a seamless loop; base speed ~40px/s; add scroll velocity (Motion useVelocity on scrollY) and flip direction with scroll direction; transform only.',
@@ -608,7 +612,7 @@ export const signaturePatterns: SignaturePattern[] = [
     components: [{ name: 'Magic UI — Scroll Based Velocity', url: 'https://magicui.design/docs/components/scroll-based-velocity' }],
   },
   {
-    id: 'reading-highlight', name: 'Words that light up as you read', sections: ['manifesto', 'intro', 'about', 'editorial-story'],
+    id: 'reading-highlight', piece: 'text-reveal', name: 'Words that light up as you read', sections: ['manifesto', 'intro', 'about', 'editorial-story'],
     levels: ['subtle', 'dynamic', 'immersive'], fits: ['editorial', 'studio', 'agency', 'personal-brand', 'quiet', 'minimal', 'luxury', 'heritage'],
     experience: 'A large statement starts faint; as you scroll, each word fills in with full colour, so reading feels guided and deliberate.',
     implementation: 'Split the paragraph into words; scroll-linked timeline over the section moves each word from muted to text colour in sequence (CSS animation-timeline: view() or Motion useScroll + useTransform).',
@@ -625,7 +629,7 @@ export const signaturePatterns: SignaturePattern[] = [
     reducedMotion: 'Images simply appear.',
   },
   {
-    id: 'tilt-cards', name: 'Product cards that tilt toward you', sections: ['product-grid', 'product-highlight', 'collection'],
+    id: 'tilt-cards', piece: 'tilt', name: 'Product cards that tilt toward you', sections: ['product-grid', 'product-highlight', 'collection'],
     levels: ['subtle', 'dynamic', 'immersive'], fits: ['ecommerce', 'product', 'futuristic', 'playful', 'pop', 'y2k', 'bold'],
     experience: 'Product cards tilt slightly toward the cursor with a soft light sweeping across, so objects feel tangible.',
     implementation: 'Map pointer position inside the card to rotateX/rotateY (max 6°) with perspective 800px; a radial-gradient highlight follows the pointer at 12% opacity; ease back on leave.',
@@ -641,6 +645,28 @@ export const signaturePatterns: SignaturePattern[] = [
     mobile: 'Shorter pin (~100vh) and start from a larger frame.',
     reducedMotion: 'Full-width image, no pin.',
     piece: 'pinned-stage',
+  },
+  {
+    id: 'picture-becomes-page', piece: 'photo-morph', name: 'A picture that becomes the next page', sections: ['featured-work', 'collection', 'product-grid', 'journal'],
+    levels: ['subtle', 'dynamic', 'immersive'], fits: ['portfolio', 'studio', 'agency', 'fashion', 'ecommerce', 'editorial', 'cinematic', 'photography', 'minimal', 'luxury'],
+    experience: 'Opening a project or a product is one movement: the thumbnail that was clicked grows into the large picture at the top of its page, and Back shrinks it home — the visitor never loses the thing they chose.',
+    implementation: 'The ready PhotoMorph piece (src/components/pieces/PhotoMorph.tsx): wrap the thumbnail in the list and the lead picture on the item’s page with the same name (the item’s slug). React’s <ViewTransition> runs on every Next.js navigation; the piece ships its own 420ms curve and a light blur mid-flight.',
+    mobile: 'Same.', reducedMotion: 'The page changes without movement.',
+  },
+  {
+    id: 'ripple-photos', piece: 'ripple-image', name: 'A photo that ripples under the pointer', sections: ['hero', 'featured-work', 'gallery', 'product-highlight'],
+    levels: ['dynamic', 'immersive'], fits: ['cinematic', 'experimental', 'surreal', 'coastal', 'fashion', 'art', 'music', 'dream', 'organic', 'experiment', 'digital'],
+    experience: 'The lead photo is alive to the hand: moving across it sends rings through the picture like a finger through water, a faint colour split at their edge, gone a second after the pointer stops.',
+    implementation: 'The ready RippleImage piece (src/components/pieces/RippleImage.tsx) does this: one WebGL fragment shader over the photo, ring strength from the pointer’s speed, drawing only while rings are alive; the photo underneath is a normal <img>.',
+    mobile: 'The photo stays still.', reducedMotion: 'The photo stays still.',
+  },
+  {
+    id: 'story-beside-picture', name: 'A story told beside one held picture', sections: ['editorial-story', 'about', 'process', 'how-it-works', 'chapters', 'case-study'],
+    levels: ['dynamic', 'immersive'], fits: ['cinematic', 'editorial', 'heritage', 'restaurant', 'hotel', 'hospitality', 'product', 'nonprofit', 'studio', 'organic', 'natural'],
+    experience: 'The story is read, not watched: its chapters scroll by at reading pace while one picture beside them stays in view, and each chapter’s picture wipes up over the last exactly as that chapter arrives.',
+    implementation: 'Build it on the ready ScrollStory piece (src/components/pieces/ScrollStory.tsx): 3–6 chapters, each a picture, a heading and 1–3 sentences. It holds the picture column (position: sticky) and scrubs a clip-path wipe per chapter with GSAP ScrollTrigger; the leaving picture steps back slightly.',
+    mobile: 'Each chapter carries its own picture above its text; nothing held or wiped.', reducedMotion: 'Same as phones.',
+    piece: 'scroll-story',
   },
   {
     id: 'reveal-footer', name: 'Footer revealed from underneath', sections: ['footer'],
@@ -659,7 +685,7 @@ export const signaturePatterns: SignaturePattern[] = [
     reducedMotion: 'Count updates with a brief colour change.',
   },
   {
-    id: 'spotlight-cursor', name: 'Flashlight over a dark image', sections: ['hero', 'manifesto'],
+    id: 'spotlight-cursor', piece: 'spotlight', name: 'Flashlight over a dark image', sections: ['hero', 'manifesto'],
     levels: ['dynamic', 'immersive'], fits: ['cinematic', 'gothic', 'dark', 'experimental', 'experiment', 'music'],
     experience: 'The first screen is almost dark; the cursor acts like a flashlight revealing the image and words underneath.',
     implementation: 'A full-screen overlay with a radial-gradient mask centred on the pointer (radius ~22vmin), lerped for smoothness; content below stays in the DOM for accessibility.',
@@ -668,7 +694,7 @@ export const signaturePatterns: SignaturePattern[] = [
     components: [],
   },
   {
-    id: 'number-ticker', name: 'Numbers that count up', sections: ['intro', 'about', 'product-highlight', 'feature-grid', 'clients'],
+    id: 'number-ticker', piece: 'number-ticker', name: 'Numbers that count up', sections: ['intro', 'about', 'product-highlight', 'feature-grid', 'clients'],
     levels: ['subtle', 'dynamic', 'immersive'], fits: ['saas', 'product', 'agency', 'technical', 'bold', 'news', 'editorial', 'bento'],
     experience: 'Key figures (customers, years, speed) roll up from zero the moment they come into view — real numbers become a small event.',
     implementation: 'Tabular figures in a fixed-width box so nothing shifts; spring from 0 to the value over ~1.2s once, on first view (IntersectionObserver).',
@@ -684,7 +710,7 @@ export const signaturePatterns: SignaturePattern[] = [
     components: [{ name: 'Magic UI — Magic Card', url: 'https://magicui.design/docs/components/magic-card' }],
   },
   {
-    id: 'word-rotate', name: 'Headline with a changing word', sections: ['hero', 'intro'],
+    id: 'word-rotate', piece: 'text-loop', name: 'Headline with a changing word', sections: ['hero', 'intro'],
     levels: ['subtle', 'dynamic', 'immersive'], fits: ['saas', 'agency', 'personal-brand', 'playful', 'bold', 'pop', 'product'],
     experience: 'One word in the main headline changes every few seconds (“for cafés / for studios / for shops”) — one line says many things.',
     implementation: 'Fixed-width slot sized to the longest word; words slide up out and in (400ms) every 2.5s; the word keeps the headline’s exact style — no colour or italic change.',
@@ -692,7 +718,7 @@ export const signaturePatterns: SignaturePattern[] = [
     components: [{ name: 'Magic UI — Word Rotate', url: 'https://magicui.design/docs/components/word-rotate' }],
   },
   {
-    id: 'text-pressure', name: 'Letters that react to the cursor', sections: ['hero', 'manifesto', 'footer'],
+    id: 'text-pressure', piece: 'proximity-type', name: 'Letters that react to the cursor', sections: ['hero', 'manifesto', 'footer'],
     levels: ['dynamic', 'immersive'], fits: ['experimental', 'typography', 'type', 'bold', 'art', 'playful', 'experiment', 'studio'],
     experience: 'The big headline letters grow bolder or wider as the cursor comes near them, like the words are breathing.',
     implementation: 'Split into letters; per letter, distance to pointer maps to font-variation-settings (wght/wdth) of the recipe’s display face — only if it is a variable font; otherwise use a small scale.',
@@ -708,7 +734,7 @@ export const signaturePatterns: SignaturePattern[] = [
     components: [{ name: 'Magic UI — Lens', url: 'https://magicui.design/docs/components/lens' }],
   },
   {
-    id: 'before-after', name: 'Drag to compare before and after', sections: ['case-study', 'product-highlight', 'editorial-story', 'featured-work'],
+    id: 'before-after', piece: 'image-comparison', name: 'Drag to compare before and after', sections: ['case-study', 'product-highlight', 'editorial-story', 'featured-work'],
     levels: ['still', 'subtle', 'dynamic', 'immersive'], fits: ['agency', 'studio', 'portfolio', 'product', 'saas'],
     experience: 'Two images sit on top of each other; dragging a handle across reveals the before and the after — the result explains itself.',
     implementation: 'clip-path: inset(0 calc(100% - var(--pos)) 0 0) on the top image; pointer and keyboard (arrow keys) move --pos; role="slider" with aria-valuenow.',
@@ -740,7 +766,7 @@ export const signaturePatterns: SignaturePattern[] = [
     components: [],
   },
   {
-    id: 'pixel-transition', name: 'Photos that dissolve in pixels', sections: ['featured-work', 'gallery', 'collection'],
+    id: 'pixel-transition', piece: 'pixel-swap', name: 'Photos that dissolve in pixels', sections: ['featured-work', 'gallery', 'collection'],
     levels: ['dynamic', 'immersive'], fits: ['experimental', 'y2k', 'pop', 'futuristic', 'raw', 'playful', 'digital'],
     experience: 'Hovering a work thumbnail breaks it into pixels that rebuild as a second image — digital and a little retro.',
     implementation: 'A grid of blocks over the image fades in with random delays, swaps the image, then fades out (≈500ms total); canvas or CSS grid of ~12×12.',

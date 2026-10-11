@@ -1,6 +1,9 @@
 'use client'
 // Shared by Discover, a site's page, Pages and the Collection: how any item is drawn, and the button that collects it.
-import { ArrowLeft, ArrowRight, Check, Layers, Plus, Trash2, X } from 'lucide-react'
+import { IDEA_BY_ID, ideaClip } from '@/data/site-ideas'
+import { ArrowLeft, ArrowRight, Check, Copy, Layers, Plus, Trash2, X } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { promptForItem } from '@/features/library/prompt'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -139,6 +142,50 @@ export function useCollect(item: CollectionItem) {
   return { on, flip }
 }
 
+/** Take, as a small hairline square: a plus that turns ink on hover; once in the Collection it fills pencil with a tick
+ *  (the picked mark) — the same square on every card that takes something (Library, What you took). */
+export function TakeSquare({ item, className = '' }: { item: CollectionItem; className?: string }) {
+  const { on, flip } = useCollect(item)
+  const label = on ? 'Taken — put it back' : 'Take it'
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); flip() }} aria-label={label} aria-pressed={on}
+          className={`z-20 grid size-8 place-items-center rounded-[3px] border transition-[background-color,color,border-color,scale] duration-[140ms] ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] ${on ? 'border-pencil bg-pencil text-paper' : 'border-line bg-white text-ink [@media(hover:hover)]:hover:border-ink [@media(hover:hover)]:hover:bg-ink [@media(hover:hover)]:hover:text-paper'} ${className}`}>
+          {on ? <Check size={15} strokeWidth={2.4} aria-hidden /> : <Plus size={15} aria-hidden />}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top">{label}</TooltipContent>
+    </Tooltip>
+  )
+}
+
+/** Copy a taken thing as a prompt (features/library/prompt.ts), as a small hairline square: it ticks in pencil and a
+ *  note says where to paste it. Nothing is drawn for a thing words cannot carry. It sits above a card's covering button:
+ *  give it a position (`relative`, or `absolute` and a place). */
+export function CopyPromptSquare({ item, title, className = '' }: { item: CollectionItem; title: string; className?: string }) {
+  const [done, setDone] = useState(false)
+  const text = promptForItem(item)
+  if (!text) return null
+  const copy = async (e: React.MouseEvent) => {
+    e.preventDefault(); e.stopPropagation()
+    try { await navigator.clipboard.writeText(text) } catch { return toast('Could not copy — your browser blocked the clipboard.') }
+    setDone(true); setTimeout(() => setDone(false), 1600)
+    toast(`Copied “${title}” as a prompt`, { description: 'Paste it into Claude, Lovable, v0 or Cursor.' })
+  }
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button type="button" onClick={copy} aria-label={done ? 'Copied' : `Copy ${title} as a prompt`}
+          className={`z-20 grid size-8 place-items-center rounded-[3px] border border-line bg-white transition-[background-color,color,border-color,scale] duration-[140ms] ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] ${done ? 'text-pencil' : 'text-ink-2 [@media(hover:hover)]:hover:border-ink [@media(hover:hover)]:hover:text-ink'} ${className}`}>
+          {done ? <Check size={14} aria-hidden /> : <Copy size={14} aria-hidden />}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top">{done ? 'Copied' : 'Copy as a prompt'}</TooltipContent>
+    </Tooltip>
+  )
+}
+
 export function CollectButton({ item, label, quiet, className = '' }: { item: CollectionItem; label?: string; quiet?: boolean; className?: string }) {
   const { on, flip } = useCollect(item)
   // Quiet: a small round + over a picture, nothing more; ticked once collected.
@@ -191,6 +238,7 @@ const GROUPS: [string, (i: CollectionItem) => boolean][] = [
   ['Qualities', (i) => i.kind === 'like'],
   ['Parts', (i) => i.kind === 'section' || i.kind === 'hero' || i.kind === 'menu' || i.kind === 'footer'],
   ['Effects', (i) => i.kind === 'effect'],
+  ['Ideas', (i) => i.kind === 'idea'],
 ]
 
 /** The Collection — the cart (2026-10-05): in the site's header on every page, the last things collected and their
@@ -381,7 +429,7 @@ function siteData(ref: SiteRef) {
 }
 
 /** The recording of the very thing taken, on the site it was taken from — if that site was recorded there. */
-function clipOf(i: CollectionItem): string | undefined {
+export function clipOf(i: CollectionItem): string | undefined {
   const ref = i.kind === 'site' || i.kind === 'like' ? i.site : i.from, e = ref && exampleOf(ref)
   if (!e) return undefined
   switch (i.kind) {
@@ -391,6 +439,7 @@ function clipOf(i: CollectionItem): string | undefined {
     case 'footer': return e.sectionClips?.footer
     case 'section': return e.sectionClips?.[i.id]
     case 'effect': return e.pieceClips?.[i.id]
+    case 'idea': { const x = IDEA_BY_ID.get(i.id); return x && ideaClip(x) }
     default: return undefined
   }
 }
