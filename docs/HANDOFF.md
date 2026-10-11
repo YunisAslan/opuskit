@@ -87,6 +87,8 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 - **Awwwards part 5, layout and navigation** (2026-10-11): `05-layout.md` — small fixed headers (median 3 links),
   panels over full-screen menus, tall footers. New menu Corner panel (recommended for product sites) and footer The
   name behind the thing (`stage`, for product- and 3D-led sites).
+- **Awwwards part 6, WebGL and 3D** (2026-10-11): `06-webgl.md` — new `dot-word` (the name as points, Canvas 2D; moment
+  `name-of-points`) and `speed-bend` (pictures lean with scroll speed).
 - **Growing the ingredients** (2026-10-11, the user: more components, sections and variety for better sites), batch by
   batch from what winners do that OpusKit had only in words. Batch 1 — three pieces: `side-scroll` (a sideways wall,
   GSAP pin + scrub; now the piece of the Sideways strip photo layout and the sideways-gallery moment, so Pip & Kiln and

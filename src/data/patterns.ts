@@ -647,6 +647,13 @@ export const signaturePatterns: SignaturePattern[] = [
     piece: 'pinned-stage',
   },
   {
+    id: 'name-of-points', piece: 'dot-word', name: 'A name made of points', sections: ['hero', 'footer', 'contact-cta'],
+    levels: ['dynamic', 'immersive'], fits: ['technical', 'futuristic', 'digital', 'experiment', 'saas', 'product', 'agency', 'studio', 'cyber', 'console'],
+    experience: 'The name is not printed but assembled from thousands of points, like a scan: the pointer parts them as it passes and they drift back into the letters.',
+    implementation: 'The ready DotWord piece (src/components/pieces/DotWord.tsx): the word is set in the display face on an offscreen canvas, sampled every 5–9px into dots, which a damped spring pulls home while the pointer pushes them; Canvas 2D, drawing only while something moves.',
+    mobile: 'The dots stand still as the word.', reducedMotion: 'The dots stand still as the word.',
+  },
+  {
     id: 'window-opens', piece: 'mask-reveal', name: 'A window that opens onto the picture', sections: ['hero', 'intro', 'editorial-story', 'location'],
     levels: ['dynamic', 'immersive'], fits: ['hotel', 'hospitality', 'real-estate', 'luxury', 'restaurant', 'heritage', 'cinematic', 'coastal', 'architecture', 'fashion'],
     experience: 'The page opens on its own colour and name, with a small shaped window in the middle — an arch, a circle — showing the place; scrolling opens the window until the visitor is standing in the picture, the words around it drawing aside.',

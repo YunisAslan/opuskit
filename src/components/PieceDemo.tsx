@@ -53,6 +53,8 @@ import { PhotoMorph } from '@/pieces/PhotoMorph'
 import { ModelStage } from '@/pieces/ModelStage'
 import { MaskReveal } from '@/pieces/MaskReveal'
 import { LettersAssemble } from '@/pieces/LettersAssemble'
+import { SpeedBend } from '@/pieces/SpeedBend'
+import { DotWord } from '@/pieces/DotWord'
 import { ScrollStory } from '@/pieces/ScrollStory'
 import { SideScroll } from '@/pieces/SideScroll'
 import type { PaletteColors, PieceId } from '@/types/domain'
@@ -129,6 +131,8 @@ function demo(id: PieceId, c: PaletteColors): ReactNode {
     case 'stickers': return <div className="relative size-full"><p className={`${display} grid h-full place-items-center text-3xl`}>Throw a sticker</p><Stickers stickers={STICKERS.slice(0, 4).map((src, i) => ({ src, alt: '', x: ['6%', '70%', '14%', '74%'][i], y: ['8%', '10%', '58%', '56%'][i], w: '4.5rem', rotate: [-10, 8, 6, -6][i], depth: 0.5 }))} /></div>
     // A small site to click through: the change shows what it answers (a link pressed), not only the sweep.
     case 'photo-morph': return <MorphDemo />
+    case 'speed-bend': return <BendDemo />
+    case 'dot-word': return <DotWord word="North" gap={5} radius={60} className={`${display} h-44 w-full px-6`} />
     case 'mask-reveal': return <WindowDemo />
     case 'letters-assemble': return <GatherDemo />
     case 'model-stage': return <ModelStage src="/library/demo-knot.glb" poster={PHOTOS[3].src} alt="A knot" className="size-full" />
@@ -234,6 +238,18 @@ function MorphDemo() {
 
 // Both follow the page's scroll, so a small stage shows a loop of what they do; the real ones run on a page
 // (app/library/demo/[id]).
+function BendDemo() {
+  const [k, setK] = useState(0)
+  useEffect(() => { const t = setInterval(() => setK((x) => (x + 1) % 4), 900); return () => clearInterval(t) }, [])
+  const lean = [0, -5, 3, 0][k]
+  return (
+    <div className="grid w-80 grid-cols-3 gap-2 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" style={{ transform: `skewY(${lean}deg) scaleY(${1 + Math.abs(lean) / 80})` }}>
+      {PHOTOS.slice(0, 6).map((p) => <img key={p.src} src={p.src} alt="" className="aspect-square w-full object-cover" />)}
+      <span className="hidden"><SpeedBend>{null}</SpeedBend></span>
+    </div>
+  )
+}
+
 function WindowDemo() {
   const [open, setOpen] = useState(false)
   useEffect(() => { const t = setInterval(() => setOpen((x) => !x), 1800); return () => clearInterval(t) }, [])

@@ -404,6 +404,19 @@ export const pieces: Record<PieceId, Piece> = {
     usage: '<LettersAssemble as="h2" className="font-(family-name:--font-display) text-6xl md:text-8xl">120 effects today. A new one every week.</LettersAssemble>',
     rules: ['One sentence of up to ~12 words, set large — the one line the page is about.', 'Once on the site; give it room above and below so it gathers while in view.'],
   },
+  // Awwwards part 6 (docs/research/awwwards/06-webgl.md): the look of WebGL without its weight.
+  'speed-bend': {
+    id: 'speed-bend', name: 'Pictures that lean with the scroll', line: 'Scroll fast and the pictures skew and stretch a little with the speed; stop and they spring straight.', slot: 'photos', source: OK,
+    file: 'SpeedBend.tsx', exportName: 'SpeedBend', deps: M, levels: LIVELY, sections: ['gallery', 'featured-work', 'collection', 'lookbook'],
+    usage: '<SpeedBend><div className="grid grid-cols-3 gap-4">{photos.map(…)}</div></SpeedBend>',
+    rules: ['Around one set of pictures — never text, a form or a list.', 'Keep it subtle (strength ≤ 1): it should be felt on a flick, not seen while reading.'],
+  },
+  'dot-word': {
+    id: 'dot-word', name: 'A name made of points', line: 'The name drawn as a field of dots that scatter from the pointer and drift back into the letters.', slot: 'pointer', source: OK,
+    file: 'DotWord.tsx', exportName: 'DotWord', deps: [], levels: LIVELY, sections: ['hero', 'footer', 'contact-cta'],
+    usage: '<DotWord word="Halden" className="h-[40svh] w-full text-(--color-text)" />',
+    rules: ['One short word or the brand name; a heavy display face gives the clearest letters.', 'Once on the site — the first screen or the footer.', 'The word also stands as text (the piece keeps it for screen readers); never the only heading.'],
+  },
 }
 
 export const MAX_HEAVY_PIECES = 2

@@ -23,8 +23,8 @@ job (the user, 2026-10-11). So we study what the winners do, part by part, and m
 | 3 | Transitions & scroll | Tags *Transitions*, *Scrolling*, *Parallax*, *Storytelling*; Elements *Transition*, *Scroll* | New moments (pieces), craft rules for page changes | done — `03-motion.md` |
 | 4 | Colour | Palettes from part 1; colour filter; *Electric Colors*, *Pastel colors* | Palettes that pass check.ts; how many colours winners use | done — `04-colour.md` |
 | 5 | Layout & navigation | *Layout*, *Inspiring UX Design*, *Unusual Navigation*, Menu, Header, Footer elements | Sections and menus worth a card; layout rules | done — `05-layout.md` |
-| 6 | WebGL, 3D, texture | *WebGL*, *3D*, *Three.js* tags and collection | Which effects are worth a piece (and cheap enough) | next |
-| 7 | Forms, microcopy, details | *Forms and Input*, *Microcopy and UX writing*, *404 pages*, Loading | Craft rules for forms and words | — |
+| 6 | WebGL, 3D, texture | *WebGL*, *3D*, *Three.js* tags and collection | Which effects are worth a piece (and cheap enough) | done — `06-webgl.md` |
+| 7 | Forms, microcopy, details | *Forms and Input*, *Microcopy and UX writing*, *404 pages*, Loading | Craft rules for forms and words | next |
 
 The order can change with what part 1 shows. Each finished part gets a line in `docs/HANDOFF.md`. New ingredients come in batches between parts (batch 1:
 `side-scroll`, `scroll-story`, `proximity-type` — `01-winners.md`).
