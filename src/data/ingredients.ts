@@ -278,6 +278,20 @@ export const palettes: Record<PaletteId, Palette> = {
     usage: { accent: 'Red-orange for one band or the CTA (Boc Studio, SWSH) — never body text' },
     why: 'A cool charcoal rather than pure black, white type and one hot signal: the studio-site look of Boc Studio and SWSH. Media sits on it like on a monitor.',
   },
+  // From the Awwwards colour study (docs/research/awwwards/04-colour.md): 72% of winners sit on a dark ground, and the
+  // most common pairs are near-black + one signal. OpusKit had black + red-orange (Charcoal Signal), not these two.
+  'ultramarine-night': {
+    id: 'ultramarine-night', name: 'Ultramarine Night', line: 'Blue-black, cool white, electric ultramarine', dark: true, tags: ['technology', 'studio', 'bold', 'futuristic'],
+    colors: { background: '#07071A', surface: '#10102A', text: '#F3F3F8', muted: '#9A9AB5', primary: '#F3F3F8', secondary: '#191935', accent: '#3D3BFF', border: '#26264A' },
+    usage: { accent: 'Ultramarine as a field — a band, a button’s fill, a shape behind the product (Noomo, Vectr, Studio K95) — never text on the dark ground' },
+    why: 'The night version of Klein blue: a black with blue in it, white type, and one electric ultramarine that glows like a screen. Five of the 93 winners carry it.',
+  },
+  'deep-teal': {
+    id: 'deep-teal', name: 'Deep Teal', line: 'Dark teal, sea white, mint', dark: true, tags: ['wellness', 'nonprofit', 'calm', 'technology'],
+    colors: { background: '#083535', surface: '#0F4141', text: '#ECF6F2', muted: '#A3C2BA', primary: '#ECF6F2', secondary: '#154A48', accent: '#2BE0B0', border: '#265957' },
+    usage: { accent: 'Mint for a figure, a line or the main action — it reads on the teal; keep paragraphs in sea white' },
+    why: 'Calm and exact at once: a deep water ground with one bright mint, for care, climate and quiet technology (20 Years Inspired by People, Alethia).',
+  },
   'warm-black': {
     id: 'warm-black', name: 'Warm Black', line: 'Warm near-black, bone, brass', dark: true, tags: ['hospitality', 'luxury', 'cinematic'],
     colors: { background: '#231F1B', surface: '#2E2925', text: '#F4EFE8', muted: '#B8AFA4', primary: '#F4EFE8', secondary: '#3F3933', accent: '#D2AE6E', border: '#4A433C' },

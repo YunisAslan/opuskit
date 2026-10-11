@@ -82,6 +82,8 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 - **Awwwards part 3, transitions and scroll** (2026-10-11): `03-motion.md` — 49 winners measured in a browser (clip-path
   73%, WebGL 71%, Lenis 63%, split lettering 43%). New pieces `mask-reveal` (moment `window-opens`) and
   `letters-assemble` (moment `letters-gather`). Smooth scroll is now the default for dynamic and immersive recipes (the user, 2026-10-11; engine `placePieces`).
+- **Awwwards part 4, colour** (2026-10-11): `04-colour.md` — 72% of winners on a dark ground, near-black + one signal.
+  New palettes Ultramarine Night and Deep Teal.
 - **Growing the ingredients** (2026-10-11, the user: more components, sections and variety for better sites), batch by
   batch from what winners do that OpusKit had only in words. Batch 1 — three pieces: `side-scroll` (a sideways wall,
   GSAP pin + scrub; now the piece of the Sideways strip photo layout and the sideways-gallery moment, so Pip & Kiln and

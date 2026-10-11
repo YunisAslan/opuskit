@@ -30,6 +30,7 @@ export type MotionLevel = 'still' | 'subtle' | 'dynamic' | 'immersive'
 export type LayoutId = 'balanced' | 'editorial' | 'asymmetric' | 'grid' | 'full-bleed' | 'experimental'
 
 export type PaletteId =
+  | 'ultramarine-night' | 'deep-teal'
   | 'apricot-hall' | 'yerba-leaf' | 'console-lilac' | 'limestone' | 'graphite-sand' | 'olive-grove' | 'lido-blue' | 'bubblegum' | 'mulberry' | 'mustard' | 'midnight-chapters'
   | 'signal-white' | 'wet-concrete' | 'legal-pad' | 'pink-plaster' | 'klein-field'
   | 'hazard-yellow' | 'bottle-green' | 'night-ink' | 'plum-velvet' | 'oxblood-room' | 'black-box' | 'white-box'
