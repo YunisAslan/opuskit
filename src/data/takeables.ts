@@ -69,6 +69,11 @@ export const TAKEABLES: TakeEntry[] = [
   m('effect:entry-gate', 'Welcome', 'A door to open first', 'The first visit opens under a sheet the visitor drags or holds away.', 'sticky-weather'),
   m('effect:curtain-transition', 'Page change', 'Curtain between pages', 'A panel with the next page’s name rises over the page, then lifts.', 'ninth-row'),
   m('effect:blob-transition', 'Page change', 'Colour blob between pages', 'A blob of colour sweeps over the screen between pages.', 'sticky-weather'),
+  // First shown on Ines Varga (#28, 2026-10-11) — the session's new pieces, built into a site.
+  m('effect:photo-morph', 'Page change', 'A picture that becomes the next page', 'The clicked map grows into the large picture of its own page, and shrinks back on Back.', 'ines-varga'),
+  m('effect:shutter-transition', 'Page change', 'Shutter between pages', 'Bars drop over the page one after another, then lift onto the next page.', 'ines-varga'),
+  m('effect:letters-assemble', 'Headline', 'Letters that gather into a sentence', 'A line’s letters arrive from scattered places and settle into words.', 'ines-varga'),
+  m('effect:scroll-story', 'Scroll', 'A story told beside one held picture', 'Chapters scroll by while the picture beside them stays, each new one wiping over the last.', 'ines-varga'),
   m('effect:cut-reveal', 'Headline', 'Words cut out of a mask', 'Headline words slide up out of a hard edge.', 'slow-atlas'),
   m('effect:split-flap', 'Headline', 'Departure board letters', 'Letters flick through characters until they land, like a station board.', 'kur-delta-watch'),
   m('effect:pinned-stage', 'Scroll', 'Section held while you scroll', 'A section stays still while scrolling moves it through its steps.', 'sela-mor'),

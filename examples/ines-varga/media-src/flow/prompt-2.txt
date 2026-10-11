@@ -1,0 +1,5 @@
+One fix. On Contact the headline that gathers its letters ("Tell me where, and I'll draw the way.") sits in the first screen, so on load it stays scattered until the visitor scrolls — the scroll has nothing left to drive it. When the line already starts in the first screen, let it gather once on its own as the page opens (about 1.4s, an out-curve, the letters a little apart in time, starting after a short beat); everywhere else keep the scroll-driven gathering as it is. Keep your full-ink letters.
+
+Run the production build, check Contact at 1440 and 390 on a fresh load, and before your final reply stop any dev server you started — do not leave one running.
+
+Rules for this session: work only inside this folder, never read or edit anything outside it. Port 3000 is taken: use port 3028 for the dev server. Never remove or change the turbopack.root line in next.config.ts.

@@ -115,6 +115,37 @@ export const examples: ExampleProject[] = [
     note: 'The pottery, its pieces, prices, stock and workshops are made up, and the bag, checkout and bookings open the visitor’s own email — nothing is sold. Its photos are Unsplash picks; its first-screen mug was made in Google Flow, cut out and moved by code (media-src/SOURCES.md).',
   },
   {
+    slug: 'ines-varga',
+    title: 'Ines Varga, maps drawn by hand',
+    summary: 'Illustrated maps for towns, trails and books, drawn by hand in ink and watercolour. Commissions open.',
+    mood: ['Hand-made', 'Curious', 'Warm'],
+    // Built 2026-10-11 with Unsplash photos and placeholders for the project covers and galleries: the hero still is
+    // the site's own first screen (the map it draws).
+    hero: { kind: 'image', src: '/examples/ines-varga/media/poster.jpg' },
+    livePath: '/live/ines-varga',
+    // Parts taken from Inkwell & Moth, Fieldhouse and Fennwood, then You → Direction (Conceptual Sketch, Gallery Grey),
+    // plus the session's new pieces at the user's request; built by an isolated Claude Code session from its Build
+    // Package: opuskit.json is the exact recipe, with what was taken.
+    choices: [
+      { label: 'Making', value: 'Portfolio' },
+      { label: 'Name', value: 'Ines Varga' },
+      { label: 'Visitors should', value: 'Get in touch' },
+      { label: 'Style', value: 'Conceptual Sketch' },
+      { label: 'First screen', value: 'Illustrated hero' },
+      { label: 'Movement', value: 'Dynamic' },
+      { label: 'Colors', value: 'Gallery Grey' },
+      { label: 'Lettering', value: 'Sketchbook' },
+      { label: 'Layout', value: 'Grid-driven' },
+      { label: 'Shape', value: 'Hairline' },
+      { label: 'Menu', value: 'Full-screen menu' },
+      { label: 'Footer', value: 'Say hello' },
+      { label: 'Big idea', value: 'None' },
+      { label: 'Pages', value: 'Home, Selected Work, Project, About, Contact' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Ines Varga, her clients, quotes and Pécs studio are made up; the maps are Unsplash photos standing in for her own (media-src/SOURCES.md), the drawings are the builder\u2019s, and the contact form opens the visitor\u2019s own email — nothing is sent.',
+  },
+  {
     slug: 'kelp-line',
     title: 'Kelp Line: kelp forests, replanted by volunteers',
     summary: 'Volunteers replanting kelp forests on a cold northern coast: dives, beach days and a count of every plant in the water.',

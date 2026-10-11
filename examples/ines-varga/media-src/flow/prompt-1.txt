@@ -1,0 +1,7 @@
+Read CLAUDE.md and build the whole site following build/implementation-plan.md.
+
+The photos are in public/media/: featuredWork-1.jpg … featuredWork-4.jpg are four of my maps (one per project in the work list, in that order); about.jpg is my portrait; and process photos for the story of how a map is made — process-walk-sign.jpg (walking the place), process-sketch.jpg (the pencil sketch), desk-glasses-map.jpg (inking at the desk), process-watercolour.jpg (colour) — plus process-path.jpg, process-supplies.jpg, process-palette.jpg and work-vintage-stack.jpg for the project galleries and wherever a picture of the studio helps. Any picture the shot list asks for that is not here (each project's own wide cover and gallery set): make a plain placeholder image in the exact ratio and size the shot list gives, with its key written clearly on it, so I can drop real files in later.
+
+The illustrations (the drawn first screen, the section accents) are not photos: draw them yourself as SVG in the page's own line and colours — a map drawn in layers for the first screen — never stock.
+
+Rules for this session: work only inside this folder, never read or edit anything outside it. Port 3000 is taken: use port 3028 for the dev server. Never remove or change the turbopack.root line in next.config.ts. Before your final reply stop any dev server you started — do not leave one running.

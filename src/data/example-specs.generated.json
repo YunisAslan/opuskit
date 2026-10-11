@@ -369,6 +369,162 @@
   ],
   "footer": "signature"
  },
+ "ines-varga": {
+  "base": "typography-first",
+  "brief": {
+   "name": "Ines Varga",
+   "offer": "Illustrated maps for towns, trails and books, drawn by hand in ink and watercolour. Commissions open.",
+   "goal": "contact"
+  },
+  "purpose": "portfolio",
+  "direction": "conceptual-sketch",
+  "characters": [
+   "raw"
+  ],
+  "lead": "illustration",
+  "motion": "dynamic",
+  "hero": "illustrated",
+  "layout": "grid",
+  "palette": "gallery-grey",
+  "typography": "sketchbook",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "concept": "off",
+  "signatures": [],
+  "pieces": [
+   "drag-photos",
+   "scribble-link",
+   "photo-morph",
+   "scroll-story",
+   "letters-assemble",
+   "shutter-transition"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "drag-photos",
+    "page": "p1",
+    "index": 1
+   },
+   {
+    "piece": "scribble-link",
+    "page": "*",
+    "index": -1
+   },
+   {
+    "piece": "photo-morph",
+    "page": "p2",
+    "index": 0
+   },
+   {
+    "piece": "scroll-story",
+    "page": "p4",
+    "index": 0
+   },
+   {
+    "piece": "letters-assemble",
+    "page": "p5",
+    "index": 0
+   },
+   {
+    "piece": "shutter-transition",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "featured-work",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "work",
+    "label": "Selected Work",
+    "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+    "sections": [
+     "featured-work",
+     "clients"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "project",
+    "label": "Project",
+    "purpose": "Show one project in full: what it was, the facts (client, place, year, role), the pictures in order, and the way to the next project.",
+    "sections": [
+     "case-study",
+     "gallery",
+     "specs",
+     "featured-work"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "testimonials",
+     "timeline"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "contact",
+    "label": "Contact",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "contact-cta",
+     "faq"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "taken": [
+   {
+    "site": "example:inkwell-moth",
+    "kind": "like",
+    "id": "opening"
+   },
+   {
+    "site": "example:fieldhouse",
+    "kind": "idea",
+    "id": "barn-index"
+   },
+   {
+    "site": "example:inkwell-moth",
+    "kind": "effect",
+    "id": "drag-photos"
+   },
+   {
+    "site": "example:fennwood",
+    "kind": "effect",
+    "id": "scribble-link"
+   }
+  ],
+  "footer": "contact",
+  "sectionVariants": [
+   {
+    "page": "p4",
+    "index": 2,
+    "variant": "line"
+   },
+   {
+    "page": "p5",
+    "index": 1,
+    "variant": "side"
+   }
+  ]
+ },
  "kelp-line": {
   "base": "japanese-quiet-minimal",
   "brief": {

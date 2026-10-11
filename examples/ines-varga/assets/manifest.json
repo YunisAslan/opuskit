@@ -1,0 +1,158 @@
+{
+  "recipe": "typography-first",
+  "title": "Ines Varga — Raw Conceptual Sketch Portfolio",
+  "assets": {
+    "logo": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Your brand identity",
+      "replaceWith": "user-owned-logo",
+      "usage": "Navigation, footer, favicon",
+      "specs": "SVG; dark and light versions; square symbol for favicon. Until the owner’s own exists: the name set as a wordmark in the display face, and its first letter as the favicon — no invented symbol to throw away later. The favicon is a file (src/app/icon.svg, the letter as a path), never a generated icon route: one that fetches a font at build time breaks static hosting and builds without a network (Kelp Line)",
+      "note": "Wordmark: the name set in Caveat Brush (src/components/site/Header.tsx → Wordmark); favicon src/app/icon.svg is the letter I as a path. Replace with the owner’s logo."
+    },
+    "typefaces": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "Google Fonts",
+      "replaceWith": "user-owned-fonts",
+      "usage": "All text",
+      "specs": "Caveat Brush, Caveat, Winky Sans (Google Fonts)",
+      "note": "Caveat Brush, Caveat, Winky Sans via next/font/google (src/app/layout.tsx)."
+    },
+    "finalCopy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Written by you",
+      "replaceWith": "user-owned-copy",
+      "usage": "Headlines, body, CTAs",
+      "specs": "Written in the recipe voice before layout; headlines ≤ 8 words",
+      "note": "src/content/site.ts — every line marked PLACEHOLDER is invented (clients, quotes, dates, prices, studio town, email) and needs the real fact."
+    },
+    "heroIllustration": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Commissioned illustrator",
+      "replaceWith": "user-owned-illustrations",
+      "usage": "Hero key visual",
+      "specs": "Layered SVG (3 depth layers if animated)",
+      "note": "Drawn as layered SVG in code (src/components/drawings/HeroMap.tsx: back pencil, mid ink, front marker). Stands in until a commissioned illustration replaces it."
+    },
+    "spotIllustrations": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "Commissioned illustrator",
+      "replaceWith": "user-owned-illustrations",
+      "usage": "Section accents",
+      "specs": "Same style and palette",
+      "note": "Drawn as SVG strokes in code: footer landscape, walking route, margin-note arrows, mini map (About), place card (Contact), 404 sheet, desk note arrow."
+    },
+    "featuredWork": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Home · Featured Work; Selected Work · Featured Work; Project · Featured Work",
+      "specs": "4 files · 1:1 · 2400×2400 — one strong picture of each project — the real work itself, never a mock-up (the same photo leads its project page)",
+      "files": [
+        "/media/featuredWork-1.jpg",
+        "/media/featuredWork-2.jpg",
+        "/media/featuredWork-3.jpg",
+        "/media/featuredWork-4.jpg"
+      ],
+      "note": "Owner’s files are 3:2, shown cropped square."
+    },
+    "projectPageCaseStudy": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Project · Case Study Preview",
+      "specs": "1 file per project · 21:9 · 2400×1029 — the project at its best, wide — the picture that opens its page",
+      "files": [
+        "/media/projectPageCaseStudy/salt-isles-1.jpg",
+        "/media/projectPageCaseStudy/centro-on-foot-1.jpg",
+        "/media/projectPageCaseStudy/riverside-quarter-1.jpg",
+        "/media/projectPageCaseStudy/lake-loop-1.jpg"
+      ],
+      "note": "Labelled placeholders at 2400×1029. Drop the real file in at the same path and set status to have in src/config/assets.ts."
+    },
+    "projectPageGallery": {
+      "required": true,
+      "level": "required",
+      "status": "temporary",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "Project · Gallery",
+      "specs": "8 files per project · 3:2 · 2400×1600 — the place and what it makes, as a set: wide views, close details, people at work — one light, one grade",
+      "files": [
+        "/media/projectPageGallery/salt-isles-1.jpg",
+        "/media/projectPageGallery/salt-isles-2.jpg",
+        "/media/projectPageGallery/salt-isles-3.jpg",
+        "/media/projectPageGallery/salt-isles-4.jpg",
+        "/media/projectPageGallery/salt-isles-5.jpg",
+        "/media/projectPageGallery/salt-isles-6.jpg",
+        "/media/projectPageGallery/salt-isles-7.jpg",
+        "/media/projectPageGallery/salt-isles-8.jpg",
+        "/media/projectPageGallery/centro-on-foot-1.jpg",
+        "/media/projectPageGallery/centro-on-foot-2.jpg",
+        "/media/projectPageGallery/centro-on-foot-3.jpg",
+        "/media/projectPageGallery/centro-on-foot-4.jpg",
+        "/media/projectPageGallery/centro-on-foot-5.jpg",
+        "/media/projectPageGallery/centro-on-foot-6.jpg",
+        "/media/projectPageGallery/centro-on-foot-7.jpg",
+        "/media/projectPageGallery/centro-on-foot-8.jpg",
+        "/media/projectPageGallery/riverside-quarter-1.jpg",
+        "/media/projectPageGallery/riverside-quarter-2.jpg",
+        "/media/projectPageGallery/riverside-quarter-3.jpg",
+        "/media/projectPageGallery/riverside-quarter-4.jpg",
+        "/media/projectPageGallery/riverside-quarter-5.jpg",
+        "/media/projectPageGallery/riverside-quarter-6.jpg",
+        "/media/projectPageGallery/riverside-quarter-7.jpg",
+        "/media/projectPageGallery/riverside-quarter-8.jpg",
+        "/media/projectPageGallery/lake-loop-1.jpg",
+        "/media/projectPageGallery/lake-loop-2.jpg",
+        "/media/projectPageGallery/lake-loop-3.jpg",
+        "/media/projectPageGallery/lake-loop-4.jpg",
+        "/media/projectPageGallery/lake-loop-5.jpg",
+        "/media/projectPageGallery/lake-loop-6.jpg",
+        "/media/projectPageGallery/lake-loop-7.jpg",
+        "/media/projectPageGallery/lake-loop-8.jpg"
+      ],
+      "note": "Labelled placeholders at 2400×1600. Slots 3 and 6 of each project show the owner’s studio photos (process-path, process-supplies, process-palette, work-vintage-stack) until the project’s own set exists; only real photos open in the lightbox."
+    },
+    "about": {
+      "required": true,
+      "level": "required",
+      "status": "have",
+      "source": "see recipe/media.md → Shot list",
+      "replaceWith": "user-owned-images",
+      "usage": "About · About",
+      "specs": "1 file · 4:3 · 2400×1800 — a real portrait of the person or the team, in their own place",
+      "note": "Owner’s portrait is 3:4; cropped to 4:3/16:9 high on the face."
+    },
+    "processPhotos": {
+      "required": false,
+      "level": "optional",
+      "status": "have",
+      "usage": "About → How a map gets made; Home → the desk; project galleries",
+      "files": [
+        "/media/process-walk-sign.jpg",
+        "/media/process-sketch.jpg",
+        "/media/desk-glasses-map.jpg",
+        "/media/process-watercolour.jpg",
+        "/media/process-path.jpg",
+        "/media/process-supplies.jpg",
+        "/media/process-palette.jpg",
+        "/media/work-vintage-stack.jpg"
+      ]
+    }
+  }
+}

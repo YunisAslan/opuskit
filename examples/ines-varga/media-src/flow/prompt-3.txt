@@ -1,0 +1,5 @@
+One fix. Choosing a page in the full-screen menu changes the page but leaves the menu open over it. The menu's SheetClose hands its onClick to DrawnLink, and DrawnLink drops every prop it does not name, so the close never runs. Let DrawnLink pass everything else it is given (onClick, ref and the rest) on to the link, keeping its own pointer and focus handlers working alongside any it is given.
+
+Run the production build, open the menu and choose each page at 1440 and 390 to check the menu closes and the page shows, and before your final reply stop any dev server you started — do not leave one running.
+
+Rules for this session: work only inside this folder, never read or edit anything outside it. Port 3000 is taken: use port 3028 for the dev server. Never remove or change the turbopack.root line in next.config.ts.
