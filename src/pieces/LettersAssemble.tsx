@@ -1,6 +1,6 @@
 'use client'
 // OpusKit piece — letters that gather into a sentence: as the line comes up the page, its letters arrive from scattered
-// places — tumbled, faint — and settle into the words exactly as the scroll goes, so the sentence is read the moment it
+// places, tumbled, and settle into the words exactly as the scroll goes, so the sentence is read the moment it
 // is whole. GSAP ScrollTrigger scrubs it (gsap, its own standard licence). The full sentence is always in the page for
 // screen readers; reduced motion shows it still.
 // Original OpusKit code (MIT).
@@ -24,10 +24,14 @@ export function LettersAssemble({ children, as = 'p', spread = 1, className }: {
     const mm = gsap.matchMedia()
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const chars = gsap.utils.toArray<HTMLElement>('[data-ch]', root.current)
-      gsap.fromTo(chars, {
-        x: (i) => rnd(i, 1) * innerWidth * 0.6 * spread, y: (i) => rnd(i, 2) * innerHeight * 0.5 * spread,
-        rotate: (i) => rnd(i, 3) * 120, opacity: 0.08,
-      }, { x: 0, y: 0, rotate: 0, opacity: 1, ease: 'power1.inOut', scrollTrigger: { trigger: root.current, start: 'top bottom', end: 'center 55%', scrub: 0.8 } }) // an even ease: the scroll, not the curve, sets the pace
+      const from = {
+        x: (i: number) => rnd(i, 1) * innerWidth * 0.6 * spread, y: (i: number) => rnd(i, 2) * innerHeight * 0.5 * spread,
+        rotate: (i: number) => rnd(i, 3) * 120, // full ink while they travel: a faded letter fails contrast mid-way (Ines Varga's build, #28)
+      }
+      const home = { x: 0, y: 0, rotate: 0 }
+      // Already in the first screen (no scroll left to drive it — Ines Varga's Contact, #28): it gathers once, on its own.
+      if (root.current!.getBoundingClientRect().top + scrollY < innerHeight * 0.8) gsap.fromTo(chars, from, { ...home, duration: 1.4, ease: 'power3.out', stagger: { amount: 0.4, from: 'random' }, delay: 0.2 })
+      else gsap.fromTo(chars, from, { ...home, ease: 'power1.inOut', scrollTrigger: { trigger: root.current, start: 'top bottom', end: 'center 55%', scrub: 0.8 } }) // an even ease: the scroll, not the curve, sets the pace
     })
     return () => mm.revert()
   }, [spread])
