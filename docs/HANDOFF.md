@@ -92,6 +92,11 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 - **Awwwards part 7, the 404** (2026-10-11): `07-details.md` — half the winners design it, 13 of 91 answer 200; the
   package's 404 rule now asks for a real 404 status and a headline from the brand's own world. **The study plan
   (parts 1–7) is complete.**
+- **Next example: #28 Ines Varga** (§5c, approved 2026-10-11 — the user picked it first). Progress lives in
+  `docs/plan-examples.md` §6 and `examples/ines-varga/BUILD-LOG.md`; the finished recipe must also be added to the
+  user's Saved (open its `/studio/open?recipe=…` link in their browser). Done for the recipe (2026-10-11): in the
+  user's Saved, waiting for approval; next is the media brief. The recipe page got **Also in your site** — every piece
+  a recipe has that was not taken from a site, as live demos.
 - **Growing the ingredients** (2026-10-11, the user: more components, sections and variety for better sites), batch by
   batch from what winners do that OpusKit had only in words. Batch 1 — three pieces: `side-scroll` (a sideways wall,
   GSAP pin + scrub; now the piece of the Sideways strip photo layout and the sideways-gallery moment, so Pip & Kiln and

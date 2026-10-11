@@ -269,7 +269,7 @@ function GatherDemo() {
   return (
     <p aria-label="Made by hand" className={`${display} px-6 text-center text-6xl`}>
       {[...'Made by hand'].map((ch, i) => <span key={i} aria-hidden className="inline-block whitespace-pre transition-[translate,rotate,opacity] duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]" style={home ? { opacity: 1 } : { translate: `${((i * 53) % 9 - 4) * 30}px ${((i * 37) % 7 - 3) * 34}px`, rotate: `${((i * 29) % 9 - 4) * 15}deg`, opacity: 0.15 }}>{ch}</span>)}
-      <span className="hidden"><LettersAssemble>x</LettersAssemble></span>
+      <span className="hidden"><LettersAssemble as="span">x</LettersAssemble></span>
     </p>
   )
 }

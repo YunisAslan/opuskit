@@ -196,6 +196,7 @@ function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
   const [kind, setKind] = useState<Kind>('all')
   const kinds = (['all', 'parts', 'effects', 'qualities'] as const).filter((k) => k === 'all' || taken.some((x) => KIND_OF(x) === k))
   const shown = taken.filter((x) => kind === 'all' || KIND_OF(x) === kind)
+  const added = r.pieces.filter((p) => !taken.some((x) => x.kind === 'effect' && x.id === p.id))
   const t = look.type, world = worldFor(r.metadata.spec.purpose), brand = r.metadata.spec.brief?.name
   const part = (id: string) => r.pages.flatMap((p) => p.sections).find((s) => s.id === id)
   // Live, not a still (the user, 2026-10-08): an effect is its working demo, in the owner's brand — move, click, drag;
@@ -246,6 +247,31 @@ function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
           <p className="mt-2 text-xs text-muted">Effects work here — move, click, drag. Parts play on the site they came from where it was recorded, else drawn in your brand. Your site takes them; it won’t look like those sites.</p>
         </>
       ) : <p className="mt-6 border border-dashed border-line p-5 text-sm text-muted">Nothing was taken from a site — this recipe started from its kind of site.</p>}
+      {/* What the site has that was not taken from a site (the user, 2026-10-11: show the new things too): pieces the
+          recipe brings by itself (a photo layout's, a moving site's smooth scroll) or added for this site — each its
+          working demo in the owner's brand, with where it goes. */}
+      {added.length > 0 && <div className="mt-14">
+        <Heading title="Also in your site" />
+        <ul className="mt-5 grid gap-x-6 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
+          {added.map((p) => (
+            <li key={p.id} className="min-w-0">
+              <article className="overflow-hidden rounded-[3px] border border-line bg-white">
+                <div className="flex h-10 items-center justify-between gap-3 border-b border-line px-3 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
+                  <span className="truncate">Effect</span><span className="shrink-0">OpusKit</span>
+                </div>
+                <div className="aspect-[16/10] overflow-hidden border-b border-line" style={{ background: look.colors.background }}>
+                  <PieceDemo id={p.id} colors={look.colors} fonts={{ display: t.display.family, body: t.body.family, utility: t.utility.family }} className="!h-full" />
+                </div>
+                <div className="px-3 pb-3.5 pt-3">
+                  <span className="block truncate text-[15px] font-medium tracking-tight first-letter:uppercase">{p.name}</span>
+                  <span className="mt-1 line-clamp-2 min-h-[2lh] text-xs leading-relaxed text-muted">{p.line}</span>
+                  <span className="mt-2 block truncate font-mono text-[11px] uppercase tracking-[0.12em] text-pencil">{p.where.split(' — ')[0]}</span>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ul>
+      </div>}
     </div>
   )
 }
