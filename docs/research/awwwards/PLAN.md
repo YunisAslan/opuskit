@@ -24,13 +24,14 @@ job (the user, 2026-10-11). So we study what the winners do, part by part, and m
 | 4 | Colour | Palettes from part 1; colour filter; *Electric Colors*, *Pastel colors* | Palettes that pass check.ts; how many colours winners use | done — `04-colour.md` |
 | 5 | Layout & navigation | *Layout*, *Inspiring UX Design*, *Unusual Navigation*, Menu, Header, Footer elements | Sections and menus worth a card; layout rules | done — `05-layout.md` |
 | 6 | WebGL, 3D, texture | *WebGL*, *3D*, *Three.js* tags and collection | Which effects are worth a piece (and cheap enough) | done — `06-webgl.md` |
-| 7 | Forms, microcopy, details | *Forms and Input*, *Microcopy and UX writing*, *404 pages*, Loading | Craft rules for forms and words | next |
+| 7 | Forms, microcopy, details | *Forms and Input*, *Microcopy and UX writing*, *404 pages*, Loading | Craft rules for forms and words | done — `07-details.md` (the 404) |
 
 The order can change with what part 1 shows. Each finished part gets a line in `docs/HANDOFF.md`. New ingredients come in batches between parts (batch 1:
 `side-scroll`, `scroll-story`, `proximity-type` — `01-winners.md`).
 
 ## Tools
 
+- `scripts/research/awwwards-404.mjs <shots-dir>` — part 7's: each winner's missing page → `data/404.json`.
 - `scripts/research/awwwards-layout.mjs <shots-dir> [top]` — part 5's: header, menu and footer of all 93 →
   `data/layout.json`.
 - `scripts/research/awwwards-motion.mjs <sheets-dir> [top]` — part 3's: each scroll/transition winner opened in a

@@ -89,6 +89,9 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   name behind the thing (`stage`, for product- and 3D-led sites).
 - **Awwwards part 6, WebGL and 3D** (2026-10-11): `06-webgl.md` — new `dot-word` (the name as points, Canvas 2D; moment
   `name-of-points`) and `speed-bend` (pictures lean with scroll speed).
+- **Awwwards part 7, the 404** (2026-10-11): `07-details.md` — half the winners design it, 13 of 91 answer 200; the
+  package's 404 rule now asks for a real 404 status and a headline from the brand's own world. **The study plan
+  (parts 1–7) is complete.**
 - **Growing the ingredients** (2026-10-11, the user: more components, sections and variety for better sites), batch by
   batch from what winners do that OpusKit had only in words. Batch 1 — three pieces: `side-scroll` (a sideways wall,
   GSAP pin + scrub; now the piece of the Sideways strip photo layout and the sideways-gallery moment, so Pip & Kiln and

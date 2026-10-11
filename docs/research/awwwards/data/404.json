@@ -1,0 +1,923 @@
+{
+  "sites": {
+    "nick-ho": {
+      "title": "Nick Ho",
+      "status": 404,
+      "designed": true,
+      "words": 23,
+      "says404": true,
+      "home": true,
+      "media": 0,
+      "headline": "WELCOME TO TURN 404"
+    },
+    "lpas": {
+      "title": "LPAS",
+      "status": 404,
+      "designed": true,
+      "words": 25,
+      "says404": true,
+      "home": true,
+      "media": 12,
+      "headline": "This content is no longer available"
+    },
+    "maria-vasilyeva-portfolio": {
+      "title": "Maria Vasilyeva Portfolio",
+      "status": 404,
+      "designed": true,
+      "words": 93,
+      "says404": true,
+      "home": true,
+      "media": 19,
+      "headline": "404"
+    },
+    "odyssee": {
+      "title": "Odyss\\u00e9e",
+      "status": 404,
+      "designed": false,
+      "words": 100,
+      "says404": false,
+      "home": true,
+      "media": 6,
+      "headline": "Medical aesthetics for timeless results."
+    },
+    "twks-1": {
+      "title": "twks",
+      "status": 404,
+      "designed": true,
+      "words": 16,
+      "says404": true,
+      "home": true,
+      "media": 13,
+      "headline": "404 Not Found"
+    },
+    "lidar-drone-scanning": {
+      "title": "Lidar Drone Scanning",
+      "status": 404,
+      "designed": false,
+      "words": 102,
+      "says404": true,
+      "home": false,
+      "media": 3,
+      "headline": "404"
+    },
+    "santioni-spirits": {
+      "title": "Santioni Spirits",
+      "status": 200,
+      "designed": false,
+      "words": 170,
+      "says404": false,
+      "home": true,
+      "media": 15,
+      "headline": "ARE YOU OF"
+    },
+    "edolus": {
+      "title": "EDOLUS",
+      "error": "page.goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at https://edolus.com/opuskit-mis"
+    },
+    "tengile-malamala-collection": {
+      "title": "Tengile Malamala Collection",
+      "status": 404,
+      "designed": true,
+      "words": 224,
+      "says404": true,
+      "home": true,
+      "media": 12,
+      "headline": "404404"
+    },
+    "milledollars": {
+      "title": "Milledollars",
+      "status": 404,
+      "designed": true,
+      "words": 8,
+      "says404": true,
+      "home": true,
+      "media": 0,
+      "headline": "404"
+    },
+    "colonia-zacamil": {
+      "title": "Colonia Zacamil",
+      "status": 200,
+      "designed": false,
+      "words": 71,
+      "says404": false,
+      "home": false,
+      "media": 40,
+      "headline": "FROM THORNS"
+    },
+    "cominvi": {
+      "title": "CoMinVi",
+      "status": 404,
+      "designed": true,
+      "words": 29,
+      "says404": true,
+      "home": true,
+      "media": 18,
+      "headline": "Menu"
+    },
+    "jesper-landberg-4": {
+      "title": "Jesper Landberg",
+      "status": 404,
+      "designed": false,
+      "words": 397,
+      "says404": false,
+      "home": true,
+      "media": 1,
+      "headline": "Jesper Landberg — design engineer"
+    },
+    "butter": {
+      "title": "Butter",
+      "status": 200,
+      "designed": true,
+      "words": 101,
+      "says404": true,
+      "home": true,
+      "media": 13,
+      "headline": "Home"
+    },
+    "realevate": {
+      "title": "Realevate",
+      "status": 404,
+      "designed": true,
+      "words": 44,
+      "says404": true,
+      "home": true,
+      "media": 18,
+      "headline": "Page not found"
+    },
+    "meer-mohsin": {
+      "title": "MEER MOHSIN",
+      "status": 404,
+      "designed": false,
+      "words": 21,
+      "says404": true,
+      "home": false,
+      "media": 2,
+      "headline": "This page doesn’t exist"
+    },
+    "the-tie-break": {
+      "title": "The Tie-break",
+      "status": 200,
+      "designed": false,
+      "words": 19,
+      "says404": false,
+      "home": false,
+      "media": 3,
+      "headline": "The Tie-break!"
+    },
+    "moto-finance": {
+      "title": "Moto Finance",
+      "status": 404,
+      "designed": true,
+      "words": 18,
+      "says404": true,
+      "home": true,
+      "media": 3,
+      "headline": "page not found"
+    },
+    "sobha-privy-collection": {
+      "title": "Sobha Privy Collection",
+      "status": 404,
+      "designed": false,
+      "words": 4,
+      "says404": true,
+      "home": false,
+      "media": 0,
+      "headline": "404 Not Found"
+    },
+    "bleibtgleich26": {
+      "title": "bleibtgleich'26",
+      "status": 404,
+      "designed": true,
+      "words": 17,
+      "says404": true,
+      "home": true,
+      "media": 1,
+      "headline": "Page"
+    },
+    "gil-huybrecht": {
+      "title": "Gil Huybrecht",
+      "status": 500,
+      "designed": false,
+      "words": 6,
+      "says404": false,
+      "home": false,
+      "media": 0,
+      "headline": "500"
+    },
+    "pensatori-irrazionali": {
+      "title": "Pensatori Irrazionali",
+      "status": 404,
+      "designed": true,
+      "words": 904,
+      "says404": true,
+      "home": true,
+      "media": 32,
+      "headline": "Error 404"
+    },
+    "boc-studio": {
+      "title": "Boc.Studio",
+      "status": 404,
+      "designed": true,
+      "words": 105,
+      "says404": true,
+      "home": true,
+      "media": 7,
+      "headline": "Exploration is also part of our process, but you are lost."
+    },
+    "noho": {
+      "title": "Noho",
+      "status": 200,
+      "designed": false,
+      "words": 1710,
+      "says404": false,
+      "home": true,
+      "media": 139,
+      "headline": "Privacy Policy"
+    },
+    "lxl-creative": {
+      "title": "LxL Creative",
+      "status": 404,
+      "designed": true,
+      "words": 28,
+      "says404": true,
+      "home": true,
+      "media": 4,
+      "headline": "404page not found"
+    },
+    "l-i-s-a": {
+      "title": "L.I.S.A.",
+      "status": 404,
+      "designed": false,
+      "words": 20,
+      "says404": true,
+      "home": false,
+      "media": 1,
+      "headline": "Page Not Found"
+    },
+    "aspen-search": {
+      "title": "Aspen Search",
+      "status": 404,
+      "designed": true,
+      "words": 155,
+      "says404": true,
+      "home": true,
+      "media": 12,
+      "headline": "NYC: 09:42 AM"
+    },
+    "leo-parpeix-portfolio-2026": {
+      "title": "L\\u00e9o Parpeix - Portfolio 2026",
+      "status": 402,
+      "designed": false,
+      "words": 6,
+      "says404": false,
+      "home": false,
+      "media": 0,
+      "headline": "This deployment is temporarily paused"
+    },
+    "the-tuscan-journey-begins": {
+      "title": "The Tuscan Journey Begins",
+      "status": 200,
+      "designed": false,
+      "words": 20,
+      "says404": false,
+      "home": false,
+      "media": 8,
+      "headline": "Activate sound for a better experience."
+    },
+    "warm-fuzzy": {
+      "title": "Warm & Fuzzy",
+      "status": 404,
+      "designed": true,
+      "words": 15,
+      "says404": true,
+      "home": true,
+      "media": 7,
+      "headline": "404 error"
+    },
+    "white-desert": {
+      "title": "White Desert",
+      "status": 404,
+      "designed": true,
+      "words": 152,
+      "says404": true,
+      "home": true,
+      "media": 40,
+      "headline": "Not found"
+    },
+    "cerebrium": {
+      "title": "Cerebrium",
+      "status": 404,
+      "designed": true,
+      "words": 82,
+      "says404": true,
+      "home": true,
+      "media": 43,
+      "headline": "Page not found"
+    },
+    "usavionix": {
+      "title": "USAvionix",
+      "status": 404,
+      "designed": true,
+      "words": 18,
+      "says404": true,
+      "home": true,
+      "media": 4,
+      "headline": "404"
+    },
+    "seasats": {
+      "title": "Seasats",
+      "status": 404,
+      "designed": true,
+      "words": 10,
+      "says404": true,
+      "home": true,
+      "media": 3,
+      "headline": "404"
+    },
+    "why-zero": {
+      "title": "Why Zero",
+      "status": 404,
+      "designed": false,
+      "words": 21,
+      "says404": false,
+      "home": true,
+      "media": 7,
+      "headline": "4\n          0\n          4"
+    },
+    "united-carriers": {
+      "title": "United Carriers",
+      "status": 404,
+      "designed": true,
+      "words": 72,
+      "says404": true,
+      "home": true,
+      "media": 37,
+      "headline": "You’ve taken‍a wrong turn"
+    },
+    "gionatan-nese-26": {
+      "title": "Gionatan Nese '26",
+      "status": 404,
+      "designed": true,
+      "words": 9,
+      "says404": true,
+      "home": true,
+      "media": 1,
+      "headline": "You're not supposed to be here..."
+    },
+    "illoca": {
+      "title": "Illoca",
+      "status": 404,
+      "designed": true,
+      "words": 26,
+      "says404": true,
+      "home": true,
+      "media": 10,
+      "headline": "404!"
+    },
+    "trevor-noah": {
+      "title": "Trevor Noah",
+      "status": 404,
+      "designed": false,
+      "words": 18,
+      "says404": false,
+      "home": true,
+      "media": 24,
+      "headline": "Access To Main Content"
+    },
+    "paul-kalkbrenner": {
+      "title": "Paul Kalkbrenner",
+      "status": 404,
+      "designed": true,
+      "words": 42,
+      "says404": true,
+      "home": true,
+      "media": 5,
+      "headline": "Tracknot found"
+    },
+    "squarespace-foundations": {
+      "title": "Squarespace Foundations",
+      "status": 200,
+      "designed": false,
+      "words": 4,
+      "says404": true,
+      "home": false,
+      "media": 1,
+      "headline": "404: Page not found"
+    },
+    "era-residence": {
+      "title": "ERA Residence",
+      "status": 404,
+      "designed": false,
+      "words": 46,
+      "says404": false,
+      "home": true,
+      "media": 26,
+      "headline": "nothin"
+    },
+    "aardvark-book-club": {
+      "title": "Aardvark Book Club",
+      "status": 404,
+      "designed": false,
+      "words": 13,
+      "says404": true,
+      "home": false,
+      "media": 0,
+      "headline": "404"
+    },
+    "hobro-digital": {
+      "title": "HOBRO DIGITAL",
+      "status": 403,
+      "designed": false,
+      "words": 37,
+      "says404": false,
+      "home": false,
+      "media": 1,
+      "headline": "hobro.digital"
+    },
+    "decathlon-yestalgia": {
+      "title": "Decathlon Yestalgia",
+      "status": 404,
+      "designed": false,
+      "words": 18,
+      "says404": false,
+      "home": false,
+      "media": 22,
+      "headline": "MENU"
+    },
+    "sharplink": {
+      "title": "Sharplink",
+      "status": 404,
+      "designed": true,
+      "words": 47,
+      "says404": true,
+      "home": true,
+      "media": 40,
+      "headline": "ABOUT"
+    },
+    "ai-in-design-report-2026": {
+      "title": "Ai in Design Report 2026",
+      "status": 404,
+      "designed": true,
+      "words": 75,
+      "says404": true,
+      "home": true,
+      "media": 21,
+      "headline": "Sorry, we can’t find the page you’re looking for"
+    },
+    "miu-miu-a-house-that-we-shaped": {
+      "title": "MIU MIU A House that we shaped",
+      "status": 200,
+      "designed": false,
+      "words": 26,
+      "says404": false,
+      "home": false,
+      "media": 5,
+      "headline": "FOR AN OPTIMAL EXPERIENCE"
+    },
+    "zeroz-brand-site": {
+      "title": "/zeroz Brand Site",
+      "status": 404,
+      "designed": true,
+      "words": 27,
+      "says404": true,
+      "home": true,
+      "media": 61,
+      "headline": "/404"
+    },
+    "kononenko-architectural-bureau": {
+      "title": "Kononenko Architectural Bureau",
+      "status": 404,
+      "designed": true,
+      "words": 39,
+      "says404": true,
+      "home": true,
+      "media": 3,
+      "headline": "KononenkoArchitecturalBureau"
+    },
+    "the-state-of-the-gallery": {
+      "title": "The state of the gallery",
+      "status": 404,
+      "designed": true,
+      "words": 32,
+      "says404": true,
+      "home": true,
+      "media": 9,
+      "headline": "Websites"
+    },
+    "oimachi": {
+      "title": "Oimachi",
+      "status": 404,
+      "designed": true,
+      "words": 17,
+      "says404": true,
+      "home": true,
+      "media": 1,
+      "headline": "Page Not Found"
+    },
+    "cipher": {
+      "title": "Cipher",
+      "status": 404,
+      "designed": true,
+      "words": 12,
+      "says404": true,
+      "home": true,
+      "media": 0,
+      "headline": "404"
+    },
+    "likova": {
+      "title": "LIKOVA",
+      "status": 404,
+      "designed": false,
+      "words": 19,
+      "says404": true,
+      "home": false,
+      "media": 17,
+      "headline": "page not found"
+    },
+    "michael-gatt": {
+      "title": "Michael Gatt",
+      "status": 404,
+      "designed": true,
+      "words": 21,
+      "says404": true,
+      "home": true,
+      "media": 1,
+      "headline": "PAGE NOT FOUND"
+    },
+    "the-watch": {
+      "title": "The Watch",
+      "status": 200,
+      "designed": false,
+      "words": 3,
+      "says404": false,
+      "home": false,
+      "media": 2,
+      "headline": "Now loading"
+    },
+    "sstr-friction-reduction": {
+      "title": "SSTR - Friction Reduction",
+      "error": "page.goto: net::ERR_TOO_MANY_REDIRECTS at https://sstr.tech/opuskit-missing-page"
+    },
+    "px-push": {
+      "title": "PX PUSH",
+      "status": 404,
+      "designed": false,
+      "words": 48,
+      "says404": true,
+      "home": false,
+      "media": 1,
+      "headline": "PX PUSH: 404"
+    },
+    "haoqi-design": {
+      "title": "HAOQI.DESIGN",
+      "status": 404,
+      "designed": true,
+      "words": 20,
+      "says404": true,
+      "home": true,
+      "media": 3,
+      "headline": "404"
+    },
+    "mosbys-files": {
+      "title": "Mosby's Files",
+      "status": 404,
+      "designed": true,
+      "words": 12,
+      "says404": true,
+      "home": true,
+      "media": 0,
+      "headline": "404"
+    },
+    "revelatio-studio": {
+      "title": "Revelatio Studio",
+      "status": 404,
+      "designed": false,
+      "words": 16,
+      "says404": true,
+      "home": false,
+      "media": 0,
+      "headline": "Page not found"
+    },
+    "studio-k95-3": {
+      "title": "Studio K95",
+      "status": 404,
+      "designed": true,
+      "words": 88,
+      "says404": true,
+      "home": true,
+      "media": 7,
+      "headline": "404"
+    },
+    "nothin": {
+      "title": "NOTHIN'",
+      "status": 404,
+      "designed": false,
+      "words": 32,
+      "says404": false,
+      "home": true,
+      "media": 5,
+      "headline": "E"
+    },
+    "produx-design": {
+      "title": "Produx Design",
+      "status": 404,
+      "designed": false,
+      "words": 127,
+      "says404": false,
+      "home": true,
+      "media": 32,
+      "headline": "A long time ago, in a browser far far away..."
+    },
+    "vero-new-york": {
+      "title": "Vero New-York",
+      "status": 404,
+      "designed": true,
+      "words": 75,
+      "says404": true,
+      "home": true,
+      "media": 16,
+      "headline": "Page not found"
+    },
+    "20-years-inspired-by-people": {
+      "title": "20 Years Inspired by People",
+      "status": 404,
+      "designed": false,
+      "words": 7,
+      "says404": true,
+      "home": false,
+      "media": 0,
+      "headline": "404"
+    },
+    "no-art": {
+      "title": "No Art",
+      "status": 404,
+      "designed": false,
+      "words": 16,
+      "says404": true,
+      "home": false,
+      "media": 0,
+      "headline": "Page not found"
+    },
+    "alethia": {
+      "title": "Alethia",
+      "status": 404,
+      "designed": true,
+      "words": 20,
+      "says404": true,
+      "home": true,
+      "media": 1,
+      "headline": "Page Not Found"
+    },
+    "serotoninn": {
+      "title": "Serotoninn",
+      "status": 404,
+      "designed": false,
+      "words": 37,
+      "says404": true,
+      "home": false,
+      "media": 71,
+      "headline": "IMAGE NOT FOUND"
+    },
+    "lacoste-ace-breaker": {
+      "title": "Lacoste Ace Breaker",
+      "status": 404,
+      "designed": false,
+      "words": 824,
+      "says404": false,
+      "home": false,
+      "media": 36,
+      "headline": "Lacoste Polo Atelier Experience"
+    },
+    "hearst-exhibit-2026": {
+      "title": "Hearst Exhibit 2026",
+      "status": 404,
+      "designed": false,
+      "words": 18,
+      "says404": true,
+      "home": false,
+      "media": 1,
+      "headline": "PageNotFound"
+    },
+    "noomo-showcase": {
+      "title": "Noomo Showcase",
+      "status": 404,
+      "designed": false,
+      "words": 3,
+      "says404": false,
+      "home": false,
+      "media": 18,
+      "headline": "GO HOME"
+    },
+    "2xa-studio": {
+      "title": "2xA Studio",
+      "status": 404,
+      "designed": false,
+      "words": 25,
+      "says404": false,
+      "home": true,
+      "media": 4,
+      "headline": "2xA STUDIO"
+    },
+    "ciao-energy-launch-website": {
+      "title": "CIAO ENERGY - LAUNCH WEBSITE",
+      "status": 404,
+      "designed": true,
+      "words": 8,
+      "says404": true,
+      "home": true,
+      "media": 0,
+      "headline": "404"
+    },
+    "made-with-gsap-1": {
+      "title": "Made With Gsap",
+      "status": 200,
+      "designed": true,
+      "words": 22,
+      "says404": true,
+      "home": true,
+      "media": 16,
+      "headline": "404"
+    },
+    "obys-r-experiment-space": {
+      "title": "Obys\\u00ae Experiment Space",
+      "status": 404,
+      "designed": false,
+      "words": 12,
+      "says404": true,
+      "home": false,
+      "media": 0,
+      "headline": "404"
+    },
+    "trionn-2": {
+      "title": "TRIONN",
+      "status": 404,
+      "designed": false,
+      "words": 54,
+      "says404": false,
+      "home": true,
+      "media": 40,
+      "headline": "INSPIRE"
+    },
+    "partizan": {
+      "title": "Partizan",
+      "status": 403,
+      "designed": false,
+      "words": 35,
+      "says404": false,
+      "home": false,
+      "media": 1,
+      "headline": "Sorry 188.253.221.120, your request cannot be processed."
+    },
+    "artem-shcherbakov": {
+      "title": "Artem Shcherbakov",
+      "status": 404,
+      "designed": false,
+      "words": 8,
+      "says404": false,
+      "home": true,
+      "media": 19,
+      "headline": "pagenot found"
+    },
+    "spotify-wrapped-party": {
+      "title": "Spotify Wrapped Party",
+      "status": 200,
+      "designed": false,
+      "words": 133,
+      "says404": false,
+      "home": true,
+      "media": 117,
+      "headline": "Wrapped Party by Spotify."
+    },
+    "normal-is-boring": {
+      "title": "NORMAL IS BORING",
+      "status": 200,
+      "designed": true,
+      "words": 60,
+      "says404": true,
+      "home": true,
+      "media": 10,
+      "headline": "N"
+    },
+    "dragonfly-redux": {
+      "title": "Dragonfly Redux",
+      "status": 200,
+      "designed": true,
+      "words": 74,
+      "says404": true,
+      "home": true,
+      "media": 33,
+      "headline": "D"
+    },
+    "lacoste-polo-factory": {
+      "title": "Lacoste \\u2014 Polo Factory",
+      "status": 404,
+      "designed": false,
+      "words": 824,
+      "says404": false,
+      "home": false,
+      "media": 36,
+      "headline": "Lacoste Polo Atelier Experience"
+    },
+    "lama-lama-2": {
+      "title": "Lama Lama",
+      "status": 404,
+      "designed": true,
+      "words": 157,
+      "says404": true,
+      "home": true,
+      "media": 143,
+      "headline": "100%"
+    },
+    "glitch-grit": {
+      "title": "Glitch&Grit",
+      "status": 404,
+      "designed": false,
+      "words": 15,
+      "says404": true,
+      "home": false,
+      "media": 1,
+      "headline": "Page Not Found"
+    },
+    "izanami": {
+      "title": "IZANAMI",
+      "status": 404,
+      "designed": true,
+      "words": 57,
+      "says404": true,
+      "home": true,
+      "media": 12,
+      "headline": "Remember who you are"
+    },
+    "hiroto-sato": {
+      "title": "Hiroto Sato",
+      "status": 404,
+      "designed": false,
+      "words": 11,
+      "says404": true,
+      "home": false,
+      "media": 0,
+      "headline": "Not Found"
+    },
+    "coffeetech-r": {
+      "title": "CoffeeTech\\u00ae",
+      "status": 404,
+      "designed": false,
+      "words": 18,
+      "says404": false,
+      "home": true,
+      "media": 2,
+      "headline": "Brew notfound"
+    },
+    "risk": {
+      "title": "RISK",
+      "status": 404,
+      "designed": false,
+      "words": 33,
+      "says404": true,
+      "home": false,
+      "media": 8,
+      "headline": "404 page"
+    },
+    "house-of-honey-1": {
+      "title": "House of Honey",
+      "status": 404,
+      "designed": true,
+      "words": 74,
+      "says404": true,
+      "home": true,
+      "media": 7,
+      "headline": "We couldn't find  that page. But our doors  are always open."
+    },
+    "pp-neue-montreal": {
+      "title": "PP Neue Montreal",
+      "status": 404,
+      "designed": true,
+      "words": 20,
+      "says404": true,
+      "home": true,
+      "media": 1,
+      "headline": "Page Not Found"
+    },
+    "longbow": {
+      "title": "Longbow",
+      "status": 404,
+      "designed": false,
+      "words": 15,
+      "says404": true,
+      "home": false,
+      "media": 3,
+      "headline": "Page Not Found"
+    },
+    "vectr": {
+      "title": "Vectr",
+      "status": 404,
+      "designed": false,
+      "words": 54,
+      "says404": false,
+      "home": true,
+      "media": 16,
+      "headline": "We couldn't findthe page youwere looking for."
+    }
+  },
+  "collected": "2026-10-11"
+}
