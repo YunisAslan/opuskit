@@ -96,7 +96,10 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   `docs/plan-examples.md` §6 and `examples/ines-varga/BUILD-LOG.md`; the finished recipe must also be added to the
   user's Saved (open its `/studio/open?recipe=…` link in their browser). Done for the recipe (2026-10-11): in the
   user's Saved, approved, built, registered and live at `/live/ines-varga`; its Library cards show the four new
-  pieces (photo-morph, shutter, letters-assemble, scroll-story). Next: its clips. Engine lessons 1–3 fixed (pictures for
+  pieces (photo-morph, shutter, letters-assemble, scroll-story). **Next (the user stopped here, 2026-10-11, to
+  continue tomorrow): its clips.** The first takes of `site.mp4`/`full.mp4` showed the page's staggered arrivals all at
+  once — fix the recorder first (`docs/capture.md`, "Open: arrivals come out all at once"), then record the site clips
+  and the three new pieces' demo clips (plans already in `demo-clips.mjs`); details in its BUILD-LOG §Next. Engine lessons 1–3 fixed (pictures for
   pieces in the shot list; letters-assemble in the first screen; DrawnLink passing a menu's close). The recipe page got **Also in your site** — every piece
   a recipe has that was not taken from a site, as live demos.
 - **Growing the ingredients** (2026-10-11, the user: more components, sections and variety for better sites), batch by

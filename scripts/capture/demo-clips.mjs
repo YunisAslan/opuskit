@@ -51,12 +51,15 @@ export const CLIPS = {
   'fade-transition': { at: PIECE, start: [60, 120], hand: clicks(3) },
   'blob-transition': { at: PIECE, start: [60, 120], hand: clicks(3) },
   'curtain-transition': { at: PIECE, start: [60, 120], hand: clicks(3) },
+  'shutter-transition': { at: PIECE, start: [60, 120], hand: clicks(3) },
   // Scrolled pages: no pointer, the page itself moving (to: a page y, or 'end'; ms). from: the clip starts with the
   // piece ([data-target]) this far down the screen (0…1), not on the plain text above it.
   'tilted-grid': { from: 0.9, scroll: [{ to: 'el:[data-target]', ms: 3600 }] },
   'scroll-progress': { scroll: [{ to: 'end', ms: 6000 }] },
   'chapter-colours': { from: 0.15, scroll: [{ to: 'end', ms: 8000 }] },
   'side-scroll': { from: 0.75, scroll: [{ to: 'end', ms: 7000 }] },
+  'letters-assemble': { from: 1, scroll: [{ to: 'el:[data-target]', ms: 3400 }] },
+  'scroll-story': { from: 0.6, scroll: [{ to: 'end', ms: 9000 }] },
 }
 
 const cap = (...args) => {

@@ -106,6 +106,15 @@ lightbox). Small things are shown large and centred, never at the edge where a s
 **One ground.** Pieces and pure parts are recorded on OpusKit's dark card ground `#18181B` (`OPUSKIT_DARK`): rows of
 white cards tired the eye, and one dark set reads well in both light and dark mode, so there is one set to maintain.
 
+**Open (2026-10-11, the user): arrivals come out all at once.** On Ines Varga the page's blocks arrive one after
+another on load (staggered delays), but in `site.mp4` and `full.mp4` they appear together. Not yet fixed — those two
+clips are recorded but not registered. Likely cause, to check first: the script waits for `load` (and the page's own
+start-up) before Cap's recording really begins (~1 s late), so the arrival sequence has already played; the clip then
+opens on a finished page. Try: start the recording first and load or reload the page inside it (`reload`, as for
+Sticky Weather's stickers), and keep the lead-in that `freezedetect` would cut. Compare the clip frame by frame with the
+page loaded by hand before keeping it. Also check that nothing scrolls the page before the recording starts (a reveal on
+entering the screen fires once).
+
 **Look at every take.** Make a contact sheet of frames (`ffmpeg … tile`) before wiring a clip in: wrong section, a
 welcome screen, a black film layer, a cut-off photo and an idle start were all caught this way. After a run,
 `cap record status` must list nothing alive (the scripts stop a recording in `finally`).
