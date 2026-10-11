@@ -205,3 +205,23 @@ img { -webkit-user-drag: none; }
   .focus-cards > li { transition: opacity 150ms ease; }
   .focus-cards:has(> li:hover) > li:not(:hover) { opacity: 0.62; }
 }
+
+/* ---------- Home first screen: the word, the mug and its shadow (components/home/ProductStage) ---------- */
+/* The word fills the stage's width exactly: --word-r is MORNING's advance width in ems (measured in Bagel Fat One) */
+.hero-stage { --mug-w: min(66vw, 40svh); }
+@media (min-width: 768px) { .hero-stage { --mug-w: min(31vw, 50svh); } }
+.hero-word-box { container-type: inline-size; }
+.hero-word { --word-r: 4.62; font-family: var(--font-display), sans-serif; font-size: calc(100cqw / var(--word-r)); line-height: 0.8; letter-spacing: 0; padding-block: 0.06em 0; }
+.hero-mug-pos { width: var(--mug-w); top: 0; translate: -50% -88%; }
+.hero-shadow-pos { width: calc(var(--mug-w) * 0.72); top: calc(var(--mug-w) * 0.07); translate: -50% 0; }
+@media (min-width: 768px) {
+  .hero-mug-pos { translate: -50% -50%; }
+  .hero-shadow-pos { top: calc(var(--mug-w) * 0.44); }
+}
+.hero-shadow { height: calc(var(--mug-w) * 0.09); border-radius: 50%; background: radial-gradient(closest-side, color-mix(in oklab, var(--color-text) 34%, transparent), transparent); }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-float { animation: hero-float 5.6s ease-in-out infinite alternate; }
+  .hero-shadow { animation: hero-shadow 5.6s ease-in-out infinite alternate; }
+}
+@keyframes hero-float { from { transform: translateY(4px) rotate(-2deg); } to { transform: translateY(-6px) rotate(2.5deg); } }
+@keyframes hero-shadow { from { transform: scale(1); opacity: 1; } to { transform: scale(0.82); opacity: 0.6; } }

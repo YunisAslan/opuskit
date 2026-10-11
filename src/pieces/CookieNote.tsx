@@ -19,7 +19,7 @@ export function CookieNote({ text, place = 'Zone 1', label = 'Note', accept = 'A
           </div>
           <p className="type-body px-4 pt-4 [font-size:0.9rem]">{text}</p>
           <div className="flex flex-wrap gap-2 px-4 pb-4 pt-4">
-            <button type="button" onClick={() => answer('all')} className="type-body bg-(--color-chapter-1,var(--color-accent)) px-4 py-2 text-(--color-background) [font-size:0.9rem]">{accept} →</button>
+            <button type="button" onClick={() => answer('all')} className="type-body bg-(--color-chapter-1,var(--color-accent)) px-4 py-2 text-(--color-chapter-1-text,var(--color-background)) [font-size:0.9rem]">{accept} →</button>
             <button type="button" onClick={() => answer('necessary')} className="type-body px-3 py-2 underline underline-offset-4 [font-size:0.9rem]">{decline}</button>
           </div>
         </motion.div>

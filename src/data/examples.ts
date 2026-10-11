@@ -26,8 +26,14 @@ export type ExampleProject = {
   livePath: string
   /** A short, light loop from the same site for small previews (the hero file can be a heavy scrub encode). */
   clip?: string
+  /** The whole landing page, top to the footer, at a reading pace — the site large (its page, "see it larger"). Recorded
+   *  with Cap at 60 fps (docs/plan-examples.md §3 step 9). */
+  fullClip?: string
   /** A few seconds of each of its sections arriving on screen — the kit shows one next to that part (docs/plan-examples.md §3 step 8). */
   sectionClips?: Partial<Record<SectionId, string>>
+  /** A still of each of its sections, framed on it once it has settled (the menu centred on its ground, the footer at the
+   *  page's end) — shown where there is no clip of that part, so a card is the site itself, never sample content. */
+  sectionStills?: Partial<Record<SectionId, string>>
   /** A few seconds of each kit piece it uses (a behaviour or a moment) doing its thing — the kit shows one next to that piece. */
   pieceClips?: Partial<Record<PieceId, string>>
   /** The same for its big idea's signature moments (`signaturePatterns` ids). */
@@ -51,8 +57,11 @@ export const examples: ExampleProject[] = [
     // Its first screen is the owner's film, scroll-controlled: the still is that film's own poster.
     hero: { kind: 'video', src: '/examples/ninth-row/media/heroVideo.mp4', poster: '/examples/ninth-row/media/posterImage.jpg' },
     livePath: '/live/ninth-row',
+    clip: '/examples/ninth-row/media/clips/site.mp4', fullClip: '/examples/ninth-row/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Halden's first screen, Lowfield Nights' Schedule, curtain and Big name footer; You → Direction (Cinema or theatre,
     // decision 54); built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe.
+    // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
+    sectionClips: { 'featured-work': '/examples/ninth-row/media/clips/featured-work.mp4' },
     choices: [
       { label: 'Making', value: 'Event / wedding' },
       { label: 'Name', value: 'Ninth Row' },
@@ -81,8 +90,11 @@ export const examples: ExampleProject[] = [
     // the hero still is the site's own first screen until they are in.
     hero: { kind: 'image', src: '/examples/pip-kiln/media/poster.jpg' },
     livePath: '/live/pip-kiln',
+    clip: '/examples/pip-kiln/media/clips/site.mp4', fullClip: '/examples/pip-kiln/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Parts taken from Maison Vey, Sticky Weather and Inkwell & Moth, then You → Direction (Playful Pop, Butter Yellow),
     // built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
+    // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
+    sectionStills: { 'product-highlight': '/examples/pip-kiln/media/stills/product-highlight.jpg' },
     choices: [
       { label: 'Making', value: 'E-commerce' },
       { label: 'Name', value: 'Pip & Kiln' },
@@ -100,7 +112,38 @@ export const examples: ExampleProject[] = [
       { label: 'Pages', value: 'Home, Shop, Product, Cart, Checkout, Workshops' },
       { label: 'Built with', value: 'Claude Code' },
     ],
-    note: 'The pottery, its pieces, prices, stock and workshops are made up, and the bag, checkout and bookings open the visitor’s own email — nothing is sold. Its pictures are still the temporary ones the build made; the real photos are picked (media-src/SOURCES.md).',
+    note: 'The pottery, its pieces, prices, stock and workshops are made up, and the bag, checkout and bookings open the visitor’s own email — nothing is sold. Its photos are Unsplash picks; its first-screen mug was made in Google Flow, cut out and moved by code (media-src/SOURCES.md).',
+  },
+  {
+    slug: 'ines-varga',
+    title: 'Ines Varga, maps drawn by hand',
+    summary: 'Illustrated maps for towns, trails and books, drawn by hand in ink and watercolour. Commissions open.',
+    mood: ['Hand-made', 'Curious', 'Warm'],
+    // Built 2026-10-11 with Unsplash photos and placeholders for the project covers and galleries: the hero still is
+    // the site's own first screen (the map it draws).
+    hero: { kind: 'image', src: '/examples/ines-varga/media/poster.jpg' },
+    livePath: '/live/ines-varga',
+    // Parts taken from Inkwell & Moth, Fieldhouse and Fennwood, then You → Direction (Conceptual Sketch, Gallery Grey),
+    // plus the session's new pieces at the user's request; built by an isolated Claude Code session from its Build
+    // Package: opuskit.json is the exact recipe, with what was taken.
+    choices: [
+      { label: 'Making', value: 'Portfolio' },
+      { label: 'Name', value: 'Ines Varga' },
+      { label: 'Visitors should', value: 'Get in touch' },
+      { label: 'Style', value: 'Conceptual Sketch' },
+      { label: 'First screen', value: 'Illustrated hero' },
+      { label: 'Movement', value: 'Dynamic' },
+      { label: 'Colors', value: 'Gallery Grey' },
+      { label: 'Lettering', value: 'Sketchbook' },
+      { label: 'Layout', value: 'Grid-driven' },
+      { label: 'Shape', value: 'Hairline' },
+      { label: 'Menu', value: 'Full-screen menu' },
+      { label: 'Footer', value: 'Say hello' },
+      { label: 'Big idea', value: 'None' },
+      { label: 'Pages', value: 'Home, Selected Work, Project, About, Contact' },
+      { label: 'Built with', value: 'Claude Code' },
+    ],
+    note: 'Ines Varga, her clients, quotes and Pécs studio are made up; the maps are Unsplash photos standing in for her own (media-src/SOURCES.md), the drawings are the builder\u2019s, and the contact form opens the visitor\u2019s own email — nothing is sent.',
   },
   {
     slug: 'kelp-line',
@@ -111,6 +154,7 @@ export const examples: ExampleProject[] = [
     // the hero still is the site's own first screen until they are in.
     hero: { kind: 'image', src: '/examples/kelp-line/media/poster.jpg' },
     livePath: '/live/kelp-line',
+    clip: '/examples/kelp-line/media/clips/site.mp4', fullClip: '/examples/kelp-line/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Parts taken from Kür Delta Watch, Lowfield Nights and Velmira, then You → Direction (Coastal Calm, Bottle Green),
     // built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
     choices: [
@@ -130,7 +174,7 @@ export const examples: ExampleProject[] = [
       { label: 'Pages', value: 'Home, Our mission, Programs, Stories, Donate, Contact' },
       { label: 'Built with', value: 'Claude Code' },
     ],
-    note: 'The charity, its people, counts, amounts and Skerra Bay are made up, and gifts and messages open the visitor’s own email — none is sent. Its pictures are still the temporary ones the build made; the real photos are picked (media-src/SOURCES.md).',
+    note: 'The charity, its people, counts, amounts and Skerra Bay are made up, and gifts and messages open the visitor’s own email — none is sent. Its photos are Unsplash picks (media-src/SOURCES.md).',
   },
   {
     slug: 'raster-school',
@@ -140,6 +184,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is type, not media: the hero still is the site's own first screen.
     hero: { kind: 'image', src: '/examples/raster-school/media/poster.jpg' },
     livePath: '/live/raster-school',
+    clip: '/examples/raster-school/media/clips/site.mp4', fullClip: '/examples/raster-school/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Parts taken from Night Shift, Sela Mor and Brasshand, then You → Direction (Swiss Modern, the first still site),
     // built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
     choices: [
@@ -169,8 +214,11 @@ export const examples: ExampleProject[] = [
     // Its first screen is a photo with depth: the still is that photo itself.
     hero: { kind: 'image', src: '/examples/pale-hour/media/hero.jpg' },
     livePath: '/live/pale-hour',
+    clip: '/examples/pale-hour/media/clips/site.mp4', fullClip: '/examples/pale-hour/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Parts taken from Sela Mor, Fieldhouse and Slow Atlas, then You → Direction (Gallery or museum, decision 46), built
     // by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe, with what was taken.
+    // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
+    sectionStills: { 'featured-work': '/examples/pale-hour/media/stills/featured-work.jpg' },
     choices: [
       { label: 'Making', value: 'Event / wedding' },
       { label: 'Name', value: 'Pale Hour' },
@@ -198,6 +246,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is a photo with depth: the still is that photo itself.
     hero: { kind: 'image', src: '/examples/low-hum/media/hero.jpg' },
     livePath: '/live/low-hum',
+    clip: '/examples/low-hum/media/clips/site.mp4', fullClip: '/examples/low-hum/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // The first site made through You → Direction (no Pages screen), parts taken from Fennwood, Lowfield Nights and
     // Inkwell & Moth, then built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe.
     choices: [
@@ -227,7 +276,10 @@ export const examples: ExampleProject[] = [
     // Its first screen is a scroll-scrubbed film over a sea of fog: the still is that film's own poster.
     hero: { kind: 'video', src: '/examples/halden/media/heroVideo.mp4', poster: '/examples/halden/media/posterImage.jpg' },
     livePath: '/live/halden',
+    clip: '/examples/halden/media/clips/site.mp4', fullClip: '/examples/halden/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the Library (blank start), then built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe.
+    // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
+    sectionClips: { hero: '/examples/halden/media/clips/hero.mp4' },
     choices: [
       { label: 'Making', value: 'Spa & bathhouse' },
       { label: 'Name', value: 'Halden' },
@@ -255,7 +307,10 @@ export const examples: ExampleProject[] = [
     // Its first screen is a product photo: the still is that photo itself.
     hero: { kind: 'image', src: '/examples/maison-vey/media/hero.jpg' },
     livePath: '/live/maison-vey',
+    clip: '/examples/maison-vey/media/clips/site.mp4', fullClip: '/examples/maison-vey/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the Library (blank start), then built by an isolated Claude Code session from its Build Package: opuskit.json is the exact recipe.
+    // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
+    sectionStills: { 'product-grid': '/examples/maison-vey/media/stills/product-grid.jpg', collection: '/examples/maison-vey/media/stills/collection.jpg' },
     choices: [
       { label: 'Making', value: 'E-commerce' },
       { label: 'Name', value: 'Maison Vey' },
@@ -283,7 +338,11 @@ export const examples: ExampleProject[] = [
     // Its first screen is a full-bleed photo: the still is that photo itself.
     hero: { kind: 'image', src: '/examples/fieldhouse/media/hero.jpg' },
     livePath: '/live/fieldhouse',
+    clip: '/examples/fieldhouse/media/clips/site.mp4', fullClip: '/examples/fieldhouse/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the Library (blank start), then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
+    // The Library's own captures of its parts (scripts/capture/site-clips.mjs, section-stills.mjs).
+    sectionClips: { hero: '/examples/fieldhouse/media/clips/hero.mp4' },
+    sectionStills: { 'case-study': '/examples/fieldhouse/media/stills/case-study.jpg', gallery: '/examples/fieldhouse/media/stills/gallery.jpg' },
     choices: [
       { label: 'Making', value: 'Studio' },
       { label: 'Name', value: 'Fieldhouse' },
@@ -311,6 +370,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is an editorial photo: the still is that photo itself.
     hero: { kind: 'image', src: '/examples/qum/media/hero.jpg' },
     livePath: '/live/qum',
+    clip: '/examples/qum/media/clips/site.mp4', fullClip: '/examples/qum/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'E-commerce' },
@@ -339,6 +399,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is a scroll-scrubbed walk through the show house: the still is that film's own poster.
     hero: { kind: 'video', src: '/examples/aster-house/media/heroVideo.mp4', poster: '/examples/aster-house/media/posterImage.jpg' },
     livePath: '/live/aster-house',
+    clip: '/examples/aster-house/media/clips/site.mp4', fullClip: '/examples/aster-house/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Real estate' },
@@ -366,6 +427,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is a 3D grading console built in code: the hero still is the poster rendered from that scene.
     hero: { kind: 'image', src: '/examples/night-shift/media/console-poster.jpg' },
     livePath: '/live/night-shift',
+    clip: '/examples/night-shift/media/clips/site.mp4', fullClip: '/examples/night-shift/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Course / education' },
@@ -393,6 +455,13 @@ export const examples: ExampleProject[] = [
     // Its first screen is her name in type; the film is a scroll band mid-page — the still is the site's own poster of it.
     hero: { kind: 'image', src: '/examples/sela-mor/media/posterImage.jpg' },
     livePath: '/live/sela-mor',
+    // Captured from the live site 2026-10-10: clips with Cap (60 fps, the Mac's own cursor), stills by Playwright.
+    clip: '/examples/sela-mor/media/clips/site.mp4',
+    fullClip: '/examples/sela-mor/media/clips/full.mp4',
+    sectionClips: { hero: '/examples/sela-mor/media/clips/hero.mp4' },
+    pieceClips: { 'pinned-stage': '/examples/sela-mor/media/clips/pinned-stage.mp4', magnetic: '/examples/sela-mor/media/clips/magnetic.mp4' },
+    signatureClips: { 'pinned-proof': '/examples/sela-mor/media/clips/pinned-stage.mp4' },
+    sectionStills: Object.fromEntries((['navbar', 'hero', 'featured-work', 'about', 'schedule', 'clients', 'newsletter', 'case-study', 'gallery', 'intro', 'press', 'contact-cta', 'footer'] as const).map((id) => [id, `/examples/sela-mor/media/stills/${id}.jpg`])),
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Personal Brand' },
@@ -420,6 +489,7 @@ export const examples: ExampleProject[] = [
     // Its first screen is type; the river film is a band mid-page, not the hero — the still is the site's own poster of it.
     hero: { kind: 'image', src: '/examples/kur-delta-watch/media/posterImage.jpg' },
     livePath: '/live/kur-delta-watch',
+    clip: '/examples/kur-delta-watch/media/clips/site.mp4', fullClip: '/examples/kur-delta-watch/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
     choices: [
       { label: 'Making', value: 'Nonprofit / cause' },
@@ -447,7 +517,10 @@ export const examples: ExampleProject[] = [
     // Its first screen is a drawing made in code: the hero still is the site's own first screen, after the tracing paper.
     hero: { kind: 'image', src: '/examples/inkwell-moth/media/poster.jpg' },
     livePath: '/live/inkwell-moth',
+    clip: '/examples/inkwell-moth/media/clips/site.mp4', fullClip: '/examples/inkwell-moth/media/clips/full.mp4', // scripts/capture/site-clips.mjs
     // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
+    // The Library's own capture of its first screen (scripts/capture/site-clips.mjs).
+    sectionClips: { hero: '/examples/inkwell-moth/media/clips/hero.mp4' },
     choices: [
       { label: 'Making', value: 'Portfolio' },
       { label: 'Name', value: 'Inkwell & Moth' },
@@ -465,137 +538,6 @@ export const examples: ExampleProject[] = [
       { label: 'Built with', value: 'Claude Code' },
     ],
     note: 'Photos are from Pexels (credits in media-src/SOURCES.md); the inkwell drawing, the spot drawings and the logo were drawn in code by Claude Code during the build; the publishers, quotes, fees and contact details are made up.',
-  },
-  {
-    slug: 'lowfield-nights',
-    title: 'Lowfield Nights — Silent films, live scores, 12–14 June',
-    summary: 'Three nights of silent films with live scores in a disused hangar on the Absheron coast, 12–14 June 2027. Entry free with an RSVP.',
-    mood: ['Cinematic', 'Nocturnal', 'Warm'],
-    hero: { kind: 'video', src: '/examples/lowfield-nights/media/heroVideo.mp4', poster: '/examples/lowfield-nights/media/posterImage.jpg' },
-    livePath: '/live/lowfield-nights',
-    // The recording shows Venue & travel only: no site clip (it would stand in for the scroll-film first screen).
-    sectionClips: {
-      'faq': '/examples/lowfield-nights/media/clips/faq.mp4',
-      'navbar': '/examples/lowfield-nights/media/clips/navbar.mp4',
-      'footer': '/examples/lowfield-nights/media/clips/footer.mp4',
-    },
-    pieceClips: {
-      'text-effect': '/examples/lowfield-nights/media/clips/piece-text-effect.mp4',
-    },
-    signatureClips: {
-      'guided-stops': '/examples/lowfield-nights/media/clips/sig-guided-stops.mp4',
-    },
-    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
-    choices: [
-      { label: 'Making', value: 'Event / wedding' },
-      { label: 'Name', value: 'Lowfield Nights' },
-      { label: 'Visitors should', value: 'Book or reserve' },
-      { label: 'Style', value: 'Cinematic Editorial' },
-      { label: 'First screen', value: 'Whole-page scroll video' },
-      { label: 'Movement', value: 'Immersive' },
-      { label: 'Colors', value: 'Graphite & Sand' },
-      { label: 'Lettering', value: 'High and Low' },
-      { label: 'Layout', value: 'Full-bleed' },
-      { label: 'Shape', value: 'Sharp' },
-      { label: 'Menu', value: 'Centered logo' },
-      { label: 'Big idea', value: 'A walk through named stops' },
-      { label: 'Pages', value: 'Home, RSVP, Venue & travel, FAQ' },
-      { label: 'Built with', value: 'Claude Code' },
-    ],
-    note: 'The film and photos are from Pexels (credits in media-src/SOURCES.md); the dates, players, venue and contacts are made up; the programme names four real public-domain silent films; Claude Code drew the logo during the build.',
-  },
-  {
-    slug: 'velmira',
-    title: 'Velmira, a lake house in the Gabala hills',
-    summary: 'Nine rooms and a bathhouse on a lake in the Gabala hills: warm water, cold air, long quiet mornings.',
-    mood: ['Dreamy', 'Soft', 'Still'],
-    hero: { kind: 'video', src: '/examples/velmira/media/heroVideo.mp4', poster: '/examples/velmira/media/posterImage.jpg' },
-    livePath: '/live/velmira',
-    // The recording starts below the film first screen: no site clip until one shows it.
-    sectionClips: {
-      'intro': '/examples/velmira/media/clips/intro.mp4',
-      'collection': '/examples/velmira/media/clips/collection.mp4',
-      'feature-rows': '/examples/velmira/media/clips/feature-rows.mp4',
-      'journal': '/examples/velmira/media/clips/journal.mp4',
-      'reservation': '/examples/velmira/media/clips/reservation.mp4',
-      'lookbook': '/examples/velmira/media/clips/lookbook.mp4',
-      'gallery': '/examples/velmira/media/clips/gallery.mp4',
-      'location': '/examples/velmira/media/clips/location.mp4',
-      'faq': '/examples/velmira/media/clips/faq.mp4',
-      'navbar': '/examples/velmira/media/clips/navbar.mp4',
-      'footer': '/examples/velmira/media/clips/footer.mp4',
-    },
-    signatureClips: {
-      'travelling-motif': '/examples/velmira/media/clips/sig-travelling-motif.mp4',
-      'footer-moment': '/examples/velmira/media/clips/sig-footer-moment.mp4',
-    },
-    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
-    choices: [
-      { label: 'Making', value: 'Hotel & travel' },
-      { label: 'Name', value: 'Velmira' },
-      { label: 'Visitors should', value: 'Book or reserve' },
-      { label: 'Style', value: 'Ethereal' },
-      { label: 'First screen', value: 'Ambient video hero' },
-      { label: 'Movement', value: 'Subtle' },
-      { label: 'Colors', value: 'Midnight Chapters' },
-      { label: 'Lettering', value: 'Kalnia Couture' },
-      { label: 'Layout', value: 'Full-bleed' },
-      { label: 'Shape', value: 'Frosted glass' },
-      { label: 'Menu', value: 'Centered logo' },
-      { label: 'Big idea', value: 'One thing guides the scroll' },
-      { label: 'Pages', value: 'Home, Rooms, Gallery, Book a stay, Getting here' },
-      { label: 'Built with', value: 'Claude Code' },
-    ],
-    note: 'The film and photos are from Pexels and the lake sound from Pixabay (credits in media-src/SOURCES.md); rooms, prices, contacts and house rules are made up; Claude Code drew the logo during the build.',
-  },
-  {
-    slug: 'saint-ashe',
-    title: 'Saint Ashe | Black clothing cut in small runs in Tbilisi',
-    summary: 'Black clothing cut in small runs in Tbilisi: heavy cotton, waxed wool and leather that ages with you.',
-    mood: ['Dark', 'Sharp', 'Crafted'],
-    hero: { kind: 'video', src: '/examples/saint-ashe/media/heroVideo.mp4', poster: '/examples/saint-ashe/media/posterImage.jpg' },
-    livePath: '/live/saint-ashe',
-    clip: '/examples/saint-ashe/media/clip.mp4',
-    sectionClips: {
-      'collection': '/examples/saint-ashe/media/clips/collection.mp4',
-      'product-grid': '/examples/saint-ashe/media/clips/product-grid.mp4',
-      'journal': '/examples/saint-ashe/media/clips/journal.mp4',
-      'newsletter': '/examples/saint-ashe/media/clips/newsletter.mp4',
-      'lookbook': '/examples/saint-ashe/media/clips/lookbook.mp4',
-      'about': '/examples/saint-ashe/media/clips/about.mp4',
-      'editorial-story': '/examples/saint-ashe/media/clips/editorial-story.mp4',
-      'team': '/examples/saint-ashe/media/clips/team.mp4',
-      'contact-cta': '/examples/saint-ashe/media/clips/contact-cta.mp4',
-      'location': '/examples/saint-ashe/media/clips/location.mp4',
-      'faq': '/examples/saint-ashe/media/clips/faq.mp4',
-      'navbar': '/examples/saint-ashe/media/clips/navbar.mp4',
-      'footer': '/examples/saint-ashe/media/clips/footer.mp4',
-    },
-    pieceClips: {
-      'text-roll': '/examples/saint-ashe/media/clips/piece-text-roll.mp4',
-    },
-    signatureClips: {
-      'giant-word-chapters': '/examples/saint-ashe/media/clips/sig-giant-word-chapters.mp4',
-      'curtain-reveal': '/examples/saint-ashe/media/clips/sig-curtain-reveal.mp4',
-    },
-    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
-    choices: [
-      { label: 'Making', value: 'Fashion' },
-      { label: 'Name', value: 'Saint Ashe' },
-      { label: 'Visitors should', value: 'Buy something' },
-      { label: 'Style', value: 'Gothic Modern' },
-      { label: 'First screen', value: 'Ambient video hero' },
-      { label: 'Movement', value: 'Dynamic' },
-      { label: 'Colors', value: 'Mulberry' },
-      { label: 'Lettering', value: 'New Gothic' },
-      { label: 'Layout', value: 'Full-bleed' },
-      { label: 'Shape', value: 'Sharp' },
-      { label: 'Menu', value: 'Centered logo' },
-      { label: 'Big idea', value: 'Loud covers, quiet reading' },
-      { label: 'Pages', value: 'Home, Collections, About, Contact' },
-      { label: 'Built with', value: 'Claude Code' },
-    ],
-    note: 'The film is from Pexels and the photos from Unsplash (credits in media-src/SOURCES.md); the collection, prices, team and shop address are made up; Claude Code drew the logo during the build.',
   },
   {
     slug: 'fennwood',
@@ -692,56 +634,6 @@ export const examples: ExampleProject[] = [
     note: 'Photos are from Unsplash (credits in media-src/SOURCES.md); the address, phone number, practitioners, prices and quotes are made up; Claude Code drew the logo during the build.',
   },
   {
-    slug: 'halvik',
-    title: 'Halvik 65, a compact aluminium keyboard',
-    summary: 'Halvik 65 is a compact mechanical keyboard in a powder-coated aluminium case, with hot-swap switches and a matching dial pad. From $159.',
-    mood: ['Precise', 'Tactile', 'Calm'],
-    // Its first screen is a product photo; the hero still is that photo.
-    hero: { kind: 'image', src: '/examples/halvik/media/hero.jpg' },
-    livePath: '/live/halvik',
-    clip: '/examples/halvik/media/clip.mp4',
-    sectionClips: {
-      'product-highlight': '/examples/halvik/media/clips/product-highlight.mp4',
-      'feature-rows': '/examples/halvik/media/clips/feature-rows.mp4',
-      'press': '/examples/halvik/media/clips/press.mp4',
-      'testimonials': '/examples/halvik/media/clips/testimonials.mp4',
-      'pricing': '/examples/halvik/media/clips/pricing.mp4',
-      'trust': '/examples/halvik/media/clips/trust.mp4',
-      'contact-cta': '/examples/halvik/media/clips/contact-cta.mp4',
-      'feature-grid': '/examples/halvik/media/clips/feature-grid.mp4',
-      'how-it-works': '/examples/halvik/media/clips/how-it-works.mp4',
-      'faq': '/examples/halvik/media/clips/faq.mp4',
-      'navbar': '/examples/halvik/media/clips/navbar.mp4',
-      'footer': '/examples/halvik/media/clips/footer.mp4',
-    },
-    pieceClips: {
-      'text-effect': '/examples/halvik/media/clips/piece-text-effect.mp4',
-      'underline-fill': '/examples/halvik/media/clips/piece-underline-fill.mp4',
-    },
-    signatureClips: {
-      'travelling-motif': '/examples/halvik/media/clips/sig-travelling-motif.mp4',
-      'footer-moment': '/examples/halvik/media/clips/sig-footer-moment.mp4',
-    },
-    // Made in the kit, then built by Claude Code from its Build Package: opuskit.json is the exact recipe.
-    choices: [
-      { label: 'Making', value: 'Product' },
-      { label: 'Name', value: 'Halvik' },
-      { label: 'Visitors should', value: 'Buy something' },
-      { label: 'Style', value: 'Bento Product' },
-      { label: 'First screen', value: 'Product stage' },
-      { label: 'Movement', value: 'Subtle' },
-      { label: 'Colors', value: 'Console Lilac' },
-      { label: 'Lettering', value: 'Wide Spec' },
-      { label: 'Layout', value: 'Grid-driven' },
-      { label: 'Shape', value: 'Round' },
-      { label: 'Menu', value: 'Floating pill' },
-      { label: 'Big idea', value: 'One thing guides the scroll' },
-      { label: 'Pages', value: 'Home, Features, Contact' },
-      { label: 'Built with', value: 'Claude Code' },
-    ],
-    note: 'Photos are from Unsplash (credits in media-src/SOURCES.md; a small keycap logo was retouched out of four); the prices, specs, press and quotes are made up; Claude Code drew the logo during the build.',
-  },
-  {
     slug: 'sticky-weather',
     title: 'Sticky Weather, a design studio for brands that want to be picked up',
     summary: 'Sticky Weather is a small design studio in Bristol making identities, packaging and websites that feel like stickers on a laptop.',
@@ -751,6 +643,7 @@ export const examples: ExampleProject[] = [
     livePath: '/live/sticky-weather',
     clip: '/examples/sticky-weather/media/clip.mp4',
     sectionClips: {
+      'hero': '/examples/sticky-weather/media/clips/hero.mp4', // the first screen alone (scripts/capture/site-clips.mjs)
       'featured-work': '/examples/sticky-weather/media/clips/featured-work.mp4',
       'manifesto': '/examples/sticky-weather/media/clips/manifesto.mp4',
       'journal': '/examples/sticky-weather/media/clips/journal.mp4',
@@ -797,6 +690,7 @@ export const examples: ExampleProject[] = [
     livePath: '/live/hexmint',
     clip: '/examples/hexmint/media/clip.mp4',
     sectionClips: {
+      'hero': '/examples/hexmint/media/clips/hero.mp4', // the first screen alone (scripts/capture/site-clips.mjs)
       'navbar': '/examples/hexmint/media/clips/navbar.mp4',
       'clients': '/examples/hexmint/media/clips/clients.mp4',
       'feature-rows': '/examples/hexmint/media/clips/feature-rows.mp4',

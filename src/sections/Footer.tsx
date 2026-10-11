@@ -5,18 +5,20 @@
 //   contact   — one big invitation with the email/phone as large links, details beside it.
 //   line      — logo, a few links and © in one quiet line.
 //   index     — every page, service and post in 3–4 columns, a map of the whole site, on the page ground.
+//   stage     — the name huge and faint behind the product or one photo, one invitation and action in front.
 import type { ElementType, ReactNode } from 'react'
 
 export type FooterColumn = { title: string; links: { label: string; href: string; current?: boolean }[] }
-export type FooterVariant = 'signature' | 'wordmark' | 'contact' | 'line' | 'index'
+export type FooterVariant = 'signature' | 'wordmark' | 'contact' | 'line' | 'index' | 'stage'
 type Link = { label: string; href: string }
 
 // A plain underline on hover — the site's Links behaviour (scribble, roll, fill…) replaces it when one is picked.
 const plain = 'underline decoration-transparent decoration-1 underline-offset-4 transition-[text-decoration-color] duration-200 hover:decoration-current focus-visible:decoration-current aria-[current=page]:decoration-current'
 
-export function FooterSection({ link: L = 'a', variant = 'signature', wordmark = 'full', logo, brand, columns, legal, copyright, invite = 'Let’s talk', contact = [], light = false }: {
+export function FooterSection({ link: L = 'a', variant = 'signature', wordmark = 'full', logo, brand, columns, legal, copyright, invite = 'Let’s talk', contact = [], light = false, image, imageAlt = '' }: {
   link?: ElementType; variant?: FooterVariant; wordmark?: 'full' | 'cropped' | 'outline'; logo: ReactNode; /** The name as text — the wordmark variant sets it huge. */ brand?: string; columns: FooterColumn[]
   legal?: Link[]; copyright: string; /** contact variant: the invitation and the ways to reach you. */ invite?: string; contact?: Link[]; light?: boolean
+  /** stage variant: the product cut-out (a transparent PNG) or one photo, in front of the name. */ image?: string; imageAlt?: string
 }) {
   const links = columns.flatMap((c) => c.links)
   const item = (l: Link & { current?: boolean }) => <L key={l.href + l.label} href={l.href} aria-current={l.current ? 'page' : undefined} className={plain}>{l.label}</L>
@@ -54,6 +56,19 @@ export function FooterSection({ link: L = 'a', variant = 'signature', wordmark =
           ))}
         </div>
       </div>
+      {bottom}
+    </footer>
+  )
+
+  if (variant === 'stage') return (
+    <footer className={`relative overflow-hidden px-(--gutter) pb-8 pt-20 ${ground}`}>
+      <p aria-hidden className="type-display pointer-events-none absolute inset-x-0 top-10 select-none text-center whitespace-nowrap leading-[0.8] opacity-[0.12] [font-size:clamp(5rem,22vw,21rem)]">{brand ?? logo}</p>
+      {image && <img src={image} alt={imageAlt} loading="lazy" className="relative mx-auto block h-[clamp(14rem,32vw,26rem)] w-auto object-contain" />}
+      <div className="relative mx-auto mt-10 flex max-w-(--container) flex-col items-center gap-5 text-center">
+        <h2 className="type-heading text-balance [font-size:clamp(1.6rem,3vw,2.6rem)]">{invite}</h2>
+        {contact[0] && <L href={contact[0].href} className="type-body rounded-(--radius-button) bg-(--color-background) px-6 py-3 text-(--color-text)">{contact[0].label}</L>}
+      </div>
+      <nav aria-label="Footer" className="type-utility relative mx-auto mt-14 flex max-w-(--container) flex-wrap justify-center gap-x-8 gap-y-3">{links.map(item)}</nav>
       {bottom}
     </footer>
   )

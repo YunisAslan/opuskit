@@ -3,8 +3,9 @@
 import assert from 'node:assert/strict'
 import type { DirectionId, PieceId, RecipeSpec, SectionId } from '../src/types/domain'
 import { spawnSync } from 'node:child_process'
-import { palettes, typography } from '../src/data/ingredients'
-import { contrast, deltaE, oklab } from '../src/lib/color'
+import { accentSets, palettes, typography } from '../src/data/ingredients'
+import { contrast, deltaE, oklab, readableOn } from '../src/lib/color'
+import { toneVars } from '../src/lib/frame'
 import { recipeSeeds } from '../src/data/recipes'
 import { concepts, heroes, imagePresentations, signaturePatterns } from '../src/data/patterns'
 import { behaviours, isMoment, pieces } from '../src/data/pieces'
@@ -14,20 +15,24 @@ import { sections } from '../src/data/patterns'
 import { TYPE_UTILITIES } from '../src/lib/type-tokens'
 import { GENERATED, piecesSource } from './pieces-source'
 import { existsSync, readFileSync } from 'node:fs'
-import { inferGoal, heroTitle, libraryFor, removeSection, toggleChrome, behaviourPick, isPhotoSection, sectionPhotos, setBehaviour, setSectionPhotos, setSectionVariant, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, effectOn, effectWhere, starters, setHero, setPartHero, heroOf, setStyle, start, togglePiece } from '../src/features/kit/plan'
+import { inferGoal, heroTitle, libraryFor, removeSection, toggleChrome, behaviourPick, isPhotoSection, sectionPhotos, setBehaviour, setSectionPhotos, setSectionVariant, EMPTY_PLAN, addPage, addSection, toggleSitePiece, cleanPlan, hasBlock, inferPurpose, moveSection, piecesFor, placeSection, addSuggested, isStandardPage, missingPages, pageSuggestions, planToSpec, sectionGroups, specFromChoices, specToPlan, swapOptions, replaceSection, resetPage, setPagePurpose, usualPages, effectOn, effectWhere, starters, setHero, setPartHero, heroOf, setStyle, start, togglePiece } from '../src/features/studio/plan'
 import { resources } from '../src/data/resources'
 import { ctaFor, directions, families, goals, purposes } from '../src/data/taxonomy'
 import { lookImages } from '../src/data/look-images'
 import { adapters } from '../src/features/build-packages'
-import { visualQa } from '../src/features/build-packages/shared'
+import { DETECTOR, visualQa } from '../src/features/build-packages/shared'
 import { pageTypes } from '../src/data/patterns'
 import { examples } from '../src/data/examples'
 import { sectionGuide } from '../src/data/section-guide'
 import exampleSpecs from '../src/data/example-specs.generated.json'
-import { closestChrome, closestPiece, closestSection, closestSite } from '../src/features/kit/closest'
+import demoClips from '../src/data/demo-clips.generated.json'
+import { createHash } from 'node:crypto'
+import { closestChrome, closestPiece, closestSection, closestSite } from '../src/features/studio/closest'
 import { LOVABLE_KNOWLEDGE_LIMIT, lovableKnowledge } from '../src/features/build-packages/lovable'
 import { recipeToMarkdown } from '../src/features/recipes/markdown'
-import { allSites, applyItems, keptByName, takenFrom, takenOf, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection, type SiteRef } from '../src/features/library/collection'
+import { allSites, alternativesOf, applyItems, designsOf, toggleItem, keptByName, shelfSites, takenFrom, takenOf, cleanCollection, collectionToPlan, lookFor, notes, placement, siteSpec, startSite, type Collection, type SiteRef } from '../src/features/library/collection'
+import { GENERIC_NAMES, NOT_OFFERED, TAKEABLES, TAKE_CATEGORIES } from '../src/data/takeables'
+import { SITE_IDEAS, ideaClip } from '../src/data/site-ideas'
 import { OFFERS, OFFER_IDS, directionsFor, kindFor, offerOf, pagesFromWords, purposeFrom, siteTraits } from '../src/features/library/inspire'
 import { COLOUR_WORDS, SHAPE_WORDS, TYPE_WORDS, recommendSectionPhotos, cleanPieces, defaultPagesFor, pieceIssues, composeRecipe, isValidSpec, rankPalettes, remix, specFromSeed, validateRecipe } from '../src/features/recipes/engine'
 
@@ -54,6 +59,16 @@ for (const p of pal) {
   assert.ok(contrast(p.colors.text, p.colors.background) >= 7, `${p.id}: text/bg ≥ 7:1`)
   assert.ok(contrast(p.colors.muted, p.colors.background) >= 4.5, `${p.id}: muted/bg ≥ 4.5:1`)
   assert.ok(contrast(p.colors.accent, p.colors.background) >= 3, `${p.id}: accent/bg ≥ 3:1`)
+  // Every pair the tokens ship reads as body text (AA) — tones, chapters and button labels are computed, the rest is data.
+  // Before: 30 of 42 palettes failed on a chapter section, 87 rotation chapters failed, Arcade's buttons read 2.9:1.
+  for (const [fg, bg, what] of [[p.colors.text, p.colors.surface, 'text/surface'], [p.colors.muted, p.colors.surface, 'muted/surface'], [p.colors.text, p.colors.secondary, 'text/secondary']] as const)
+    assert.ok(contrast(fg, bg) >= 4.5, `${p.id}: ${what} ≥ 4.5:1`)
+  assert.ok(contrast(readableOn(p.colors.primary, [p.colors.background, p.colors.text]), p.colors.primary) >= 4.5, `${p.id}: a primary button's label ≥ 4.5:1`)
+  for (const chapter of [undefined, ...Object.values(accentSets).flatMap((a) => a.colors)]) {
+    const t = toneVars(p.colors, chapter)
+    for (const [fg, bg, what] of [[t['--inv-text'], t['--inv-bg'], 'inverse text'], [t['--inv-muted'], t['--inv-bg'], 'inverse muted'], [t['--chap-text'], t['--chap-bg'], 'chapter text'], [t['--chap-muted'], t['--chap-bg'], 'chapter muted']])
+      assert.ok(contrast(fg, bg) >= 4.5, `${p.id}${chapter ? ` + ${chapter}` : ''}: ${what} ≥ 4.5:1`)
+  }
 }
 // Identity is ground + accent (award sites differ by accent, type and media, rarely by ground): two palettes collide
 // only when both are close. Grounds-only spacing pushed the library into the greyed middle (docs/research/2026-10-04-colour.md §6).
@@ -81,7 +96,11 @@ for (const t of types) for (const f of new Set([t.display.family, t.heading.fami
 for (const [f, n] of famUse) assert.ok(n <= 2, `${f} used in ${n} pairings (max 2)`)
 for (const f of ['Inter', 'DM Sans', 'Space Grotesk', 'Syne', 'Bricolage Grotesque', 'Fraunces', 'Instrument Serif', 'Geist', 'Playfair Display', 'Poppins', 'Montserrat'])
   assert.ok(!famUse.has(f), `${f} is an AI-default face — keep it out of the library`)
-assert.ok(types.filter((t) => /mono/i.test(t.utility.family)).length <= 1, 'monospace utility in more than one pairing')
+// Mono labels: up to four pairings, each with its own mono (the user, 2026-10-11 — 29% of Awwwards winners use them; the
+// AI tell is mono + uppercase + the same face everywhere, so uppercase stays in one pairing).
+const monos = types.filter((t) => /mono|courier/i.test(t.utility.family))
+assert.ok(monos.length <= 4, `monospace utility in ${monos.length} pairings (max 4)`)
+assert.equal(new Set(monos.map((t) => t.utility.family)).size, monos.length, 'each mono-label pairing has its own mono')
 assert.ok(types.filter((t) => t.utility.uppercase).length <= 1, 'uppercase utility labels in more than one pairing')
 // Menu links (utility) sit beside buttons and text (body): one face at two widths reads as a mistake (yunisaslanov).
 for (const t of types) if (t.utility.family === t.body.family)
@@ -117,12 +136,46 @@ const main = async () => {
     const other = seed.spec.purpose === 'nonprofit' ? 'portfolio' : 'nonprofit'
     assert.deepEqual(composeRecipe({ ...specFromSeed(seed), purpose: other }).creativeDirection.visualPrinciples, directions[seed.spec.direction].principles, `${seed.slug}: its own voice stays with its own kind of site`)
   }
+  for (const d of Object.values(directions)) { // a seed's text density is written for its own look: a look of another family that shares it as a base gets its family's
+    const seed = recipeSeeds.find((x) => x.slug === d.baseRecipe)!
+    if (d.families[0] !== directions[seed.spec.direction].families[0]) assert.notEqual(composeRecipe({ ...specFromSeed(seed), direction: d.id }).contentDirection.density, seed.content.density, `${d.id}: no text density from ${seed.slug}'s look`)
+  }
   assert.ok(!/\b(\w+) \1\b/.test(composeRecipe({ ...specFromSeed(recipeSeeds[0]), direction: 'sticker-studio', purpose: 'studio' }).title), 'no doubled word in a composed title')
+
+  // The Library's catalog (decision 58): every design a shelf site has is named once, shown on a site that has it, under
+  // a name that says which one it is. A new example or a design brought in from a site the user sends fails here until
+  // src/data/takeables.ts has its name, category and the site that shows it best.
+  const designs = new Map<string, Set<string>>()
+  for (const ref of shelfSites) for (const { key } of designsOf(ref)) designs.set(key, (designs.get(key) ?? new Set()).add(ref))
+  for (const [key, sites] of designs) assert.ok(NOT_OFFERED.has(key) || TAKEABLES.some((x) => x.key === key), `${key} (on ${[...sites].join(', ')}) is not in src/data/takeables.ts — give it a name, a category and the site that shows it best`)
+  assert.equal(new Set(TAKEABLES.map((x) => x.key)).size, TAKEABLES.length, 'one catalog entry per design')
+  assert.equal(new Set(TAKEABLES.map((x) => x.name.toLowerCase())).size, TAKEABLES.length, 'no two designs share a name')
+  for (const x of TAKEABLES) {
+    assert.ok(designs.get(x.key)?.has(x.bestOn), `${x.key}: its bestOn ${x.bestOn} must be a shelf site that has it`)
+    assert.ok(TAKE_CATEGORIES[x.group].includes(x.category), `${x.key}: category ${x.category} is not one of ${x.group}'s`)
+    assert.ok(!GENERIC_NAMES.has(x.name.toLowerCase()), `${x.key}: "${x.name}" says what kind it is, not which one`)
+  }
+
+  // One of a set (a link hover, a main button, a page change, a headline entrance): taking one puts back the other;
+  // effects that sit side by side are both kept.
+  {
+    const wavy = { kind: 'effect' as const, id: 'wavy-link' as const, from: 'example:pip-kiln' as SiteRef }, scribble = { kind: 'effect' as const, id: 'scribble-link' as const, from: 'example:fennwood' as SiteRef }
+    const sound = { kind: 'effect' as const, id: 'ambient-sound' as const, from: 'example:sela-mor' as SiteRef }
+    const c = [scribble, sound, wavy].reduce((x, i) => toggleItem(x, i), { items: [] } as Collection)
+    assert.deepEqual(c.items.map((i) => (i as typeof wavy).id), ['ambient-sound', 'wavy-link'], 'a new link hover replaces the one taken; sound stays')
+    assert.ok(alternativesOf('wavy-link').includes('scribble-link') && !alternativesOf('ambient-sound').length, 'alternatives only within a one-of set')
+  }
 
   // Claude Code only ships relevant skills.
   const still = composeRecipe(remix(specFromSeed(recipeSeeds[3]), { motion: 'still' }))
   const cc = await adapters['claude-code'].generate(still)
   assert.ok(!cc.files.some((f) => f.path.includes('motion-system')), 'no motion skill for still recipes')
+  // The detector checks a build, never the owner's picks: its config switches off only what the recipe chose.
+  const detector = (f: { files: { path: string; content: string }[] }) => JSON.parse(f.files.find((x) => x.path === '.impeccable/config.json')!.content).detector
+  assert.ok(cc.files.find((f) => f.path === 'build/verification.md')!.content.includes(DETECTOR), 'verification runs the detector')
+  assert.deepEqual(detector(cc).ignoreRules, [], 'a recipe with no italic display and no Endless row switches no check off')
+  const italic = composeRecipe({ ...specFromSeed(recipeSeeds[0]), typography: 'moonlit-italic', pieces: ['marquee'] })
+  for (const t of ['claude-code', 'cursor'] as const) assert.deepEqual(detector(await adapters[t].generate(italic)).ignoreRules, ['italic-serif-display', 'marquee'], `${t}: the owner's italic face and Endless row are never defects`)
   for (const f of cc.files.filter((f) => f.path.endsWith('SKILL.md'))) {
     const name = f.path.split('/')[2]
     assert.match(f.content, new RegExp(`^---\\nname: ${name}\\ndescription: .+\\n---`), `${name} frontmatter`)
@@ -252,6 +305,20 @@ const main = async () => {
   assert.equal(briefed.contentDirection.ctaExamples[0], goals.book.cta[0], 'goal sets the primary CTA')
   assert.match(recipeToMarkdown(briefed), /Oak & Awl: Leather goods\./, 'offer reaches the markdown')
   // Video recipes ship scripts/prepare-video.sh (valid bash); others don't.
+  // A site's idea (src/data/site-ideas.ts): its code and its clip are on disk, its site has it, and a recipe that took it
+  // ships IDEAS.md and the code as a reference, in every tool's package.
+  for (const x of SITE_IDEAS) {
+    assert.ok(existsSync(`examples/${x.site}/${x.file}`), `idea ${x.id}: its code examples/${x.site}/${x.file} is there`)
+    assert.ok(existsSync(`public${ideaClip(x)}`), `idea ${x.id}: its clip ${ideaClip(x)} is recorded (node scripts/capture/site-clips.mjs ${x.site}:idea-${x.id})`)
+    assert.ok(designsOf(`example:${x.site}` as SiteRef).some((d) => d.key === `idea:${x.id}`), `idea ${x.id}: its site offers it`)
+  }
+  if (SITE_IDEAS.length) {
+    const x = SITE_IDEAS[0], took = composeRecipe({ ...specFromSeed(recipeSeeds[0]), taken: [{ site: `example:${x.site}`, kind: 'idea', id: x.id }] })
+    for (const t of Object.keys(adapters) as (keyof typeof adapters)[]) {
+      const files = (await adapters[t].generate(took)).files.map((f) => f.path)
+      assert.ok(files.includes('IDEAS.md') && files.includes(`reference/ideas/${x.id}.tsx`), `${t}: a taken idea ships IDEAS.md and its reference code`)
+    }
+  }
   const vid = await adapters['claude-code'].generate(composeRecipe(specFromSeed(recipeSeeds[1])))
   const sh = vid.files.find((f) => f.path === 'scripts/prepare-video.sh')
   assert.ok(sh && /-crf CRF -g 6/.test(sh.content) && /fit_budget/.test(sh.content), 'video recipe ships prepare-video.sh (budget-fitted, short GOP for scrubbing)')
@@ -290,10 +357,17 @@ const main = async () => {
     assert.match(src, new RegExp(p.source.license), `${p.id}: source file carries its ${p.source.license} attribution`)
     assert.match(src, new RegExp(`export function ${p.exportName}\\b`), `${p.id}: exports ${p.exportName}`)
     // Lenis (MIT) only in a piece that lists it as a dependency, so its package says to install it.
-    const own = p.deps.includes('lenis') ? '|lenis' : ''
-    assert.ok(!new RegExp(`@/lib/utils|from ['"](?!react|motion/react|@paper-design/shaders-react|next/navigation${own})[^'"]+['"]`).test(src), `${p.id}: no imports beyond react, motion, Paper Shaders, next/navigation (and Lenis, when listed)`)
+    const own = p.deps.includes('lenis') ? '|lenis' : p.deps.includes('gsap') ? '|gsap|gsap/ScrollTrigger' : p.deps.includes('three') ? '|three|three/examples/jsm/[\\w/]+\\.js' : ''
+    assert.ok(!new RegExp(`@/lib/utils|from ['"](?!react|motion/react|@paper-design/shaders-react|next/navigation${own})[^'"]+['"]`).test(src), `${p.id}: no imports beyond react, motion, Paper Shaders, next/navigation (and Lenis, GSAP or three, when listed)`)
     assert.ok(/reactbits|aceternity|hover\.dev/.test(p.source.url) === false, `${p.id}: never from a library that forbids redistribution`)
   }
+  // A piece that needs its own pictures puts them in the shot list (Ines Varga, #28).
+  assert.ok(composeRecipe({ ...vspec, motion: 'dynamic', pieces: ['scroll-story'] }).media.shots.some((s) => s.key === 'storyChapters' && s.count === 4), 'the story beside one picture asks for its chapter pictures')
+  // Moving recipes get smooth scroll by default (the user, 2026-10-11); calm ones only when picked.
+  assert.ok(composeRecipe({ ...vspec, motion: 'dynamic' }).pieces.some((p) => p.id === 'smooth-scroll'), 'a dynamic recipe glides')
+  assert.ok(!composeRecipe({ ...vspec, motion: 'subtle', pieces: [] }).pieces.some((p) => p.id === 'smooth-scroll'), 'a subtle recipe does not, unless picked')
+  // A piece that needs GSAP brings it into the package's dependencies (allowed since 2026-10-11).
+  assert.ok(composeRecipe({ ...vspec, pieces: ['scroll-story'] }).implementation.dependencies.some((d) => d.name === 'gsap'), 'a GSAP piece lists gsap')
   assert.deepEqual(cleanPieces(['text-effect', 'text-loop', 'marquee', 'nope']), ['text-loop', 'marquee'], 'one piece per slot, later pick wins, unknown dropped')
   const kitted = composeRecipe({ ...vspec, pieces: ['text-effect', 'number-ticker', 'ring-carousel', 'image-field' as never] })
   assert.equal(kitted.pieces.filter((p) => ['text-effect', 'number-ticker', 'ring-carousel', 'image-field'].includes(p.id)).length, 3, 'photo slot keeps one piece') // a big-idea moment may add its own piece
@@ -367,19 +441,14 @@ const main = async () => {
   assert.equal(fromPlan.pages[0].sections[0].id, 'hero', 'the first screen tops the first page')
   assert.equal(fromPlan.pages[1].sections[1]?.id, 'gallery', 'a section lands where it was inserted, and moves')
   assert.ok(fromPlan.pages.some((p) => p.type === 'faq'), 'added pages are in the recipe')
-  assert.deepEqual(fromPlan.pieces.map((p) => p.id).sort(), ['cut-reveal', 'shader-grain'], 'one piece per job per section')
-  assert.ok(fromPlan.pieces.every((p) => p.where.startsWith(`${home.label} → Hero`)), 'pieces are placed on the section they were attached to')
+  assert.deepEqual(fromPlan.pieces.map((p) => p.id).filter((id) => id !== 'smooth-scroll').sort(), ['cut-reveal', 'shader-grain'], 'one piece per job per section') // smooth scroll is the moving recipe's default, site-wide
+  assert.ok(fromPlan.pieces.filter((p) => p.id !== 'smooth-scroll').every((p) => p.where.startsWith(`${home.label} → Hero`)), 'pieces are placed on the section they were attached to')
   // Touches come only from what the kit shows: the big idea (Design → Big idea, recommended until changed) — never extras.
   assert.ok(fromPlan.concept && fromPlan.signatures.every((x) => concepts[fromPlan.concept!.id].signatures.includes(x.id)), 'a kit recipe gets only its big idea’s touches')
   assert.equal(composeRecipe(planToSpec(setStyle(plan, 'concept', 'off'))).signatures.length, 0, 'no big idea, no touches')
   assert.equal(composeRecipe(planToSpec(setStyle(plan, 'concept', 'live-console'))).concept?.id, 'live-console', 'a picked big idea is kept')
   assert.equal(specToPlan(composeRecipe(planToSpec(setStyle(plan, 'concept', 'off'))).metadata.spec).concept, 'off', 'Customise keeps the big idea')
   assert.equal(composeRecipe({ ...planToSpec(setStyle(plan, 'concept', 'playful-way-in')), motion: 'subtle' }).concept?.id !== 'playful-way-in', true, 'a big idea that needs more movement falls back to the recommendation')
-  // Recipes follow the owner's picks: no GSAP guidance anywhere (licence), and seed rules name colour roles, not hues.
-  for (const a of Object.values(adapters)) {
-    const all = (await a.generate(shopFilm)).files.map((f) => f.content).join('').replace(/No GSAP[^.]*\./g, '')
-    assert.ok(!/gsap|scrolltrigger/i.test(all), `${a.id}: no GSAP guidance`)
-  }
   // Ready sections never ship the generic tells the recipe forbids: "→" after links, middle-dot joins, 01/02 markers.
   for (const [id, src] of Object.entries(blockSource)) assert.ok(!/→| · |padStart\(2, '0'\)/.test(src!), `${id}: ready section ships a generic tell`)
   // Controls are the project's shadcn/ui parts: a ready section never ships a plain browser control or disclosure.
@@ -599,13 +668,22 @@ const main = async () => {
     if (!existsSync(`examples/${e.slug}/opuskit.json`)) assert.ok(!spec.pages.some((p) => p.type === 'custom'), `${e.slug}: every page is a known page type`)
   }
   for (const e of examples) assert.ok(/^\/live\/[a-z0-9-]+$/.test(e.livePath) && existsSync(`public${e.livePath}/index.html`), `${e.slug}: livePath is /live/{slug} (never index.html) and its export exists`)
+  // The Library's clips of pieces being used (scripts/capture/demo-clips.mjs): each on disk, of a real piece, and recorded
+  // from the code that ships now — a piece changed since its clip fails here until it is recorded again.
+  for (const [id, c] of Object.entries(demoClips as Record<string, { src: string; source: string }>)) {
+    const piece = pieces[id as PieceId]
+    assert.ok(piece && existsSync(`public${c.src}`), `demo clip ${id}: a piece, on disk`)
+    assert.equal(createHash('sha1').update(readFileSync(`src/pieces/${piece.file}`)).digest('hex').slice(0, 12), c.source, `demo clip ${id}: recorded from the piece as it is now (node scripts/capture/demo-clips.mjs ${id})`)
+  }
   // The kit's "a site like this" clips (docs/plan-examples.md): every clip exists, sits on a part the site has, and only fair matches show.
   for (const e of examples) {
     const spec = (exampleSpecs as Record<string, RecipeSpec>)[e.slug]
-    for (const src of [e.clip, ...Object.values(e.sectionClips ?? {}), ...Object.values(e.pieceClips ?? {}), ...Object.values(e.signatureClips ?? {})].filter(Boolean)) assert.ok(existsSync(`public${src}`), `${e.slug}: clip ${src} is on disk`)
+    for (const src of [e.clip, e.fullClip, ...Object.values(e.sectionClips ?? {}), ...Object.values(e.sectionStills ?? {}), ...Object.values(e.pieceClips ?? {}), ...Object.values(e.signatureClips ?? {})].filter(Boolean)) assert.ok(existsSync(`public${src}`), `${e.slug}: clip or still ${src} is on disk`)
+    // A piece the site uses — picked, or brought by its recipe (a signature moment's piece: Sela Mor's held proof).
+    const used = composeRecipe(spec).pieces.map((x) => x.id)
     for (const id of Object.keys(e.pieceClips ?? {}) as PieceId[]) {
-      assert.ok(spec.pieces?.includes(id), `${e.slug}: uses the ${id} it shows a clip of`)
-      assert.ok(closestPiece(spec, id), `${e.slug}: its ${id} clip is offered`)
+      assert.ok(spec.pieces?.includes(id) || used.includes(id), `${e.slug}: uses the ${id} it shows a clip of`)
+      if (spec.pieces?.includes(id)) assert.ok(closestPiece(spec, id), `${e.slug}: its ${id} clip is offered`)
     }
     const sigs = composeRecipe(spec).signatures.map((x) => x.id)
     // The moment is in its recipe today, or was in the recipe it was built from (defaults move, built sites do not).
@@ -613,6 +691,7 @@ const main = async () => {
     for (const id of Object.keys(e.signatureClips ?? {})) assert.ok(sigs.includes(id) || built.includes(`### ${signaturePatterns.find((p) => p.id === id)?.name} — `), `${e.slug}: has the ${id} moment it shows a clip of`)
     const chrome = (id: SectionId): id is 'navbar' | 'footer' => id === 'navbar' || id === 'footer'
     for (const id of Object.keys(e.sectionClips ?? {}) as SectionId[]) assert.ok(chrome(id) || spec.pages.some((p) => p.sections.includes(id)), `${e.slug}: has the ${id} it shows a clip of`)
+    for (const id of Object.keys(e.sectionStills ?? {}) as SectionId[]) assert.ok(chrome(id) || spec.pages.some((p) => p.sections.includes(id)), `${e.slug}: has the ${id} it shows a still of`)
     if (e.legacy || !e.clip) continue // a site waiting for its clip is simply not offered yet
     assert.equal(closestSite(spec)?.example.slug, e.slug, `${e.slug}: its own recipe finds it`)
     for (const id of Object.keys(e.sectionClips ?? {}) as SectionId[]) assert.equal((chrome(id) ? closestChrome(spec, id) : closestSection(spec, id))?.example.slug, e.slug, `${e.slug}: its own ${id} finds it`)
@@ -775,7 +854,7 @@ const main = async () => {
         assert.deepEqual(nr.pages.map((p) => p.label), ['Home', 'Programme', 'Tickets', 'Visit', 'About'], 'and gets a cinema’s pages')
         assert.equal(ctaFor('event', inferGoal(nr)), 'Book tickets', 'whose main action books tickets')
         assert.equal(ctaFor('restaurant', 'book'), 'Book a table', 'a restaurant still books a table')
-        assert.deepEqual([...keptByName([{ kind: 'footer', id: 'wordmark', from: 'example:lowfield-nights' }, { kind: 'menu', id: 'classic-bar', from: 'example:halden' }, { kind: 'like', what: 'colours', site: 'example:fennwood' }])].sort(), ['footer', 'nav', 'palette'], 'a new look keeps a taken menu and footer')
+        assert.deepEqual([...keptByName([{ kind: 'footer', id: 'wordmark', from: 'example:ninth-row' }, { kind: 'menu', id: 'classic-bar', from: 'example:halden' }, { kind: 'like', what: 'colours', site: 'example:fennwood' }])].sort(), ['footer', 'nav', 'palette'], 'a new look keeps a taken menu and footer')
         // Its build: Featured Work's picture asked for "each project", and the copy filled the programme with real films
         // and famous directors — a cinema's pictures are its strands, and invented content is invented outright.
         const nrr = composeRecipe(planToSpec(nr))
@@ -794,13 +873,13 @@ const main = async () => {
         } }
       assert.equal(pagesFromWords(shop, 'Small-batch tableware.'), shop, 'a sentence that says nothing about pages changes nothing') }
     { // What was taken rides on the recipe (decision 45): Direction writes it, the spec keeps it, a plan opened back has it.
-      const col: Collection = { items: [{ kind: 'like', what: 'opening', site: 'example:fennwood' }, { kind: 'section', id: 'menu', from: 'example:fennwood' }, { kind: 'effect', id: 'text-effect', from: 'example:lowfield-nights' }], purpose: 'restaurant', name: 'Low Hum' }
+      const col: Collection = { items: [{ kind: 'like', what: 'opening', site: 'example:fennwood' }, { kind: 'section', id: 'menu', from: 'example:fennwood' }, { kind: 'effect', id: 'text-effect', from: 'example:low-hum' }], purpose: 'restaurant', name: 'Low Hum' }
       const taken = takenOf(col.items), spec = planToSpec({ ...directionsFor(col)[0].plan, taken })
       assert.deepEqual(spec.taken, taken, 'the recipe keeps what was taken')
       assert.deepEqual(specToPlan(spec).taken, taken, 'and a plan opened from it has it again')
-      assert.deepEqual(takenFrom(taken), ['Fennwood’s first screen and Menu', 'Lowfield Nights’ Words that arrive'], 'in words, by site') }
+      assert.deepEqual(takenFrom(taken), ['Fennwood’s first screen and Menu', 'Low Hum’s Words that arrive'], 'in words, by site') }
     { // A taken part that replaces one never lands after the page's booking (Low Hum: Schedule after Reservation).
-      const col: Collection = { items: [{ kind: 'section', id: 'menu', from: 'example:fennwood' }, { kind: 'section', id: 'reservation', from: 'example:fennwood' }, { kind: 'section', id: 'schedule', from: 'example:lowfield-nights' }], purpose: 'restaurant', name: 'Low Hum' }
+      const col: Collection = { items: [{ kind: 'section', id: 'menu', from: 'example:fennwood' }, { kind: 'section', id: 'reservation', from: 'example:fennwood' }, { kind: 'section', id: 'schedule', from: 'example:low-hum' }], purpose: 'restaurant', name: 'Low Hum' }
       const home = directionsFor(col)[0].plan.pages[0].sections.map((x) => x.id)
       assert.ok(home.indexOf('schedule') < home.indexOf('reservation'), `the booking stays last on Home (${home})`) }
     { // A quality taken by name is in every direction; the three looks are not one family three times (decision 39).
@@ -849,6 +928,8 @@ const main = async () => {
       assert.ok(before.every((k) => after.includes(k)), 'adding later keeps every part already there')
       assert.deepEqual(r.plan.pages[0].sections.slice(0, 2).map((x) => x.key), moved.pages[0].sections.slice(0, 2).map((x) => x.key), 'and keeps their order')
       assert.equal(r.added.length, 2, 'both new parts were added') }
+    // A taken idea survives the round trip through storage; one the Library no longer offers is dropped.
+    assert.deepEqual(cleanCollection({ items: [{ kind: 'idea', id: 'mug-stage', from: 'example:pip-kiln' }, { kind: 'idea', id: 'seat-map' }] }).items, [{ kind: 'idea', id: 'mug-stage', from: 'example:pip-kiln' }], 'ideas are kept, unknown ones dropped')
     const dirty = cleanCollection({ items: [{ kind: 'site', site: 'example:nope' }, { kind: 'section', id: 'hero' }, { kind: 'effect', id: 'grain' }, { kind: 'effect', id: 'grain' }, null], purpose: 'other', look: 'seed:nope' })
     assert.deepEqual(dirty, { items: [{ kind: 'effect', id: 'grain' }], purpose: undefined, name: undefined, about: undefined, look: undefined, goal: undefined, like: undefined }, 'unknown ids are dropped, duplicates once')
   }
@@ -920,12 +1001,15 @@ const main = async () => {
   {
     const { lookKnowledge } = await import('../src/data/look-knowledge')
     const slugs = new Set(Object.keys(JSON.parse(readFileSync('src/data/example-specs.generated.json', 'utf8'))))
+    // Samples on Your files are the examples' real media: every one is there to fetch (npm run examples).
+    for (const [slug, m] of Object.entries(JSON.parse(readFileSync('src/data/example-media.generated.json', 'utf8')) as Record<string, { photos: string[]; films: { src: string; poster?: string }[] }>))
+      for (const f of [...m.photos, ...m.films.flatMap((x) => [x.src, x.poster ?? x.src])]) assert.ok(existsSync(`public${f}`), `${slug}: sample ${f} exists`)
     for (const id of Object.keys(directions) as DirectionId[]) {
       const k = lookKnowledge[id]
       assert.ok(k, `${id}: look knowledge`)
       assert.ok(k.moves.length >= 3 && k.craft.length >= 2 && k.sparks.length >= 2 && k.traps.length >= 1 && k.seen.length >= 1, `${id}: knowledge has moves, craft, sparks, traps, seen`)
       for (const x of k.seen.filter((x) => x.startsWith('example:'))) assert.ok(slugs.has(x.slice(8)), `${id}: ${x} is a built example`)
-      for (const x of [...k.moves, ...k.craft, ...k.sparks, ...k.traps]) assert.ok(!/\bGSAP\b|React Bits|Aceternity/i.test(x), `${id}: knowledge never needs a forbidden library — ${x}`)
+      for (const x of [...k.moves, ...k.craft, ...k.sparks, ...k.traps]) assert.ok(!/React Bits|Aceternity/i.test(x), `${id}: knowledge never needs a forbidden library — ${x}`)
     }
     for (const seed of recipeSeeds.slice(0, 4)) {
       const r = composeRecipe(specFromSeed(seed))

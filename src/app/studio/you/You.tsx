@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { OFFERS, OFFER_IDS, kindFor, offerOf, purposeFrom, type OfferId } from '@/features/library/inspire'
 import { updateCollection, useCollection } from '@/lib/collection'
-import { updatePlan, usePlan } from '@/lib/kit'
+import { updatePlan, usePlan } from '@/lib/plan'
 import { useHydrated } from '@/lib/store'
 import { StepFrame } from '../shared'
 

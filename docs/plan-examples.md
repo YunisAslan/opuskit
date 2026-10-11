@@ -49,8 +49,8 @@ its `examples.ts` entry; grep for `/examples/{slug}` (kit sample photos use some
 
 ## 4. The built sites — what is open
 
-All twenty-four are built, registered and live (Kelp Line and Pip & Kiln still with temporary pictures). Open:
-- **Clips for #11–#21** (Inkwell & Moth, Kür Delta Watch, Night Shift, Aster House, Sela Mor, QUM, Fieldhouse, Maison Vey, Low Hum, Halden, Pale Hour, Raster School):
+All twenty-five are built, registered and live. Open:
+- **Clips for #11–#25** (Inkwell & Moth, Kür Delta Watch, Night Shift, Aster House, Sela Mor, QUM, Fieldhouse, Maison Vey, Low Hum, Halden, Pale Hour, Raster School, Kelp Line, Pip & Kiln, Ninth Row):
   waiting for the user's screen recordings.
 - **Re-recordings** (section clips that are a held still frame because the recording never stopped on them; ~4 s
   standing still on each fixes it):
@@ -60,13 +60,9 @@ All twenty-four are built, registered and live (Kelp Line and Pip & Kiln still w
 | Fennwood | intro, menu, gallery, reservation, location, faq, footer |
 | Sticky Weather | featured-work, manifesto, journal, contact-cta, about |
 | Hexmint | clients, feature-rows, feature-grid, integrations, testimonials, contact-cta, how-it-works |
-| Lowfield Nights | the home first screen (site clip), intro, schedule, team, location, reservation, menu, faq, footer |
-| Velmira | the home first screen (site clip), intro, feature-rows, journal, reservation, lookbook, gallery, location, faq, footer |
 | Slow Atlas | editorial-story, journal, categories |
-| Halvik | product-highlight, feature-rows, press, testimonials, pricing, trust, contact-cta, footer, feature-grid, how-it-works |
 | Hane | services, how-it-works, testimonials, pricing, reservation |
 | Brasshand | manifesto, case-study, clients, services, journal |
-| Saint Ashe | journal, newsletter, lookbook, editorial-story, team, product-grid, contact-cta, footer, about |
 
 ## 5. Next sites (#17–#20, 2026-10-06)
 
@@ -132,6 +128,12 @@ Order: 26 → 27 → 28 → 29. Concepts are invented and international (no Azer
 | # | Site | Recipe | Media | Build | Registered | Clips |
 |---|---|---|---|---|---|---|
 | 1–10 | Slow Atlas … Lowfield Nights | ✓ | ✓ | ✓ | ✓ | ✓ (re-recordings in §4) |
+
+Removed 2026-10-10 at the user's request, with everything that was theirs (code, media, live export, zip, card, catalog
+entries): Halvik, Velmira, Lowfield Nights, Saint Ashe. Their folders went to the macOS Trash
+(`opuskit-removed-2026-10-10`); earlier commits still hold them. Rows below that name them as a source of taken parts
+are history — those examples were built from them.
+
 | 11 | Inkwell & Moth | ✓ | ✓ | ✓ | ✓ live | waiting for recording |
 | 12 | Kür Delta Watch | ✓ | ✓ | ✓ | ✓ live | waiting for recording |
 | 13 | Night Shift | ✓ | ✓ | ✓ | ✓ live | waiting for recording |
@@ -144,7 +146,8 @@ Order: 26 → 27 → 28 → 29. Concepts are invented and international (no Azer
 | 20 | Halden | ✓ via the Library (blank → Health & wellness; Dark Cinematic · Charcoal Signal · Opening Credits; Home: Film on the first screen, Services, How It Works, Gallery, Testimonials (Wall), Pricing, Location, Reservation · The baths · Visit · FAQ · Sign In · Sign Up; Smooth scroll + Scroll progress, both by the user) — saved 2026-10-07 | ✓ the user's film (drone over fog, 4K) via `prepare-video.sh`; 21 photos (Unsplash connector) | ✓ Prompt 1 + Prompt 2 (scene map fitted to the film) in an isolated `claude -p` session; reviewed 1440 + 390 | ✓ live at `/live/halden` (click-through checked), `npm run check` ✓ | waiting for recording |
 | 21 | Pale Hour | ✓ the flow: parts from Sela Mor (Featured Work, Schedule, Photos follow the cursor), Fieldhouse (Gallery, Tap to open large), Slow Atlas (Journal, Cut-out headline); A place or an event → Gallery or museum (decision 46); Art Editorial · Gallery Grey · Cut Glass; Home · Exhibitions · Visit · About — approved 2026-10-08 | ✓ 23 photos (Unsplash connector, `media-src/SOURCES.md`) | ✓ Prompt 1 + Prompt 2 (photos, readable first screen, no real brand) + Prompt 3 (no hand-written `/_next/image`, for the static export) in an isolated `claude -p` session; reviewed 1440 + 390 | ✓ live at `/live/pale-hour` (click-through checked), `npm run check` ✓ | waiting for recording |
 | 22 | Raster School | ✓ the flow: parts from Night Shift (Process, Pricing), Sela Mor (Schedule), Brasshand (Manifesto, Team); Course / education; Swiss Modern · Klein Field · Grid Discipline · **still**; Home · Curriculum · Enrol · Instructor · FAQ — approved 2026-10-08 | ✓ 5 photos (Unsplash connector, `media-src/SOURCES.md`) | ✓ Prompt 1 + Prompt 2 (photos, alts, caption) in an isolated `claude -p` session; reviewed 1440 + 390; Engine lessons 1–7 in its BUILD-LOG | ✓ live at `/live/raster-school` (click-through checked), `npm run check` ✓ | waiting for recording |
-| 23 | Kelp Line | ✓ the flow (night run 2026-10-09): parts from Kür Delta Watch (Timeline, Editorial Story), Lowfield Nights (Schedule), Velmira (Gallery, Tap to open large); Nonprofit / cause; Coastal Calm · Bottle Green · Letterpress Modern · subtle; Home · Our mission · Programs · Stories · Donate · Contact — **not approved yet** (link in its BUILD-LOG) | 21 photos picked (Unsplash connector, `media-src/SOURCES.md`); **not in yet** — the cloud blocks the downloads: `media-src/fetch.sh`, then Prompt 3 | ✓ Prompt 1 + Prompt 2 (one picture per story) in an isolated `claude -p` session; reviewed 1440 + 390; Engine lessons 1–7 in its BUILD-LOG | ✓ live at `/live/kelp-line` (click-through checked), `npm run check` ✓ — with temporary pictures | waiting for photos, then recording |
-| 24 | Pip & Kiln | ✓ the flow (night run 2026-10-09): parts from Maison Vey (Product Grid, Collection, Product Highlight), Sticky Weather (Manifesto, Wavy underline), Inkwell & Moth (Prints on a desk); E-commerce; Playful Pop · Butter Yellow · Bubble Pop · dynamic; Home · Shop · Product · Cart · Checkout · Workshops — **not approved yet** (link in its BUILD-LOG) | photos picked (Unsplash connector, `media-src/SOURCES.md`); **not in yet** — `media-src/fetch.sh`, then Prompt 2; per-product sets are the owner's shoot | ✓ Prompt 1 in an isolated `claude -p` session, no fix round; reviewed 1440 + 390 and the shop walked through; Engine lessons 1–5 in its BUILD-LOG | ✓ live at `/live/pip-kiln` (click-through checked), `npm run check` ✓ — with temporary pictures | waiting for photos, then recording |
+| 23 | Kelp Line | ✓ the flow (night run 2026-10-09): parts from Kür Delta Watch (Timeline, Editorial Story), Lowfield Nights (Schedule), Velmira (Gallery, Tap to open large); Nonprofit / cause; Coastal Calm · Bottle Green · Letterpress Modern · subtle; Home · Our mission · Programs · Stories · Donate · Contact — **not approved yet** (link in its BUILD-LOG) | ✓ 21 photos (Unsplash connector, `media-src/SOURCES.md`; fetched on the user's machine 2026-10-09 — the cloud blocked the downloads) | ✓ Prompt 1 + Prompt 2 (one picture per story) in an isolated `claude -p` session; reviewed 1440 + 390; Engine lessons 1–7 in its BUILD-LOG | ✓ live at `/live/kelp-line` (click-through checked), `npm run check` ✓ | waiting for recording |
+| 24 | Pip & Kiln | ✓ the flow (night run 2026-10-09): parts from Maison Vey (Product Grid, Collection, Product Highlight), Sticky Weather (Manifesto, Wavy underline), Inkwell & Moth (Prints on a desk); E-commerce; Playful Pop · Butter Yellow · Bubble Pop · dynamic; Home · Shop · Product · Cart · Checkout · Workshops — **not approved yet** (link in its BUILD-LOG) | ✓ photos (Unsplash connector, `media-src/SOURCES.md`; fetched 2026-10-09, the six plates re-picked); per-product sets are the owner's shoot | ✓ Prompt 1 in an isolated `claude -p` session; Prompt 2 (photos, 2026-10-09); Prompt 3 + 4 (2026-10-10: a first screen of layers — the giant word and a cut-out Flow mug); reviewed 1440 + 390 and the shop walked through; Engine lessons 1–5 in its BUILD-LOG | ✓ live at `/live/pip-kiln` (click-through checked), `npm run check` ✓ | waiting for recording |
 | 25 | Ninth Row | ✓ the flow: Halden's film first screen and Smooth scroll, Lowfield Nights' Schedule, Curtain between pages and Big name footer; A place or an event → Cinema or theatre (decision 54); Film-inspired · Grading Suite · Tall Order; Home · Programme · Tickets · Visit · About — approved 2026-10-09 | ✓ the user's film (Google Flow, prepare-video.sh --upscale footage); 10 photos (Unsplash connector) | ✓ Prompt 1 + Prompt 2 (photos, invented films, Big name footer) in an isolated `claude -p` session; reviewed 1440 + 390 | ✓ live at `/live/ninth-row` (click-through checked), `npm run check` ✓ | waiting for recording |
-| 26–29 | Tidewell Physio, Hollis & Daughters, Ines Varga, Tally House | proposed (§5c), waiting for the user's approval | | | | |
+| 26–29 | Tidewell Physio, Hollis & Daughters, Tally House | §5c approved by the user 2026-10-11 (started with #28) | | | | |
+| 28 | Ines Varga | ✓ the flow 2026-10-11 (Inkwell & Moth's drawn first screen and Prints on a desk, Fieldhouse's Names beside one photo, Fennwood's Hand-drawn underline; My work → portfolio; Conceptual Sketch · Gallery Grey · Sketchbook · dynamic) + the session's new pieces at the user's request; in the user's Saved; approved | ✓ 13 photos (Unsplash, `media-src/SOURCES.md`); drawings by the builder; project covers and galleries are placeholders | ✓ Prompt 1 (run twice: the account's session limit) + Prompts 2–3 (gathering headline in view; DrawnLink dropping the menu's close) in an isolated `claude -p` session; reviewed 1440 + 390; Engine lessons 1–3 in its BUILD-LOG | ✓ live at `/live/ines-varga` (click-through checked), `npm run check` ✓; the four new pieces' Library cards | clips started 2026-10-11, stopped: staggered arrivals came out all at once — recorder fix first (`docs/capture.md`) |

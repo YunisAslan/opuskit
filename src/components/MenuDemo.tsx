@@ -15,7 +15,7 @@ import { useLoop } from './LinkDemo'
 const W = 760, H = 475, BAR = 76
 const LINKS = ['Work', 'Services', 'Journal', 'About']
 const ease = 'cubic-bezier(.65,0,.35,1)'
-const BEATS: Record<NavStyleId, number> = { 'classic-bar': 5, 'floating-pill': 6, 'fullscreen-menu': 5, 'centered-logo': 4, 'card-menu': 4, 'bottom-dock': 7, 'split-pill': 5, 'side-index': 4, 'status-bar': 4 }
+const BEATS: Record<NavStyleId, number> = { 'classic-bar': 5, 'floating-pill': 6, 'fullscreen-menu': 5, 'centered-logo': 4, 'card-menu': 4, 'bottom-dock': 7, 'split-pill': 5, 'side-index': 4, 'status-bar': 4, 'corner-panel': 5 }
 
 type Ctx = { c: PaletteColors; type: TypographyPairing; shape: ShapeStyle; display: CSSProperties; ui: CSSProperties; brand: string; b: number }
 
@@ -106,6 +106,29 @@ function scene(id: NavStyleId, x: Ctx): ReactNode {
           <span className="flex" style={{ gap: 26 }}><Link ui={ui} color={c.text}>Shop</Link><Link ui={ui} color={c.text} on={b === 2}>Collections</Link></span>
           <span className="absolute left-1/2 -translate-x-1/2" style={{ ...display, fontSize: small ? 26 : 40, lineHeight: 1, transition: `font-size .55s ${ease}` }}>{brand}</span>
           <span className="flex items-center" style={{ gap: 26 }}><Link ui={ui} color={c.text}>Journal</Link><Link ui={ui} color={c.text}>Bag (0)</Link></span>
+        </div>
+      </>
+    }
+    case 'corner-panel': {
+      const open = b >= 1 && b <= 3, on = b === 3 ? 1 : 0
+      const rows: [string, ImageKey][] = [['Work', 'studio'], ['Services', 'ceramics'], ['Journal', 'botanical'], ['About', 'interior']]
+      return <>
+        <Page {...x} />
+        <div className="absolute inset-x-0 top-0 flex items-center justify-between" style={{ height: BAR, padding: '0 44px', background: c.background, borderBottom: `1px solid ${c.border}` }}>
+          <Logo display={display} brand={brand} />
+          <span style={{ ...ui, fontSize: 14, color: c.text, textDecoration: 'underline', textUnderlineOffset: 5 }}>{open ? 'Close' : 'Menu'}</span>
+        </div>
+        <div className="absolute" style={{ right: 28, top: 64, width: 400, background: c.surface, border: `1px solid ${c.border}`, borderRadius: shape.card, boxShadow: '0 22px 50px rgb(0 0 0 / .18)', transformOrigin: 'top right', transform: `scale(${open ? 1 : 0.96})`, opacity: open ? 1 : 0, transition: `transform .25s cubic-bezier(.23,1,.32,1), opacity .2s` }}>
+          <div className="flex" style={{ gap: 16, padding: 18 }}>
+            <div className="flex-1">
+              {rows.map(([t], i) => <p key={t} style={{ ...display, fontSize: 24, padding: '9px 0', borderBottom: `1px solid ${c.border}`, color: i === on ? c.text : c.muted, transition: 'color .2s' }}>{t}</p>)}
+            </div>
+            <div className="relative overflow-hidden" style={{ width: 120, height: 150, borderRadius: shape.media }}><Photo k={rows[on][1]} style={{ inset: 0, width: '100%', height: '100%' }} /></div>
+          </div>
+          <div className="flex" style={{ gap: 8, padding: '0 18px 18px' }}>
+            <span className="flex-1 text-center" style={{ ...ui, fontSize: 13, border: `1px solid ${c.text}`, borderRadius: shape.button, padding: '10px 0' }}>Say hello</span>
+            <span className="flex-1 text-center" style={{ ...ui, fontSize: 13, background: c.primary, color: c.background, borderRadius: shape.button, padding: '10px 0' }}>Start a project</span>
+          </div>
         </div>
       </>
     }

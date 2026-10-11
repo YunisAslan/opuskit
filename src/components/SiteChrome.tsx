@@ -35,9 +35,10 @@ export function Header() {
           <span className="hidden sm:contents"><ThemeToggle /></span>
           {/* One Collection for every screen size (two would open two sheets). */}
           <CollectionSheet />
-          {n ? <BuildButton /> : null}
         </div>
-        {!n && <Link href="/library" className="label hidden items-center bg-ink px-6 text-paper! transition-colors hover:bg-ink-2 md:flex">Start a site</Link>}
+        {/* One way on, one shape (the user, 2026-10-11): the full-height ink block at the right edge — Start a site while
+            the Collection is empty, then Build my site / Continue building in its place. */}
+        {n ? <BuildButton /> : <Link href="/library" className="label hidden items-center bg-ink px-6 text-paper! transition-colors hover:bg-ink-2 md:flex">Start a site</Link>}
         <button className="border-l border-line px-4 md:hidden" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(!open)}>
           <span className="sr-only">Menu</span>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">{open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M3 9h18M3 15h18" />}</svg>

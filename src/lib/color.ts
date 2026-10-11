@@ -21,6 +21,27 @@ export function contrastLabel(ratio: number) {
 
 export const isHex = (v: unknown): v is string => typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v)
 
+/** The first colour that reads on `bg` as body text (AA, 4.5:1), else black or white, whichever reads better — the palette's
+ *  own ink first, so a chapter keeps its character; neutral otherwise (ink stays neutral). */
+export function readableOn(bg: string, prefer: string[]): string {
+  return prefer.find((c) => contrast(c, bg) >= 4.5) ?? (contrast('#000000', bg) >= contrast('#FFFFFF', bg) ? '#000000' : '#FFFFFF')
+}
+
+/** `a` mixed into `b` (share of `a`, 0–1), in sRGB. */
+export function mixHex(a: string, b: string, share: number): string {
+  const ch = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))
+  const [x, y] = [ch(a), ch(b)]
+  return '#' + x.map((v, i) => Math.round(v * share + y[i] * (1 - share)).toString(16).padStart(2, '0')).join('').toUpperCase()
+}
+
+/** Secondary text on a ground: the text colour softened toward the ground (72% — the look the tones always had), only as
+ *  far as AA still holds; `text` itself when even that is too soft. The previews' grey-on-colour misses (Kelp Line, Sticky
+ *  Weather: 30 of 42 palettes failed on a chapter) came from a fixed 72% mix. */
+export function mutedOn(text: string, bg: string): string {
+  for (let share = 0.72; share < 1; share += 0.02) { const m = mixHex(text, bg, share); if (contrast(m, bg) >= 4.5) return m }
+  return text
+}
+
 // OKLab / OKLCH (Björn Ottosson). Perceptual — used to keep palettes genuinely distinct from each other.
 export function oklab(hex: string) {
   const n = parseInt(hex.replace('#', ''), 16)

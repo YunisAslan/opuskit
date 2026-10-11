@@ -115,6 +115,12 @@ export const palettes: Record<PaletteId, Palette> = {
     usage: { accent: 'Accent equals ink — emphasis comes from scale and weight, not colour' },
     why: 'The one true monochrome: #000 and #FFF, not tinted charcoal. With no colour to lean on, typography and media carry everything — the purest stage for film.',
   },
+  'white-box': {
+    id: 'white-box', name: 'White Box', line: 'Paper grey, pure black, nothing else', dark: false, tags: ['minimal', 'monochrome', 'editorial'],
+    colors: { background: '#EDEDED', surface: '#FFFFFF', text: '#000000', muted: '#575757', primary: '#000000', secondary: '#E6E6E6', accent: '#000000', border: '#D4D4D4' },
+    usage: { accent: 'Accent equals ink — emphasis comes from scale, weight and the photographs, not colour' },
+    why: 'Black Box in daylight. 37 of 88 recent Awwwards Sites of the Day are greyscale only and 38 are a near-black and a near-white (docs/research/awwwards/01-winners.md): the interface stays black and white and the work brings the colour.',
+  },
   espresso: {
     id: 'espresso', name: 'Espresso', line: 'Deep coffee brown, mint note', dark: true, tags: ['luxury', 'hospitality', 'organic'],
     colors: { background: '#2A1A14', surface: '#3A2820', text: '#F5EAE2', muted: '#C9B2A4', primary: '#F5EAE2', secondary: '#4A342A', accent: '#A8E0CF', border: '#54403A' },
@@ -272,6 +278,20 @@ export const palettes: Record<PaletteId, Palette> = {
     usage: { accent: 'Red-orange for one band or the CTA (Boc Studio, SWSH) — never body text' },
     why: 'A cool charcoal rather than pure black, white type and one hot signal: the studio-site look of Boc Studio and SWSH. Media sits on it like on a monitor.',
   },
+  // From the Awwwards colour study (docs/research/awwwards/04-colour.md): 72% of winners sit on a dark ground, and the
+  // most common pairs are near-black + one signal. OpusKit had black + red-orange (Charcoal Signal), not these two.
+  'ultramarine-night': {
+    id: 'ultramarine-night', name: 'Ultramarine Night', line: 'Blue-black, cool white, electric ultramarine', dark: true, tags: ['technology', 'studio', 'bold', 'futuristic'],
+    colors: { background: '#07071A', surface: '#10102A', text: '#F3F3F8', muted: '#9A9AB5', primary: '#F3F3F8', secondary: '#191935', accent: '#3D3BFF', border: '#26264A' },
+    usage: { accent: 'Ultramarine as a field — a band, a button’s fill, a shape behind the product (Noomo, Vectr, Studio K95) — never text on the dark ground' },
+    why: 'The night version of Klein blue: a black with blue in it, white type, and one electric ultramarine that glows like a screen. Five of the 93 winners carry it.',
+  },
+  'deep-teal': {
+    id: 'deep-teal', name: 'Deep Teal', line: 'Dark teal, sea white, mint', dark: true, tags: ['wellness', 'nonprofit', 'calm', 'technology'],
+    colors: { background: '#083535', surface: '#0F4141', text: '#ECF6F2', muted: '#A3C2BA', primary: '#ECF6F2', secondary: '#154A48', accent: '#2BE0B0', border: '#265957' },
+    usage: { accent: 'Mint for a figure, a line or the main action — it reads on the teal; keep paragraphs in sea white' },
+    why: 'Calm and exact at once: a deep water ground with one bright mint, for care, climate and quiet technology (20 Years Inspired by People, Alethia).',
+  },
   'warm-black': {
     id: 'warm-black', name: 'Warm Black', line: 'Warm near-black, bone, brass', dark: true, tags: ['hospitality', 'luxury', 'cinematic'],
     colors: { background: '#231F1B', surface: '#2E2925', text: '#F4EFE8', muted: '#B8AFA4', primary: '#F4EFE8', secondary: '#3F3933', accent: '#D2AE6E', border: '#4A433C' },
@@ -321,6 +341,9 @@ const GF = {
   atkinsonNext: 'Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800',
   monaSans: 'Mona+Sans:ital,wdth,wght@0,75..125,200..900;1,75..125,200..900',
   martianMono: 'Martian+Mono:wdth,wght@75..112.5,100..800',
+  instrumentSans: 'Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700', fragmentMono: 'Fragment+Mono:ital@0;1',
+  chivo: 'Chivo:ital,wght@0,100..900;1,100..900', chivoMono: 'Chivo+Mono:ital,wght@0,100..900;1,100..900',
+  brygada: 'Brygada+1918:ital,wght@0,400..700;1,400..700', splineSans: 'Spline+Sans:wght@300..700',
   gloock: 'Gloock',
   figtree: 'Figtree:ital,wght@0,300..900;1,300..900',
   unbounded: 'Unbounded:wght@200..900',
@@ -532,6 +555,35 @@ export const typography: Record<TypographyId, TypographyPairing> = {
     utility: { family: 'Atkinson Hyperlegible Next', weight: 600, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0', use: 'Labels, data — tabular figures' },
     googleFamilies: [GF.scienceGothic, GF.atkinsonNext], source: 'Google Fonts', sample: 'Launch window opens Thursday',
     why: 'An aerospace, instrument-panel read without a monospace costume; Atkinson Next disambiguates 1/l/I and 0/O for spec-heavy content.',
+  },
+  // From the Awwwards study (docs/research/awwwards/02-typography.md): winners set a neo-grotesk and put their small
+  // labels — nav, dates, counts, captions — in a mono (29% of them; 2 of OpusKit's 58 pairings did).
+  'studio-mono': {
+    id: 'studio-mono', name: 'Studio Mono', line: 'A tight grotesk, every label in mono', tags: ['agency', 'studio', 'portfolio', 'minimal', 'technical'],
+    display: { family: 'Instrument Sans', weight: 600, size: 'clamp(3rem, 8.5vw, 7.5rem)', lineHeight: '0.92', letterSpacing: '-0.045em', use: 'Hero headlines' },
+    heading: { family: 'Instrument Sans', weight: 600, size: 'clamp(1.5rem, 2.6vw, 2.25rem)', lineHeight: '1.05', letterSpacing: '-0.025em', use: 'Section headings' },
+    body: { family: 'Instrument Sans', weight: 400, size: '1rem', lineHeight: '1.55', letterSpacing: '-0.005em', use: 'Paragraphs' },
+    utility: { family: 'Fragment Mono', weight: 400, size: '0.75rem', lineHeight: '1.4', letterSpacing: '0.01em', use: 'Labels, navigation, dates, counts' },
+    googleFamilies: [GF.instrumentSans, GF.fragmentMono], source: 'Google Fonts', sample: 'Selected work, 2019 to now',
+    why: 'The award-winning studio voice: one tight grotesk carries everything, and a quiet mono marks the small facts — the page reads as made by people who measure.',
+  },
+  'lab-notes': {
+    id: 'lab-notes', name: 'Lab Notes', line: 'A heavy grotesk and its own mono', tags: ['saas', 'technical', 'product', 'bold'],
+    display: { family: 'Chivo', weight: 800, size: 'clamp(2.75rem, 7.5vw, 6.75rem)', lineHeight: '0.9', letterSpacing: '-0.035em', use: 'Hero headlines' },
+    heading: { family: 'Chivo', weight: 700, size: 'clamp(1.5rem, 2.5vw, 2.1rem)', lineHeight: '1.05', letterSpacing: '-0.02em', use: 'Section headings' },
+    body: { family: 'Chivo', weight: 400, size: '1rem', lineHeight: '1.55', letterSpacing: '0', use: 'Paragraphs' },
+    utility: { family: 'Chivo Mono', weight: 400, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0', use: 'Labels, numbers, code, navigation' },
+    googleFamilies: [GF.chivo, GF.chivoMono], source: 'Google Fonts', sample: 'Ship it before lunch',
+    why: 'A grotesk with its own mono cut: headlines with weight, figures and labels from the same family, so the product page reads as one instrument.',
+  },
+  'spline-edition': {
+    id: 'spline-edition', name: 'Spline Edition', line: 'Serif italics over a plain sans', tags: ['editorial', 'fashion', 'studio', 'luxury'],
+    display: { family: 'Brygada 1918', weight: 500, size: 'clamp(3rem, 8vw, 7rem)', lineHeight: '0.95', letterSpacing: '-0.02em', use: 'Hero — a word or phrase in italic for emphasis', italic: true },
+    heading: { family: 'Brygada 1918', weight: 500, size: 'clamp(1.6rem, 2.8vw, 2.4rem)', lineHeight: '1.08', letterSpacing: '-0.01em', use: 'Section headings' },
+    body: { family: 'Spline Sans', weight: 400, size: '1rem', lineHeight: '1.6', letterSpacing: '0', use: 'Paragraphs' },
+    utility: { family: 'Spline Sans', weight: 500, size: '0.8125rem', lineHeight: '1.4', letterSpacing: '0.01em', use: 'Captions, credits, dates' },
+    googleFamilies: [GF.brygada, GF.splineSans], source: 'Google Fonts', sample: 'The autumn issue, in print',
+    why: 'The magazine formula the winners use: a serif with real italics for the voice, a plain sans to read and to caption.',
   },
   'data-sheet': {
     id: 'data-sheet', name: 'Data Sheet', line: 'Wide sans headlines, mono for numbers', tags: ['technical', 'minimal', 'architecture'],

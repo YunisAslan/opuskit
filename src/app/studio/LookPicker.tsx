@@ -1,11 +1,9 @@
 'use client'
 // Make it yours: the look, the colours and the lettering, one list at a time under tabs that name each pick (decision
 // 29). On Direction (Make it yours, decisions 36, 39), and on Brand for a recipe opened from elsewhere. What fits
-// leads; a colour or lettering seen on a site the owner took from says so ("From Fennwood"), and the Library is one link
-// away — taking from real sites stays the way in.
+// leads. Tiles carry only their name — no "From Fennwood", "Fits your site", "As built" (the user, 2026-10-11: noise).
 import { Check, LayoutGrid } from 'lucide-react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { useGoogleFonts } from '@/components/FontLoader'
@@ -13,19 +11,20 @@ import { LazyMount } from '@/components/LazyMount'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { Chip } from '@/components/ui'
 import { palettes, typography } from '@/data/ingredients'
-import { directions, families, purposes } from '@/data/taxonomy'
+import { directions, families } from '@/data/taxonomy'
 import { lookCredit, lookImages, lookImg } from '@/data/look-images'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
-import { planToSpec, setStyle } from '@/features/kit/plan'
+import { SiteCard } from '@/app/library/Library'
+import { planToSpec, setStyle } from '@/features/studio/plan'
 import { allSites, lookChoices, siteName, siteSpec, type SiteRef, keptByName } from '@/features/library/collection'
 import { siteTraits } from '@/features/library/inspire'
 import { composeRecipe, rankPalettes } from '@/features/recipes/engine'
 import { SiteThumb, exampleOf } from '@/app/library/parts'
 import { useCollection } from '@/lib/collection'
-import { readPlan, updatePlan, usePlan, writePlan } from '@/lib/kit'
+import { readPlan, updatePlan, usePlan, writePlan } from '@/lib/plan'
 import { luminance } from '@/lib/color'
 import { SERIF_FAMILIES } from '@/lib/type-tokens'
-import type { DirectionId, FamilyId, KitPlan, PaletteId, TypographyId } from '@/types/domain'
+import type { DirectionId, FamilyId, StudioPlan, PaletteId, TypographyId } from '@/types/domain'
 import { usePlanLook } from './shared'
 
 const FIRST = 12
@@ -64,9 +63,6 @@ export function LookPicker({ every }: { every?: boolean }) {
   colourOrder.current ??= [...new Set([spec.palette, ...fits, ...look.d.palettes, ...ALL_COLOURS])]
   const colours = colourOrder.current.filter((id) => tone === 'all' || isDark(id) === (tone === 'dark'))
   // Where a colour, lettering or look was seen: the sites the owner took from.
-  const taken = [...new Set(c.items.flatMap((i) => (i.kind === 'site' || i.kind === 'like' ? [i.site] : [])))]
-  const seenOn = (k: 'palette' | 'typography' | 'direction', id: string) => { const r = taken.find((s) => siteTraits(s)?.[k] === id); return r && `From ${siteName(r)}` }
-  const tag = (k: 'palette' | 'typography', id: string, made: boolean, best: boolean) => seenOn(k, id) ?? (best ? 'Fits your site' : made ? 'Made for this look' : undefined)
 
   // The look: the owner's taken sites' looks lead, then those OpusKit's sites of their kind use, then the rest.
   const theirLooks = new Map(plan.blank ? [] : lookChoices(c).map((r) => [siteSpec(r)!.direction, siteName(r)] as const))
@@ -77,7 +73,7 @@ export function LookPicker({ every }: { every?: boolean }) {
   // A look OpusKit has built a site in shows that site playing; any other is drawn as the owner's site in it.
   const builtIn = new Map<DirectionId, SiteRef>()
   for (const r of [...allSites].sort((a, b) => Number(!!exampleOf(b)?.clip) - Number(!!exampleOf(a)?.clip))) if (exampleOf(r) && !builtIn.has(siteSpec(r)!.direction)) builtIn.set(siteSpec(r)!.direction, r)
-  const inLook = (id: DirectionId): KitPlan => {
+  const inLook = (id: DirectionId): StudioPlan => {
     const site = lookChoices(c).map((r) => siteSpec(r)!).find((x) => x.direction === id)
     // Colours or lettering taken by name stay with any look (decision 39); the rest follows the new look.
     const named = keptByName(c.items)
@@ -112,7 +108,7 @@ export function LookPicker({ every }: { every?: boolean }) {
           shown={lookChoice === 'theirs' ? looks.length : Math.min(nLooks, looks.length)} total={looks.length} onMore={() => setNLooks(Infinity)} wide>
           {looks.slice(0, lookChoice === 'theirs' ? undefined : nLooks).map((id) => (
             <div key={id} className="relative" data-look-tile title={lookCredit(id)}>
-            <Tile on={look.d.id === id} onPick={() => pickLook(id)} label={directions[id].name} sub={seenOn('direction', id) ?? (kindLooks.has(id) ? 'Fits your site' : builtIn.has(id) ? `As built: ${siteName(builtIn.get(id)!)}` : undefined)}>
+            <Tile on={look.d.id === id} onPick={() => pickLook(id)} label={directions[id].name}>
               <span className="pointer-events-none block" aria-hidden>
                 {/* A mood photo anyone reads as the style; without one, a site built in it, else the owner's site in it. */}
                 {lookImg(id)
@@ -140,7 +136,7 @@ export function LookPicker({ every }: { every?: boolean }) {
           {colours.slice(0, nColours).map((id) => {
             const pc = palettes[id].colors
             return (
-              <Tile key={id} on={spec.palette === id} onPick={() => updatePlan((x) => setStyle(x, 'palette', id))} label={palettes[id].name} sub={tag('palette', id, look.d.palettes.includes(id), fits.includes(id))}>
+              <Tile key={id} on={spec.palette === id} onPick={() => updatePlan((x) => setStyle(x, 'palette', id))} label={palettes[id].name}>
                 <span className="grid h-12 grid-cols-[2fr_1fr_1fr_1fr]" aria-hidden>{[pc.background, pc.text, pc.accent, pc.surface].map((x, i) => <span key={i} style={{ background: x }} />)}</span>
               </Tile>
             )
@@ -154,7 +150,7 @@ export function LookPicker({ every }: { every?: boolean }) {
           {fonts.slice(0, nType).map((id) => {
             const t = typography[id]
             return (
-              <Tile key={id} on={look.type.id === id} onPick={() => updatePlan((x) => setStyle(x, 'typography', id))} label={t.name} sub={tag('typography', id, look.d.typography.includes(id), id === look.d.defaults.typography)}>
+              <Tile key={id} on={look.type.id === id} onPick={() => updatePlan((x) => setStyle(x, 'typography', id))} label={t.name}>
                 {/* Both faces of the pairing, each in itself: headings, and the text everything else is set in. */}
                 <span className="block h-[4.25rem] overflow-hidden px-3 pt-2.5" aria-hidden>
                   <span className="block truncate text-[1.35rem] leading-none" style={{ fontFamily: `'${t.display.family}'`, fontWeight: t.display.weight, fontStretch: t.display.stretch, fontStyle: t.display.italic ? 'italic' : undefined }}>Aa {t.display.family}</span>
@@ -227,17 +223,7 @@ function LookSites({ id, onClose, onUse, using }: { id?: DirectionId; onClose: (
             <button type="button" onClick={() => onUse(d.id)} disabled={using === d.id} className="btn btn-ink btn-sm disabled:opacity-50">{using === d.id ? <><Check size={14} aria-hidden />Your look</> : 'Use this look'}</button>
           </div>
           <ul className="grid gap-5 p-6 sm:grid-cols-2">
-            {sitesIn(d.id).map((r) => (
-              <li key={r}>
-                <Link href={`/library/sites/${r.replace(':', '/')}`} className="group block">
-                  <span className="block overflow-hidden border border-line"><SiteThumb site={r} auto /></span>
-                  <span className="mt-2 flex items-baseline justify-between gap-3">
-                    <span className="ulink font-medium">{siteName(r)}</span>
-                    <span className="text-xs text-muted">{purposes[siteSpec(r)!.purpose].name}{exampleOf(r) ? '' : ' · planned'}</span>
-                  </span>
-                </Link>
-              </li>
-            ))}
+            {sitesIn(d.id).map((r) => <SiteCard key={r} site={r} />)}
           </ul>
           {lookImages[d.id] && <p className="border-t border-line px-6 py-3 text-xs text-muted"><a href={lookImages[d.id]!.page} target="_blank" rel="noreferrer" className="link">{lookCredit(d.id)}</a></p>}
         </>}

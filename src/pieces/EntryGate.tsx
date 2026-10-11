@@ -82,7 +82,7 @@ export function EntryGate({ title, hint, action, mode = 'drag', enter = 'Enter',
           onClick={() => (reduce || mode === 'drag') && lift('up')}
           onKeyDown={(e) => { if (mode === 'hold' && !reduce && (e.key === 'Enter' || e.key === ' ') && !e.repeat) { e.preventDefault(); hold(true) } }}
           onKeyUp={(e) => { if (mode === 'hold' && (e.key === 'Enter' || e.key === ' ')) hold(false) }}
-          className="relative min-h-14 cursor-pointer overflow-hidden rounded-(--radius-button,0px) bg-(--color-primary) px-8 font-(family-name:--font-body) text-(--color-background)">
+          className="relative min-h-14 cursor-pointer overflow-hidden rounded-(--radius-button,0px) bg-(--color-primary) px-8 font-(family-name:--font-body) text-(--color-on-primary,var(--color-background))">
           {mode === 'hold' && !reduce && <motion.span aria-hidden className="absolute inset-y-0 left-0 bg-(--color-accent)" style={{ width }} />}
           <span className="relative">{reduce ? enter : action}</span>
         </button>

@@ -1,6 +1,7 @@
 import { chromeNote, validateRecipe } from '@/features/recipes/engine'
 import { TYPE_UTILITIES, typeVars } from '@/lib/type-tokens'
-import { FRAMES, TONE_CSS, errorColor, frameVars, toneVars } from '@/lib/frame'
+import { FRAMES, TONE_CSS, chapterTextVars, errorColor, frameVars, toneVars } from '@/lib/frame'
+import { readableOn } from '@/lib/color'
 import { CRAFT_QA, PHONE_QA, REDUCED_QA, motionCss, saltQa } from './craft'
 import type { AssetManifest, PageSection, PaletteColors, UniversalRecipe } from '@/types/domain'
 
@@ -72,7 +73,7 @@ export function providedFilePaths(r: UniversalRecipe) {
 export function tokensCss(r: UniversalRecipe) {
   const t = r.visualSystem.typography
   const hex0 = Object.fromEntries(r.visualSystem.palette.tokens.map((c) => [c.role, c.hex])) as PaletteColors
-  const colors = [...r.visualSystem.palette.tokens.map((c) => `  --color-${c.role}: ${c.hex};`), `  --color-error: ${errorColor(hex0)}; /* form errors and failed states only — never decoration */`, ...(r.visualSystem.rotation?.colors.map((c, i) => `  --color-chapter-${i + 1}: ${c}; /* ${r.visualSystem.rotation!.name} — chapter ${i + 1} */`) ?? [])].join('\n')
+  const colors = [...r.visualSystem.palette.tokens.map((c) => `  --color-${c.role}: ${c.hex};`), `  --color-error: ${errorColor(hex0)}; /* form errors and failed states only — never decoration */`, `  --color-on-primary: ${readableOn(hex0.primary, [hex0.background, hex0.text])}; /* labels on primary buttons (AA) */`, ...(r.visualSystem.rotation?.colors.map((c, i) => `  --color-chapter-${i + 1}: ${c}; /* ${r.visualSystem.rotation!.name} — chapter ${i + 1} */\n  --color-chapter-${i + 1}-text: ${chapterTextVars(hex0, r.visualSystem.rotation!.colors)[`--color-chapter-${i + 1}-text`]}; /* text on chapter ${i + 1} (AA) */`) ?? [])].join('\n')
   // Each role reads the variable next/font sets (variable: '--font-<family>' in app/layout.tsx), the family name until then.
   const fonts = (['display', 'heading', 'body', 'utility'] as const).map((k) => `  --font-${k}: var(--font-${t[k].family.toLowerCase().replace(/[^a-z0-9]+/g, '-')}, '${t[k].family}');`).join('\n')
   const sh = r.visualSystem.shape
@@ -116,7 +117,7 @@ export function visualQa(r: UniversalRecipe): string[] {
   return [
     `Background is ${r.visualSystem.palette.tokens[0].hex}; no other page background colors are introduced.`,
     `Display text uses ${t.display.family} ${t.display.weight}; body uses ${t.body.family}; no other families appear.`,
-    r.visualSystem.rotation ? `Colour chapters (${r.visualSystem.rotation.name}): each chapter section owns one accent as a full colour field (--color-chapter-1..3, in turn); never two chapter colours in one view, and text never sits on them without AA contrast.` : `Accent ${r.visualSystem.palette.tokens.find((x) => x.role === 'accent')?.hex} covers < 5% of any viewport.`,
+    r.visualSystem.rotation ? `Colour chapters (${r.visualSystem.rotation.name}): each chapter section owns one accent as a full colour field (--color-chapter-1..3, in turn); never two chapter colours in one view, and text on a chapter colour is its --color-chapter-N-text (AA).` : `Accent ${r.visualSystem.palette.tokens.find((x) => x.role === 'accent')?.hex} covers < 5% of any viewport.`,
     `Pages: ${r.pages.map((p) => p.label).join(' · ')} — every page shares the same navbar and footer${r.pages.some((p) => p.hide) ? `, except: ${r.pages.filter((p) => p.hide).map((p) => `${p.label} — ${chromeNote(p).toLowerCase()}`).join('; ')} Leave them out with a route group whose own layout.tsx omits them — never render and hide with CSS` : ''}.`,
     // The footer as the recipe built it (a dark palette keeps it on the page ground — Ninth Row, #25: verification said
     // "dark band" while layout.md said the page ground).
@@ -153,6 +154,26 @@ export function visualQa(r: UniversalRecipe): string[] {
     r.metadata.spec.lead === 'video' ? 'Lighthouse on mobile: LCP < 2.5s with the poster still as the LCP element, CLS < 0.1.' : 'Lighthouse on mobile: LCP < 2.5s, CLS < 0.1.',
   ]
 }
+
+/** The anti-pattern detector a package that runs code checks itself with: impeccable by Paul Bakaus (Apache-2.0), run as
+ *  an outside tool — nothing of it ships. Pinned, so a new release never changes what "done" means. In a real browser it
+ *  found what our own review missed (Low Hum's 1.4:1 text, Hane's 4.4:1 body) with almost no noise; on static files it
+ *  is mostly noise, so the builder scans the running pages. */
+export const DETECTOR = 'impeccable@4.5.2'
+/** Faces the detector calls overused. A recipe whose lettering uses one switches that check off for it: the owner's
+ *  pick is never a defect (Sela Mor's Mona Sans). */
+const DETECTOR_FONTS = new Set(['inter', 'roboto', 'open sans', 'lato', 'montserrat', 'arial', 'helvetica', 'fraunces', 'instrument sans', 'instrument serif', 'geist', 'geist sans', 'geist mono', 'mona sans', 'plus jakarta sans', 'space grotesk', 'recoleta'])
+
+/** .impeccable/config.json: only the checks the owner's picks earn back — an italic display face (Fieldhouse's Moonlit
+ *  Italic), a taken Endless row, a listed face. */
+export function detectorConfig(r: UniversalRecipe): string {
+  const t = r.visualSystem.typography
+  const ignoreRules = [...([t.display, t.heading].some((f) => f.italic) ? ['italic-serif-display'] : []), ...(r.pieces.some((p) => p.id === 'marquee') ? ['marquee'] : [])]
+  const fonts = [...new Set([t.display, t.heading, t.body, t.utility].map((f) => f.family.toLowerCase()))].filter((f) => DETECTOR_FONTS.has(f))
+  return JSON.stringify({ detector: { ignoreRules, ignoreValues: fonts.map((value) => ({ rule: 'overused-font', value, reason: 'The owner’s lettering (OpusKit recipe)' })) } }, null, 2) + '\n'
+}
+
+export const DETECTOR_QA = `Detector: with the dev server running, run \`npx -y ${DETECTOR} detect --json <page url>\` on every page, at its default size and again with \`--viewport 390x844\`; every warning and error is fixed (advisories: fix what is real). \`.impeccable/config.json\` switches off only what the owner's picks earn back — never add to it to quiet a finding. It needs Node 22.18+ and Chrome (IMPECCABLE_BROWSER=<path> if it is not found); if it cannot run, say so in the final reply.`
 
 /** The site reads as one design, not parts pasted side by side: what the yunisaslanov build got wrong (a menu whose
  *  links were narrower, smaller and higher than the logo and button beside them). Checked on every part. */

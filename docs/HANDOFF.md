@@ -1,6 +1,6 @@
 # Handoff — where the work is and how to continue
 
-Last updated 2026-10-08. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
+Last updated 2026-10-11. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
 Keep this file current: update "Now" and "Next" whenever a step finishes.
 
 Talk to the user in Azerbaijani; code, docs and commits in English.
@@ -21,7 +21,166 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 - **Queue:** #25 Ninth Row was built on 2026-10-09 with the user's film (see Today); the night run proposed #26–#29 (`docs/plan-examples.md` §5c) —
   approve or change them before the next night run.
 
-## Today (2026-10-09, on the user's machine — committed and pushed)
+## Today (2026-10-10 and 11)
+
+- **Engine review**: `composeRecipe` split — the shot list (`shotList`) and npm dependencies (`packageDeps`) are their
+  own functions; all 35 recipes × 5 packages were byte-identical before and after.
+- **"Kit" names retired in code**: `features/kit/` → `features/studio/`, `lib/kit.ts` → `lib/plan.ts`, `KitPlan` →
+  `StudioPlan`; `opuskit.json`'s note says "the studio". Storage keys unchanged (`opuskit:plan`). "Your kit" in a
+  package still means its pieces.
+- **A look of another family than its base seed** (15 looks, e.g. Maximalism ← Art Direction) gets its family's text
+  density (`FAMILY_DENSITY`), not the seed's (check.ts). Headline/CTA examples still come from the base seed of the
+  same kind — the base seeds are cousins by design. The event headline example no longer names Sheki.
+- **Measured, no change**: every layout (6) and first screen (11) is used by the 25 examples, none by more than 6;
+  41 looks map to 15 layout × lead defaults; every look has its own principles/do/avoid and `lookKnowledge`. Big ideas
+  (6) only reach recipes outside the studio flow (decision 21).
+- **Contrast by construction** (decision 57): tone, chapter and button-label colours are computed to pass AA
+  (`readableOn`, `mutedOn`); new tokens `--color-on-primary`, `--color-chapter-N-text`; check.ts asserts every pair.
+  Built examples keep their colours until rebuilt.
+- **Signature picture: a still plus code, not a film** (tested with the user on Pip & Kiln). An AI film (Google Flow,
+  frames-to-video, start = end frame) loops cleanly and keeps the ground, but its object morphs (the glaze drips swim)
+  and it is 720p — the user: "videos are hard to get right; beautiful sites are possible without them". What works: one
+  Flow still → Real-ESRGAN 4× (`~/.cache/opuskit/realesrgan`) → rembg `birefnet-general` (isnet cut into the mug) →
+  a 160 KB WebP moved by code. Rules learned: a photo moves only in its own plane (a 3D pointer tilt read as a
+  cardboard cut-out) and is never relit (a WebGL light from a Depth Anything map looked fake — the photo carries its
+  own light); depth comes from layers — a giant word behind, the photo in front. **Not in the engine yet** — the user:
+  wait. A physics shelf (Matter.js, mugs to grab and throw) was tried and dropped: don't bring it back.
+- **#24 Pip & Kiln's first screen rebuilt that way** (Prompt 3 + 4 in its BUILD-LOG, isolated `claude -p`, 4.7 min,
+  $1.36): MORNING across the screen, the Morning Person Mug (Raspberry) floating in front, pointer drift, a pinned
+  scroll where the word leaves and the mug rolls upright, "Thrown on Tuesday. Glazed loud."; Add to bag adds the
+  Raspberry glaze. Live export, card and poster rebuilt; click-through checked.
+- **Library: one design, one card** (decision 58, `src/data/takeables.ts`): Style · Sections · Moments · Touches; each
+  design once, on its `bestOn` site, under its own name; Movement gone. The Library has four views as tabs
+  (Sites · Sections · Moments · Touches — no Style tab, the user: not needed), each with a category filter, so a part is picked without opening a site; a card opened shows the design large, its
+  alternatives (another menu, another link hover — never the same design recoloured) and the sites it is used on. Kind and Feel filters pick one each; kinds are
+  13 plain names (E-commerce, Product, SaaS, Portfolio, Studio, Restaurant, Hotel, Events, Wellness, Education,
+  Nonprofit, Real estate, Blog — only near-duplicates share one: Fashion → E-commerce, Personal brand → Portfolio,
+  Agency → Studio, Spa + Clinic → Wellness). When the user sends a site to mine: build the thing as our own section
+  variant or piece, add its catalog entry (check.ts asks), show it once an example carries it. Candidate: Pip & Kiln's
+  "giant word, object in front" first screen (built in the example, not in the engine). Previews (captures, clips,
+  live components) come later.
+- **Real media in the Library, Sela Mor first** (2026-10-10): stills of every section (Playwright, framed after they
+  settle; the footer at the page's end; the menu centred) and clips recorded with **Cap** (`cap record --window`, 60 fps,
+  the Mac's own cursor, Chrome as a 1210×923 app window — never the whole screen, it once showed the desktop; window frame
+  and title bar trimmed; small things zoomed and centred): the site (12 s), the whole landing page (34 s, top to footer),
+  its first screen, its held proof, its magnetic button. Wired through `examples.ts` (`clip`, `fullClip`, `sectionClips`,
+  `sectionStills`, `pieceClips`, `signatureClips`); TakenPicture: clip → still → drawn. Library effects that a component
+  shows alone are live in OpusKit's standard theme (`standardLook`), centred; scroll/photo moments show the recording.
+  Capture tooling is now in `scripts/capture/` (see `docs/capture.md`). VS Code needs Screen Recording + Accessibility (granted).
+- **Library cards on one dark ground** (2026-10-10, the user picked it): every piece and pure part on OpusKit's dark
+  card ground `#18181B` (`OPUSKIT_DARK`), one set of clips for light and dark mode. Clips recorded at the browser's own
+  zoom (pixel ratio 3) with the pointer measured, so a dragged photo stays under the cursor; Cap's cursor smoothing off;
+  start and end close to the piece, still lead-ins cut.
+- **Learning from Awwwards** (2026-10-11, the user: OpusKit's goal is sites at Awwwards level): part by part, plan in
+  `docs/research/awwwards/PLAN.md`. Part 1 done — the 93 latest Sites of the Day as data (`data/sotd.json`,
+  `scripts/research/awwwards-sotd.mjs`), findings in `01-winners.md`: usability is where winners score lowest; 44% use
+  3D (our biggest gap); 42% are black-and-white palettes; 11% design their 404. Applied (the user said yes): White Box palette; `JURY_QA` in craft.ts (designed 404,
+  semantics/meta, keyboard/focus, speed) in all five packages; **GSAP is allowed** (the user, 2026-10-11 — AGENTS.md).
+- **Awwwards part 2, typography** (2026-10-11): `02-typography.md`. Winners: grotesks, mono labels on 29%, serif as
+  accent. The user loosened the mono rule (up to 4 pairings, each its own mono; uppercase still one). New pairings
+  Studio Mono, Lab Notes, Spline Edition.
+- **Awwwards part 3, transitions and scroll** (2026-10-11): `03-motion.md` — 49 winners measured in a browser (clip-path
+  73%, WebGL 71%, Lenis 63%, split lettering 43%). New pieces `mask-reveal` (moment `window-opens`) and
+  `letters-assemble` (moment `letters-gather`). Smooth scroll is now the default for dynamic and immersive recipes (the user, 2026-10-11; engine `placePieces`).
+- **Awwwards part 4, colour** (2026-10-11): `04-colour.md` — 72% of winners on a dark ground, near-black + one signal.
+  New palettes Ultramarine Night and Deep Teal.
+- **Awwwards part 5, layout and navigation** (2026-10-11): `05-layout.md` — small fixed headers (median 3 links),
+  panels over full-screen menus, tall footers. New menu Corner panel (recommended for product sites) and footer The
+  name behind the thing (`stage`, for product- and 3D-led sites).
+- **Awwwards part 6, WebGL and 3D** (2026-10-11): `06-webgl.md` — new `dot-word` (the name as points, Canvas 2D; moment
+  `name-of-points`) and `speed-bend` (pictures lean with scroll speed).
+- **Awwwards part 7, the 404** (2026-10-11): `07-details.md` — half the winners design it, 13 of 91 answer 200; the
+  package's 404 rule now asks for a real 404 status and a headline from the brand's own world. **The study plan
+  (parts 1–7) is complete.**
+- **Next example: #28 Ines Varga** (§5c, approved 2026-10-11 — the user picked it first). Progress lives in
+  `docs/plan-examples.md` §6 and `examples/ines-varga/BUILD-LOG.md`; the finished recipe must also be added to the
+  user's Saved (open its `/studio/open?recipe=…` link in their browser). Done for the recipe (2026-10-11): in the
+  user's Saved, approved, built, registered and live at `/live/ines-varga`; its Library cards show the four new
+  pieces (photo-morph, shutter, letters-assemble, scroll-story). **Next (the user stopped here, 2026-10-11, to
+  continue tomorrow): its clips.** The first takes of `site.mp4`/`full.mp4` showed the page's staggered arrivals all at
+  once — fix the recorder first (`docs/capture.md`, "Open: arrivals come out all at once"), then record the site clips
+  and the three new pieces' demo clips (plans already in `demo-clips.mjs`); details in its BUILD-LOG §Next. Engine lessons 1–3 fixed (pictures for
+  pieces in the shot list; letters-assemble in the first screen; DrawnLink passing a menu's close). The recipe page got **Also in your site** — every piece
+  a recipe has that was not taken from a site, as live demos.
+- **Growing the ingredients** (2026-10-11, the user: more components, sections and variety for better sites), batch by
+  batch from what winners do that OpusKit had only in words. Batch 1 — three pieces: `side-scroll` (a sideways wall,
+  GSAP pin + scrub; now the piece of the Sideways strip photo layout and the sideways-gallery moment, so Pip & Kiln and
+  Maison Vey carry it — Library card on Maison Vey with its demo clip), `scroll-story` (chapters beside one held
+  picture that wipes per chapter, GSAP scrub; the new signature moment `story-beside-picture`), `proximity-type`
+  (letters swell near the pointer; variable faces). A piece reaches the Library only once a built site shows it —
+  scroll-story and proximity-type wait for a night-run site to use them.
+  Batch 2 — the engine's moments that had only words now bring ready code: nine signature moments linked to pieces
+  that already existed (image trail, stacking cards, velocity ribbon, reading highlight, tilt cards, counting numbers,
+  word rotate, before/after, letters near the cursor → proximity-type), and five new pieces: `photo-dome` (CSS 3D
+  sphere of photos to drag; the Photo dome layout), `pixel-swap` (pixel dissolve), `spotlight` (flashlight),
+  `hover-preview` (list with its photo at the pointer; the hover-reveal layout), `ripple-image` (plain WebGL ripple
+  under the pointer — the first WebGL piece; new moment `ripple-photos`). WebGL pieces never call loseContext on
+  cleanup: React strict mode remounts and gets the same lost context.
+  Batch 3 — section designs, which reach every studio site (the engine picks one per look family): the most used
+  single-design sections got two more each — Journal `index` (a contents page, titles large on rules) and `lead` (the
+  newest large, the rest beside it); Newsletter `giant` (title huge, the field one ruled line) and `card`. Built
+  examples keep the design they were built in: `BUILT_BEFORE` in `scripts/example-specs.ts` pins it (add a section
+  there whenever a single-design section gets new designs). Then FAQ (`centered`, `stacked` — styles the shadcn
+  trigger through `data-slot`), Schedule (`timeline` — times large like a departure board, `cards`; kept out of the
+  Library like the plain schedule) and Reservation (`centered`, `ledger`).
+  Batch 4 — page changes: `photo-morph` (the clicked thumbnail grows into the next page's picture — React 19.3's
+  `<ViewTransition>`, no library; its CSS ships as a hoisted `<style href precedence>`; new moment
+  `picture-becomes-page`) and `shutter-transition` (bars drop and lift; a fourth choice for Between pages). Tested
+  together on two real pages: the morphing picture flies above the shutter, as intended.
+  Batch 5 — 3D: `model-stage` (three, raw — no react-three-fiber): the owner's .glb in RoomEnvironment light, idle
+  turn, ≤ 8° lean to the pointer, camera eases back on scroll, draws only in view, poster first and as fallback. The
+  3D first screen (`webgl-scene`) now brings it, and the package lists `three` alone. Demo model:
+  `public/library/demo-knot.glb` (made with three's GLTFExporter).
+  Batch 6 — more section designs: Product grid (`editorial` — the first product across two columns and rows;
+  `shelf` — a ruled list, names large), Feature grid (`rows`, `bento`), CTA band (`line`, `loud` — an inverse band;
+  inside data-tone="inverse" the light colour is --color-text). Case study, editorial story, about and location
+  already vary through `media`. Then Menu (`card` — a printed card; `list` — dishes large), Trust (`statement`,
+  `inline`), Timeline (`years` — the years huge, no line), Categories (`words` — names huge on rules). Still one
+  design: collection (its own full-screen picture), lookbook, article, curriculum, donate, listen. Next: designs for the next most used single-design sections (location's facts, editorial-story, case-study).
+- **Every site has a video now** (2026-10-11): the 14 without one got `clip` (site.mp4, ~12 s) and `fullClip`
+  (full.mp4, top to footer) from `site-clips.mjs`; cards and site pages play them. The six older ones (Fennwood, Hane,
+  Sticky Weather, Hexmint, Brasshand, Slow Atlas) still have only the user's short clip. "A site like this" now breaks
+  a tie by the very same look (with more sites clipped, Halden and another film site tied).
+- **Recording guide: `docs/capture.md`** — how the Library's stills and clips are made and every lesson from making
+  them; read it before recording. Its scripts are in `scripts/capture/`.
+- **The Library offers only what is special** (2026-10-10/11, the user): not the basics any AI builder does unasked
+  (bar menus, grids of work, story columns, timelines, schedules, food menus, plain footers, a soft fade, a reading
+  line, a lightbox, smooth scroll, words arriving, an underline fill) nor near-twins — `NOT_OFFERED` in
+  `src/data/takeables.ts` (sites keep them, the engine builds them, check.ts counts them as named). Left: 12 sections
+  (5 first screens, 4 menus that open or move, 2 showcases, 3 footers — the user found one too few), 11 moments, 6 touches. Menus and the
+  footer are drawn pure on the dark ground; the rest show their site, moving ones as clips (`scripts/capture/`:
+  `demo-clips.mjs`, `site-clips.mjs`, `section-stills.mjs`, the shared pointer `hand.mjs` + `mouse.py`). Brasshand's
+  "index of big titles" was not on its site (its home holds one project at a time) — dropped.
+- **Four examples removed** (2026-10-10, the user): Halvik, Velmira, Lowfield Nights, Saint Ashe — code, media, live
+  export, zip, card, look-knowledge `seen`. Their folders are in the macOS Trash (`opuskit-removed-2026-10-10`), the
+  tracked files in git history. Sample worlds moved: product → Qum's photos (an invented skincare brand, Saltmoor),
+  event → Ninth Row's (the same film nights, now in an old cinema), shop → Maison Vey's (its five scents); the video
+  dialog demo plays Ninth Row's film. Catalog: centred menu now best on Fennwood, product highlight on Pip & Kiln;
+  four designs no remaining site shows left the Library (whole page over one film, film looping behind the headline,
+  lookbook, arrow that hops across the button — its clip stays recorded for when a site has it again). Kelp Line and
+  Ninth Row still record them as where their parts came from (history).
+- **Pieces shown being used** (2026-10-10, later): a piece that only moves on hover, drag, click or the page's scroll
+  plays a Cap clip of it being used on its Library card (16 pieces: the two buttons, the brand cursor, image trail,
+  before/after, prints on a desk, lightbox, sound, the three page changes, tilted grid, reading line, chapter colours).
+  Tooling is in the repo now: `scripts/capture/demo-clips.mjs` + `mouse.py` (a hand-like pointer — the user found an
+  even-speed one robotic), the stage `/library/demo/{id}`; check.ts fails when a piece changed after its clip. The page
+  change demos are a small clickable site (Work · Journal · About); the brand cursor has a zone to enter; the sound
+  demo plays Sela Mor's loop. Cards say what a thing does (its line) under the name, not its category. Its per-site
+  recorders are in `scripts/capture/` too (`site-clips.mjs`, `section-stills.mjs`). The user's reference (componentry.dev): one thing per card, large and centred, self-running loops.
+- **Build tab**: the tools first under "Pick the AI tool that will build your site", Room to invent after; "Download
+  Build Package" everywhere the old "build kit" was.
+- **Your files redone**: one row per shot-list part (what it shows, its size, the owner's files) with Add yours and
+  Samples — the examples' real photos (490) and films (8), the sites the owner took parts from first. A sample is
+  stored like an upload (`storeSample`, `UploadedAsset.sample`), so the package puts it at its path; the zip README
+  names it as a sample to replace. Removed from the tab: the status list (fonts, copy), the AI prompts.
+- **impeccable's detector in every Claude Code / Cursor package** (decision 56): verification runs
+  `npx -y impeccable@4.5.2 detect` on each running page; `.impeccable/config.json` spares the owner's picks. Five new
+  generic tells, more words to avoid, no skipped heading levels. Its audit of our live sites (home pages, 1440px):
+  Low Hum 1.4:1 text, Sticky Weather 1.6:1 and 4.1:1 plus a pulsing nav dot, Halvik 4.1:1, Kelp Line's muted text
+  grey on green (the palette's own `muted`), Brasshand's headline shows "Baku", Saint Ashe an image at opacity 0 —
+  the user set these aside (2026-10-10), as well as the five library faces on its overused lists — don't ask again.
+
+## Before (2026-10-09, on the user's machine — committed and pushed)
 
 - **Kelp Line and Pip & Kiln finished**: their picked photos fetched here (the cloud could not), fitted with Python PIL,
   Pip & Kiln's six plate photos re-picked (no clean 2:3); each site's photo prompt sent to a **new** isolated session
@@ -36,7 +195,7 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 - `other-model-examples/` (a Cursor-built comparison of Maison Vey's package, `refined-luxury-editorial-store-cursor`)
   was removed by the user; it is in git history up to `a526afd`.
 
-## Before (2026-10-08 — committed and pushed; 2026-10-07's flow is in `e7e0220`)
+## Earlier (2026-10-08 — committed and pushed; 2026-10-07's flow is in `e7e0220`)
 
 - **#22 Raster School built** — the first still site (Swiss Modern · Klein Field), the first package with Interaction
   craft and Seasoning, isolated `claude -p`, 5 Unsplash photos, live at `/live/raster-school`. Its Engine lessons (7, all
@@ -152,13 +311,17 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 1. **The next batch** (#26–#29, `docs/plan-examples.md` §5c — Tidewell Physio, Hollis & Daughters, Ines Varga, Tally
    House): waiting for the user's approval. Each: recipe through the flow → link to the user → isolated build (outside
    the repo, `claude -p`) → photos (Unsplash connector) → register; Engine lessons fixed before the next site.
-2. **Clips** for #11–#25: the user's screen recordings of the live exports (Low Hum, Pale Hour, Kelp Line, Pip & Kiln
-   and Ninth Row are new).
+2. **Library media for every new site**: when a site is added, put its special ideas in the catalog (the rest in
+   `NOT_OFFERED`) and record them with `scripts/capture/` as `docs/capture.md` says. The user's own screen recordings
+   remain welcome for whole-site clips.
 3. **Pip & Kiln's copy vs its photos**: the builder listed where the product photos show other glazes and shapes than
    the copy says — ask the user whether to fit the copy to the photos.
 4. **Feed back from the builds** (decision 33, ask first): Low Hum's wavy edges and sticky mobile button, Pale Hour's
    floor-plan index, Ninth Row's seat plan and doors countdown.
-5. Known gaps: "Event / wedding" is the kind's name for galleries and cinemas too (renaming breaks older examples'
+5. **Signature picture in the engine** (when the user says so): the recipe writes the Flow still prompt from the
+   owner's words and the look, a `prepare-image` step upscales and cuts it out, the package hands over the layered
+   first screen with the plane-only motion rules (memory: photo-cutouts-stay-flat).
+6. Known gaps: "Event / wedding" is the kind's name for galleries and cinemas too (renaming breaks older examples'
    `choices`); older recipes have no `taken`.
 
 ## Night runs

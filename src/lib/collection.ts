@@ -2,9 +2,9 @@
 // The Library's Collection, kept in the browser like the kit's plan.
 import { useMemo } from 'react'
 import { EMPTY_COLLECTION, cleanCollection, collectionSig, type Collection } from '@/features/library/collection'
-import { specToPlan } from '@/features/kit/plan'
-import type { KitPlan, RecipeSpec } from '@/types/domain'
-import { writePlan } from './kit'
+import { specToPlan } from '@/features/studio/plan'
+import type { StudioPlan, RecipeSpec } from '@/types/domain'
+import { writePlan } from './plan'
 import { KEYS, get, useStored, write } from './store'
 
 export const readCollection = (): Collection => cleanCollection(get<unknown>(KEYS.collection, null))
@@ -26,7 +26,7 @@ export function openInStudio(spec: RecipeSpec, fromId: string | undefined, opene
 
 /** You takes the plan's name, sentence and kind, and Direction keeps the plan as it is. Also mends a plan being built
  *  whose You is empty (one opened before decision 44), so You is filled in and Direction is open. */
-export function adoptPlan(plan: KitPlan, opened: string) {
+export function adoptPlan(plan: StudioPlan, opened: string) {
   const c = cleanCollection({ ...readCollection(), name: plan.name, about: plan.about, purpose: plan.purpose, offer: undefined })
   write(KEYS.collection, c)
   write(KEYS.composed, { sig: collectionSig(c), pick: 0, opened })

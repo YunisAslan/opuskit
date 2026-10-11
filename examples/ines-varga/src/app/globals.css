@@ -1,0 +1,118 @@
+@import "../styles/tokens.css";
+
+/* ── Page ─────────────────────────────────────────────────────────────────────────────────────────────── */
+html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; }
+button, a, [role="button"] { touch-action: manipulation; }
+::selection { background: var(--color-accent); color: var(--color-surface); }
+body { font-size: var(--type-body-size); line-height: var(--type-body-leading); }
+h1, h2, h3 { text-wrap: balance; overflow-wrap: anywhere; }
+p { text-wrap: pretty; }
+img { -webkit-user-drag: none; }
+
+/* Focus: no rings — a focused link gets its underline, a focused control its border (recipe → Accessibility) */
+:focus { outline: none; }
+a:focus-visible:not([data-drawn]) { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.25em; }
+
+/* The section grid: 12 columns desktop, 6 tablet, 4 mobile */
+.grid-site { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gutter); }
+@media (min-width: 640px) { .grid-site { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .grid-site { grid-template-columns: repeat(12, minmax(0, 1fr)); } }
+
+/* Press — this look's own: a 2px offset, no curve. Every link card and tile carries .press */
+.press { transition: transform var(--duration-press) steps(2); }
+.press:active { transform: translate(2px, 2px); }
+@media (prefers-reduced-motion: reduce) { .press:active { transform: none; } }
+
+/* ── Hard cut: things land like paper on a table — slightly off, then square, in two steps ───────────────── */
+[data-cut="armed"] > * { opacity: 0; transform: translate(6px, 10px) rotate(-0.8deg); }
+[data-cut="in"] > * { opacity: 1; transform: none; transition: opacity 200ms steps(2), transform 200ms steps(2); }
+[data-cut="in"] > :nth-child(2) { transition-delay: 50ms; }
+[data-cut="in"] > :nth-child(3) { transition-delay: 100ms; }
+[data-cut="in"] > :nth-child(4) { transition-delay: 150ms; }
+[data-cut="in"] > :nth-child(5) { transition-delay: 200ms; }
+[data-cut="in"] > :nth-child(n + 6) { transition-delay: 250ms; }
+@media (prefers-reduced-motion: reduce) {
+  [data-cut="armed"] > * { transform: none; }
+  [data-cut="in"] > * { transition: opacity 200ms ease; transition-delay: 0ms !important; }
+}
+
+/* ── Image clip reveal: the picture opens like a curtain ─────────────────────────────────────────────────── */
+[data-clip] { clip-path: inset(0); }
+[data-clip="armed"] { clip-path: inset(100% 0 0 0); }
+[data-clip="armed"] > * { transform: scale(1.15); }
+[data-clip="in"] { transition: clip-path 1000ms cubic-bezier(0.65, 0, 0.35, 1); }
+[data-clip="in"] > * { transition: transform 1000ms cubic-bezier(0.65, 0, 0.35, 1); }
+@media (prefers-reduced-motion: reduce) {
+  [data-clip="armed"] { clip-path: inset(0); opacity: 0; }
+  [data-clip="armed"] > * { transform: none; }
+  [data-clip="in"] { transition: opacity 200ms ease; }
+}
+
+/* ── Line-by-line headline reveal: masks keep 0.2em above and 0.3em below so no descender is cut ─────────── */
+.line-mask { display: block; overflow: clip; padding: 0.2em 0 0.3em; margin: -0.2em 0 -0.3em; }
+.line-mask > span { display: block; }
+[data-lines="armed"] .line-mask > span { transform: translateY(115%); }
+[data-lines="in"] .line-mask > span { transform: none; transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1); transition-delay: calc(var(--line, 0) * 80ms); }
+@media (prefers-reduced-motion: reduce) {
+  [data-lines="armed"] .line-mask > span { transform: none; }
+}
+
+/* ── Pencil strokes that draw themselves (SVG paths with pathLength="1") ───────────────────────────────── */
+[data-draw="armed"] [data-stroke] { stroke-dasharray: 1; stroke-dashoffset: 1; }
+[data-draw="in"] [data-stroke] { stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset var(--draw-time, 900ms) cubic-bezier(0.65, 0, 0.35, 1); transition-delay: calc(var(--d, 0) * 1ms); }
+[data-draw="armed"] [data-note] { opacity: 0; }
+[data-draw="in"] [data-note] { opacity: 1; transition: opacity 200ms steps(2); transition-delay: calc(var(--d, 0) * 1ms); }
+@media (prefers-reduced-motion: reduce) {
+  [data-draw="armed"] [data-stroke] { stroke-dashoffset: 0; opacity: 0; }
+  [data-draw="in"] [data-stroke] { opacity: 1; transition: opacity 200ms ease; }
+  [data-draw="in"] [data-note] { transition: opacity 200ms ease; }
+}
+
+/* Skeleton shimmer for app/loading.tsx — slow, linear, still under reduced motion */
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+.skeleton { background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-secondary) 50%, var(--color-surface) 75%); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
+
+/* The first screen pencils itself in at first paint (pure CSS: nothing waits on JavaScript, nothing is hidden without it) */
+@keyframes pencil { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes note-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+.draw-load [data-stroke] { stroke-dasharray: 1; stroke-dashoffset: 1; animation: pencil var(--t, 900ms) cubic-bezier(0.65, 0, 0.35, 1) var(--d, 0ms) forwards; }
+.draw-load [data-note] { opacity: 0; animation: note-in 200ms steps(2) var(--d, 0ms) forwards; }
+@media (prefers-reduced-motion: reduce) {
+  .draw-load [data-stroke] { stroke-dashoffset: 0; opacity: 0; animation: note-in 300ms ease 100ms forwards; }
+  .draw-load [data-note] { animation: note-in 300ms ease 100ms forwards; }
+}
+
+/* Menu links land like the rest of the site: off, then square, in two steps */
+@keyframes menu-in { from { opacity: 0; transform: translate(6px, 10px) rotate(-0.8deg); } to { opacity: 1; transform: none; } }
+@keyframes tick { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+/* One size per heading level, everywhere: h1 = type-display; h2 = type-h2; a project title in a list = type-h3 */
+@utility type-h2 { font-family: var(--font-display), sans-serif; font-weight: 400; font-size: clamp(2.5rem, 5.5vw, 5rem); line-height: 0.95; }
+@utility type-h3 { font-family: var(--font-display), sans-serif; font-weight: 400; font-size: clamp(2rem, 4.2vw, 3.75rem); line-height: 1; }
+/* A note in the margin: the heading hand, the one marker colour, large enough to pass AA as large text */
+@utility type-note { font-family: var(--font-heading), sans-serif; font-weight: 700; font-size: clamp(1.5rem, 2vw, 1.75rem); line-height: 1.1; color: var(--color-accent); }
+/* Wobbly hand-cut corners for cards (uneven radii, still in the hairline family) */
+@utility rounded-wobbly { border-radius: 6px 9px 5px 8px / 8px 5px 9px 6px; }
+
+/* About → the mini map: each layer pencils in when its chapter arrives, and comes off again on the way back */
+.mini [data-layer] [data-stroke]:not([data-dotted]) { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 900ms cubic-bezier(0.65, 0, 0.35, 1) calc(var(--d, 0ms) + var(--i, 0) * 60ms); }
+.mini [data-layer][data-on] [data-stroke]:not([data-dotted]) { stroke-dashoffset: 0; }
+.mini [data-layer] [data-dotted], .mini [data-layer] [data-wash] { opacity: 0; transition: opacity 400ms ease var(--d, 0ms); }
+.mini [data-layer][data-on] [data-dotted], .mini [data-layer][data-on] [data-wash] { opacity: 1; }
+.mini-still *, .mini-still [data-layer] * { transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .mini [data-layer] [data-stroke]:not([data-dotted]) { stroke-dashoffset: 0; opacity: 0; transition: opacity 200ms ease; }
+  .mini [data-layer][data-on] [data-stroke]:not([data-dotted]) { opacity: 1; }
+}
+
+/* Parallax drift: --p is the scroll progress (0 → 1) Motion writes; the picture travels 8% (4% on phones) at 1.1 */
+.drift { --travel: 4%; transform: translateY(calc((var(--p, 0.5) * 2 - 1) * var(--travel))) scale(1.1); will-change: transform; }
+@media (max-width: 767px) { .drift { --travel: 2%; } }
+
+/* Contact → the gathering headline: with scripts on, its letters wait hidden until LettersAssemble has placed them
+   (a 3s safety net shows them anyway); without scripts or with reduced motion they are simply there */
+@keyframes gather-failsafe { to { opacity: 1; } }
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-gather=""] [data-ch] { opacity: 0; animation: gather-failsafe 0s linear 3s forwards; }
+}

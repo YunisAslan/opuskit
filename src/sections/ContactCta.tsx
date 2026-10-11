@@ -22,7 +22,7 @@ export function ContactCtaSection({ tone, variant = 'statement', link: L = 'a', 
           and I’d like to talk about <input name="topic" required aria-label="What it is about" placeholder="a project" className={`${field} min-w-[12ch]`} />.
           You can reach me at <input name="email" type="email" required aria-label="Your email" placeholder="you@example.com" autoComplete="email" className={`${field} min-w-[14ch]`} />.
           <span className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 [font-size:1rem]">
-            <button type="submit" className="type-body rounded-(--radius-button) bg-(--color-primary) px-7 py-3.5 text-(--color-background)">{action.label}</button>
+            <button type="submit" className="type-body rounded-(--radius-button) bg-(--color-primary) px-7 py-3.5 text-(--color-on-primary,var(--color-background))">{action.label}</button>
             {email && <a href={`mailto:${email}`} className="type-body underline underline-offset-4">or write to {email}</a>}
           </span>
         </form>
@@ -37,7 +37,7 @@ export function ContactCtaSection({ tone, variant = 'statement', link: L = 'a', 
           {email && <a href={`mailto:${email}`} className="type-heading block break-words underline-offset-4 hover:underline [font-size:clamp(1.4rem,2.6vw,2.2rem)]">{email}</a>}
           {phone && <a href={`tel:${phone.replace(/\s/g, '')}`} className="type-heading block underline-offset-4 hover:underline [font-size:clamp(1.4rem,2.6vw,2.2rem)]">{phone}</a>}
           {address && <p className="type-body text-(--color-muted)">{address}</p>}
-          <L href={action.href} className="type-body inline-block rounded-(--radius-button) bg-(--color-primary) px-7 py-3.5 text-(--color-background)">{action.label}</L>
+          <L href={action.href} className="type-body inline-block rounded-(--radius-button) bg-(--color-primary) px-7 py-3.5 text-(--color-on-primary,var(--color-background))">{action.label}</L>
         </div>
       </div>
     </section>
@@ -47,7 +47,7 @@ export function ContactCtaSection({ tone, variant = 'statement', link: L = 'a', 
       <div className="mx-auto max-w-(--container)">
         {title}
         <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-          <L href={action.href} className="type-body rounded-(--radius-button) bg-(--color-primary) px-7 py-3.5 text-(--color-background)">{action.label}</L>
+          <L href={action.href} className="type-body rounded-(--radius-button) bg-(--color-primary) px-7 py-3.5 text-(--color-on-primary,var(--color-background))">{action.label}</L>
           {email && <a href={`mailto:${email}`} className="type-body underline underline-offset-4">{email}</a>}
         </div>
       </div>

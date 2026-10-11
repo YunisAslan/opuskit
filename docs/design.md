@@ -76,8 +76,8 @@ The shadcn variables (`--background`, `--card`, `--border`, …) read these toke
 - **Nav** (`SiteChrome.tsx`):
   - `.label` links; hover fills `paper-2`.
   - The current page sits on an ink block (`aria-current`).
-  - When the Collection is empty, a full-height ink "Start a site" block sits at the right. Once it has items, the
-    Collection button and Build my site take its place.
+  - The way on is one shape: a full-height ink block at the right edge — "Start a site" while the Collection is
+    empty, then "Build my site" / "Continue building" in the same block (the user, 2026-10-11: two sizes looked odd).
   - Header cells are ruled: logo | nav | tools.
 - **Steps bar** (`FlowBar` / `Steps` in `library/parts.tsx`, under the header, sticky at `top-14`): each step a ruled
   cell like the header's (mono number + name); the current one on a `white` surface, the way walked underlined 2px in
@@ -90,6 +90,11 @@ The shadcn variables (`--background`, `--card`, `--border`, …) read these toke
   grids of cards are ruled per cell (`border-l border-t` on the grid, `border-r border-b` on each cell — never a
   `gap-px bg-line` fill, which shows grey where a row is short). A pick taken from a site is marked `from Fennwood`
   in a pencil `.label`.
+- **Your files** (`MediaSlots.tsx`, 2026-10-10): one ruled row per picture or film the site needs (the shot list) —
+  the part on the left, what it shows, the owner's files, Add yours and Samples. Samples open a dialog like the
+  Library's: photos one site at a time (ruled site cells, the sites the owner took parts from first and marked
+  `taken`, the part's own pictures first), films all at once. A picked sample is ringed in pencil; its thumbnail
+  names the site. No status lists, no AI prompts, no fonts or copy on this tab.
 - Library and studio controls are shadcn/ui (see AGENTS.md). Corners are 2–4px everywhere; no pills. Round only for
   dots, toggles, avatars and step numbers.
 
@@ -112,8 +117,22 @@ cells and hex labels was "a bit odd"; the user: simple, creative, and no buttons
 - **Text links:** `.ulink` draws a 1px line from the left; `.group:hover .ulink` works for card titles.
 - **Arrows:** lucide arrows lean the way they point — `→` right, `↗` up-right, `←` left. This works globally; there
   is no class to add.
-- **Cards:** pictures scale a little (`group-hover:scale-[1.03–1.05]`). Library cards lift 4px and their border turns
+- **Cards:** pictures scale a little (`group-hover:scale-[1.02–1.05]`). Library cards lift 4px and their border turns
   ink.
+- **Library cards** (`Part` and the site cards in `library/Library.tsx`, 2026-10-11): minimal, in the site's own
+  language — one ruled cell: a 40px head bar (mono: the shelf or kind left; the site, or a pencil dot and "Taken",
+  right), the design playing on the dark card ground, then the name (15px medium) and what it does (two lines, muted)
+  with two 32px hairline squares beside the name:
+  copy as a prompt (`features/library/prompt.ts`; ticks in pencil) and take (+; ink on hover; taken, the square fills
+  pencil with a tick — the picked mark — and the card's border turns pencil). Sites: visit ↗ and take (the count once
+  taken). Each square names itself in a tooltip. **One click, one place**: anywhere else on a catalog card opens its one
+  dialog — the design large at the top left (its recording with controls, or the live part), the others a site could
+  have instead around it (beside, then below), then the sites it is used on; a site card opens the site's own page. (A picture that opened a player and a name that
+  opened details confused the user, 2026-10-11.) Presses follow OpusKit's own craft (`build-packages/craft.ts`): scale
+  0.97, 140ms, the out curve; hover only where a pointer can hover. Mono caps on controls are utilities, not `.label`
+  (`.label` sits outside Tailwind's layers; its muted colour beat every hover colour). Rejected on the way (the user,
+  2026-10-11): a white strip on the picture with an orange fill; tools hidden in the head bar; a following bubble and a
+  large plus cell ("too complex"); a foot bar of two big cells on every card (heavy).
 - **Logo:** its cell fills `paper-2` and the symbol turns −12°.
 - **Ticker:** pauses on hover.
 - **Rule:** anything clickable must visibly change on hover. `text-ink-2 → text-ink` alone is invisible; add a fill,

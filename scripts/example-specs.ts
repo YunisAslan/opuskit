@@ -8,8 +8,8 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { examples } from '../src/data/examples'
 import { layouts, palettes } from '../src/data/ingredients'
 import { footerStyles, heroes, navStyles, pageTypes, sections, shapeStyles } from '../src/data/patterns'
-import { specFromChoices } from '../src/features/kit/plan'
-import { isValidSpec, normalizeSpec } from '../src/features/recipes/engine'
+import { specFromChoices } from '../src/features/studio/plan'
+import { composeRecipe, isValidSpec, normalizeSpec } from '../src/features/recipes/engine'
 import type { PageSpec, PaletteColors, RecipeSpec, SectionId } from '../src/types/domain'
 
 const find = <T extends { name: string }>(kb: Record<string, T>, name?: string) =>
@@ -33,6 +33,9 @@ export function specFromLayout(base: RecipeSpec, md: string): RecipeSpec {
   })
 }
 
+/** Sections that had one design until a date; every example built before then has that one. */
+const BUILT_BEFORE: Partial<Record<SectionId, string>> = { journal: 'cards', newsletter: 'split', faq: 'side', schedule: 'columns', reservation: 'side', 'product-grid': 'grid', 'feature-grid': 'cells', 'cta-band': 'card', menu: 'columns', trust: 'row', timeline: 'line', categories: 'tiles' } // until 2026-10-11
+
 const out: Record<string, RecipeSpec> = {}
 for (const e of examples) {
   const root = `examples/${e.slug}`
@@ -52,6 +55,10 @@ for (const e of examples) {
   // (effect placements point at page ids, so they move with the rename).
   const ids = Object.fromEntries(spec.pages.map((p, i) => [p.id, `p${i + 1}`]))
   out[e.slug] = { ...spec, pages: spec.pages.map((p) => ({ ...p, id: ids[p.id] })), piecePlacements: spec.piecePlacements?.map((x) => ({ ...x, page: x.page === '*' ? '*' : ids[x.page] ?? x.page })), uploads: spec.uploads?.map(({ fileId: _, ...u }) => u) }
+  // The designs it was built in: a section that later got more designs keeps the one the site has (its only one then).
+  const r = composeRecipe(out[e.slug])
+  const pins = r.pages.flatMap((p) => p.sections.flatMap((s, index) => BUILT_BEFORE[s.id] && s.variant && !s.variant.chosen ? [{ page: p.id, index, variant: BUILT_BEFORE[s.id]! }] : []))
+  if (pins.length) out[e.slug].sectionVariants = [...(out[e.slug].sectionVariants ?? []), ...pins]
   console.log(`✓ ${e.slug} — ${shipped ? 'opuskit.json' : 'choices + recipe/layout.md'} · ${spec.pages.length} pages · hero ${spec.hero ?? '—'} · menu ${spec.nav ?? '—'} · shape ${spec.shape ?? '—'}`)
 }
 writeFileSync('src/data/example-specs.generated.json', JSON.stringify(out, null, 1) + '\n')

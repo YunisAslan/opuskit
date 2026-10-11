@@ -5,7 +5,7 @@ import { Maximize2 } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
-import type { Match } from '@/features/kit/closest'
+import type { Match } from '@/features/studio/closest'
 
 // The site's name as its title starts: "Halvik 65, a compact…" → "Halvik 65".
 const siteName = (m: Match) => m.example.title.split(/ [—|] |, |: /)[0]

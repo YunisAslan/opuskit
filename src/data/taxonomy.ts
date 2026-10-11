@@ -373,7 +373,7 @@ export const directions: Record<DirectionId, Direction> = {
     do: ['Use a strict column grid', 'Pair large images with tiny captions', 'Align everything to a baseline'],
     avoid: ['Rounded, bubbly UI', 'Illustrations', 'Busy backgrounds'],
     defaults: { palette: 'wet-concrete', typography: 'data-sheet', layout: 'grid', lead: 'photography', motion: 'subtle' },
-    palettes: ['wet-concrete', 'signal-white', 'graphite-sand', 'black-box', 'limestone', 'gallery-grey'], typography: ['data-sheet', 'grid-discipline', 'quiet-page', 'wide-spec', 'plain-giant', 'horizon'],
+    palettes: ['wet-concrete', 'signal-white', 'white-box', 'graphite-sand', 'black-box', 'limestone', 'gallery-grey'], typography: ['data-sheet', 'grid-discipline', 'quiet-page', 'wide-spec', 'plain-giant', 'horizon'],
     tags: ['minimal', 'architecture', 'grid'],
     why: 'Strong proportion signals competence. The grid does the design work, so the photography of space can breathe.',
   },
@@ -387,7 +387,7 @@ export const directions: Record<DirectionId, Direction> = {
     do: ['Use one typeface family in 2–3 weights', 'Build hierarchy with size jumps', 'Keep photography black-and-white or muted'],
     avoid: ['Accent colors on UI', 'Gradients', 'Too many type sizes'],
     defaults: { palette: 'black-box', typography: 'loud-and-clear', layout: 'editorial', lead: 'typography', motion: 'subtle' },
-    palettes: ['black-box', 'signal-white', 'wet-concrete', 'paper-cobalt', 'gallery-grey'], typography: ['loud-and-clear', 'grid-discipline', 'data-sheet', 'printed-word', 'plain-giant'],
+    palettes: ['black-box', 'white-box', 'signal-white', 'wet-concrete', 'paper-cobalt', 'gallery-grey'], typography: ['loud-and-clear', 'grid-discipline', 'data-sheet', 'printed-word', 'plain-giant', 'studio-mono'],
     tags: ['minimal', 'monochrome', 'type'],
     why: 'Removing color forces every decision into scale, weight and space — the result feels deliberate and timeless.',
   },
@@ -415,7 +415,7 @@ export const directions: Record<DirectionId, Direction> = {
     do: ['Use full-height portrait imagery', 'Mix huge and tiny type', 'Let images overlap grid lines'],
     avoid: ['Uniform product-card grids everywhere', 'Stock-looking photography', 'Centered everything'],
     defaults: { palette: 'plum-velvet', typography: 'gala-night', layout: 'asymmetric', lead: 'photography', motion: 'dynamic' },
-    palettes: ['plum-velvet', 'black-box', 'bubblegum', 'bottle-green', 'mulberry'], typography: ['gala-night', 'soft-couture', 'stretch-test', 'kalnia-couture', 'cut-glass', 'signature'],
+    palettes: ['plum-velvet', 'black-box', 'bubblegum', 'bottle-green', 'mulberry'], typography: ['gala-night', 'soft-couture', 'stretch-test', 'kalnia-couture', 'cut-glass', 'signature', 'spline-edition'],
     tags: ['editorial', 'fashion'],
     why: 'Fashion is sold through mood. Editorial pacing turns browsing into an experience people remember.',
   },
@@ -429,7 +429,7 @@ export const directions: Record<DirectionId, Direction> = {
     do: ['Show works large with small metadata', 'Use one accent color sparingly', 'Write captions like a curator'],
     avoid: ['Hover effects that distort artwork', 'Heavy UI chrome', 'Autoplaying carousels'],
     defaults: { palette: 'limestone', typography: 'printed-word', layout: 'editorial', lead: 'photography', motion: 'subtle' },
-    palettes: ['limestone', 'studio-aqua', 'klein-field', 'signal-white', 'pink-plaster', 'apricot-hall', 'gallery-grey'], typography: ['printed-word', 'high-low', 'quiet-page', 'gallery-hours', 'two-scripts', 'campus', 'cut-glass', 'real-ink', 'projection'],
+    palettes: ['limestone', 'studio-aqua', 'klein-field', 'signal-white', 'pink-plaster', 'apricot-hall', 'gallery-grey'], typography: ['printed-word', 'high-low', 'quiet-page', 'gallery-hours', 'two-scripts', 'campus', 'cut-glass', 'real-ink', 'projection', 'spline-edition'],
     tags: ['editorial', 'art', 'gallery'],
     why: 'Treating content like exhibits gives it weight and makes visitors read, not skim.',
   },
@@ -485,7 +485,7 @@ export const directions: Record<DirectionId, Direction> = {
     do: ['Use scroll-linked transitions between projects', 'Preload the next project media', 'Offer an index view'],
     avoid: ['Grids of tiny thumbnails as the only view', 'Hijacking scroll speed', 'Long intro loaders'],
     defaults: { palette: 'graphite-sand', typography: 'opening-credits', layout: 'full-bleed', lead: 'video', motion: 'immersive' },
-    palettes: ['graphite-sand', 'night-ink', 'black-box', 'klein-field', 'midnight-chapters', 'grape-soda', 'charcoal-signal'], typography: ['opening-credits', 'data-sheet', 'loud-and-clear', 'funnel', 'projection'],
+    palettes: ['graphite-sand', 'night-ink', 'black-box', 'klein-field', 'midnight-chapters', 'grape-soda', 'charcoal-signal', 'ultramarine-night'], typography: ['opening-credits', 'data-sheet', 'loud-and-clear', 'funnel', 'projection', 'studio-mono'],
     tags: ['cinematic', 'portfolio', 'immersive'],
     why: 'Full-screen presentation removes comparison noise — each project gets the visitor\'s complete attention.',
   },
@@ -571,7 +571,7 @@ export const directions: Record<DirectionId, Direction> = {
     do: ['Use close-up material photography', 'Use arched or softly rounded media masks', 'Pair a soft, chunky serif with a warm humanist sans'],
     avoid: ['Neon or saturated accents', 'Hard black', 'Clinical grids'],
     defaults: { palette: 'yerba-leaf', typography: 'corner-bakery', layout: 'balanced', lead: 'photography', motion: 'subtle' },
-    palettes: ['yerba-leaf', 'mint-fresh', 'pink-plaster', 'bottle-green', 'apricot-hall', 'olive-grove', 'limestone', 'sage-white'], typography: ['corner-bakery', 'quiet-page', 'main-street', 'gallery-hours', 'soft-wedge', 'kind-words', 'wanderer'],
+    palettes: ['yerba-leaf', 'mint-fresh', 'pink-plaster', 'bottle-green', 'apricot-hall', 'olive-grove', 'limestone', 'sage-white', 'deep-teal'], typography: ['corner-bakery', 'quiet-page', 'main-street', 'gallery-hours', 'soft-wedge', 'kind-words', 'wanderer'],
     tags: ['organic', 'natural'],
     why: 'Natural tones and textures create an emotional, physical connection — the site feels touchable.',
   },
@@ -613,7 +613,7 @@ export const directions: Record<DirectionId, Direction> = {
     do: ['Use tabular figures for data, not a mono costume', 'Use one luminous accent', 'Render 3D with restraint'],
     avoid: ['Neon overload', 'Purple-blue AI gradients', 'Fake terminal gimmicks'],
     defaults: { palette: 'night-ink', typography: 'control-room', layout: 'grid', lead: '3d', motion: 'dynamic' },
-    palettes: ['night-ink', 'graphite-sand', 'black-box', 'klein-field', 'charcoal-signal'], typography: ['control-room', 'data-sheet', 'opening-credits', 'funnel', 'horizon'],
+    palettes: ['night-ink', 'graphite-sand', 'black-box', 'klein-field', 'charcoal-signal', 'ultramarine-night'], typography: ['control-room', 'data-sheet', 'opening-credits', 'funnel', 'horizon'],
     tags: ['futuristic', 'technical', 'dark'],
     why: 'Precision and depth communicate advanced capability without resorting to clichés.',
   },
@@ -627,7 +627,7 @@ export const directions: Record<DirectionId, Direction> = {
     do: ['Use tabular numerals', 'Show real specs and diagrams', 'Keep motion functional'],
     avoid: ['Illustrative fluff', 'Rounded card soup', 'Marketing superlatives'],
     defaults: { palette: 'night-market', typography: 'data-sheet', layout: 'grid', lead: 'product', motion: 'subtle' },
-    palettes: ['night-market', 'graphite-sand', 'wet-concrete', 'night-ink', 'signal-white', 'grading-suite', 'paper-cobalt', 'charcoal-signal'], typography: ['data-sheet', 'control-room', 'grid-discipline', 'wide-spec', 'campus', 'stack', 'plain-giant', 'horizon'],
+    palettes: ['night-market', 'graphite-sand', 'wet-concrete', 'night-ink', 'signal-white', 'grading-suite', 'paper-cobalt', 'charcoal-signal', 'ultramarine-night', 'deep-teal'], typography: ['data-sheet', 'control-room', 'grid-discipline', 'wide-spec', 'campus', 'stack', 'plain-giant', 'horizon', 'lab-notes'],
     tags: ['futuristic', 'minimal', 'technical'],
     why: 'Technical audiences trust specifics. Precise, documented presentation reads as competence.',
   },
@@ -655,7 +655,7 @@ export const directions: Record<DirectionId, Direction> = {
     do: ['Use wide landscape images', 'Let sections breathe', 'Keep navigation minimal'],
     avoid: ['Dark heavy sections', 'Crowded grids', 'Loud colours'],
     defaults: { palette: 'mint-fresh', typography: 'letterpress-modern', layout: 'editorial', lead: 'photography', motion: 'subtle' },
-    palettes: ['mint-fresh', 'bottle-green', 'studio-aqua', 'wet-concrete', 'sage-white'], typography: ['letterpress-modern', 'quiet-page', 'swiss-italic', 'private-collection', 'cut-glass', 'soft-wedge'],
+    palettes: ['mint-fresh', 'bottle-green', 'studio-aqua', 'wet-concrete', 'sage-white', 'deep-teal'], typography: ['letterpress-modern', 'quiet-page', 'swiss-italic', 'private-collection', 'cut-glass', 'soft-wedge'],
     tags: ['coastal', 'fresh', 'quiet'],
     why: 'Cool, airy colour and generous space feel restful — like a day by the sea.',
   },
@@ -767,7 +767,7 @@ export const directions: Record<DirectionId, Direction> = {
     do: ['Arrange features in a tile grid', 'Show the product in every tile', 'Keep text short and clear'],
     avoid: ['Long walls of text', 'Many accent colours', 'Heavy shadows'],
     defaults: { palette: 'cobalt-sky', typography: 'friendly-app', layout: 'grid', lead: 'product', motion: 'subtle' },
-    palettes: ['cobalt-sky', 'signal-white', 'mint-fresh', 'chrome-silver', 'console-lilac', 'paper-cobalt'], typography: ['friendly-app', 'swiss-italic', 'data-sheet', 'funnel', 'wide-spec', 'stack', 'horizon'],
+    palettes: ['cobalt-sky', 'signal-white', 'mint-fresh', 'chrome-silver', 'console-lilac', 'paper-cobalt'], typography: ['friendly-app', 'swiss-italic', 'data-sheet', 'funnel', 'wide-spec', 'stack', 'horizon', 'lab-notes'],
     tags: ['bento', 'product', 'saas'],
     why: 'Tiles make a product easy to understand at a glance — each benefit is one clear, bite-sized box.',
   },
@@ -961,3 +961,25 @@ export const goals: Record<GoalId, Goal> = {
  *  not a table — Ninth Row, #25). */
 const GOAL_CTA: Partial<Record<PurposeId, Partial<Record<GoalId, string>>>> = { event: { book: 'Book tickets' } }
 export const ctaFor = (purpose: PurposeId | undefined, goal: GoalId) => (purpose && GOAL_CTA[purpose]?.[goal]) ?? goals[goal].cta[0]
+
+// Kinds of site as the plain names people know (the Library's Kind filter and every label of a site's kind) — SaaS, Portfolio, E-commerce stay apart; only kinds that mean nearly
+// the same thing share one name (the user, 2026-10-10: no "A & B" umbrellas). It is only a filter; every kind sits under
+// one name, and a name no site has is not offered.
+export const KIND_GROUPS: Record<string, { name: string; kinds: PurposeId[] }> = {
+  ecommerce: { name: 'E-commerce', kinds: ['ecommerce', 'fashion'] },
+  product: { name: 'Product', kinds: ['product'] },
+  saas: { name: 'SaaS', kinds: ['saas'] },
+  portfolio: { name: 'Portfolio', kinds: ['portfolio', 'personal-brand', 'experiment'] },
+  studio: { name: 'Studio', kinds: ['studio', 'agency'] },
+  restaurant: { name: 'Restaurant', kinds: ['restaurant'] },
+  hotel: { name: 'Hotel', kinds: ['hotel'] },
+  events: { name: 'Events', kinds: ['event'] },
+  wellness: { name: 'Wellness', kinds: ['spa', 'clinic'] },
+  education: { name: 'Education', kinds: ['course'] },
+  nonprofit: { name: 'Nonprofit', kinds: ['nonprofit'] },
+  realestate: { name: 'Real estate', kinds: ['real-estate'] },
+  blog: { name: 'Blog', kinds: ['blog'] },
+}
+/** A kind of site as it is shown: its plain name (Education, Studio, Wellness), the same everywhere — the data's own
+ *  names ("Course / education") stay for matching examples' recorded choices. */
+export const kindName = (p: PurposeId) => Object.values(KIND_GROUPS).find((g) => g.kinds.includes(p))?.name ?? purposes[p].name

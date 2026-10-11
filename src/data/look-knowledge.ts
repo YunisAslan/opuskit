@@ -262,7 +262,7 @@ export const lookKnowledge: Record<DirectionId, LookKnowledge> = {
       'Blur and glass over a flat colour, which just turns grey.',
       'Glow, glass, particles and gradient stacked on one screen: heavy to render and mushy to look at.',
     ],
-    seen: ['Microsoft AI', 'Alethia', 'cobloc', 'Kriss.ai', 'Noomo Agency', 'example:velmira'],
+    seen: ['Microsoft AI', 'Alethia', 'cobloc', 'Kriss.ai', 'Noomo Agency'],
   },
   'dark-cinematic': {
     moves: [
@@ -314,7 +314,7 @@ export const lookKnowledge: Record<DirectionId, LookKnowledge> = {
       'Every chapter in the same layout; scenes need changes of scale: a full frame, then a narrow column, then giant type.',
       'Giant words or the footer name sized by eye and cut off at the edge on some screens.',
     ],
-    seen: ['Depo Luxe', 'Colonia Zacamil', 'Tracing Art', 'Hearst Exhibit 2026', 'Paul Kalkbrenner', 'example:lowfield-nights'],
+    seen: ['Depo Luxe', 'Colonia Zacamil', 'Tracing Art', 'Hearst Exhibit 2026', 'Paul Kalkbrenner'],
   },
   'immersive-portfolio': {
     moves: [
@@ -362,7 +362,7 @@ export const lookKnowledge: Record<DirectionId, LookKnowledge> = {
       'Every section a centred title card: the pacing stalls; title cards should only mark a change of chapter.',
       'Letterbox crops applied mechanically to every image, cutting off heads, products or text in the photo.',
     ],
-    seen: ['Heloise Thibodeau', 'Petra Garmon', 'Siena Film Foundation', 'Body of Water', 'Paris by Emily', 'example:lowfield-nights'],
+    seen: ['Heloise Thibodeau', 'Petra Garmon', 'Siena Film Foundation', 'Body of Water', 'Paris by Emily'],
   },
   'gothic-modern': {
     moves: [
@@ -386,7 +386,7 @@ export const lookKnowledge: Record<DirectionId, LookKnowledge> = {
       'Drama from props instead of contrast: drips, skulls, candle flicker and red glows read as Halloween.',
       'Giant words cropped at the edge until a letter is lost, so the headline stops reading.',
     ],
-    seen: ['MEER MOHSIN', 'Glitch&Grit', 'Hearst Exhibit 2026', 'example:saint-ashe'],
+    seen: ['MEER MOHSIN', 'Glitch&Grit', 'Hearst Exhibit 2026'],
   },
   'modern-heritage': {
     moves: [
@@ -744,7 +744,7 @@ export const lookKnowledge: Record<DirectionId, LookKnowledge> = {
       'Every tile the same size: a grid of equal cards reads as a template, not a bento.',
       'Gradient washes and frosted blur on each tile: the generic app-site default, and it hides the product.',
     ],
-    seen: ['Dropbox Brand', 'Aspen Search', 'Vectr', 'framer.com', 'CIAO ENERGY - LAUNCH WEBSITE', 'example:halvik'],
+    seen: ['Dropbox Brand', 'Aspen Search', 'Vectr', 'framer.com', 'CIAO ENERGY - LAUNCH WEBSITE'],
   },
   'cyberpunk': {
     moves: [

@@ -163,3 +163,51 @@ the copy does not (glazes and shapes of the six products) and changed nothing: t
 
 Moved back, live export rebuilt, click-through checked in a real browser (no failed requests, every button shows the
 pointer); card and poster replaced.
+
+## 7. A first screen of layers — Prompt 3 (2026-10-10, on the user's machine)
+
+The user tested a new first screen in a preview page (OpusKit session, 2026-10-10): instead of an AI film, one still
+made in Google Flow, cut out (`media-src/SOURCES.md` → heroMug) and moved by code — a giant word behind, the photo in
+front, depth from the layers. Two tries before it looked natural: a 3D pointer tilt read as a cardboard cut-out, and a
+WebGL relight from a depth map looked fake ("flash") because the photo already carries its own light. The user: apply
+only this first screen to Pip & Kiln (not the physics shelf). A new isolated session (`claude -p`, Claude Opus 5.5,
+`--setting-sources project,local`, `--permission-mode acceptEdits`, Bash/Read/Write/Edit/Glob/Grep, the project moved
+outside the repository):
+
+```
+The site in this folder is already built from its Build Package (read CLAUDE.md first).
+
+Change only the Home first screen (src/components/home/ProductStage.tsx and what it needs). Keep every other page and section as it is.
+
+public/media/heroMug.webp is the Morning Person Mug in its Raspberry glaze, cut out on a transparent background. Rebuild the first screen from layers, not from a photo on a ground:
+1. Behind: the word MORNING in the display face, as wide as the screen allows — it must fit whole, no letter cut, at 1440 and at 390 — centred vertically, in the text colour, aria-hidden. The h1 stays the real headline.
+2. In front: the mug, centred, covering the middle letters of the word, floating gently (a few px up and down and a few degrees of lean, about 5–6 s, alternating), with a soft shadow below it that grows and shrinks as it floats.
+3. Pointer (fine pointers only): the mug drifts toward the pointer (up to about 35 px) and leans (up to about 6°); the word moves a little the other way. The mug is a flat photo: it never turns in 3D — no rotateX/rotateY, no perspective tilt, no added light, shine or highlight on it (all of these look fake on a photo).
+4. Scroll: the first screen stays pinned for about 2.3 screens; the word slides left fast; the mug rises slowly, rolls in its own plane (up to about 16°) and shrinks a little; the headline, its line and the actions fade out, and a second line arrives in the display face: "Thrown on Tuesday. Glazed loud." (put it in the copy deck, src/content/home.ts, marked PLACEHOLDER).
+5. The headline, its line, the price and Add to bag sit at the foot of the screen: headline and line on the left in the heading face, the action on the right. Keep the existing add-to-bag behaviour and price. The starburst, sticker, badge and disc go: the giant word and the mug are the whole picture.
+6. Phones: the word just above the middle with the mug covering its top half; headline, line and action below; no pointer effect; the scroll effect lighter.
+7. Reduced motion: nothing floats, pins or moves; the same layers stand still.
+8. Register heroMug in src/config/assets.ts and assets/manifest.json (status 'have', alt "The Morning Person Mug in Raspberry: a raspberry glaze dripping over a sunflower-yellow rim"); leave hero.jpg where else it is used.
+
+Check Home at 1440 and 390 (top, mid-scroll, end of the pin) and that the rest of the site is unchanged, run the production build, and before your final reply stop any dev server you started — do not leave one running.
+
+Rules for this session: work only inside this folder, never read or edit anything outside it. Port 3000 is taken: use port 3023 for the dev server. Never remove or change the turbopack.root line in next.config.ts.
+```
+
+Finished (31 turns, ~4.7 min, $1.36 reported): the word fitted to the width from its own measure (no layout shift), the
+mug floating and drifting in its plane only, the scroll roll ending with the mug upright "as if set down", actions
+unclickable once faded, phones lighter (1.5-screen pin), reduced motion still. It noted that Add to bag still added
+the Sunshine glaze while the picture shows Raspberry, and that hero.jpg is now unused (left in place). Reviewed by
+Claude at 1440 and 390 (production build, no overflow, the other pages unchanged).
+
+Prompt 4, the same session resumed (`claude -p --continue`, same flags):
+
+```
+The first screen shows the Morning Person Mug in Raspberry, so its Add to bag adds the Raspberry glaze. Run the production build, and before your final reply stop any dev server you started.
+```
+
+Finished (3 turns, reported $1.47 with the resumed context): `add(p, 'Raspberry')` on the first screen; lint and production build pass.
+
+Moved back; live export rebuilt (`/live/pip-kiln`, media pointed at `/examples/pip-kiln/media/`), click-through from the
+menu checked in a real browser (the mug loads, Shop renders, no 4xx; only aborted link prefetches); card and poster
+replaced with the new first screen; `npm run examples`, `npm run check` ✓.

@@ -4,26 +4,28 @@
 // (tokens, type scale, controls, layout, motion patterns, section plans) ships in the Build Package and the copied
 // recipe, not on this page.
 
+import { IDEA_BY_ID, ideaClip } from '@/data/site-ideas'
 import { PieceDemo } from '@/components/PieceDemo'
-import { Bookmark, BookmarkCheck, Check, Circle, Download, Pencil, Search, SlidersHorizontal, TriangleAlert } from 'lucide-react'
+import { Bookmark, BookmarkCheck, Download, Pencil, SlidersHorizontal } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { ToolIcon } from '@/components/ToolIcon'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { directions, purposes } from '@/data/taxonomy'
-import { resources } from '@/data/resources'
+import { directions, kindName } from '@/data/taxonomy'
 import { adapters } from '@/features/build-packages'
 import { BuildTab, downloadPackage, useBuildPackage } from '@/features/build-packages/BuildPanel'
-import { MediaSlots, SLOTS } from '@/components/MediaSlots'
+import { MediaSlots } from '@/components/MediaSlots'
 import type { TakenPart, BuildTarget, PaletteColors, PieceId, RecipeSpec, SectionId, UniversalRecipe } from '@/types/domain'
 import { normalizeSpec } from './engine'
 import { toggleSaved, useSaved } from './library'
-import { FlowBar, SiteThumb, exampleOf } from '@/app/library/parts'
+import { CopyPromptSquare, FlowBar, SiteThumb, TakeSquare, exampleOf } from '@/app/library/parts'
+import { CardPicture } from '@/app/library/Library'
 import { BrandCard } from '@/components/BrandCard'
 import { useGoogleFonts } from '@/components/FontLoader'
-import { siteName, takenName, type SiteRef } from '@/features/library/collection'
+import { siteName, siteSpec, takeKeyOf, takenName, type CollectionItem, type SiteRef } from '@/features/library/collection'
+import { TAKE_BY_KEY } from '@/data/takeables'
+import { TRAITS, type Trait } from '@/features/library/inspire'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { Chip, CopyButton } from '@/components/ui'
 import { recipeToMarkdown } from './markdown'
@@ -35,20 +37,12 @@ const TABS = [
 ] as const
 type TabId = (typeof TABS)[number]['id']
 
-const STATUS: Record<string, { label: string; mark: typeof Check; cls: string }> = {
-  have: { label: 'Ready', mark: Check, cls: 'text-ink' },
-  create: { label: 'To create', mark: Pencil, cls: 'text-pencil' },
-  find: { label: 'To find', mark: Search, cls: 'text-ink-2' },
-  temporary: { label: 'Placeholder for now', mark: TriangleAlert, cls: 'text-warn' },
-  optional: { label: 'Optional', mark: Circle, cls: 'text-muted' },
-}
-
 /** `studio`: this recipe is the one being built (its steps bar is on top); otherwise a Change first opens it in the
  *  building steps (/studio/open), so Brand edits this recipe. */
 export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false }: { recipe: UniversalRecipe; recipeRef: string; onChange: (spec: RecipeSpec) => void; studio?: boolean }) {
   const saved = useSaved().some((s) => s.ref === recipeRef)
   const [tab, setTab] = useState<TabId>('site')
-  // The tool the user picked in the kit; none if they chose to decide later. We never pick one for them.
+  // The tool the user picked; none if they chose to decide later. We never pick one for them.
   const [target, setTarget] = useState<BuildTarget | null>(r.metadata.spec.target === 'not-sure' ? null : r.metadata.spec.target)
   const [zipping, setZipping] = useState(false)
   const spec = r.metadata.spec
@@ -85,7 +79,7 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false 
             </Select>
             <button type="button" disabled={!pkg || zipping} className={`btn btn-ink inline-flex items-center gap-2 disabled:opacity-50 ${studio ? 'btn-sm' : ''}`}
               onClick={async () => { if (!pkg) return; setZipping(true); try { await downloadPackage(pkg, r) } finally { setZipping(false) } }}>
-              <Download size={16} aria-hidden />{zipping ? 'Preparing…' : 'Download build kit'}
+              <Download size={16} aria-hidden />{zipping ? 'Preparing…' : 'Download Build Package'}
             </button>
       </div>
     </>
@@ -97,7 +91,7 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false 
     <article className={`mx-auto max-w-[1440px] px-5 md:px-8 ${studio ? 'pb-24' : 'pb-40'}`}>
       {/* The owner's own name and sentence; the engine's long title stays in the package. */}
       <header className="pt-10 lg:pt-14">
-        <p className="label text-muted">Recipe · {purposes[spec.purpose].name} · {directions[spec.direction].name} · {r.visualSystem.palette.name} · {r.visualSystem.typography.name}</p>
+        <p className="label text-muted">Recipe · {kindName(spec.purpose)} · {directions[spec.direction].name} · {r.visualSystem.palette.name} · {r.visualSystem.typography.name}</p>
         <h1 className="display mt-4 max-w-5xl text-[clamp(2.6rem,6vw,5rem)]">{spec.brief?.name?.trim() || r.title}</h1>
         <p className="mt-4 line-clamp-2 max-w-2xl text-lg text-ink-2">{spec.brief?.offer?.trim() || r.summary}</p>
       </header>
@@ -119,8 +113,15 @@ export function RecipeDocument({ recipe: r, recipeRef, onChange, studio = false 
 
       <section id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="pt-10">
         {tab === 'site' ? <YourSite r={r} look={look} editHref={editHref} />
-          : tab === 'media' ? <Media r={r} spec={spec} update={update} />
-          : <div className="space-y-16"><RoomToInvent r={r} /><BuildTab recipe={r} target={target} onTarget={setTarget} pkg={pkg} error={error} /></div>}
+          : tab === 'media' ? <Media r={r} update={update} />
+          : <div className="space-y-16">
+              <div>
+                <Heading title="Pick the AI tool that will build your site" />
+                <p className="mt-3 max-w-2xl text-sm text-ink-2">You get one package made for that tool: the same site, written in the files and words it reads best.</p>
+                <div className="mt-6"><BuildTab recipe={r} target={target} onTarget={setTarget} pkg={pkg} error={error} /></div>
+              </div>
+              <RoomToInvent r={r} />
+            </div>}
       </section>
 
       {/* One action bar, always in reach: in the Studio it is the steps bar on top, elsewhere fixed at the bottom. */}
@@ -184,7 +185,7 @@ function YourSite({ r, look, editHref }: { r: UniversalRecipe; look: Look; editH
 }
 
 type Kind = 'all' | 'parts' | 'effects' | 'qualities'
-const KIND_OF = (x: TakenPart): Exclude<Kind, 'all'> => (x.kind === 'effect' ? 'effects' : x.kind === 'section' || x.kind === 'menu' || x.kind === 'footer' ? 'parts' : 'qualities')
+const KIND_OF = (x: TakenPart): Exclude<Kind, 'all'> => (x.kind === 'effect' || x.kind === 'idea' ? 'effects' : x.kind === 'section' || x.kind === 'menu' || x.kind === 'footer' ? 'parts' : 'qualities')
 const KIND_NAME: Record<Kind, string> = { all: 'All', parts: 'Parts', effects: 'Effects', qualities: 'Looks & qualities' }
 const KIND_ONE: Record<Exclude<Kind, 'all'>, string> = { parts: 'Part', effects: 'Effect', qualities: 'Look or quality' }
 
@@ -195,6 +196,7 @@ function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
   const [kind, setKind] = useState<Kind>('all')
   const kinds = (['all', 'parts', 'effects', 'qualities'] as const).filter((k) => k === 'all' || taken.some((x) => KIND_OF(x) === k))
   const shown = taken.filter((x) => kind === 'all' || KIND_OF(x) === kind)
+  const added = r.pieces.filter((p) => !taken.some((x) => x.kind === 'effect' && x.id === p.id))
   const t = look.type, world = worldFor(r.metadata.spec.purpose), brand = r.metadata.spec.brief?.name
   const part = (id: string) => r.pages.flatMap((p) => p.sections).find((s) => s.id === id)
   // Live, not a still (the user, 2026-10-08): an effect is its working demo, in the owner's brand — move, click, drag;
@@ -202,6 +204,7 @@ function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
   // plays that site. Without a recording a part is drawn in the owner's brand.
   const visual = (x: TakenPart) => {
     const clip = exampleOf(x.site as SiteRef)?.sectionClips?.[(x.kind === 'menu' ? 'navbar' : x.kind === 'footer' ? 'footer' : x.id) as SectionId]
+    if (x.kind === 'idea') { const i = IDEA_BY_ID.get(x.id); if (i) return <LiveClip src={ideaClip(i)} /> }
     if (x.kind === 'effect') return <PieceDemo id={x.id as PieceId} colors={look.colors} fonts={{ display: t.display.family, body: t.body.family, utility: t.utility.family }} className="!h-full" />
     if (clip && x.kind !== 'site' && x.kind !== 'like' && x.kind !== 'hero') return <LiveClip src={clip} />
     if (x.kind === 'section') { const s = part(x.id); return <div className="size-full" inert><SectionPreview id={x.id as SectionId} variant={s?.variant?.id} tone={s?.tone} media={s?.media} colors={look.colors} type={t} shape={look.shape} world={world} brand={brand} className="h-full" /></div> }
@@ -214,22 +217,73 @@ function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
       {taken.length ? (
         <>
           {kinds.length > 2 && <div className="mt-5 flex flex-wrap gap-1.5">{kinds.map((k) => <Chip key={k} small active={kind === k} onClick={() => setKind(k)}>{KIND_NAME[k]}</Chip>)}</div>}
-          <ul className="mt-5 grid border-l border-t border-line sm:grid-cols-2 xl:grid-cols-3">
-            {shown.map((x) => (
-              <li key={`${x.kind}:${x.id}:${x.site}`} className="overflow-hidden border-b border-r border-line bg-white">
-                <div className="aspect-[16/10] overflow-hidden border-b border-line" style={{ background: look.colors.background }}>{visual(x)}</div>
-                <div className="flex items-baseline justify-between gap-3 px-4 py-3">
-                  <span className="min-w-0"><span className="label block text-muted">{KIND_ONE[KIND_OF(x)]}</span><span className="mt-1 block truncate first-letter:uppercase">{takenName(x)}</span></span>
-                  <From site={siteName(x.site as SiteRef)} />
-                </div>
+          {/* The Library's own card (docs/design.md, Library cards): what it is and where it came from in the head, the
+              thing itself, its name and what it does, then copy it as a prompt and take it again — the + shows whether it
+              is in the Collection now, for the next site. */}
+          <ul className="mt-5 grid gap-x-6 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
+            {shown.map((x) => { const item = itemOf(x), named = TAKE_BY_KEY.get(takeKeyOf(item) ?? ''); return (
+              <li key={`${x.kind}:${x.id}:${x.site}`} className="min-w-0">
+                <article className="overflow-hidden rounded-[3px] border border-line bg-white">
+                  <div className="flex h-10 items-center justify-between gap-3 border-b border-line px-3 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
+                    <span className="truncate">{KIND_ONE[KIND_OF(x)]}</span><span className="shrink-0">{siteName(x.site as SiteRef)}</span>
+                  </div>
+                  {/* As the Library showed it when it was taken (the user, 2026-10-11): the same picture as its Library card —
+                      its recording, the live piece on the dark card ground, the site's own capture. A pick from a site no
+                      longer on the shelf has nothing to show there, so it is drawn in the owner's brand. */}
+                  <div className="aspect-[16/10] overflow-hidden border-b border-line" style={{ background: siteSpec(x.site as SiteRef) ? '#18181B' : look.colors.background }}>
+                    {siteSpec(x.site as SiteRef) ? <CardPicture item={item} category={named?.category ?? ''} /> : visual(x)}
+                  </div>
+                  <div className="flex items-start gap-3 px-3 pb-3.5 pt-3">
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[15px] font-medium tracking-tight first-letter:uppercase">{takenName(x)}</span>
+                      <span className="mt-1 line-clamp-2 min-h-[2lh] text-xs leading-relaxed text-muted">{named?.line ?? (x.kind === 'like' ? TRAITS[x.id as Trait]?.line : x.kind === 'site' ? 'Its colours, lettering, corners, menu and footer' : '')}</span>
+                    </span>
+                    <span className="flex shrink-0 gap-1.5"><CopyPromptSquare item={item} title={takenName(x)} className="relative" />{siteSpec(x.site as SiteRef) && <TakeSquare item={item} className="relative" />}</span>
+                  </div>
+                </article>
               </li>
-            ))}
+            ) })}
           </ul>
           <p className="mt-2 text-xs text-muted">Effects work here — move, click, drag. Parts play on the site they came from where it was recorded, else drawn in your brand. Your site takes them; it won’t look like those sites.</p>
         </>
       ) : <p className="mt-6 border border-dashed border-line p-5 text-sm text-muted">Nothing was taken from a site — this recipe started from its kind of site.</p>}
+      {/* What the site has that was not taken from a site (the user, 2026-10-11: show the new things too): pieces the
+          recipe brings by itself (a photo layout's, a moving site's smooth scroll) or added for this site — each its
+          working demo in the owner's brand, with where it goes. */}
+      {added.length > 0 && <div className="mt-14">
+        <Heading title="Also in your site" />
+        <ul className="mt-5 grid gap-x-6 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
+          {added.map((p) => (
+            <li key={p.id} className="min-w-0">
+              <article className="overflow-hidden rounded-[3px] border border-line bg-white">
+                <div className="flex h-10 items-center justify-between gap-3 border-b border-line px-3 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
+                  <span className="truncate">Effect</span><span className="shrink-0">OpusKit</span>
+                </div>
+                <div className="aspect-[16/10] overflow-hidden border-b border-line" style={{ background: look.colors.background }}>
+                  <PieceDemo id={p.id} colors={look.colors} fonts={{ display: t.display.family, body: t.body.family, utility: t.utility.family }} className="!h-full" />
+                </div>
+                <div className="px-3 pb-3.5 pt-3">
+                  <span className="block truncate text-[15px] font-medium tracking-tight first-letter:uppercase">{p.name}</span>
+                  <span className="mt-1 line-clamp-2 min-h-[2lh] text-xs leading-relaxed text-muted">{p.line}</span>
+                  <span className="mt-2 block truncate font-mono text-[11px] uppercase tracking-[0.12em] text-pencil">{p.where.split(' — ')[0]}</span>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ul>
+      </div>}
     </div>
   )
+}
+
+/** A pick kept on the recipe, as the Collection item that takes it again. */
+const itemOf = (x: TakenPart): CollectionItem => {
+  const site = x.site as SiteRef
+  switch (x.kind) {
+    case 'site': return { kind: 'site', site }
+    case 'like': return { kind: 'like', what: x.id as Trait, site }
+    default: return { kind: x.kind, id: x.id, from: site } as CollectionItem
+  }
 }
 
 /** A recording that plays while it is on screen, muted and looping; still with reduced motion. */
@@ -245,72 +299,15 @@ function LiveClip({ src }: { src: string }) {
   return <video ref={ref} src={src} muted loop playsInline preload="metadata" aria-hidden className="size-full object-cover" />
 }
 
-// ─── Your files: photos and films, and what each one should show ────────────
+// ─── Your files: one row per picture or film the site needs ─────────────────
 
-function Media({ r, spec, update }: { r: UniversalRecipe; spec: RecipeSpec; update: (p: Partial<RecipeSpec>) => void }) {
+function Media({ r, update }: { r: UniversalRecipe; update: (p: Partial<RecipeSpec>) => void }) {
   // The logo is never asked for: without one the builder sets the name as a wordmark in the display face.
-  const others = r.assetRequirements.filter((a) => a.asset !== 'logo' && !SLOTS.some((s) => s.asset === a.asset && s.show(spec)))
   return (
-    <div className="space-y-16">
-      <div>
-        <Heading title="Your photos and films" />
-        <p className="mt-3 max-w-2xl text-sm text-ink-2">Add them here and they go straight into your build kit, at the exact paths the site uses. Files stay in this browser. Nothing yet? The build starts with temporary pictures of the same size, and yours replace them later.</p>
-        <div className="mt-6"><MediaSlots spec={spec} onChange={update} /></div>
-      </div>
-
-      <div>
-        <Heading title="What each one shows" />
-        <p className="mt-3 max-w-2xl text-sm text-ink-2">The shot list your build follows — find, shoot or make exactly these.</p>
-        <div className="mt-6 border-l border-t border-line">
-          {r.media.shots.map((x) => (
-            <div key={x.key} className="grid gap-x-6 gap-y-1 border-b border-r border-line bg-white px-4 py-3.5 text-sm md:grid-cols-[14rem_minmax(0,1fr)_14rem]">
-              <p className="label text-muted">{x.where}</p>
-              <p className="text-ink first-letter:uppercase">{x.shows}</p>
-              <p className="text-muted md:text-right">{x.format}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {others.length > 0 && (
-        <div>
-          <Heading title="Everything else the site needs" />
-          <ul className="mt-6 grid border-l border-t border-line sm:grid-cols-2 xl:grid-cols-3">
-            {others.map((a) => {
-              const st = STATUS[a.status]
-              return (
-                <li key={a.key} className="flex items-start gap-3 border-b border-r border-line bg-white p-4">
-                  <st.mark size={16} className={`mt-0.5 shrink-0 ${st.cls}`} aria-hidden />
-                  <span className="min-w-0"><span className="block font-medium">{a.label}</span><span className={`block text-sm ${st.cls}`}>{st.label}</span><span className="mt-1 block text-xs text-muted">{a.specs}</span></span>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-      )}
-
-      {r.assetCreationPaths.length > 0 && (
-        <div>
-          <Heading title="How to get what's missing" />
-          <Accordion type="multiple" className="mt-6 border-l border-t border-line">
-            {r.assetCreationPaths.map((p) => (
-              <AccordionItem key={p.title} value={p.title} className="border-b border-r border-line bg-white">
-                <AccordionTrigger className="p-4 text-base font-medium hover:no-underline">{p.title}</AccordionTrigger>
-                <AccordionContent className="px-4 pb-5">
-                  <ol className="list-decimal space-y-1 pl-5 text-sm">{p.steps.map((s) => <li key={s}>{s}</li>)}</ol>
-                  {p.prompt && (
-                    <div className="mt-4 rounded-[3px] bg-ink p-4 text-paper">
-                      <p className="font-mono text-xs leading-relaxed">{p.prompt}</p>
-                      <CopyButton text={p.prompt} label="Copy prompt" className="mt-3 border-paper! text-paper" />
-                    </div>
-                  )}
-                  <p className="mt-4 text-sm text-muted">Use: {p.tools.map((id) => resources.find((x) => x.id === id)).filter(Boolean).map((x, i) => <span key={x!.id}>{i > 0 && ', '}<a className="link text-ink" href={x!.url} target="_blank" rel="noreferrer">{x!.name}</a></span>)}</p>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      )}
+    <div>
+      <Heading title="Your photos and films" />
+      <p className="mt-3 max-w-2xl text-sm text-ink-2">Each part of your site, and the picture it needs. Add your own, or start with a sample from a site built with OpusKit — the Build Package puts each file where it goes. Files stay in this browser.</p>
+      <div className="mt-6"><MediaSlots r={r} onChange={update} /></div>
     </div>
   )
 }

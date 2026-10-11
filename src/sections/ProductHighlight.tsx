@@ -5,7 +5,7 @@ import type { ElementType } from 'react'
 type P = { tone?: 'ground' | 'surface' | 'inverse' | 'chapter'; media?: 'side' | 'full' | 'over'; link?: ElementType; name: string; text: string; image: string; alt: string; details: { label: string; value: string }[]; action: { label: string; href: string } }
 export function ProductHighlightSection({ tone, media = 'side', link: L = 'a', name, text, image, alt, details, action }: P) {
   const list = <dl className="divide-y divide-(--color-border) border-y border-(--color-border)">{details.map((d) => <div key={d.label} className="flex justify-between gap-4 py-3"><dt className="type-utility text-(--color-muted)">{d.label}</dt><dd className="type-body text-right">{d.value}</dd></div>)}</dl>
-  const buy = <L href={action.href} className="type-body inline-block rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-(--color-background)">{action.label}</L>
+  const buy = <L href={action.href} className="type-body inline-block rounded-(--radius-button) bg-(--color-primary) px-6 py-3 text-(--color-on-primary,var(--color-background))">{action.label}</L>
   if (media === 'over') return (
     <section data-tone={tone === 'ground' ? 'surface' : tone ?? 'surface'} className="overflow-hidden px-(--gutter) py-(--section-y)">
       <div className="relative mx-auto max-w-(--container) text-center">

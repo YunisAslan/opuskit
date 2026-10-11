@@ -18,12 +18,17 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
   add to it what a new build or study teaches, with its source in `seen`.
   How every control, state and movement feels — press, hover, open/close, curves and times, reduced motion, phones,
   worst-case content — is `build-packages/craft.ts` (adapted from Emil Kowalski's skills, MIT; decision 50): its tokens
-  ship in tokens.css, its guide as the `interaction-craft` skill (a file for Lovable, v0, own code), its checks in verification. Loaders,
+  ship in tokens.css, its guide as the `interaction-craft` skill (a file for Lovable, v0, own code), its checks in verification. Claude Code and Cursor packages
+  also run impeccable's detector (Apache-2.0, run as an outside tool, pinned) on every page, sparing the owner's picks
+  (`DETECTOR_QA`, `detectorConfig` in `build-packages/shared.ts`; decision 56). Loaders,
   micro-interactions and parallax are seasoning — salt, not sauce — dosed per recipe (`seasoning`, decision 51).
 - OpusKit's own controls (select, checkbox, dialog, popover, accordion, inputs, toasts) are shadcn/ui in `src/components/ui/`, themed to OpusKit's palette in `globals.css`. Add new ones with `npx shadcn@latest add <name>`, then rewrite `bg-muted` → `bg-secondary` in the new file (`--color-muted` is OpusKit's muted *text* colour). Never use a native `<select>`, `<dialog>` or `<details>` in app UI.
 - The flow is the way to make a site (`docs/plan-library.md`, decisions 35–39): `/library`, browsing with no steps (the +
-  on a site opens everything it has to take: its whole look, one quality — colours, lettering, first screen, movement —
-  its signature parts only — `SIGNATURE_PARTS`, decision 52, the engine gives the rest — its effects); Build my site starts three steps: `/studio/you` (name, sentence, kind — only the owner's) →
+  on a site opens what it has to take in four groups — Style (whole look, colours, lettering), Sections, Moments,
+  Touches. Each design shows once in the whole Library, on the site that shows it best, under a name that says which
+  one it is: the catalog `src/data/takeables.ts`, decision 58; a new example's or a new site's design fails check.ts
+  until it has its name, category and `bestOn`; the Library's tabs — Sites, Sections, Moments, Touches — show the
+  catalog itself); Build my site starts three steps: `/studio/you` (name, sentence, kind — only the owner's) →
   `/studio/direction` → recipe. Direction (decision 39): Make it yours on top (every look, colour and lettering,
   `studio/LookPicker.tsx`, with Your brand beside it — name, sentence, button, palette, exact; decisions 40, 43), the start is the first mix of `directionsFor` in
   `features/library/inspire.ts` (what was taken by name is in it, none a copy; the packs are not shown — decision 42);
@@ -37,8 +42,8 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
 - The kit was retired 2026-10-07 (with accounts, pricing/paywall, explore, resources and `/recipe/{slug}`). Every recipe
   opens in the studio: `/studio/open?from=seed:{slug}|gen:{id}|example:{slug}` → Direction (`openInStudio` in
   `src/lib/collection.ts`, `specToPlan`; an example's recipe is rebuilt from its `choices` by `specFromChoices`); `/kit`
-  redirects there (`next.config.ts`). The plan model the studio edits is still `KitPlan` in `src/features/kit/plan.ts`
-  (pure, tested in check.ts; storage `src/lib/kit.ts`); what the studio doesn't edit rides along in `plan.from`, and a plan
+  redirects there (`next.config.ts`). The plan model the studio edits is `StudioPlan` in `src/features/studio/plan.ts`
+  (pure, tested in check.ts; storage `src/lib/plan.ts`); what the studio doesn't edit rides along in `plan.from`, and a plan
   opened from a saved recipe updates that recipe. The recipe page (`/result/[id]`) is always unlocked; it shows the owner's
   name, Your brand and What you took (`spec.taken`, decision 45).
 - OpusKit's own look — read `docs/design.md` before changing the landing, the chrome or any screen's look: tokens
@@ -60,9 +65,10 @@ Current: `docs/plan-library.md` — OpusKit Library, the new front door (Discove
   Sources live in `src/pieces/` (type-checked with OpusKit), metadata in `src/data/pieces.ts`; run `npm run pieces` after editing a piece or a section (it bundles both).
   Adapt only from MIT libraries (Motion Primitives, Magic UI, Cult UI, Animata, Componentry, Fancy Components) or depend on
   Apache-2.0 ones (Paper Shaders) — never React Bits, Aceternity or Hover.dev (their terms forbid redistributing
-  components), and nothing that needs GSAP (its free licence excludes Webflow-competing tools). Tokens only
+  components). GSAP is allowed (the user, 2026-10-11: "lisenziyanı boş ver" — 56% of recent Awwwards winners use it;
+  its free licence excludes Webflow-competing tools, a risk the user took). Tokens only
   (`--color-*`, `--font-*`), a reduced-motion version, no import beyond `react`/`motion`/`@paper-design/shaders-react`
-  (plus `lenis`, MIT, in a piece that lists it in `deps` — SmoothScroll).
+  (plus `lenis`, MIT, and `gsap`, in a piece that lists it in `deps`).
 - `npm run check` composes every seed recipe and every adapter and asserts completeness — and distinctiveness: two palettes ≥ 0.06 ΔE_OK apart in ground (or, if closer, clearly different accents), no greyed mid-tone ground, neutral ink, no cream-band or clay-accent clusters, no AI-default fonts, each family in ≤ 2 pairings, no two seeds sharing a palette or pairing. Add to the library only what passes.
 
 ## Example projects
@@ -93,6 +99,8 @@ After adding or changing an example, run `npm run examples`. It writes:
   Read from the example's `opuskit.json` (every Build Package ships one — keep it, it's committed with the example), or,
   for older examples without it, rebuilt from its `choices` plus its own `recipe/layout.md` (pages, sections, first
   screen, layout, shape, menu). `npm run check` composes each spec and asserts it matches that layout.md.
+- `src/data/example-media.generated.json` — its real photos and its film (`heroVideo.mp4`), offered as samples on the
+  recipe page's Your files tab (`components/MediaSlots.tsx`; clips, posters and PNGs left out).
 - `public/downloads/{slug}.zip` ("Copy the code") — the real code with same-size placeholder photos, videos left out and
   listed in `MEDIA.md`, no env files.
 Record `choices` with the exact option names.
@@ -101,7 +109,23 @@ Each example is registered in `src/data/examples.ts` (title/summary — copy fro
 `<title>`/meta description, not the abstract recipe doc, since a build often renames the brand).
 Its clips: `clip` (10–15 s, first screen + scroll) and `sectionClips` (3–5 s per section, the section standing still and framed
 on it — never the page scrolling past; `examples/{slug}/public/media/clips/{sectionId}.mp4`)
-feed "a site like this" (`src/features/kit/closest.ts`); an old example carries `legacy: true` and is never offered there.
+feed "a site like this" (`src/features/studio/closest.ts`); an old example carries `legacy: true` and is never offered there.
+Its `fullClip` (the whole landing page, top to footer) plays on its page and in "see it larger"; its `sectionStills`
+(`public/media/stills/{sectionId}.jpg`, the menu centred, the footer at the page's end) show a part where there is no
+clip — so a Library card is the site itself, never sample content. Clips are recorded with Cap (60 fps, the Mac's own
+cursor) in a laptop-shaped Chrome app window, never the whole screen; small things are zoomed onto and centred.
+**Before recording anything, read `docs/capture.md`** — the tools and every lesson learned (browser zoom not CSS zoom,
+the measured pointer, short loops, skipping welcomes, one dark ground).
+A piece that only moves when used (hover, drag, click, the page's scroll) shows in the Library as a clip of it being
+used: `node scripts/capture/demo-clips.mjs [id]` records it on `/library/demo/{id}` (standard theme) with Cap and a
+hand-like Mac pointer (`scripts/capture/mouse.py`: aimed moves, arcs, overshoot, no even speed) into
+`public/library/demos/`; `src/data/demo-clips.generated.json` keeps each piece's source hash and check.ts fails when a
+piece changed after its clip — record it again. Pieces that move by themselves (a headline, a loop) stay live.
+Sections are shown by what suits each (`shownPure` in `src/data/takeables.ts`): menus, footers, a programme, a food
+menu, a sentence, a line of years are drawn pure in the same dark standard theme (`pureLook`); first screens, work,
+products, photos and stories show their site — `scripts/capture/section-stills.mjs` (framed stills) and
+`scripts/capture/site-clips.mjs` (Cap clips of parts that move with the scroll), registered in the example's
+`sectionStills` / `sectionClips`.
 Its card (the Library, the landing) shows `public/examples/{slug}.jpg` — a 1440×900 JPEG screenshot of its live homepage, taken
 once the hero video has real frames (a black first frame makes a blank card). After replacing one, clear
 `.next/dev/cache/images` or the dev server keeps serving the old one.

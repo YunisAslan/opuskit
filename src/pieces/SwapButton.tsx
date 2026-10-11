@@ -10,13 +10,13 @@ const Arrow = () => <svg viewBox="0 0 16 16" className="size-4" aria-hidden><pat
 export function SwapButton({ link: L = 'a', href, label, className }: { link?: ElementType; href: string; label: string; className?: string }) {
   const [on, setOn] = useState(false)
   const reduce = useReducedMotion()
-  const box = <motion.span layout={!reduce} className="grid size-11 place-items-center bg-(--color-chapter-2,var(--color-accent)) text-(--color-text)"><Arrow /></motion.span>
+  const box = <motion.span layout={!reduce} className="grid size-11 place-items-center bg-(--color-chapter-2,var(--color-accent)) text-(--color-chapter-2-text,var(--color-text))"><Arrow /></motion.span>
   return (
     <L href={href} className={`type-utility inline-flex [font-family:var(--font-body)] ${className ?? ''}`}
       onPointerEnter={() => setOn(true)} onPointerLeave={() => setOn(false)} onFocus={() => setOn(true)} onBlur={() => setOn(false)}>
       <motion.span className="inline-flex items-stretch gap-1" animate={{ rotate: on && !reduce ? -3 : 0 }} transition={{ type: 'spring', stiffness: 300, damping: 18 }}>
         {!on && box}
-        <motion.span layout={!reduce} className="flex items-center bg-(--color-chapter-2,var(--color-accent)) px-4 font-semibold uppercase tracking-tight text-(--color-text)">{label}</motion.span>
+        <motion.span layout={!reduce} className="flex items-center bg-(--color-chapter-2,var(--color-accent)) px-4 font-semibold uppercase tracking-tight text-(--color-chapter-2-text,var(--color-text))">{label}</motion.span>
         {on && box}
       </motion.span>
     </L>

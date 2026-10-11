@@ -1,0 +1,2842 @@
+{
+  "source": "https://www.awwwards.com/websites/sites_of_the_day/",
+  "sites": [
+    {
+      "slug": "nick-ho",
+      "title": "Nick Ho",
+      "live": "https://nickho-motorsports.nl/",
+      "date": "2026-10-11",
+      "pitch": "A digital home for Porsche Carrera Cup driver Nick Ho, where a scroll-driven 360° helmet viewer and precise GSAP motion capture the feeling of speed on...",
+      "tags": [
+        "Games & Entertainment",
+        "Sports",
+        "Web & Interactive",
+        "Animation",
+        "GSAP",
+        "Three.js",
+        "3D",
+        "Interaction Design",
+        "Webflow"
+      ],
+      "colors": [
+        "#FED60A"
+      ],
+      "scores": {
+        "design": 7.11,
+        "usability": 7,
+        "creativity": 7.06,
+        "content": 7.17,
+        "overall": 7.07,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "lpas",
+      "title": "LPAS",
+      "live": "https://lpas.com/",
+      "date": "2026-10-10",
+      "pitch": "LPAS is a California-based process-driven architecture and interior design studio. \r\nClear process. Creative results. Human-centered. Always curious.",
+      "tags": [
+        "Architecture",
+        "Web & Interactive",
+        "Wordpress",
+        "Portfolio",
+        "Responsive Design",
+        "GSAP",
+        "UI design",
+        "About Page",
+        "Header Design",
+        "Footer Design",
+        "Figma"
+      ],
+      "colors": [
+        "#E3C1AA",
+        "#262626"
+      ],
+      "scores": {
+        "design": 7.26,
+        "usability": 7.21,
+        "creativity": 7.37,
+        "content": 7.53,
+        "overall": 7.29,
+        "jurors": 19
+      }
+    },
+    {
+      "slug": "maria-vasilyeva-portfolio",
+      "title": "Maria Vasilyeva Portfolio",
+      "live": "https://www.mariavasilyeva.com/",
+      "date": "2026-10-09",
+      "pitch": "Interactive designer portfolio inspired by music and sound, where rhythm, typography, layout, interactions and animation come together to create a dynamic...",
+      "tags": [
+        "Other",
+        "Promotional",
+        "Web & Interactive",
+        "Animation",
+        "CSS",
+        "Navigation Menu",
+        "Portfolio",
+        "Typography",
+        "WebGL",
+        "Interaction Design",
+        "UI design",
+        "Sanity"
+      ],
+      "colors": [
+        "#131313",
+        "#F9F9F9"
+      ],
+      "scores": {
+        "design": 7.44,
+        "usability": 6.94,
+        "creativity": 7.67,
+        "content": 7.39,
+        "overall": 7.33,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "odyssee",
+      "title": "Odyss\\u00e9e",
+      "live": "https://www.odysseeclinic.com.au/",
+      "date": "2026-10-08",
+      "pitch": "Odyssée is founded upon a philosophy of integrity in our approach to aesthetic medicine. This manifests in evidence-based treatments, a timeless approach...",
+      "tags": [
+        "Animation",
+        "Clean",
+        "Minimal",
+        "Transitions",
+        "GSAP",
+        "Microinteractions",
+        "Next.js",
+        "Sanity",
+        "Luxury"
+      ],
+      "colors": [
+        "#1E305E",
+        "#F6F4F2"
+      ],
+      "scores": {
+        "design": 7.56,
+        "usability": 7.28,
+        "creativity": 7,
+        "content": 7.5,
+        "overall": 7.36,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "twks-1",
+      "title": "twks",
+      "live": "https://twks.ch/en",
+      "date": "2026-10-07",
+      "pitch": "Independent creative  agency based in Geneva since 2011. We partner with local and international brands and institutions to build their brand, digital...",
+      "tags": [
+        "Design Agencies",
+        "Portfolio",
+        "Typography",
+        "Gallery",
+        "Interaction Design",
+        "Contact Page",
+        "Microinteractions",
+        "Figma"
+      ],
+      "colors": [
+        "#000000",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.44,
+        "usability": 7.39,
+        "creativity": 7.06,
+        "content": 7.67,
+        "overall": 7.37,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "lidar-drone-scanning",
+      "title": "Lidar Drone Scanning",
+      "live": "https://drone.riotters.com/",
+      "date": "2026-10-06",
+      "pitch": "A Riotters R&D experiment turning raw drone LIDAR scans into a real-time 3D point cloud, rendered live in the browser with WebGL.",
+      "tags": [
+        "Design Agencies",
+        "Technology",
+        "Web & Interactive",
+        "Animation",
+        "WebGL",
+        "Transitions",
+        "Storytelling",
+        "Three.js",
+        "3D",
+        "Gestures / Interaction",
+        "Microinteractions",
+        "Next.js"
+      ],
+      "colors": [
+        "#DFE5E8",
+        "#28363E"
+      ],
+      "scores": {
+        "design": 7.56,
+        "usability": 7.44,
+        "creativity": 7.61,
+        "content": 7.72,
+        "overall": 7.55,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "santioni-spirits",
+      "title": "Santioni Spirits",
+      "live": "https://santionispirits.com/",
+      "date": "2026-10-05",
+      "pitch": "\"The Notturno Experience\" invites visitors into the illustrated universe of Santioni Spirits. An immersive, comic book-inspired journey serving as the...",
+      "tags": [
+        "Art & Illustration",
+        "Food & Drink",
+        "Web & Interactive",
+        "Animation",
+        "Typography",
+        "WebGL",
+        "Illustration",
+        "Sound-Audio",
+        "Storytelling",
+        "Interaction Design"
+      ],
+      "colors": [
+        "#592223",
+        "#C82924"
+      ],
+      "scores": {
+        "design": 8.11,
+        "usability": 7.5,
+        "creativity": 8.39,
+        "content": 8.17,
+        "overall": 7.99,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "edolus",
+      "title": "EDOLUS",
+      "live": "https://edolus.com/",
+      "date": "2026-10-04",
+      "pitch": "A cinematic WebGL journey into AI infrastructure. Pushing the limits of real-time 3D, immersive UX, and dynamic sound design. Engineered by Vertex3D.",
+      "tags": [
+        "Music & Sound",
+        "Technology",
+        "Animation",
+        "WebGL",
+        "Experimental",
+        "Storytelling",
+        "GSAP",
+        "GLSL",
+        "3D",
+        "Interaction Design"
+      ],
+      "colors": [
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.06,
+        "usability": 7.17,
+        "creativity": 7.67,
+        "content": 7.44,
+        "overall": 7.25,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "tengile-malamala-collection",
+      "title": "Tengile Malamala Collection",
+      "live": "https://tengilemalamala.com/",
+      "date": "2026-10-03",
+      "pitch": "An immersive experience showcasing Tengile MalaMala's quiet luxury through cinematic storytelling and refined editorial design, bringing Africa's iconic...",
+      "tags": [
+        "Hotel / Restaurant",
+        "Big Background Images",
+        "Menu - Horizontal",
+        "Storytelling",
+        "React",
+        "Photo & Video",
+        "UI design",
+        "Microinteractions",
+        "Sanity",
+        "Social responsibility",
+        "AWS",
+        "Luxury"
+      ],
+      "colors": [
+        "#FBF8F6",
+        "#5C6E21"
+      ],
+      "scores": {
+        "design": 7.11,
+        "usability": 7.17,
+        "creativity": 6.89,
+        "content": 7.5,
+        "overall": 7.12,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "milledollars",
+      "title": "Milledollars",
+      "live": "https://milledollars.fr/",
+      "date": "2026-10-02",
+      "pitch": "Milledollars is a creative bureau focused on high-end video production.",
+      "tags": [
+        "Film & TV",
+        "Animation",
+        "GSAP",
+        "UI design",
+        "Vue.js",
+        "Contentful"
+      ],
+      "colors": [
+        "#E0DEE1"
+      ],
+      "scores": {
+        "design": 7.17,
+        "usability": 6.94,
+        "creativity": 7.06,
+        "content": 7.28,
+        "overall": 7.09,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "colonia-zacamil",
+      "title": "Colonia Zacamil",
+      "live": "https://coloniazacamil.com/",
+      "date": "2026-10-01",
+      "pitch": "Colonia Zacamil is a place where public art, community co-design and sustainable development converge.",
+      "tags": [
+        "Art & Illustration",
+        "Institutions",
+        "WebGL",
+        "Three.js",
+        "3D",
+        "Vue.js",
+        "Social responsibility"
+      ],
+      "colors": [
+        "#CDC3B7",
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.5,
+        "usability": 7.22,
+        "creativity": 7.78,
+        "content": 7.72,
+        "overall": 7.49,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "cominvi",
+      "title": "CoMinVi",
+      "live": "https://www.cominvi.com.mx/",
+      "date": "2026-09-30",
+      "pitch": "Website design and development for CoMinVi, a Mexican mining company. A clean and modern digital experience designed to showcase their expertise, services,...",
+      "tags": [
+        "Business & Corporate",
+        "Other",
+        "Technology",
+        "Animation",
+        "Graphic design",
+        "Content architecture",
+        "Webflow",
+        "Javascript",
+        "Figma"
+      ],
+      "colors": [
+        "#151515",
+        "#FF7511"
+      ],
+      "scores": {
+        "design": 7.61,
+        "usability": 7,
+        "creativity": 7.39,
+        "content": 7.39,
+        "overall": 7.36,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "jesper-landberg-4",
+      "title": "Jesper Landberg",
+      "live": "http://jesperlandberg.com",
+      "date": "2026-09-29",
+      "pitch": "Swedish design engineer building visually rich, motion-driven websites.",
+      "tags": [
+        "Web & Interactive",
+        "Animation",
+        "Infinite Scroll",
+        "GSAP",
+        "Three.js",
+        "Nuxt.js"
+      ],
+      "colors": [
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.5,
+        "usability": 7.44,
+        "creativity": 7.83,
+        "content": 7.72,
+        "overall": 7.57,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "butter",
+      "title": "Butter",
+      "live": "https://www.butter.video/",
+      "date": "2026-09-28",
+      "pitch": "Butter is the first video editor where creatives can build and remix custom design tools right on timeline.",
+      "tags": [
+        "Business & Corporate",
+        "Mobile & Apps",
+        "Web & Interactive",
+        "App Style",
+        "WebGL",
+        "React",
+        "3D",
+        "Filters and Effects",
+        "P5.js"
+      ],
+      "colors": [
+        "#1E1E1E",
+        "#F7F7F7"
+      ],
+      "scores": {
+        "design": 7.37,
+        "usability": 7.42,
+        "creativity": 7.47,
+        "content": 7.68,
+        "overall": 7.44,
+        "jurors": 19
+      }
+    },
+    {
+      "slug": "realevate",
+      "title": "Realevate",
+      "live": "https://realevate.agency/",
+      "date": "2026-09-27",
+      "pitch": "Global real estate marketing agency, connecting investors worldwide with exceptional investment opportunities across the world's leading destinations.",
+      "tags": [
+        "Business & Corporate",
+        "Animation",
+        "Fullscreen",
+        "Menu - Horizontal",
+        "Node.js",
+        "GSAP",
+        "Real Estate",
+        "Microinteractions",
+        "Javascript"
+      ],
+      "colors": [
+        "#1F2B5E",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.33,
+        "usability": 6.89,
+        "creativity": 7.17,
+        "content": 7.33,
+        "overall": 7.17,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "meer-mohsin",
+      "title": "MEER MOHSIN",
+      "live": "https://www.meermohsin.me/",
+      "date": "2026-09-26",
+      "pitch": "A cinematic journey through design and creative development, blending emotion, movement, and immersive storytelling into every interaction.",
+      "tags": [
+        "Business & Corporate",
+        "Design Agencies",
+        "Web & Interactive",
+        "Animation",
+        "HTML5",
+        "Storytelling",
+        "GSAP",
+        "Three.js",
+        "3D"
+      ],
+      "colors": [
+        "#990000",
+        "#090909"
+      ],
+      "scores": {
+        "design": 7,
+        "usability": 6.83,
+        "creativity": 7.56,
+        "content": 7.06,
+        "overall": 7.07,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "the-tie-break",
+      "title": "The Tie-break",
+      "live": "https://thetiebreak.merci-michel.com/",
+      "date": "2026-09-25",
+      "pitch": "Play and explore the new New Balance x Miu Miu collection with Coco Gauff.",
+      "tags": [
+        "Fashion",
+        "Games & Entertainment",
+        "Colorful",
+        "Fullscreen",
+        "WebGL",
+        "Experimental",
+        "Three.js",
+        "Photo & Video"
+      ],
+      "colors": [
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.06,
+        "usability": 7.06,
+        "creativity": 7.39,
+        "content": 6.89,
+        "overall": 7.11,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "moto-finance",
+      "title": "Moto Finance",
+      "live": "https://www.moto-card.com/",
+      "date": "2026-09-24",
+      "pitch": "The website for Moto, a premium financial card for modern wealth. Designed to make the card feel worth carrying before you even apply.",
+      "tags": [
+        "Technology",
+        "Big Background Images",
+        "Parallax",
+        "Scrolling",
+        "Single page",
+        "GSAP",
+        "Three.js",
+        "3D",
+        "Startups",
+        "Webflow",
+        "Luxury"
+      ],
+      "colors": [
+        "#0B0C07",
+        "#E1E5E5"
+      ],
+      "scores": {
+        "design": 7.37,
+        "usability": 7.21,
+        "creativity": 7.58,
+        "content": 7.37,
+        "overall": 7.36,
+        "jurors": 19
+      }
+    },
+    {
+      "slug": "sobha-privy-collection",
+      "title": "Sobha Privy Collection",
+      "live": "https://sobha-privy-collection.com/",
+      "date": "2026-09-23",
+      "pitch": "A handpicked selection of Dubai's rarest luxury real estate at the city's most iconic addresses.",
+      "tags": [
+        "Architecture",
+        "Animation",
+        "Parallax",
+        "WebGL",
+        "Three.js",
+        "3D",
+        "Real Estate",
+        "Luxury"
+      ],
+      "colors": [
+        "#FFFFFF",
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.28,
+        "usability": 7.06,
+        "creativity": 7.39,
+        "content": 7.5,
+        "overall": 7.26,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "bleibtgleich26",
+      "title": "bleibtgleich'26",
+      "live": "https://bleibtgleich.dev",
+      "date": "2026-09-22",
+      "pitch": "thebestideas deserveexecution",
+      "tags": [
+        "Art & Illustration",
+        "Promotional",
+        "Portfolio",
+        "Experimental",
+        "GSAP",
+        "Filters and Effects",
+        "Webflow"
+      ],
+      "colors": [
+        "#FFFFFF",
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.67,
+        "usability": 7.11,
+        "creativity": 7.39,
+        "content": 7.28,
+        "overall": 7.41,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "gil-huybrecht",
+      "title": "Gil Huybrecht",
+      "live": "https://gilhuybrecht.com/",
+      "date": "2026-09-21",
+      "pitch": "My new portfolio website where you'll find my latest work, availability and more information about me and my services.",
+      "tags": [
+        "Design Agencies",
+        "Promotional",
+        "Web & Interactive",
+        "Clean",
+        "Infinite Scroll",
+        "Portfolio",
+        "Typography",
+        "WebGL",
+        "Gallery",
+        "Microinteractions",
+        "Next.js",
+        "DatoCMS"
+      ],
+      "colors": [
+        "#0D0D0F",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.78,
+        "usability": 7.22,
+        "creativity": 7.39,
+        "content": 7.72,
+        "overall": 7.53,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "pensatori-irrazionali",
+      "title": "Pensatori Irrazionali",
+      "live": "https://pensatori-irrazionali.com/",
+      "date": "2026-09-20",
+      "pitch": "A creative house based in Europe, operating worldwide.",
+      "tags": [
+        "Design Agencies",
+        "Technology",
+        "Web & Interactive",
+        "Navigation Menu",
+        "Portfolio",
+        "WebGL",
+        "GSAP",
+        "Three.js",
+        "Photo & Video",
+        "Contact Page",
+        "Microinteractions",
+        "404 pages"
+      ],
+      "colors": [
+        "#4C4C4C",
+        "#F5F5F5"
+      ],
+      "scores": {
+        "design": 7.17,
+        "usability": 7,
+        "creativity": 7.17,
+        "content": 7.28,
+        "overall": 7.13,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "boc-studio",
+      "title": "Boc.Studio",
+      "live": "https://boc.studio/",
+      "date": "2026-09-19",
+      "pitch": "Structure first, delight throughout. A straight-to-the-point portfolio for Boc Studio where a simple, pragmatic structure comes alive through bold motion...",
+      "tags": [
+        "Design Agencies",
+        "Technology",
+        "Web & Interactive",
+        "Big Background Images",
+        "Clean",
+        "Graphic design",
+        "Typography",
+        "Microinteractions",
+        "404 pages",
+        "Vercel",
+        "Sanity",
+        "Framer"
+      ],
+      "colors": [
+        "#FF4421",
+        "#0D0E0E"
+      ],
+      "scores": {
+        "design": 7.28,
+        "usability": 6.67,
+        "creativity": 7.06,
+        "content": 7.39,
+        "overall": 7.06,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "noho",
+      "title": "Noho",
+      "live": "https://noho.ink",
+      "date": "2026-09-18",
+      "pitch": "Non-commercial redesign concept for Noho. A modern, sustainable, ergonomic, and aesthetically pleasing furniture website.",
+      "tags": [
+        "Web & Interactive",
+        "Animation",
+        "Clean",
+        "Single page",
+        "WebGL",
+        "GSAP",
+        "3D",
+        "UI design",
+        "Webflow",
+        "Social responsibility"
+      ],
+      "colors": [
+        "#F1EEE9",
+        "#E7E2DA"
+      ],
+      "scores": {
+        "design": 7.44,
+        "usability": 6.83,
+        "creativity": 7.11,
+        "content": 7.17,
+        "overall": 7.17,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "lxl-creative",
+      "title": "LxL Creative",
+      "live": "https://www.lxlcreative.co.uk/",
+      "date": "2026-09-17",
+      "pitch": "LxL Creative are a UK-based agency producing integrated creative campaigns for the entertainment industry.",
+      "tags": [
+        "Film & TV",
+        "Colorful",
+        "Navigation Menu",
+        "Transitions",
+        "GSAP",
+        "Microinteractions",
+        "BARBA.js",
+        "Webflow"
+      ],
+      "colors": [
+        "#FF5121",
+        "#27201D"
+      ],
+      "scores": {
+        "design": 7.11,
+        "usability": 7.06,
+        "creativity": 7.39,
+        "content": 7.44,
+        "overall": 7.18,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "l-i-s-a",
+      "title": "L.I.S.A.",
+      "live": "https://lisa.locomotive.ca/en",
+      "date": "2026-09-16",
+      "pitch": "L.I.S.A. (Locomotive Interactive Super Assistant) is the agency's interactive AI assistant, connecting clients, collaborators, and talent through projects,...",
+      "tags": [
+        "Design Agencies",
+        "Technology",
+        "Animation",
+        "WebGL",
+        "Experimental",
+        "GSAP",
+        "3D",
+        "Content architecture",
+        "Blender"
+      ],
+      "colors": [
+        "#000000",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 6.94,
+        "creativity": 7.83,
+        "content": 7.5,
+        "overall": 7.29,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "aspen-search",
+      "title": "Aspen Search",
+      "live": "https://www.aspensearch.com/",
+      "date": "2026-09-15",
+      "pitch": "Boutique executive search specialists connecting exceptional engineering and research talent with leading quantitative trading firms and venture-backed...",
+      "tags": [
+        "Business & Corporate",
+        "Technology",
+        "Web & Interactive",
+        "Minimal",
+        "Single page",
+        "Typography",
+        "Three.js",
+        "Next.js",
+        "Sanity"
+      ],
+      "colors": [
+        "#FFFFFF",
+        "#232323"
+      ],
+      "scores": {
+        "design": 7.33,
+        "usability": 7.06,
+        "creativity": 7.44,
+        "content": 7.11,
+        "overall": 7.25,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "leo-parpeix-portfolio-2026",
+      "title": "L\\u00e9o Parpeix - Portfolio 2026",
+      "live": "https://leoparpeix.com/",
+      "date": "2026-09-14",
+      "pitch": "Portfolio of Léo Parpeix, Art Director and Interactive Designer, specializing in creating unique website with a focus on innovation and user-centered...",
+      "tags": [
+        "Promotional",
+        "Web & Interactive",
+        "Animation",
+        "Portfolio",
+        "Typography",
+        "WebGL",
+        "Transitions",
+        "Experimental",
+        "3D",
+        "Microinteractions",
+        "After Effects",
+        "Blender"
+      ],
+      "colors": [],
+      "scores": {
+        "design": 7.78,
+        "usability": 7.33,
+        "creativity": 7.89,
+        "content": 7.67,
+        "overall": 7.66,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "the-tuscan-journey-begins",
+      "title": "The Tuscan Journey Begins",
+      "live": "https://weekend-mm-2026-pasticcino-bag-master.monogrid.io/en/",
+      "date": "2026-09-13",
+      "pitch": "MONOGRID created an interactive journey for Weekend Max Mara, transforming Italian craftsmanship into an immersive digital experience.",
+      "tags": [
+        "Fashion",
+        "Music & Sound",
+        "Web & Interactive",
+        "WebGL",
+        "Illustration",
+        "Sound-Audio",
+        "Storytelling",
+        "GSAP",
+        "Gestures / Interaction",
+        "Interaction Design",
+        "UI design",
+        "Vue.js"
+      ],
+      "colors": [
+        "#465016"
+      ],
+      "scores": {
+        "design": 6.94,
+        "usability": 6.94,
+        "creativity": 7.56,
+        "content": 7.22,
+        "overall": 7.09,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "warm-fuzzy",
+      "title": "Warm & Fuzzy",
+      "live": "https://www.warmnfuzzy.tv/",
+      "date": "2026-09-12",
+      "pitch": "Warm & Fuzzy is a feel-good company for creative things.",
+      "tags": [
+        "Design Agencies",
+        "Animation",
+        "Colorful",
+        "Portfolio",
+        "Transitions",
+        "3D",
+        "Photo & Video",
+        "Motion",
+        "Figma",
+        "Next.js"
+      ],
+      "colors": [
+        "#190BB6",
+        "#E5CF4F"
+      ],
+      "scores": {
+        "design": 7.33,
+        "usability": 7.11,
+        "creativity": 7.22,
+        "content": 7.33,
+        "overall": 7.24,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "white-desert",
+      "title": "White Desert",
+      "live": "https://white-desert.com/",
+      "date": "2026-09-11",
+      "pitch": "White Desert is the world's leading luxury Antarctic expedition company, offering once-in-a-lifetime journeys to the South Pole and Emperor Penguins.",
+      "tags": [
+        "Hotel / Restaurant",
+        "Gallery",
+        "GSAP",
+        "Photo & Video",
+        "Contentful",
+        "Vercel",
+        "Next.js",
+        "Luxury"
+      ],
+      "colors": [
+        "#1F2A44",
+        "#E9E7E1"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 7.17,
+        "creativity": 7.22,
+        "content": 7.78,
+        "overall": 7.26,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "cerebrium",
+      "title": "Cerebrium",
+      "live": "https://cerebrium.ai/",
+      "date": "2026-09-10",
+      "pitch": "Serverless infrastructure for real-time AI. Deploy voice agents, LLMs, and AI workloads with instant scaling, global regions, and built-in observability.",
+      "tags": [
+        "Technology",
+        "Web & Interactive",
+        "App Style",
+        "Data Visualization",
+        "Storytelling",
+        "GSAP",
+        "Three.js",
+        "3D",
+        "UI design",
+        "Microinteractions",
+        "Startups",
+        "Cinema 4D"
+      ],
+      "colors": [
+        "#172B76",
+        "#902177"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 7.44,
+        "creativity": 7.28,
+        "content": 7.56,
+        "overall": 7.33,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "usavionix",
+      "title": "USAvionix",
+      "live": "https://www.usavionix.com/",
+      "date": "2026-09-09",
+      "pitch": "The first agent in the air, built with the speed, range, and onboard intelligence to search vast areas on its own.",
+      "tags": [
+        "Technology",
+        "WebGL",
+        "Storytelling",
+        "3D",
+        "Startups",
+        "Next.js"
+      ],
+      "colors": [],
+      "scores": {
+        "design": 7.44,
+        "usability": 7.06,
+        "creativity": 7.94,
+        "content": 7.56,
+        "overall": 7.44,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "seasats",
+      "title": "Seasats",
+      "live": "https://www.seasats.com/",
+      "date": "2026-09-08",
+      "pitch": "Seasats is a San Diego-based robotics and marine technology company that designs and builds autonomous surface vehicles. Specifically, solar-electric...",
+      "tags": [
+        "Business & Corporate",
+        "Institutions",
+        "Clean",
+        "Infinite Scroll",
+        "Unusual Navigation",
+        "Menu - Vertical",
+        "3D",
+        "Footer Design",
+        "Startups",
+        "Javascript",
+        "Cinema 4D"
+      ],
+      "colors": [
+        "#619785",
+        "#BF5114"
+      ],
+      "scores": {
+        "design": 7.5,
+        "usability": 7.17,
+        "creativity": 7.28,
+        "content": 7.56,
+        "overall": 7.36,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "why-zero",
+      "title": "Why Zero",
+      "live": "https://why.zero.university/",
+      "date": "2026-09-07",
+      "pitch": "Why Zero is an immersive web experience about how Zero University is replacing the broken education system with AI-native learning by offering real projects...",
+      "tags": [
+        "Culture & Education",
+        "Technology",
+        "Single page",
+        "Sound-Audio",
+        "Storytelling",
+        "GSAP",
+        "Three.js",
+        "3D",
+        "Gestures / Interaction",
+        "Filters and Effects",
+        "Startups",
+        "Blender"
+      ],
+      "colors": [
+        "#FFFFFF",
+        "#01C654"
+      ],
+      "scores": {
+        "design": 7.5,
+        "usability": 7.28,
+        "creativity": 7.89,
+        "content": 7.56,
+        "overall": 7.52,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "united-carriers",
+      "title": "United Carriers",
+      "live": "https://unitedcarriers.com/",
+      "date": "2026-09-06",
+      "pitch": "With teams across Australia, New Zealand, China, and Hong Kong, plus a global network spanning 100+ countries, United Carriers helps to move freight with...",
+      "tags": [
+        "Business & Corporate",
+        "Web & Interactive",
+        "Icons",
+        "Transitions",
+        "Responsive",
+        "Storytelling",
+        "GSAP",
+        "Three.js",
+        "3D",
+        "Microinteractions",
+        "Webflow"
+      ],
+      "colors": [
+        "#0016CB"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 6.83,
+        "creativity": 7.39,
+        "content": 7,
+        "overall": 7.12,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "gionatan-nese-26",
+      "title": "Gionatan Nese '26",
+      "live": "https://www.gionatannese.com/",
+      "date": "2026-09-05",
+      "pitch": "Portfolio of Gionatan Nese, Multi-Disciplinary Designer based in Milan, Italy.Turning bold ideas into ambitious cool Stuff™ that actually stick.",
+      "tags": [
+        "Web & Interactive",
+        "Infinite Scroll",
+        "Minimal",
+        "Portfolio",
+        "Typography",
+        "WebGL",
+        "Sound-Audio",
+        "GSAP",
+        "Three.js",
+        "3D"
+      ],
+      "colors": [
+        "#000000",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.33,
+        "usability": 7.06,
+        "creativity": 7.72,
+        "content": 7.39,
+        "overall": 7.33,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "illoca",
+      "title": "Illoca",
+      "live": "https://illoca.unseen.co/",
+      "date": "2026-09-04",
+      "pitch": "illoca is an AI-native design engine built for professional architects. Explore, refine, and move from first ideas to editable 2D and 3D designs.",
+      "tags": [
+        "Architecture",
+        "Culture & Education",
+        "Animation",
+        "Colorful",
+        "Scrolling",
+        "WebGL",
+        "3D",
+        "Microinteractions",
+        "Startups"
+      ],
+      "colors": [
+        "#3B60C5",
+        "#FDF2DE"
+      ],
+      "scores": {
+        "design": 7.17,
+        "usability": 7.44,
+        "creativity": 7.61,
+        "content": 7.33,
+        "overall": 7.36,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "trevor-noah",
+      "title": "Trevor Noah",
+      "live": "https://www.trevornoah.com/",
+      "date": "2026-09-03",
+      "pitch": "An immersive digital home for Trevor Noah, uniting his stand-up, podcast, books and world tour in one interactive experience built to explore.",
+      "tags": [
+        "Culture & Education",
+        "Promotional",
+        "Web & Interactive",
+        "Colorful",
+        "Typography",
+        "WebGL",
+        "Storytelling",
+        "Webflow"
+      ],
+      "colors": [
+        "#FF9BB4",
+        "#1D2440"
+      ],
+      "scores": {
+        "design": 7.17,
+        "usability": 7.28,
+        "creativity": 7.5,
+        "content": 7.28,
+        "overall": 7.28,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "paul-kalkbrenner",
+      "title": "Paul Kalkbrenner",
+      "live": "https://www.paulkalkbrenner.net/",
+      "date": "2026-09-02",
+      "pitch": "Branding and website work for the German musician, Paul Kalkbrenner. Designed to present his music, tour dates, and personal journey through a clean and...",
+      "tags": [
+        "Art & Illustration",
+        "Music & Sound",
+        "Web & Interactive",
+        "Big Background Images",
+        "Clean",
+        "Flat Design",
+        "Portfolio",
+        "Gallery",
+        "Webflow",
+        "After Effects",
+        "Figma"
+      ],
+      "colors": [
+        "#000000",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.56,
+        "usability": 7.17,
+        "creativity": 7.39,
+        "content": 7.39,
+        "overall": 7.39,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "squarespace-foundations",
+      "title": "Squarespace Foundations",
+      "live": "https://brand.squarespace.com/",
+      "date": "2026-09-01",
+      "pitch": "Discover the essential guiding principles and distinctive visual elements that define the Squarespace identity through an interactive brand experience.",
+      "tags": [
+        "Design Agencies",
+        "Promotional",
+        "Web & Interactive",
+        "Graphic design",
+        "HTML5",
+        "Scrolling",
+        "Transitions",
+        "Storytelling",
+        "GSAP",
+        "Interaction Design",
+        "UI design",
+        "Javascript"
+      ],
+      "colors": [
+        "#FFFFFF",
+        "#292929"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 7.33,
+        "creativity": 7.56,
+        "content": 7.5,
+        "overall": 7.35,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "era-residence",
+      "title": "ERA Residence",
+      "live": "https://www.era-residence.com/",
+      "date": "2026-08-31",
+      "pitch": "Contemporary Mediterranean Boutique residences on the New Golden Mile combining architecture, natural materials and resort-style living near Marbella...",
+      "tags": [
+        "Architecture",
+        "Parallax",
+        "Storytelling",
+        "GSAP",
+        "Real Estate",
+        "Photo & Video",
+        "Webflow",
+        "Luxury"
+      ],
+      "colors": [
+        "#B5CEDB",
+        "#F8BBCB"
+      ],
+      "scores": {
+        "design": 7.61,
+        "usability": 7.17,
+        "creativity": 7.5,
+        "content": 7.44,
+        "overall": 7.44,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "aardvark-book-club",
+      "title": "Aardvark Book Club",
+      "live": "https://aardvarkbookclub.com",
+      "date": "2026-08-30",
+      "pitch": "Where BookTok meets the bookshelf. A digital rebuild for Aardvark Book Club — editorial curation, custom 3D, and interactions that make every page feel...",
+      "tags": [
+        "Culture & Education",
+        "E-Commerce",
+        "Animation",
+        "Colorful",
+        "Typography",
+        "Transitions",
+        "GSAP",
+        "3D",
+        "Gestures / Interaction",
+        "BARBA.js",
+        "Webflow"
+      ],
+      "colors": [
+        "#FFFFFF",
+        "#FAED8F"
+      ],
+      "scores": {
+        "design": 7.06,
+        "usability": 7.17,
+        "creativity": 7.33,
+        "content": 7.28,
+        "overall": 7.17,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "hobro-digital",
+      "title": "HOBRO DIGITAL",
+      "live": "https://hobro.digital",
+      "date": "2026-08-29",
+      "pitch": "A clean website experience for a full-cycle digital agency from Canada.",
+      "tags": [
+        "Business & Corporate",
+        "Design Agencies",
+        "Technology",
+        "Animation",
+        "Clean",
+        "Colorful",
+        "Node.js",
+        "GSAP",
+        "3D",
+        "UI design",
+        "Figma"
+      ],
+      "colors": [
+        "#000000",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.33,
+        "usability": 6.94,
+        "creativity": 6.94,
+        "content": 7.17,
+        "overall": 7.12,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "decathlon-yestalgia",
+      "title": "Decathlon Yestalgia",
+      "live": "https://decathlonyestalgia.com/",
+      "date": "2026-08-28",
+      "pitch": "An exclusive capsule collection, brought to life through a vibrant and playful visual language celebrating the 90's and mixing new designs with archive...",
+      "tags": [
+        "E-Commerce",
+        "Animation",
+        "Colorful",
+        "HTML5",
+        "Typography",
+        "GSAP",
+        "Javascript"
+      ],
+      "colors": [
+        "#F3AFCC"
+      ],
+      "scores": {
+        "design": 7.56,
+        "usability": 7.11,
+        "creativity": 7.61,
+        "content": 7.44,
+        "overall": 7.42,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "sharplink",
+      "title": "Sharplink",
+      "live": "https://www.sharplink.com/",
+      "date": "2026-08-27",
+      "pitch": "Sharplink is the institutional-grade Ethereum treasury platform giving investors a smarter, more productive access vehicle to ETH.",
+      "tags": [
+        "Business & Corporate",
+        "Institutions",
+        "Animation",
+        "GSAP",
+        "Three.js",
+        "3D",
+        "Footer Design",
+        "Vue.js"
+      ],
+      "colors": [
+        "#0E76FF",
+        "#F3F3F3"
+      ],
+      "scores": {
+        "design": 7.42,
+        "usability": 7.26,
+        "creativity": 7.47,
+        "content": 7.26,
+        "overall": 7.37,
+        "jurors": 19
+      }
+    },
+    {
+      "slug": "ai-in-design-report-2026",
+      "title": "Ai in Design Report 2026",
+      "live": "https://stateofaidesign.com/",
+      "date": "2026-08-26",
+      "pitch": "A research report transformed into an editorial digital experience, where data, analysis, and motion speak in a single visual language.",
+      "tags": [
+        "Magazine / Newspaper / Blog",
+        "Business & Corporate",
+        "Design Agencies",
+        "Animation",
+        "Colorful",
+        "Responsive Design",
+        "Data Visualization",
+        "Storytelling",
+        "UI design",
+        "Figma",
+        "Framer"
+      ],
+      "colors": [],
+      "scores": {
+        "design": 7.44,
+        "usability": 7.17,
+        "creativity": 7.06,
+        "content": 7.39,
+        "overall": 7.28,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "miu-miu-a-house-that-we-shaped",
+      "title": "MIU MIU A House that we shaped",
+      "live": "https://immersivebags.miumiu.com/",
+      "date": "2026-08-25",
+      "pitch": "Explore the house and interact with the objects to discover the new Miu Miu Bags collection",
+      "tags": [
+        "Fashion",
+        "Promotional",
+        "Colorful",
+        "Fullscreen",
+        "WebGL",
+        "Storytelling",
+        "Three.js",
+        "Luxury"
+      ],
+      "colors": [
+        "#0C0F60",
+        "#265ADF"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 6.89,
+        "creativity": 7.44,
+        "content": 7.28,
+        "overall": 7.17,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "zeroz-brand-site",
+      "title": "/zeroz Brand Site",
+      "live": "https://otsuka-air.jp/",
+      "date": "2026-08-24",
+      "pitch": "Brand site for /zeroz, a self-conditioning food born from Otsuka Pharmaceutical Co., Ltd.'s \"Active Inner Resource\" concept. Chapters unfold through 3DCG...",
+      "tags": [
+        "E-Commerce",
+        "Food & Drink",
+        "Technology",
+        "Scrolling",
+        "Typography",
+        "WebGL",
+        "Storytelling",
+        "Three.js",
+        "3D",
+        "Header Design",
+        "Microinteractions",
+        "Blender"
+      ],
+      "colors": [
+        "#00AA54"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 7.11,
+        "creativity": 7.78,
+        "content": 7.17,
+        "overall": 7.29,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "kononenko-architectural-bureau",
+      "title": "Kononenko Architectural Bureau",
+      "live": "https://kononenkogroup.com",
+      "date": "2026-08-23",
+      "pitch": "A website for Kononenko Architectural Bureau, showcasing its projects and design approach through minimalism, bold typography, thoughtful structure, and...",
+      "tags": [
+        "Architecture",
+        "Business & Corporate",
+        "Animation",
+        "Clean",
+        "Minimal",
+        "Real Estate",
+        "Content architecture",
+        "Interaction Design",
+        "About Page",
+        "Figma"
+      ],
+      "colors": [
+        "#FFFFFF",
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.28,
+        "usability": 7.11,
+        "creativity": 7.11,
+        "content": 7.44,
+        "overall": 7.21,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "the-state-of-the-gallery",
+      "title": "The state of the gallery",
+      "live": "https://mesh3d.gallery/the-state-of-the-gallery",
+      "date": "2026-08-22",
+      "pitch": "mesh3d - \"The state of the gallery\" is an overiew of the gallery in numbers and picks. What's catalogued, who is making the strongest Three.js work and...",
+      "tags": [
+        "Technology",
+        "Web & Interactive",
+        "Scrolling",
+        "Single page",
+        "WebGL",
+        "Data Visualization",
+        "Experimental",
+        "Three.js",
+        "React",
+        "3D",
+        "Filters and Effects",
+        "About Page"
+      ],
+      "colors": [
+        "#08090D"
+      ],
+      "scores": {
+        "design": 7.11,
+        "usability": 7.06,
+        "creativity": 7.78,
+        "content": 7.22,
+        "overall": 7.24,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "oimachi",
+      "title": "Oimachi",
+      "live": "https://www.oimachi.co",
+      "date": "2026-08-21",
+      "pitch": "Copenhagen-based innovation studio working across branding, development and AI visibility.",
+      "tags": [
+        "Design Agencies",
+        "Technology",
+        "Web & Interactive",
+        "Clean",
+        "Portfolio",
+        "Typography",
+        "GSAP",
+        "Webflow"
+      ],
+      "colors": [
+        "#FFFFFF",
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.06,
+        "usability": 7.22,
+        "creativity": 7.06,
+        "content": 7.11,
+        "overall": 7.11,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "cipher",
+      "title": "Cipher",
+      "live": "https://cipher.tv/",
+      "date": "2026-08-20",
+      "pitch": "Cipher is a creative production company exploring the space between precision and possibility. This portfolio celebrates craftsmanship and experiments.",
+      "tags": [
+        "Design Agencies",
+        "Web & Interactive",
+        "Portfolio",
+        "Experimental",
+        "GSAP",
+        "Gestures / Interaction",
+        "Interaction Design",
+        "Nuxt.js"
+      ],
+      "colors": [
+        "#060403"
+      ],
+      "scores": {
+        "design": 7.5,
+        "usability": 7.11,
+        "creativity": 7.33,
+        "content": 7.28,
+        "overall": 7.33,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "likova",
+      "title": "LIKOVA",
+      "live": "https://likova.space",
+      "date": "2026-08-19",
+      "pitch": "A unique, creative, and inspiring business center deserves an equally inspiring website.",
+      "tags": [
+        "Business & Corporate",
+        "Responsive Design",
+        "WebGL",
+        "Three.js",
+        "3D",
+        "Real Estate",
+        "Luxury"
+      ],
+      "colors": [
+        "#070B20",
+        "#E3E6EB"
+      ],
+      "scores": {
+        "design": 7.39,
+        "usability": 7.06,
+        "creativity": 7.22,
+        "content": 7.44,
+        "overall": 7.26,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "michael-gatt",
+      "title": "Michael Gatt",
+      "live": "https://michaelgatt.com/",
+      "date": "2026-08-18",
+      "pitch": "An interactive portfolio introducing Michael Gatt's universe of film, TV shows, games, and music composing through a collection of selected work.",
+      "tags": [
+        "Film & TV",
+        "Music & Sound",
+        "Promotional",
+        "Portfolio",
+        "WebGL",
+        "Storytelling",
+        "Interaction Design",
+        "Microinteractions",
+        "Project Page",
+        "404 pages",
+        "Vue.js",
+        "Nuxt.js"
+      ],
+      "colors": [
+        "#0F0F0F",
+        "#CFCFCF"
+      ],
+      "scores": {
+        "design": 7.61,
+        "usability": 7.28,
+        "creativity": 7.89,
+        "content": 7.61,
+        "overall": 7.57,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "the-watch",
+      "title": "The Watch",
+      "live": "https://thewatch.60fps.fr/",
+      "date": "2026-08-17",
+      "pitch": "The FS 60P is our take on showing a luxury watch at its best. A real-time WebGL piece that interacts with the content around it.",
+      "tags": [
+        "Web & Interactive",
+        "WebGL",
+        "360",
+        "Experimental",
+        "Three.js",
+        "3D",
+        "Project Page",
+        "Luxury"
+      ],
+      "colors": [
+        "#000000",
+        "#808080"
+      ],
+      "scores": {
+        "design": 7.39,
+        "usability": 7.33,
+        "creativity": 7.67,
+        "content": 7.72,
+        "overall": 7.46,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "sstr-friction-reduction",
+      "title": "SSTR - Friction Reduction",
+      "live": "https://sstr.tech/en/",
+      "date": "2026-08-16",
+      "pitch": "Brand, site and 3D for a friction-reduction company in oil drilling. Editorial minimalism that speaks the engineer's language: a modular grid, motion...",
+      "tags": [
+        "Business & Corporate",
+        "Technology",
+        "Web & Interactive",
+        "Animation",
+        "Clean",
+        "Minimal",
+        "Typography",
+        "Data Visualization",
+        "GSAP",
+        "Interaction Design",
+        "BARBA.js",
+        "Astro"
+      ],
+      "colors": [
+        "#FE5B2A",
+        "#18191B"
+      ],
+      "scores": {
+        "design": 7.17,
+        "usability": 7.17,
+        "creativity": 7.33,
+        "content": 7.06,
+        "overall": 7.19,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "px-push",
+      "title": "PX PUSH",
+      "live": "https://pxpush.com/",
+      "date": "2026-08-15",
+      "pitch": "PX PUSH is a design subscription studio of record for brands that understand the value of consistent, professional output — established to meet the demands...",
+      "tags": [
+        "Business & Corporate",
+        "Design Agencies",
+        "Technology",
+        "Animation",
+        "Portfolio",
+        "Retro",
+        "WebGL",
+        "GSAP",
+        "404 pages",
+        "Nuxt.js"
+      ],
+      "colors": [
+        "#03049C",
+        "#1A1A1A"
+      ],
+      "scores": {
+        "design": 7.28,
+        "usability": 7.06,
+        "creativity": 7.5,
+        "content": 7.22,
+        "overall": 7.25,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "haoqi-design",
+      "title": "HAOQI.DESIGN",
+      "live": "https://haoqi.design",
+      "date": "2026-08-14",
+      "pitch": "Haoqi Wen is a product designer and design engineer at TikTok, specializing in design systems and AI, blending technology and systematic thinking with...",
+      "tags": [
+        "Design Agencies",
+        "Web & Interactive",
+        "Portfolio",
+        "Scrolling",
+        "WebGL",
+        "Gallery",
+        "3D",
+        "UI design",
+        "next.js",
+        "Figma",
+        "Next.js"
+      ],
+      "colors": [],
+      "scores": {
+        "design": 7.28,
+        "usability": 7,
+        "creativity": 7.61,
+        "content": 7.06,
+        "overall": 7.24,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "mosbys-files",
+      "title": "Mosby's Files",
+      "live": "https://www.mosbyfiles.com/",
+      "date": "2026-08-13",
+      "pitch": "A research-driven archive spotlighting the early American architects. The interface itself is a statement: a CSS-only skeuomorphic folder system where...",
+      "tags": [
+        "Architecture",
+        "Technology",
+        "Animation",
+        "Navigation Menu",
+        "Unusual Navigation",
+        "Transitions",
+        "Experimental",
+        "GSAP",
+        "Interaction Design",
+        "Footer Design",
+        "Vue.js"
+      ],
+      "colors": [
+        "#D71E1E",
+        "#1E4BD7"
+      ],
+      "scores": {
+        "design": 7.33,
+        "usability": 7.11,
+        "creativity": 7.22,
+        "content": 7.33,
+        "overall": 7.24,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "revelatio-studio",
+      "title": "Revelatio Studio",
+      "live": "https://revelatio.studio/",
+      "date": "2026-08-12",
+      "pitch": "Revelatio Studio is a Branding, Product & Code consultancy. Three disciplines, one team, one process. Recife-based, shipping everywhere.",
+      "tags": [
+        "Promotional",
+        "Web & Interactive",
+        "Clean",
+        "Unusual Navigation",
+        "WebGL",
+        "Photography",
+        "GSAP",
+        "Interaction Design",
+        "Header Design",
+        "Microinteractions",
+        "Footer Design",
+        "Webflow"
+      ],
+      "colors": [
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.33,
+        "usability": 7.06,
+        "creativity": 7.28,
+        "content": 7.44,
+        "overall": 7.25,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "studio-k95-3",
+      "title": "Studio K95",
+      "live": "https://k95.it",
+      "date": "2026-08-11",
+      "pitch": "A bold and immersive portfolio website for Studio K95, blending graphic design, motion, interaction and a dark editorial aesthetic",
+      "tags": [
+        "Design Agencies",
+        "Animation",
+        "Portfolio",
+        "Responsive Design",
+        "Web Fonts",
+        "GSAP",
+        "Three.js",
+        "3D",
+        "404 pages",
+        "Nuxt.js"
+      ],
+      "colors": [
+        "#1500E1"
+      ],
+      "scores": {
+        "design": 7.28,
+        "usability": 7.33,
+        "creativity": 7.33,
+        "content": 7.11,
+        "overall": 7.29,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "nothin",
+      "title": "NOTHIN'",
+      "live": "https://www.noth.in",
+      "date": "2026-08-10",
+      "pitch": "Nothin' is a Paris studio at the intersection of fashion, luxury and tech. Branding, editorial, art direction and AI systems — built so a single idea...",
+      "tags": [
+        "Design Agencies",
+        "Web & Interactive",
+        "Parallax",
+        "Portfolio",
+        "Scrolling",
+        "WebGL",
+        "Experimental",
+        "GSAP",
+        "3D",
+        "Photo & Video",
+        "Microinteractions",
+        "Webflow"
+      ],
+      "colors": [
+        "#FFFFFF",
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.61,
+        "usability": 7.33,
+        "creativity": 7.44,
+        "content": 7.22,
+        "overall": 7.46,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "produx-design",
+      "title": "Produx Design",
+      "live": "https://www.produx.design",
+      "date": "2026-08-09",
+      "pitch": "Produx builds brand identities for companies that care how things feel and how they are perceived over time.",
+      "tags": [
+        "Design Agencies",
+        "Animation",
+        "GSAP",
+        "Three.js",
+        "3D",
+        "Filters and Effects",
+        "404 pages",
+        "Next.js"
+      ],
+      "colors": [
+        "#303930",
+        "#545E54"
+      ],
+      "scores": {
+        "design": 6.89,
+        "usability": 7,
+        "creativity": 7.28,
+        "content": 7,
+        "overall": 7.01,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "vero-new-york",
+      "title": "Vero New-York",
+      "live": "https://verostudio.com/",
+      "date": "2026-08-08",
+      "pitch": "Vero creates luxury custom sculptures from wedding dresses. Blending advanced technology and artistry, the studio transforms each unique gown into a timeless,...",
+      "tags": [
+        "E-Commerce",
+        "Web & Interactive",
+        "Animation",
+        "Big Background Images",
+        "Fullscreen",
+        "Parallax",
+        "Typography",
+        "WebGL",
+        "Next.js",
+        "Sanity",
+        "Luxury"
+      ],
+      "colors": [
+        "#F3F0ED",
+        "#181615"
+      ],
+      "scores": {
+        "design": 7.56,
+        "usability": 7.28,
+        "creativity": 7.28,
+        "content": 7.17,
+        "overall": 7.38,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "20-years-inspired-by-people",
+      "title": "20 Years Inspired by People",
+      "live": "https://inspiring.nk.studio/es",
+      "date": "2026-08-07",
+      "pitch": "An archive of stories, people and moments that inspired /nk.studio throughout 20 years. Before inspiring, we were inspired.",
+      "tags": [
+        "Other",
+        "Promotional",
+        "Web & Interactive",
+        "Animation",
+        "Typography",
+        "Storytelling",
+        "GSAP",
+        "Next.js",
+        "Tailwind"
+      ],
+      "colors": [
+        "#20E5B5",
+        "#142929"
+      ],
+      "scores": {
+        "design": 7.11,
+        "usability": 6.83,
+        "creativity": 7.33,
+        "content": 7.33,
+        "overall": 7.09,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "no-art",
+      "title": "No Art",
+      "live": "https://www.noartmusic.com/",
+      "date": "2026-08-06",
+      "pitch": "An immersive digital platform for No Art, bringing its global music and art universe to life through interactive storytelling, releases and events.",
+      "tags": [
+        "Art & Illustration",
+        "Events",
+        "Animation",
+        "Sound-Audio",
+        "GSAP",
+        "Shopify",
+        "3D",
+        "UI design",
+        "Microinteractions",
+        "Webflow"
+      ],
+      "colors": [
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 7,
+        "creativity": 7.28,
+        "content": 7.22,
+        "overall": 7.17,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "alethia",
+      "title": "Alethia",
+      "live": "https://www.alethia.earth/",
+      "date": "2026-08-05",
+      "pitch": "A website where content, visuals, and interaction work as one system to make complex environmental data feel clear and trustworthy.",
+      "tags": [
+        "Business & Corporate",
+        "Other",
+        "Animation",
+        "Scrolling",
+        "Storytelling",
+        "Interaction Design",
+        "UI design",
+        "Figma",
+        "Framer"
+      ],
+      "colors": [
+        "#0F1F10",
+        "#C6F19D"
+      ],
+      "scores": {
+        "design": 7.44,
+        "usability": 7.17,
+        "creativity": 7.33,
+        "content": 7.33,
+        "overall": 7.33,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "serotoninn",
+      "title": "Serotoninn",
+      "live": "https://serotoninn.com/",
+      "date": "2026-08-04",
+      "pitch": "Young womenswear brand. Designed in Germany, made in Kyiv, Ukraine. Chic pieces with a grungy touch—perfect for anyone who wants something a little different.",
+      "tags": [
+        "E-Commerce",
+        "Fashion",
+        "Clean",
+        "Wordpress",
+        "Navigation Menu",
+        "Gallery",
+        "GSAP",
+        "Footer Design",
+        "404 pages",
+        "Swiper.js",
+        "Luxury"
+      ],
+      "colors": [
+        "#ED3833",
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 7,
+        "creativity": 7.72,
+        "content": 7.33,
+        "overall": 7.27,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "lacoste-ace-breaker",
+      "title": "Lacoste Ace Breaker",
+      "live": "https://members-play.lacoste.com/ace-breaker-rg",
+      "date": "2026-08-03",
+      "pitch": "Play and break as many bricks as you can to win tickets to Roland Garros and Lacoste polo shirts.",
+      "tags": [
+        "Fashion",
+        "Games & Entertainment",
+        "Sports",
+        "Fullscreen",
+        "Unusual Navigation",
+        "WebGL",
+        "Three.js",
+        "3D"
+      ],
+      "colors": [
+        "#082415",
+        "#FCD757"
+      ],
+      "scores": {
+        "design": 7.28,
+        "usability": 7.33,
+        "creativity": 7.72,
+        "content": 7.22,
+        "overall": 7.38,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "hearst-exhibit-2026",
+      "title": "Hearst Exhibit 2026",
+      "live": "https://www.hollywoodexhibit2026.com",
+      "date": "2026-08-02",
+      "pitch": "Hearst Galleries presents a joint photography exhibition for ELLE and Esquire featuring iconic Hollywood photography celebrating 40 years of voices, creativity,...",
+      "tags": [
+        "Magazine / Newspaper / Blog",
+        "Web & Interactive",
+        "Clean",
+        "Photographic",
+        "Scrolling",
+        "Typography",
+        "WebGL",
+        "Photography",
+        "Gallery",
+        "GSAP",
+        "Microinteractions",
+        "Vercel"
+      ],
+      "colors": [
+        "#252525",
+        "#E3E3E3"
+      ],
+      "scores": {
+        "design": 7.11,
+        "usability": 6.67,
+        "creativity": 7.28,
+        "content": 7.44,
+        "overall": 7.04,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "noomo-showcase",
+      "title": "Noomo Showcase",
+      "live": "https://showcase.noomoagency.com",
+      "date": "2026-08-01",
+      "pitch": "Instead of a standard showreel, we built an immersive showcase of our latest work for brands like Salesforce, AMD, and Coinbase.",
+      "tags": [
+        "Design Agencies",
+        "Promotional",
+        "Web & Interactive",
+        "Animation",
+        "Scrolling",
+        "WebGL",
+        "Data Visualization",
+        "Storytelling",
+        "GSAP",
+        "Three.js",
+        "3D",
+        "Interaction Design"
+      ],
+      "colors": [
+        "#0004EB",
+        "#020411"
+      ],
+      "scores": {
+        "design": 7.11,
+        "usability": 6.83,
+        "creativity": 7.56,
+        "content": 7.28,
+        "overall": 7.13,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "2xa-studio",
+      "title": "2xA Studio",
+      "live": "https://2xa.studio/",
+      "date": "2026-07-31",
+      "pitch": "Website for 2xA Studio. A code-driven design studio operating between Amsterdam and Athens.",
+      "tags": [
+        "Design Agencies",
+        "Animation",
+        "CSS",
+        "Graphic design",
+        "HTML5",
+        "Typography",
+        "Responsive",
+        "Javascript"
+      ],
+      "colors": [
+        "#0F0F0F",
+        "#FDFDFD"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 6.78,
+        "creativity": 7.39,
+        "content": 7.22,
+        "overall": 7.12,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "ciao-energy-launch-website",
+      "title": "CIAO ENERGY - LAUNCH WEBSITE",
+      "live": "https://www.ciaoenergy.com/",
+      "date": "2026-07-30",
+      "pitch": "An immersive experience built with Webflow and Three.js for the launch of Ciao Energy’s new drink range, centered on an interactive 3D object, sound design,...",
+      "tags": [
+        "Food & Drink",
+        "Promotional",
+        "Animation",
+        "Clean",
+        "Infinite Scroll",
+        "Experimental",
+        "Sound-Audio",
+        "Three.js",
+        "3D",
+        "Webflow",
+        "Blender"
+      ],
+      "colors": [
+        "#EEEEEE",
+        "#191917"
+      ],
+      "scores": {
+        "design": 7,
+        "usability": 7,
+        "creativity": 7.33,
+        "content": 6.94,
+        "overall": 7.06,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "made-with-gsap-1",
+      "title": "Made With Gsap",
+      "live": "https://madewithgsap.com/",
+      "date": "2026-07-29",
+      "pitch": "Made With Gsap is an ever-growing collection of unique, well-crafted JS effects.",
+      "tags": [
+        "Culture & Education",
+        "Technology",
+        "Web & Interactive",
+        "Animation",
+        "Clean",
+        "Scrolling",
+        "GSAP",
+        "Gestures / Interaction",
+        "Vanilla JS"
+      ],
+      "colors": [
+        "#C9FE6E",
+        "#0A0A0B"
+      ],
+      "scores": {
+        "design": 7.56,
+        "usability": 7.61,
+        "creativity": 7.83,
+        "content": 7.67,
+        "overall": 7.64,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "obys-r-experiment-space",
+      "title": "Obys\\u00ae Experiment Space",
+      "live": "https://experiment.obys.agency/",
+      "date": "2026-07-28",
+      "pitch": "Obys® Experiment Space is an interactive archive of unpublished works, concepts, experiments, and alternative directions. A collection of ideas rarely...",
+      "tags": [
+        "Art & Illustration",
+        "Design Agencies",
+        "Animation",
+        "Clean",
+        "Typography",
+        "WebGL",
+        "Experimental",
+        "Gallery",
+        "GSAP",
+        "Three.js",
+        "3D"
+      ],
+      "colors": [
+        "#000000",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.33,
+        "usability": 6.89,
+        "creativity": 7.5,
+        "content": 7.61,
+        "overall": 7.26,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "trionn-2",
+      "title": "TRIONN",
+      "live": "https://trionn.com",
+      "date": "2026-07-27",
+      "pitch": "TRIONN is an AI-powered digital studio crafting meaningful experiences through strategy, design, motion & technology, using Next.js, GSAP & Three.js to...",
+      "tags": [
+        "Design Agencies",
+        "Technology",
+        "Web & Interactive",
+        "Animation",
+        "Portfolio",
+        "GSAP",
+        "Three.js",
+        "3D",
+        "Interaction Design",
+        "Microinteractions",
+        "404 pages",
+        "Next.js"
+      ],
+      "colors": [
+        "#0A0A0A",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 7,
+        "creativity": 7.61,
+        "content": 7.44,
+        "overall": 7.26,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "partizan",
+      "title": "Partizan",
+      "live": "https://partizan.com/",
+      "date": "2026-07-26",
+      "pitch": "We are Partizan. Since 1991, we've told stories that shape culture and reimagine how people see the world.",
+      "tags": [
+        "Design Agencies",
+        "Film & TV",
+        "Portfolio",
+        "WebGL",
+        "Transitions",
+        "GSAP",
+        "Three.js",
+        "Filters and Effects",
+        "404 pages"
+      ],
+      "colors": [],
+      "scores": {
+        "design": 7.33,
+        "usability": 6.61,
+        "creativity": 6.94,
+        "content": 7.33,
+        "overall": 7.04,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "artem-shcherbakov",
+      "title": "Artem Shcherbakov",
+      "live": "https://artemartemartem.com/",
+      "date": "2026-07-25",
+      "pitch": "Interactive portfolio for CGI and VFX director Artem Shcherbakov, featuring custom WebGL effects, dynamic animated typography, and seamless page transitions.",
+      "tags": [
+        "Design Agencies",
+        "Film & TV",
+        "Animation",
+        "Portfolio",
+        "GSAP",
+        "Three.js",
+        "Photo & Video",
+        "About Page",
+        "Project Page",
+        "404 pages",
+        "Next.js"
+      ],
+      "colors": [
+        "#0E0E0E",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.11,
+        "usability": 7,
+        "creativity": 7.5,
+        "content": 7.11,
+        "overall": 7.16,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "spotify-wrapped-party",
+      "title": "Spotify Wrapped Party",
+      "live": "https://wrapped-party.activetheory.dev",
+      "date": "2026-07-24",
+      "pitch": "For the first time, a multiplayer wrapped experience allowing fans to invite up to nine friends to compare their 2025 listening in a party, packed with...",
+      "tags": [
+        "Games & Entertainment",
+        "Mobile & Apps",
+        "Music & Sound",
+        "Animation",
+        "WebGL",
+        "Transitions",
+        "Data Visualization",
+        "Sound-Audio",
+        "GSAP",
+        "Firebase"
+      ],
+      "colors": [
+        "#EFEFEA"
+      ],
+      "scores": {
+        "design": 7.17,
+        "usability": 6.56,
+        "creativity": 7,
+        "content": 6.94,
+        "overall": 6.93,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "normal-is-boring",
+      "title": "NORMAL IS BORING",
+      "live": "https://normalisboring.es/",
+      "date": "2026-07-23",
+      "pitch": "Avant-garde branding and digital experience for a luxury real estate brand redefining the sector through design, motion, and a distinctive unconventional...",
+      "tags": [
+        "Architecture",
+        "Animation",
+        "Clean",
+        "Wordpress",
+        "CSS",
+        "Graphic design",
+        "Typography",
+        "Photography",
+        "Transitions",
+        "GSAP",
+        "UI design",
+        "Luxury"
+      ],
+      "colors": [
+        "#000000",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.11,
+        "usability": 6.83,
+        "creativity": 7,
+        "content": 7.17,
+        "overall": 7.01,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "dragonfly-redux",
+      "title": "Dragonfly Redux",
+      "live": "https://dragonfly2.studiofreight.dev/",
+      "date": "2026-07-22",
+      "pitch": "Eight years in crypto, Dragonfly brings access and influence to crypto teams with global aspirations to find adoption anywhere.",
+      "tags": [
+        "Business & Corporate",
+        "Other",
+        "Technology",
+        "Scrolling",
+        "WebGL",
+        "Menu - Vertical",
+        "GSAP",
+        "3D",
+        "Filters and Effects",
+        "Vue.js"
+      ],
+      "colors": [
+        "#FA4C14",
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.5,
+        "usability": 7.33,
+        "creativity": 7.5,
+        "content": 6.89,
+        "overall": 7.39,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "lacoste-polo-factory",
+      "title": "Lacoste \\u2014 Polo Factory",
+      "live": "https://members-play.lacoste.com/polo-factory-experience",
+      "date": "2026-07-21",
+      "pitch": "Welcome to the Lacoste Polo Factory. Where polos are born.",
+      "tags": [
+        "Architecture",
+        "Fashion",
+        "Games & Entertainment",
+        "Colorful",
+        "Fullscreen",
+        "WebGL",
+        "Three.js",
+        "3D"
+      ],
+      "colors": [
+        "#A4E7FE",
+        "#F7ECE8"
+      ],
+      "scores": {
+        "design": 7.39,
+        "usability": 7,
+        "creativity": 7.94,
+        "content": 7.06,
+        "overall": 7.35,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "lama-lama-2",
+      "title": "Lama Lama",
+      "live": "https://lamalama.com/",
+      "date": "2026-07-20",
+      "pitch": "A creative digital agency that goes all in or not at all.",
+      "tags": [
+        "Design Agencies",
+        "E-Commerce",
+        "Web & Interactive",
+        "Animation",
+        "Graphic design",
+        "WebGL",
+        "GSAP",
+        "Javascript"
+      ],
+      "colors": [
+        "#F9F4EB",
+        "#1A1C1C"
+      ],
+      "scores": {
+        "design": 7.72,
+        "usability": 7.44,
+        "creativity": 7.61,
+        "content": 7.61,
+        "overall": 7.61,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "glitch-grit",
+      "title": "Glitch&Grit",
+      "live": "https://glitchandgrit.com/",
+      "date": "2026-07-19",
+      "pitch": "Glitch&Grit is a creative studio built for those who crave work that is thoughtful, intentional and scalable, blending artistry with strategy across content,...",
+      "tags": [
+        "Design Agencies",
+        "Film & TV",
+        "Portfolio",
+        "Typography",
+        "Video",
+        "Transitions",
+        "Photo & Video",
+        "Footer Design",
+        "Webflow",
+        "Figma"
+      ],
+      "colors": [
+        "#FFFBF7",
+        "#000000"
+      ],
+      "scores": {
+        "design": 7.28,
+        "usability": 6.94,
+        "creativity": 7.22,
+        "content": 7.22,
+        "overall": 7.16,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "izanami",
+      "title": "IZANAMI",
+      "live": "https://izanami-official.com/",
+      "date": "2026-07-18",
+      "pitch": "Harmony is not something to be created — it is something to be remembered. Guided by the spirit of Wa, Izanami designs harmony across life through School,...",
+      "tags": [
+        "Art & Illustration",
+        "Business & Corporate",
+        "Scrolling",
+        "Typography",
+        "WebGL",
+        "Storytelling",
+        "GSAP",
+        "Copy design",
+        "Figma"
+      ],
+      "colors": [
+        "#0A0801",
+        "#D9D7D4"
+      ],
+      "scores": {
+        "design": 7.17,
+        "usability": 7.17,
+        "creativity": 7.28,
+        "content": 7.28,
+        "overall": 7.2,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "hiroto-sato",
+      "title": "Hiroto Sato",
+      "live": "https://www.hirotos.com",
+      "date": "2026-07-17",
+      "pitch": "Portfolio of Hiroto Sato, a creative developer based in Japan, crafting interactive websites through design, 3D visuals, and motion.",
+      "tags": [
+        "Web & Interactive",
+        "Portfolio",
+        "WebGL",
+        "GSAP",
+        "3D",
+        "Blender"
+      ],
+      "colors": [
+        "#FFFFFF",
+        "#0B0B0A"
+      ],
+      "scores": {
+        "design": 7,
+        "usability": 7.11,
+        "creativity": 7.33,
+        "content": 7.17,
+        "overall": 7.12,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "coffeetech-r",
+      "title": "CoffeeTech\\u00ae",
+      "live": "https://coffee-tech.com/",
+      "date": "2026-07-16",
+      "pitch": "CoffeeTech® produces industry-leading commercial, shop, and lab roasters, setting the gold standard in coffee roasting technology.",
+      "tags": [
+        "Business & Corporate",
+        "Technology",
+        "Clean",
+        "Minimal",
+        "Transitions",
+        "360",
+        "GSAP",
+        "3D",
+        "Webflow",
+        "Javascript"
+      ],
+      "colors": [
+        "#C8603D",
+        "#0D0E13"
+      ],
+      "scores": {
+        "design": 7.17,
+        "usability": 7.17,
+        "creativity": 6.89,
+        "content": 7.11,
+        "overall": 7.11,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "risk",
+      "title": "RISK",
+      "live": "https://www.risk.film",
+      "date": "2026-07-15",
+      "pitch": "Post Production Studio",
+      "tags": [
+        "Film & TV",
+        "Animation",
+        "Fullscreen",
+        "Horizontal Layout",
+        "Infinite Scroll",
+        "WebGL",
+        "Transitions",
+        "Filters and Effects",
+        "Webflow",
+        "Figma"
+      ],
+      "colors": [
+        "#000000",
+        "#E4D5BE"
+      ],
+      "scores": {
+        "design": 7.44,
+        "usability": 6.67,
+        "creativity": 7.22,
+        "content": 7.22,
+        "overall": 7.14,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "house-of-honey-1",
+      "title": "House of Honey",
+      "live": "https://www.houseofhoney.com/",
+      "date": "2026-07-14",
+      "pitch": "House of Honey designs spaces with story. We built a sophisticated digital presence that mirrors this sensory philosophy through editorial elegance and...",
+      "tags": [
+        "Architecture",
+        "Culture & Education",
+        "Minimal",
+        "Portfolio",
+        "Typography",
+        "Copy design",
+        "Interaction Design",
+        "Microinteractions",
+        "Motion",
+        "Next.js",
+        "Sanity",
+        "Luxury"
+      ],
+      "colors": [
+        "#331917",
+        "#EDCCBE"
+      ],
+      "scores": {
+        "design": 7.42,
+        "usability": 7.32,
+        "creativity": 7.37,
+        "content": 7.47,
+        "overall": 7.38,
+        "jurors": 19
+      }
+    },
+    {
+      "slug": "pp-neue-montreal",
+      "title": "PP Neue Montreal",
+      "live": "https://neuemontreal.com/",
+      "date": "2026-07-13",
+      "pitch": "Neue Montreal a journey in time, going from its Montreal design roots to its growing family of siblings. Travel through what makes Neue Montreal the most...",
+      "tags": [
+        "Promotional",
+        "Web & Interactive",
+        "Animation",
+        "Clean",
+        "Colorful",
+        "Fullscreen",
+        "Graphic design",
+        "Experimental",
+        "Footer Design",
+        "Motion",
+        "Figma",
+        "Framer"
+      ],
+      "colors": [
+        "#D82F2F",
+        "#1A1A1A"
+      ],
+      "scores": {
+        "design": 7.44,
+        "usability": 7.28,
+        "creativity": 7.33,
+        "content": 7.33,
+        "overall": 7.36,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "longbow",
+      "title": "Longbow",
+      "live": "https://db-longbow.webflow.io/",
+      "date": "2026-07-12",
+      "pitch": "A premium web experience for Longbow Motors, creators of British EV sports cars. Clean UI, smooth animations, and bold typography perfectly reflect the...",
+      "tags": [
+        "Promotional",
+        "Technology",
+        "Web & Interactive",
+        "Typography",
+        "Photo & Video",
+        "UI design",
+        "Footer Design",
+        "Webflow",
+        "Figma"
+      ],
+      "colors": [
+        "#888C8F",
+        "#FFFFFF"
+      ],
+      "scores": {
+        "design": 7.17,
+        "usability": 6.89,
+        "creativity": 7.17,
+        "content": 7.22,
+        "overall": 7.09,
+        "jurors": 18
+      }
+    },
+    {
+      "slug": "vectr",
+      "title": "Vectr",
+      "live": "https://vectrfl.com/",
+      "date": "2026-07-11",
+      "pitch": "Vectr — AI-driven precision staffing for critical outages.",
+      "tags": [
+        "Technology",
+        "Animation",
+        "WebGL",
+        "Transitions",
+        "Storytelling",
+        "Three.js",
+        "3D",
+        "Startups",
+        "Astro"
+      ],
+      "colors": [
+        "#3932DC",
+        "#050419"
+      ],
+      "scores": {
+        "design": 7.22,
+        "usability": 7.11,
+        "creativity": 7.56,
+        "content": 7.22,
+        "overall": 7.26,
+        "jurors": 18
+      }
+    }
+  ],
+  "collected": "2026-10-11"
+}

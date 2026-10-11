@@ -122,7 +122,39 @@
     "id": "wordmark"
    }
   ],
-  "footer": "wordmark"
+  "footer": "wordmark",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 2,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 4,
+    "variant": "split"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "columns"
+   },
+   {
+    "page": "p3",
+    "index": 0,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p4",
+    "index": 1,
+    "variant": "side"
+   }
+  ]
  },
  "pip-kiln": {
   "base": "typography-first",
@@ -150,6 +182,66 @@
     "page": "rerq7kdx",
     "index": 4,
     "variant": "giant"
+   },
+   {
+    "page": "p1",
+    "index": 1,
+    "variant": "tiles"
+   },
+   {
+    "page": "p1",
+    "index": 2,
+    "variant": "grid"
+   },
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "row"
+   },
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "split"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "grid"
+   },
+   {
+    "page": "p2",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 4,
+    "variant": "grid"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "grid"
+   },
+   {
+    "page": "p6",
+    "index": 1,
+    "variant": "columns"
+   },
+   {
+    "page": "p6",
+    "index": 4,
+    "variant": "side"
+   },
+   {
+    "page": "p6",
+    "index": 5,
+    "variant": "side"
    }
   ],
   "signatures": [],
@@ -276,6 +368,162 @@
    }
   ],
   "footer": "signature"
+ },
+ "ines-varga": {
+  "base": "typography-first",
+  "brief": {
+   "name": "Ines Varga",
+   "offer": "Illustrated maps for towns, trails and books, drawn by hand in ink and watercolour. Commissions open.",
+   "goal": "contact"
+  },
+  "purpose": "portfolio",
+  "direction": "conceptual-sketch",
+  "characters": [
+   "raw"
+  ],
+  "lead": "illustration",
+  "motion": "dynamic",
+  "hero": "illustrated",
+  "layout": "grid",
+  "palette": "gallery-grey",
+  "typography": "sketchbook",
+  "assets": [],
+  "uploads": [],
+  "mediaPlan": "have",
+  "concept": "off",
+  "signatures": [],
+  "pieces": [
+   "drag-photos",
+   "scribble-link",
+   "photo-morph",
+   "scroll-story",
+   "letters-assemble",
+   "shutter-transition"
+  ],
+  "piecePlacements": [
+   {
+    "piece": "drag-photos",
+    "page": "p1",
+    "index": 1
+   },
+   {
+    "piece": "scribble-link",
+    "page": "*",
+    "index": -1
+   },
+   {
+    "piece": "photo-morph",
+    "page": "p2",
+    "index": 0
+   },
+   {
+    "piece": "scroll-story",
+    "page": "p4",
+    "index": 0
+   },
+   {
+    "piece": "letters-assemble",
+    "page": "p5",
+    "index": 0
+   },
+   {
+    "piece": "shutter-transition",
+    "page": "*",
+    "index": -1
+   }
+  ],
+  "pages": [
+   {
+    "id": "p1",
+    "type": "home",
+    "label": "Home",
+    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
+    "sections": [
+     "hero",
+     "featured-work",
+     "contact-cta"
+    ]
+   },
+   {
+    "id": "p2",
+    "type": "work",
+    "label": "Selected Work",
+    "purpose": "Prove quality and range through the strongest projects; make it easy to go deeper on any one.",
+    "sections": [
+     "featured-work",
+     "clients"
+    ]
+   },
+   {
+    "id": "p3",
+    "type": "project",
+    "label": "Project",
+    "purpose": "Show one project in full: what it was, the facts (client, place, year, role), the pictures in order, and the way to the next project.",
+    "sections": [
+     "case-study",
+     "gallery",
+     "specs",
+     "featured-work"
+    ]
+   },
+   {
+    "id": "p4",
+    "type": "about",
+    "label": "About",
+    "purpose": "Put a human face and point of view on the work; build trust.",
+    "sections": [
+     "about",
+     "testimonials",
+     "timeline"
+    ]
+   },
+   {
+    "id": "p5",
+    "type": "contact",
+    "label": "Contact",
+    "purpose": "Give one clear, low-friction way to get in touch.",
+    "sections": [
+     "contact-cta",
+     "faq"
+    ]
+   }
+  ],
+  "target": "not-sure",
+  "taken": [
+   {
+    "site": "example:inkwell-moth",
+    "kind": "like",
+    "id": "opening"
+   },
+   {
+    "site": "example:fieldhouse",
+    "kind": "idea",
+    "id": "barn-index"
+   },
+   {
+    "site": "example:inkwell-moth",
+    "kind": "effect",
+    "id": "drag-photos"
+   },
+   {
+    "site": "example:fennwood",
+    "kind": "effect",
+    "id": "scribble-link"
+   }
+  ],
+  "footer": "contact",
+  "sectionVariants": [
+   {
+    "page": "p4",
+    "index": 2,
+    "variant": "line"
+   },
+   {
+    "page": "p5",
+    "index": 1,
+    "variant": "side"
+   }
+  ]
  },
  "kelp-line": {
   "base": "japanese-quiet-minimal",
@@ -412,7 +660,49 @@
     "id": "lightbox"
    }
   ],
-  "footer": "line"
+  "footer": "line",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 1,
+    "variant": "line"
+   },
+   {
+    "page": "p1",
+    "index": 5,
+    "variant": "card"
+   },
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "cards"
+   },
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "split"
+   },
+   {
+    "page": "p3",
+    "index": 3,
+    "variant": "card"
+   },
+   {
+    "page": "p5",
+    "index": 1,
+    "variant": "row"
+   },
+   {
+    "page": "p5",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p6",
+    "index": 0,
+    "variant": "columns"
+   }
+  ]
  },
  "raster-school": {
   "base": "swiss-modern",
@@ -455,6 +745,31 @@
     "page": "oq6ywwqg",
     "index": 5,
     "variant": "cards"
+   },
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 1,
+    "variant": "side"
+   },
+   {
+    "page": "p5",
+    "index": 0,
+    "variant": "side"
    }
   ],
   "signatures": [],
@@ -576,6 +891,26 @@
     "page": "9r3cpt7y",
     "index": 2,
     "variant": "grid"
+   },
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 4,
+    "variant": "cards"
+   },
+   {
+    "page": "p3",
+    "index": 1,
+    "variant": "columns"
+   },
+   {
+    "page": "p3",
+    "index": 2,
+    "variant": "side"
    }
   ],
   "signatures": [],
@@ -764,7 +1099,44 @@
    }
   ],
   "target": "not-sure",
-  "footer": "contact"
+  "footer": "contact",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 2,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 4,
+    "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "columns"
+   },
+   {
+    "page": "p2",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 0,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 2,
+    "variant": "side"
+   }
+  ]
  },
  "halden": {
   "base": "cinematic-editorial",
@@ -793,6 +1165,31 @@
     "page": "danhs2i2",
     "index": 4,
     "variant": "wall"
+   },
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 0,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "side"
    }
   ],
   "signatures": [],
@@ -980,7 +1377,49 @@
    }
   ],
   "target": "not-sure",
-  "footer": "signature"
+  "footer": "signature",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 1,
+    "variant": "grid"
+   },
+   {
+    "page": "p1",
+    "index": 5,
+    "variant": "row"
+   },
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "split"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "grid"
+   },
+   {
+    "page": "p2",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 4,
+    "variant": "grid"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "grid"
+   }
+  ]
  },
  "fieldhouse": {
   "base": "luxury-fashion",
@@ -1214,7 +1653,84 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 2,
+    "variant": "grid"
+   },
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "cards"
+   },
+   {
+    "page": "p1",
+    "index": 8,
+    "variant": "split"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "tiles"
+   },
+   {
+    "page": "p2",
+    "index": 1,
+    "variant": "grid"
+   },
+   {
+    "page": "p2",
+    "index": 2,
+    "variant": "row"
+   },
+   {
+    "page": "p3",
+    "index": 4,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 5,
+    "variant": "grid"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "grid"
+   },
+   {
+    "page": "p6",
+    "index": 2,
+    "variant": "line"
+   },
+   {
+    "page": "p7",
+    "index": 0,
+    "variant": "cards"
+   },
+   {
+    "page": "p7",
+    "index": 1,
+    "variant": "split"
+   },
+   {
+    "page": "p8",
+    "index": 1,
+    "variant": "cards"
+   },
+   {
+    "page": "p8",
+    "index": 2,
+    "variant": "split"
+   },
+   {
+    "page": "p9",
+    "index": 0,
+    "variant": "side"
+   }
+  ]
  },
  "aster-house": {
   "base": "swiss-modern",
@@ -1315,7 +1831,29 @@
    "secondary": "#C0A57A",
    "accent": "#1E3A8A",
    "border": "#B39A70"
-  }
+  },
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "grid"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "grid"
+   },
+   {
+    "page": "p2",
+    "index": 1,
+    "variant": "cells"
+   },
+   {
+    "page": "p2",
+    "index": 2,
+    "variant": "side"
+   }
+  ]
  },
  "night-shift": {
   "base": "digital-futurism",
@@ -1424,7 +1962,34 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "cells"
+   },
+   {
+    "page": "p2",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 1,
+    "variant": "side"
+   },
+   {
+    "page": "p5",
+    "index": 0,
+    "variant": "side"
+   }
+  ]
  },
  "sela-mor": {
   "base": "typography-first",
@@ -1559,7 +2124,29 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 4,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "split"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "columns"
+   },
+   {
+    "page": "p4",
+    "index": 1,
+    "variant": "split"
+   }
+  ]
  },
  "kur-delta-watch": {
   "base": "neo-brutalist-commerce",
@@ -1681,7 +2268,39 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 4,
+    "variant": "line"
+   },
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "card"
+   },
+   {
+    "page": "p1",
+    "index": 7,
+    "variant": "cards"
+   },
+   {
+    "page": "p1",
+    "index": 8,
+    "variant": "split"
+   },
+   {
+    "page": "p5",
+    "index": 1,
+    "variant": "row"
+   },
+   {
+    "page": "p5",
+    "index": 2,
+    "variant": "side"
+   }
+  ]
  },
  "inkwell-moth": {
   "base": "art-direction-studio",
@@ -1788,273 +2407,14 @@
    "secondary": "#EADFAA",
    "accent": "#C8323C",
    "border": "#E4D9A0"
-  }
- },
- "lowfield-nights": {
-  "base": "cinematic-editorial",
-  "brief": {
-   "name": "Lowfield Nights",
-   "offer": "Three nights of films and live scores in a disused hangar on the Absheron coast, 12–14 June.",
-   "goal": "book"
   },
-  "purpose": "event",
-  "direction": "cinematic-editorial",
-  "characters": [],
-  "lead": "video",
-  "motion": "immersive",
-  "hero": "scroll-video-page",
-  "layout": "full-bleed",
-  "palette": "graphite-sand",
-  "typography": "high-low",
-  "assets": [],
-  "uploads": [],
-  "mediaPlan": "temporary",
-  "footer": "wordmark",
-  "concept": "guided-walk",
-  "signatures": [],
-  "pieces": [
-   "text-effect",
-   "curtain-transition"
-  ],
-  "piecePlacements": [
+  "sectionVariants": [
    {
-    "piece": "text-effect",
-    "page": "*",
-    "index": -1
-   },
-   {
-    "piece": "curtain-transition",
-    "page": "*",
-    "index": -1
+    "page": "p4",
+    "index": 1,
+    "variant": "side"
    }
-  ],
-  "pages": [
-   {
-    "id": "p1",
-    "type": "home",
-    "label": "Home",
-    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
-    "sections": [
-     "hero",
-     "intro",
-     "schedule",
-     "team",
-     "location",
-     "faq",
-     "reservation"
-    ]
-   },
-   {
-    "id": "p2",
-    "type": "reservations",
-    "label": "RSVP",
-    "purpose": "Convert interest into a booking with minimal friction.",
-    "sections": [
-     "reservation",
-     "location",
-     "faq"
-    ]
-   },
-   {
-    "id": "p3",
-    "type": "locations",
-    "label": "Venue & travel",
-    "purpose": "Help visitors find and choose the right location.",
-    "sections": [
-     "location",
-     "gallery",
-     "faq"
-    ]
-   },
-   {
-    "id": "p4",
-    "type": "faq",
-    "label": "FAQ",
-    "purpose": "Answer the questions that would otherwise stall a decision.",
-    "sections": [
-     "faq",
-     "contact-cta"
-    ]
-   }
-  ],
-  "target": "not-sure"
- },
- "velmira": {
-  "base": "japanese-quiet-minimal",
-  "brief": {
-   "name": "Velmira",
-   "offer": "Nine rooms and a bathhouse on a lake in the Gabala hills: warm water, cold air, long quiet mornings.",
-   "goal": "book"
-  },
-  "purpose": "hotel",
-  "direction": "ethereal",
-  "characters": [],
-  "lead": "video",
-  "motion": "subtle",
-  "hero": "ambient-video",
-  "layout": "full-bleed",
-  "palette": "midnight-chapters",
-  "typography": "kalnia-couture",
-  "assets": [],
-  "uploads": [],
-  "mediaPlan": "temporary",
-  "signatures": [],
-  "pieces": [
-   "ambient-sound"
-  ],
-  "piecePlacements": [
-   {
-    "piece": "ambient-sound",
-    "page": "*",
-    "index": -1
-   }
-  ],
-  "pages": [
-   {
-    "id": "p1",
-    "type": "home",
-    "label": "Home",
-    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
-    "sections": [
-     "hero",
-     "intro",
-     "collection",
-     "feature-rows",
-     "journal",
-     "reservation"
-    ]
-   },
-   {
-    "id": "p2",
-    "type": "collections",
-    "label": "Rooms",
-    "purpose": "Present the current collection through an editorial, image-led experience.",
-    "sections": [
-     "collection",
-     "lookbook",
-     "reservation"
-    ]
-   },
-   {
-    "id": "p3",
-    "type": "gallery",
-    "label": "Gallery",
-    "purpose": "Let atmosphere and craft speak for themselves.",
-    "sections": [
-     "gallery"
-    ]
-   },
-   {
-    "id": "p4",
-    "type": "reservations",
-    "label": "Book a stay",
-    "purpose": "Convert interest into a booking with minimal friction.",
-    "sections": [
-     "reservation",
-     "location",
-     "faq"
-    ]
-   },
-   {
-    "id": "p5",
-    "type": "locations",
-    "label": "Getting here",
-    "purpose": "Help visitors find and choose the right location.",
-    "sections": [
-     "location",
-     "faq"
-    ]
-   }
-  ],
-  "target": "not-sure",
-  "footer": "signature"
- },
- "saint-ashe": {
-  "base": "cinematic-editorial",
-  "brief": {
-   "name": "Saint Ashe",
-   "offer": "Black clothing cut in small runs in Tbilisi: heavy cotton, waxed wool and leather that ages with you.",
-   "goal": "buy"
-  },
-  "purpose": "fashion",
-  "direction": "gothic-modern",
-  "characters": [],
-  "lead": "video",
-  "motion": "dynamic",
-  "hero": "ambient-video",
-  "layout": "full-bleed",
-  "palette": "mulberry",
-  "typography": "new-gothic",
-  "assets": [],
-  "uploads": [],
-  "mediaPlan": "temporary",
-  "signatures": [],
-  "pieces": [
-   "text-roll",
-   "swap-button"
-  ],
-  "piecePlacements": [
-   {
-    "piece": "text-roll",
-    "page": "*",
-    "index": -1
-   },
-   {
-    "piece": "swap-button",
-    "page": "*",
-    "index": -1
-   }
-  ],
-  "pages": [
-   {
-    "id": "p1",
-    "type": "home",
-    "label": "Home",
-    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
-    "sections": [
-     "hero",
-     "collection",
-     "product-grid",
-     "journal",
-     "newsletter"
-    ]
-   },
-   {
-    "id": "p2",
-    "type": "collections",
-    "label": "Collections",
-    "purpose": "Present the current collection through an editorial, image-led experience.",
-    "sections": [
-     "collection",
-     "lookbook",
-     "product-grid"
-    ]
-   },
-   {
-    "id": "p3",
-    "type": "about",
-    "label": "About",
-    "purpose": "Put a human face and point of view on the work; build trust.",
-    "sections": [
-     "about",
-     "editorial-story",
-     "team"
-    ]
-   },
-   {
-    "id": "p4",
-    "type": "contact",
-    "label": "Contact",
-    "purpose": "Give one clear, low-friction way to get in touch.",
-    "sections": [
-     "contact-cta",
-     "location",
-     "faq"
-    ]
-   }
-  ],
-  "target": "not-sure",
-  "footer": "signature"
+  ]
  },
  "fennwood": {
   "base": "organic-modern",
@@ -2140,7 +2500,39 @@
    "secondary": "#F5BC6E",
    "accent": "#4F5E12",
    "border": "#E5B06A"
-  }
+  },
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 2,
+    "variant": "columns"
+   },
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "columns"
+   },
+   {
+    "page": "p2",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 0,
+    "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 2,
+    "variant": "side"
+   }
+  ]
  },
  "hane": {
   "base": "japanese-quiet-minimal",
@@ -2245,109 +2637,34 @@
    "secondary": "#E5BDAF",
    "accent": "#A3123A",
    "border": "#D8B5A8"
-  }
- },
- "halvik": {
-  "base": "swiss-modern",
-  "brief": {
-   "name": "Halvik",
-   "offer": "Halvik 65 — a compact mechanical keyboard in a powder-coated aluminium case, with hot-swap switches and a matching dial pad.",
-   "goal": "buy"
   },
-  "purpose": "product",
-  "direction": "bento-product",
-  "characters": [],
-  "lead": "product",
-  "motion": "subtle",
-  "hero": "product-stage",
-  "layout": "grid",
-  "palette": "console-lilac",
-  "typography": "wide-spec",
-  "assets": [],
-  "uploads": [],
-  "mediaPlan": "have",
-  "concept": "one-guide",
-  "signatures": [],
-  "pieces": [
-   "text-effect",
-   "underline-fill",
-   "magnetic",
-   "smooth-scroll"
-  ],
-  "piecePlacements": [
+  "sectionVariants": [
    {
-    "piece": "text-effect",
-    "page": "*",
-    "index": -1
+    "page": "p1",
+    "index": 7,
+    "variant": "side"
    },
    {
-    "piece": "underline-fill",
-    "page": "*",
-    "index": -1
+    "page": "p2",
+    "index": 3,
+    "variant": "side"
    },
    {
-    "piece": "magnetic",
-    "page": "*",
-    "index": -1
+    "page": "p4",
+    "index": 0,
+    "variant": "side"
    },
    {
-    "piece": "smooth-scroll",
-    "page": "*",
-    "index": -1
+    "page": "p4",
+    "index": 2,
+    "variant": "side"
+   },
+   {
+    "page": "p5",
+    "index": 0,
+    "variant": "side"
    }
-  ],
-  "pages": [
-   {
-    "id": "p1",
-    "type": "home",
-    "label": "Home",
-    "purpose": "Establish mood and promise in seconds; orient the visitor to what this site is and give them a clear next step.",
-    "sections": [
-     "hero",
-     "product-highlight",
-     "feature-rows",
-     "press",
-     "testimonials",
-     "pricing",
-     "trust",
-     "contact-cta"
-    ]
-   },
-   {
-    "id": "p2",
-    "type": "features",
-    "label": "Features",
-    "purpose": "Explain what the product does with concrete, specific evidence, not adjectives.",
-    "sections": [
-     "feature-grid",
-     "how-it-works",
-     "product-highlight",
-     "contact-cta"
-    ]
-   },
-   {
-    "id": "p3",
-    "type": "contact",
-    "label": "Contact",
-    "purpose": "Give one clear, low-friction way to get in touch.",
-    "sections": [
-     "contact-cta",
-     "faq"
-    ]
-   }
-  ],
-  "target": "not-sure",
-  "footer": "signature",
-  "customPalette": {
-   "background": "#9D91E3",
-   "surface": "#B2A8EA",
-   "text": "#000000",
-   "muted": "#1E1640",
-   "primary": "#000000",
-   "secondary": "#8A7DD8",
-   "accent": "#000000",
-   "border": "#7D70CC"
-  }
+  ]
  },
  "sticky-weather": {
   "base": "typography-first",
@@ -2467,7 +2784,14 @@
    }
   ],
   "target": "not-sure",
-  "footer": "signature"
+  "footer": "signature",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "cards"
+   }
+  ]
  },
  "hexmint": {
   "base": "digital-futurism",
@@ -2575,7 +2899,29 @@
    }
   ],
   "target": "not-sure",
-  "footer": "signature"
+  "footer": "signature",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "cells"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "cells"
+   },
+   {
+    "page": "p3",
+    "index": 1,
+    "variant": "side"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "side"
+   }
+  ]
  },
  "brasshand": {
   "base": "typography-first",
@@ -2704,7 +3050,24 @@
     ]
    }
   ],
-  "target": "not-sure"
+  "target": "not-sure",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 5,
+    "variant": "cards"
+   },
+   {
+    "page": "p3",
+    "index": 3,
+    "variant": "side"
+   },
+   {
+    "page": "p5",
+    "index": 2,
+    "variant": "side"
+   }
+  ]
  },
  "slow-atlas": {
   "base": "swiss-modern",
@@ -2810,6 +3173,48 @@
    }
   ],
   "target": "not-sure",
-  "footer": "signature"
+  "footer": "signature",
+  "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 2,
+    "variant": "cards"
+   },
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "tiles"
+   },
+   {
+    "page": "p1",
+    "index": 4,
+    "variant": "split"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "cards"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "split"
+   },
+   {
+    "page": "p4",
+    "index": 1,
+    "variant": "cards"
+   },
+   {
+    "page": "p5",
+    "index": 1,
+    "variant": "cards"
+   },
+   {
+    "page": "p5",
+    "index": 2,
+    "variant": "split"
+   }
+  ]
  }
 }

@@ -1,6 +1,9 @@
 'use client'
 // Shared by Discover, a site's page, Pages and the Collection: how any item is drawn, and the button that collects it.
-import { ArrowLeft, ArrowRight, Check, Layers, Plus, Trash2, X } from 'lucide-react'
+import { IDEA_BY_ID, ideaClip } from '@/data/site-ideas'
+import { ArrowLeft, ArrowRight, Check, Copy, Layers, Plus, Trash2, X } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { promptForItem } from '@/features/library/prompt'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -9,12 +12,12 @@ import { toast } from 'sonner'
 import { useGoogleFonts } from '@/components/FontLoader'
 import { LinkDemo, type LinkPiece } from '@/components/LinkDemo'
 import { OptionDemo } from '@/components/OptionDemo'
-import { PieceDemo } from '@/components/PieceDemo'
+import { OPUSKIT_DARK, PieceDemo } from '@/components/PieceDemo'
 import { ScaledFrame } from '@/components/ScaledFrame'
 import { SectionPreview, worldFor } from '@/components/SectionPreview'
 import { SitePreview, previewFromRecipe } from '@/components/SitePreview'
 import { examples } from '@/data/examples'
-import { directions, motionLevels, purposes } from '@/data/taxonomy'
+import { directions, motionLevels, kindName } from '@/data/taxonomy'
 import { palettes, typography } from '@/data/ingredients'
 import { TRAITS, TRAIT_IDS, purposeFrom, siteTraits, type Trait } from '@/features/library/inspire'
 import { heroName } from '@/components/HeroPreview'
@@ -24,17 +27,17 @@ import { hasItem, itemKey, itemName, notes, removeItem, siteName, siteSpec, site
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { behaviours, pieces } from '@/data/pieces'
-import { specToPlan } from '@/features/kit/plan'
+import { specToPlan } from '@/features/studio/plan'
 import { composeRecipe } from '@/features/recipes/engine'
 import { adoptPlan, readCollection, updateCollection, useCollection } from '@/lib/collection'
-import { readPlan, usePlan } from '@/lib/kit'
+import { readPlan, usePlan } from '@/lib/plan'
 import { KEYS, get, useHydrated } from '@/lib/store'
-import type { KitPlan, LayoutId, MediaPlacement, PurposeId, SectionTone } from '@/types/domain'
+import type { StudioPlan, LayoutId, MediaPlacement, PurposeId, SectionTone } from '@/types/domain'
 
-export type Look = ReturnType<typeof lookOf> & { plan: KitPlan; world: ReturnType<typeof worldFor>; brand?: string; layout?: LayoutId }
+export type Look = ReturnType<typeof lookOf> & { plan: StudioPlan; world: ReturnType<typeof worldFor>; brand?: string; layout?: LayoutId }
 
 /** A site's own look, for its page and for the parts it shows on the shelves. */
-export function siteLook(ref: SiteRef, plan: KitPlan, layout?: LayoutId): Look {
+export function siteLook(ref: SiteRef, plan: StudioPlan, layout?: LayoutId): Look {
   return { ...lookOf(plan), plan, world: worldFor(siteSpec(ref)?.purpose), layout }
 }
 // Shelves are samples, never the visitor's own style (that is picked later): a part is drawn as on the first real site
@@ -45,27 +48,45 @@ export function sampleLook(item: CollectionItem, kind?: PurposeId): Look {
   const key = site ?? `plain:${kind ?? ''}`
   if (!looks.has(key)) {
     const spec = site && siteSpec(site)
-    const plan: KitPlan = spec ? specToPlan(spec) : { pages: [], purpose: kind }
+    const plan: StudioPlan = spec ? specToPlan(spec) : { pages: [], purpose: kind }
     looks.set(key, spec ? siteLook(site, plan) : { ...lookOf(plan), plan, world: worldFor(kind) })
   }
   return looks.get(key)!
 }
 
+/** The standard theme: a neutral look in OpusKit's own colours, for effects shown as pure components (the Library's
+ *  Moments and Touches) — the same piece every site gets, before any site dresses it. */
+let standard: Look | undefined
+export function standardLook(): Look {
+  // One accent only — OpusKit's orange — where a piece reads a colour chapter (the hopping arrow's box).
+  standard ??= { ...sampleLook({ kind: 'effect', id: 'magnetic' }), colors: OPUSKIT_DARK, chapters: [OPUSKIT_DARK.accent, OPUSKIT_DARK.accent, OPUSKIT_DARK.accent] }
+  return standard
+}
+
+/** The standard theme dressed in the world of the site that shows a design best — a food menu with dishes, a programme
+ *  with screenings — for a section drawn pure. */
+export function pureLook(item: CollectionItem): Look {
+  const from = 'from' in item ? (item.from as SiteRef | undefined) : undefined
+  return { ...standardLook(), world: worldFor(from ? siteSpec(from)?.purpose : undefined) }
+}
+
 export const exampleOf = (ref: SiteRef) => (ref.startsWith('example:') ? examples.find((e) => `example:${e.slug}` === ref) : undefined)
 
 /** One item, drawn the way you would get it. Fixed 16:10, so a shelf reads as one grid. */
-export function ItemPreview(p: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement }; sketch?: boolean }) {
+export function ItemPreview(p: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement }; sketch?: boolean; /** Drawn pure in a catalog card: closer, so its words read. */ pure?: boolean }) {
   useGoogleFonts(p.look.type.googleFamilies)
   // On the look's own ground, so a part shorter than the frame doesn't end in a white band.
   return <div className="size-full" style={{ background: p.look.colors.background }}><Drawn {...p} /></div>
 }
-function Drawn({ item, look, rhythm, sketch }: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement }; sketch?: boolean }) {
+function Drawn({ item, look, rhythm, sketch, pure }: { item: CollectionItem; look: Look; rhythm?: { tone?: SectionTone; media?: MediaPlacement }; sketch?: boolean; pure?: boolean }) {
+  // A part drawn pure is laid out 900 wide, not 1280, so a card shows it larger; a footer sits at the card's foot.
+  const close = pure ? 900 : undefined
   const pv = { colors: look.colors, type: look.type, shape: look.shape, chapters: look.chapters, world: look.world, brand: look.brand, layout: look.layout, sketch }
   switch (item.kind) {
     case 'site': return <SiteThumb site={item.site} />
     case 'like': return <TraitPicture what={item.what} site={item.site} />
-    case 'section': return <SectionPreview id={item.id} variant={item.variant} {...pv} {...rhythm} className="aspect-[16/10]" />
-    case 'footer': return <SectionPreview id="footer" footer={item.id} {...pv} className="aspect-[16/10]" />
+    case 'section': return <SectionPreview id={item.id} variant={item.variant} {...pv} {...rhythm} width={close} className="aspect-[16/10]" />
+    case 'footer': return <SectionPreview id="footer" footer={item.id} {...pv} width={close} anchor={pure ? 'bottom' : undefined} className="aspect-[16/10]" />
     case 'hero': return <div className={`aspect-[16/10] overflow-hidden ${sketch ? 'sketch' : ''}`}><HeroPreview plan={look.plan} id={item.id} /></div>
     case 'menu': return <OptionDemo id={`nav:${item.id}`} colors={look.colors} type={look.type} shape={look.shape} />
     case 'effect':
@@ -95,7 +116,8 @@ export function SiteThumb({ site, auto }: { site: SiteRef; auto?: boolean }) {
     <div className="relative aspect-[16/10] overflow-hidden bg-paper-2" {...(auto ? {} : { onMouseEnter: play, onMouseLeave: () => video.current?.pause() })}>
       <Image src={`/examples/${e.slug}.jpg`} alt="" width={800} height={500} className="size-full object-cover object-top" />
       {/* Shown once it has frames, so the screenshot never blinks to black. */}
-      {e.clip && <video ref={video} src={e.clip} muted loop playsInline preload={auto ? 'metadata' : 'none'} aria-hidden onPlaying={() => setPlaying(true)}
+      {/* The whole landing page where it was recorded (the user, 2026-10-10: full, not the short loop), else the loop. */}
+      {(e.fullClip ?? e.clip) && <video ref={video} src={e.fullClip ?? e.clip} muted loop playsInline preload={auto ? 'metadata' : 'none'} aria-hidden onPlaying={() => setPlaying(true)}
         className={`absolute inset-0 size-full object-cover transition-opacity duration-300 ${auto ? (playing ? 'opacity-100' : 'opacity-0') : 'opacity-0 group-hover:opacity-100'}`} />}
     </div>
   )
@@ -108,6 +130,9 @@ export function useCollect(item: CollectionItem) {
     const before = readCollection(), after = toggleItem(before, item)
     updateCollection(() => after)
     if (on) return toast(`Removed: ${itemName(item)}`, { action: { label: 'Undo', onClick: () => updateCollection(() => before) } })
+    // Taking one of a set a site can only have one of (a link hover…) put back the one taken before: say which.
+    const gone = before.items.filter((x) => !after.items.some((y) => itemKey(y) === itemKey(x)))
+    if (gone.length) return toast(`${itemName(item)} replaced ${gone.map(itemName).join(', ')}`, { description: 'A site has only one of these.', action: { label: 'Undo', onClick: () => updateCollection(() => before) } })
     const had = new Set(notes(before).map((n) => n.text))
     const note = notes(after).find((n) => !had.has(n.text) && n.keys.includes(itemKey(item)))
     if (note) toast(note.text, { action: { label: 'Open', onClick: openCollection } })
@@ -115,6 +140,50 @@ export function useCollect(item: CollectionItem) {
     else if (!before.items.length) toast('Added to your Collection', { description: 'Keep browsing — Build my site waits at the top, beside your Collection.', action: { label: 'Open', onClick: openCollection } })
   }
   return { on, flip }
+}
+
+/** Take, as a small hairline square: a plus that turns ink on hover; once in the Collection it fills pencil with a tick
+ *  (the picked mark) — the same square on every card that takes something (Library, What you took). */
+export function TakeSquare({ item, className = '' }: { item: CollectionItem; className?: string }) {
+  const { on, flip } = useCollect(item)
+  const label = on ? 'Taken — put it back' : 'Take it'
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); flip() }} aria-label={label} aria-pressed={on}
+          className={`z-20 grid size-8 place-items-center rounded-[3px] border transition-[background-color,color,border-color,scale] duration-[140ms] ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] ${on ? 'border-pencil bg-pencil text-paper' : 'border-line bg-white text-ink [@media(hover:hover)]:hover:border-ink [@media(hover:hover)]:hover:bg-ink [@media(hover:hover)]:hover:text-paper'} ${className}`}>
+          {on ? <Check size={15} strokeWidth={2.4} aria-hidden /> : <Plus size={15} aria-hidden />}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top">{label}</TooltipContent>
+    </Tooltip>
+  )
+}
+
+/** Copy a taken thing as a prompt (features/library/prompt.ts), as a small hairline square: it ticks in pencil and a
+ *  note says where to paste it. Nothing is drawn for a thing words cannot carry. It sits above a card's covering button:
+ *  give it a position (`relative`, or `absolute` and a place). */
+export function CopyPromptSquare({ item, title, className = '' }: { item: CollectionItem; title: string; className?: string }) {
+  const [done, setDone] = useState(false)
+  const text = promptForItem(item)
+  if (!text) return null
+  const copy = async (e: React.MouseEvent) => {
+    e.preventDefault(); e.stopPropagation()
+    try { await navigator.clipboard.writeText(text) } catch { return toast('Could not copy — your browser blocked the clipboard.') }
+    setDone(true); setTimeout(() => setDone(false), 1600)
+    toast(`Copied “${title}” as a prompt`, { description: 'Paste it into Claude, Lovable, v0 or Cursor.' })
+  }
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button type="button" onClick={copy} aria-label={done ? 'Copied' : `Copy ${title} as a prompt`}
+          className={`z-20 grid size-8 place-items-center rounded-[3px] border border-line bg-white transition-[background-color,color,border-color,scale] duration-[140ms] ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] ${done ? 'text-pencil' : 'text-ink-2 [@media(hover:hover)]:hover:border-ink [@media(hover:hover)]:hover:text-ink'} ${className}`}>
+          {done ? <Check size={14} aria-hidden /> : <Copy size={14} aria-hidden />}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top">{done ? 'Copied' : 'Copy as a prompt'}</TooltipContent>
+    </Tooltip>
+  )
 }
 
 export function CollectButton({ item, label, quiet, className = '' }: { item: CollectionItem; label?: string; quiet?: boolean; className?: string }) {
@@ -141,12 +210,13 @@ export function useToBuild() {
   const router = useRouter()
   return () => {
     toast.dismiss() // browsing's notes stay behind with browsing
-    const c = readCollection()
-    router.push(c.name?.trim() && c.purpose ? '/studio/direction' : '/studio/you')
+    // Always the first step, filled with what is already known — never skipped to Direction because a name and a kind
+    // are remembered: after clearing the Collection the user landed on Direction without seeing You (2026-10-10).
+    router.push('/studio/you')
   }
 }
 /** Whether a site is being built from the Collection already (then the way on is "Continue building"). */
-export const isBuilding = (plan: KitPlan) => plan.via === 'studio' && plan.pages.length > 0
+export const isBuilding = (plan: StudioPlan) => plan.via === 'studio' && plan.pages.length > 0
 /** "Build my site" the first time, "Continue building" after. */
 export function useBuildLabel() {
   return isBuilding(usePlan()) ? 'Continue building' : 'Build my site'
@@ -157,7 +227,11 @@ export function useBuildLabel() {
 export function BuildButton() {
   const toBuild = useToBuild(), label = useBuildLabel(), path = usePathname()
   if (path.startsWith('/studio/')) return null
-  return <button type="button" onClick={toBuild} className="btn btn-ink btn-sm"><span className="max-sm:hidden">{label}</span><span className="sm:hidden">Build</span><ArrowRight size={14} aria-hidden /></button>
+  return (
+    <button type="button" onClick={toBuild} className="label flex items-center gap-2 bg-ink px-4 text-paper! transition-colors hover:bg-ink-2 active:[&>span]:scale-[0.97] md:px-6">
+      <span className="max-sm:hidden">{label}</span><span className="sm:hidden">Build</span><ArrowRight size={14} aria-hidden />
+    </button>
+  )
 }
 
 const OPEN = 'opuskit:open-collection'
@@ -168,11 +242,12 @@ const GROUPS: [string, (i: CollectionItem) => boolean][] = [
   ['Qualities', (i) => i.kind === 'like'],
   ['Parts', (i) => i.kind === 'section' || i.kind === 'hero' || i.kind === 'menu' || i.kind === 'footer'],
   ['Effects', (i) => i.kind === 'effect'],
+  ['Ideas', (i) => i.kind === 'idea'],
 ]
 
 /** The Collection — the cart (2026-10-05): in the site's header on every page, the last things collected and their
  *  count (a small bump when something goes in). Opened: everything in it, the quiet notes, remove — and the one way
- *  from browsing to building, **Build my site**, which starts Pages → Style → Recipe. */
+ *  from browsing to building, **Build my site**, which starts You → Direction → Recipe. */
 export function CollectionSheet() {
   const c = useCollection()
   const toBuild = useToBuild(), buildLabel = useBuildLabel()
@@ -186,7 +261,7 @@ export function CollectionSheet() {
   const remove = (i: CollectionItem) => { const before = readCollection(); updateCollection((x) => removeItem(x, itemKey(i))); toast(`Removed: ${itemName(i)}`, { action: { label: 'Undo', onClick: () => updateCollection(() => before) } }) }
   const clear = () => { const before = readCollection(); updateCollection((x) => ({ ...x, items: [] })); toast('Collection cleared', { action: { label: 'Undo', onClick: () => updateCollection(() => before) } }) }
   // What Build will make, in one line.
-  const summary = `${c.name?.trim() || 'Your site'}${c.purpose ? ` · ${purposes[c.purpose].name}` : ''} — made from ${n} ${n === 1 ? 'thing' : 'things'} you like`
+  const summary = `${c.name?.trim() || 'Your site'}${c.purpose ? ` · ${kindName(c.purpose)}` : ''} — made from ${n} ${n === 1 ? 'thing' : 'things'} you like`
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       {/* The pictures sit beside the button, not inside it: a drawn part holds buttons of its own, which can't nest. */}
@@ -358,16 +433,17 @@ function siteData(ref: SiteRef) {
 }
 
 /** The recording of the very thing taken, on the site it was taken from — if that site was recorded there. */
-function clipOf(i: CollectionItem): string | undefined {
+export function clipOf(i: CollectionItem): string | undefined {
   const ref = i.kind === 'site' || i.kind === 'like' ? i.site : i.from, e = ref && exampleOf(ref)
   if (!e) return undefined
   switch (i.kind) {
-    case 'like': return i.what === 'opening' ? e.clip : undefined
-    case 'hero': return e.clip
+    case 'like': return i.what === 'opening' ? e.sectionClips?.hero ?? e.clip : undefined
+    case 'hero': return e.sectionClips?.hero ?? e.clip
     case 'menu': return e.sectionClips?.navbar
     case 'footer': return e.sectionClips?.footer
     case 'section': return e.sectionClips?.[i.id]
     case 'effect': return e.pieceClips?.[i.id]
+    case 'idea': { const x = IDEA_BY_ID.get(i.id); return x && ideaClip(x) }
     default: return undefined
   }
 }
@@ -375,10 +451,26 @@ function clipOf(i: CollectionItem): string | undefined {
 /** One taken thing, drawn as it was taken: the site's recording of it where there is one, else drawn in that site's own
  *  look (its colours, lettering and the part's place on its page). The same picture in the take dialog, the Collection
  *  and the header, so what you took is what you see. */
+/** A still of the very part, on the site it came from (`sectionStills`) — the site itself where there is no clip of it. */
+function stillOf(i: CollectionItem): string | undefined {
+  const ref = i.kind === 'like' ? i.site : i.kind === 'site' ? undefined : i.from, e = ref && exampleOf(ref)
+  if (!e?.sectionStills) return undefined
+  switch (i.kind) {
+    case 'like': return i.what === 'opening' ? e.sectionStills.hero : undefined
+    case 'menu': return e.sectionStills.navbar
+    case 'footer': return e.sectionStills.footer
+    case 'section': return e.sectionStills[i.id]
+    default: return undefined
+  }
+}
+
 export function TakenPicture({ item, auto }: { item: CollectionItem; auto?: boolean }) {
   if (item.kind === 'site') return <SiteThumb site={item.site} auto={auto} />
   const clip = clipOf(item)
   if (clip) return <Clip src={clip} />
+  const still = stillOf(item)
+  // eslint-disable-next-line @next/next/no-img-element -- a captured still of the live site, already sized
+  if (still) return <img src={still} alt="" loading="lazy" className="pointer-events-none size-full object-cover object-top" />
   if (item.kind === 'like') return <TraitPicture what={item.what} site={item.site} />
   if (!item.from) return <div className="pointer-events-none size-full"><ItemPreview item={item} look={sampleLook(item)} /></div>
   const { look, recipe } = siteData(item.from as SiteRef)

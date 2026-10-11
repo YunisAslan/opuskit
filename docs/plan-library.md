@@ -55,7 +55,7 @@ DISCOVER → COLLECT → BRAND → COMPOSE → RECIPE → BUILD (zip)   [REVIEW 
 - Missing parts are not filled here, only mentioned softly ("a portfolio usually has a contact part — we'll add one").
 - **A whole site in the Collection** changes the page: "Start from this site → Compose" becomes the main action, and the
   other items show as additions on top of it.
-- Stored in the browser first, like the kit's plans (`src/lib/kit.ts`).
+- Stored in the browser first, like the kit's plans (`src/lib/plan.ts`).
 
 ### BRAND — between Collect and Compose
 - A short "About you": name and kind of site (carried over if picked in Discover); logo and photos optional — with
@@ -71,7 +71,7 @@ DISCOVER → COLLECT → BRAND → COMPOSE → RECIPE → BUILD (zip)   [REVIEW 
 - **The person:** per section only three actions — swap (other designs), remove, move. Effects come from the
   Collection; the engine places them.
 - The full kit opens from an "Edit in detail" link, for people who want more.
-- **Exists:** almost all of it, in the kit — `KitPlan`, `src/features/kit/plan.ts` (`start`, `swapOptions`,
+- **Exists:** almost all of it, in the kit — `StudioPlan`, `src/features/studio/plan.ts` (`start`, `swapOptions`,
   `replaceSection`, `piecesFor`), Pages → Other designs.
 
 ### RECIPE
@@ -99,7 +99,7 @@ longer on the way (still at `/kit`).
   with its chips under it — Kind of site, Feel — several can be on at once; no search (16 sites); four cards a row on wide screens. Name + one fact per card; + collects, the picture opens the site's page.
   `/library/sites/{example|seed}/{slug}`: a site's parts in its own look, each with +.
 - The Collection chip in Discover's steps bar opens the sheet (look and remove only): items grouped, quiet notes,
-  remove with undo. Discover's **Next** builds the pages (`planFromStudio`: rebuilt only when the Collection changed; `KitPlan.via =
+  remove with undo. Discover's **Next** builds the pages (`planFromStudio`: rebuilt only when the Collection changed; `StudioPlan.via =
   'studio'`). Toasts only when a rule speaks. `/studio` redirects to Pages.
 - `/studio/pages` — Pages: the site's name and one sentence as the page title (typed in place); "What are you making?"
   only when nothing says it; "Start from" when several sites were collected. A start site's pages, else the kind of
@@ -322,7 +322,7 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     check.ts asserts all four for every seed.
 27. **Start blank** (2026-10-06): besides starting from collected sites, anyone can start from nothing. "Or start
     blank" sits in the Library's opening line and on the "Collect something first" screen: pick the kind of site, and
-    building opens on Brand with that kind's own pages (`startBlank`; `KitPlan.blank`). The Collection is left as it
+    building opens on Brand with that kind's own pages (`startBlank`; `StudioPlan.blank`). The Collection is left as it
     is — what is in it now is not added, what is collected later joins as usual — and no collected site is the start
     (Brand's colours, lettering and photo come from the kind of site's look). It makes a new recipe; Undo goes back.
 28. **The look is picked in Brand** (2026-10-06). The look (Japanese Minimal, Organic Modern…) still shapes most of a
@@ -615,6 +615,51 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     an event's Featured Work is its programme strands, never a still from a real film). (4) The builder filled the
     programme with real films and famous directors: the copy rules now say invented content is invented outright —
     never a real film, book, record, artwork, artist, brand or famous person. check.ts for each.
+56. **A build checks itself with a detector** (2026-10-10, the user sent impeccable.style — Paul Bakaus's design
+    toolkit for agents, github.com/pbakaus/impeccable, Apache-2.0). Its deterministic detector (59 checks, no model)
+    run in a real browser over our 25 live sites found what our reviews missed — Low Hum's 1.4:1 text, Sticky
+    Weather's 1.6:1, Kelp Line's grey-on-green muted text, Brasshand's headline naming Baku — with almost no noise;
+    on static files it is mostly noise (2,526 findings, most of them flush divider lists). So: Claude Code and Cursor
+    packages run `npx -y impeccable@4.5.2 detect` on every running page as part of verification (`DETECTOR_QA`), with
+    a `.impeccable/config.json` that switches off only what the owner's picks earn back — an italic display face, a
+    taken Endless row, a listed font (`detectorConfig`, check.ts). Nothing of impeccable ships; its ideas went into
+    our own words: five more generic tells (eyebrow over the hero headline, side stripes and cards in cards, ghost
+    cards and glows, fake-live dots, manufactured cadences), more words to avoid, and headings that never skip a
+    level. Not taken: its DESIGN.md (our tokens.css and recipe already lock the system), its taste where it fights a
+    look (italic serifs, kickers in an article). Five library faces are on its overused lists (Mona Sans,
+    Cormorant, Newsreader, IBM Plex Sans, Roboto Flex); they stay (the user set it aside).
+57. **Every colour pair the tokens ship passes AA** (2026-10-10, the user: fix contrast — the most repeated second-round
+    fix: "readable first screen", "visible focus"; the detector found 1.4–4.1:1 text on four live sites). Measured over
+    42 palettes and the three chapter sets: a chapter section's muted text failed on 30 palettes (a fixed 72% mix),
+    rotation chapter text in 87 combinations, accent-chapter text on 9, inverse muted on 3, Arcade's button labels
+    (2.9:1). Now computed, not mixed: `readableOn` (the palette's ink or ground when it reads, else black or white) and
+    `mutedOn` (the text softened toward the ground only as far as 4.5:1 holds) in `lib/color.ts`; tokens.css ships
+    `--inv-muted`, `--chap-muted`, `--color-on-primary` and `--color-chapter-N-text`, the ready sections' primary
+    buttons and the chapter pieces read them, OpusKit's previews too (`TokenScope`). check.ts asserts every pair on
+    every palette and chapter colour: text, muted on surface, text on secondary, the button label, inverse and chapter
+    text and muted.
+
+58. **One design, one card, a name that earns it** (2026-10-10, the user: the Library repeats itself, "Just one thing"
+    and "Effects" are not real groups, Movement says nothing; show only what is worth adding to a Collection, under a
+    title that does it justice; many sites will be sent to mine for new things). Measured: 293 cards over 25 sites,
+    118 distinct designs (Signature columns footer ×14, Gallery ×14, Movement 25 cards for 4 values). Now a catalog,
+    `src/data/takeables.ts`: one entry per design (`hero:` `nav:` `footer:` `section:id[/variant]` `effect:`) with a
+    group — Sections, Moments (what happens on the page), Touches (what answers the hand) — a category inside it, a
+    specific name ("Big name footer", "Floating pill menu", "Film that plays as you scroll") and `bestOn`, the one site
+    that shows it. The site's + shows Style (whole look; its colours and lettering only where no earlier site shows the
+    same), then only the designs the catalog puts on it. The test is "is it a real choice?", not "is it plain": every
+    menu (8), footer (5) and first screen (11) stays; parts whose versions are not worth choosing between (testimonials,
+    FAQ) never show (`SIGNATURE_PARTS`). Movement is gone (it comes with the look). Collection and recipe names read
+    the catalog too (`itemName`, `takenName`). check.ts: every design on the shelf has an entry, its `bestOn` has it,
+    names unique and never a bare category word. The Library itself has four views — Sites, Sections, Moments,
+    Touches (no Style view: colours and lettering come with a site; `catalogOf` in `library/SiteTake.tsx`): every
+    design once, as its `bestOn` site has it, a category filter, the + takes it. Opened: the design large, then its
+    alternatives — other designs of the same thing (another menu, another way to show work, another link hover), never
+    the same design recoloured on another site (the user) — then the sites it is used on, shown as the sites themselves
+    (their recording or screen), not their names. A one-of effect (a link hover, a main button, a page change, a
+    headline entrance — `behaviours` with `many: false`) keeps its own card, its modal shows the other ones ("Or another link hover — a site has one"), and
+    taking one puts back the one taken before (`toggleItem`, a toast with Undo) — the Collection never holds two. The view is kept in the address (`#sections`). Next
+    (later): real previews — captures, clips, live components.
 
 ## 5. Open
 

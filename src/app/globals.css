@@ -304,9 +304,9 @@ a:hover > svg.lucide-arrow-left { transform: translateX(-3px); }
 
 /* Section tones (src/lib/frame.ts TONE_CSS — kept identical, checked by check.ts) */
 [data-tone="surface"]{background:var(--color-surface)}
-[data-tone="inverse"]{--color-background:var(--inv-bg);--color-text:var(--inv-text);--color-primary:var(--inv-text);--color-accent:var(--inv-accent)}
-[data-tone="chapter"]{--color-background:var(--chap-bg);--color-text:var(--chap-text);--color-primary:var(--chap-text);--color-accent:var(--chap-text)}
-[data-tone="inverse"],[data-tone="chapter"]{--color-muted:color-mix(in oklab,var(--color-text) 72%,var(--color-background));--color-surface:color-mix(in oklab,var(--color-text) 7%,var(--color-background));--color-secondary:color-mix(in oklab,var(--color-text) 14%,var(--color-background));--color-border:color-mix(in oklab,var(--color-text) 24%,var(--color-background));background:var(--color-background);color:var(--color-text)}
+[data-tone="inverse"]{--color-background:var(--inv-bg);--color-text:var(--inv-text);--color-primary:var(--inv-text);--color-accent:var(--inv-accent);--color-muted:var(--inv-muted);--color-on-primary:var(--inv-bg)}
+[data-tone="chapter"]{--color-background:var(--chap-bg);--color-text:var(--chap-text);--color-primary:var(--chap-text);--color-accent:var(--chap-text);--color-muted:var(--chap-muted);--color-on-primary:var(--chap-bg)}
+[data-tone="inverse"],[data-tone="chapter"]{--color-surface:color-mix(in oklab,var(--color-text) 7%,var(--color-background));--color-secondary:color-mix(in oklab,var(--color-text) 14%,var(--color-background));--color-border:color-mix(in oklab,var(--color-text) 24%,var(--color-background));background:var(--color-background);color:var(--color-text)}
 
 /* Landing: the showcase's progress line. */
 @keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }

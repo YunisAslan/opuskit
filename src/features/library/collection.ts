@@ -1,5 +1,5 @@
 // The Library's Collection (docs/plan-library.md): whatever the person took off the shelves — sites, parts, effects —
-// free, in any mix. Rules never block here; they only speak up as quiet notes. `collectionToPlan` turns it into a kit
+// free, in any mix. Rules never block here; they only speak up as quiet notes. `collectionToPlan` turns it into a studio
 // plan (Compose): a site in it is the start, every part and effect lands where it fits, the engine fills the rest.
 // Pure (no storage, no React), so check.ts tests it.
 
@@ -11,12 +11,14 @@ import { MAX_HEAVY_PIECES, behaviourOf, behaviours, pieces } from '@/data/pieces
 import { recipeSeeds, seedBySlug } from '@/data/recipes'
 import { sectionVariants } from '@/data/section-variants'
 import { goals, purposes } from '@/data/taxonomy'
-import { CLOSING, EMPTY_PLAN, addSuggested, moveSection, effectOn, onChrome, pageSuggestions, piecesFor, replaceSection, sectionGroups, setBehaviour, setHero, setSectionVariant, setStyle, specToPlan, start, toggleSitePiece, togglePiece } from '@/features/kit/plan'
-import { composeRecipe, isValidSpec, specFromSeed } from '@/features/recipes/engine'
+import { CLOSING, EMPTY_PLAN, addSuggested, moveSection, effectOn, onChrome, pageSuggestions, piecesFor, replaceSection, sectionGroups, setBehaviour, setHero, setSectionVariant, setStyle, specToPlan, start, toggleSitePiece, togglePiece } from '@/features/studio/plan'
+import { composeRecipe, isValidSpec, resolveHero, specFromSeed } from '@/features/recipes/engine'
+import { TAKEABLES, TAKE_BY_KEY } from '@/data/takeables'
+import { IDEA_BY_ID, SITE_IDEAS } from '@/data/site-ideas'
 import { TRAITS, TRAIT_IDS, starterFrom, type Trait } from './inspire'
-import type { TakenPart, GoalId, DirectionId, FooterStyleId, HeroId, KitPlan, NavStyleId, PageTypeId, PieceId, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
+import type { TakenPart, GoalId, DirectionId, FooterStyleId, HeroId, StudioPlan, NavStyleId, PageTypeId, PieceId, PlanSection, PurposeId, RecipeSpec, SectionId } from '@/types/domain'
 
-/** A site is `example:{slug}` (built, real) or `seed:{slug}` (a recipe drawn by the engine) — the kit's own `from` ids. */
+/** A site is `example:{slug}` (built, real) or `seed:{slug}` (a recipe drawn by the engine) — the studio's own `from` ids. */
 export type SiteRef = `example:${string}` | `seed:${string}`
 export type CollectionItem =
   | { kind: 'site'; site: SiteRef }
@@ -25,6 +27,8 @@ export type CollectionItem =
   | { kind: 'menu'; id: NavStyleId; from?: SiteRef }
   | { kind: 'footer'; id: FooterStyleId; from?: SiteRef }
   | { kind: 'effect'; id: PieceId; from?: SiteRef }
+  /** A site's own invention (src/data/site-ideas.ts), taken as an idea to make again. */
+  | { kind: 'idea'; id: string; from?: SiteRef }
   /** One quality of a site (decision 35): its colours, lettering, first screen or movement — not the site. */
   | { kind: 'like'; what: Trait; site: SiteRef }
 
@@ -44,8 +48,19 @@ export const itemKey = (i: CollectionItem) => (i.kind === 'site' ? `site:${i.sit
 /** What Direction composes from: when it is unchanged, the plan made from it (or opened into it) is kept as it is. */
 export const collectionSig = (c: Collection) => JSON.stringify([c.items.map(itemKey), c.purpose, c.about])
 export const hasItem = (c: Collection, i: CollectionItem) => c.items.some((x) => itemKey(x) === itemKey(i))
-export const toggleItem = (c: Collection, i: CollectionItem): Collection =>
-  hasItem(c, i) ? { ...c, items: c.items.filter((x) => itemKey(x) !== itemKey(i)) } : { ...c, items: [...c.items, i] }
+/** The other effects a site can only have instead of this one (one link hover, one main button, one page change, one
+ *  headline entrance — `behaviours` with `many: false`); none for an effect that sits beside others. */
+export function alternativesOf(id: PieceId): PieceId[] {
+  const b = behaviourOf(id)
+  return b && !behaviours[b].many ? behaviours[b].ids.filter((x) => x !== id) : []
+}
+/** Takes an item or puts it back. Taking an effect puts back the alternatives already taken: a site has one link hover,
+ *  so the Collection never holds two (the user, 2026-10-10 — cards stay apart, the take keeps the rule). */
+export const toggleItem = (c: Collection, i: CollectionItem): Collection => {
+  if (hasItem(c, i)) return { ...c, items: c.items.filter((x) => itemKey(x) !== itemKey(i)) }
+  const instead = i.kind === 'effect' ? new Set(alternativesOf(i.id)) : new Set<PieceId>()
+  return { ...c, items: [...c.items.filter((x) => !(x.kind === 'effect' && instead.has(x.id))), i] }
+}
 export const removeItem = (c: Collection, key: string): Collection => ({ ...c, items: c.items.filter((x) => itemKey(x) !== key) })
 
 // ─── Sites ──────────────────────────────────────────────────────────────────
@@ -59,7 +74,8 @@ export function siteSpec(ref: SiteRef): RecipeSpec | undefined {
 }
 export function siteName(ref: SiteRef): string {
   const [kind, slug] = ref.split(':')
-  return (kind === 'example' ? examples.find((e) => e.slug === slug)?.title.split(/ [—|:] |, |: /)[0] : seedBySlug[slug]?.title) ?? slug
+  // A site no longer on the shelf (an example removed since a recipe took from it) is named from its slug: Lowfield Nights.
+  return (kind === 'example' ? examples.find((e) => e.slug === slug)?.title.split(/ [—|:] |, |: /)[0] : seedBySlug[slug]?.title) ?? slug.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ')
 }
 /** Every site on the shelf: the built ones first (proof), then the recipes. */
 export const allSites: SiteRef[] = [
@@ -73,13 +89,45 @@ export const sitesWith = (id: SectionId): SiteRef[] => allSites.filter((r) => r.
 
 // ─── Names, for cards, notes and the Collection page ────────────────────────
 
+/** The catalog key of a taken thing (src/data/takeables.ts) — what design it is, whichever site it came from. */
+export function takeKeyOf(i: CollectionItem): string | undefined {
+  switch (i.kind) {
+    case 'section': return `section:${i.id}${i.variant ? `/${i.variant}` : ''}`
+    case 'menu': return `nav:${i.id}`
+    case 'footer': return `footer:${i.id}`
+    case 'effect': return `effect:${i.id}`
+    case 'idea': return `idea:${i.id}`
+    case 'like': { const spec = i.what === 'opening' ? siteSpec(i.site) : undefined; return spec && `hero:${resolveHero(spec).id}` }
+    default: return undefined
+  }
+}
+
+/** Every design a site has to take, as catalog keys with the item that takes it: its first screen, menu, the parts that
+ *  carry its design (decision 52), footer and effects. Which of them its own page shows is the catalog's `bestOn`. */
+export function designsOf(ref: SiteRef): { key: string; item: CollectionItem }[] {
+  const spec = siteSpec(ref)
+  if (!spec) return []
+  const r = composeRecipe(spec), out = new Map<string, CollectionItem>()
+  const add = (item: CollectionItem) => { const k = takeKeyOf(item); if (k && !out.has(k)) out.set(k, item) }
+  add({ kind: 'like', what: 'opening', site: ref })
+  add({ kind: 'menu', id: r.chrome.nav.id, from: ref })
+  for (const p of r.pages) for (const x of p.sections) if (SIGNATURE_PARTS.has(x.id as SectionId)) add({ kind: 'section', id: x.id as SectionId, ...(x.variant ? { variant: x.variant.id } : {}), from: ref })
+  add({ kind: 'footer', id: r.chrome.footerStyle.id, from: ref })
+  for (const p of r.pieces) add({ kind: 'effect', id: p.id, from: ref })
+  for (const x of SITE_IDEAS) if (`example:${x.site}` === ref) add({ kind: 'idea', id: x.id, from: ref })
+  return [...out].map(([key, item]) => ({ key, item }))
+}
+
 export function itemName(i: CollectionItem): string {
+  const named = TAKE_BY_KEY.get(takeKeyOf(i) ?? '')
+  if (named) return `${named.name} · ${siteName(i.kind === 'like' ? i.site : 'from' in i && i.from ? i.from : ('' as SiteRef))}`.replace(/ · $/, '')
   switch (i.kind) {
     case 'site': return siteName(i.site)
     case 'section': { const v = i.variant && sectionVariants[i.id]?.options.find((o) => o.id === i.variant); return `${v ? `${sections[i.id].name} · ${v.name}` : sections[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}` }
     case 'hero': return EFFECTS.find((e) => e.hero === i.id)?.name ?? i.id
     case 'menu': return `Navigation · ${navStyles[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}`
     case 'footer': return `Footer · ${footerStyles[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}`
+    case 'idea': return `${IDEA_BY_ID.get(i.id)?.name ?? i.id}${i.from ? ` · ${siteName(i.from)}` : ''}`
     case 'effect': return `${pieces[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}`
     case 'like': return `${TRAITS[i.what].name} · ${siteName(i.site)}`
   }
@@ -97,6 +145,11 @@ export const takenOf = (items: CollectionItem[]): TakenPart[] => items.flatMap((
 
 /** One pick in words: "whole look", "colours", "Menu", "Words that arrive". */
 export function takenName(t: TakenPart): string {
+  // The catalog's name when the pick is one design (a section taken without its variant takes its first design's name).
+  const opening = t.kind === 'like' && t.id === 'opening' ? siteSpec(t.site as SiteRef) : undefined
+  const key = opening ? `hero:${resolveHero(opening).id}` : t.kind === 'menu' ? `nav:${t.id}` : t.kind === 'footer' || t.kind === 'effect' || t.kind === 'section' || t.kind === 'idea' ? `${t.kind}:${t.id}` : undefined
+  const named = key && (TAKE_BY_KEY.get(key) ?? TAKEABLES.find((x) => x.key.startsWith(`${key}/`)))
+  if (named) return named.name
   switch (t.kind) {
     case 'site': return 'whole look'
     case 'like': return TRAITS[t.id as Trait]?.name.toLowerCase() ?? t.id
@@ -169,7 +222,7 @@ const LOOK_FOR: Partial<Record<PurposeId, DirectionId>> = {
 export const lookFor = (purpose?: PurposeId): DirectionId | undefined => (purpose ? LOOK_FOR[purpose] : undefined)
 
 /** The plan the shelves are drawn in: the start site's look, else the kind of site's, so every card shows what you'd get. */
-export function previewPlan(c: Collection): KitPlan {
+export function previewPlan(c: Collection): StudioPlan {
   const s = startSite(c), spec = s && siteSpec(s)
   if (spec) return { ...specToPlan(spec), name: c.name }
   const d = lookFor(c.purpose)
@@ -187,7 +240,7 @@ const NOT_SWAPPED = new Set<SectionId>(['contact-cta', 'cta-band', 'donate']) //
 export const SIGNATURE_PARTS = new Set<SectionId>(['featured-work', 'case-study', 'gallery', 'lookbook', 'collection', 'product-highlight', 'product-grid', 'manifesto', 'editorial-story', 'timeline', 'chapters', 'menu', 'schedule', 'listen'])
 const jobIds = (id: SectionId) => sectionGroups.find((g) => g.ids.includes(id))?.ids ?? [id]
 
-export type Composed = { plan: KitPlan; picked: number; unplaced: PieceId[] }
+export type Composed = { plan: StudioPlan; picked: number; unplaced: PieceId[] }
 
 // ─── Many sites, one site: blend them, or let one page follow one site ─────
 
@@ -208,7 +261,7 @@ const newKey = () => Math.random().toString(36).slice(2, 10)
 const sameJob = (a: SectionId, b: SectionId) => a === b || (!NOT_SWAPPED.has(a) && !NOT_SWAPPED.has(b) && jobIds(a).includes(b))
 
 /** One page follows one site: its parts become that site's page's parts, in their designs. */
-export function pageLike(plan: KitPlan, pageId: string, ref: SiteRef): KitPlan {
+export function pageLike(plan: StudioPlan, pageId: string, ref: SiteRef): StudioPlan {
   const page = plan.pages.find((p) => p.id === pageId), sp = page && pageLikeOf(ref, page.type)
   if (!sp) return plan
   return { ...plan, pages: plan.pages.map((p) => (p.id !== pageId ? p : { ...p, sections: sp.parts.map((x) => ({ key: newKey(), id: x.id, pieces: [], ...(x.variant ? { variant: x.variant } : {}), from: ref })) })) }
@@ -217,7 +270,7 @@ export function pageLike(plan: KitPlan, pageId: string, ref: SiteRef): KitPlan {
 /** A page made of all the collected sites: each of its parts is taken, in its design, from a site whose page of this
  *  kind has a part doing the same job — spread so every site gives something (the one that has given least goes first,
  *  then the order they were collected in). A part no site has stays the engine's. */
-export function blendPage(plan: KitPlan, pageId: string, sites: SiteRef[]): KitPlan {
+export function blendPage(plan: StudioPlan, pageId: string, sites: SiteRef[]): StudioPlan {
   const page = plan.pages.find((p) => p.id === pageId)
   if (!page || !sites.length) return plan
   const given = new Map<SiteRef, number>(sites.map((r) => [r, 0]))
@@ -244,7 +297,7 @@ export function blendPage(plan: KitPlan, pageId: string, sites: SiteRef[]): KitP
   return { ...plan, pages: plan.pages.map((p) => (p.id === pageId ? { ...p, sections: parts } : p)) }
 }
 
-/** Builds the kit plan from the Collection. One site: its own pages. Several: the kind of site's pages, each a blend of
+/** Builds the studio plan from the Collection. One site: its own pages. Several: the kind of site's pages, each a blend of
  *  them — or, where the person said "Home like Sela Mor", that site's page. The look (until Brand) comes from the first
  *  site. Then every collected part and effect where it fits; a part replaces the same job's part on its page (never one
  *  the person collected), else joins the page. The goal is never asked: it is read from the parts (`inferGoal`). */
@@ -252,7 +305,7 @@ export function collectionToPlan(c: Collection): Composed {
   const sites = lookChoices(c), first = startSite(c), firstSpec = first && siteSpec(first)
   const kinds = sites.map((r) => siteSpec(r)!.purpose)
   const purpose = c.purpose ?? [...kinds].sort((a, b) => kinds.filter((k) => k === b).length - kinds.filter((k) => k === a).length)[0]
-  let plan: KitPlan = firstSpec ? { ...specToPlan(firstSpec), fromId: undefined } : lookFor(purpose) ? setStyle(EMPTY_PLAN, 'direction', lookFor(purpose)) : EMPTY_PLAN
+  let plan: StudioPlan = firstSpec ? { ...specToPlan(firstSpec), fromId: undefined } : lookFor(purpose) ? setStyle(EMPTY_PLAN, 'direction', lookFor(purpose)) : EMPTY_PLAN
   const own = sites.length === 1 && firstSpec?.purpose === purpose
   if (own) plan = { ...plan, pages: plan.pages.map((p) => ({ ...p, sections: p.sections.map((x) => ({ ...x, from: first })) })) }
   else plan = start(plan, purpose ?? null, starterFrom(purpose, c.about))
@@ -270,7 +323,7 @@ export function collectionToPlan(c: Collection): Composed {
  *  arranged is touched). A first screen, menu or footer: the first one collected is used. A moment goes on the first
  *  part that can carry it; the ones no part can carry come back as `unplaced`. Sites are skipped: their parts wait in
  *  the Collection panel on Pages. */
-export function applyItems(plan: KitPlan, items: CollectionItem[], replace: boolean): { plan: KitPlan; unplaced: PieceId[]; added: string[] } {
+export function applyItems(plan: StudioPlan, items: CollectionItem[], replace: boolean): { plan: StudioPlan; unplaced: PieceId[]; added: string[] } {
   const collected = new Set<string>() // section instance keys that came from the Collection
   const unplaced: PieceId[] = [], added: string[] = []
   const once = new Set<string>()
@@ -312,6 +365,8 @@ export function applyItems(plan: KitPlan, items: CollectionItem[], replace: bool
       if (k) { collected.add(k); added.push(k); if (i.variant) plan = setSectionVariant(plan, page.id, k, i.variant) }
       continue
     }
+    // A site's idea changes no page: it rides in `taken`, and the package asks for it with its code as a reference.
+    if (i.kind === 'idea') continue
     // Effects: a behaviour or a whole-site extra is site-wide; a moment goes on the first part that can carry it.
     const id = i.id, b = behaviourOf(id)
     if (b && !behaviours[b].many) { plan = setBehaviour(plan, b, id); continue }
@@ -337,7 +392,7 @@ export function applyItems(plan: KitPlan, items: CollectionItem[], replace: bool
 
 /** Where the Collection went: what is on the pages, and what waits (a second site, a moment no part can carry, a part
  *  the owner removed). Pages says so, so nothing collected disappears without a word. */
-export function placement(plan: KitPlan, c: Collection): { placed: CollectionItem[]; waiting: CollectionItem[] } {
+export function placement(plan: StudioPlan, c: Collection): { placed: CollectionItem[]; waiting: CollectionItem[] } {
   const start = startSite(c), parts = plan.pages.flatMap((p) => p.sections)
   const on = (i: CollectionItem) => {
     switch (i.kind) {
@@ -372,6 +427,7 @@ export function cleanCollection(x: unknown): Collection {
     if (r.kind === 'menu' && Object.hasOwn(navStyles, id)) return [{ kind: 'menu', id: id as NavStyleId, ...from(r.from) }]
     if (r.kind === 'footer' && Object.hasOwn(footerStyles, id)) return [{ kind: 'footer', id: id as FooterStyleId, ...from(r.from) }]
     if (r.kind === 'effect' && Object.hasOwn(pieces, id)) return [{ kind: 'effect', id: id as PieceId, ...from(r.from) }]
+    if (r.kind === 'idea' && IDEA_BY_ID.has(id)) return [{ kind: 'idea', id, ...from(r.from) }]
     return []
   })
   const unique = items.filter((i, n) => items.findIndex((y) => itemKey(y) === itemKey(i)) === n)
