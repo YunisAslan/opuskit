@@ -647,6 +647,20 @@ export const signaturePatterns: SignaturePattern[] = [
     piece: 'pinned-stage',
   },
   {
+    id: 'window-opens', piece: 'mask-reveal', name: 'A window that opens onto the picture', sections: ['hero', 'intro', 'editorial-story', 'location'],
+    levels: ['dynamic', 'immersive'], fits: ['hotel', 'hospitality', 'real-estate', 'luxury', 'restaurant', 'heritage', 'cinematic', 'coastal', 'architecture', 'fashion'],
+    experience: 'The page opens on its own colour and name, with a small shaped window in the middle — an arch, a circle — showing the place; scrolling opens the window until the visitor is standing in the picture, the words around it drawing aside.',
+    implementation: 'The ready MaskReveal piece (src/components/pieces/MaskReveal.tsx): the section holds while the window’s clip-path opens to the full screen and the picture settles from 1.25 to 1, the side words drawing apart (GSAP ScrollTrigger pin + scrub). The shape comes from the brand — an arch for a building, a circle for a plate or a lens.',
+    mobile: 'The same, a shorter hold.', reducedMotion: 'The picture full width under the name.',
+  },
+  {
+    id: 'letters-gather', piece: 'letters-assemble', name: 'Letters that gather into a sentence', sections: ['manifesto', 'intro', 'contact-cta'],
+    levels: ['dynamic', 'immersive'], fits: ['agency', 'studio', 'experimental', 'typography', 'type', 'bold', 'experiment', 'playful', 'digital', 'portfolio'],
+    experience: 'The page’s one important sentence is not shown but assembled: its letters drift in from all over as it rises into view and lock into words just as it reaches the middle.',
+    implementation: 'The ready LettersAssemble piece (src/components/pieces/LettersAssemble.tsx): each letter starts at a fixed scattered offset, turned and faint, and a GSAP ScrollTrigger scrub brings them home between the line entering and reaching the middle of the screen.',
+    mobile: 'Same, with a smaller spread.', reducedMotion: 'The sentence shown in place.',
+  },
+  {
     id: 'picture-becomes-page', piece: 'photo-morph', name: 'A picture that becomes the next page', sections: ['featured-work', 'collection', 'product-grid', 'journal'],
     levels: ['subtle', 'dynamic', 'immersive'], fits: ['portfolio', 'studio', 'agency', 'fashion', 'ecommerce', 'editorial', 'cinematic', 'photography', 'minimal', 'luxury'],
     experience: 'Opening a project or a product is one movement: the thumbnail that was clicked grows into the large picture at the top of its page, and Back shrinks it home — the visitor never loses the thing they chose.',

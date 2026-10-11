@@ -11,6 +11,8 @@ import { ChapterColours } from '@/pieces/ChapterColours'
 import { ScrollProgress } from '@/pieces/ScrollProgress'
 import { ScrollStory } from '@/pieces/ScrollStory'
 import { SideScroll } from '@/pieces/SideScroll'
+import { MaskReveal } from '@/pieces/MaskReveal'
+import { LettersAssemble } from '@/pieces/LettersAssemble'
 import { TiltedGrid } from '@/pieces/TiltedGrid'
 import type { PieceId } from '@/types/domain'
 
@@ -38,6 +40,8 @@ const SCROLLED: Partial<Record<PieceId, () => React.ReactNode>> = {
       <div data-target><SideScroll label="Work">{PHOTOS.slice(0, 8).map((p) => <img key={p.src} src={p.src} alt="" className="h-[60vh] w-auto" />)}</SideScroll></div>
       <div className="h-[15vh]" /></>
   ),
+  'mask-reveal': () => <><Text n={1} /><div data-target><MaskReveal src={PHOTOS[2].src} alt="" left="Costa" right="del Sol"><h2 className="text-6xl">Era House</h2></MaskReveal></div><Text n={2} /></>,
+  'letters-assemble': () => <><Text n={2} /><div data-target className="py-[30vh]"><LettersAssemble as="h2" className="mx-auto max-w-4xl px-6 text-center text-7xl">A good identity still works on a paper bag.</LettersAssemble></div><Text n={2} /></>,
   'scroll-story': () => (
     <><Text n={1} />
       <div data-target className="mx-auto max-w-5xl px-6"><ScrollStory chapters={STORY.map(([title, k]) => ({ src: PHOTOS[k].src, alt: '', body: <><h3 className="text-5xl">{title}</h3><p className="mt-4 text-lg text-(--color-muted)">Every job starts with a walk round the place it is for, and ends when the owner stops noticing it.</p></> }))} /></div>

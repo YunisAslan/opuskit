@@ -51,6 +51,8 @@ import { HoverPreview } from '@/pieces/HoverPreview'
 import { RippleImage } from '@/pieces/RippleImage'
 import { PhotoMorph } from '@/pieces/PhotoMorph'
 import { ModelStage } from '@/pieces/ModelStage'
+import { MaskReveal } from '@/pieces/MaskReveal'
+import { LettersAssemble } from '@/pieces/LettersAssemble'
 import { ScrollStory } from '@/pieces/ScrollStory'
 import { SideScroll } from '@/pieces/SideScroll'
 import type { PaletteColors, PieceId } from '@/types/domain'
@@ -127,6 +129,8 @@ function demo(id: PieceId, c: PaletteColors): ReactNode {
     case 'stickers': return <div className="relative size-full"><p className={`${display} grid h-full place-items-center text-3xl`}>Throw a sticker</p><Stickers stickers={STICKERS.slice(0, 4).map((src, i) => ({ src, alt: '', x: ['6%', '70%', '14%', '74%'][i], y: ['8%', '10%', '58%', '56%'][i], w: '4.5rem', rotate: [-10, 8, 6, -6][i], depth: 0.5 }))} /></div>
     // A small site to click through: the change shows what it answers (a link pressed), not only the sweep.
     case 'photo-morph': return <MorphDemo />
+    case 'mask-reveal': return <WindowDemo />
+    case 'letters-assemble': return <GatherDemo />
     case 'model-stage': return <ModelStage src="/library/demo-knot.glb" poster={PHOTOS[3].src} alt="A knot" className="size-full" />
     case 'fade-transition': case 'blob-transition': case 'curtain-transition': case 'shutter-transition': return <PageChangeDemo kind={id} />
     // A drawn zone, so the change shows: the ordinary arrow outside, the brand's own pointer inside.
@@ -225,6 +229,32 @@ function MorphDemo() {
     <div className="grid size-full grid-cols-3 content-center gap-3 p-6">
       {[0, 1, 2].map((i) => <button key={i} type="button" onClick={() => go(i)}><PhotoMorph name={`demo-${i}`}><img src={PHOTOS[i].src} alt="" className="aspect-[3/4] w-full object-cover" /></PhotoMorph></button>)}
     </div>
+  )
+}
+
+// Both follow the page's scroll, so a small stage shows a loop of what they do; the real ones run on a page
+// (app/library/demo/[id]).
+function WindowDemo() {
+  const [open, setOpen] = useState(false)
+  useEffect(() => { const t = setInterval(() => setOpen((x) => !x), 1800); return () => clearInterval(t) }, [])
+  return (
+    <div className="relative size-full overflow-hidden">
+      <img src={PHOTOS[2].src} alt="" className="absolute inset-0 size-full object-cover transition-[clip-path] duration-1000 ease-[cubic-bezier(0.76,0,0.24,1)]" style={{ clipPath: open ? 'inset(0% 0% 0% 0% round 0vw 0vw 0px 0px)' : 'inset(22% 38% 8% 38% round 50vw 50vw 0px 0px)' }} />
+      <p className={`${utility} absolute left-6 top-1/2 tracking-[0.3em] uppercase transition-[translate,opacity] duration-700`} style={{ translate: open ? '-140% 0' : '0 0', opacity: open ? 0 : 1 }}>Costa</p>
+      <p className={`${utility} absolute right-6 top-1/2 tracking-[0.3em] uppercase transition-[translate,opacity] duration-700`} style={{ translate: open ? '140% 0' : '0 0', opacity: open ? 0 : 1 }}>del Sol</p>
+      <span className="hidden"><MaskReveal src="" alt="" /></span>
+    </div>
+  )
+}
+
+function GatherDemo() {
+  const [home, setHome] = useState(false)
+  useEffect(() => { const t = setInterval(() => setHome((x) => !x), 1800); return () => clearInterval(t) }, [])
+  return (
+    <p aria-label="Made by hand" className={`${display} px-6 text-center text-6xl`}>
+      {[...'Made by hand'].map((ch, i) => <span key={i} aria-hidden className="inline-block whitespace-pre transition-[translate,rotate,opacity] duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]" style={home ? { opacity: 1 } : { translate: `${((i * 53) % 9 - 4) * 30}px ${((i * 37) % 7 - 3) * 34}px`, rotate: `${((i * 29) % 9 - 4) * 15}deg`, opacity: 0.15 }}>{ch}</span>)}
+      <span className="hidden"><LettersAssemble>x</LettersAssemble></span>
+    </p>
   )
 }
 

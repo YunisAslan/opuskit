@@ -79,6 +79,9 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 - **Awwwards part 2, typography** (2026-10-11): `02-typography.md`. Winners: grotesks, mono labels on 29%, serif as
   accent. The user loosened the mono rule (up to 4 pairings, each its own mono; uppercase still one). New pairings
   Studio Mono, Lab Notes, Spline Edition.
+- **Awwwards part 3, transitions and scroll** (2026-10-11): `03-motion.md` — 49 winners measured in a browser (clip-path
+  73%, WebGL 71%, Lenis 63%, split lettering 43%). New pieces `mask-reveal` (moment `window-opens`) and
+  `letters-assemble` (moment `letters-gather`). Open for the user: smooth scroll as the default for dynamic/immersive.
 - **Growing the ingredients** (2026-10-11, the user: more components, sections and variety for better sites), batch by
   batch from what winners do that OpusKit had only in words. Batch 1 — three pieces: `side-scroll` (a sideways wall,
   GSAP pin + scrub; now the piece of the Sideways strip photo layout and the sideways-gallery moment, so Pip & Kiln and

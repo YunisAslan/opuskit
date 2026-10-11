@@ -391,6 +391,19 @@ export const pieces: Record<PieceId, Piece> = {
     usage: '<ModelStage src="/media/model.glb" poster="/media/model-poster.jpg" alt="The kettle, in brushed steel" className="h-svh">\n  <h1 className="…">…</h1>\n</ModelStage>',
     rules: ['The owner’s real object as a .glb under 3 MB, and a rendered still of it as the poster.', 'Words sit over it as HTML, beside the object, never on it.', 'Once on the site — the first screen or the product’s own page.'],
   },
+  // Awwwards part 3 (docs/research/awwwards/03-motion.md): seen on the winners, not yet in OpusKit.
+  'mask-reveal': {
+    id: 'mask-reveal', name: 'A window that opens onto the picture', line: 'A small arch, circle or frame in the page’s colour opens as you scroll until the picture fills the screen.', slot: 'scroll', source: OK,
+    file: 'MaskReveal.tsx', exportName: 'MaskReveal', deps: G, levels: LIVELY, heavy: true, sections: ['hero', 'intro', 'editorial-story', 'location', 'product-highlight', 'about'],
+    usage: '<MaskReveal src="/media/terrace.jpg" alt="…" shape="arch" left="Costa" right="del Sol">\n  <h1 className="…">Era Residence</h1>\n</MaskReveal>',
+    rules: ['One picture worth the whole screen — a place, a room, a landscape.', 'The shape comes from the brand (an arch for a building, a circle for a lens or a plate).', 'Once on the site.'],
+  },
+  'letters-assemble': {
+    id: 'letters-assemble', name: 'Letters that gather into a sentence', line: 'As the line comes up the page, its letters arrive from scattered places and settle into the words.', slot: 'statement', source: OK,
+    file: 'LettersAssemble.tsx', exportName: 'LettersAssemble', deps: G, levels: LIVELY, sections: ['manifesto', 'intro', 'contact-cta', 'stats'],
+    usage: '<LettersAssemble as="h2" className="font-(family-name:--font-display) text-6xl md:text-8xl">120 effects today. A new one every week.</LettersAssemble>',
+    rules: ['One sentence of up to ~12 words, set large — the one line the page is about.', 'Once on the site; give it room above and below so it gathers while in view.'],
+  },
 }
 
 export const MAX_HEAVY_PIECES = 2
