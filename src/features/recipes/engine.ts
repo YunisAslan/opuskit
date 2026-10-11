@@ -851,6 +851,12 @@ const ITEM_PAGES: Partial<Record<PageTypeId, string>> = { 'product-detail': 'pro
 const LIST_SECTIONS = new Set<SectionId>(['featured-work', 'product-grid', 'collection', 'categories', 'journal', 'team'])
 /** Parts that tell one story per page: on several pages each gets its own picture, not one shared file. */
 const PER_PAGE_SHOTS = new Set<SectionId>(['editorial-story', 'case-study', 'about'])
+/** Ready pieces that need pictures of their own: the shot list asks for them wherever the piece is (Ines Varga, #28 —
+ *  the story beside one held picture had no chapter pictures in the list). */
+const PIECE_SHOTS: Partial<Record<PieceId, { key: string; shows: string; n: number; ratio: string; px: number }>> = {
+  'scroll-story': { key: 'storyChapters', shows: 'one picture per chapter of the story, in its order — each the moment that chapter tells, all in one grade', n: 4, ratio: '4:5', px: 1800 },
+  'mask-reveal': { key: 'windowPicture', shows: 'the one picture worth the whole screen — the place or the room, wide, calm at the centre where the window first opens', n: 1, ratio: '16:9', px: 2800 },
+}
 /** "4 / 5" (a CSS token) → "4:5" (a file ratio). */
 const ratio = (r: string) => r.replace(/\s*\/\s*/, ':')
 const sizeOf = (ratio: string, px: number) => { const [w, h] = ratio.split(':').map(Number); return w >= h ? `${px}×${Math.round((px * h) / w)}` : `${Math.round((px * w) / h)}×${px}` }
@@ -1009,6 +1015,14 @@ function shotList(spec: RecipeSpec, pages: PageBlueprint[], hero: HeroPattern, f
     addShot(where, () => ({ key, where, kind: 'photo', shows: sh.shows, count: sh.n, ratio: r, size: sizeOf(r, sh.px), ...(per ? { per } : {}),
       format: `${sh.n} photo${sh.n > 1 ? 's' : ''}${per ? ` per ${per}` : ''}${sh.note ? ` (${sh.note})` : ''} · ${r} · ${sizeOf(r, sh.px)}` }))
   }))
+  for (const id of new Set([...(spec.piecePlacements ?? []).map((x) => x.piece), ...(spec.pieces ?? [])])) {
+    const need = PIECE_SHOTS[id]
+    if (!need) continue
+    const pg = pages.find((p) => p.id === spec.piecePlacements?.find((x) => x.piece === id)?.page)
+    const where = `${pg && pages.length > 1 ? `${pg.label} · ` : ''}${pieceCatalog[id].name}`
+    addShot(where, () => ({ key: need.key, where, kind: 'photo', shows: need.shows, count: need.n, ratio: need.ratio, size: sizeOf(need.ratio, need.px),
+      format: `${need.n} photo${need.n > 1 ? 's' : ''} · ${need.ratio} · ${sizeOf(need.ratio, need.px)}` }))
+  }
   return [...shotMap.values()]
 }
 

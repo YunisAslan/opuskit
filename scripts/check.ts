@@ -361,6 +361,8 @@ const main = async () => {
     assert.ok(!new RegExp(`@/lib/utils|from ['"](?!react|motion/react|@paper-design/shaders-react|next/navigation${own})[^'"]+['"]`).test(src), `${p.id}: no imports beyond react, motion, Paper Shaders, next/navigation (and Lenis, GSAP or three, when listed)`)
     assert.ok(/reactbits|aceternity|hover\.dev/.test(p.source.url) === false, `${p.id}: never from a library that forbids redistribution`)
   }
+  // A piece that needs its own pictures puts them in the shot list (Ines Varga, #28).
+  assert.ok(composeRecipe({ ...vspec, motion: 'dynamic', pieces: ['scroll-story'] }).media.shots.some((s) => s.key === 'storyChapters' && s.count === 4), 'the story beside one picture asks for its chapter pictures')
   // Moving recipes get smooth scroll by default (the user, 2026-10-11); calm ones only when picked.
   assert.ok(composeRecipe({ ...vspec, motion: 'dynamic' }).pieces.some((p) => p.id === 'smooth-scroll'), 'a dynamic recipe glides')
   assert.ok(!composeRecipe({ ...vspec, motion: 'subtle', pieces: [] }).pieces.some((p) => p.id === 'smooth-scroll'), 'a subtle recipe does not, unless picked')
