@@ -923,6 +923,8 @@ const main = async () => {
       assert.ok(before.every((k) => after.includes(k)), 'adding later keeps every part already there')
       assert.deepEqual(r.plan.pages[0].sections.slice(0, 2).map((x) => x.key), moved.pages[0].sections.slice(0, 2).map((x) => x.key), 'and keeps their order')
       assert.equal(r.added.length, 2, 'both new parts were added') }
+    // A taken idea survives the round trip through storage; one the Library no longer offers is dropped.
+    assert.deepEqual(cleanCollection({ items: [{ kind: 'idea', id: 'mug-stage', from: 'example:pip-kiln' }, { kind: 'idea', id: 'seat-map' }] }).items, [{ kind: 'idea', id: 'mug-stage', from: 'example:pip-kiln' }], 'ideas are kept, unknown ones dropped')
     const dirty = cleanCollection({ items: [{ kind: 'site', site: 'example:nope' }, { kind: 'section', id: 'hero' }, { kind: 'effect', id: 'grain' }, { kind: 'effect', id: 'grain' }, null], purpose: 'other', look: 'seed:nope' })
     assert.deepEqual(dirty, { items: [{ kind: 'effect', id: 'grain' }], purpose: undefined, name: undefined, about: undefined, look: undefined, goal: undefined, like: undefined }, 'unknown ids are dropped, duplicates once')
   }

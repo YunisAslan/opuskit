@@ -76,8 +76,8 @@ The shadcn variables (`--background`, `--card`, `--border`, …) read these toke
 - **Nav** (`SiteChrome.tsx`):
   - `.label` links; hover fills `paper-2`.
   - The current page sits on an ink block (`aria-current`).
-  - When the Collection is empty, a full-height ink "Start a site" block sits at the right. Once it has items, the
-    Collection button and Build my site take its place.
+  - The way on is one shape: a full-height ink block at the right edge — "Start a site" while the Collection is
+    empty, then "Build my site" / "Continue building" in the same block (the user, 2026-10-11: two sizes looked odd).
   - Header cells are ruled: logo | nav | tools.
 - **Steps bar** (`FlowBar` / `Steps` in `library/parts.tsx`, under the header, sticky at `top-14`): each step a ruled
   cell like the header's (mono number + name); the current one on a `white` surface, the way walked underlined 2px in

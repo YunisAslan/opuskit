@@ -427,6 +427,7 @@ export function cleanCollection(x: unknown): Collection {
     if (r.kind === 'menu' && Object.hasOwn(navStyles, id)) return [{ kind: 'menu', id: id as NavStyleId, ...from(r.from) }]
     if (r.kind === 'footer' && Object.hasOwn(footerStyles, id)) return [{ kind: 'footer', id: id as FooterStyleId, ...from(r.from) }]
     if (r.kind === 'effect' && Object.hasOwn(pieces, id)) return [{ kind: 'effect', id: id as PieceId, ...from(r.from) }]
+    if (r.kind === 'idea' && IDEA_BY_ID.has(id)) return [{ kind: 'idea', id, ...from(r.from) }]
     return []
   })
   const unique = items.filter((i, n) => items.findIndex((y) => itemKey(y) === itemKey(i)) === n)

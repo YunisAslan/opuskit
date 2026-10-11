@@ -227,7 +227,11 @@ export function useBuildLabel() {
 export function BuildButton() {
   const toBuild = useToBuild(), label = useBuildLabel(), path = usePathname()
   if (path.startsWith('/studio/')) return null
-  return <button type="button" onClick={toBuild} className="btn btn-ink btn-sm"><span className="max-sm:hidden">{label}</span><span className="sm:hidden">Build</span><ArrowRight size={14} aria-hidden /></button>
+  return (
+    <button type="button" onClick={toBuild} className="label flex items-center gap-2 bg-ink px-4 text-paper! transition-colors hover:bg-ink-2 active:[&>span]:scale-[0.97] md:px-6">
+      <span className="max-sm:hidden">{label}</span><span className="sm:hidden">Build</span><ArrowRight size={14} aria-hidden />
+    </button>
+  )
 }
 
 const OPEN = 'opuskit:open-collection'

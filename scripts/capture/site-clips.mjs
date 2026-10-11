@@ -46,8 +46,6 @@ export const SHOTS = {
   'low-hum:idea-sleeve-record': ['/menu', 0, 0, 0, { prep: (h) => h.scrollTo('[role="tablist"]', 320), act: async (h) => {
     await h.glide(0.5, 2200); await h.wait(300); await h.glide(-0.5, 1800); await h.wait(300)
     await h.tap('[role="tab"]:has-text("Side B")'); await h.wait(2000); await h.tap('[role="tab"]:has-text("Side A")'); await h.wait(1600) } }],
-  'raster-school:idea-seat-map': ['/enrol', 0, 0, 0, { act: async (h) => {
-    for (const c of ['Cohort 19', 'Cohort 20', 'Cohort 18']) { await h.tap(`main button:has-text("${c}")`); await h.wait(1500) } } }],
   'raster-school:idea-faq-search': ['/faq', 0, 0, 0, { act: async (h) => {
     await h.tap('input'); await h.type('can I pay later'); await h.wait(1600)
     await h.p.keyboard.press('Meta+A'); await h.p.keyboard.press('Backspace'); await h.wait(400); await h.type('online'); await h.wait(1600) } }],
