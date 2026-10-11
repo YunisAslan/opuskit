@@ -1,0 +1,910 @@
+{
+  "sites": {
+    "nick-ho": {
+      "title": "Nick Ho",
+      "live": "https://nickho-motorsports.nl/",
+      "fonts": [
+        "Anton"
+      ]
+    },
+    "lpas": {
+      "title": "LPAS",
+      "live": "https://lpas.com/",
+      "fonts": [
+        "Aeonik"
+      ]
+    },
+    "maria-vasilyeva-portfolio": {
+      "title": "Maria Vasilyeva Portfolio",
+      "live": "https://www.mariavasilyeva.com/",
+      "fonts": [
+        "synt",
+        "feat",
+        "suo"
+      ]
+    },
+    "odyssee": {
+      "title": "Odyss\\u00e9e",
+      "live": "https://www.odysseeclinic.com.au/",
+      "fonts": [
+        "baselGrotesk",
+        "baselGrotesk Fallback",
+        "psTimes",
+        "psTimes Fallback"
+      ]
+    },
+    "twks-1": {
+      "title": "twks",
+      "live": "https://twks.ch/en",
+      "fonts": [
+        "GT Standard"
+      ]
+    },
+    "lidar-drone-scanning": {
+      "title": "Lidar Drone Scanning",
+      "live": "https://drone.riotters.com/",
+      "fonts": [
+        "switzer",
+        "switzer Fallback",
+        "protoMono",
+        "protoMono Fallback"
+      ]
+    },
+    "santioni-spirits": {
+      "title": "Santioni Spirits",
+      "live": "https://santionispirits.com/",
+      "fonts": [
+        "Charles Rosie Regular",
+        "PPNikkeiMaru-Regular",
+        "PPNikkeiMaru-Ultrabold",
+        "GT-Era-Text-Light"
+      ]
+    },
+    "edolus": {
+      "title": "EDOLUS",
+      "live": "https://edolus.com/",
+      "fonts": []
+    },
+    "tengile-malamala-collection": {
+      "title": "Tengile Malamala Collection",
+      "live": "https://tengilemalamala.com/",
+      "fonts": [
+        "PP Fragment",
+        "Inter"
+      ]
+    },
+    "milledollars": {
+      "title": "Milledollars",
+      "live": "https://milledollars.fr/",
+      "fonts": [
+        "ABCDiatype",
+        "Migra",
+        "Redacted Script"
+      ]
+    },
+    "colonia-zacamil": {
+      "title": "Colonia Zacamil",
+      "live": "https://coloniazacamil.com/",
+      "fonts": [
+        "Roboto Mono",
+        "Reckless Neue",
+        "Heathergreen"
+      ]
+    },
+    "cominvi": {
+      "title": "CoMinVi",
+      "live": "https://www.cominvi.com.mx/",
+      "fonts": [
+        "Helvetica Now Display",
+        "PP Supply Mono"
+      ]
+    },
+    "jesper-landberg-4": {
+      "title": "Jesper Landberg",
+      "live": "http://jesperlandberg.com",
+      "fonts": [
+        "sans"
+      ]
+    },
+    "butter": {
+      "title": "Butter",
+      "live": "https://www.butter.video/",
+      "fonts": [
+        "DieGrotesk",
+        "DieGrotesk Fallback",
+        "ABCDiatype",
+        "ABCDiatype Fallback"
+      ]
+    },
+    "realevate": {
+      "title": "Realevate",
+      "live": "https://realevate.agency/",
+      "fonts": [
+        "Google Sans",
+        "Roslindale Display",
+        "Monument Extended"
+      ]
+    },
+    "meer-mohsin": {
+      "title": "MEER MOHSIN",
+      "live": "https://www.meermohsin.me/",
+      "fonts": [
+        "light-font",
+        "regular-font",
+        "ruthie"
+      ]
+    },
+    "the-tie-break": {
+      "title": "The Tie-break",
+      "live": "https://thetiebreak.merci-michel.com/",
+      "fonts": [
+        "Instrument",
+        "WorkSans"
+      ]
+    },
+    "moto-finance": {
+      "title": "Moto Finance",
+      "live": "https://www.moto-card.com/",
+      "fonts": [
+        "Neuemontreal"
+      ]
+    },
+    "sobha-privy-collection": {
+      "title": "Sobha Privy Collection",
+      "live": "https://sobha-privy-collection.com/",
+      "fonts": [
+        "altesse-std-24pt",
+        "altesse-std-64pt",
+        "TT Commons Pro",
+        "TT Ramillas"
+      ]
+    },
+    "bleibtgleich26": {
+      "title": "bleibtgleich'26",
+      "live": "https://bleibtgleich.dev",
+      "fonts": [
+        "Akzidenz Grotesk Pro"
+      ]
+    },
+    "gil-huybrecht": {
+      "title": "Gil Huybrecht",
+      "live": "https://gilhuybrecht.com/",
+      "fonts": [
+        "sans"
+      ]
+    },
+    "pensatori-irrazionali": {
+      "title": "Pensatori Irrazionali",
+      "live": "https://pensatori-irrazionali.com/",
+      "fonts": [
+        "helveticaNow",
+        "helveticaNow Fallback",
+        "ballet",
+        "ballet Fallback",
+        "ppEditorial",
+        "ppEditorial Fallback",
+        "someTypeMono",
+        "someTypeMono Fallback",
+        "novela",
+        "novela Fallback"
+      ]
+    },
+    "boc-studio": {
+      "title": "Boc.Studio",
+      "live": "https://boc.studio/",
+      "fonts": [
+        "ppMori",
+        "ppMori Fallback"
+      ]
+    },
+    "noho": {
+      "title": "Noho",
+      "live": "https://noho.ink",
+      "fonts": [
+        "Switzer",
+        "Switzer Variable"
+      ]
+    },
+    "lxl-creative": {
+      "title": "LxL Creative",
+      "live": "https://www.lxlcreative.co.uk/",
+      "fonts": [
+        "Owners Wide",
+        "Scribo",
+        "Manrope"
+      ]
+    },
+    "l-i-s-a": {
+      "title": "L.I.S.A.",
+      "live": "https://lisa.locomotive.ca/en",
+      "fonts": [
+        "HelveticaNowDisplay",
+        "LocomotiveNew"
+      ]
+    },
+    "aspen-search": {
+      "title": "Aspen Search",
+      "live": "https://www.aspensearch.com/",
+      "fonts": [
+        "suisseIntl",
+        "suisseIntl Fallback",
+        "suisseIntlMono",
+        "suisseIntlMono Fallback"
+      ]
+    },
+    "leo-parpeix-portfolio-2026": {
+      "title": "L\\u00e9o Parpeix - Portfolio 2026",
+      "live": "https://leoparpeix.com/",
+      "fonts": [],
+      "notes": [
+        "page 402"
+      ]
+    },
+    "the-tuscan-journey-begins": {
+      "title": "The Tuscan Journey Begins",
+      "live": "https://weekend-mm-2026-pasticcino-bag-master.monogrid.io/en/",
+      "fonts": []
+    },
+    "warm-fuzzy": {
+      "title": "Warm & Fuzzy",
+      "live": "https://www.warmnfuzzy.tv/",
+      "fonts": [
+        "SuisseIntl"
+      ]
+    },
+    "white-desert": {
+      "title": "White Desert",
+      "live": "https://white-desert.com/",
+      "fonts": [
+        "Inter Tight",
+        "Cardinal Classic Long",
+        "Oswald"
+      ]
+    },
+    "cerebrium": {
+      "title": "Cerebrium",
+      "live": "https://cerebrium.ai/",
+      "fonts": [
+        "Suisse Int\\",
+        "ABC Favorit Trial"
+      ]
+    },
+    "usavionix": {
+      "title": "USAvionix",
+      "live": "https://www.usavionix.com/",
+      "fonts": [
+        "Geist",
+        "Geist Fallback",
+        "Geist Mono",
+        "Geist Mono Fallback"
+      ]
+    },
+    "seasats": {
+      "title": "Seasats",
+      "live": "https://www.seasats.com/",
+      "fonts": [
+        "seasonMix",
+        "seasonMix Fallback",
+        "seasonSans",
+        "seasonSans Fallback",
+        "supplyMono",
+        "supplyMono Fallback"
+      ]
+    },
+    "why-zero": {
+      "title": "Why Zero",
+      "live": "https://why.zero.university/",
+      "fonts": [
+        "Caveat",
+        "Google Sans Code",
+        "Google Sans Flex",
+        "Inter",
+        "Newsreader",
+        "Supply Sans",
+        "Bethany Elingston",
+        "PP Supply Mono",
+        "STK Bureau Serif"
+      ]
+    },
+    "united-carriers": {
+      "title": "United Carriers",
+      "live": "https://unitedcarriers.com/",
+      "fonts": [
+        "BT Steinhart",
+        "Helvetica Neue",
+        "BT Steinhart Mono"
+      ]
+    },
+    "gionatan-nese-26": {
+      "title": "Gionatan Nese '26",
+      "live": "https://www.gionatannese.com/",
+      "fonts": [
+        "LayGrotesk",
+        "Teodor"
+      ]
+    },
+    "illoca": {
+      "title": "Illoca",
+      "live": "https://illoca.unseen.co/",
+      "fonts": [
+        "Geist Mono",
+        "Space Grotesk",
+        "Syne",
+        "DM Sans",
+        "Space Mono",
+        "Caveat",
+        "F37 Analog",
+        "Graphik Web",
+        "Architect Pro Symbols",
+        "Architect Pro"
+      ]
+    },
+    "trevor-noah": {
+      "title": "Trevor Noah",
+      "live": "https://www.trevornoah.com/",
+      "fonts": [
+        "Die Grotesk C",
+        "Die Grotesk B",
+        "Die Grotesk D"
+      ]
+    },
+    "paul-kalkbrenner": {
+      "title": "Paul Kalkbrenner",
+      "live": "https://www.paulkalkbrenner.net/",
+      "fonts": [
+        "ABC Diatype Plus Variable"
+      ]
+    },
+    "squarespace-foundations": {
+      "title": "Squarespace Foundations",
+      "live": "https://brand.squarespace.com/",
+      "fonts": [
+        "Clarkson",
+        "ClarksonSerifLight",
+        "ClarksonSerifLightItalic",
+        "ClarksonSerifRegular",
+        "ClarksonSerifRegularItalic",
+        "ClarksonSerifMedium",
+        "ClarksonSerifMediumItalic",
+        "ClarksonCondensed"
+      ]
+    },
+    "era-residence": {
+      "title": "ERA Residence",
+      "live": "https://www.era-residence.com/",
+      "fonts": [
+        "Maison Neue Extended"
+      ]
+    },
+    "aardvark-book-club": {
+      "title": "Aardvark Book Club",
+      "live": "https://aardvarkbookclub.com",
+      "fonts": [
+        "Hello Organichand Webfont",
+        "Degular",
+        "Champ"
+      ]
+    },
+    "hobro-digital": {
+      "title": "HOBRO DIGITAL",
+      "live": "https://hobro.digital",
+      "fonts": [],
+      "notes": [
+        "page 403"
+      ]
+    },
+    "decathlon-yestalgia": {
+      "title": "Decathlon Yestalgia",
+      "live": "https://decathlonyestalgia.com/",
+      "fonts": [
+        "Roboto Flex"
+      ]
+    },
+    "sharplink": {
+      "title": "Sharplink",
+      "live": "https://www.sharplink.com/",
+      "fonts": [
+        "Archivo Narrow",
+        "Archivo Narrow Fallback: Arial",
+        "Archivo",
+        "Archivo Fallback: Arial"
+      ]
+    },
+    "ai-in-design-report-2026": {
+      "title": "Ai in Design Report 2026",
+      "live": "https://stateofaidesign.com/",
+      "fonts": [
+        "Fragment Mono",
+        "Geist Mono",
+        "Beausite Classic Medium",
+        "Beausite Classic Regular",
+        "Beausite Classic Bold",
+        "Inter",
+        "Beausite Classic Medium Placeholder",
+        "Beausite Classic Regular Placeholder",
+        "Beausite Classic Bold Placeholder",
+        "Inter Placeholder"
+      ]
+    },
+    "miu-miu-a-house-that-we-shaped": {
+      "title": "MIU MIU A House that we shaped",
+      "live": "https://immersivebags.miumiu.com/",
+      "fonts": [
+        "SometypeMono",
+        "BiroScript",
+        "WorkSans"
+      ]
+    },
+    "zeroz-brand-site": {
+      "title": "/zeroz Brand Site",
+      "live": "https://otsuka-air.jp/",
+      "fonts": [
+        "Zen Kaku Gothic Antique"
+      ]
+    },
+    "kononenko-architectural-bureau": {
+      "title": "Kononenko Architectural Bureau",
+      "live": "https://kononenkogroup.com",
+      "fonts": [
+        "n",
+        "h"
+      ]
+    },
+    "the-state-of-the-gallery": {
+      "title": "The state of the gallery",
+      "live": "https://mesh3d.gallery/the-state-of-the-gallery",
+      "fonts": [
+        "Geist",
+        "Geist Fallback",
+        "Geist Mono",
+        "Geist Mono Fallback",
+        "overusedGrotesk",
+        "overusedGrotesk Fallback"
+      ]
+    },
+    "oimachi": {
+      "title": "Oimachi",
+      "live": "https://www.oimachi.co",
+      "fonts": [
+        "Aeonik",
+        "Feature Deck",
+        "Material Symbols Rounded"
+      ]
+    },
+    "cipher": {
+      "title": "Cipher",
+      "live": "https://cipher.tv/",
+      "fonts": [
+        "Arizona",
+        "Favorit"
+      ]
+    },
+    "likova": {
+      "title": "LIKOVA",
+      "live": "https://likova.space",
+      "fonts": [
+        "TT Norms Pro"
+      ]
+    },
+    "michael-gatt": {
+      "title": "Michael Gatt",
+      "live": "https://michaelgatt.com/",
+      "fonts": [
+        "Zapf-Humanist-Demi"
+      ]
+    },
+    "the-watch": {
+      "title": "The Watch",
+      "live": "https://thewatch.60fps.fr/",
+      "fonts": [
+        "Nekst",
+        "Inter"
+      ]
+    },
+    "sstr-friction-reduction": {
+      "title": "SSTR - Friction Reduction",
+      "live": "https://sstr.tech/en/",
+      "fonts": [
+        "Abc Monument Grotesk"
+      ]
+    },
+    "px-push": {
+      "title": "PX PUSH",
+      "live": "https://pxpush.com/",
+      "fonts": [
+        "Graphik",
+        "SemiSqueezed",
+        "GeistMono",
+        "Mono"
+      ]
+    },
+    "haoqi-design": {
+      "title": "HAOQI.DESIGN",
+      "live": "https://haoqi.design",
+      "fonts": []
+    },
+    "mosbys-files": {
+      "title": "Mosby's Files",
+      "live": "https://www.mosbyfiles.com/",
+      "fonts": [
+        "Signifier",
+        "Founders Grotesk"
+      ]
+    },
+    "revelatio-studio": {
+      "title": "Revelatio Studio",
+      "live": "https://revelatio.studio/",
+      "fonts": [
+        "Neue Haas Grotesk Text Pro 55 Roman"
+      ]
+    },
+    "studio-k95-3": {
+      "title": "Studio K95",
+      "live": "https://k95.it",
+      "fonts": [
+        "adaptive"
+      ]
+    },
+    "nothin": {
+      "title": "NOTHIN'",
+      "live": "https://www.noth.in",
+      "fonts": [
+        "Ppneuemontreal",
+        "Ppneuemontreal Book"
+      ]
+    },
+    "produx-design": {
+      "title": "Produx Design",
+      "live": "https://www.produx.design",
+      "fonts": [
+        "At Aero",
+        "At Aero Regular",
+        "At Aero Medium",
+        "At Aero Light",
+        "DM Mono"
+      ]
+    },
+    "vero-new-york": {
+      "title": "Vero New-York",
+      "live": "https://verostudio.com/",
+      "fonts": [
+        "Louize Display",
+        "Beausite Classic"
+      ]
+    },
+    "20-years-inspired-by-people": {
+      "title": "20 Years Inspired by People",
+      "live": "https://inspiring.nk.studio/es",
+      "fonts": [
+        "DM Sans",
+        "DM Sans Fallback",
+        "Instrument Serif",
+        "Instrument Serif Fallback"
+      ]
+    },
+    "no-art": {
+      "title": "No Art",
+      "live": "https://www.noartmusic.com/",
+      "fonts": [
+        "Nue Haas Grotesk Text Pro",
+        "Chivomono",
+        "Rock salt"
+      ]
+    },
+    "alethia": {
+      "title": "Alethia",
+      "live": "https://www.alethia.earth/",
+      "fonts": [
+        "Geist",
+        "Fragment Mono",
+        "Geist Mono",
+        "Geist Medium",
+        "Geist Regular",
+        "Geist SemiBold",
+        "Inter",
+        "Geist Placeholder",
+        "Geist Medium Placeholder",
+        "Geist Regular Placeholder",
+        "Geist SemiBold Placeholder",
+        "Inter Placeholder"
+      ]
+    },
+    "serotoninn": {
+      "title": "Serotoninn",
+      "live": "https://serotoninn.com/",
+      "fonts": [
+        "Inter",
+        "Thunder",
+        "PP Fraktion Mono"
+      ]
+    },
+    "lacoste-ace-breaker": {
+      "title": "Lacoste Ace Breaker",
+      "live": "https://members-play.lacoste.com/ace-breaker-rg",
+      "fonts": [
+        "MonaSans"
+      ]
+    },
+    "hearst-exhibit-2026": {
+      "title": "Hearst Exhibit 2026",
+      "live": "https://www.hollywoodexhibit2026.com",
+      "fonts": [
+        "Instrument Sans",
+        "Instrument Sans Fallback",
+        "abcArizona",
+        "abcArizona Fallback",
+        "safiraMarch",
+        "safiraMarch Fallback",
+        "haigrast",
+        "haigrast Fallback",
+        "ivyPrestoHeadline",
+        "ivyPrestoHeadline Fallback",
+        "ivyPrestoText",
+        "ivyPrestoText Fallback"
+      ]
+    },
+    "noomo-showcase": {
+      "title": "Noomo Showcase",
+      "live": "https://showcase.noomoagency.com",
+      "fonts": [
+        "GTAmericaMonoRegular",
+        "ppneuemontreal-book",
+        "ppneuemontreal-medium"
+      ]
+    },
+    "2xa-studio": {
+      "title": "2xA Studio",
+      "live": "https://2xa.studio/",
+      "fonts": [
+        "Geist",
+        "GeistMono",
+        "HelveticaProRoman",
+        "2XAMONOVF"
+      ]
+    },
+    "ciao-energy-launch-website": {
+      "title": "CIAO ENERGY - LAUNCH WEBSITE",
+      "live": "https://www.ciaoenergy.com/",
+      "fonts": [
+        "Geistmono",
+        "Franklin Gothic Atf",
+        "Geist"
+      ]
+    },
+    "made-with-gsap-1": {
+      "title": "Made With Gsap",
+      "live": "https://madewithgsap.com/",
+      "fonts": [
+        "LayGrotesk",
+        "PPNeueMontrealMono"
+      ]
+    },
+    "obys-r-experiment-space": {
+      "title": "Obys\\u00ae Experiment Space",
+      "live": "https://experiment.obys.agency/",
+      "fonts": [
+        "OTF Obys NG"
+      ]
+    },
+    "trionn-2": {
+      "title": "TRIONN",
+      "live": "https://trionn.com",
+      "fonts": [
+        "neueHaas",
+        "neueHaas Fallback",
+        "ppEditorial",
+        "ppEditorial Fallback",
+        "martianMono",
+        "martianMono Fallback",
+        "familjen",
+        "familjen Fallback"
+      ]
+    },
+    "partizan": {
+      "title": "Partizan",
+      "live": "https://partizan.com/",
+      "fonts": [
+        "GT America Standard",
+        "Teodor"
+      ]
+    },
+    "artem-shcherbakov": {
+      "title": "Artem Shcherbakov",
+      "live": "https://artemartemartem.com/",
+      "fonts": [
+        "EaseDouble",
+        "Great Rebellion",
+        "Arial Narrow"
+      ]
+    },
+    "spotify-wrapped-party": {
+      "title": "Spotify Wrapped Party",
+      "live": "https://wrapped-party.activetheory.dev",
+      "fonts": [
+        "SpotifyMixWide",
+        "SpotifyMixNarrow",
+        "SpotifyMix",
+        "CircularSp-Arab",
+        "CircularSp-Grek",
+        "CircularSp-Hebr",
+        "CircularSp-Cyrl",
+        "KoreanSWGI",
+        "NotoSansThai",
+        "UDShinGoPro",
+        "Noto Sans TC",
+        "Noto Sans SC"
+      ]
+    },
+    "normal-is-boring": {
+      "title": "NORMAL IS BORING",
+      "live": "https://normalisboring.es/",
+      "fonts": [
+        "Juana-Medium",
+        "Juana-Regular",
+        "Juana-Light",
+        "Editorialnew-Ultralight",
+        "Editorialnew-Regular",
+        "Izmir-Regular",
+        "Editorialnew-UltralightItalic"
+      ]
+    },
+    "dragonfly-redux": {
+      "title": "Dragonfly Redux",
+      "live": "https://dragonfly2.studiofreight.dev/",
+      "fonts": [
+        "NON Natural Grotesk",
+        "NON Natural Mono",
+        "FK Roman Standard"
+      ]
+    },
+    "lacoste-polo-factory": {
+      "title": "Lacoste \\u2014 Polo Factory",
+      "live": "https://members-play.lacoste.com/polo-factory-experience",
+      "fonts": [
+        "Lacoste"
+      ]
+    },
+    "lama-lama-2": {
+      "title": "Lama Lama",
+      "live": "https://lamalama.com/",
+      "fonts": [
+        "SuisseBPIntl",
+        "Sometype"
+      ]
+    },
+    "glitch-grit": {
+      "title": "Glitch&Grit",
+      "live": "https://glitchandgrit.com/",
+      "fonts": []
+    },
+    "izanami": {
+      "title": "IZANAMI",
+      "live": "https://izanami-official.com/",
+      "fonts": []
+    },
+    "hiroto-sato": {
+      "title": "Hiroto Sato",
+      "live": "https://www.hirotos.com",
+      "fonts": [
+        "gazzetta-variable",
+        "helvetica-neue-lt-pro-cond",
+        "helvetica-neue-lt-pro"
+      ]
+    },
+    "coffeetech-r": {
+      "title": "CoffeeTech\\u00ae",
+      "live": "https://coffee-tech.com/",
+      "fonts": [
+        "Inter",
+        "Google Sans"
+      ]
+    },
+    "risk": {
+      "title": "RISK",
+      "live": "https://www.risk.film",
+      "fonts": [
+        "Redhatdisplay Variablefont Wght",
+        "Redhatdisplay"
+      ]
+    },
+    "house-of-honey-1": {
+      "title": "House of Honey",
+      "live": "https://www.houseofhoney.com/",
+      "fonts": [
+        "canora",
+        "canora Fallback",
+        "noeText",
+        "noeText Fallback",
+        "neueHaasGrotesk",
+        "neueHaasGrotesk Fallback"
+      ]
+    },
+    "pp-neue-montreal": {
+      "title": "PP Neue Montreal",
+      "live": "https://neuemontreal.com/",
+      "fonts": [
+        "PP Neue Montreal Text Medium",
+        "PP Neue Montreal Text Regular",
+        "PP Neue Montreal Hairline",
+        "PP Neue Montreal Extralight",
+        "PP Neue Montreal Thin",
+        "PP Neue Montreal Light",
+        "PP Neue Montreal Book",
+        "PP Neue Montreal Regular",
+        "PP Neue Montreal Medium",
+        "PP Neue Montreal Semibold",
+        "PP Neue Montreal Bold",
+        "PP Neue Montreal Extrabold",
+        "PP Neue Montreal Black",
+        "PP Neue Montreal Extrabold Italic",
+        "PP Neue Montreal Text Thin",
+        "PP Neue Montreal Text Thin Italic",
+        "PP Neue Montreal Text Light",
+        "PP Neue Montreal Text Light Italic",
+        "PP Neue Montreal Text Book",
+        "PP Neue Montreal Text Book Italic",
+        "PP Neue Montreal Text Italic",
+        "PP Neue Montreal Text Medium Italic",
+        "PP Neue Montreal Text Semibold",
+        "PP Neue Montreal Text Semibold Italic",
+        "PP Neue Montreal Text Bold",
+        "PP Neue Montreal Text Bold Italic",
+        "PP Neue Montreal Hairline Italic",
+        "PP Neue Montreal Extralight Italic",
+        "PP Neue Montreal Thin Italic",
+        "PP Neue Montreal Light Italic",
+        "PP Neue Montreal Book Italic",
+        "PP Neue Montreal Italic",
+        "PP Neue Montreal Medium Italic",
+        "PP Neue Montreal Semibold Italic",
+        "PP Neue Montreal Bold Italic",
+        "PP Neue Montreal Black Italic",
+        "PP Neue Montreal Variable Variable Regular",
+        "PP Neue Montreal Text Variable Variable Regular",
+        "Inter",
+        "PP Neue Montreal Text Medium Placeholder",
+        "PP Neue Montreal Text Regular Placeholder",
+        "PP Neue Montreal Light Placeholder",
+        "PP Neue Montreal Regular Placeholder",
+        "PP Neue Montreal Medium Placeholder",
+        "PP Neue Montreal Semibold Placeholder",
+        "PP Neue Montreal Bold Placeholder",
+        "PP Neue Montreal Extrabold Placeholder",
+        "PP Neue Montreal Extrabold Italic Placeholder",
+        "PP Neue Montreal Text Light Placeholder",
+        "PP Neue Montreal Text Light Italic Placeholder",
+        "PP Neue Montreal Text Italic Placeholder",
+        "PP Neue Montreal Text Medium Italic Placeholder",
+        "PP Neue Montreal Text Semibold Placeholder",
+        "PP Neue Montreal Text Semibold Italic Placeholder",
+        "PP Neue Montreal Text Bold Placeholder",
+        "PP Neue Montreal Text Bold Italic Placeholder",
+        "PP Neue Montreal Light Italic Placeholder",
+        "PP Neue Montreal Italic Placeholder",
+        "PP Neue Montreal Medium Italic Placeholder",
+        "PP Neue Montreal Semibold Italic Placeholder",
+        "PP Neue Montreal Bold Italic Placeholder",
+        "PP Neue Montreal Variable Variable Regular Placeholder",
+        "PP Neue Montreal Text Variable Variable Regular Placeholder",
+        "Inter Placeholder"
+      ]
+    },
+    "longbow": {
+      "title": "Longbow",
+      "live": "https://db-longbow.webflow.io/",
+      "fonts": [
+        "Ebgaramond Variablefont Wght 0",
+        "Geist Mono V4",
+        "BebasNeueBold"
+      ]
+    },
+    "vectr": {
+      "title": "Vectr",
+      "live": "https://vectrfl.com/",
+      "fonts": [
+        "Soehne Buch"
+      ]
+    }
+  },
+  "collected": "2026-10-11"
+}

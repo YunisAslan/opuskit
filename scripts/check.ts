@@ -96,7 +96,11 @@ for (const t of types) for (const f of new Set([t.display.family, t.heading.fami
 for (const [f, n] of famUse) assert.ok(n <= 2, `${f} used in ${n} pairings (max 2)`)
 for (const f of ['Inter', 'DM Sans', 'Space Grotesk', 'Syne', 'Bricolage Grotesque', 'Fraunces', 'Instrument Serif', 'Geist', 'Playfair Display', 'Poppins', 'Montserrat'])
   assert.ok(!famUse.has(f), `${f} is an AI-default face — keep it out of the library`)
-assert.ok(types.filter((t) => /mono/i.test(t.utility.family)).length <= 1, 'monospace utility in more than one pairing')
+// Mono labels: up to four pairings, each with its own mono (the user, 2026-10-11 — 29% of Awwwards winners use them; the
+// AI tell is mono + uppercase + the same face everywhere, so uppercase stays in one pairing).
+const monos = types.filter((t) => /mono|courier/i.test(t.utility.family))
+assert.ok(monos.length <= 4, `monospace utility in ${monos.length} pairings (max 4)`)
+assert.equal(new Set(monos.map((t) => t.utility.family)).size, monos.length, 'each mono-label pairing has its own mono')
 assert.ok(types.filter((t) => t.utility.uppercase).length <= 1, 'uppercase utility labels in more than one pairing')
 // Menu links (utility) sit beside buttons and text (body): one face at two widths reads as a mistake (yunisaslanov).
 for (const t of types) if (t.utility.family === t.body.family)

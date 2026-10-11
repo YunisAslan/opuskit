@@ -76,6 +76,9 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   `scripts/research/awwwards-sotd.mjs`), findings in `01-winners.md`: usability is where winners score lowest; 44% use
   3D (our biggest gap); 42% are black-and-white palettes; 11% design their 404. Applied (the user said yes): White Box palette; `JURY_QA` in craft.ts (designed 404,
   semantics/meta, keyboard/focus, speed) in all five packages; **GSAP is allowed** (the user, 2026-10-11 — AGENTS.md).
+- **Awwwards part 2, typography** (2026-10-11): `02-typography.md`. Winners: grotesks, mono labels on 29%, serif as
+  accent. The user loosened the mono rule (up to 4 pairings, each its own mono; uppercase still one). New pairings
+  Studio Mono, Lab Notes, Spline Edition.
 - **Growing the ingredients** (2026-10-11, the user: more components, sections and variety for better sites), batch by
   batch from what winners do that OpusKit had only in words. Batch 1 — three pieces: `side-scroll` (a sideways wall,
   GSAP pin + scrub; now the piece of the Sideways strip photo layout and the sideways-gallery moment, so Pip & Kiln and

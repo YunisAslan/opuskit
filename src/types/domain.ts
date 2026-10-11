@@ -39,6 +39,7 @@ export type PaletteId =
   | 'grape-soda' | 'signal-orange' | 'paper-cobalt' | 'gallery-grey' | 'sage-white' | 'charcoal-signal' | 'warm-black'
 
 export type TypographyId =
+  | 'studio-mono' | 'lab-notes' | 'spline-edition'
   | 'gallery-hours' | 'two-scripts' | 'funnel' | 'wide-spec' | 'diner-serif' | 'private-collection' | 'kalnia-couture' | 'poster-caps' | 'campus' | 'stack'
   | 'quiet-page' | 'ink-and-paper' | 'soft-couture' | 'printed-word' | 'opening-credits' | 'gala-night'
   | 'loud-and-clear' | 'grid-discipline' | 'photocopy-zine' | 'workshop-manual' | 'corner-bakery'

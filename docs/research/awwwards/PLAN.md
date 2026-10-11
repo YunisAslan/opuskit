@@ -19,8 +19,8 @@ job (the user, 2026-10-11). So we study what the winners do, part by part, and m
 | # | Part | Source on Awwwards | What it can give OpusKit | State |
 |---|---|---|---|---|
 | 1 | **The winners as data** | Sites of the Day (recent ~90): tags, jury scores (design / usability / creativity / content), palettes, pitches | The base every other part asks: which tags, categories, palettes and stacks win; what scores well | done — `01-winners.md` |
-| 2 | Typography | Typography Honors; fonts on winners; Best Fonts | Pairings and type moves (sizes, contrast, mono labels), free stand-ins for winning faces | next |
-| 3 | Transitions & scroll | Tags *Transitions*, *Scrolling*, *Parallax*, *Storytelling*; Elements *Transition*, *Scroll* | New moments (pieces), craft rules for page changes | — |
+| 2 | Typography | Typography Honors; fonts on winners; Best Fonts | Pairings and type moves (sizes, contrast, mono labels), free stand-ins for winning faces | done — `02-typography.md` |
+| 3 | Transitions & scroll | Tags *Transitions*, *Scrolling*, *Parallax*, *Storytelling*; Elements *Transition*, *Scroll* | New moments (pieces), craft rules for page changes | next |
 | 4 | Colour | Palettes from part 1; colour filter; *Electric Colors*, *Pastel colors* | Palettes that pass check.ts; how many colours winners use | — |
 | 5 | Layout & navigation | *Layout*, *Inspiring UX Design*, *Unusual Navigation*, Menu, Header, Footer elements | Sections and menus worth a card; layout rules | — |
 | 6 | WebGL, 3D, texture | *WebGL*, *3D*, *Three.js* tags and collection | Which effects are worth a piece (and cheap enough) | — |
@@ -31,5 +31,7 @@ The order can change with what part 1 shows. Each finished part gets a line in `
 
 ## Tools
 
+- `scripts/research/awwwards-fonts.mjs` — part 2's collector: each winner's live page → its `@font-face` families →
+  `data/fonts.json`.
 - `scripts/research/awwwards-sotd.mjs [pages]` — part 1's collector: Sites of the Day list pages → each site's page →
   `docs/research/awwwards/data/sotd.json`. Polite (one request at a time, ~1.2 s apart); keeps what it already has.
