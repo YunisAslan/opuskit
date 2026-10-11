@@ -80,6 +80,18 @@ export const sectionVariants: Partial<Record<SectionId, Designs>> = {
     options: [v('side', 'Form beside', 'The invitation and hours on the left, the form on a card beside them.'), v('centered', 'Centred', 'The invitation centred over the form, the hours and phone under it.'), v('ledger', 'A ledger', 'The title large, the hours and phone as ruled lines, the form open beside them.')],
     byFamily: { quiet: 'centered', minimal: 'centered', organic: 'centered', editorial: 'ledger', bold: 'ledger', raw: 'ledger', cinematic: 'ledger' },
   },
+  'product-grid': {
+    options: [v('grid', 'Even tiles', 'Every product in the same shape, four to a row.'), v('editorial', 'One leads', 'The first product large across two columns and two rows, the rest around it.'), v('shelf', 'A shelf list', 'A ruled list: a small photo, the name large, the price at the end.')],
+    byFamily: { editorial: 'editorial', cinematic: 'editorial', bold: 'editorial', raw: 'shelf', minimal: 'shelf', futuristic: 'shelf' },
+  },
+  'feature-grid': {
+    options: [v('cells', 'Ruled cells', 'Every feature in a cell of one grid.'), v('rows', 'One per line', 'The name large on the left, its line on the right, a rule between.'), v('bento', 'Mixed sizes', 'The first feature wide with its picture, the rest in cells around it.')],
+    byFamily: { editorial: 'rows', minimal: 'rows', raw: 'rows', quiet: 'rows', futuristic: 'bento', bold: 'bento', experimental: 'bento' },
+  },
+  'cta-band': {
+    options: [v('card', 'A quiet box', 'The line and the action in a box on the surface colour.'), v('line', 'Between two rules', 'The line large between two rules, the action an underlined link.'), v('loud', 'A loud band', 'A full-width band in the ink colour, the line huge.')],
+    byFamily: { editorial: 'line', minimal: 'line', quiet: 'line', bold: 'loud', raw: 'loud', experimental: 'loud', cinematic: 'loud' },
+  },
   journal: {
     options: [v('cards', 'Pictures over titles', 'Three entries side by side, a picture over each.'), v('index', 'A contents page', 'No pictures: each title large on its own rule, the date beside it.'), v('lead', 'The newest leads', 'The newest entry large with its picture, the next ones listed beside it.')],
     byFamily: { editorial: 'index', minimal: 'index', raw: 'index', futuristic: 'index', cinematic: 'lead', bold: 'lead' },

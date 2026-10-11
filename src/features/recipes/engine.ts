@@ -84,7 +84,7 @@ export function pieceIssues(spec: Pick<RecipeSpec, 'motion' | 'pieces'>): Partia
 }
 
 /** Places each kit piece on the first page section it suits; navbar/footer pieces go to the site chrome. */
-function placePieces(spec: RecipeSpec, pages: PageBlueprint[], signatures: SignatureMoment[]): RecipePiece[] {
+function placePieces(spec: RecipeSpec, pages: PageBlueprint[], signatures: SignatureMoment[], heroId?: HeroId): RecipePiece[] {
   const issues = pieceIssues(spec)
   // Each photo section's layout brings its own piece (marquee, ring, field…) onto that very section.
   const fromPhotos = new Map<PieceId, string[]>()
@@ -95,6 +95,8 @@ function placePieces(spec: RecipeSpec, pages: PageBlueprint[], signatures: Signa
     const id = signaturePatterns.find((p) => p.id === m.id)?.piece
     if (id) fromPhotos.set(id, [...(fromPhotos.get(id) ?? []), pieceCatalog[id].slot === 'site' ? `${WHERE.site} (the “${m.name}” moment, ${m.where})` : `${m.where} (the “${m.name}” moment)`])
   }
+  // A 3D first screen brings the ready ModelStage piece.
+  if (heroId === 'webgl-scene') fromPhotos.set('model-stage', [...(fromPhotos.get('model-stage') ?? []), 'Home → First screen (the 3D scene)'])
   const ids = uniq([...(spec.pieces ?? []), ...fromPhotos.keys()])
   return ids.map((id) => {
     const p = pieceCatalog[id]
@@ -1015,7 +1017,8 @@ function packageDeps(techs: MotionPattern['tech'][], kit: RecipePiece[], heroId:
   if (kit.some((k) => k.deps.includes('gsap'))) deps.push({ name: 'gsap', why: `Pins and scrubs ${kit.filter((k) => k.deps.includes('gsap')).map((k) => `“${k.name}”`).join(' and ')} (ScrollTrigger; GSAP’s own standard licence)` })
   if (kit.some((k) => k.deps.includes('lenis'))) deps.push({ name: 'lenis', why: 'Smooth scroll for the SmoothScroll kit piece (MIT; mouse and trackpad only)' })
   else if (techs.includes('lenis')) deps.push({ name: 'lenis', why: 'Smooth scroll on desktop; Motion useScroll reads the scroll it keeps' })
-  if (techs.includes('three')) deps.push({ name: 'three', why: 'WebGL renderer' }, { name: '@react-three/fiber', why: 'Declarative Three.js in React' }, { name: '@react-three/drei', why: 'Loaders, controls and helpers (useGLTF, Environment)' })
+  if (kit.some((k) => k.deps.includes('three'))) deps.push({ name: 'three', why: 'WebGL renderer, glTF loader and studio light for the ModelStage piece (MIT)' })
+  else if (techs.includes('three')) deps.push({ name: 'three', why: 'WebGL renderer' }, { name: '@react-three/fiber', why: 'Declarative Three.js in React' }, { name: '@react-three/drei', why: 'Loaders, controls and helpers (useGLTF, Environment)' })
   return deps
 }
 
@@ -1114,7 +1117,7 @@ export function composeRecipe(input: RecipeSpec, id?: string): UniversalRecipe {
   // The copy deck: what every part of every page says, written before any layout, from the owner's own words.
   const copy = pages.map((p) => ({ page: p.label, brief: p.purpose, parts: [...(PAGE_COPY[p.type] ?? []), ...p.sections.map((s) => ({ part: s.name.split(' — ')[0], says: `${s.purpose}. ${s.content}.`.replace(/\.\./g, '.') }))] }))
   const shots = shotList(spec, pages, hero, frame, who)
-  const kit = placePieces(spec, pages, signatures)
+  const kit = placePieces(spec, pages, signatures, hero.id)
 
   // Menu, footer, first screen and closing CTA are defined by the chosen patterns (chrome, hero, ready sections) — listing
   // them again as generic components contradicted those picks. No forced SectionHeader: its "index number, label,

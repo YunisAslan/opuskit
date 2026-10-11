@@ -385,6 +385,12 @@ export const pieces: Record<PieceId, Piece> = {
     usage: '// app/layout.tsx, inside <body>:\n<PageShutter bars={5} />',
     rules: ['Mount once in the root layout; it handles every internal link.', 'Under 800 ms in all; 4–7 bars, in the ink colour or the accent.'],
   },
+  'model-stage': {
+    id: 'model-stage', name: 'A 3D object in soft light', line: 'The site’s own 3D model turns slowly, leans toward the pointer and eases back as the page scrolls.', slot: 'background', source: OK,
+    file: 'ModelStage.tsx', exportName: 'ModelStage', deps: ['three'], levels: MOVING, heavy: true, sections: ['hero', 'product-highlight'],
+    usage: '<ModelStage src="/media/model.glb" poster="/media/model-poster.jpg" alt="The kettle, in brushed steel" className="h-svh">\n  <h1 className="…">…</h1>\n</ModelStage>',
+    rules: ['The owner’s real object as a .glb under 3 MB, and a rendered still of it as the poster.', 'Words sit over it as HTML, beside the object, never on it.', 'Once on the site — the first screen or the product’s own page.'],
+  },
 }
 
 export const MAX_HEAVY_PIECES = 2

@@ -100,8 +100,16 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   Batch 4 — page changes: `photo-morph` (the clicked thumbnail grows into the next page's picture — React 19.3's
   `<ViewTransition>`, no library; its CSS ships as a hoisted `<style href precedence>`; new moment
   `picture-becomes-page`) and `shutter-transition` (bars drop and lift; a fourth choice for Between pages). Tested
-  together on two real pages: the morphing picture flies above the shutter, as intended. Next: a real 3D piece
-  (three); designs for the next most used single-design sections (location's facts, editorial-story, case-study).
+  together on two real pages: the morphing picture flies above the shutter, as intended.
+  Batch 5 — 3D: `model-stage` (three, raw — no react-three-fiber): the owner's .glb in RoomEnvironment light, idle
+  turn, ≤ 8° lean to the pointer, camera eases back on scroll, draws only in view, poster first and as fallback. The
+  3D first screen (`webgl-scene`) now brings it, and the package lists `three` alone. Demo model:
+  `public/library/demo-knot.glb` (made with three's GLTFExporter).
+  Batch 6 — more section designs: Product grid (`editorial` — the first product across two columns and rows;
+  `shelf` — a ruled list, names large), Feature grid (`rows`, `bento`), CTA band (`line`, `loud` — an inverse band;
+  inside data-tone="inverse" the light colour is --color-text). Case study, editorial story, about and location
+  already vary through `media`. Still one design: trust, menu, collection, categories, timeline, lookbook,
+  article, curriculum, donate, listen. Next: designs for the next most used single-design sections (location's facts, editorial-story, case-study).
 - **Every site has a video now** (2026-10-11): the 14 without one got `clip` (site.mp4, ~12 s) and `fullClip`
   (full.mp4, top to footer) from `site-clips.mjs`; cards and site pages play them. The six older ones (Fennwood, Hane,
   Sticky Weather, Hexmint, Brasshand, Slow Atlas) still have only the user's short clip. "A site like this" now breaks

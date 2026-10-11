@@ -20,10 +20,10 @@ export type TakeEntry = { key: string; group: TakeGroup; category: string; name:
 export const NOT_OFFERED = new Set([
   'hero:type-statement', 'hero:parallax-photo', 'hero:editorial-image', 'hero:product-stage',
   'nav:classic-bar', 'nav:centered-logo', 'nav:floating-pill', 'nav:split-pill',
-  'section:featured-work/staggered', 'section:featured-work/grid', 'section:featured-work/index', 'section:case-study', 'section:product-grid', 'section:collection',
+  'section:featured-work/staggered', 'section:featured-work/grid', 'section:featured-work/index', 'section:case-study', 'section:product-grid', 'section:product-grid/grid', 'section:product-grid/editorial', 'section:product-grid/shelf', 'section:collection',
   'section:gallery', 'section:editorial-story', 'section:manifesto/giant', 'section:timeline', 'section:schedule', 'section:schedule/columns', 'section:schedule/timeline', 'section:schedule/cards', 'section:menu',
   'footer:contact', 'footer:signature',
-  'effect:fade-transition', 'effect:text-effect', 'effect:smooth-scroll', 'effect:scroll-progress', 'effect:lightbox', 'effect:underline-fill',
+  'effect:fade-transition', 'effect:text-effect', 'effect:smooth-scroll', 'effect:scroll-progress', 'effect:lightbox', 'effect:underline-fill', 'effect:model-stage',
 ])
 /** How a section's card shows it (the user, 2026-10-10: by what suits each): a menu or a footer is drawn pure, in the
  *  standard dark theme like Moments and Touches; a first screen or a showcase is shown as its site has it. */

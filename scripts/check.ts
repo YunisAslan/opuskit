@@ -353,8 +353,8 @@ const main = async () => {
     assert.match(src, new RegExp(p.source.license), `${p.id}: source file carries its ${p.source.license} attribution`)
     assert.match(src, new RegExp(`export function ${p.exportName}\\b`), `${p.id}: exports ${p.exportName}`)
     // Lenis (MIT) only in a piece that lists it as a dependency, so its package says to install it.
-    const own = p.deps.includes('lenis') ? '|lenis' : p.deps.includes('gsap') ? '|gsap|gsap/ScrollTrigger' : ''
-    assert.ok(!new RegExp(`@/lib/utils|from ['"](?!react|motion/react|@paper-design/shaders-react|next/navigation${own})[^'"]+['"]`).test(src), `${p.id}: no imports beyond react, motion, Paper Shaders, next/navigation (and Lenis or GSAP, when listed)`)
+    const own = p.deps.includes('lenis') ? '|lenis' : p.deps.includes('gsap') ? '|gsap|gsap/ScrollTrigger' : p.deps.includes('three') ? '|three|three/examples/jsm/[\\w/]+\\.js' : ''
+    assert.ok(!new RegExp(`@/lib/utils|from ['"](?!react|motion/react|@paper-design/shaders-react|next/navigation${own})[^'"]+['"]`).test(src), `${p.id}: no imports beyond react, motion, Paper Shaders, next/navigation (and Lenis, GSAP or three, when listed)`)
     assert.ok(/reactbits|aceternity|hover\.dev/.test(p.source.url) === false, `${p.id}: never from a library that forbids redistribution`)
   }
   // A piece that needs GSAP brings it into the package's dependencies (allowed since 2026-10-11).

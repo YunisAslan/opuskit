@@ -50,6 +50,7 @@ import { Spotlight } from '@/pieces/Spotlight'
 import { HoverPreview } from '@/pieces/HoverPreview'
 import { RippleImage } from '@/pieces/RippleImage'
 import { PhotoMorph } from '@/pieces/PhotoMorph'
+import { ModelStage } from '@/pieces/ModelStage'
 import { ScrollStory } from '@/pieces/ScrollStory'
 import { SideScroll } from '@/pieces/SideScroll'
 import type { PaletteColors, PieceId } from '@/types/domain'
@@ -126,6 +127,7 @@ function demo(id: PieceId, c: PaletteColors): ReactNode {
     case 'stickers': return <div className="relative size-full"><p className={`${display} grid h-full place-items-center text-3xl`}>Throw a sticker</p><Stickers stickers={STICKERS.slice(0, 4).map((src, i) => ({ src, alt: '', x: ['6%', '70%', '14%', '74%'][i], y: ['8%', '10%', '58%', '56%'][i], w: '4.5rem', rotate: [-10, 8, 6, -6][i], depth: 0.5 }))} /></div>
     // A small site to click through: the change shows what it answers (a link pressed), not only the sweep.
     case 'photo-morph': return <MorphDemo />
+    case 'model-stage': return <ModelStage src="/library/demo-knot.glb" poster={PHOTOS[3].src} alt="A knot" className="size-full" />
     case 'fade-transition': case 'blob-transition': case 'curtain-transition': case 'shutter-transition': return <PageChangeDemo kind={id} />
     // A drawn zone, so the change shows: the ordinary arrow outside, the brand's own pointer inside.
     case 'brand-cursor': return <div className="grid size-full place-items-center"><div className="grid h-36 w-60 place-items-center rounded-(--radius-md) border border-dashed border-(--color-border) bg-(--color-surface)" style={{ cursor: `url("${CURSOR}") 3 2, auto` }}><p className="text-sm text-(--color-muted)">Move the cursor here</p></div></div>

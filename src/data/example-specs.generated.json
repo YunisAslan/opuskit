@@ -185,8 +185,18 @@
    },
    {
     "page": "p1",
+    "index": 2,
+    "variant": "grid"
+   },
+   {
+    "page": "p1",
     "index": 7,
     "variant": "split"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "grid"
    },
    {
     "page": "p2",
@@ -197,6 +207,16 @@
     "page": "p3",
     "index": 3,
     "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 4,
+    "variant": "grid"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "grid"
    },
    {
     "page": "p6",
@@ -478,6 +498,11 @@
   "sectionVariants": [
    {
     "page": "p1",
+    "index": 5,
+    "variant": "card"
+   },
+   {
+    "page": "p1",
     "index": 6,
     "variant": "cards"
    },
@@ -485,6 +510,11 @@
     "page": "p1",
     "index": 7,
     "variant": "split"
+   },
+   {
+    "page": "p3",
+    "index": 3,
+    "variant": "card"
    },
    {
     "page": "p5",
@@ -1165,8 +1195,18 @@
   "sectionVariants": [
    {
     "page": "p1",
+    "index": 1,
+    "variant": "grid"
+   },
+   {
+    "page": "p1",
     "index": 6,
     "variant": "split"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "grid"
    },
    {
     "page": "p2",
@@ -1177,6 +1217,16 @@
     "page": "p3",
     "index": 3,
     "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 4,
+    "variant": "grid"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "grid"
    }
   ]
  },
@@ -1416,6 +1466,11 @@
   "sectionVariants": [
    {
     "page": "p1",
+    "index": 2,
+    "variant": "grid"
+   },
+   {
+    "page": "p1",
     "index": 7,
     "variant": "cards"
    },
@@ -1425,9 +1480,24 @@
     "variant": "split"
    },
    {
+    "page": "p2",
+    "index": 1,
+    "variant": "grid"
+   },
+   {
     "page": "p3",
     "index": 4,
     "variant": "side"
+   },
+   {
+    "page": "p3",
+    "index": 5,
+    "variant": "grid"
+   },
+   {
+    "page": "p4",
+    "index": 0,
+    "variant": "grid"
    },
    {
     "page": "p7",
@@ -1558,6 +1628,21 @@
   },
   "sectionVariants": [
    {
+    "page": "p1",
+    "index": 3,
+    "variant": "grid"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "grid"
+   },
+   {
+    "page": "p2",
+    "index": 1,
+    "variant": "cells"
+   },
+   {
     "page": "p2",
     "index": 2,
     "variant": "side"
@@ -1677,6 +1762,11 @@
     "page": "p1",
     "index": 7,
     "variant": "side"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "cells"
    },
    {
     "page": "p2",
@@ -1974,6 +2064,11 @@
   ],
   "target": "not-sure",
   "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 6,
+    "variant": "card"
+   },
    {
     "page": "p1",
     "index": 7,
@@ -2580,6 +2675,16 @@
   "target": "not-sure",
   "footer": "signature",
   "sectionVariants": [
+   {
+    "page": "p1",
+    "index": 3,
+    "variant": "cells"
+   },
+   {
+    "page": "p2",
+    "index": 0,
+    "variant": "cells"
+   },
    {
     "page": "p3",
     "index": 1,
