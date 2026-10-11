@@ -84,6 +84,9 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   `letters-assemble` (moment `letters-gather`). Smooth scroll is now the default for dynamic and immersive recipes (the user, 2026-10-11; engine `placePieces`).
 - **Awwwards part 4, colour** (2026-10-11): `04-colour.md` — 72% of winners on a dark ground, near-black + one signal.
   New palettes Ultramarine Night and Deep Teal.
+- **Awwwards part 5, layout and navigation** (2026-10-11): `05-layout.md` — small fixed headers (median 3 links),
+  panels over full-screen menus, tall footers. New menu Corner panel (recommended for product sites) and footer The
+  name behind the thing (`stage`, for product- and 3D-led sites).
 - **Growing the ingredients** (2026-10-11, the user: more components, sections and variety for better sites), batch by
   batch from what winners do that OpusKit had only in words. Batch 1 — three pieces: `side-scroll` (a sideways wall,
   GSAP pin + scrub; now the piece of the Sideways strip photo layout and the sideways-gallery moment, so Pip & Kiln and

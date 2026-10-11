@@ -398,9 +398,9 @@ export type SignaturePattern = {
   piece?: PieceId
 }
 
-export type NavStyleId = 'classic-bar' | 'floating-pill' | 'fullscreen-menu' | 'centered-logo' | 'card-menu' | 'bottom-dock' | 'side-index' | 'split-pill' | 'status-bar'
+export type NavStyleId = 'classic-bar' | 'floating-pill' | 'fullscreen-menu' | 'centered-logo' | 'card-menu' | 'bottom-dock' | 'side-index' | 'split-pill' | 'status-bar' | 'corner-panel'
 /** Footer styles — the page's ending, chosen with the menu in Design (same on every page that shows it). */
-export type FooterStyleId = 'signature' | 'wordmark' | 'contact' | 'line' | 'index'
+export type FooterStyleId = 'signature' | 'wordmark' | 'contact' | 'line' | 'index' | 'stage'
 export type FooterStyle = { id: FooterStyleId; name: string; line: string; composition: string; behavior: string; responsive: string }
 /** The frame every page shares; a page can leave either out (`hide`). */
 export type ChromeId = 'navbar' | 'footer'

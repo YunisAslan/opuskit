@@ -653,12 +653,14 @@ function pageRhythm(list: PageSection[], spec: RecipeSpec, chapters: boolean, fo
 
 /** Footer that suits the look, unless the user picked one: quiet and minimal looks end on one calm line, bold ones on
  *  the name set large, warm and raw ones on an open invitation, editorial and cinematic ones on full columns. */
-export function recommendedFooter(spec: Pick<RecipeSpec, 'direction' | 'purpose' | 'concept'>, concept = spec.concept): FooterStyleId {
+export function recommendedFooter(spec: Pick<RecipeSpec, 'direction' | 'purpose' | 'concept'> & { lead?: RecipeSpec['lead'] }, concept = spec.concept): FooterStyleId {
   const fam = directions[spec.direction].families[0]
   const byFamily: Record<string, FooterStyleId> = { quiet: 'line', minimal: 'line', futuristic: 'line', bold: 'wordmark', experimental: 'wordmark', raw: 'contact', organic: 'contact', editorial: 'signature', cinematic: 'signature' }
   // Shops and clinics need their full set of links whatever the look.
   if (spec.purpose === 'ecommerce' || spec.purpose === 'clinic' || spec.purpose === 'hotel' || spec.purpose === 'spa') return 'signature'
   // Content-rich sites end on a map of everything they hold.
+  // A site led by its object ends on it: the name behind the thing (Awwwards part 5 — USAvionix, The Watch).
+  if ((spec.lead === 'product' || spec.lead === '3d') && spec.purpose !== 'blog') return 'stage'
   if (spec.purpose === 'blog') return 'index'
   // A big idea brings its own ending: only giant chapters end on the name set huge.
   const byConcept: Partial<Record<ConceptId, FooterStyleId>> = { 'giant-chapters': 'wordmark', 'loud-and-quiet': 'line', 'live-console': 'line', 'guided-walk': 'contact' }
@@ -718,7 +720,7 @@ function byPurposeNav(spec: Pick<RecipeSpec, 'purpose'>, d: (typeof directions)[
   if (d.families.includes('editorial') && (spec.purpose === 'portfolio' || spec.purpose === 'studio')) return 'side-index'
   const byPurpose: Record<PurposeId, NavStyleId> = {
     portfolio: 'fullscreen-menu', agency: 'fullscreen-menu', studio: 'fullscreen-menu', fashion: 'centered-logo', restaurant: 'centered-logo',
-    ecommerce: 'classic-bar', product: 'floating-pill', saas: 'floating-pill', 'personal-brand': 'bottom-dock', experiment: 'status-bar', other: 'classic-bar',
+    ecommerce: 'classic-bar', product: 'corner-panel', saas: 'floating-pill', 'personal-brand': 'bottom-dock', experiment: 'status-bar', other: 'classic-bar',
     blog: 'classic-bar', event: 'centered-logo', nonprofit: 'floating-pill', 'real-estate': 'classic-bar', hotel: 'centered-logo', course: 'floating-pill', clinic: 'classic-bar', spa: 'centered-logo',
   }
   return byPurpose[spec.purpose]

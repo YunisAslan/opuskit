@@ -22,8 +22,8 @@ job (the user, 2026-10-11). So we study what the winners do, part by part, and m
 | 2 | Typography | Typography Honors; fonts on winners; Best Fonts | Pairings and type moves (sizes, contrast, mono labels), free stand-ins for winning faces | done — `02-typography.md` |
 | 3 | Transitions & scroll | Tags *Transitions*, *Scrolling*, *Parallax*, *Storytelling*; Elements *Transition*, *Scroll* | New moments (pieces), craft rules for page changes | done — `03-motion.md` |
 | 4 | Colour | Palettes from part 1; colour filter; *Electric Colors*, *Pastel colors* | Palettes that pass check.ts; how many colours winners use | done — `04-colour.md` |
-| 5 | Layout & navigation | *Layout*, *Inspiring UX Design*, *Unusual Navigation*, Menu, Header, Footer elements | Sections and menus worth a card; layout rules | next |
-| 6 | WebGL, 3D, texture | *WebGL*, *3D*, *Three.js* tags and collection | Which effects are worth a piece (and cheap enough) | — |
+| 5 | Layout & navigation | *Layout*, *Inspiring UX Design*, *Unusual Navigation*, Menu, Header, Footer elements | Sections and menus worth a card; layout rules | done — `05-layout.md` |
+| 6 | WebGL, 3D, texture | *WebGL*, *3D*, *Three.js* tags and collection | Which effects are worth a piece (and cheap enough) | next |
 | 7 | Forms, microcopy, details | *Forms and Input*, *Microcopy and UX writing*, *404 pages*, Loading | Craft rules for forms and words | — |
 
 The order can change with what part 1 shows. Each finished part gets a line in `docs/HANDOFF.md`. New ingredients come in batches between parts (batch 1:
@@ -31,6 +31,8 @@ The order can change with what part 1 shows. Each finished part gets a line in `
 
 ## Tools
 
+- `scripts/research/awwwards-layout.mjs <shots-dir> [top]` — part 5's: header, menu and footer of all 93 →
+  `data/layout.json`.
 - `scripts/research/awwwards-motion.mjs <sheets-dir> [top]` — part 3's: each scroll/transition winner opened in a
   headless browser and measured → `data/motion.json`; contact sheets go outside the repo.
 - `scripts/research/awwwards-fonts.mjs` — part 2's collector: each winner's live page → its `@font-face` families →
