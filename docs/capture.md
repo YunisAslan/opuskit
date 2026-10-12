@@ -77,6 +77,15 @@ before pressing; a drag moves a little slower.
 motion blur 0.3. A page's own drawn cursor (the brand cursor) needs `useSvg: false` so Cap shows the real bitmap.
 Hide the cursor in clips with no pointer.
 
+**Capture at the screen's rate, write the true rate back.** The Mac's screen runs at 120 Hz (ProMotion) and Chrome
+draws 120 frames a second; a 60 fps capture beat against it — every few seconds the same frame twice, then one skipped,
+a scroll that caught (measured: Chrome's own frames were all under 10 ms). So Cap records at 120 fps and the export
+(60 fps) takes every second frame. And a page standing still sends no frames, so Cap measures a lower average and writes
+it into the project (`recording-meta.json`, `fps: 50` for a 60 fps capture); the export then repeated every sixth frame
+and a scroll juddered (the user, 2026-10-12: "partlayır"). Both recorders write the true rate back before `cap export`.
+To check a clip, measure the scroll per frame: an even scroll moves a steady amount every frame; `0 3 1 1 2 1 | 0 3 …`
+is the judder, `0#..0#..0#` the beat.
+
 **Short loops.** The pointer starts just off the piece and stops just after the thing happens — no trip across the
 screen to it and away (that was a second or two of a five-second loop). A scroll goes down and comes back up, so the
 loop on the card has no jump. Clips run 2–8 s; a long scroll up to ~11 s.
@@ -106,14 +115,14 @@ lightbox). Small things are shown large and centred, never at the edge where a s
 **One ground.** Pieces and pure parts are recorded on OpusKit's dark card ground `#18181B` (`OPUSKIT_DARK`): rows of
 white cards tired the eye, and one dark set reads well in both light and dark mode, so there is one set to maintain.
 
-**Open (2026-10-11, the user): arrivals come out all at once.** On Ines Varga the page's blocks arrive one after
-another on load (staggered delays), but in `site.mp4` and `full.mp4` they appear together. Not yet fixed — those two
-clips are recorded but not registered. Likely cause, to check first: the script waits for `load` (and the page's own
-start-up) before Cap's recording really begins (~1 s late), so the arrival sequence has already played; the clip then
-opens on a finished page. Try: start the recording first and load or reload the page inside it (`reload`, as for
-Sticky Weather's stickers), and keep the lead-in that `freezedetect` would cut. Compare the clip frame by frame with the
-page loaded by hand before keeping it. Also check that nothing scrolls the page before the recording starts (a reveal on
-entering the screen fires once).
+**Arrivals are replayed inside the recording** (fixed 2026-10-12). On Ines Varga the map draws itself stroke by
+stroke on load (CSS animations with delays, ~3 s), and the clips opened on a finished map: the recorder waits 4 s after
+`load`, so the arrival had played before Cap started. Now `site` and `full` (and any shot with `replay`) rewind the
+page's time-driven animations (`document.getAnimations()` on the document timeline) to their first frame and pause
+them before recording, then play them once Cap runs and wait for them to end before scrolling. No reload — that flashes
+a blank page. JS tweens (GSAP) are not rewound; a piece that plays once on its own must start below the first screen on
+its demo stage (LettersAssemble gathers on its own when it opens in view — its demo now has a screen of space above).
+Thin pencil strokes read as standing still to `freezedetect`, so a replayed clip keeps 0.9 s before the first change.
 
 **Look at every take.** Make a contact sheet of frames (`ffmpeg … tile`) before wiring a clip in: wrong section, a
 welcome screen, a black film layer, a cut-off photo and an idle start were all caught this way. After a run,

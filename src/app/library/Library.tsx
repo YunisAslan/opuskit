@@ -6,7 +6,6 @@
 // filtered by one kind and one feel — then Sections, Moments and Touches: every card of the catalog
 // (src/data/takeables.ts) once, filtered by its category, each marked with the site it comes from. The view is kept in
 // the address (#sections), so coming back from a site keeps it.
-import { IDEA_BY_ID, ideaClip } from '@/data/site-ideas'
 import { ArrowUpRight, Check, Copy, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 import { promptFor } from '@/features/library/prompt'
@@ -20,14 +19,13 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { KIND_GROUPS, directions, families, kindName } from '@/data/taxonomy'
 import { alternativesOf, hasItem, takeKeyOf, shelfSites, siteName, siteSpec, type CollectionItem, type SiteRef } from '@/features/library/collection'
 import { behaviourOf } from '@/data/pieces'
-import type { BehaviourId, PieceId } from '@/types/domain'
+import type { BehaviourId } from '@/types/domain'
 import { useCollection } from '@/lib/collection'
 import { useHydrated } from '@/lib/store'
 import type { FamilyId, PurposeId } from '@/types/domain'
-import DEMO_CLIPS from '@/data/demo-clips.generated.json'
-import { Clip, CopyPromptSquare, TakeSquare, ItemPreview, SiteThumb, StartBlank, TakenPicture, clipOf, exampleOf, pureLook, standardLook, useCollect } from './parts'
+import { CopyPromptSquare, TakeSquare, SiteThumb, StartBlank, TakenPicture, exampleOf, pictureClip, useCollect } from './parts'
 import { LikeButton, catalogOf, type CatalogCard } from './SiteTake'
-import { TAKE_CATEGORIES, shownPure, type TakeGroup } from '@/data/takeables'
+import { TAKE_CATEGORIES, type TakeGroup } from '@/data/takeables'
 
 const SITES = shelfSites.map((ref) => { const spec = siteSpec(ref)!; return { ref, spec, name: siteName(ref), families: directions[spec.direction].families } })
 const KINDS = Object.keys(KIND_GROUPS).filter((g) => SITES.some((s) => KIND_GROUPS[g].kinds.includes(s.spec.purpose)))
@@ -142,9 +140,9 @@ function Part({ card: x }: { card: CatalogCard }) {
           playing on the dark card ground, then its name and what it does. The picture can hold controls of its own (a
           demo's buttons), so the card opens from the name's button, which covers the whole cell; the tools sit above it. */}
       <article className={`relative overflow-hidden rounded-[3px] border bg-white transition-[border-color,translate,box-shadow] duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_18px_36px_-24px_rgb(0_0_0/.55)] ${on ? 'border-pencil' : 'border-line group-hover:border-ink'}`}>
-        <CardHead label={x.category} info={on ? <span className="flex items-center gap-1.5 text-pencil"><span className="size-1.5 rounded-full bg-pencil" aria-hidden />Taken</span> : siteName(x.site)} />
+        <CardHead label={x.category} info={on ? <span className="flex items-center gap-1.5 text-pencil"><span className="size-1.5 rounded-full bg-pencil" aria-hidden />Taken</span> : x.site ? siteName(x.site) : 'Demo'} />
         <div className="relative border-b border-line bg-[#18181B]">
-          <LazyMount className="aspect-[16/10] overflow-hidden"><div className="size-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"><CardPicture item={x.item} category={x.category} /></div></LazyMount>
+          <LazyMount className="aspect-[16/10] overflow-hidden"><div className="size-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"><TakenPicture item={x.item} category={x.category} /></div></LazyMount>
         </div>
         <div className="flex items-start gap-3 px-3 pb-3.5 pt-3">
           <button type="button" onClick={() => setOpen(true)} aria-label={`${x.title} — open`} className="block min-w-0 flex-1 text-left after:absolute after:inset-0">
@@ -167,7 +165,7 @@ function Part({ card: x }: { card: CatalogCard }) {
             <ToolRow card={x} />
           </div>
           <div className="min-h-0 flex-1 space-y-10 overflow-y-auto p-5 md:p-6 [scrollbar-color:var(--color-line)_transparent] [scrollbar-width:thin]">
-            {/* One place for a card (the user, 2026-10-11): the design top left and large — its recording with controls,
+            {/* One place for a card (the user, 2026-10-11): the design top left and large — its recording,
                 or the live part — and around it the others a site could have instead, beside it and then below; then
                 the sites it is used on. */}
             <section aria-label={alts.length ? 'The design and its alternatives' : 'The design'}>
@@ -176,14 +174,15 @@ function Part({ card: x }: { card: CatalogCard }) {
                 <li className={alts.length ? 'sm:col-span-2 sm:row-span-2' : 'sm:col-span-2 lg:col-span-4'}><Large card={x} /></li>
                 {alts.map((y) => (
                   <li key={y.title} className="relative">
-                    <TakeFrame item={y.item}><CardPicture item={y.item} category={y.category} /></TakeFrame>
+                    <TakeFrame item={y.item}><TakenPicture item={y.item} category={y.category} /></TakeFrame>
                     <p className="mt-2 truncate text-sm font-medium">{y.title}</p>
                     <div className="absolute right-2 top-2 z-10 flex gap-1.5"><CopyPromptSquare item={y.item} title={y.title} className="relative" /><TakePlus item={y.item} title={y.title} /></div>
                   </li>
                 ))}
               </ul>
             </section>
-            <section aria-label="Used on">
+            {!x.styles.length && <p className="text-sm text-muted">Not on a Library site yet — shown by its own demo.</p>}
+            {!!x.styles.length && <section aria-label="Used on">
               <h3 className="label mb-4 text-muted">Used on</h3>
               <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {x.styles.map((y) => (
@@ -195,7 +194,7 @@ function Part({ card: x }: { card: CatalogCard }) {
                   </li>
                 ))}
               </ul>
-            </section>
+            </section>}
           </div>
         </DialogContent>
       </Dialog>
@@ -270,14 +269,14 @@ function ToolRow({ card, children }: { card: CatalogCard; children?: ReactNode }
   )
 }
 
-/** The design large, inside its card's dialog: the recording with its controls, or the live part at full size. */
+/** The design large, inside its card's dialog: the recording (no controls — the user, 2026-10-12), or the live part at full size. */
 function Large({ card: x }: { card: CatalogCard }) {
-  const clip = clipFor(x.item, x.category)
+  const clip = pictureClip(x.item, x.category)
   return (
     <div className="overflow-hidden rounded-[3px] border border-line bg-[#18181B]">
       {clip
-        ? <video src={clip} muted loop playsInline autoPlay controls className="block aspect-[16/10] max-h-[62vh] w-full object-contain" />
-        : <div className="mx-auto aspect-[16/10] max-h-[62vh] w-full"><CardPicture item={x.item} category={x.category} /></div>}
+        ? <video src={clip} muted loop playsInline autoPlay className="block aspect-[16/10] max-h-[62vh] w-full object-contain" />
+        : <div className="mx-auto aspect-[16/10] max-h-[62vh] w-full"><TakenPicture item={x.item} category={x.category} /></div>}
     </div>
   )
 }
@@ -322,37 +321,6 @@ const ONE_OF: Partial<Record<BehaviourId, string>> = { links: 'link hover', butt
 const ANOTHER: Record<string, string> = {
   'First screen': 'Or another first screen — a site has one', Menu: 'Or another menu — a site has one', Footer: 'Or another footer — a site has one',
   Work: 'Other ways to show work', Products: 'Other ways to show products', Story: 'Other ways to tell the story', Listings: 'Other ways to list things',
-}
-
-/** What a catalog card shows: an effect as the pure component in OpusKit's standard theme, live and centred (the same
- *  piece every site gets); a section as the site that shows it best has it. */
-// A moment that lives in a whole site (a section held while you scroll, photos on the page) shows the site's own
-// recording where there is one; anything a component shows alone (a button, a link, a headline) is the component.
-const SITE_MOMENTS = new Set(['Scroll', 'Photos'])
-// A menu is a component too: all eight drawn the same way, in the standard theme, so they compare side by side.
-// A piece that only moves when used (hovered, dragged, clicked, scrolled past) plays a clip of it being used, the Mac's
-// own cursor doing it (scripts/capture/demo-clips.mjs): standing still it says nothing (the user, 2026-10-10).
-/** The recording a card plays, if it plays one (else it shows a live part): the same choice as CardPicture. */
-function clipFor(item: CollectionItem, category: string): string | undefined {
-  if (item.kind === 'idea') { const x = IDEA_BY_ID.get(item.id); return x && ideaClip(x) }
-  const key = takeKeyOf(item)
-  if (key && shownPure(key)) return undefined
-  if (item.kind === 'effect') {
-    const site = SITE_MOMENTS.has(category) ? exampleOf(item.from as SiteRef)?.pieceClips?.[item.id] : undefined
-    return site ?? (DEMO_CLIPS as Record<string, { src: string }>)[item.id]?.src
-  }
-  return clipOf(item)
-}
-export const CardPicture = ({ item, category }: { item: CollectionItem; category: string }) => {
-  const key = takeKeyOf(item)
-  if (item.kind === 'idea') { const x = IDEA_BY_ID.get(item.id); if (x) return <Clip src={ideaClip(x)} /> }
-  if (key && shownPure(key)) return <div className="pointer-events-none size-full"><ItemPreview item={item} look={pureLook(item)} pure /></div>
-  const site = item.kind === 'effect' && SITE_MOMENTS.has(category) && exampleOf(item.from as SiteRef)?.pieceClips?.[item.id]
-  const used = item.kind === 'effect' && !site && (DEMO_CLIPS as Record<string, { src: string }>)[item.id]
-  if (used) return <Clip src={used.src} />
-  return item.kind === 'effect' && !site
-    ? <div className="pointer-events-none size-full"><ItemPreview item={item} look={standardLook()} /></div>
-    : <TakenPicture item={item} />
 }
 
 /** A takeable picture's frame: ringed in pencil once it is in the Collection. */

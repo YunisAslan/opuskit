@@ -22,7 +22,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 // these points (fractions of the screen) over `s` seconds, for a part that answers the pointer (a 3D object that turns
 // toward it), `crop`: [centre x, centre y, width] as fractions of the screen — a small thing shown large (a thermometer in
 // a filter bar), `prep` / `act`: what happens before and during the recording, for an idea that is used — a form filled in,
-// a tab pressed, a name hovered (helpers below: `tap`, `hover`, `type`, `glide`, `wait`). A scroll goes down and comes back, so the loop on the card has no jump (the user, 2026-10-11).
+// a tab pressed, a name hovered (helpers below: `tap`, `hover`, `type`, `glide`, `wait`), `replay`: the page's own
+// arrival on load (CSS and Web Animations — a map drawing itself) rewound before the recording and played inside it; on
+// by default for `site` and `full`, which open on the page arriving (the user, 2026-10-11: Ines Varga's map came out whole). A scroll goes down and comes back, so the loop on the card has no jump (the user, 2026-10-11).
 export const SHOTS = {
   'halden:hero': ['', 0, 1.6, 4200, { late: 1.6 }],
   'fieldhouse:hero': ['', 0, 0.7, 3000],
@@ -83,7 +85,7 @@ const glide = steady
 const read = async (page, pxPerSec) => { const d = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight - scrollY); await steady(page, 'end', (d / pxPerSec) * 1000 + 800) }
 
 async function record(key) {
-  const [slug, id] = key.split(':'), [route, i, screens, ms, { late = 0, session = WELCOMES[slug] ?? {}, reload = false, hand, crop, prep, act, local = {} } = {}] = SHOTS[key] ?? PAGE[id], url = `http://localhost:3000/live/${slug}${route}`
+  const [slug, id] = key.split(':'), [route, i, screens, ms, { late = 0, session = WELCOMES[slug] ?? {}, reload = false, replay = id === 'site' || id === 'full', hand, crop, prep, act, local = {} } = {}] = SHOTS[key] ?? PAGE[id], url = `http://localhost:3000/live/${slug}${route}`
   const tmp = fs.mkdtempSync(`${os.tmpdir()}/opuskit-site-`)
   const b = await chromium.launchPersistentContext(`${tmp}/profile`, { headless: false, viewport: null, executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     ignoreDefaultArgs: ['--enable-automation'], args: [`--app=${url}`, '--window-position=130,33', '--window-size=1210,923', '--force-device-scale-factor=1.68', '--hide-scrollbars', '--mute-audio'] })
@@ -114,15 +116,21 @@ async function record(key) {
     }
     if (prep) { await prep(do_); await sleep(900) }
     if (hand) await pointer.mouse([[X(hand.to[0][0] * geo.w), Y(hand.to[0][1] * geo.h)]], 0.4)
+    // The arrival has played during the wait above: rewind it to its first frame and hold it there until Cap records.
+    // Only time-driven ones — a scroll-driven animation keeps following the scroll. JS tweens (GSAP) are not rewound.
+    if (replay) await p.evaluate(() => { window.__arrival = document.getAnimations().filter((a) => a.timeline === document.timeline); for (const a of window.__arrival) { a.pause(); a.currentTime = 0 } })
     let win
     for (let n = 0; n < 10 && !win; n++) {
       await p.evaluate((t) => { document.title = t }, `opuskit-site-${slug}-${id}`); await sleep(300)
       win = cap('targets').find((x) => x.windows)?.windows.find((w) => /chrome/i.test(w.ownerName) && w.name === `opuskit-site-${slug}-${id}`)
     }
     if (!win) throw new Error(`no Chrome window for ${key}`)
-    rid = cap('record', 'start', '--window', win.id, '--fps', '60', '--mode', 'studio', '--path', `${tmp}/c.cap`, '--detach').find((e) => e.recordingId)?.recordingId
+    rid = cap('record', 'start', '--window', win.id, '--fps', '120', '--mode', 'studio', '--path', `${tmp}/c.cap`, '--detach').find((e) => e.recordingId)?.recordingId
     await sleep(1100) // Cap's start-up, then a breath on the section standing still
     if (reload) { await p.reload({ waitUntil: 'load' }); await sleep(1300) }
+    // Played again and watched to its end (never longer than 6 s; a loop that never ends is not waited for).
+    if (replay) await p.evaluate(() => Promise.race([new Promise((r) => setTimeout(r, 6000)),
+      Promise.all(window.__arrival.map((a) => { a.play(); return a.effect?.getComputedTiming().iterations === Infinity ? null : a.finished.catch(() => {}) }))]))
     if (hand) await pointer.mouse(hand.to.map(([fx, fy]) => [X(fx * geo.w), Y(fy * geo.h)]), hand.s)
     if (act) await act(do_)
     if (screens) { await glide(p, screens, ms); await sleep(350); await glide(p, -screens, ms * 0.8) }
@@ -130,6 +138,13 @@ async function record(key) {
     if (id === 'full') { await sleep(600); await read(p, 520); await sleep(1000) }
     await sleep(500)
     cap('record', 'stop', '--id', rid); rid = undefined
+    // Captured at 120 fps, the screen's own rate (ProMotion): Chrome draws 120 frames a second, and a 60 fps capture beat
+    // against it — now and then the same frame twice, then one skipped (a scroll that caught; the user, 2026-10-12). The
+    // export takes every second frame. Cap writes the rate it measured, and a page standing still sends no frames: it
+    // wrote 50 for a 60 fps capture and the export repeated every sixth frame ("partlayır"). So the true rate goes back in.
+    const meta = `${tmp}/c.cap/recording-meta.json`, m = JSON.parse(fs.readFileSync(meta, 'utf8'))
+    for (const s of m.segments) s.display.fps = 120
+    fs.writeFileSync(meta, JSON.stringify(m))
     const cfg = JSON.parse(fs.readFileSync(`${tmp}/c.cap/project-config.json`, 'utf8'))
     cfg.cursor = { ...cfg.cursor, hide: !hand && !act, raw: true, size: 110, motionBlur: 0.3 }
     cfg.background = { ...cfg.background, padding: 0, rounding: 0, shadow: 0 }
@@ -143,11 +158,12 @@ async function record(key) {
     const y0 = crop ? even(Math.min(Math.max(bar + vh * crop[1] - h / 2, bar), bar + vh - h)) : bar + 2
     const out = `${ROOT}/examples/${slug}/public/media/clips/${id}.mp4`
     fs.mkdirSync(path.dirname(out), { recursive: true })
-    // From a breath before the page starts to move (Cap's start-up and the wait cut away); a film that never stands
+    // From a breath before the page starts to move (Cap's start-up and the wait cut away; a longer one before an
+    // arrival, whose first thin pencil strokes read as standing still); a film that never stands
     // still (Halden's) hides that moment, so then a fixed cut.
     const still = spawnSync('ffmpeg', ['-i', `${tmp}/raw.mp4`, '-vf', `crop=${w}:${h}:${x0}:${y0},freezedetect=n=0.001:d=0.2`, '-an', '-f', 'null', '-'], { encoding: 'utf8' }).stderr
     const lead = /freeze_start: 0(?:\.0+)?\b[\s\S]*?freeze_end: ([\d.]+)/.exec(still)?.[1]
-    execFileSync('ffmpeg', ['-v', 'error', '-y', '-ss', String((lead ? Math.max(0, Number(lead) - 0.4) : 1.5) + late), '-i', `${tmp}/raw.mp4`, '-vf', `crop=${w}:${h}:${x0}:${y0},scale=1280:-2:flags=lanczos`, '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-pix_fmt', 'yuv420p', '-r', '60', '-movflags', '+faststart', out])
+    execFileSync('ffmpeg', ['-v', 'error', '-y', '-ss', String((lead ? Math.max(0, Number(lead) - (replay ? 0.9 : 0.4)) : 1.5) + late), '-i', `${tmp}/raw.mp4`, '-vf', `crop=${w}:${h}:${x0}:${y0},scale=1280:-2:flags=lanczos`, '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-pix_fmt', 'yuv420p', '-r', '60', '-movflags', '+faststart', out])
     console.log('recorded', key)
   } finally {
     if (rid) cap('record', 'stop', '--id', rid) // never a recording left running

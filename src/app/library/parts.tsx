@@ -23,7 +23,9 @@ import { TRAITS, TRAIT_IDS, purposeFrom, siteTraits, type Trait } from '@/featur
 import { heroName } from '@/components/HeroPreview'
 import { HeroPreview } from '@/components/HeroPreview'
 import { lookOf } from '@/components/ProductVisual'
-import { hasItem, itemKey, itemName, notes, removeItem, siteName, siteSpec, sitesWith, toggleItem, type CollectionItem, type SiteRef } from '@/features/library/collection'
+import { hasItem, itemKey, itemName, notes, removeItem, siteName, siteSpec, sitesWith, takeKeyOf, toggleItem, type CollectionItem, type SiteRef } from '@/features/library/collection'
+import { TAKE_BY_KEY, shownPure } from '@/data/takeables'
+import DEMO_CLIPS from '@/data/demo-clips.generated.json'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { behaviours, pieces } from '@/data/pieces'
@@ -464,10 +466,35 @@ function stillOf(i: CollectionItem): string | undefined {
   }
 }
 
-export function TakenPicture({ item, auto }: { item: CollectionItem; auto?: boolean }) {
+// A moment that lives in a whole site (a section held while you scroll, photos on the page) shows the site's own
+// recording where there is one; anything a component shows alone (a button, a link, a headline) is the component.
+const SITE_MOMENTS = new Set(['Scroll', 'Photos'])
+const categoryOf = (item: CollectionItem) => TAKE_BY_KEY.get(takeKeyOf(item) ?? '')?.category ?? ''
+
+/** The recording a design plays, if it plays one (else it is drawn live): the same choice as TakenPicture. */
+export function pictureClip(item: CollectionItem, category = categoryOf(item)): string | undefined {
+  const key = takeKeyOf(item)
+  if (key && shownPure(key)) return undefined
+  if (item.kind === 'effect') {
+    // A piece that only moves when used (hovered, dragged, clicked, scrolled past) plays a clip of it being used, the
+    // Mac's own cursor doing it (scripts/capture/demo-clips.mjs): standing still it says nothing (the user, 2026-10-10).
+    const site = SITE_MOMENTS.has(category) && item.from ? exampleOf(item.from)?.pieceClips?.[item.id] : undefined
+    return site ?? (DEMO_CLIPS as Record<string, { src: string }>)[item.id]?.src
+  }
+  return clipOf(item)
+}
+
+/** One design, drawn the same everywhere it shows — its Library card and that card's dialog, a site's take list, the
+ *  Collection, the recipe page (the user, 2026-10-12: "hər yerdə bir cür görünsün"; the colours never change): its
+ *  recording; a menu or footer drawn pure in the standard theme; an effect live in the standard theme; a section as
+ *  the site that shows it best has it. */
+export function TakenPicture({ item, auto, category }: { item: CollectionItem; auto?: boolean; category?: string }) {
   if (item.kind === 'site') return <SiteThumb site={item.site} auto={auto} />
-  const clip = clipOf(item)
+  const key = takeKeyOf(item)
+  if (key && shownPure(key)) return <div className="pointer-events-none size-full"><ItemPreview item={item} look={pureLook(item)} pure /></div>
+  const clip = pictureClip(item, category)
   if (clip) return <Clip src={clip} />
+  if (item.kind === 'effect') return <div className="pointer-events-none size-full"><ItemPreview item={item} look={standardLook()} /></div>
   const still = stillOf(item)
   // eslint-disable-next-line @next/next/no-img-element -- a captured still of the live site, already sized
   if (still) return <img src={still} alt="" loading="lazy" className="pointer-events-none size-full object-cover object-top" />

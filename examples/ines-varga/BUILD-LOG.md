@@ -159,12 +159,9 @@ them. `npm run check` ✓.
       four chapter pictures, the window's one picture); check.ts. This build's prompt named the four process photos
       instead.
 - [x] The new pieces have their Library cards on this site (catalog `bestOn: ines-varga`).
-- [ ] Clips (started 2026-10-11, stopped by the user): `media/clips/site.mp4` and `full.mp4` were recorded with
-      `site-clips.mjs ines-varga:site ines-varga:full` and are clean (only the page, an even scroll) — but **wrong**: the
-      page's blocks arrive one after another on load, and in the clips they arrive together (the user). Not
-      registered, not committed. Fix the recorder first (docs/capture.md, "Open: arrivals come out all at once"), then
-      record both again.
-- [ ] The new pieces in use: plans added to `scripts/capture/demo-clips.mjs` (`shutter-transition`: three clicks;
-      `letters-assemble`: the line scrolled into view; `scroll-story`: down through the chapters; `photo-morph` loops by
-      itself and stays live). Not recorded yet — run `node scripts/capture/demo-clips.mjs shutter-transition
-      letters-assemble scroll-story` once the arrival problem is understood (it may touch these too).
+- [x] Clips (2026-10-12): the first takes opened on a finished map — the hero map draws itself on load and the
+      recorder started 4 s after it. `site-clips.mjs` now replays the page's arrival inside the recording
+      (docs/capture.md); `site.mp4` (11 s) and `full.mp4` (12 s) recorded again and registered (`clip`, `fullClip`).
+- [x] The new pieces in use (2026-10-12): `shutter-transition`, `letters-assemble`, `scroll-story` recorded with
+      `demo-clips.mjs`. letters-assemble's first take showed the line already whole (it sat in the demo's first screen,
+      so it gathered once on load); its demo stage now has a screen of space above. `photo-morph` stays live.

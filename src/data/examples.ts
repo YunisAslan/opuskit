@@ -123,6 +123,7 @@ export const examples: ExampleProject[] = [
     // the site's own first screen (the map it draws).
     hero: { kind: 'image', src: '/examples/ines-varga/media/poster.jpg' },
     livePath: '/live/ines-varga',
+    clip: '/examples/ines-varga/media/clips/site.mp4', fullClip: '/examples/ines-varga/media/clips/full.mp4', // scripts/capture/site-clips.mjs (the map's arrival replayed)
     // Parts taken from Inkwell & Moth, Fieldhouse and Fennwood, then You → Direction (Conceptual Sketch, Gallery Grey),
     // plus the session's new pieces at the user's request; built by an isolated Claude Code session from its Build
     // Package: opuskit.json is the exact recipe, with what was taken.

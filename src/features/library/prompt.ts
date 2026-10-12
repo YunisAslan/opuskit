@@ -18,7 +18,7 @@ const FIT = 'Make it belong to my site: my colours, fonts, spacing and words, no
 export function promptFor(key: string): string {
   const e = TAKE_BY_KEY.get(key)
   if (!e) return ''
-  return compose(key, e.name, e.line, siteName(e.bestOn))
+  return compose(key, e.name, e.line, e.bestOn && siteName(e.bestOn))
 }
 
 /** What the knowledge base says about one design, whether or not the Library offers it on its own card. */
@@ -54,9 +54,9 @@ function details(key: string): string[] {
   return out
 }
 
-const compose = (key: string, name: string, line: string, seenOn: string) => {
+const compose = (key: string, name: string, line: string, seenOn?: string) => {
   const out = details(key)
-  return [`Add this to my website: ${name}.`, ...(line ? ['', line] : []), ...(out.length ? ['', ...out] : []), '', FIT, `Seen on ${seenOn}, in the OpusKit Library.`].join('\n')
+  return [`Add this to my website: ${name}.`, ...(line ? ['', line] : []), ...(out.length ? ['', ...out] : []), '', FIT, seenOn ? `Seen on ${seenOn}, in the OpusKit Library.` : 'From the OpusKit Library.'].join('\n')
 }
 
 /** A design's own name and one line, from the knowledge base — for a design without a catalog card. */

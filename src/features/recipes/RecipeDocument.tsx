@@ -19,8 +19,7 @@ import { MediaSlots } from '@/components/MediaSlots'
 import type { TakenPart, BuildTarget, PaletteColors, PieceId, RecipeSpec, SectionId, UniversalRecipe } from '@/types/domain'
 import { normalizeSpec } from './engine'
 import { toggleSaved, useSaved } from './library'
-import { CopyPromptSquare, FlowBar, SiteThumb, TakeSquare, exampleOf } from '@/app/library/parts'
-import { CardPicture } from '@/app/library/Library'
+import { CopyPromptSquare, FlowBar, SiteThumb, TakeSquare, TakenPicture, exampleOf } from '@/app/library/parts'
 import { BrandCard } from '@/components/BrandCard'
 import { useGoogleFonts } from '@/components/FontLoader'
 import { siteName, siteSpec, takeKeyOf, takenName, type CollectionItem, type SiteRef } from '@/features/library/collection'
@@ -199,13 +198,13 @@ function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
   const added = r.pieces.filter((p) => !taken.some((x) => x.kind === 'effect' && x.id === p.id))
   const t = look.type, world = worldFor(r.metadata.spec.purpose), brand = r.metadata.spec.brief?.name
   const part = (id: string) => r.pages.flatMap((p) => p.sections).find((s) => s.id === id)
-  // Live, not a still (the user, 2026-10-08): an effect is its working demo, in the owner's brand — move, click, drag;
-  // a part plays its few seconds on the real site it came from, when that site was recorded; a whole look or quality
+  // Live, not a still (the user, 2026-10-08): an effect is shown as the Library shows it, never recoloured (the user,
+  // 2026-10-12); a part plays its few seconds on the real site it came from, when that site was recorded; a whole look or quality
   // plays that site. Without a recording a part is drawn in the owner's brand.
   const visual = (x: TakenPart) => {
     const clip = exampleOf(x.site as SiteRef)?.sectionClips?.[(x.kind === 'menu' ? 'navbar' : x.kind === 'footer' ? 'footer' : x.id) as SectionId]
     if (x.kind === 'idea') { const i = IDEA_BY_ID.get(x.id); if (i) return <LiveClip src={ideaClip(i)} /> }
-    if (x.kind === 'effect') return <PieceDemo id={x.id as PieceId} colors={look.colors} fonts={{ display: t.display.family, body: t.body.family, utility: t.utility.family }} className="!h-full" />
+    if (x.kind === 'effect') return <TakenPicture item={{ kind: 'effect', id: x.id as PieceId }} />
     if (clip && x.kind !== 'site' && x.kind !== 'like' && x.kind !== 'hero') return <LiveClip src={clip} />
     if (x.kind === 'section') { const s = part(x.id); return <div className="size-full" inert><SectionPreview id={x.id as SectionId} variant={s?.variant?.id} tone={s?.tone} media={s?.media} colors={look.colors} type={t} shape={look.shape} world={world} brand={brand} className="h-full" /></div> }
     if (x.kind === 'footer') return <div className="size-full" inert><SectionPreview id="footer" footer={r.chrome.footerStyle.id} colors={look.colors} type={t} shape={look.shape} world={world} brand={brand} className="h-full" /></div>
@@ -230,8 +229,8 @@ function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
                   {/* As the Library showed it when it was taken (the user, 2026-10-11): the same picture as its Library card —
                       its recording, the live piece on the dark card ground, the site's own capture. A pick from a site no
                       longer on the shelf has nothing to show there, so it is drawn in the owner's brand. */}
-                  <div className="aspect-[16/10] overflow-hidden border-b border-line" style={{ background: siteSpec(x.site as SiteRef) ? '#18181B' : look.colors.background }}>
-                    {siteSpec(x.site as SiteRef) ? <CardPicture item={item} category={named?.category ?? ''} /> : visual(x)}
+                  <div className="aspect-[16/10] overflow-hidden border-b border-line" style={{ background: siteSpec(x.site as SiteRef) || x.kind === 'effect' ? '#18181B' : look.colors.background }}>
+                    {siteSpec(x.site as SiteRef) ? <TakenPicture item={item} category={named?.category} /> : visual(x)}
                   </div>
                   <div className="flex items-start gap-3 px-3 pb-3.5 pt-3">
                     <span className="min-w-0 flex-1">
@@ -244,12 +243,12 @@ function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
               </li>
             ) })}
           </ul>
-          <p className="mt-2 text-xs text-muted">Effects work here — move, click, drag. Parts play on the site they came from where it was recorded, else drawn in your brand. Your site takes them; it won’t look like those sites.</p>
+          <p className="mt-2 text-xs text-muted">Each is shown as the Library shows it. Parts play on the site they came from where it was recorded, else drawn in your brand. Your site takes them; it won’t look like those sites.</p>
         </>
       ) : <p className="mt-6 border border-dashed border-line p-5 text-sm text-muted">Nothing was taken from a site — this recipe started from its kind of site.</p>}
       {/* What the site has that was not taken from a site (the user, 2026-10-11: show the new things too): pieces the
           recipe brings by itself (a photo layout's, a moving site's smooth scroll) or added for this site — each its
-          working demo in the owner's brand, with where it goes. */}
+          as the Library shows it, with where it goes. */}
       {added.length > 0 && <div className="mt-14">
         <Heading title="Also in your site" />
         <ul className="mt-5 grid gap-x-6 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
@@ -259,8 +258,8 @@ function Taken({ r, look }: { r: UniversalRecipe; look: Look }) {
                 <div className="flex h-10 items-center justify-between gap-3 border-b border-line px-3 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
                   <span className="truncate">Effect</span><span className="shrink-0">OpusKit</span>
                 </div>
-                <div className="aspect-[16/10] overflow-hidden border-b border-line" style={{ background: look.colors.background }}>
-                  <PieceDemo id={p.id} colors={look.colors} fonts={{ display: t.display.family, body: t.body.family, utility: t.utility.family }} className="!h-full" />
+                <div className="aspect-[16/10] overflow-hidden border-b border-line bg-[#18181B]">
+                  <TakenPicture item={{ kind: 'effect', id: p.id }} />
                 </div>
                 <div className="px-3 pb-3.5 pt-3">
                   <span className="block truncate text-[15px] font-medium tracking-tight first-letter:uppercase">{p.name}</span>

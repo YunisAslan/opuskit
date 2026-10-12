@@ -855,6 +855,7 @@ const PER_PAGE_SHOTS = new Set<SectionId>(['editorial-story', 'case-study', 'abo
  *  the story beside one held picture had no chapter pictures in the list). */
 const PIECE_SHOTS: Partial<Record<PieceId, { key: string; shows: string; n: number; ratio: string; px: number }>> = {
   'scroll-story': { key: 'storyChapters', shows: 'one picture per chapter of the story, in its order — each the moment that chapter tells, all in one grade', n: 4, ratio: '4:5', px: 1800 },
+  'scene-slider': { key: 'scenes', shows: 'one picture per scene, in the journey’s order, each worth the whole screen and in one grade — where it can be, the same scene cut into layers (sky, far, middle, near) on transparent ground', n: 4, ratio: '16:10', px: 2800 },
   'mask-reveal': { key: 'windowPicture', shows: 'the one picture worth the whole screen — the place or the room, wide, calm at the centre where the window first opens', n: 1, ratio: '16:9', px: 2800 },
 }
 /** "4 / 5" (a CSS token) → "4:5" (a file ratio). */

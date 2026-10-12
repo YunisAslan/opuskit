@@ -1,6 +1,6 @@
 # Handoff — where the work is and how to continue
 
-Last updated 2026-10-11. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
+Last updated 2026-10-12. Read this first in a new session, on any computer. Then `AGENTS.md` → `docs/plan-library.md`.
 Keep this file current: update "Now" and "Next" whenever a step finishes.
 
 Talk to the user in Azerbaijani; code, docs and commits in English.
@@ -96,10 +96,10 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   `docs/plan-examples.md` §6 and `examples/ines-varga/BUILD-LOG.md`; the finished recipe must also be added to the
   user's Saved (open its `/studio/open?recipe=…` link in their browser). Done for the recipe (2026-10-11): in the
   user's Saved, approved, built, registered and live at `/live/ines-varga`; its Library cards show the four new
-  pieces (photo-morph, shutter, letters-assemble, scroll-story). **Next (the user stopped here, 2026-10-11, to
-  continue tomorrow): its clips.** The first takes of `site.mp4`/`full.mp4` showed the page's staggered arrivals all at
-  once — fix the recorder first (`docs/capture.md`, "Open: arrivals come out all at once"), then record the site clips
-  and the three new pieces' demo clips (plans already in `demo-clips.mjs`); details in its BUILD-LOG §Next. Engine lessons 1–3 fixed (pictures for
+  pieces (photo-morph, shutter, letters-assemble, scroll-story). **Clips done (2026-10-12):** the first takes opened on a finished map
+  (it draws itself on load, the recorder started 4 s later); `site-clips.mjs` now replays a page's arrival inside the
+  recording (`docs/capture.md`), and `site.mp4`/`full.mp4` plus the shutter, letters-assemble and scroll-story demo
+  clips are recorded and registered. Engine lessons 1–3 fixed (pictures for
   pieces in the shot list; letters-assemble in the first screen; DrawnLink passing a menu's close). The recipe page got **Also in your site** — every piece
   a recipe has that was not taken from a site, as live demos.
 - **Growing the ingredients** (2026-10-11, the user: more components, sections and variety for better sites), batch by
@@ -191,6 +191,23 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   Grading Suite · Tall Order, live at `/live/ninth-row`. Engine lessons: a cinema is an event venue with its own start
   and "Book tickets" (decision 54); a taken menu/footer survives a new look, verification's footer matches the layout,
   shot wording by kind, invented content never real films or people (decision 55).
+- **Cap's judder fixed** (2026-10-12, the user: "partlayır"): Cap wrote `fps: 50` for 60 fps captures and its export
+  repeated every sixth frame; a 60 fps capture also beat against the 120 Hz screen. Both recorders now capture at 120
+  and write the true rate back (`docs/capture.md`). Ines Varga's clips and today's three demos are clean. About 35
+  older clips still carry the judder — **the user set re-recording aside** (2026-10-12: focus on OpusKit itself); don't
+  start it unasked. The shutter demo was also wrong (one striped block, not five staggered bars) — fixed in
+  `PieceDemo.tsx` and re-recorded.
+- **Canopy slider in the Library** (2026-10-12, decision 59): fixed against its reference (letters slide and stretch,
+  drag/trackpad, a quick wipe with a long glide, a new swipe during a trackpad's momentum) and made the piece
+  `scene-slider` — the first catalog card without a site, shown by its own demo; it paints on one canvas (layers of the
+  page flickered grey mid-turn). `canopy-slider/` deleted (in git history). Also fixed: every card's details flickered
+  (the photo-morph demo's view transitions).
+- **One picture per design, everywhere** (2026-10-12, decision 60; the user: "heçnəyin rəngini dəyişmə … hər yerdə bir cür
+  görünsün"): `TakenPicture` (`app/library/parts.tsx`) is the one way a design is drawn — the Library card and its
+  dialog, a site's take list, the Collection, the recipe page's What you took and Also in your site; never recoloured
+  to a site's or the owner's palette. Videos show no controls anywhere.
+- **A new machine's recording setup** (2026-10-12): Cap's CLI ships inside the app — `ln -s
+  /Applications/Cap.app/Contents/MacOS/cap-cli ~/.local/bin/cap`; `brew install uv`.
 - Port 3000 is often taken by the user's other project; run OpusKit's dev server on 3001 when it is.
 - `other-model-examples/` (a Cursor-built comparison of Maison Vey's package, `refined-luxury-editorial-store-cursor`)
   was removed by the user; it is in git history up to `a526afd`.

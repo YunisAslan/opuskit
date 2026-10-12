@@ -1,0 +1,210 @@
+[
+  {
+    "id": "dawn",
+    "eyebrow": "First light",
+    "title": [
+      "Wake with",
+      "the forest"
+    ],
+    "text": "A slow sunrise over the ridgeline. Move your cursor to look around, then scroll to wander deeper.",
+    "cta": "Begin the journey",
+    "layers": [
+      {
+        "src": "/library/scene-slider/dawn-0.webp",
+        "depth": 0.08
+      },
+      {
+        "src": "/library/scene-slider/dawn-1.webp",
+        "depth": 0.18
+      },
+      {
+        "src": "/library/scene-slider/dawn-2.webp",
+        "depth": 0.35
+      },
+      {
+        "src": "/library/scene-slider/dawn-3.webp",
+        "depth": 0.45
+      },
+      {
+        "src": "/library/scene-slider/dawn-4.webp",
+        "depth": 0.6
+      },
+      {
+        "src": "/library/scene-slider/dawn-5.webp",
+        "depth": 0.9
+      },
+      {
+        "src": "/library/scene-slider/dawn-6.webp",
+        "depth": 1.4
+      }
+    ]
+  },
+  {
+    "id": "canopy",
+    "eyebrow": "Under the canopy",
+    "title": [
+      "Light becomes",
+      "leaf"
+    ],
+    "text": "Beneath the canopy, every shade of green is sunlight that has been caught, folded and kept.",
+    "cta": "Read about the canopy",
+    "layers": [
+      {
+        "src": "/library/scene-slider/canopy-0.webp",
+        "depth": 0.08
+      },
+      {
+        "src": "/library/scene-slider/canopy-1.webp",
+        "depth": 0.18
+      },
+      {
+        "src": "/library/scene-slider/canopy-2.webp",
+        "depth": 0.3
+      },
+      {
+        "src": "/library/scene-slider/canopy-3.webp",
+        "depth": 0.45
+      },
+      {
+        "src": "/library/scene-slider/canopy-4.webp",
+        "depth": 0.55
+      },
+      {
+        "src": "/library/scene-slider/canopy-5.webp",
+        "depth": 0.8
+      },
+      {
+        "src": "/library/scene-slider/canopy-6.webp",
+        "depth": 1.3
+      }
+    ]
+  },
+  {
+    "id": "river",
+    "eyebrow": "From above",
+    "title": [
+      "Every river",
+      "remembers rain"
+    ],
+    "text": "From the air, the forest breathes in clouds and breathes out rivers — one long, slow cycle.",
+    "cta": "Follow the water",
+    "layers": [
+      {
+        "src": "/library/scene-slider/river-0.webp",
+        "depth": 0.15
+      },
+      {
+        "src": "/library/scene-slider/river-1.webp",
+        "depth": 0.3
+      },
+      {
+        "src": "/library/scene-slider/river-2.webp",
+        "depth": 0.5
+      },
+      {
+        "src": "/library/scene-slider/river-3.webp",
+        "depth": 1.1
+      }
+    ]
+  },
+  {
+    "id": "fireflies",
+    "eyebrow": "After dark",
+    "title": [
+      "The night keeps",
+      "its own light"
+    ],
+    "text": "When the sun goes, the forest switches on. Thousands of small lamps drift over the water.",
+    "cta": "Listen to the night",
+    "layers": [
+      {
+        "src": "/library/scene-slider/fireflies-0.webp",
+        "depth": 0.08
+      },
+      {
+        "src": "/library/scene-slider/fireflies-1.webp",
+        "depth": 0.22
+      },
+      {
+        "src": "/library/scene-slider/fireflies-2.webp",
+        "depth": 0.35
+      },
+      {
+        "src": "/library/scene-slider/fireflies-3.webp",
+        "depth": 1
+      },
+      {
+        "src": "/library/scene-slider/fireflies-4.webp",
+        "depth": 1.45
+      }
+    ]
+  },
+  {
+    "id": "lagoon",
+    "eyebrow": "Golden hour",
+    "title": [
+      "Gold at the",
+      "water's edge"
+    ],
+    "text": "The lagoon holds the last of the day. Birds head home low over the water, and the palms go dark first.",
+    "cta": "Stay for sunset",
+    "layers": [
+      {
+        "src": "/library/scene-slider/lagoon-0.webp",
+        "depth": 0.08
+      },
+      {
+        "src": "/library/scene-slider/lagoon-1.webp",
+        "depth": 0.22
+      },
+      {
+        "src": "/library/scene-slider/lagoon-2.webp",
+        "depth": 0.6
+      },
+      {
+        "src": "/library/scene-slider/lagoon-3.webp",
+        "depth": 1.35
+      }
+    ]
+  },
+  {
+    "id": "frog",
+    "eyebrow": "Cloud forest",
+    "title": [
+      "Stillness is",
+      "a language"
+    ],
+    "text": "Look long enough and the forest looks back. Most of it is watching, perfectly still, from just out of focus.",
+    "cta": "Look closer",
+    "layers": [
+      {
+        "src": "/library/scene-slider/frog-0.webp",
+        "depth": 0.08
+      },
+      {
+        "src": "/library/scene-slider/frog-1.webp",
+        "depth": 0.2
+      },
+      {
+        "src": "/library/scene-slider/frog-2.webp",
+        "depth": 0.3
+      },
+      {
+        "src": "/library/scene-slider/frog-3.webp",
+        "depth": 0.4
+      },
+      {
+        "src": "/library/scene-slider/frog-4.webp",
+        "depth": 0.6
+      },
+      {
+        "src": "/library/scene-slider/frog-5.webp",
+        "depth": 0.85
+      },
+      {
+        "src": "/library/scene-slider/frog-6.webp",
+        "depth": 1.5
+      }
+    ]
+  }
+]

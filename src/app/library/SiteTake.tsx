@@ -19,6 +19,7 @@ import { designsOf, hasItem, itemKey, shelfSites, siteName, siteSpec, toggleItem
 import { siteTraits } from '@/features/library/inspire'
 import { composeRecipe } from '@/features/recipes/engine'
 import { updateCollection, useCollection } from '@/lib/collection'
+import type { PieceId } from '@/types/domain'
 import { CopyPromptSquare, SiteThumb, TakenPicture, exampleOf, siteLook, useCollect } from './parts'
 
 type Takeable = { item: CollectionItem; title: string; sub: string; picture: ReactNode; order?: number }
@@ -94,7 +95,7 @@ function Group({ title, line, children }: { title: string; line: string; childre
  *  views. Each design on its `bestOn` site (src/data/takeables.ts). */
 export type Style = { site: SiteRef; item: CollectionItem }
 /** A design and the sites that have it (`styles`, its `bestOn` first) — shown as the sites it is used on. */
-export type CatalogCard = { item: CollectionItem; title: string; category: string; line: string; site: SiteRef; styles: Style[] }
+export type CatalogCard = { item: CollectionItem; title: string; category: string; line: string; /** Absent: shown by its own demo. */ site?: SiteRef; styles: Style[] }
 let bySite: Map<string, Style[]> | undefined
 const stylesOf = (key: string) => {
   bySite ??= shelfSites.reduce((m, site) => { for (const d of designsOf(site)) m.set(d.key, [...(m.get(d.key) ?? []), { site, item: d.item }]); return m }, new Map<string, Style[]>())
@@ -102,7 +103,8 @@ const stylesOf = (key: string) => {
 }
 const catalogs = new Map<TakeGroup, CatalogCard[]>()
 export function catalogOf(group: TakeGroup): CatalogCard[] {
-  if (!catalogs.has(group)) catalogs.set(group, TAKE_CATEGORIES[group].flatMap((category) => TAKEABLES.filter((x) => x.group === group && x.category === category).flatMap((x) => {
+  if (!catalogs.has(group)) catalogs.set(group, TAKE_CATEGORIES[group].flatMap((category) => TAKEABLES.filter((x) => x.group === group && x.category === category).flatMap((x): CatalogCard[] => {
+    if (!x.bestOn) return x.key.startsWith('effect:') ? [{ item: { kind: 'effect', id: x.key.slice(7) as PieceId }, title: x.name, category, line: x.line, styles: [] }] : []
     const all = stylesOf(x.key), main = all.find((y) => y.site === x.bestOn)
     return main ? [{ item: main.item, title: x.name, category, line: x.line, site: x.bestOn, styles: [main, ...all.filter((y) => y !== main)] }] : []
   })))

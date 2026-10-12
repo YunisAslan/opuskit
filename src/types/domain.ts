@@ -307,7 +307,7 @@ export type PieceId =
   | 'grid-pattern' | 'grain' | 'magnet-lines' | 'video-dialog'
   | 'media-between-text' | 'parallax-floating' | 'cut-reveal' | 'underline-fill' | 'drag-photos' | 'text-along-path' | 'shader-grain' | 'shader-dither'
   | 'duo-headline' | 'scribble-link' | 'wavy-link' | 'swap-button' | 'stickers' | 'blob-transition' | 'brand-cursor' | 'cookie-note'
-  | 'curtain-transition' | 'preloader' | 'smooth-scroll' | 'ambient-sound' | 'fade-transition' | 'entry-gate' | 'chapter-colours' | 'lightbox' | 'pinned-stage' | 'side-scroll' | 'scroll-story' | 'proximity-type' | 'photo-dome' | 'pixel-swap' | 'spotlight' | 'hover-preview' | 'ripple-image' | 'photo-morph' | 'shutter-transition' | 'model-stage' | 'mask-reveal' | 'letters-assemble' | 'speed-bend' | 'dot-word'
+  | 'curtain-transition' | 'preloader' | 'smooth-scroll' | 'ambient-sound' | 'fade-transition' | 'entry-gate' | 'chapter-colours' | 'lightbox' | 'pinned-stage' | 'side-scroll' | 'scroll-story' | 'proximity-type' | 'photo-dome' | 'pixel-swap' | 'spotlight' | 'hover-preview' | 'ripple-image' | 'photo-morph' | 'shutter-transition' | 'model-stage' | 'mask-reveal' | 'letters-assemble' | 'speed-bend' | 'dot-word' | 'scene-slider'
 /** Where a piece lives on the page. A kit holds at most one piece per slot, so the site keeps one voice. */
 /** 'site' pieces work across the whole site (page transition, cursor, cookie notice) and are chosen in the Design step. */
 export type PieceSlot = 'headline' | 'label' | 'statement' | 'numbers' | 'photos' | 'scroll' | 'pointer' | 'background' | 'video' | 'button' | 'decor' | 'open' | 'site'

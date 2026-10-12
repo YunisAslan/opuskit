@@ -660,6 +660,34 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     headline entrance — `behaviours` with `many: false`) keeps its own card, its modal shows the other ones ("Or another link hover — a site has one"), and
     taking one puts back the one taken before (`toggleItem`, a toast with Undo) — the Collection never holds two. The view is kept in the address (`#sections`). Next
     (later): real previews — captures, clips, live components.
+59. **A piece can come before a site** (2026-10-12, the user: add canopy-slider to the Library; asked whether it should
+    wait for a site that uses it, chose "its own demo, without a site"). The slider (`canopy-slider/`, a static page
+    after rainforest.imm-g-prod.com) became the piece `scene-slider` (`src/pieces/SceneSlider.tsx`): full-screen scenes
+    from the owner's own picture or its cut-out layers (far to near, with depth), a quick slanted wipe, the new scene
+    gliding home after it, headline letters that slide a tenth of its width (container units, so a card shows it at
+    scale), wheel/trackpad only while it fills the screen (the page scrolls on past either end), drag, keys, buttons;
+    the shot list asks for its scenes (`PIECE_SHOTS.scenes`). The catalog takes an entry without `bestOn`
+    (`effect:scene-slider`, Moments · Photos): its card plays the piece's own demo (the forest scenes drawn into layered
+    WebP, `public/library/scene-slider/`, turning by themselves), its modal says "Not on a Library site yet";
+    check.ts lets only a piece be siteless, and fails once a site has it (then it gets that site). Found on the way: the
+    photo-morph card's own demo ran a document view transition every 2.2 s wherever the Library was, and an open dialog
+    vanished from each snapshot — every card's details flickered. The demo now turns only on screen with no other dialog
+    open, and a dialog has its own view-transition name (`ui/dialog.tsx`). Then the slider itself flickered mid-turn
+    (grey bands, see-through layers): two scenes of 5–7 full-screen layers, each its own layer of the page, were more
+    than Chrome keeps drawn (reproduced with `--force-gpu-mem-available-mb`: 70 grey frames in 12 s at 256 MB, 18 at
+    512). It now paints its pictures on one canvas — none at 64 — and rests under a dialog. `canopy-slider/` and the
+    script that drew its scenes into the demo's WebP were deleted once the piece had everything (the user, 2026-10-12);
+    the page is in git history (93e30b9) if the demo scenes are ever redrawn.
+60. **One picture per design, everywhere; no video controls** (2026-10-12, the user: "heçnəyin rəngini dəyişmə … Library-də
+    necə görünürsə … hər yerdə bir cür görünsün"; "videolardaki control-ları silək ki istifadəçinin başı qarışmasın").
+    A design is drawn by one function, `TakenPicture` (`app/library/parts.tsx`, with `pictureClip` for the recording it
+    plays): the Library card and its dialog, a site's take list, the Collection, the recipe page's What you took and
+    Also in your site all show the same thing — its recording; a menu or footer drawn pure in the standard theme; an
+    effect live in the standard theme; a section as the site that shows it best has it. Nothing is recoloured to a
+    site's or the owner's palette (before, a site's take list drew its effects in that site's colours and the recipe
+    page in the owner's). The owner's own page in Direction still shows their palette — that is where it is picked.
+    No video in OpusKit's own screens has controls: a card that played with a player bar beside one that did not read
+    as two kinds of thing. Only the `VideoDialog` piece keeps them — it is a site's film player, with sound.
 
 ## 5. Open
 

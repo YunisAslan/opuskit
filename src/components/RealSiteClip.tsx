@@ -1,6 +1,6 @@
 'use client'
 // A few seconds of a real site built with OpusKit, next to the live preview (docs/plan-examples.md §1).
-// Muted, looping; with reduced motion it waits for a tap.
+// Muted, looping, never with controls (the user, 2026-10-12); with reduced motion it stands on its first frame.
 import { Maximize2 } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
@@ -18,7 +18,7 @@ export function RealSiteClip({ match, label }: { match: Match; label: string }) 
     <figure className="overflow-hidden rounded-lg border border-line bg-white">
       {/* Its own shape, never cropped: recordings aren't all 16:10. */}
       <div className="min-h-24 bg-paper-2">
-        {still !== undefined && <video key={clip} src={clip} muted loop playsInline autoPlay={!still} controls={still} preload="metadata" className="block h-auto w-full" aria-label={`${e.title}, a few seconds of the real site`} />}
+        {still !== undefined && <video key={clip} src={clip} muted loop playsInline autoPlay={!still} preload="metadata" className="block h-auto w-full" aria-label={`${e.title}, a few seconds of the real site`} />}
       </div>
       <figcaption className="px-3 py-2 text-xs text-muted">
         {label}: <Link href={`/library/sites/example/${e.slug}`} className="link">{siteName(match)}</Link>, built with OpusKit. Colours and typefaces will follow your choices.
@@ -51,7 +51,7 @@ export function TileClip({ match, className = 'aspect-video' }: { match: Match; 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-[min(92vw,1100px)] sm:max-w-[min(92vw,1100px)]">
           <DialogTitle className="sr-only">{name}</DialogTitle>
-          <video src={match.clip} muted loop playsInline autoPlay controls className="block h-auto w-full rounded-md" />
+          <video src={match.clip} muted loop playsInline autoPlay className="block h-auto w-full rounded-md" />
           <DialogDescription className="text-xs">
             <Link href={`/library/sites/example/${match.example.slug}`} className="link">{name}</Link>, built with OpusKit. Colours and typefaces will follow your choices.
           </DialogDescription>

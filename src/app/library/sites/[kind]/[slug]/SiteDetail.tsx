@@ -47,7 +47,7 @@ export function SiteDetail({ site }: { site: SiteRef }) {
         {/* The whole landing page, recorded top to footer, where there is one; else the site's thumbnail. */}
         <div className="overflow-hidden rounded-lg border border-line">
           {e?.fullClip
-            ? <video src={e.fullClip} poster={`/examples/${e.slug}.jpg`} muted loop playsInline autoPlay controls preload="metadata" className="block aspect-[16/10] w-full bg-black object-cover object-top" />
+            ? <video src={e.fullClip} poster={`/examples/${e.slug}.jpg`} muted loop playsInline autoPlay preload="metadata" className="block aspect-[16/10] w-full bg-black object-cover object-top" />
             : <SiteThumb site={site} />}
         </div>
       </div>

@@ -3,7 +3,7 @@
 // (or OpusKit's own when shown in the catalog). The same code a Build Package ships.
 
 import type { CSSProperties, ReactNode } from 'react'
-import { Fragment, startTransition, useEffect, useRef, useState } from 'react'
+import { Fragment, startTransition, useEffect, useId, useRef, useState } from 'react'
 import { AmbientSound } from '@/pieces/AmbientSound'
 import { Grain } from '@/pieces/Grain'
 import { GridPattern } from '@/pieces/GridPattern'
@@ -56,7 +56,9 @@ import { LettersAssemble } from '@/pieces/LettersAssemble'
 import { SpeedBend } from '@/pieces/SpeedBend'
 import { DotWord } from '@/pieces/DotWord'
 import { ScrollStory } from '@/pieces/ScrollStory'
+import { SceneSlider } from '@/pieces/SceneSlider'
 import { SideScroll } from '@/pieces/SideScroll'
+import SCENE_DEMO from '@/data/scene-slider-demo.generated.json'
 import type { PaletteColors, PieceId } from '@/types/domain'
 import { LinkDemo } from './LinkDemo'
 
@@ -78,6 +80,24 @@ export const OPUSKIT_DARK: PaletteColors = { background: '#18181B', surface: '#2
 
 const display = 'font-(family-name:--font-display) leading-[0.95] tracking-tight'
 const utility = 'font-(family-name:--font-utility) text-sm'
+
+// The forest scenes of the canopy slider (decision 59), drawn in code there and kept as layered pictures — the piece
+// itself takes the owner's own pictures.
+export const SCENE_SCENES = SCENE_DEMO.map((s) => ({ title: s.title, eyebrow: s.eyebrow, text: s.text, action: { label: s.cta, href: '#' }, layers: s.layers, alt: s.eyebrow }))
+
+/** The scenes at a screen's size (1280 wide), shrunk to the card, turning by themselves. */
+function SceneDemo() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [k, setK] = useState(0)
+  useEffect(() => { const el = ref.current!, ro = new ResizeObserver(() => setK(el.offsetWidth / 1280)); ro.observe(el); return () => ro.disconnect() }, [])
+  return (
+    <div ref={ref} className="relative size-full overflow-hidden">
+      {k > 0 && <div className="absolute left-0 top-0 origin-top-left" style={{ width: 1280, height: `${100 / k}%`, transform: `scale(${k})` }}>
+        <SceneSlider label="The forest, from dawn to night" scenes={SCENE_SCENES} autoplay={3400} className="h-full!" />
+      </div>}
+    </div>
+  )
+}
 
 function demo(id: PieceId, c: PaletteColors): ReactNode {
   switch (id) {
@@ -116,6 +136,7 @@ function demo(id: PieceId, c: PaletteColors): ReactNode {
     case 'spotlight': return <Spotlight radius="70px" className="size-full"><img src={PHOTOS[3].src} alt="" className="size-full object-cover" /><p className={`${display} absolute inset-0 grid place-items-center text-5xl text-white`}>After dark</p></Spotlight>
     case 'hover-preview': return <HoverPreview photos={PHOTOS.slice(0, 4)} className="w-full px-8">{['Shop sign', 'Labels', 'A bakery book', 'Posters'].map((t, i) => <p key={t} className={`${display} flex justify-between border-b border-(--color-border) py-2 text-2xl`}><span>{t}</span><span className={`${utility} text-(--color-muted)`}>{2021 + i}</span></p>)}</HoverPreview>
     case 'scroll-story': return <StoryDemo />
+    case 'scene-slider': return <SceneDemo />
     case 'proximity-type': return <ProximityType className={`${display} text-7xl`} from={200} to={900} radius={140}>Halden</ProximityType>
     case 'underline-fill': return <LinkDemo piece="underline-fill" colors={c} />
     case 'parallax-floating': return <ParallaxFloating className="size-full" photos={[{ ...PHOTOS[0], x: '6%', y: '10%', w: '22%', depth: 1.5 }, { ...PHOTOS[4], x: '72%', y: '8%', w: '20%', depth: 0.8 }, { ...PHOTOS[6], x: '10%', y: '62%', w: '18%', depth: 1 }, { ...PHOTOS[2], x: '70%', y: '60%', w: '22%', depth: 2 }]}><p className={`${display} text-3xl`}>Move the cursor</p></ParallaxFloating>
@@ -191,7 +212,8 @@ const PAGES = [['Work', 'Signs, labels and books for places that last.'], ['Jour
 const SWEEP = {
   'fade-transition': ['opuskit-fade 0.9s ease-in-out both', 'bg-(--color-background)', '@keyframes opuskit-fade{0%{opacity:0}45%,55%{opacity:1}100%{opacity:0}}'],
   'blob-transition': ['opuskit-blob 1.2s cubic-bezier(.76,0,.24,1) both', 'inset-x-[-20%] top-[30%] h-[140%] rounded-t-[50%] bg-(--color-chapter-1,var(--color-accent))', '@keyframes opuskit-blob{0%{transform:translateY(100%)}45%,55%{transform:translateY(-10%)}100%{transform:translateY(-160%)}}'],
-  'shutter-transition': ['opuskit-shutter 1.1s cubic-bezier(.76,0,.24,1) both', 'bg-[repeating-linear-gradient(90deg,var(--color-text)_0_19%,transparent_19%_20%)]', '@keyframes opuskit-shutter{0%{transform:scaleY(0);transform-origin:bottom}40%{transform:scaleY(1);transform-origin:bottom}60%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(0);transform-origin:top}}'],
+  // As the piece: five solid bars, each 35 ms after the one before, drop from the bottom, then lift away upward.
+  'shutter-transition': ['opuskit-shutter 0.95s cubic-bezier(.76,0,.24,1) both', 'flex', '@keyframes opuskit-shutter{0%{transform:scaleY(0);transform-origin:bottom}30%{transform:scaleY(1);transform-origin:bottom}62%{transform:scaleY(1);transform-origin:top}92%,100%{transform:scaleY(0);transform-origin:top}}'],
   'curtain-transition': ['opuskit-curtain 1.3s cubic-bezier(.76,0,.24,1) both', 'grid place-items-center bg-(--color-text)', '@keyframes opuskit-curtain{0%{transform:translateY(100%)}35%,60%{transform:translateY(0)}95%,100%{transform:translateY(-100%)}}'],
 } as const
 /** Page changes, on a small site: a link pressed sweeps the page over and the next one comes in under it. Until the
@@ -210,9 +232,13 @@ function PageChangeDemo({ kind }: { kind: keyof typeof SWEEP }) {
         {PAGES.map(([name], i) => <button key={name} type="button" onClick={() => { setTouched(true); go(i) }} className={i === page ? 'underline underline-offset-4' : 'text-(--color-muted) hover:text-(--color-text)'}>{name}</button>)}
       </nav>
       <div className="px-5 pt-8"><p className={`${display} text-5xl`}>{PAGES[page][0]}</p><p className="mt-3 text-sm text-(--color-muted)">{PAGES[page][1]}</p></div>
-      {run && <div key={run.n} onAnimationEnd={() => setRun(null)} className={`pointer-events-none absolute ${kind === 'blob-transition' ? '' : 'inset-0'} ${look}`} style={{ animation }}>
-        {kind === 'curtain-transition' && <p className={`${display} text-5xl text-(--color-background)`}>{PAGES[run.to][0]}</p>}
-      </div>}
+      {run && (kind === 'shutter-transition'
+        ? <div key={run.n} className={`pointer-events-none absolute inset-0 ${look}`}>
+            {[0, 1, 2, 3, 4].map((i) => <span key={i} onAnimationEnd={i === 4 ? () => setRun(null) : undefined} className="h-full flex-1 bg-(--color-text)" style={{ animation, animationDelay: `${i * 35}ms` }} />)}
+          </div>
+        : <div key={run.n} onAnimationEnd={() => setRun(null)} className={`pointer-events-none absolute ${kind === 'blob-transition' ? '' : 'inset-0'} ${look}`} style={{ animation }}>
+            {kind === 'curtain-transition' && <p className={`${display} text-5xl text-(--color-background)`}>{PAGES[run.to][0]}</p>}
+          </div>)}
       <style>{css}</style>
     </div>
   )
@@ -220,18 +246,33 @@ function PageChangeDemo({ kind }: { kind: keyof typeof SWEEP }) {
 
 // A small list and its item page, switched in a transition so React's <ViewTransition> morphs the picture.
 function MorphDemo() {
+  // A transition name is unique in the page, and the Library can show this demo twice at once (a card and its large view).
+  const id = useId().replace(/[^a-zA-Z0-9]/g, '')
+  const root = useRef<HTMLElement>(null)
   const [open, setOpen] = useState<number | null>(null)
   const go = (i: number | null) => startTransition(() => setOpen(i))
-  useEffect(() => { const t = setTimeout(() => go(open === null ? 1 : null), 2200); return () => clearTimeout(t) }, [open])
+  // Every turn is a view transition of the whole document, and while one runs the page is a snapshot: a dialog open
+  // over the Library vanished for its 420 ms, every 2.2 s, wherever it was opened (the user, 2026-10-12: "plir").
+  // So it turns by itself only while it is on screen and no other dialog is open over it.
+  useEffect(() => {
+    let t = 0
+    const tick = () => {
+      const el = root.current, r = el?.getBoundingClientRect(), dialog = document.querySelector('[role="dialog"]')
+      if (el && r && r.bottom > 0 && r.top < innerHeight && !document.hidden && (!dialog || dialog.contains(el))) go(open === null ? 1 : null)
+      else t = window.setTimeout(tick, 700)
+    }
+    t = window.setTimeout(tick, 2200)
+    return () => clearTimeout(t)
+  }, [open])
   if (open !== null) return (
-    <button type="button" onClick={() => go(null)} className="grid size-full grid-cols-[3fr_2fr] items-end gap-4 p-4 text-left">
-      <PhotoMorph name={`demo-${open}`}><img src={PHOTOS[open].src} alt="" className="h-full w-full object-cover" /></PhotoMorph>
+    <button ref={root as React.RefObject<HTMLButtonElement>} type="button" onClick={() => go(null)} className="grid size-full grid-cols-[3fr_2fr] items-end gap-4 p-4 text-left">
+      <PhotoMorph name={`demo-${id}-${open}`}><img src={PHOTOS[open].src} alt="" className="h-full w-full object-cover" /></PhotoMorph>
       <span><span className={`${display} block text-3xl`}>Project {open + 1}</span><span className={`${utility} text-(--color-muted)`}>Back</span></span>
     </button>
   )
   return (
-    <div className="grid size-full grid-cols-3 content-center gap-3 p-6">
-      {[0, 1, 2].map((i) => <button key={i} type="button" onClick={() => go(i)}><PhotoMorph name={`demo-${i}`}><img src={PHOTOS[i].src} alt="" className="aspect-[3/4] w-full object-cover" /></PhotoMorph></button>)}
+    <div ref={root as React.RefObject<HTMLDivElement>} className="grid size-full grid-cols-3 content-center gap-3 p-6">
+      {[0, 1, 2].map((i) => <button key={i} type="button" onClick={() => go(i)}><PhotoMorph name={`demo-${id}-${i}`}><img src={PHOTOS[i].src} alt="" className="aspect-[3/4] w-full object-cover" /></PhotoMorph></button>)}
     </div>
   )
 }

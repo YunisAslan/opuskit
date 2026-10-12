@@ -15,6 +15,8 @@ import { MaskReveal } from '@/pieces/MaskReveal'
 import { LettersAssemble } from '@/pieces/LettersAssemble'
 import { SpeedBend } from '@/pieces/SpeedBend'
 import { TiltedGrid } from '@/pieces/TiltedGrid'
+import { SceneSlider } from '@/pieces/SceneSlider'
+import { SCENE_SCENES } from '@/components/PieceDemo'
 import type { PieceId } from '@/types/domain'
 
 const PHOTOS = [...[1, 2, 3, 4, 5, 6].map((n) => `/examples/brasshand/media/work-${n}.jpg`), ...[1, 2, 3, 4].map((n) => `/examples/sticky-weather/media/work-${n}.jpg`)].map((src) => ({ src, alt: '' }))
@@ -35,6 +37,7 @@ const CHROME_OFF = <style>{'header.sticky, #main ~ footer, #main ~ canvas, nextj
 
 /** The pages for pieces that follow the page's scroll. */
 const SCROLLED: Partial<Record<PieceId, () => React.ReactNode>> = {
+  'scene-slider': () => <><div data-target><SceneSlider label="The forest, from dawn to night" scenes={SCENE_SCENES} /></div><Text n={3} /></>,
   'tilted-grid': () => <><Text n={2} /><div className="h-[45vh]" /><div data-target><TiltedGrid photos={[...PHOTOS, ...PHOTOS].slice(0, 15)} columns={5} className="mx-auto max-w-5xl px-6" /></div><div className="h-[70vh]" /></>,
   'side-scroll': () => (
     <><Text n={2} />
@@ -43,7 +46,8 @@ const SCROLLED: Partial<Record<PieceId, () => React.ReactNode>> = {
   ),
   'speed-bend': () => <><Text n={2} /><div data-target className="mx-auto max-w-4xl px-6 py-20"><SpeedBend><div className="grid grid-cols-3 gap-4">{[...PHOTOS, ...PHOTOS].slice(0, 12).map((p, i) => <img key={i} src={p.src} alt="" className="aspect-[4/5] w-full object-cover" />)}</div></SpeedBend></div><Text n={3} /></>,
   'mask-reveal': () => <><Text n={1} /><div data-target><MaskReveal src={PHOTOS[2].src} alt="" left="Costa" right="del Sol"><h2 className="text-6xl">Era House</h2></MaskReveal></div><Text n={2} /></>,
-  'letters-assemble': () => <><Text n={2} /><div data-target className="py-[30vh]"><LettersAssemble as="h2" className="mx-auto max-w-4xl px-6 text-center text-7xl">A good identity still works on a paper bag.</LettersAssemble></div><Text n={2} /></>,
+  // Below the first screen: a line already there when the page opens gathers once on its own, before anyone sees it.
+  'letters-assemble': () => <><Text n={2} /><div className="h-screen" /><div data-target className="py-[30vh]"><LettersAssemble as="h2" className="mx-auto max-w-4xl px-6 text-center text-7xl">A good identity still works on a paper bag.</LettersAssemble></div><Text n={2} /></>,
   'scroll-story': () => (
     <><Text n={1} />
       <div data-target className="mx-auto max-w-5xl px-6"><ScrollStory chapters={STORY.map(([title, k]) => ({ src: PHOTOS[k].src, alt: '', body: <><h3 className="text-5xl">{title}</h3><p className="mt-4 text-lg text-(--color-muted)">Every job starts with a walk round the place it is for, and ends when the owner stops noticing it.</p></> }))} /></div>

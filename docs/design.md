@@ -126,7 +126,7 @@ cells and hex labels was "a bit odd"; the user: simple, creative, and no buttons
   copy as a prompt (`features/library/prompt.ts`; ticks in pencil) and take (+; ink on hover; taken, the square fills
   pencil with a tick — the picked mark — and the card's border turns pencil). Sites: visit ↗ and take (the count once
   taken). Each square names itself in a tooltip. **One click, one place**: anywhere else on a catalog card opens its one
-  dialog — the design large at the top left (its recording with controls, or the live part), the others a site could
+  dialog — the design large at the top left (its recording, never with controls, or the live part — decision 60), the others a site could
   have instead around it (beside, then below), then the sites it is used on; a site card opens the site's own page. (A picture that opened a player and a name that
   opened details confused the user, 2026-10-11.) Presses follow OpusKit's own craft (`build-packages/craft.ts`): scale
   0.97, 140ms, the out curve; hover only where a pointer can hover. Mono caps on controls are utilities, not `.label`

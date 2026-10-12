@@ -120,7 +120,8 @@ export function designsOf(ref: SiteRef): { key: string; item: CollectionItem }[]
 
 export function itemName(i: CollectionItem): string {
   const named = TAKE_BY_KEY.get(takeKeyOf(i) ?? '')
-  if (named) return `${named.name} · ${siteName(i.kind === 'like' ? i.site : 'from' in i && i.from ? i.from : ('' as SiteRef))}`.replace(/ · $/, '')
+  const site = i.kind === 'like' ? i.site : 'from' in i ? i.from : undefined
+  if (named) return site ? `${named.name} · ${siteName(site)}` : named.name
   switch (i.kind) {
     case 'site': return siteName(i.site)
     case 'section': { const v = i.variant && sectionVariants[i.id]?.options.find((o) => o.id === i.variant); return `${v ? `${sections[i.id].name} · ${v.name}` : sections[i.id].name}${i.from ? ` · ${siteName(i.from)}` : ''}` }

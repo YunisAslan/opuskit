@@ -35,6 +35,10 @@
     "src": "/library/demos/image-trail.mp4",
     "source": "387c54817547"
   },
+  "letters-assemble": {
+    "src": "/library/demos/letters-assemble.mp4",
+    "source": "a23e70f1126b"
+  },
   "lightbox": {
     "src": "/library/demos/lightbox.mp4",
     "source": "30b9b53563ab"
@@ -46,6 +50,14 @@
   "scroll-progress": {
     "src": "/library/demos/scroll-progress.mp4",
     "source": "2abf9f79fbec"
+  },
+  "scroll-story": {
+    "src": "/library/demos/scroll-story.mp4",
+    "source": "b6f9f9670094"
+  },
+  "shutter-transition": {
+    "src": "/library/demos/shutter-transition.mp4",
+    "source": "dbad8d197ab8"
   },
   "side-scroll": {
     "src": "/library/demos/side-scroll.mp4",

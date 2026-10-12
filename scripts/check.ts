@@ -151,7 +151,10 @@ const main = async () => {
   assert.equal(new Set(TAKEABLES.map((x) => x.key)).size, TAKEABLES.length, 'one catalog entry per design')
   assert.equal(new Set(TAKEABLES.map((x) => x.name.toLowerCase())).size, TAKEABLES.length, 'no two designs share a name')
   for (const x of TAKEABLES) {
-    assert.ok(designs.get(x.key)?.has(x.bestOn), `${x.key}: its bestOn ${x.bestOn} must be a shelf site that has it`)
+    if (!x.bestOn) {
+      assert.ok(x.key.startsWith('effect:') && Object.hasOwn(pieces, x.key.slice(7)), `${x.key}: only a piece can be shown by its own demo, without a site`)
+      assert.ok(!designs.has(x.key), `${x.key}: a Library site has it now — give it that site as bestOn`)
+    } else assert.ok(designs.get(x.key)?.has(x.bestOn), `${x.key}: its bestOn ${x.bestOn} must be a shelf site that has it`)
     assert.ok(TAKE_CATEGORIES[x.group].includes(x.category), `${x.key}: category ${x.category} is not one of ${x.group}'s`)
     assert.ok(!GENERIC_NAMES.has(x.name.toLowerCase()), `${x.key}: "${x.name}" says what kind it is, not which one`)
   }

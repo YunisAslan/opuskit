@@ -330,6 +330,12 @@ export const pieces: Record<PieceId, Piece> = {
     usage: '<SideScroll label="Rooms">\n  {rooms.map((r) => <figure key={r.src} className="w-[60vw] md:w-[42vw]"><img src={r.src} alt={r.alt} className="aspect-[4/3] w-full object-cover" /><figcaption>{r.name}</figcaption></figure>)}\n</SideScroll>',
     rules: ['4–10 items of one height, widths from their own pictures; a caption under each.', 'Once per page — it is the page’s walk, not a carousel.', 'Phones and reduced motion get the swipe row it already has; never pin there.'],
   },
+  'scene-slider': {
+    id: 'scene-slider', name: 'Full-screen scenes behind a slanted edge', line: 'Each scene fills the screen and drifts with the pointer; a slanted edge sweeps the next one in, which keeps gliding after it, while the headline’s letters slide across.', slot: 'photos', source: OK,
+    file: 'SceneSlider.tsx', exportName: 'SceneSlider', deps: [], levels: LIVELY, heavy: true, sections: ['hero'],
+    usage: '<SceneSlider link={Link} label="The forest, from dawn to night" scenes={[\n  { title: ["Wake with", "the forest"], eyebrow: "First light", text: "…", action: { label: "Begin", href: "/visit" },\n    alt: "Mist over the ridges at sunrise", layers: [{ src: "/media/dawn-sky.webp", depth: 0.08 }, { src: "/media/dawn-branch.webp", depth: 0.9 }] },\n  { title: ["Light becomes", "leaf"], src: "/media/canopy.jpg", alt: "…" },\n  …\n]} />',
+    rules: ['3–6 scenes that tell one journey in order — a place at different hours, a making from first step to last — not a carousel of unrelated pictures.', 'Every scene is a picture worth the whole screen, all in one grade; where a scene can be cut into layers (sky, far, middle, near), give them far to near with their depth — that is what makes it deep.', 'Headlines of 1–3 short lines; one sentence under each at most.', 'It is the first screen, or the whole of a page that is a journey; once on the site. The page scrolls on after the last scene.'],
+  },
   'scroll-story': {
     id: 'scroll-story', name: 'A story told beside one held picture', line: 'Chapters scroll by on one side; the picture beside them stays, and each chapter’s picture wipes up over the last as it arrives.', slot: 'scroll', source: OK,
     file: 'ScrollStory.tsx', exportName: 'ScrollStory', deps: G, levels: LIVELY, sections: ['editorial-story', 'about', 'process', 'how-it-works', 'chapters', 'case-study', 'product-highlight'],

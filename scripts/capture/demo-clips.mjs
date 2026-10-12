@@ -108,7 +108,7 @@ async function record(id) {
   }
   if (!win) { await b.close(); throw new Error(`no Chrome window for ${id}`) }
   const proj = `${tmp}/${id}.cap`
-  const rid = cap('record', 'start', '--window', win.id, '--fps', '60', '--mode', 'studio', '--path', proj, '--detach').find((e) => e.recordingId)?.recordingId
+  const rid = cap('record', 'start', '--window', win.id, '--fps', '120', '--mode', 'studio', '--path', proj, '--detach').find((e) => e.recordingId)?.recordingId
   try {
     await sleep(800) // Cap takes a moment to start capturing; a shorter wait loses the first move
     for (const s of c.scroll ?? []) { await glide(p, s.to, s.ms); await sleep(1000) }
@@ -119,6 +119,13 @@ async function record(id) {
     }
   } finally { cap('record', 'stop', '--id', rid); await b.close() } // never a recording left running
 
+  // Captured at 120 fps, the screen's own rate (ProMotion): Chrome draws 120 frames a second, and a 60 fps capture beat
+  // against it — now and then the same frame twice, then one skipped (a scroll that caught; the user, 2026-10-12). The
+  // export takes every second frame. Cap writes the rate it measured, and a page standing still sends no frames: it
+  // wrote 50 for a 60 fps capture and the export repeated every sixth frame ("partlayır"). So the true rate goes back in.
+  const meta = `${proj}/recording-meta.json`, m = JSON.parse(fs.readFileSync(meta, 'utf8'))
+  for (const s of m.segments) s.display.fps = 120
+  fs.writeFileSync(meta, JSON.stringify(m))
   // The Mac's own cursor where the clip is about the pointer; edge to edge.
   const cfg = JSON.parse(fs.readFileSync(`${proj}/project-config.json`, 'utf8'))
   // raw: the cursor where the pointer really was — smoothing made it trail behind a dragged photo.
