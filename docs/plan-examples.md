@@ -108,11 +108,11 @@ Still open for later: Victorian, Surrealism, Synthwave, Y2K Chrome, Pixel Art, M
 Swiss Editorial, Fashion Editorial, Raw Editorial, Art Direction, Immersive Portfolio, Conceptual Sketch, Cyberpunk,
 Warm Hospitality — and the kinds with one example (real estate, personal brand, clinic, blog, SaaS).
 
-## 5c. Next sites (#26–#29, proposed by the night run 2026-10-09) — waiting for the user's approval
+## 5c. Next sites (#26–#29, proposed by the night run 2026-10-09) — approved by the user 2026-10-11
 
 Written by the night run when §5b ran out (#25 Ninth Row waits for the user's film). Same rules as §5b: a look no
 example has yet, a kind with only one example, one engine test each; photos by Claude (no film or sound needed, so a
-night run can build them once approved). Nothing here is built until the user approves the batch.
+night run can build them). #28 Ines Varga was built first; #26, #27 and #29 are next.
 
 | # | Site | Kind | Look (new) · motion · lead | Media | Engine test |
 |---|---|---|---|---|---|

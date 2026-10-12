@@ -47,6 +47,10 @@
     "src": "/library/demos/magnetic.mp4",
     "source": "d09b1cafd92b"
   },
+  "scene-slider": {
+    "src": "/library/demos/scene-slider.mp4",
+    "source": "8fd6d248d712"
+  },
   "scroll-progress": {
     "src": "/library/demos/scroll-progress.mp4",
     "source": "2abf9f79fbec"

@@ -92,7 +92,12 @@ loop on the card has no jump. Clips run 2–8 s; a long scroll up to ~11 s.
 
 **Cap starts late.** Recording begins about a second after `record start` returns: wait ~0.8–1.1 s before acting, then
 cut the still lead-in (`freezedetect`, keeping 0.15–0.4 s). A film that never stands still hides that moment — then a
-fixed cut, plus `late` for a film that answers the scroll late (Halden's).
+fixed cut, plus `late` for a film that answers the scroll late (Halden's). A piece that never stands still (the scene
+slider's scenes breathe) hides it on its demo too: `lead` in its `CLIPS` entry cuts a fixed lead-in.
+
+**Record on a warm page.** Right after a piece's code changed, the dev server was still compiling it during the take:
+every frame came out twice (30 fps in a 60 fps file). Load the demo page once before recording, and count repeated
+frames in each take (`signalstats` YAVG per frame — equal neighbours are repeats).
 
 **One even speed, never slow.** Every scroll moves at one constant speed with a short soft start and stop (~0.4 s):
 an ease-in-out crawled and then rushed, and the user saw it (2026-10-11). Brisk, not slow: the whole page at ~520 px a

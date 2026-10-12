@@ -18,8 +18,8 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   `/live/pip-kiln` with temporary pictures (photos picked, `fetch.sh`). Engine lessons fixed before it was built: a
   workshops page from the sentence can be booked (Schedule, Pricing, Reservation); a taken effect no part can carry
   brings its part instead of vanishing. Per-product photo sets are the owner's shoot.
-- **Queue:** #25 Ninth Row was built on 2026-10-09 with the user's film (see Today); the night run proposed #26–#29 (`docs/plan-examples.md` §5c) —
-  approve or change them before the next night run.
+- **Queue:** #25 Ninth Row was built on 2026-10-09 with the user's film (see Today); the night run proposed #26–#29
+  (`docs/plan-examples.md` §5c), which the user approved on 2026-10-11.
 
 ## Today (2026-10-10 and 11)
 
@@ -202,6 +202,12 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
   `scene-slider` — the first catalog card without a site, shown by its own demo; it paints on one canvas (layers of the
   page flickered grey mid-turn). `canopy-slider/` deleted (in git history). Also fixed: every card's details flickered
   (the photo-morph demo's view transitions).
+- **Scene slider renamed and recorded** (2026-10-12): "Slideshow with a diagonal wipe", allowed as a section too
+  (decision 60's note); its card and dialog play a Cap clip of it being dragged (`demo-clips.mjs scene-slider`; a fixed
+  `lead` cut, since the scenes never stand still). The colour shift the user saw at
+  each turn was the piece: every scene carried its own shade under the words, two stacked during a wipe, and the
+  picture brightened in one frame as the old scene went (measured: +4% luminance in one frame). One shade now, over the
+  canvas; re-recorded, no jump left.
 - **One picture per design, everywhere** (2026-10-12, decision 60; the user: "heçnəyin rəngini dəyişmə … hər yerdə bir cür
   görünsün"): `TakenPicture` (`app/library/parts.tsx`) is the one way a design is drawn — the Library card and its
   dialog, a site's take list, the Collection, the recipe page's What you took and Also in your site; never recoloured
@@ -325,8 +331,8 @@ Talk to the user in Azerbaijani; code, docs and commits in English.
 
 ## Next
 
-1. **The next batch** (#26–#29, `docs/plan-examples.md` §5c — Tidewell Physio, Hollis & Daughters, Ines Varga, Tally
-   House): waiting for the user's approval. Each: recipe through the flow → link to the user → isolated build (outside
+1. **The rest of the batch** (`docs/plan-examples.md` §5c, approved 2026-10-11; #28 Ines Varga done): #26 Tidewell
+   Physio, #27 Hollis & Daughters, #29 Tally House — but the user's focus is OpusKit itself for now (2026-10-12). Each: recipe through the flow → link to the user → isolated build (outside
    the repo, `claude -p`) → photos (Unsplash connector) → register; Engine lessons fixed before the next site.
 2. **Library media for every new site**: when a site is added, put its special ideas in the catalog (the rest in
    `NOT_OFFERED`) and record them with `scripts/capture/` as `docs/capture.md` says. The user's own screen recordings

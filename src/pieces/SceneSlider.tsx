@@ -242,6 +242,9 @@ export function SceneSlider({ link: L = 'a', scenes, label = 'Scenes', autoplay,
       className={`@container relative h-svh w-full touch-pan-y select-none overflow-hidden bg-(--color-text) outline-none ${ink} ${className ?? ''}`}>
       <style href="opuskit-scene-slider" precedence="default">{CSS}</style>
       <canvas aria-hidden className="absolute inset-0 size-full" />
+      {/* A soft shade under the words, so they read on any picture — once, over the canvas: one per scene doubled up while
+          two scenes showed, and the picture brightened in one frame as the old scene went (the user, 2026-10-12). */}
+      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_50%_32%_at_50%_50%,rgb(0_0_0/0.22),transparent_70%),linear-gradient(to_top,rgb(0_0_0/0.35),transparent_35%)]" />
       {scenes.map((s, i) => {
         const layers = s.layers?.length ? s.layers : [{ src: s.src ?? '', depth: 0.5 }]
         let n = 0
@@ -254,8 +257,6 @@ export function SceneSlider({ link: L = 'a', scenes, label = 'Scenes', autoplay,
                 <img key={j} src={l.src} alt="" data-depth={l.depth} fetchPriority={i ? 'low' : 'high'} className="hidden" />
               ))}
             </div>
-            {/* A soft shade under the words, so they read on any picture. */}
-            <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_50%_32%_at_50%_50%,rgb(0_0_0/0.22),transparent_70%),linear-gradient(to_top,rgb(0_0_0/0.35),transparent_35%)]" />
             <div className="pointer-events-none absolute inset-0 grid place-items-center px-[6vw] text-center">
               <div className="flex flex-col items-center gap-5">
                 {s.eyebrow && <p className="ss-fade font-(family-name:--font-utility) text-xs uppercase tracking-[0.4em]" style={{ '--fd': '-0.1s' } as CSSProperties}><span className="opacity-60">{pad(i + 1)}</span> {s.eyebrow}</p>}

@@ -60,6 +60,13 @@ export const CLIPS = {
   'side-scroll': { from: 0.75, scroll: [{ to: 'end', ms: 7000 }] },
   'letters-assemble': { from: 1, scroll: [{ to: 'el:[data-target]', ms: 3400 }] },
   'scroll-story': { from: 0.6, scroll: [{ to: 'end', ms: 9000 }] },
+  // A page, not a stage (scroll: [] — page zoom and framing, nothing scrolled): dragged on twice and back twice, so the
+  // loop ends on the scene it starts on.
+  'scene-slider': { scroll: [], lead: 1.8, at: centre('[data-scene-slider]'), start: [150, -100], hand: [
+    { to: [[150, -100], [-140, -94]], s: 0.55, press: 'drag', wait: 1300 }, { to: [[-140, -94], [150, -100]], s: 0.6, wait: 100 },
+    { to: [[150, -100], [-140, -94]], s: 0.55, press: 'drag', wait: 1300 },
+    { to: [[-140, -94], [150, -100]], s: 0.55, press: 'drag', wait: 1300 }, { to: [[150, -100], [-140, -94]], s: 0.6, wait: 100 },
+    { to: [[-140, -94], [150, -100]], s: 0.55, press: 'drag', wait: 2400 }] },
 }
 
 const cap = (...args) => {
@@ -143,7 +150,8 @@ async function record(id) {
   // The clip starts where something first moves (less a breath): Cap's start-up and the pointer's wait are cut away.
   const still = spawnSync('ffmpeg', ['-i', `${tmp}/raw.mp4`, '-vf', `crop=${w}:${h}:${x}:${y},freezedetect=n=0.001:d=0.2`, '-an', '-f', 'null', '-'], { encoding: 'utf8' }).stderr
   const lead = /freeze_start: 0(?:\.0+)?\b[\s\S]*?freeze_end: ([\d.]+)/.exec(still)?.[1]
-  const from = lead ? Math.max(0, Number(lead) - 0.15) : 0
+  // lead: a piece that never stands still (the scenes breathe) has no still lead-in to find — cut a fixed one.
+  const from = c.lead ?? (lead ? Math.max(0, Number(lead) - 0.15) : 0)
   execFileSync('ffmpeg', ['-v', 'error', '-y', '-ss', String(from), '-i', `${tmp}/raw.mp4`, '-vf', `crop=${w}:${h}:${x}:${y},scale=1280:-2:flags=lanczos`, '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-pix_fmt', 'yuv420p', '-r', '60', '-movflags', '+faststart', `${OUT}/${id}.mp4`])
   fs.rmSync(tmp, { recursive: true, force: true })
   console.log('recorded', id)

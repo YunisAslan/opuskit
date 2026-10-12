@@ -75,7 +75,7 @@ export const TAKEABLES: TakeEntry[] = [
   m('effect:photo-morph', 'Page change', 'A picture that becomes the next page', 'The clicked map grows into the large picture of its own page, and shrinks back on Back.', 'ines-varga'),
   m('effect:shutter-transition', 'Page change', 'Shutter between pages', 'Bars drop over the page one after another, then lift onto the next page.', 'ines-varga'),
   m('effect:letters-assemble', 'Headline', 'Letters that gather into a sentence', 'A line’s letters arrive from scattered places and settle into words.', 'ines-varga'),
-  { key: 'effect:scene-slider', group: 'moments', category: 'Photos', name: 'Full-screen scenes behind a slanted edge', line: 'Each scene fills the screen and drifts with the pointer; a slanted edge sweeps the next one in while the headline’s letters slide across.' },
+  { key: 'effect:scene-slider', group: 'moments', category: 'Photos', name: 'Slideshow with a diagonal wipe', line: 'Each scene drifts with the pointer; a diagonal edge sweeps the next one in while the headline’s letters slide across.' },
   m('effect:scroll-story', 'Scroll', 'A story told beside one held picture', 'Chapters scroll by while the picture beside them stays, each new one wiping over the last.', 'ines-varga'),
   m('effect:cut-reveal', 'Headline', 'Words cut out of a mask', 'Headline words slide up out of a hard edge.', 'slow-atlas'),
   m('effect:split-flap', 'Headline', 'Departure board letters', 'Letters flick through characters until they land, like a station board.', 'kur-delta-watch'),

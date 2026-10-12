@@ -667,8 +667,9 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     gliding home after it, headline letters that slide a tenth of its width (container units, so a card shows it at
     scale), wheel/trackpad only while it fills the screen (the page scrolls on past either end), drag, keys, buttons;
     the shot list asks for its scenes (`PIECE_SHOTS.scenes`). The catalog takes an entry without `bestOn`
-    (`effect:scene-slider`, Moments · Photos): its card plays the piece's own demo (the forest scenes drawn into layered
-    WebP, `public/library/scene-slider/`, turning by themselves), its modal says "Not on a Library site yet";
+    (`effect:scene-slider`, Moments · Photos): its card plays a clip of the piece's own demo being dragged (the forest
+    scenes drawn into layered WebP, `public/library/scene-slider/`; recorded by `demo-clips.mjs`, 2026-10-12 — live, the
+    heaviest piece in the Library ran beside every other card), its modal says "Not on a Library site yet";
     check.ts lets only a piece be siteless, and fails once a site has it (then it gets that site). Found on the way: the
     photo-morph card's own demo ran a document view transition every 2.2 s wherever the Library was, and an open dialog
     vanished from each snapshot — every card's details flickered. The demo now turns only on screen with no other dialog
@@ -688,6 +689,9 @@ The user's idea (2026-10-05): test with agents playing users, each given a perso
     page in the owner's). The owner's own page in Direction still shows their palette — that is where it is picked.
     No video in OpusKit's own screens has controls: a card that played with a player bar beside one that did not read
     as two kinds of thing. Only the `VideoDialog` piece keeps them — it is a site's film player, with sound.
+    Renamed the same day (the user: clearer, and not "full-screen" — it can be a section too): `scene-slider` is
+    "Slideshow with a diagonal wipe"; besides the first screen it may sit in gallery, featured work, collection, story
+    and chapters, at most of the screen's height (wheel then scrolls the page; drag, keys and buttons turn it).
 
 ## 5. Open
 
